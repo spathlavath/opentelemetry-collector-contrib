@@ -202,6 +202,8 @@ receivers:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/mongodbatlasreceiver v0.129.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/mongodbreceiver v0.129.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/mysqlreceiver v0.129.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver v0.129.0
+    path: ./receiver/newrelicmysqlreceiver
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/namedpipereceiver v0.129.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/netflowreceiver v0.129.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/nginxreceiver v0.129.0

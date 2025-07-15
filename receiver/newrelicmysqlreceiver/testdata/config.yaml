@@ -1,0 +1,77 @@
+receivers:
+  newrelicmysql:
+    endpoint: "localhost:3306"
+    username: "root"
+    password: "password"
+    database: "test"
+    
+    # Collection settings
+    collection_interval: 30s
+    initial_delay: 1s
+    timeout: 30s
+    
+    # Enhanced monitoring features
+    query_performance:
+      enabled: true
+      max_digests: 100
+      digest_text_max_length: 1024
+      collection_interval: 60s
+      include_query_examples: true
+      exclude_system_queries: true
+      min_query_time: 1ms
+    
+    wait_events:
+      enabled: true
+      collection_interval: 60s
+      max_events: 100
+      event_types: ["io", "lock", "sync"]
+    
+    blocking_sessions:
+      enabled: true
+      collection_interval: 30s
+      max_sessions: 50
+      min_wait_time: 1s
+    
+    innodb:
+      enabled: true
+      collection_interval: 60s
+      detailed_metrics: true
+    
+    replication:
+      enabled: true
+      collection_interval: 60s
+      monitor_slave_status: true
+    
+    performance_schema:
+      enabled: true
+      collection_interval: 60s
+      table_io_stats: true
+    
+    slow_query:
+      enabled: true
+      collection_interval: 60s
+      slow_query_log: true
+      long_query_time: 2
+    
+    # Feature flags for New Relic enhancements
+    enabled_features:
+      - "query_performance"
+      - "wait_events"
+      - "blocking_sessions"
+      - "innodb"
+      - "replication"
+      - "slow_query"
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    metrics:
+      receivers: [newrelicmysql]
+      processors: [batch]
+      exporters: [debug]

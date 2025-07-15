@@ -1,0 +1,159 @@
+# Example OpenTelemetry Collector configuration for New Relic MySQL receiver
+# This configuration demonstrates how to use the newrelicmysql receiver
+# with comprehensive monitoring capabilities
+
+receivers:
+  # New Relic MySQL receiver with advanced monitoring
+  newrelicmysql:
+    # MySQL connection configuration
+    endpoint: "monitoring_user:secure_password@tcp(localhost:3306)/mysql"
+    username: "monitoring_user"
+    password: "secure_password"
+    database: "mysql"
+    
+    # Collection settings
+    collection_interval: 60s
+    initial_delay: 1s
+    timeout: 30s
+    
+    # Transport and timeout configuration
+    transport: "tcp"
+    connect_timeout: 10s
+    read_timeout: 30s
+    write_timeout: 30s
+    
+    # TLS configuration (uncomment and configure as needed)
+    # tls:
+    #   insecure: false
+    #   insecure_skip_verify: false
+    #   cert_file: "/path/to/client-cert.pem"
+    #   key_file: "/path/to/client-key.pem"
+    #   ca_file: "/path/to/ca.pem"
+    #   server_name: "mysql.example.com"
+    
+    # Query Performance Monitoring
+    query_performance:
+      enabled: true
+      max_digests: 1000
+      digest_text_max_length: 1024
+      collection_interval: 60s
+      include_query_examples: false
+      exclude_system_queries: true
+      min_query_time: 1ms
+    
+    # Wait Events Monitoring
+    wait_events:
+      enabled: true
+      collection_interval: 60s
+      max_events: 1000
+      event_types: ["io", "lock", "sync"]
+    
+    # Blocking Sessions Monitoring
+    blocking_sessions:
+      enabled: true
+      collection_interval: 30s
+      max_sessions: 100
+      min_wait_time: 1s
+    
+    # InnoDB Enhanced Metrics
+    innodb:
+      enabled: true
+      collection_interval: 60s
+      detailed_metrics: true
+    
+    # Replication Monitoring
+    replication:
+      enabled: true
+      collection_interval: 60s
+      monitor_slave_status: true
+    
+    # Performance Schema Configuration
+    performance_schema:
+      enabled: true
+      collection_interval: 60s
+      table_io_stats: true
+      index_io_stats: true
+      file_io_stats: false
+    
+    # Slow Query Log Monitoring
+    slow_query:
+      enabled: true
+      collection_interval: 300s # 5 minutes
+      max_queries: 100
+      min_query_time: 1s
+    
+    # Feature flags (optional - all features enabled by default)
+    enabled_features:
+      - "query_performance"
+      - "wait_events"
+      - "blocking_sessions"
+      - "innodb"
+      - "replication"
+      - "performance_schema"
+      - "slow_query"
+
+processors:
+  # Batch processor for efficient data handling
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+    send_batch_max_size: 2048
+  
+  # Resource processor to add additional attributes
+  resource:
+    attributes:
+      - key: service.name
+        value: "mysql-monitoring"
+        action: insert
+      - key: environment
+        value: "production"
+        action: insert
+
+exporters:
+  # New Relic exporter
+  newrelic:
+    apikey: "${NEW_RELIC_LICENSE_KEY}"
+    endpoint: "https://metric-api.newrelic.com/metric/v1"
+    timeout: 30s
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+  
+  # Debug exporter for troubleshooting
+  debug:
+    verbosity: detailed
+    sampling_initial: 2
+    sampling_thereafter: 500
+
+  # Prometheus exporter (optional)
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: "mysql"
+    const_labels:
+      environment: "production"
+
+service:
+  # Extensions
+  extensions: []
+  
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      address: 0.0.0.0:8888
+  
+  # Pipeline configuration
+  pipelines:
+    metrics:
+      receivers:
+        - newrelicmysql
+      processors:
+        - resource
+        - batch
+      exporters:
+        - newrelic
+        # - debug      # Uncomment for debugging
+        # - prometheus # Uncomment to expose Prometheus metrics
