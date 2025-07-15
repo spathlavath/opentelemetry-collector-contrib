@@ -1,0 +1,466 @@
+type: newrelicmysql
+
+status:
+  class: receiver
+  stability:
+    beta: [metrics]
+  distributions: [contrib]
+  codeowners:
+    active: [spathlavath]
+
+resource_attributes:
+  mysql.instance.endpoint:
+    description: Endpoint of the MySQL instance.
+    enabled: true
+    type: string
+  mysql.instance.version:
+    description: Version of the MySQL instance.
+    enabled: true
+    type: string
+
+attributes:
+  # Core MySQL attributes
+  buffer_pool_pages:
+    name_override: kind
+    description: The buffer pool pages types.
+    type: string
+    enum: [data, free, misc]
+  buffer_pool_data:
+    name_override: status
+    description: The status of buffer pool data.
+    type: string
+    enum: [dirty, clean]
+  buffer_pool_operations:
+    name_override: operation
+    description: The buffer pool operations types.
+    type: string
+    enum: [read_ahead_rnd, read_ahead, read_ahead_evicted, read_requests, reads, wait_free, write_requests]
+  command:
+    description: The command types.
+    type: string
+    enum: [delete, delete_multi, insert, select, update, update_multi]
+  connection_error:
+    name_override: error
+    description: The connection error type.
+    type: string
+    enum: [accept, internal, max_connections, peer_address, select, tcpwrap, aborted, aborted_clients, locked]
+  handler:
+    name_override: kind
+    description: The handler types.
+    type: string
+    enum: [commit, delete, discover, external_lock, mrr_init, prepare, read_first, read_key, read_last, read_next, read_prev, read_rnd, read_rnd_next, rollback, savepoint, savepoint_rollback, update, write]
+  
+  # New Relic specific attributes
+  query_digest:
+    description: SHA-256 hash of the normalized query.
+    type: string
+  query_type:
+    description: Type of SQL query.
+    type: string
+    enum: [select, insert, update, delete, create, drop, alter, show, set, begin, commit, rollback]
+  wait_event_type:
+    description: Type of wait event.
+    type: string
+    enum: [io, lock, cpu, network, memory, other]
+  wait_event:
+    description: Specific wait event name.
+    type: string
+  blocking_session_id:
+    description: ID of the session causing a block.
+    type: string
+  blocked_session_id:
+    description: ID of the blocked session.
+    type: string
+  schema_name:
+    description: Database schema name.
+    type: string
+  table_name:
+    description: Database table name.
+    type: string
+  index_name:
+    description: Database index name.
+    type: string
+
+metrics:
+  # Core MySQL metrics (enhanced from standard receiver)
+  mysql.buffer_pool.data_pages:
+    enabled: true
+    description: The number of data pages in the InnoDB buffer pool.
+    unit: "1"
+    sum:
+      monotonic: false
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [buffer_pool_data]
+
+  mysql.buffer_pool.limit:
+    enabled: true
+    description: The configured size of the InnoDB buffer pool.
+    unit: By
+    gauge:
+      value_type: int
+
+  mysql.buffer_pool.operations:
+    enabled: true
+    description: The number of operations on the InnoDB buffer pool.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [buffer_pool_operations]
+
+  mysql.buffer_pool.pages:
+    enabled: true
+    description: The number of pages in the InnoDB buffer pool.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [buffer_pool_pages]
+
+  mysql.buffer_pool.usage:
+    enabled: true
+    description: The number of bytes in the InnoDB buffer pool.
+    unit: By
+    sum:
+      monotonic: false
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [buffer_pool_data]
+
+  mysql.commands:
+    enabled: true
+    description: The number of times each type of command has been executed.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [command]
+
+  mysql.handlers:
+    enabled: true
+    description: The number of requests to various MySQL handlers.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [handler]
+
+  mysql.connection.count:
+    enabled: true
+    description: The number of connection attempts to the MySQL server.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.connection.errors:
+    enabled: true
+    description: The number of failed connections to the MySQL server.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [connection_error]
+
+  # New Relic Enhanced Query Performance Metrics
+  mysql.query.execution_count:
+    enabled: true
+    description: Number of times a query has been executed.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [query_digest, query_type, schema_name]
+
+  mysql.query.total_time:
+    enabled: true
+    description: Total time spent executing queries of this type.
+    unit: ms
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+    attributes: [query_digest, query_type, schema_name]
+
+  mysql.query.min_time:
+    enabled: true
+    description: Minimum execution time for this query type.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [query_digest, query_type, schema_name]
+
+  mysql.query.max_time:
+    enabled: true
+    description: Maximum execution time for this query type.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [query_digest, query_type, schema_name]
+
+  mysql.query.avg_time:
+    enabled: true
+    description: Average execution time for this query type.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [query_digest, query_type, schema_name]
+
+  mysql.query.lock_time:
+    enabled: true
+    description: Total time spent waiting for locks for this query type.
+    unit: ms
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+    attributes: [query_digest, query_type, schema_name]
+
+  mysql.query.rows_sent:
+    enabled: true
+    description: Total number of rows sent by this query type.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [query_digest, query_type, schema_name]
+
+  mysql.query.rows_examined:
+    enabled: true
+    description: Total number of rows examined by this query type.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [query_digest, query_type, schema_name]
+
+  # InnoDB Enhanced Metrics
+  mysql.innodb.buffer_pool_read_requests:
+    enabled: true
+    description: Number of logical read requests to the InnoDB buffer pool.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.innodb.buffer_pool_reads:
+    enabled: true
+    description: Number of reads that InnoDB could not satisfy from the buffer pool.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.innodb.buffer_pool_write_requests:
+    enabled: true
+    description: Number of writes done to the InnoDB buffer pool.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.innodb.data_reads:
+    enabled: true
+    description: Number of data reads by InnoDB.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.innodb.data_writes:
+    enabled: true
+    description: Number of data writes by InnoDB.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.innodb.data_read:
+    enabled: true
+    description: Amount of data read by InnoDB.
+    unit: By
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.innodb.data_written:
+    enabled: true
+    description: Amount of data written by InnoDB.
+    unit: By
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  # Wait Events Metrics
+  mysql.wait_events.total_time:
+    enabled: true
+    description: Total time spent waiting for events.
+    unit: ms
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+    attributes: [wait_event_type, wait_event]
+
+  mysql.wait_events.count:
+    enabled: true
+    description: Number of wait events.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [wait_event_type, wait_event]
+
+  # Blocking Sessions Metrics
+  mysql.blocking_sessions.count:
+    enabled: true
+    description: Number of blocking sessions.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [blocking_session_id]
+
+  mysql.blocked_sessions.count:
+    enabled: true
+    description: Number of blocked sessions.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [blocked_session_id]
+
+  mysql.blocked_sessions.wait_time:
+    enabled: true
+    description: Time blocked sessions have been waiting.
+    unit: s
+    gauge:
+      value_type: double
+    attributes: [blocked_session_id, blocking_session_id]
+
+  # Table I/O Metrics (Enhanced)
+  mysql.table_io.wait_time:
+    enabled: true
+    description: Total time spent waiting for table I/O operations.
+    unit: ms
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+    attributes: [schema_name, table_name]
+
+  mysql.table_io.operations:
+    enabled: true
+    description: Number of table I/O operations.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [schema_name, table_name]
+
+  # Index I/O Metrics (Enhanced)
+  mysql.index_io.wait_time:
+    enabled: true
+    description: Total time spent waiting for index I/O operations.
+    unit: ms
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+    attributes: [schema_name, table_name, index_name]
+
+  mysql.index_io.operations:
+    enabled: true
+    description: Number of index I/O operations.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [schema_name, table_name, index_name]
+
+  # Replication Metrics
+  mysql.slave_lag:
+    enabled: true
+    description: Number of seconds that the replica must lag the source.
+    unit: s
+    gauge:
+      value_type: int
+
+  mysql.slave_sql_running:
+    enabled: true
+    description: Whether the SQL thread is running on the replica.
+    unit: "1"
+    gauge:
+      value_type: int
+
+  mysql.slave_io_running:
+    enabled: true
+    description: Whether the I/O thread is running on the replica.
+    unit: "1"
+    gauge:
+      value_type: int
+
+  # Performance Schema Metrics
+  mysql.performance_schema.events_statements_total:
+    enabled: true
+    description: Total number of statement events.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+    attributes: [query_digest, query_type]
+
+  mysql.performance_schema.events_statements_time:
+    enabled: true
+    description: Total time of statement events.
+    unit: ms
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+    attributes: [query_digest, query_type]
+
+  # Slow Query Log Metrics
+  mysql.slow_queries.count:
+    enabled: true
+    description: Number of slow queries.
+    unit: "1"
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: int
+
+  mysql.slow_queries.total_time:
+    enabled: true
+    description: Total time spent on slow queries.
+    unit: ms
+    sum:
+      monotonic: true
+      aggregation_temporality: cumulative
+      value_type: double
+
+tests:
+  config:
+    endpoint: localhost:3306
+    username: root
+    password: root
+    database: mysql
+    tls:
+      insecure: true

@@ -1,0 +1,195 @@
+default:
+all_set:
+  metrics:
+    mysql.blocked_sessions.count:
+      enabled: true
+    mysql.blocked_sessions.wait_time:
+      enabled: true
+    mysql.blocking_sessions.count:
+      enabled: true
+    mysql.buffer_pool.data_pages:
+      enabled: true
+    mysql.buffer_pool.limit:
+      enabled: true
+    mysql.buffer_pool.operations:
+      enabled: true
+    mysql.buffer_pool.pages:
+      enabled: true
+    mysql.buffer_pool.usage:
+      enabled: true
+    mysql.commands:
+      enabled: true
+    mysql.connection.count:
+      enabled: true
+    mysql.connection.errors:
+      enabled: true
+    mysql.handlers:
+      enabled: true
+    mysql.index_io.operations:
+      enabled: true
+    mysql.index_io.wait_time:
+      enabled: true
+    mysql.innodb.buffer_pool_read_requests:
+      enabled: true
+    mysql.innodb.buffer_pool_reads:
+      enabled: true
+    mysql.innodb.buffer_pool_write_requests:
+      enabled: true
+    mysql.innodb.data_read:
+      enabled: true
+    mysql.innodb.data_reads:
+      enabled: true
+    mysql.innodb.data_writes:
+      enabled: true
+    mysql.innodb.data_written:
+      enabled: true
+    mysql.performance_schema.events_statements_time:
+      enabled: true
+    mysql.performance_schema.events_statements_total:
+      enabled: true
+    mysql.query.avg_time:
+      enabled: true
+    mysql.query.execution_count:
+      enabled: true
+    mysql.query.lock_time:
+      enabled: true
+    mysql.query.max_time:
+      enabled: true
+    mysql.query.min_time:
+      enabled: true
+    mysql.query.rows_examined:
+      enabled: true
+    mysql.query.rows_sent:
+      enabled: true
+    mysql.query.total_time:
+      enabled: true
+    mysql.slave_io_running:
+      enabled: true
+    mysql.slave_lag:
+      enabled: true
+    mysql.slave_sql_running:
+      enabled: true
+    mysql.slow_queries.count:
+      enabled: true
+    mysql.slow_queries.total_time:
+      enabled: true
+    mysql.table_io.operations:
+      enabled: true
+    mysql.table_io.wait_time:
+      enabled: true
+    mysql.wait_events.count:
+      enabled: true
+    mysql.wait_events.total_time:
+      enabled: true
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: true
+    mysql.instance.version:
+      enabled: true
+none_set:
+  metrics:
+    mysql.blocked_sessions.count:
+      enabled: false
+    mysql.blocked_sessions.wait_time:
+      enabled: false
+    mysql.blocking_sessions.count:
+      enabled: false
+    mysql.buffer_pool.data_pages:
+      enabled: false
+    mysql.buffer_pool.limit:
+      enabled: false
+    mysql.buffer_pool.operations:
+      enabled: false
+    mysql.buffer_pool.pages:
+      enabled: false
+    mysql.buffer_pool.usage:
+      enabled: false
+    mysql.commands:
+      enabled: false
+    mysql.connection.count:
+      enabled: false
+    mysql.connection.errors:
+      enabled: false
+    mysql.handlers:
+      enabled: false
+    mysql.index_io.operations:
+      enabled: false
+    mysql.index_io.wait_time:
+      enabled: false
+    mysql.innodb.buffer_pool_read_requests:
+      enabled: false
+    mysql.innodb.buffer_pool_reads:
+      enabled: false
+    mysql.innodb.buffer_pool_write_requests:
+      enabled: false
+    mysql.innodb.data_read:
+      enabled: false
+    mysql.innodb.data_reads:
+      enabled: false
+    mysql.innodb.data_writes:
+      enabled: false
+    mysql.innodb.data_written:
+      enabled: false
+    mysql.performance_schema.events_statements_time:
+      enabled: false
+    mysql.performance_schema.events_statements_total:
+      enabled: false
+    mysql.query.avg_time:
+      enabled: false
+    mysql.query.execution_count:
+      enabled: false
+    mysql.query.lock_time:
+      enabled: false
+    mysql.query.max_time:
+      enabled: false
+    mysql.query.min_time:
+      enabled: false
+    mysql.query.rows_examined:
+      enabled: false
+    mysql.query.rows_sent:
+      enabled: false
+    mysql.query.total_time:
+      enabled: false
+    mysql.slave_io_running:
+      enabled: false
+    mysql.slave_lag:
+      enabled: false
+    mysql.slave_sql_running:
+      enabled: false
+    mysql.slow_queries.count:
+      enabled: false
+    mysql.slow_queries.total_time:
+      enabled: false
+    mysql.table_io.operations:
+      enabled: false
+    mysql.table_io.wait_time:
+      enabled: false
+    mysql.wait_events.count:
+      enabled: false
+    mysql.wait_events.total_time:
+      enabled: false
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: false
+    mysql.instance.version:
+      enabled: false
+filter_set_include:
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+    mysql.instance.version:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+filter_set_exclude:
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: true
+      metrics_exclude:
+        - strict: "mysql.instance.endpoint-val"
+    mysql.instance.version:
+      enabled: true
+      metrics_exclude:
+        - strict: "mysql.instance.version-val"
