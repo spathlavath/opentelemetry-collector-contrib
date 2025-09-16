@@ -13,8 +13,20 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	OracledbBackgroundCheckpointsCompleted: metricInfo{
+		Name: "oracledb.background_checkpoints_completed",
+	},
+	OracledbBackgroundCPUUsage: metricInfo{
+		Name: "oracledb.background_cpu_usage",
+	},
+	OracledbBufferBusyWaits: metricInfo{
+		Name: "oracledb.buffer_busy_waits",
+	},
 	OracledbBufferCacheHitRatio: metricInfo{
 		Name: "oracledb.buffer_cache_hit_ratio",
+	},
+	OracledbBufferCacheSize: metricInfo{
+		Name: "oracledb.buffer_cache_size",
 	},
 	OracledbConsistentGets: metricInfo{
 		Name: "oracledb.consistent_gets",
@@ -22,11 +34,38 @@ var MetricsInfo = metricsInfo{
 	OracledbCPUTime: metricInfo{
 		Name: "oracledb.cpu_time",
 	},
+	OracledbCPUUsagePercentage: metricInfo{
+		Name: "oracledb.cpu_usage_percentage",
+	},
+	OracledbDatabaseCPUTimeRatio: metricInfo{
+		Name: "oracledb.database_cpu_time_ratio",
+	},
+	OracledbDatabaseWaitTimeRatio: metricInfo{
+		Name: "oracledb.database_wait_time_ratio",
+	},
 	OracledbDbBlockGets: metricInfo{
 		Name: "oracledb.db_block_gets",
 	},
 	OracledbDdlStatementsParallelized: metricInfo{
 		Name: "oracledb.ddl_statements_parallelized",
+	},
+	OracledbDiskFree: metricInfo{
+		Name: "oracledb.disk_free",
+	},
+	OracledbDiskReads: metricInfo{
+		Name: "oracledb.disk_reads",
+	},
+	OracledbDiskTotal: metricInfo{
+		Name: "oracledb.disk_total",
+	},
+	OracledbDiskUsed: metricInfo{
+		Name: "oracledb.disk_used",
+	},
+	OracledbDiskUtilization: metricInfo{
+		Name: "oracledb.disk_utilization",
+	},
+	OracledbDiskWrites: metricInfo{
+		Name: "oracledb.disk_writes",
 	},
 	OracledbDmlLocksLimit: metricInfo{
 		Name: "oracledb.dml_locks_limit",
@@ -36,6 +75,9 @@ var MetricsInfo = metricsInfo{
 	},
 	OracledbDmlStatementsParallelized: metricInfo{
 		Name: "oracledb.dml_statements_parallelized",
+	},
+	OracledbElapsedTime: metricInfo{
+		Name: "oracledb.elapsed_time",
 	},
 	OracledbEnqueueDeadlocks: metricInfo{
 		Name: "oracledb.enqueue_deadlocks",
@@ -55,20 +97,74 @@ var MetricsInfo = metricsInfo{
 	OracledbExchangeDeadlocks: metricInfo{
 		Name: "oracledb.exchange_deadlocks",
 	},
+	OracledbExecutionCount: metricInfo{
+		Name: "oracledb.execution_count",
+	},
 	OracledbExecutions: metricInfo{
 		Name: "oracledb.executions",
+	},
+	OracledbFailedConnections: metricInfo{
+		Name: "oracledb.failed_connections",
+	},
+	OracledbFileIoWaitTime: metricInfo{
+		Name: "oracledb.file_io_wait_time",
+	},
+	OracledbGcCrBlocksReceived: metricInfo{
+		Name: "oracledb.gc_cr_blocks_received",
+	},
+	OracledbGcCurrentBlocksReceived: metricInfo{
+		Name: "oracledb.gc_current_blocks_received",
 	},
 	OracledbHardParses: metricInfo{
 		Name: "oracledb.hard_parses",
 	},
+	OracledbIndexFastFullScans: metricInfo{
+		Name: "oracledb.index_fast_full_scans",
+	},
+	OracledbIndexRangeScans: metricInfo{
+		Name: "oracledb.index_range_scans",
+	},
+	OracledbLeafNodeSplits: metricInfo{
+		Name: "oracledb.leaf_node_splits",
+	},
 	OracledbLibraryCacheHitRatio: metricInfo{
 		Name: "oracledb.library_cache_hit_ratio",
+	},
+	OracledbLibraryCacheLockWaits: metricInfo{
+		Name: "oracledb.library_cache_lock_waits",
+	},
+	OracledbLibraryCachePinWaits: metricInfo{
+		Name: "oracledb.library_cache_pin_waits",
+	},
+	OracledbLockMemory: metricInfo{
+		Name: "oracledb.lock_memory",
+	},
+	OracledbLogFileSyncWaits: metricInfo{
+		Name: "oracledb.log_file_sync_waits",
 	},
 	OracledbLogicalReads: metricInfo{
 		Name: "oracledb.logical_reads",
 	},
 	OracledbLogons: metricInfo{
 		Name: "oracledb.logons",
+	},
+	OracledbNetworkBytesReceived: metricInfo{
+		Name: "oracledb.network_bytes_received",
+	},
+	OracledbNetworkBytesSent: metricInfo{
+		Name: "oracledb.network_bytes_sent",
+	},
+	OracledbNetworkPacketsReceived: metricInfo{
+		Name: "oracledb.network_packets_received",
+	},
+	OracledbNetworkPacketsSent: metricInfo{
+		Name: "oracledb.network_packets_sent",
+	},
+	OracledbNetworkTrafficVolume: metricInfo{
+		Name: "oracledb.network_traffic_volume",
+	},
+	OracledbOsLoad: metricInfo{
+		Name: "oracledb.os_load",
 	},
 	OracledbParallelOperationsDowngraded1To25Pct: metricInfo{
 		Name: "oracledb.parallel_operations_downgraded_1_to_25_pct",
@@ -91,17 +187,29 @@ var MetricsInfo = metricsInfo{
 	OracledbParseCalls: metricInfo{
 		Name: "oracledb.parse_calls",
 	},
+	OracledbPgaAggregateLimit: metricInfo{
+		Name: "oracledb.pga_aggregate_limit",
+	},
+	OracledbPgaAggregateTarget: metricInfo{
+		Name: "oracledb.pga_aggregate_target",
+	},
 	OracledbPgaAllocatedMemory: metricInfo{
 		Name: "oracledb.pga_allocated_memory",
 	},
 	OracledbPgaFreeableMemory: metricInfo{
 		Name: "oracledb.pga_freeable_memory",
 	},
+	OracledbPgaGlobalMemoryBound: metricInfo{
+		Name: "oracledb.pga_global_memory_bound",
+	},
 	OracledbPgaMaximumMemory: metricInfo{
 		Name: "oracledb.pga_maximum_memory",
 	},
 	OracledbPgaMemory: metricInfo{
 		Name: "oracledb.pga_memory",
+	},
+	OracledbPgaOverAllocationCount: metricInfo{
+		Name: "oracledb.pga_over_allocation_count",
 	},
 	OracledbPgaUsedMemory: metricInfo{
 		Name: "oracledb.pga_used_memory",
@@ -130,6 +238,9 @@ var MetricsInfo = metricsInfo{
 	OracledbPhysicalWritesDirect: metricInfo{
 		Name: "oracledb.physical_writes_direct",
 	},
+	OracledbPinnedBuffers: metricInfo{
+		Name: "oracledb.pinned_buffers",
+	},
 	OracledbProcessesLimit: metricInfo{
 		Name: "oracledb.processes_limit",
 	},
@@ -139,11 +250,83 @@ var MetricsInfo = metricsInfo{
 	OracledbQueriesParallelized: metricInfo{
 		Name: "oracledb.queries_parallelized",
 	},
+	OracledbQueryAvgActiveSessions: metricInfo{
+		Name: "oracledb.query_avg_active_sessions",
+	},
+	OracledbQueryAvgBufferGets: metricInfo{
+		Name: "oracledb.query_avg_buffer_gets",
+	},
+	OracledbQueryAvgCPUTime: metricInfo{
+		Name: "oracledb.query_avg_cpu_time",
+	},
+	OracledbQueryAvgDiskReads: metricInfo{
+		Name: "oracledb.query_avg_disk_reads",
+	},
+	OracledbQueryAvgElapsedTime: metricInfo{
+		Name: "oracledb.query_avg_elapsed_time",
+	},
+	OracledbQueryAvgExecutionTime: metricInfo{
+		Name: "oracledb.query_avg_execution_time",
+	},
+	OracledbQueryAvgExecutionsPerSec: metricInfo{
+		Name: "oracledb.query_avg_executions_per_sec",
+	},
+	OracledbQueryAvgRowsProcessed: metricInfo{
+		Name: "oracledb.query_avg_rows_processed",
+	},
+	OracledbQueryBlockedSessions: metricInfo{
+		Name: "oracledb.query_blocked_sessions",
+	},
+	OracledbQueryBufferGetsPerExecution: metricInfo{
+		Name: "oracledb.query_buffer_gets_per_execution",
+	},
+	OracledbQueryCPUTimePerExecution: metricInfo{
+		Name: "oracledb.query_cpu_time_per_execution",
+	},
+	OracledbQueryDiskReadsPerExecution: metricInfo{
+		Name: "oracledb.query_disk_reads_per_execution",
+	},
+	OracledbQueryElapsedTimePerExecution: metricInfo{
+		Name: "oracledb.query_elapsed_time_per_execution",
+	},
+	OracledbQueryExecutionsDelta: metricInfo{
+		Name: "oracledb.query_executions_delta",
+	},
+	OracledbQueryLongRunningQueries: metricInfo{
+		Name: "oracledb.query_long_running_queries",
+	},
+	OracledbQueryRowsProcessedPerExecution: metricInfo{
+		Name: "oracledb.query_rows_processed_per_execution",
+	},
+	OracledbQueryTotalBufferGets: metricInfo{
+		Name: "oracledb.query_total_buffer_gets",
+	},
+	OracledbQueryTotalCPUTime: metricInfo{
+		Name: "oracledb.query_total_cpu_time",
+	},
+	OracledbQueryTotalDiskReads: metricInfo{
+		Name: "oracledb.query_total_disk_reads",
+	},
+	OracledbQueryTotalElapsedTime: metricInfo{
+		Name: "oracledb.query_total_elapsed_time",
+	},
+	OracledbQueryTotalExecutions: metricInfo{
+		Name: "oracledb.query_total_executions",
+	},
+	OracledbQueryTotalRowsProcessed: metricInfo{
+		Name: "oracledb.query_total_rows_processed",
+	},
 	OracledbRedoSize: metricInfo{
 		Name: "oracledb.redo_size",
 	},
+	OracledbResponseTimePerTransaction: metricInfo{
+		Name: "oracledb.response_time_per_transaction",
+	},
 	OracledbRowCacheHitRatio: metricInfo{
 		Name: "oracledb.row_cache_hit_ratio",
+	},
+	OracledbRowsFetched: metricInfo{
+		Name: "oracledb.rows_fetched",
 	},
 	OracledbSessions: metricInfo{
 		Name: "oracledb.sessions",
@@ -151,14 +334,128 @@ var MetricsInfo = metricsInfo{
 	OracledbSessionsLimit: metricInfo{
 		Name: "oracledb.sessions_limit",
 	},
+	OracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads: metricInfo{
+		Name: "oracledb.sga_buffer_cache_advisory_estimated_physical_reads",
+	},
+	OracledbSgaBufferCacheAdvisorySizeFactor: metricInfo{
+		Name: "oracledb.sga_buffer_cache_advisory_size_factor",
+	},
+	OracledbSgaBufferCacheAdvisorySizeForEstimate: metricInfo{
+		Name: "oracledb.sga_buffer_cache_advisory_size_for_estimate",
+	},
+	OracledbSgaBufferCacheSize: metricInfo{
+		Name: "oracledb.sga_buffer_cache_size",
+	},
+	OracledbSgaDataBufferCacheSize: metricInfo{
+		Name: "oracledb.sga_data_buffer_cache_size",
+	},
+	OracledbSgaDatabaseBufferCache: metricInfo{
+		Name: "oracledb.sga_database_buffer_cache",
+	},
+	OracledbSgaDefaultBufferPoolSize: metricInfo{
+		Name: "oracledb.sga_default_buffer_pool_size",
+	},
+	OracledbSgaFixedBufferCacheSize: metricInfo{
+		Name: "oracledb.sga_fixed_buffer_cache_size",
+	},
 	OracledbSgaFixedSize: metricInfo{
 		Name: "oracledb.sga_fixed_size",
+	},
+	OracledbSgaJavaPoolSize: metricInfo{
+		Name: "oracledb.sga_java_pool_size",
+	},
+	OracledbSgaKeepBufferPoolSize: metricInfo{
+		Name: "oracledb.sga_keep_buffer_pool_size",
+	},
+	OracledbSgaLargePoolSize: metricInfo{
+		Name: "oracledb.sga_large_pool_size",
+	},
+	OracledbSgaLogBuffer: metricInfo{
+		Name: "oracledb.sga_log_buffer",
+	},
+	OracledbSgaMaximumSize: metricInfo{
+		Name: "oracledb.sga_maximum_size",
+	},
+	OracledbSgaRecycleBufferPoolSize: metricInfo{
+		Name: "oracledb.sga_recycle_buffer_pool_size",
+	},
+	OracledbSgaRedoBuffers: metricInfo{
+		Name: "oracledb.sga_redo_buffers",
+	},
+	OracledbSgaReservedSharedPoolSize: metricInfo{
+		Name: "oracledb.sga_reserved_shared_pool_size",
+	},
+	OracledbSgaSharedIoPoolSize: metricInfo{
+		Name: "oracledb.sga_shared_io_pool_size",
+	},
+	OracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved: metricInfo{
+		Name: "oracledb.sga_shared_pool_advisory_estimated_parse_time_saved",
+	},
+	OracledbSgaSharedPoolAdvisorySizeFactor: metricInfo{
+		Name: "oracledb.sga_shared_pool_advisory_size_factor",
+	},
+	OracledbSgaSharedPoolAdvisorySizeForEstimate: metricInfo{
+		Name: "oracledb.sga_shared_pool_advisory_size_for_estimate",
+	},
+	OracledbSgaSharedPoolFreeMemory: metricInfo{
+		Name: "oracledb.sga_shared_pool_free_memory",
+	},
+	OracledbSgaSharedPoolReservedFreeMemory: metricInfo{
+		Name: "oracledb.sga_shared_pool_reserved_free_memory",
+	},
+	OracledbSgaSharedPoolReservedUsedMemory: metricInfo{
+		Name: "oracledb.sga_shared_pool_reserved_used_memory",
+	},
+	OracledbSgaSharedPoolUsedMemory: metricInfo{
+		Name: "oracledb.sga_shared_pool_used_memory",
+	},
+	OracledbSgaSize: metricInfo{
+		Name: "oracledb.sga_size",
+	},
+	OracledbSgaStreamsPoolSize: metricInfo{
+		Name: "oracledb.sga_streams_pool_size",
 	},
 	OracledbSharedPoolFree: metricInfo{
 		Name: "oracledb.shared_pool_free",
 	},
+	OracledbSharedPoolReservedSize: metricInfo{
+		Name: "oracledb.shared_pool_reserved_size",
+	},
+	OracledbSharedPoolSize: metricInfo{
+		Name: "oracledb.shared_pool_size",
+	},
+	OracledbSortSegmentSize: metricInfo{
+		Name: "oracledb.sort_segment_size",
+	},
+	OracledbSQLAreaEvicted: metricInfo{
+		Name: "oracledb.sql_area_evicted",
+	},
+	OracledbTableFetchByRowid: metricInfo{
+		Name: "oracledb.table_fetch_by_rowid",
+	},
+	OracledbTableScansLong: metricInfo{
+		Name: "oracledb.table_scans_long",
+	},
+	OracledbTableScansShort: metricInfo{
+		Name: "oracledb.table_scans_short",
+	},
+	OracledbTablespaceDatafileSize: metricInfo{
+		Name: "oracledb.tablespace_datafile_size",
+	},
+	OracledbTablespaceFreeSpace: metricInfo{
+		Name: "oracledb.tablespace_free_space",
+	},
+	OracledbTablespaceLargestFreeSpace: metricInfo{
+		Name: "oracledb.tablespace_largest_free_space",
+	},
+	OracledbTablespaceNumberOfDatafiles: metricInfo{
+		Name: "oracledb.tablespace_number_of_datafiles",
+	},
 	OracledbTablespaceOffline: metricInfo{
 		Name: "oracledb.tablespace_offline",
+	},
+	OracledbTablespacePercentUsed: metricInfo{
+		Name: "oracledb.tablespace_percent_used",
 	},
 	OracledbTablespaceSizeLimit: metricInfo{
 		Name: "oracledb.tablespace_size_limit",
@@ -166,8 +463,23 @@ var MetricsInfo = metricsInfo{
 	OracledbTablespaceSizeUsage: metricInfo{
 		Name: "oracledb.tablespace_size_usage",
 	},
+	OracledbTablespaceStatus: metricInfo{
+		Name: "oracledb.tablespace_status",
+	},
+	OracledbTablespaceTotalSpace: metricInfo{
+		Name: "oracledb.tablespace_total_space",
+	},
 	OracledbTablespaceUsagePercentage: metricInfo{
 		Name: "oracledb.tablespace_usage_percentage",
+	},
+	OracledbTablespaceUsedSpace: metricInfo{
+		Name: "oracledb.tablespace_used_space",
+	},
+	OracledbTempSpaceAllocated: metricInfo{
+		Name: "oracledb.temp_space_allocated",
+	},
+	OracledbTotalSessionsCreated: metricInfo{
+		Name: "oracledb.total_sessions_created",
 	},
 	OracledbTransactionsLimit: metricInfo{
 		Name: "oracledb.transactions_limit",
@@ -190,68 +502,325 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
-	OracledbBufferCacheHitRatio                   metricInfo
-	OracledbConsistentGets                        metricInfo
-	OracledbCPUTime                               metricInfo
-	OracledbDbBlockGets                           metricInfo
-	OracledbDdlStatementsParallelized             metricInfo
-	OracledbDmlLocksLimit                         metricInfo
-	OracledbDmlLocksUsage                         metricInfo
-	OracledbDmlStatementsParallelized             metricInfo
-	OracledbEnqueueDeadlocks                      metricInfo
-	OracledbEnqueueLocksLimit                     metricInfo
-	OracledbEnqueueLocksUsage                     metricInfo
-	OracledbEnqueueResourcesLimit                 metricInfo
-	OracledbEnqueueResourcesUsage                 metricInfo
-	OracledbExchangeDeadlocks                     metricInfo
-	OracledbExecutions                            metricInfo
-	OracledbHardParses                            metricInfo
-	OracledbLibraryCacheHitRatio                  metricInfo
-	OracledbLogicalReads                          metricInfo
-	OracledbLogons                                metricInfo
-	OracledbParallelOperationsDowngraded1To25Pct  metricInfo
-	OracledbParallelOperationsDowngraded25To50Pct metricInfo
-	OracledbParallelOperationsDowngraded50To75Pct metricInfo
-	OracledbParallelOperationsDowngraded75To99Pct metricInfo
-	OracledbParallelOperationsDowngradedToSerial  metricInfo
-	OracledbParallelOperationsNotDowngraded       metricInfo
-	OracledbParseCalls                            metricInfo
-	OracledbPgaAllocatedMemory                    metricInfo
-	OracledbPgaFreeableMemory                     metricInfo
-	OracledbPgaMaximumMemory                      metricInfo
-	OracledbPgaMemory                             metricInfo
-	OracledbPgaUsedMemory                         metricInfo
-	OracledbPhysicalReadBytes                     metricInfo
-	OracledbPhysicalReadIoRequests                metricInfo
-	OracledbPhysicalReads                         metricInfo
-	OracledbPhysicalReadsDirect                   metricInfo
-	OracledbPhysicalWriteBytes                    metricInfo
-	OracledbPhysicalWriteIoRequests               metricInfo
-	OracledbPhysicalWrites                        metricInfo
-	OracledbPhysicalWritesDirect                  metricInfo
-	OracledbProcessesLimit                        metricInfo
-	OracledbProcessesUsage                        metricInfo
-	OracledbQueriesParallelized                   metricInfo
-	OracledbRedoSize                              metricInfo
-	OracledbRowCacheHitRatio                      metricInfo
-	OracledbSessions                              metricInfo
-	OracledbSessionsLimit                         metricInfo
-	OracledbSgaFixedSize                          metricInfo
-	OracledbSharedPoolFree                        metricInfo
-	OracledbTablespaceOffline                     metricInfo
-	OracledbTablespaceSizeLimit                   metricInfo
-	OracledbTablespaceSizeUsage                   metricInfo
-	OracledbTablespaceUsagePercentage             metricInfo
-	OracledbTransactionsLimit                     metricInfo
-	OracledbTransactionsUsage                     metricInfo
-	OracledbUserCommits                           metricInfo
-	OracledbUserRollbacks                         metricInfo
-	OracledbWaitEvents                            metricInfo
-	OracledbWaitTime                              metricInfo
+	OracledbBackgroundCheckpointsCompleted               metricInfo
+	OracledbBackgroundCPUUsage                           metricInfo
+	OracledbBufferBusyWaits                              metricInfo
+	OracledbBufferCacheHitRatio                          metricInfo
+	OracledbBufferCacheSize                              metricInfo
+	OracledbConsistentGets                               metricInfo
+	OracledbCPUTime                                      metricInfo
+	OracledbCPUUsagePercentage                           metricInfo
+	OracledbDatabaseCPUTimeRatio                         metricInfo
+	OracledbDatabaseWaitTimeRatio                        metricInfo
+	OracledbDbBlockGets                                  metricInfo
+	OracledbDdlStatementsParallelized                    metricInfo
+	OracledbDiskFree                                     metricInfo
+	OracledbDiskReads                                    metricInfo
+	OracledbDiskTotal                                    metricInfo
+	OracledbDiskUsed                                     metricInfo
+	OracledbDiskUtilization                              metricInfo
+	OracledbDiskWrites                                   metricInfo
+	OracledbDmlLocksLimit                                metricInfo
+	OracledbDmlLocksUsage                                metricInfo
+	OracledbDmlStatementsParallelized                    metricInfo
+	OracledbElapsedTime                                  metricInfo
+	OracledbEnqueueDeadlocks                             metricInfo
+	OracledbEnqueueLocksLimit                            metricInfo
+	OracledbEnqueueLocksUsage                            metricInfo
+	OracledbEnqueueResourcesLimit                        metricInfo
+	OracledbEnqueueResourcesUsage                        metricInfo
+	OracledbExchangeDeadlocks                            metricInfo
+	OracledbExecutionCount                               metricInfo
+	OracledbExecutions                                   metricInfo
+	OracledbFailedConnections                            metricInfo
+	OracledbFileIoWaitTime                               metricInfo
+	OracledbGcCrBlocksReceived                           metricInfo
+	OracledbGcCurrentBlocksReceived                      metricInfo
+	OracledbHardParses                                   metricInfo
+	OracledbIndexFastFullScans                           metricInfo
+	OracledbIndexRangeScans                              metricInfo
+	OracledbLeafNodeSplits                               metricInfo
+	OracledbLibraryCacheHitRatio                         metricInfo
+	OracledbLibraryCacheLockWaits                        metricInfo
+	OracledbLibraryCachePinWaits                         metricInfo
+	OracledbLockMemory                                   metricInfo
+	OracledbLogFileSyncWaits                             metricInfo
+	OracledbLogicalReads                                 metricInfo
+	OracledbLogons                                       metricInfo
+	OracledbNetworkBytesReceived                         metricInfo
+	OracledbNetworkBytesSent                             metricInfo
+	OracledbNetworkPacketsReceived                       metricInfo
+	OracledbNetworkPacketsSent                           metricInfo
+	OracledbNetworkTrafficVolume                         metricInfo
+	OracledbOsLoad                                       metricInfo
+	OracledbParallelOperationsDowngraded1To25Pct         metricInfo
+	OracledbParallelOperationsDowngraded25To50Pct        metricInfo
+	OracledbParallelOperationsDowngraded50To75Pct        metricInfo
+	OracledbParallelOperationsDowngraded75To99Pct        metricInfo
+	OracledbParallelOperationsDowngradedToSerial         metricInfo
+	OracledbParallelOperationsNotDowngraded              metricInfo
+	OracledbParseCalls                                   metricInfo
+	OracledbPgaAggregateLimit                            metricInfo
+	OracledbPgaAggregateTarget                           metricInfo
+	OracledbPgaAllocatedMemory                           metricInfo
+	OracledbPgaFreeableMemory                            metricInfo
+	OracledbPgaGlobalMemoryBound                         metricInfo
+	OracledbPgaMaximumMemory                             metricInfo
+	OracledbPgaMemory                                    metricInfo
+	OracledbPgaOverAllocationCount                       metricInfo
+	OracledbPgaUsedMemory                                metricInfo
+	OracledbPhysicalReadBytes                            metricInfo
+	OracledbPhysicalReadIoRequests                       metricInfo
+	OracledbPhysicalReads                                metricInfo
+	OracledbPhysicalReadsDirect                          metricInfo
+	OracledbPhysicalWriteBytes                           metricInfo
+	OracledbPhysicalWriteIoRequests                      metricInfo
+	OracledbPhysicalWrites                               metricInfo
+	OracledbPhysicalWritesDirect                         metricInfo
+	OracledbPinnedBuffers                                metricInfo
+	OracledbProcessesLimit                               metricInfo
+	OracledbProcessesUsage                               metricInfo
+	OracledbQueriesParallelized                          metricInfo
+	OracledbQueryAvgActiveSessions                       metricInfo
+	OracledbQueryAvgBufferGets                           metricInfo
+	OracledbQueryAvgCPUTime                              metricInfo
+	OracledbQueryAvgDiskReads                            metricInfo
+	OracledbQueryAvgElapsedTime                          metricInfo
+	OracledbQueryAvgExecutionTime                        metricInfo
+	OracledbQueryAvgExecutionsPerSec                     metricInfo
+	OracledbQueryAvgRowsProcessed                        metricInfo
+	OracledbQueryBlockedSessions                         metricInfo
+	OracledbQueryBufferGetsPerExecution                  metricInfo
+	OracledbQueryCPUTimePerExecution                     metricInfo
+	OracledbQueryDiskReadsPerExecution                   metricInfo
+	OracledbQueryElapsedTimePerExecution                 metricInfo
+	OracledbQueryExecutionsDelta                         metricInfo
+	OracledbQueryLongRunningQueries                      metricInfo
+	OracledbQueryRowsProcessedPerExecution               metricInfo
+	OracledbQueryTotalBufferGets                         metricInfo
+	OracledbQueryTotalCPUTime                            metricInfo
+	OracledbQueryTotalDiskReads                          metricInfo
+	OracledbQueryTotalElapsedTime                        metricInfo
+	OracledbQueryTotalExecutions                         metricInfo
+	OracledbQueryTotalRowsProcessed                      metricInfo
+	OracledbRedoSize                                     metricInfo
+	OracledbResponseTimePerTransaction                   metricInfo
+	OracledbRowCacheHitRatio                             metricInfo
+	OracledbRowsFetched                                  metricInfo
+	OracledbSessions                                     metricInfo
+	OracledbSessionsLimit                                metricInfo
+	OracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads metricInfo
+	OracledbSgaBufferCacheAdvisorySizeFactor             metricInfo
+	OracledbSgaBufferCacheAdvisorySizeForEstimate        metricInfo
+	OracledbSgaBufferCacheSize                           metricInfo
+	OracledbSgaDataBufferCacheSize                       metricInfo
+	OracledbSgaDatabaseBufferCache                       metricInfo
+	OracledbSgaDefaultBufferPoolSize                     metricInfo
+	OracledbSgaFixedBufferCacheSize                      metricInfo
+	OracledbSgaFixedSize                                 metricInfo
+	OracledbSgaJavaPoolSize                              metricInfo
+	OracledbSgaKeepBufferPoolSize                        metricInfo
+	OracledbSgaLargePoolSize                             metricInfo
+	OracledbSgaLogBuffer                                 metricInfo
+	OracledbSgaMaximumSize                               metricInfo
+	OracledbSgaRecycleBufferPoolSize                     metricInfo
+	OracledbSgaRedoBuffers                               metricInfo
+	OracledbSgaReservedSharedPoolSize                    metricInfo
+	OracledbSgaSharedIoPoolSize                          metricInfo
+	OracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved metricInfo
+	OracledbSgaSharedPoolAdvisorySizeFactor              metricInfo
+	OracledbSgaSharedPoolAdvisorySizeForEstimate         metricInfo
+	OracledbSgaSharedPoolFreeMemory                      metricInfo
+	OracledbSgaSharedPoolReservedFreeMemory              metricInfo
+	OracledbSgaSharedPoolReservedUsedMemory              metricInfo
+	OracledbSgaSharedPoolUsedMemory                      metricInfo
+	OracledbSgaSize                                      metricInfo
+	OracledbSgaStreamsPoolSize                           metricInfo
+	OracledbSharedPoolFree                               metricInfo
+	OracledbSharedPoolReservedSize                       metricInfo
+	OracledbSharedPoolSize                               metricInfo
+	OracledbSortSegmentSize                              metricInfo
+	OracledbSQLAreaEvicted                               metricInfo
+	OracledbTableFetchByRowid                            metricInfo
+	OracledbTableScansLong                               metricInfo
+	OracledbTableScansShort                              metricInfo
+	OracledbTablespaceDatafileSize                       metricInfo
+	OracledbTablespaceFreeSpace                          metricInfo
+	OracledbTablespaceLargestFreeSpace                   metricInfo
+	OracledbTablespaceNumberOfDatafiles                  metricInfo
+	OracledbTablespaceOffline                            metricInfo
+	OracledbTablespacePercentUsed                        metricInfo
+	OracledbTablespaceSizeLimit                          metricInfo
+	OracledbTablespaceSizeUsage                          metricInfo
+	OracledbTablespaceStatus                             metricInfo
+	OracledbTablespaceTotalSpace                         metricInfo
+	OracledbTablespaceUsagePercentage                    metricInfo
+	OracledbTablespaceUsedSpace                          metricInfo
+	OracledbTempSpaceAllocated                           metricInfo
+	OracledbTotalSessionsCreated                         metricInfo
+	OracledbTransactionsLimit                            metricInfo
+	OracledbTransactionsUsage                            metricInfo
+	OracledbUserCommits                                  metricInfo
+	OracledbUserRollbacks                                metricInfo
+	OracledbWaitEvents                                   metricInfo
+	OracledbWaitTime                                     metricInfo
 }
 
 type metricInfo struct {
 	Name string
+}
+
+type metricOracledbBackgroundCheckpointsCompleted struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.background_checkpoints_completed metric with initial data.
+func (m *metricOracledbBackgroundCheckpointsCompleted) init() {
+	m.data.SetName("oracledb.background_checkpoints_completed")
+	m.data.SetDescription("Number of background checkpoints completed")
+	m.data.SetUnit("{checkpoints}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbBackgroundCheckpointsCompleted) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbBackgroundCheckpointsCompleted) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbBackgroundCheckpointsCompleted) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbBackgroundCheckpointsCompleted(cfg MetricConfig) metricOracledbBackgroundCheckpointsCompleted {
+	m := metricOracledbBackgroundCheckpointsCompleted{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbBackgroundCPUUsage struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.background_cpu_usage metric with initial data.
+func (m *metricOracledbBackgroundCPUUsage) init() {
+	m.data.SetName("oracledb.background_cpu_usage")
+	m.data.SetDescription("CPU time used by background processes")
+	m.data.SetUnit("us")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbBackgroundCPUUsage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbBackgroundCPUUsage) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbBackgroundCPUUsage) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbBackgroundCPUUsage(cfg MetricConfig) metricOracledbBackgroundCPUUsage {
+	m := metricOracledbBackgroundCPUUsage{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbBufferBusyWaits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.buffer_busy_waits metric with initial data.
+func (m *metricOracledbBufferBusyWaits) init() {
+	m.data.SetName("oracledb.buffer_busy_waits")
+	m.data.SetDescription("Number of buffer busy wait events")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbBufferBusyWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbBufferBusyWaits) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbBufferBusyWaits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbBufferBusyWaits(cfg MetricConfig) metricOracledbBufferBusyWaits {
+	m := metricOracledbBufferBusyWaits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricOracledbBufferCacheHitRatio struct {
@@ -296,6 +865,55 @@ func (m *metricOracledbBufferCacheHitRatio) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbBufferCacheHitRatio(cfg MetricConfig) metricOracledbBufferCacheHitRatio {
 	m := metricOracledbBufferCacheHitRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbBufferCacheSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.buffer_cache_size metric with initial data.
+func (m *metricOracledbBufferCacheSize) init() {
+	m.data.SetName("oracledb.buffer_cache_size")
+	m.data.SetDescription("Size of the buffer cache in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbBufferCacheSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbBufferCacheSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbBufferCacheSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbBufferCacheSize(cfg MetricConfig) metricOracledbBufferCacheSize {
+	m := metricOracledbBufferCacheSize{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -405,6 +1023,153 @@ func newMetricOracledbCPUTime(cfg MetricConfig) metricOracledbCPUTime {
 	return m
 }
 
+type metricOracledbCPUUsagePercentage struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.cpu_usage_percentage metric with initial data.
+func (m *metricOracledbCPUUsagePercentage) init() {
+	m.data.SetName("oracledb.cpu_usage_percentage")
+	m.data.SetDescription("Database CPU usage as a percentage of total available CPU")
+	m.data.SetUnit("%")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbCPUUsagePercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbCPUUsagePercentage) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbCPUUsagePercentage) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbCPUUsagePercentage(cfg MetricConfig) metricOracledbCPUUsagePercentage {
+	m := metricOracledbCPUUsagePercentage{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDatabaseCPUTimeRatio struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.database_cpu_time_ratio metric with initial data.
+func (m *metricOracledbDatabaseCPUTimeRatio) init() {
+	m.data.SetName("oracledb.database_cpu_time_ratio")
+	m.data.SetDescription("Ratio of database CPU time to total elapsed time")
+	m.data.SetUnit("%")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbDatabaseCPUTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDatabaseCPUTimeRatio) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDatabaseCPUTimeRatio) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDatabaseCPUTimeRatio(cfg MetricConfig) metricOracledbDatabaseCPUTimeRatio {
+	m := metricOracledbDatabaseCPUTimeRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDatabaseWaitTimeRatio struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.database_wait_time_ratio metric with initial data.
+func (m *metricOracledbDatabaseWaitTimeRatio) init() {
+	m.data.SetName("oracledb.database_wait_time_ratio")
+	m.data.SetDescription("Ratio of database wait time to total elapsed time")
+	m.data.SetUnit("%")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbDatabaseWaitTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDatabaseWaitTimeRatio) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDatabaseWaitTimeRatio) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDatabaseWaitTimeRatio(cfg MetricConfig) metricOracledbDatabaseWaitTimeRatio {
+	m := metricOracledbDatabaseWaitTimeRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbDbBlockGets struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -500,6 +1265,316 @@ func (m *metricOracledbDdlStatementsParallelized) emit(metrics pmetric.MetricSli
 
 func newMetricOracledbDdlStatementsParallelized(cfg MetricConfig) metricOracledbDdlStatementsParallelized {
 	m := metricOracledbDdlStatementsParallelized{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDiskFree struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.disk_free metric with initial data.
+func (m *metricOracledbDiskFree) init() {
+	m.data.SetName("oracledb.disk_free")
+	m.data.SetDescription("Free disk space for database files")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbDiskFree) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("disk_name", diskNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDiskFree) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDiskFree) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDiskFree(cfg MetricConfig) metricOracledbDiskFree {
+	m := metricOracledbDiskFree{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDiskReads struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.disk_reads metric with initial data.
+func (m *metricOracledbDiskReads) init() {
+	m.data.SetName("oracledb.disk_reads")
+	m.data.SetDescription("Number of disk read operations")
+	m.data.SetUnit("{reads}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("disk_name", diskNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDiskReads) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDiskReads) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDiskReads(cfg MetricConfig) metricOracledbDiskReads {
+	m := metricOracledbDiskReads{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDiskTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.disk_total metric with initial data.
+func (m *metricOracledbDiskTotal) init() {
+	m.data.SetName("oracledb.disk_total")
+	m.data.SetDescription("Total disk space for database files")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbDiskTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("disk_name", diskNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDiskTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDiskTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDiskTotal(cfg MetricConfig) metricOracledbDiskTotal {
+	m := metricOracledbDiskTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDiskUsed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.disk_used metric with initial data.
+func (m *metricOracledbDiskUsed) init() {
+	m.data.SetName("oracledb.disk_used")
+	m.data.SetDescription("Used disk space for database files")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbDiskUsed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("disk_name", diskNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDiskUsed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDiskUsed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDiskUsed(cfg MetricConfig) metricOracledbDiskUsed {
+	m := metricOracledbDiskUsed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDiskUtilization struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.disk_utilization metric with initial data.
+func (m *metricOracledbDiskUtilization) init() {
+	m.data.SetName("oracledb.disk_utilization")
+	m.data.SetDescription("Disk utilization percentage")
+	m.data.SetUnit("%")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbDiskUtilization) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, diskNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("disk_name", diskNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDiskUtilization) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDiskUtilization) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDiskUtilization(cfg MetricConfig) metricOracledbDiskUtilization {
+	m := metricOracledbDiskUtilization{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbDiskWrites struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.disk_writes metric with initial data.
+func (m *metricOracledbDiskWrites) init() {
+	m.data.SetName("oracledb.disk_writes")
+	m.data.SetDescription("Number of disk write operations")
+	m.data.SetUnit("{writes}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("disk_name", diskNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbDiskWrites) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbDiskWrites) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbDiskWrites(cfg MetricConfig) metricOracledbDiskWrites {
+	m := metricOracledbDiskWrites{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -649,6 +1724,57 @@ func (m *metricOracledbDmlStatementsParallelized) emit(metrics pmetric.MetricSli
 
 func newMetricOracledbDmlStatementsParallelized(cfg MetricConfig) metricOracledbDmlStatementsParallelized {
 	m := metricOracledbDmlStatementsParallelized{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.elapsed_time metric with initial data.
+func (m *metricOracledbElapsedTime) init() {
+	m.data.SetName("oracledb.elapsed_time")
+	m.data.SetDescription("Total elapsed time for database operations")
+	m.data.SetUnit("us")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbElapsedTime) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbElapsedTime(cfg MetricConfig) metricOracledbElapsedTime {
+	m := metricOracledbElapsedTime{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -954,6 +2080,57 @@ func newMetricOracledbExchangeDeadlocks(cfg MetricConfig) metricOracledbExchange
 	return m
 }
 
+type metricOracledbExecutionCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.execution_count metric with initial data.
+func (m *metricOracledbExecutionCount) init() {
+	m.data.SetName("oracledb.execution_count")
+	m.data.SetDescription("Total number of SQL statement executions")
+	m.data.SetUnit("{executions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbExecutionCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbExecutionCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbExecutionCount(cfg MetricConfig) metricOracledbExecutionCount {
+	m := metricOracledbExecutionCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbExecutions struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -998,6 +2175,210 @@ func (m *metricOracledbExecutions) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbExecutions(cfg MetricConfig) metricOracledbExecutions {
 	m := metricOracledbExecutions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbFailedConnections struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.failed_connections metric with initial data.
+func (m *metricOracledbFailedConnections) init() {
+	m.data.SetName("oracledb.failed_connections")
+	m.data.SetDescription("Number of failed connection attempts")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbFailedConnections) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbFailedConnections) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbFailedConnections) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbFailedConnections(cfg MetricConfig) metricOracledbFailedConnections {
+	m := metricOracledbFailedConnections{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbFileIoWaitTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.file_io_wait_time metric with initial data.
+func (m *metricOracledbFileIoWaitTime) init() {
+	m.data.SetName("oracledb.file_io_wait_time")
+	m.data.SetDescription("Time spent waiting for file I/O operations")
+	m.data.SetUnit("us")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbFileIoWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbFileIoWaitTime) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbFileIoWaitTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbFileIoWaitTime(cfg MetricConfig) metricOracledbFileIoWaitTime {
+	m := metricOracledbFileIoWaitTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbGcCrBlocksReceived struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.gc_cr_blocks_received metric with initial data.
+func (m *metricOracledbGcCrBlocksReceived) init() {
+	m.data.SetName("oracledb.gc_cr_blocks_received")
+	m.data.SetDescription("Number of consistent read blocks received from remote instances")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbGcCrBlocksReceived) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbGcCrBlocksReceived) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbGcCrBlocksReceived) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbGcCrBlocksReceived(cfg MetricConfig) metricOracledbGcCrBlocksReceived {
+	m := metricOracledbGcCrBlocksReceived{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbGcCurrentBlocksReceived struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.gc_current_blocks_received metric with initial data.
+func (m *metricOracledbGcCurrentBlocksReceived) init() {
+	m.data.SetName("oracledb.gc_current_blocks_received")
+	m.data.SetDescription("Number of current blocks received from remote instances")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbGcCurrentBlocksReceived) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbGcCurrentBlocksReceived) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbGcCurrentBlocksReceived) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbGcCurrentBlocksReceived(cfg MetricConfig) metricOracledbGcCurrentBlocksReceived {
+	m := metricOracledbGcCurrentBlocksReceived{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -1056,6 +2437,159 @@ func newMetricOracledbHardParses(cfg MetricConfig) metricOracledbHardParses {
 	return m
 }
 
+type metricOracledbIndexFastFullScans struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.index_fast_full_scans metric with initial data.
+func (m *metricOracledbIndexFastFullScans) init() {
+	m.data.SetName("oracledb.index_fast_full_scans")
+	m.data.SetDescription("Number of index fast full scans performed")
+	m.data.SetUnit("{scans}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbIndexFastFullScans) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbIndexFastFullScans) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbIndexFastFullScans) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbIndexFastFullScans(cfg MetricConfig) metricOracledbIndexFastFullScans {
+	m := metricOracledbIndexFastFullScans{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbIndexRangeScans struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.index_range_scans metric with initial data.
+func (m *metricOracledbIndexRangeScans) init() {
+	m.data.SetName("oracledb.index_range_scans")
+	m.data.SetDescription("Number of index range scans performed")
+	m.data.SetUnit("{scans}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbIndexRangeScans) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbIndexRangeScans) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbIndexRangeScans) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbIndexRangeScans(cfg MetricConfig) metricOracledbIndexRangeScans {
+	m := metricOracledbIndexRangeScans{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbLeafNodeSplits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.leaf_node_splits metric with initial data.
+func (m *metricOracledbLeafNodeSplits) init() {
+	m.data.SetName("oracledb.leaf_node_splits")
+	m.data.SetDescription("Number of leaf node splits in B-tree indexes")
+	m.data.SetUnit("{splits}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbLeafNodeSplits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbLeafNodeSplits) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbLeafNodeSplits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbLeafNodeSplits(cfg MetricConfig) metricOracledbLeafNodeSplits {
+	m := metricOracledbLeafNodeSplits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbLibraryCacheHitRatio struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1098,6 +2632,208 @@ func (m *metricOracledbLibraryCacheHitRatio) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbLibraryCacheHitRatio(cfg MetricConfig) metricOracledbLibraryCacheHitRatio {
 	m := metricOracledbLibraryCacheHitRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbLibraryCacheLockWaits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.library_cache_lock_waits metric with initial data.
+func (m *metricOracledbLibraryCacheLockWaits) init() {
+	m.data.SetName("oracledb.library_cache_lock_waits")
+	m.data.SetDescription("Number of library cache lock waits")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbLibraryCacheLockWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbLibraryCacheLockWaits) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbLibraryCacheLockWaits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbLibraryCacheLockWaits(cfg MetricConfig) metricOracledbLibraryCacheLockWaits {
+	m := metricOracledbLibraryCacheLockWaits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbLibraryCachePinWaits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.library_cache_pin_waits metric with initial data.
+func (m *metricOracledbLibraryCachePinWaits) init() {
+	m.data.SetName("oracledb.library_cache_pin_waits")
+	m.data.SetDescription("Number of library cache pin waits")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbLibraryCachePinWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbLibraryCachePinWaits) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbLibraryCachePinWaits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbLibraryCachePinWaits(cfg MetricConfig) metricOracledbLibraryCachePinWaits {
+	m := metricOracledbLibraryCachePinWaits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbLockMemory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.lock_memory metric with initial data.
+func (m *metricOracledbLockMemory) init() {
+	m.data.SetName("oracledb.lock_memory")
+	m.data.SetDescription("Amount of memory used for locks")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbLockMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbLockMemory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbLockMemory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbLockMemory(cfg MetricConfig) metricOracledbLockMemory {
+	m := metricOracledbLockMemory{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbLogFileSyncWaits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.log_file_sync_waits metric with initial data.
+func (m *metricOracledbLogFileSyncWaits) init() {
+	m.data.SetName("oracledb.log_file_sync_waits")
+	m.data.SetDescription("Number of log file sync waits")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbLogFileSyncWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbLogFileSyncWaits) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbLogFileSyncWaits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbLogFileSyncWaits(cfg MetricConfig) metricOracledbLogFileSyncWaits {
+	m := metricOracledbLogFileSyncWaits{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -1200,6 +2936,310 @@ func (m *metricOracledbLogons) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbLogons(cfg MetricConfig) metricOracledbLogons {
 	m := metricOracledbLogons{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbNetworkBytesReceived struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.network_bytes_received metric with initial data.
+func (m *metricOracledbNetworkBytesReceived) init() {
+	m.data.SetName("oracledb.network_bytes_received")
+	m.data.SetDescription("Bytes received over network connections")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbNetworkBytesReceived) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbNetworkBytesReceived) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbNetworkBytesReceived) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbNetworkBytesReceived(cfg MetricConfig) metricOracledbNetworkBytesReceived {
+	m := metricOracledbNetworkBytesReceived{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbNetworkBytesSent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.network_bytes_sent metric with initial data.
+func (m *metricOracledbNetworkBytesSent) init() {
+	m.data.SetName("oracledb.network_bytes_sent")
+	m.data.SetDescription("Bytes sent over network connections")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbNetworkBytesSent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbNetworkBytesSent) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbNetworkBytesSent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbNetworkBytesSent(cfg MetricConfig) metricOracledbNetworkBytesSent {
+	m := metricOracledbNetworkBytesSent{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbNetworkPacketsReceived struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.network_packets_received metric with initial data.
+func (m *metricOracledbNetworkPacketsReceived) init() {
+	m.data.SetName("oracledb.network_packets_received")
+	m.data.SetDescription("Packets received over network connections")
+	m.data.SetUnit("{packets}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbNetworkPacketsReceived) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbNetworkPacketsReceived) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbNetworkPacketsReceived) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbNetworkPacketsReceived(cfg MetricConfig) metricOracledbNetworkPacketsReceived {
+	m := metricOracledbNetworkPacketsReceived{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbNetworkPacketsSent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.network_packets_sent metric with initial data.
+func (m *metricOracledbNetworkPacketsSent) init() {
+	m.data.SetName("oracledb.network_packets_sent")
+	m.data.SetDescription("Packets sent over network connections")
+	m.data.SetUnit("{packets}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbNetworkPacketsSent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbNetworkPacketsSent) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbNetworkPacketsSent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbNetworkPacketsSent(cfg MetricConfig) metricOracledbNetworkPacketsSent {
+	m := metricOracledbNetworkPacketsSent{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbNetworkTrafficVolume struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.network_traffic_volume metric with initial data.
+func (m *metricOracledbNetworkTrafficVolume) init() {
+	m.data.SetName("oracledb.network_traffic_volume")
+	m.data.SetDescription("Total network traffic volume for database operations")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbNetworkTrafficVolume) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbNetworkTrafficVolume) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbNetworkTrafficVolume) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbNetworkTrafficVolume(cfg MetricConfig) metricOracledbNetworkTrafficVolume {
+	m := metricOracledbNetworkTrafficVolume{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbOsLoad struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.os_load metric with initial data.
+func (m *metricOracledbOsLoad) init() {
+	m.data.SetName("oracledb.os_load")
+	m.data.SetDescription("Operating system load average")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbOsLoad) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbOsLoad) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbOsLoad) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbOsLoad(cfg MetricConfig) metricOracledbOsLoad {
+	m := metricOracledbOsLoad{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -1564,6 +3604,104 @@ func newMetricOracledbParseCalls(cfg MetricConfig) metricOracledbParseCalls {
 	return m
 }
 
+type metricOracledbPgaAggregateLimit struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.pga_aggregate_limit metric with initial data.
+func (m *metricOracledbPgaAggregateLimit) init() {
+	m.data.SetName("oracledb.pga_aggregate_limit")
+	m.data.SetDescription("PGA aggregate limit setting")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbPgaAggregateLimit) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbPgaAggregateLimit) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbPgaAggregateLimit) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbPgaAggregateLimit(cfg MetricConfig) metricOracledbPgaAggregateLimit {
+	m := metricOracledbPgaAggregateLimit{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbPgaAggregateTarget struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.pga_aggregate_target metric with initial data.
+func (m *metricOracledbPgaAggregateTarget) init() {
+	m.data.SetName("oracledb.pga_aggregate_target")
+	m.data.SetDescription("PGA aggregate target setting")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbPgaAggregateTarget) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbPgaAggregateTarget) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbPgaAggregateTarget) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbPgaAggregateTarget(cfg MetricConfig) metricOracledbPgaAggregateTarget {
+	m := metricOracledbPgaAggregateTarget{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbPgaAllocatedMemory struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1662,6 +3800,55 @@ func newMetricOracledbPgaFreeableMemory(cfg MetricConfig) metricOracledbPgaFreea
 	return m
 }
 
+type metricOracledbPgaGlobalMemoryBound struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.pga_global_memory_bound metric with initial data.
+func (m *metricOracledbPgaGlobalMemoryBound) init() {
+	m.data.SetName("oracledb.pga_global_memory_bound")
+	m.data.SetDescription("PGA global memory bound")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbPgaGlobalMemoryBound) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbPgaGlobalMemoryBound) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbPgaGlobalMemoryBound) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbPgaGlobalMemoryBound(cfg MetricConfig) metricOracledbPgaGlobalMemoryBound {
+	m := metricOracledbPgaGlobalMemoryBound{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbPgaMaximumMemory struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1753,6 +3940,57 @@ func (m *metricOracledbPgaMemory) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbPgaMemory(cfg MetricConfig) metricOracledbPgaMemory {
 	m := metricOracledbPgaMemory{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbPgaOverAllocationCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.pga_over_allocation_count metric with initial data.
+func (m *metricOracledbPgaOverAllocationCount) init() {
+	m.data.SetName("oracledb.pga_over_allocation_count")
+	m.data.SetDescription("Number of PGA over-allocations")
+	m.data.SetUnit("{allocations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbPgaOverAllocationCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbPgaOverAllocationCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbPgaOverAllocationCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbPgaOverAllocationCount(cfg MetricConfig) metricOracledbPgaOverAllocationCount {
+	m := metricOracledbPgaOverAllocationCount{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -2217,6 +4455,55 @@ func newMetricOracledbPhysicalWritesDirect(cfg MetricConfig) metricOracledbPhysi
 	return m
 }
 
+type metricOracledbPinnedBuffers struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.pinned_buffers metric with initial data.
+func (m *metricOracledbPinnedBuffers) init() {
+	m.data.SetName("oracledb.pinned_buffers")
+	m.data.SetDescription("Number of pinned buffers in buffer cache")
+	m.data.SetUnit("{buffers}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbPinnedBuffers) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbPinnedBuffers) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbPinnedBuffers) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbPinnedBuffers(cfg MetricConfig) metricOracledbPinnedBuffers {
+	m := metricOracledbPinnedBuffers{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbProcessesLimit struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2366,6 +4653,1122 @@ func newMetricOracledbQueriesParallelized(cfg MetricConfig) metricOracledbQuerie
 	return m
 }
 
+type metricOracledbQueryAvgActiveSessions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_active_sessions metric with initial data.
+func (m *metricOracledbQueryAvgActiveSessions) init() {
+	m.data.SetName("oracledb.query_avg_active_sessions")
+	m.data.SetDescription("Average number of active sessions running queries")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgActiveSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgActiveSessions) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgActiveSessions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgActiveSessions(cfg MetricConfig) metricOracledbQueryAvgActiveSessions {
+	m := metricOracledbQueryAvgActiveSessions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryAvgBufferGets struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_buffer_gets metric with initial data.
+func (m *metricOracledbQueryAvgBufferGets) init() {
+	m.data.SetName("oracledb.query_avg_buffer_gets")
+	m.data.SetDescription("Average buffer gets per query execution")
+	m.data.SetUnit("{gets}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgBufferGets) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgBufferGets) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgBufferGets) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgBufferGets(cfg MetricConfig) metricOracledbQueryAvgBufferGets {
+	m := metricOracledbQueryAvgBufferGets{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryAvgCPUTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_cpu_time metric with initial data.
+func (m *metricOracledbQueryAvgCPUTime) init() {
+	m.data.SetName("oracledb.query_avg_cpu_time")
+	m.data.SetDescription("Average CPU time per query execution")
+	m.data.SetUnit("us")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgCPUTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgCPUTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgCPUTime(cfg MetricConfig) metricOracledbQueryAvgCPUTime {
+	m := metricOracledbQueryAvgCPUTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryAvgDiskReads struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_disk_reads metric with initial data.
+func (m *metricOracledbQueryAvgDiskReads) init() {
+	m.data.SetName("oracledb.query_avg_disk_reads")
+	m.data.SetDescription("Average disk reads per query execution")
+	m.data.SetUnit("{reads}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgDiskReads) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgDiskReads) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgDiskReads(cfg MetricConfig) metricOracledbQueryAvgDiskReads {
+	m := metricOracledbQueryAvgDiskReads{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryAvgElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_elapsed_time metric with initial data.
+func (m *metricOracledbQueryAvgElapsedTime) init() {
+	m.data.SetName("oracledb.query_avg_elapsed_time")
+	m.data.SetDescription("Average elapsed time per query execution")
+	m.data.SetUnit("us")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgElapsedTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgElapsedTime(cfg MetricConfig) metricOracledbQueryAvgElapsedTime {
+	m := metricOracledbQueryAvgElapsedTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryAvgExecutionTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_execution_time metric with initial data.
+func (m *metricOracledbQueryAvgExecutionTime) init() {
+	m.data.SetName("oracledb.query_avg_execution_time")
+	m.data.SetDescription("Average execution time for queries")
+	m.data.SetUnit("us")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgExecutionTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgExecutionTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgExecutionTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgExecutionTime(cfg MetricConfig) metricOracledbQueryAvgExecutionTime {
+	m := metricOracledbQueryAvgExecutionTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryAvgExecutionsPerSec struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_executions_per_sec metric with initial data.
+func (m *metricOracledbQueryAvgExecutionsPerSec) init() {
+	m.data.SetName("oracledb.query_avg_executions_per_sec")
+	m.data.SetDescription("Average number of query executions per second")
+	m.data.SetUnit("{executions}/s")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgExecutionsPerSec) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgExecutionsPerSec) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgExecutionsPerSec) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgExecutionsPerSec(cfg MetricConfig) metricOracledbQueryAvgExecutionsPerSec {
+	m := metricOracledbQueryAvgExecutionsPerSec{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryAvgRowsProcessed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_avg_rows_processed metric with initial data.
+func (m *metricOracledbQueryAvgRowsProcessed) init() {
+	m.data.SetName("oracledb.query_avg_rows_processed")
+	m.data.SetDescription("Average rows processed per query execution")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryAvgRowsProcessed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryAvgRowsProcessed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryAvgRowsProcessed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryAvgRowsProcessed(cfg MetricConfig) metricOracledbQueryAvgRowsProcessed {
+	m := metricOracledbQueryAvgRowsProcessed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryBlockedSessions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_blocked_sessions metric with initial data.
+func (m *metricOracledbQueryBlockedSessions) init() {
+	m.data.SetName("oracledb.query_blocked_sessions")
+	m.data.SetDescription("Number of blocked sessions waiting for queries")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryBlockedSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryBlockedSessions) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryBlockedSessions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryBlockedSessions(cfg MetricConfig) metricOracledbQueryBlockedSessions {
+	m := metricOracledbQueryBlockedSessions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryBufferGetsPerExecution struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_buffer_gets_per_execution metric with initial data.
+func (m *metricOracledbQueryBufferGetsPerExecution) init() {
+	m.data.SetName("oracledb.query_buffer_gets_per_execution")
+	m.data.SetDescription("Buffer gets per execution for specific queries")
+	m.data.SetUnit("{gets}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryBufferGetsPerExecution) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryBufferGetsPerExecution) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryBufferGetsPerExecution) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryBufferGetsPerExecution(cfg MetricConfig) metricOracledbQueryBufferGetsPerExecution {
+	m := metricOracledbQueryBufferGetsPerExecution{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryCPUTimePerExecution struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_cpu_time_per_execution metric with initial data.
+func (m *metricOracledbQueryCPUTimePerExecution) init() {
+	m.data.SetName("oracledb.query_cpu_time_per_execution")
+	m.data.SetDescription("CPU time per execution for specific queries")
+	m.data.SetUnit("us")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryCPUTimePerExecution) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryCPUTimePerExecution) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryCPUTimePerExecution) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryCPUTimePerExecution(cfg MetricConfig) metricOracledbQueryCPUTimePerExecution {
+	m := metricOracledbQueryCPUTimePerExecution{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryDiskReadsPerExecution struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_disk_reads_per_execution metric with initial data.
+func (m *metricOracledbQueryDiskReadsPerExecution) init() {
+	m.data.SetName("oracledb.query_disk_reads_per_execution")
+	m.data.SetDescription("Disk reads per execution for specific queries")
+	m.data.SetUnit("{reads}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryDiskReadsPerExecution) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryDiskReadsPerExecution) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryDiskReadsPerExecution) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryDiskReadsPerExecution(cfg MetricConfig) metricOracledbQueryDiskReadsPerExecution {
+	m := metricOracledbQueryDiskReadsPerExecution{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryElapsedTimePerExecution struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_elapsed_time_per_execution metric with initial data.
+func (m *metricOracledbQueryElapsedTimePerExecution) init() {
+	m.data.SetName("oracledb.query_elapsed_time_per_execution")
+	m.data.SetDescription("Elapsed time per execution for specific queries")
+	m.data.SetUnit("us")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryElapsedTimePerExecution) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryElapsedTimePerExecution) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryElapsedTimePerExecution) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryElapsedTimePerExecution(cfg MetricConfig) metricOracledbQueryElapsedTimePerExecution {
+	m := metricOracledbQueryElapsedTimePerExecution{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryExecutionsDelta struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_executions_delta metric with initial data.
+func (m *metricOracledbQueryExecutionsDelta) init() {
+	m.data.SetName("oracledb.query_executions_delta")
+	m.data.SetDescription("Change in query executions since last measurement")
+	m.data.SetUnit("{executions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityDelta)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryExecutionsDelta) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryExecutionsDelta) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryExecutionsDelta) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryExecutionsDelta(cfg MetricConfig) metricOracledbQueryExecutionsDelta {
+	m := metricOracledbQueryExecutionsDelta{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryLongRunningQueries struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_long_running_queries metric with initial data.
+func (m *metricOracledbQueryLongRunningQueries) init() {
+	m.data.SetName("oracledb.query_long_running_queries")
+	m.data.SetDescription("Number of long-running queries (>5 minutes)")
+	m.data.SetUnit("{queries}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbQueryLongRunningQueries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryLongRunningQueries) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryLongRunningQueries) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryLongRunningQueries(cfg MetricConfig) metricOracledbQueryLongRunningQueries {
+	m := metricOracledbQueryLongRunningQueries{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryRowsProcessedPerExecution struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_rows_processed_per_execution metric with initial data.
+func (m *metricOracledbQueryRowsProcessedPerExecution) init() {
+	m.data.SetName("oracledb.query_rows_processed_per_execution")
+	m.data.SetDescription("Rows processed per execution for specific queries")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryRowsProcessedPerExecution) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryRowsProcessedPerExecution) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryRowsProcessedPerExecution) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryRowsProcessedPerExecution(cfg MetricConfig) metricOracledbQueryRowsProcessedPerExecution {
+	m := metricOracledbQueryRowsProcessedPerExecution{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryTotalBufferGets struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_total_buffer_gets metric with initial data.
+func (m *metricOracledbQueryTotalBufferGets) init() {
+	m.data.SetName("oracledb.query_total_buffer_gets")
+	m.data.SetDescription("Total buffer gets for specific queries")
+	m.data.SetUnit("{gets}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryTotalBufferGets) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryTotalBufferGets) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryTotalBufferGets) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryTotalBufferGets(cfg MetricConfig) metricOracledbQueryTotalBufferGets {
+	m := metricOracledbQueryTotalBufferGets{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryTotalCPUTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_total_cpu_time metric with initial data.
+func (m *metricOracledbQueryTotalCPUTime) init() {
+	m.data.SetName("oracledb.query_total_cpu_time")
+	m.data.SetDescription("Total CPU time for specific queries")
+	m.data.SetUnit("us")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryTotalCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryTotalCPUTime) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryTotalCPUTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryTotalCPUTime(cfg MetricConfig) metricOracledbQueryTotalCPUTime {
+	m := metricOracledbQueryTotalCPUTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryTotalDiskReads struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_total_disk_reads metric with initial data.
+func (m *metricOracledbQueryTotalDiskReads) init() {
+	m.data.SetName("oracledb.query_total_disk_reads")
+	m.data.SetDescription("Total disk reads for specific queries")
+	m.data.SetUnit("{reads}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryTotalDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryTotalDiskReads) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryTotalDiskReads) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryTotalDiskReads(cfg MetricConfig) metricOracledbQueryTotalDiskReads {
+	m := metricOracledbQueryTotalDiskReads{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryTotalElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_total_elapsed_time metric with initial data.
+func (m *metricOracledbQueryTotalElapsedTime) init() {
+	m.data.SetName("oracledb.query_total_elapsed_time")
+	m.data.SetDescription("Total elapsed time for specific queries")
+	m.data.SetUnit("us")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryTotalElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryTotalElapsedTime) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryTotalElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryTotalElapsedTime(cfg MetricConfig) metricOracledbQueryTotalElapsedTime {
+	m := metricOracledbQueryTotalElapsedTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryTotalExecutions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_total_executions metric with initial data.
+func (m *metricOracledbQueryTotalExecutions) init() {
+	m.data.SetName("oracledb.query_total_executions")
+	m.data.SetDescription("Total executions for specific queries")
+	m.data.SetUnit("{executions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryTotalExecutions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryTotalExecutions) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryTotalExecutions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryTotalExecutions(cfg MetricConfig) metricOracledbQueryTotalExecutions {
+	m := metricOracledbQueryTotalExecutions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbQueryTotalRowsProcessed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.query_total_rows_processed metric with initial data.
+func (m *metricOracledbQueryTotalRowsProcessed) init() {
+	m.data.SetName("oracledb.query_total_rows_processed")
+	m.data.SetDescription("Total rows processed for specific queries")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbQueryTotalRowsProcessed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("sql_id", sqlIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbQueryTotalRowsProcessed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbQueryTotalRowsProcessed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbQueryTotalRowsProcessed(cfg MetricConfig) metricOracledbQueryTotalRowsProcessed {
+	m := metricOracledbQueryTotalRowsProcessed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbRedoSize struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2417,6 +5820,55 @@ func newMetricOracledbRedoSize(cfg MetricConfig) metricOracledbRedoSize {
 	return m
 }
 
+type metricOracledbResponseTimePerTransaction struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.response_time_per_transaction metric with initial data.
+func (m *metricOracledbResponseTimePerTransaction) init() {
+	m.data.SetName("oracledb.response_time_per_transaction")
+	m.data.SetDescription("Average response time per database transaction")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbResponseTimePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbResponseTimePerTransaction) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbResponseTimePerTransaction) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbResponseTimePerTransaction(cfg MetricConfig) metricOracledbResponseTimePerTransaction {
+	m := metricOracledbResponseTimePerTransaction{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbRowCacheHitRatio struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2459,6 +5911,57 @@ func (m *metricOracledbRowCacheHitRatio) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbRowCacheHitRatio(cfg MetricConfig) metricOracledbRowCacheHitRatio {
 	m := metricOracledbRowCacheHitRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbRowsFetched struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.rows_fetched metric with initial data.
+func (m *metricOracledbRowsFetched) init() {
+	m.data.SetName("oracledb.rows_fetched")
+	m.data.SetDescription("Number of rows fetched by queries")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbRowsFetched) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbRowsFetched) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbRowsFetched) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbRowsFetched(cfg MetricConfig) metricOracledbRowsFetched {
+	m := metricOracledbRowsFetched{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -2567,6 +6070,404 @@ func newMetricOracledbSessionsLimit(cfg MetricConfig) metricOracledbSessionsLimi
 	return m
 }
 
+type metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_buffer_cache_advisory_estimated_physical_reads metric with initial data.
+func (m *metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads) init() {
+	m.data.SetName("oracledb.sga_buffer_cache_advisory_estimated_physical_reads")
+	m.data.SetDescription("Estimated physical reads for buffer cache advisory")
+	m.data.SetUnit("{reads}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("size_factor", sizeFactorAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads(cfg MetricConfig) metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads {
+	m := metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaBufferCacheAdvisorySizeFactor struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_buffer_cache_advisory_size_factor metric with initial data.
+func (m *metricOracledbSgaBufferCacheAdvisorySizeFactor) init() {
+	m.data.SetName("oracledb.sga_buffer_cache_advisory_size_factor")
+	m.data.SetDescription("Size factor for buffer cache advisory")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbSgaBufferCacheAdvisorySizeFactor) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sizeFactorAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("size_factor", sizeFactorAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaBufferCacheAdvisorySizeFactor) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaBufferCacheAdvisorySizeFactor) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaBufferCacheAdvisorySizeFactor(cfg MetricConfig) metricOracledbSgaBufferCacheAdvisorySizeFactor {
+	m := metricOracledbSgaBufferCacheAdvisorySizeFactor{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaBufferCacheAdvisorySizeForEstimate struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_buffer_cache_advisory_size_for_estimate metric with initial data.
+func (m *metricOracledbSgaBufferCacheAdvisorySizeForEstimate) init() {
+	m.data.SetName("oracledb.sga_buffer_cache_advisory_size_for_estimate")
+	m.data.SetDescription("Buffer cache size for advisory estimate")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbSgaBufferCacheAdvisorySizeForEstimate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("size_factor", sizeFactorAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaBufferCacheAdvisorySizeForEstimate) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaBufferCacheAdvisorySizeForEstimate) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaBufferCacheAdvisorySizeForEstimate(cfg MetricConfig) metricOracledbSgaBufferCacheAdvisorySizeForEstimate {
+	m := metricOracledbSgaBufferCacheAdvisorySizeForEstimate{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaBufferCacheSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_buffer_cache_size metric with initial data.
+func (m *metricOracledbSgaBufferCacheSize) init() {
+	m.data.SetName("oracledb.sga_buffer_cache_size")
+	m.data.SetDescription("Size of SGA buffer cache")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaBufferCacheSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaBufferCacheSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaBufferCacheSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaBufferCacheSize(cfg MetricConfig) metricOracledbSgaBufferCacheSize {
+	m := metricOracledbSgaBufferCacheSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaDataBufferCacheSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_data_buffer_cache_size metric with initial data.
+func (m *metricOracledbSgaDataBufferCacheSize) init() {
+	m.data.SetName("oracledb.sga_data_buffer_cache_size")
+	m.data.SetDescription("Size of SGA data buffer cache")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaDataBufferCacheSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaDataBufferCacheSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaDataBufferCacheSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaDataBufferCacheSize(cfg MetricConfig) metricOracledbSgaDataBufferCacheSize {
+	m := metricOracledbSgaDataBufferCacheSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaDatabaseBufferCache struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_database_buffer_cache metric with initial data.
+func (m *metricOracledbSgaDatabaseBufferCache) init() {
+	m.data.SetName("oracledb.sga_database_buffer_cache")
+	m.data.SetDescription("Size of SGA database buffer cache")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaDatabaseBufferCache) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaDatabaseBufferCache) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaDatabaseBufferCache) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaDatabaseBufferCache(cfg MetricConfig) metricOracledbSgaDatabaseBufferCache {
+	m := metricOracledbSgaDatabaseBufferCache{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaDefaultBufferPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_default_buffer_pool_size metric with initial data.
+func (m *metricOracledbSgaDefaultBufferPoolSize) init() {
+	m.data.SetName("oracledb.sga_default_buffer_pool_size")
+	m.data.SetDescription("Size of SGA default buffer pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaDefaultBufferPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaDefaultBufferPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaDefaultBufferPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaDefaultBufferPoolSize(cfg MetricConfig) metricOracledbSgaDefaultBufferPoolSize {
+	m := metricOracledbSgaDefaultBufferPoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaFixedBufferCacheSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_fixed_buffer_cache_size metric with initial data.
+func (m *metricOracledbSgaFixedBufferCacheSize) init() {
+	m.data.SetName("oracledb.sga_fixed_buffer_cache_size")
+	m.data.SetDescription("Size of SGA fixed buffer cache")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaFixedBufferCacheSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaFixedBufferCacheSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaFixedBufferCacheSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaFixedBufferCacheSize(cfg MetricConfig) metricOracledbSgaFixedBufferCacheSize {
+	m := metricOracledbSgaFixedBufferCacheSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbSgaFixedSize struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2609,6 +6510,894 @@ func (m *metricOracledbSgaFixedSize) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbSgaFixedSize(cfg MetricConfig) metricOracledbSgaFixedSize {
 	m := metricOracledbSgaFixedSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaJavaPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_java_pool_size metric with initial data.
+func (m *metricOracledbSgaJavaPoolSize) init() {
+	m.data.SetName("oracledb.sga_java_pool_size")
+	m.data.SetDescription("Size of SGA Java pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaJavaPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaJavaPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaJavaPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaJavaPoolSize(cfg MetricConfig) metricOracledbSgaJavaPoolSize {
+	m := metricOracledbSgaJavaPoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaKeepBufferPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_keep_buffer_pool_size metric with initial data.
+func (m *metricOracledbSgaKeepBufferPoolSize) init() {
+	m.data.SetName("oracledb.sga_keep_buffer_pool_size")
+	m.data.SetDescription("Size of SGA keep buffer pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaKeepBufferPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaKeepBufferPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaKeepBufferPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaKeepBufferPoolSize(cfg MetricConfig) metricOracledbSgaKeepBufferPoolSize {
+	m := metricOracledbSgaKeepBufferPoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaLargePoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_large_pool_size metric with initial data.
+func (m *metricOracledbSgaLargePoolSize) init() {
+	m.data.SetName("oracledb.sga_large_pool_size")
+	m.data.SetDescription("Size of SGA large pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaLargePoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaLargePoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaLargePoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaLargePoolSize(cfg MetricConfig) metricOracledbSgaLargePoolSize {
+	m := metricOracledbSgaLargePoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaLogBuffer struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_log_buffer metric with initial data.
+func (m *metricOracledbSgaLogBuffer) init() {
+	m.data.SetName("oracledb.sga_log_buffer")
+	m.data.SetDescription("Size of SGA log buffer")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaLogBuffer) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaLogBuffer) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaLogBuffer) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaLogBuffer(cfg MetricConfig) metricOracledbSgaLogBuffer {
+	m := metricOracledbSgaLogBuffer{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaMaximumSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_maximum_size metric with initial data.
+func (m *metricOracledbSgaMaximumSize) init() {
+	m.data.SetName("oracledb.sga_maximum_size")
+	m.data.SetDescription("Maximum size of SGA")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaMaximumSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaMaximumSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaMaximumSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaMaximumSize(cfg MetricConfig) metricOracledbSgaMaximumSize {
+	m := metricOracledbSgaMaximumSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaRecycleBufferPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_recycle_buffer_pool_size metric with initial data.
+func (m *metricOracledbSgaRecycleBufferPoolSize) init() {
+	m.data.SetName("oracledb.sga_recycle_buffer_pool_size")
+	m.data.SetDescription("Size of SGA recycle buffer pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaRecycleBufferPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaRecycleBufferPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaRecycleBufferPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaRecycleBufferPoolSize(cfg MetricConfig) metricOracledbSgaRecycleBufferPoolSize {
+	m := metricOracledbSgaRecycleBufferPoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaRedoBuffers struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_redo_buffers metric with initial data.
+func (m *metricOracledbSgaRedoBuffers) init() {
+	m.data.SetName("oracledb.sga_redo_buffers")
+	m.data.SetDescription("Size of SGA redo buffers")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaRedoBuffers) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaRedoBuffers) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaRedoBuffers) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaRedoBuffers(cfg MetricConfig) metricOracledbSgaRedoBuffers {
+	m := metricOracledbSgaRedoBuffers{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaReservedSharedPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_reserved_shared_pool_size metric with initial data.
+func (m *metricOracledbSgaReservedSharedPoolSize) init() {
+	m.data.SetName("oracledb.sga_reserved_shared_pool_size")
+	m.data.SetDescription("Size of SGA reserved shared pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaReservedSharedPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaReservedSharedPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaReservedSharedPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaReservedSharedPoolSize(cfg MetricConfig) metricOracledbSgaReservedSharedPoolSize {
+	m := metricOracledbSgaReservedSharedPoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedIoPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_io_pool_size metric with initial data.
+func (m *metricOracledbSgaSharedIoPoolSize) init() {
+	m.data.SetName("oracledb.sga_shared_io_pool_size")
+	m.data.SetDescription("Size of SGA shared I/O pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaSharedIoPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedIoPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedIoPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedIoPoolSize(cfg MetricConfig) metricOracledbSgaSharedIoPoolSize {
+	m := metricOracledbSgaSharedIoPoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_pool_advisory_estimated_parse_time_saved metric with initial data.
+func (m *metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved) init() {
+	m.data.SetName("oracledb.sga_shared_pool_advisory_estimated_parse_time_saved")
+	m.data.SetDescription("Estimated parse time saved for shared pool advisory")
+	m.data.SetUnit("us")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("size_factor", sizeFactorAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved(cfg MetricConfig) metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved {
+	m := metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedPoolAdvisorySizeFactor struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_pool_advisory_size_factor metric with initial data.
+func (m *metricOracledbSgaSharedPoolAdvisorySizeFactor) init() {
+	m.data.SetName("oracledb.sga_shared_pool_advisory_size_factor")
+	m.data.SetDescription("Size factor for shared pool advisory")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbSgaSharedPoolAdvisorySizeFactor) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sizeFactorAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("size_factor", sizeFactorAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedPoolAdvisorySizeFactor) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedPoolAdvisorySizeFactor) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedPoolAdvisorySizeFactor(cfg MetricConfig) metricOracledbSgaSharedPoolAdvisorySizeFactor {
+	m := metricOracledbSgaSharedPoolAdvisorySizeFactor{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedPoolAdvisorySizeForEstimate struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_pool_advisory_size_for_estimate metric with initial data.
+func (m *metricOracledbSgaSharedPoolAdvisorySizeForEstimate) init() {
+	m.data.SetName("oracledb.sga_shared_pool_advisory_size_for_estimate")
+	m.data.SetDescription("Shared pool size for advisory estimate")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbSgaSharedPoolAdvisorySizeForEstimate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("size_factor", sizeFactorAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedPoolAdvisorySizeForEstimate) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedPoolAdvisorySizeForEstimate) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedPoolAdvisorySizeForEstimate(cfg MetricConfig) metricOracledbSgaSharedPoolAdvisorySizeForEstimate {
+	m := metricOracledbSgaSharedPoolAdvisorySizeForEstimate{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedPoolFreeMemory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_pool_free_memory metric with initial data.
+func (m *metricOracledbSgaSharedPoolFreeMemory) init() {
+	m.data.SetName("oracledb.sga_shared_pool_free_memory")
+	m.data.SetDescription("Free memory in SGA shared pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaSharedPoolFreeMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedPoolFreeMemory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedPoolFreeMemory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedPoolFreeMemory(cfg MetricConfig) metricOracledbSgaSharedPoolFreeMemory {
+	m := metricOracledbSgaSharedPoolFreeMemory{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedPoolReservedFreeMemory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_pool_reserved_free_memory metric with initial data.
+func (m *metricOracledbSgaSharedPoolReservedFreeMemory) init() {
+	m.data.SetName("oracledb.sga_shared_pool_reserved_free_memory")
+	m.data.SetDescription("Free memory in SGA shared pool reserved area")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaSharedPoolReservedFreeMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedPoolReservedFreeMemory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedPoolReservedFreeMemory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedPoolReservedFreeMemory(cfg MetricConfig) metricOracledbSgaSharedPoolReservedFreeMemory {
+	m := metricOracledbSgaSharedPoolReservedFreeMemory{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedPoolReservedUsedMemory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_pool_reserved_used_memory metric with initial data.
+func (m *metricOracledbSgaSharedPoolReservedUsedMemory) init() {
+	m.data.SetName("oracledb.sga_shared_pool_reserved_used_memory")
+	m.data.SetDescription("Used memory in SGA shared pool reserved area")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaSharedPoolReservedUsedMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedPoolReservedUsedMemory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedPoolReservedUsedMemory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedPoolReservedUsedMemory(cfg MetricConfig) metricOracledbSgaSharedPoolReservedUsedMemory {
+	m := metricOracledbSgaSharedPoolReservedUsedMemory{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSharedPoolUsedMemory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_shared_pool_used_memory metric with initial data.
+func (m *metricOracledbSgaSharedPoolUsedMemory) init() {
+	m.data.SetName("oracledb.sga_shared_pool_used_memory")
+	m.data.SetDescription("Used memory in SGA shared pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaSharedPoolUsedMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSharedPoolUsedMemory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSharedPoolUsedMemory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSharedPoolUsedMemory(cfg MetricConfig) metricOracledbSgaSharedPoolUsedMemory {
+	m := metricOracledbSgaSharedPoolUsedMemory{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_size metric with initial data.
+func (m *metricOracledbSgaSize) init() {
+	m.data.SetName("oracledb.sga_size")
+	m.data.SetDescription("Total size of SGA")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaSize(cfg MetricConfig) metricOracledbSgaSize {
+	m := metricOracledbSgaSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSgaStreamsPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sga_streams_pool_size metric with initial data.
+func (m *metricOracledbSgaStreamsPoolSize) init() {
+	m.data.SetName("oracledb.sga_streams_pool_size")
+	m.data.SetDescription("Size of SGA streams pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSgaStreamsPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSgaStreamsPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSgaStreamsPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSgaStreamsPoolSize(cfg MetricConfig) metricOracledbSgaStreamsPoolSize {
+	m := metricOracledbSgaStreamsPoolSize{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -2665,6 +7454,562 @@ func newMetricOracledbSharedPoolFree(cfg MetricConfig) metricOracledbSharedPoolF
 	return m
 }
 
+type metricOracledbSharedPoolReservedSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.shared_pool_reserved_size metric with initial data.
+func (m *metricOracledbSharedPoolReservedSize) init() {
+	m.data.SetName("oracledb.shared_pool_reserved_size")
+	m.data.SetDescription("Size of shared pool reserved area")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSharedPoolReservedSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSharedPoolReservedSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSharedPoolReservedSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSharedPoolReservedSize(cfg MetricConfig) metricOracledbSharedPoolReservedSize {
+	m := metricOracledbSharedPoolReservedSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSharedPoolSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.shared_pool_size metric with initial data.
+func (m *metricOracledbSharedPoolSize) init() {
+	m.data.SetName("oracledb.shared_pool_size")
+	m.data.SetDescription("Total size of shared pool")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSharedPoolSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSharedPoolSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSharedPoolSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSharedPoolSize(cfg MetricConfig) metricOracledbSharedPoolSize {
+	m := metricOracledbSharedPoolSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSortSegmentSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sort_segment_size metric with initial data.
+func (m *metricOracledbSortSegmentSize) init() {
+	m.data.SetName("oracledb.sort_segment_size")
+	m.data.SetDescription("Size of sort segments")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbSortSegmentSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSortSegmentSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSortSegmentSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSortSegmentSize(cfg MetricConfig) metricOracledbSortSegmentSize {
+	m := metricOracledbSortSegmentSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbSQLAreaEvicted struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.sql_area_evicted metric with initial data.
+func (m *metricOracledbSQLAreaEvicted) init() {
+	m.data.SetName("oracledb.sql_area_evicted")
+	m.data.SetDescription("Number of SQL statements evicted from shared pool")
+	m.data.SetUnit("{statements}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbSQLAreaEvicted) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbSQLAreaEvicted) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbSQLAreaEvicted) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbSQLAreaEvicted(cfg MetricConfig) metricOracledbSQLAreaEvicted {
+	m := metricOracledbSQLAreaEvicted{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTableFetchByRowid struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.table_fetch_by_rowid metric with initial data.
+func (m *metricOracledbTableFetchByRowid) init() {
+	m.data.SetName("oracledb.table_fetch_by_rowid")
+	m.data.SetDescription("Number of table fetches by rowid")
+	m.data.SetUnit("{fetches}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbTableFetchByRowid) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTableFetchByRowid) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTableFetchByRowid) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTableFetchByRowid(cfg MetricConfig) metricOracledbTableFetchByRowid {
+	m := metricOracledbTableFetchByRowid{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTableScansLong struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.table_scans_long metric with initial data.
+func (m *metricOracledbTableScansLong) init() {
+	m.data.SetName("oracledb.table_scans_long")
+	m.data.SetDescription("Number of long table scans (>5 blocks)")
+	m.data.SetUnit("{scans}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbTableScansLong) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTableScansLong) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTableScansLong) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTableScansLong(cfg MetricConfig) metricOracledbTableScansLong {
+	m := metricOracledbTableScansLong{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTableScansShort struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.table_scans_short metric with initial data.
+func (m *metricOracledbTableScansShort) init() {
+	m.data.SetName("oracledb.table_scans_short")
+	m.data.SetDescription("Number of short table scans (<=5 blocks)")
+	m.data.SetUnit("{scans}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbTableScansShort) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTableScansShort) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTableScansShort) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTableScansShort(cfg MetricConfig) metricOracledbTableScansShort {
+	m := metricOracledbTableScansShort{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTablespaceDatafileSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_datafile_size metric with initial data.
+func (m *metricOracledbTablespaceDatafileSize) init() {
+	m.data.SetName("oracledb.tablespace_datafile_size")
+	m.data.SetDescription("Size of tablespace datafiles")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespaceDatafileSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, datafileNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+	dp.Attributes().PutStr("datafile_name", datafileNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespaceDatafileSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespaceDatafileSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespaceDatafileSize(cfg MetricConfig) metricOracledbTablespaceDatafileSize {
+	m := metricOracledbTablespaceDatafileSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTablespaceFreeSpace struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_free_space metric with initial data.
+func (m *metricOracledbTablespaceFreeSpace) init() {
+	m.data.SetName("oracledb.tablespace_free_space")
+	m.data.SetDescription("Free space in tablespace")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespaceFreeSpace) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespaceFreeSpace) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespaceFreeSpace) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespaceFreeSpace(cfg MetricConfig) metricOracledbTablespaceFreeSpace {
+	m := metricOracledbTablespaceFreeSpace{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTablespaceLargestFreeSpace struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_largest_free_space metric with initial data.
+func (m *metricOracledbTablespaceLargestFreeSpace) init() {
+	m.data.SetName("oracledb.tablespace_largest_free_space")
+	m.data.SetDescription("Largest contiguous free space in tablespace")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespaceLargestFreeSpace) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespaceLargestFreeSpace) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespaceLargestFreeSpace) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespaceLargestFreeSpace(cfg MetricConfig) metricOracledbTablespaceLargestFreeSpace {
+	m := metricOracledbTablespaceLargestFreeSpace{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTablespaceNumberOfDatafiles struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_number_of_datafiles metric with initial data.
+func (m *metricOracledbTablespaceNumberOfDatafiles) init() {
+	m.data.SetName("oracledb.tablespace_number_of_datafiles")
+	m.data.SetDescription("Number of datafiles in tablespace")
+	m.data.SetUnit("{files}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespaceNumberOfDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespaceNumberOfDatafiles) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespaceNumberOfDatafiles) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespaceNumberOfDatafiles(cfg MetricConfig) metricOracledbTablespaceNumberOfDatafiles {
+	m := metricOracledbTablespaceNumberOfDatafiles{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbTablespaceOffline struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2709,6 +8054,57 @@ func (m *metricOracledbTablespaceOffline) emit(metrics pmetric.MetricSlice) {
 
 func newMetricOracledbTablespaceOffline(cfg MetricConfig) metricOracledbTablespaceOffline {
 	m := metricOracledbTablespaceOffline{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTablespacePercentUsed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_percent_used metric with initial data.
+func (m *metricOracledbTablespacePercentUsed) init() {
+	m.data.SetName("oracledb.tablespace_percent_used")
+	m.data.SetDescription("Percentage of tablespace used")
+	m.data.SetUnit("%")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespacePercentUsed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespacePercentUsed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespacePercentUsed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespacePercentUsed(cfg MetricConfig) metricOracledbTablespacePercentUsed {
+	m := metricOracledbTablespacePercentUsed{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -2818,6 +8214,109 @@ func newMetricOracledbTablespaceSizeUsage(cfg MetricConfig) metricOracledbTables
 	return m
 }
 
+type metricOracledbTablespaceStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_status metric with initial data.
+func (m *metricOracledbTablespaceStatus) init() {
+	m.data.SetName("oracledb.tablespace_status")
+	m.data.SetDescription("Status of tablespace (online=1, offline=0)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespaceStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, tablespaceStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+	dp.Attributes().PutStr("tablespace_status", tablespaceStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespaceStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespaceStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespaceStatus(cfg MetricConfig) metricOracledbTablespaceStatus {
+	m := metricOracledbTablespaceStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTablespaceTotalSpace struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_total_space metric with initial data.
+func (m *metricOracledbTablespaceTotalSpace) init() {
+	m.data.SetName("oracledb.tablespace_total_space")
+	m.data.SetDescription("Total space allocated to tablespace")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespaceTotalSpace) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespaceTotalSpace) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespaceTotalSpace) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespaceTotalSpace(cfg MetricConfig) metricOracledbTablespaceTotalSpace {
+	m := metricOracledbTablespaceTotalSpace{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricOracledbTablespaceUsagePercentage struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2862,6 +8361,157 @@ func (m *metricOracledbTablespaceUsagePercentage) emit(metrics pmetric.MetricSli
 
 func newMetricOracledbTablespaceUsagePercentage(cfg MetricConfig) metricOracledbTablespaceUsagePercentage {
 	m := metricOracledbTablespaceUsagePercentage{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTablespaceUsedSpace struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.tablespace_used_space metric with initial data.
+func (m *metricOracledbTablespaceUsedSpace) init() {
+	m.data.SetName("oracledb.tablespace_used_space")
+	m.data.SetDescription("Used space in tablespace")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricOracledbTablespaceUsedSpace) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTablespaceUsedSpace) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTablespaceUsedSpace) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTablespaceUsedSpace(cfg MetricConfig) metricOracledbTablespaceUsedSpace {
+	m := metricOracledbTablespaceUsedSpace{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTempSpaceAllocated struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.temp_space_allocated metric with initial data.
+func (m *metricOracledbTempSpaceAllocated) init() {
+	m.data.SetName("oracledb.temp_space_allocated")
+	m.data.SetDescription("Amount of temporary space allocated")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricOracledbTempSpaceAllocated) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTempSpaceAllocated) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTempSpaceAllocated) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTempSpaceAllocated(cfg MetricConfig) metricOracledbTempSpaceAllocated {
+	m := metricOracledbTempSpaceAllocated{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricOracledbTotalSessionsCreated struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills oracledb.total_sessions_created metric with initial data.
+func (m *metricOracledbTotalSessionsCreated) init() {
+	m.data.SetName("oracledb.total_sessions_created")
+	m.data.SetDescription("Total number of sessions created since instance startup")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricOracledbTotalSessionsCreated) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricOracledbTotalSessionsCreated) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricOracledbTotalSessionsCreated) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricOracledbTotalSessionsCreated(cfg MetricConfig) metricOracledbTotalSessionsCreated {
+	m := metricOracledbTotalSessionsCreated{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -3174,71 +8824,175 @@ func newMetricOracledbWaitTime(cfg MetricConfig) metricOracledbWaitTime {
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                                              MetricsBuilderConfig // config of the metrics builder.
-	startTime                                           pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                                     int                  // maximum observed number of metrics per resource.
-	metricsBuffer                                       pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                                           component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter                      map[string]filter.Filter
-	resourceAttributeExcludeFilter                      map[string]filter.Filter
-	metricOracledbBufferCacheHitRatio                   metricOracledbBufferCacheHitRatio
-	metricOracledbConsistentGets                        metricOracledbConsistentGets
-	metricOracledbCPUTime                               metricOracledbCPUTime
-	metricOracledbDbBlockGets                           metricOracledbDbBlockGets
-	metricOracledbDdlStatementsParallelized             metricOracledbDdlStatementsParallelized
-	metricOracledbDmlLocksLimit                         metricOracledbDmlLocksLimit
-	metricOracledbDmlLocksUsage                         metricOracledbDmlLocksUsage
-	metricOracledbDmlStatementsParallelized             metricOracledbDmlStatementsParallelized
-	metricOracledbEnqueueDeadlocks                      metricOracledbEnqueueDeadlocks
-	metricOracledbEnqueueLocksLimit                     metricOracledbEnqueueLocksLimit
-	metricOracledbEnqueueLocksUsage                     metricOracledbEnqueueLocksUsage
-	metricOracledbEnqueueResourcesLimit                 metricOracledbEnqueueResourcesLimit
-	metricOracledbEnqueueResourcesUsage                 metricOracledbEnqueueResourcesUsage
-	metricOracledbExchangeDeadlocks                     metricOracledbExchangeDeadlocks
-	metricOracledbExecutions                            metricOracledbExecutions
-	metricOracledbHardParses                            metricOracledbHardParses
-	metricOracledbLibraryCacheHitRatio                  metricOracledbLibraryCacheHitRatio
-	metricOracledbLogicalReads                          metricOracledbLogicalReads
-	metricOracledbLogons                                metricOracledbLogons
-	metricOracledbParallelOperationsDowngraded1To25Pct  metricOracledbParallelOperationsDowngraded1To25Pct
-	metricOracledbParallelOperationsDowngraded25To50Pct metricOracledbParallelOperationsDowngraded25To50Pct
-	metricOracledbParallelOperationsDowngraded50To75Pct metricOracledbParallelOperationsDowngraded50To75Pct
-	metricOracledbParallelOperationsDowngraded75To99Pct metricOracledbParallelOperationsDowngraded75To99Pct
-	metricOracledbParallelOperationsDowngradedToSerial  metricOracledbParallelOperationsDowngradedToSerial
-	metricOracledbParallelOperationsNotDowngraded       metricOracledbParallelOperationsNotDowngraded
-	metricOracledbParseCalls                            metricOracledbParseCalls
-	metricOracledbPgaAllocatedMemory                    metricOracledbPgaAllocatedMemory
-	metricOracledbPgaFreeableMemory                     metricOracledbPgaFreeableMemory
-	metricOracledbPgaMaximumMemory                      metricOracledbPgaMaximumMemory
-	metricOracledbPgaMemory                             metricOracledbPgaMemory
-	metricOracledbPgaUsedMemory                         metricOracledbPgaUsedMemory
-	metricOracledbPhysicalReadBytes                     metricOracledbPhysicalReadBytes
-	metricOracledbPhysicalReadIoRequests                metricOracledbPhysicalReadIoRequests
-	metricOracledbPhysicalReads                         metricOracledbPhysicalReads
-	metricOracledbPhysicalReadsDirect                   metricOracledbPhysicalReadsDirect
-	metricOracledbPhysicalWriteBytes                    metricOracledbPhysicalWriteBytes
-	metricOracledbPhysicalWriteIoRequests               metricOracledbPhysicalWriteIoRequests
-	metricOracledbPhysicalWrites                        metricOracledbPhysicalWrites
-	metricOracledbPhysicalWritesDirect                  metricOracledbPhysicalWritesDirect
-	metricOracledbProcessesLimit                        metricOracledbProcessesLimit
-	metricOracledbProcessesUsage                        metricOracledbProcessesUsage
-	metricOracledbQueriesParallelized                   metricOracledbQueriesParallelized
-	metricOracledbRedoSize                              metricOracledbRedoSize
-	metricOracledbRowCacheHitRatio                      metricOracledbRowCacheHitRatio
-	metricOracledbSessions                              metricOracledbSessions
-	metricOracledbSessionsLimit                         metricOracledbSessionsLimit
-	metricOracledbSgaFixedSize                          metricOracledbSgaFixedSize
-	metricOracledbSharedPoolFree                        metricOracledbSharedPoolFree
-	metricOracledbTablespaceOffline                     metricOracledbTablespaceOffline
-	metricOracledbTablespaceSizeLimit                   metricOracledbTablespaceSizeLimit
-	metricOracledbTablespaceSizeUsage                   metricOracledbTablespaceSizeUsage
-	metricOracledbTablespaceUsagePercentage             metricOracledbTablespaceUsagePercentage
-	metricOracledbTransactionsLimit                     metricOracledbTransactionsLimit
-	metricOracledbTransactionsUsage                     metricOracledbTransactionsUsage
-	metricOracledbUserCommits                           metricOracledbUserCommits
-	metricOracledbUserRollbacks                         metricOracledbUserRollbacks
-	metricOracledbWaitEvents                            metricOracledbWaitEvents
-	metricOracledbWaitTime                              metricOracledbWaitTime
+	config                                                     MetricsBuilderConfig // config of the metrics builder.
+	startTime                                                  pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                                            int                  // maximum observed number of metrics per resource.
+	metricsBuffer                                              pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                                                  component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter                             map[string]filter.Filter
+	resourceAttributeExcludeFilter                             map[string]filter.Filter
+	metricOracledbBackgroundCheckpointsCompleted               metricOracledbBackgroundCheckpointsCompleted
+	metricOracledbBackgroundCPUUsage                           metricOracledbBackgroundCPUUsage
+	metricOracledbBufferBusyWaits                              metricOracledbBufferBusyWaits
+	metricOracledbBufferCacheHitRatio                          metricOracledbBufferCacheHitRatio
+	metricOracledbBufferCacheSize                              metricOracledbBufferCacheSize
+	metricOracledbConsistentGets                               metricOracledbConsistentGets
+	metricOracledbCPUTime                                      metricOracledbCPUTime
+	metricOracledbCPUUsagePercentage                           metricOracledbCPUUsagePercentage
+	metricOracledbDatabaseCPUTimeRatio                         metricOracledbDatabaseCPUTimeRatio
+	metricOracledbDatabaseWaitTimeRatio                        metricOracledbDatabaseWaitTimeRatio
+	metricOracledbDbBlockGets                                  metricOracledbDbBlockGets
+	metricOracledbDdlStatementsParallelized                    metricOracledbDdlStatementsParallelized
+	metricOracledbDiskFree                                     metricOracledbDiskFree
+	metricOracledbDiskReads                                    metricOracledbDiskReads
+	metricOracledbDiskTotal                                    metricOracledbDiskTotal
+	metricOracledbDiskUsed                                     metricOracledbDiskUsed
+	metricOracledbDiskUtilization                              metricOracledbDiskUtilization
+	metricOracledbDiskWrites                                   metricOracledbDiskWrites
+	metricOracledbDmlLocksLimit                                metricOracledbDmlLocksLimit
+	metricOracledbDmlLocksUsage                                metricOracledbDmlLocksUsage
+	metricOracledbDmlStatementsParallelized                    metricOracledbDmlStatementsParallelized
+	metricOracledbElapsedTime                                  metricOracledbElapsedTime
+	metricOracledbEnqueueDeadlocks                             metricOracledbEnqueueDeadlocks
+	metricOracledbEnqueueLocksLimit                            metricOracledbEnqueueLocksLimit
+	metricOracledbEnqueueLocksUsage                            metricOracledbEnqueueLocksUsage
+	metricOracledbEnqueueResourcesLimit                        metricOracledbEnqueueResourcesLimit
+	metricOracledbEnqueueResourcesUsage                        metricOracledbEnqueueResourcesUsage
+	metricOracledbExchangeDeadlocks                            metricOracledbExchangeDeadlocks
+	metricOracledbExecutionCount                               metricOracledbExecutionCount
+	metricOracledbExecutions                                   metricOracledbExecutions
+	metricOracledbFailedConnections                            metricOracledbFailedConnections
+	metricOracledbFileIoWaitTime                               metricOracledbFileIoWaitTime
+	metricOracledbGcCrBlocksReceived                           metricOracledbGcCrBlocksReceived
+	metricOracledbGcCurrentBlocksReceived                      metricOracledbGcCurrentBlocksReceived
+	metricOracledbHardParses                                   metricOracledbHardParses
+	metricOracledbIndexFastFullScans                           metricOracledbIndexFastFullScans
+	metricOracledbIndexRangeScans                              metricOracledbIndexRangeScans
+	metricOracledbLeafNodeSplits                               metricOracledbLeafNodeSplits
+	metricOracledbLibraryCacheHitRatio                         metricOracledbLibraryCacheHitRatio
+	metricOracledbLibraryCacheLockWaits                        metricOracledbLibraryCacheLockWaits
+	metricOracledbLibraryCachePinWaits                         metricOracledbLibraryCachePinWaits
+	metricOracledbLockMemory                                   metricOracledbLockMemory
+	metricOracledbLogFileSyncWaits                             metricOracledbLogFileSyncWaits
+	metricOracledbLogicalReads                                 metricOracledbLogicalReads
+	metricOracledbLogons                                       metricOracledbLogons
+	metricOracledbNetworkBytesReceived                         metricOracledbNetworkBytesReceived
+	metricOracledbNetworkBytesSent                             metricOracledbNetworkBytesSent
+	metricOracledbNetworkPacketsReceived                       metricOracledbNetworkPacketsReceived
+	metricOracledbNetworkPacketsSent                           metricOracledbNetworkPacketsSent
+	metricOracledbNetworkTrafficVolume                         metricOracledbNetworkTrafficVolume
+	metricOracledbOsLoad                                       metricOracledbOsLoad
+	metricOracledbParallelOperationsDowngraded1To25Pct         metricOracledbParallelOperationsDowngraded1To25Pct
+	metricOracledbParallelOperationsDowngraded25To50Pct        metricOracledbParallelOperationsDowngraded25To50Pct
+	metricOracledbParallelOperationsDowngraded50To75Pct        metricOracledbParallelOperationsDowngraded50To75Pct
+	metricOracledbParallelOperationsDowngraded75To99Pct        metricOracledbParallelOperationsDowngraded75To99Pct
+	metricOracledbParallelOperationsDowngradedToSerial         metricOracledbParallelOperationsDowngradedToSerial
+	metricOracledbParallelOperationsNotDowngraded              metricOracledbParallelOperationsNotDowngraded
+	metricOracledbParseCalls                                   metricOracledbParseCalls
+	metricOracledbPgaAggregateLimit                            metricOracledbPgaAggregateLimit
+	metricOracledbPgaAggregateTarget                           metricOracledbPgaAggregateTarget
+	metricOracledbPgaAllocatedMemory                           metricOracledbPgaAllocatedMemory
+	metricOracledbPgaFreeableMemory                            metricOracledbPgaFreeableMemory
+	metricOracledbPgaGlobalMemoryBound                         metricOracledbPgaGlobalMemoryBound
+	metricOracledbPgaMaximumMemory                             metricOracledbPgaMaximumMemory
+	metricOracledbPgaMemory                                    metricOracledbPgaMemory
+	metricOracledbPgaOverAllocationCount                       metricOracledbPgaOverAllocationCount
+	metricOracledbPgaUsedMemory                                metricOracledbPgaUsedMemory
+	metricOracledbPhysicalReadBytes                            metricOracledbPhysicalReadBytes
+	metricOracledbPhysicalReadIoRequests                       metricOracledbPhysicalReadIoRequests
+	metricOracledbPhysicalReads                                metricOracledbPhysicalReads
+	metricOracledbPhysicalReadsDirect                          metricOracledbPhysicalReadsDirect
+	metricOracledbPhysicalWriteBytes                           metricOracledbPhysicalWriteBytes
+	metricOracledbPhysicalWriteIoRequests                      metricOracledbPhysicalWriteIoRequests
+	metricOracledbPhysicalWrites                               metricOracledbPhysicalWrites
+	metricOracledbPhysicalWritesDirect                         metricOracledbPhysicalWritesDirect
+	metricOracledbPinnedBuffers                                metricOracledbPinnedBuffers
+	metricOracledbProcessesLimit                               metricOracledbProcessesLimit
+	metricOracledbProcessesUsage                               metricOracledbProcessesUsage
+	metricOracledbQueriesParallelized                          metricOracledbQueriesParallelized
+	metricOracledbQueryAvgActiveSessions                       metricOracledbQueryAvgActiveSessions
+	metricOracledbQueryAvgBufferGets                           metricOracledbQueryAvgBufferGets
+	metricOracledbQueryAvgCPUTime                              metricOracledbQueryAvgCPUTime
+	metricOracledbQueryAvgDiskReads                            metricOracledbQueryAvgDiskReads
+	metricOracledbQueryAvgElapsedTime                          metricOracledbQueryAvgElapsedTime
+	metricOracledbQueryAvgExecutionTime                        metricOracledbQueryAvgExecutionTime
+	metricOracledbQueryAvgExecutionsPerSec                     metricOracledbQueryAvgExecutionsPerSec
+	metricOracledbQueryAvgRowsProcessed                        metricOracledbQueryAvgRowsProcessed
+	metricOracledbQueryBlockedSessions                         metricOracledbQueryBlockedSessions
+	metricOracledbQueryBufferGetsPerExecution                  metricOracledbQueryBufferGetsPerExecution
+	metricOracledbQueryCPUTimePerExecution                     metricOracledbQueryCPUTimePerExecution
+	metricOracledbQueryDiskReadsPerExecution                   metricOracledbQueryDiskReadsPerExecution
+	metricOracledbQueryElapsedTimePerExecution                 metricOracledbQueryElapsedTimePerExecution
+	metricOracledbQueryExecutionsDelta                         metricOracledbQueryExecutionsDelta
+	metricOracledbQueryLongRunningQueries                      metricOracledbQueryLongRunningQueries
+	metricOracledbQueryRowsProcessedPerExecution               metricOracledbQueryRowsProcessedPerExecution
+	metricOracledbQueryTotalBufferGets                         metricOracledbQueryTotalBufferGets
+	metricOracledbQueryTotalCPUTime                            metricOracledbQueryTotalCPUTime
+	metricOracledbQueryTotalDiskReads                          metricOracledbQueryTotalDiskReads
+	metricOracledbQueryTotalElapsedTime                        metricOracledbQueryTotalElapsedTime
+	metricOracledbQueryTotalExecutions                         metricOracledbQueryTotalExecutions
+	metricOracledbQueryTotalRowsProcessed                      metricOracledbQueryTotalRowsProcessed
+	metricOracledbRedoSize                                     metricOracledbRedoSize
+	metricOracledbResponseTimePerTransaction                   metricOracledbResponseTimePerTransaction
+	metricOracledbRowCacheHitRatio                             metricOracledbRowCacheHitRatio
+	metricOracledbRowsFetched                                  metricOracledbRowsFetched
+	metricOracledbSessions                                     metricOracledbSessions
+	metricOracledbSessionsLimit                                metricOracledbSessionsLimit
+	metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads
+	metricOracledbSgaBufferCacheAdvisorySizeFactor             metricOracledbSgaBufferCacheAdvisorySizeFactor
+	metricOracledbSgaBufferCacheAdvisorySizeForEstimate        metricOracledbSgaBufferCacheAdvisorySizeForEstimate
+	metricOracledbSgaBufferCacheSize                           metricOracledbSgaBufferCacheSize
+	metricOracledbSgaDataBufferCacheSize                       metricOracledbSgaDataBufferCacheSize
+	metricOracledbSgaDatabaseBufferCache                       metricOracledbSgaDatabaseBufferCache
+	metricOracledbSgaDefaultBufferPoolSize                     metricOracledbSgaDefaultBufferPoolSize
+	metricOracledbSgaFixedBufferCacheSize                      metricOracledbSgaFixedBufferCacheSize
+	metricOracledbSgaFixedSize                                 metricOracledbSgaFixedSize
+	metricOracledbSgaJavaPoolSize                              metricOracledbSgaJavaPoolSize
+	metricOracledbSgaKeepBufferPoolSize                        metricOracledbSgaKeepBufferPoolSize
+	metricOracledbSgaLargePoolSize                             metricOracledbSgaLargePoolSize
+	metricOracledbSgaLogBuffer                                 metricOracledbSgaLogBuffer
+	metricOracledbSgaMaximumSize                               metricOracledbSgaMaximumSize
+	metricOracledbSgaRecycleBufferPoolSize                     metricOracledbSgaRecycleBufferPoolSize
+	metricOracledbSgaRedoBuffers                               metricOracledbSgaRedoBuffers
+	metricOracledbSgaReservedSharedPoolSize                    metricOracledbSgaReservedSharedPoolSize
+	metricOracledbSgaSharedIoPoolSize                          metricOracledbSgaSharedIoPoolSize
+	metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved
+	metricOracledbSgaSharedPoolAdvisorySizeFactor              metricOracledbSgaSharedPoolAdvisorySizeFactor
+	metricOracledbSgaSharedPoolAdvisorySizeForEstimate         metricOracledbSgaSharedPoolAdvisorySizeForEstimate
+	metricOracledbSgaSharedPoolFreeMemory                      metricOracledbSgaSharedPoolFreeMemory
+	metricOracledbSgaSharedPoolReservedFreeMemory              metricOracledbSgaSharedPoolReservedFreeMemory
+	metricOracledbSgaSharedPoolReservedUsedMemory              metricOracledbSgaSharedPoolReservedUsedMemory
+	metricOracledbSgaSharedPoolUsedMemory                      metricOracledbSgaSharedPoolUsedMemory
+	metricOracledbSgaSize                                      metricOracledbSgaSize
+	metricOracledbSgaStreamsPoolSize                           metricOracledbSgaStreamsPoolSize
+	metricOracledbSharedPoolFree                               metricOracledbSharedPoolFree
+	metricOracledbSharedPoolReservedSize                       metricOracledbSharedPoolReservedSize
+	metricOracledbSharedPoolSize                               metricOracledbSharedPoolSize
+	metricOracledbSortSegmentSize                              metricOracledbSortSegmentSize
+	metricOracledbSQLAreaEvicted                               metricOracledbSQLAreaEvicted
+	metricOracledbTableFetchByRowid                            metricOracledbTableFetchByRowid
+	metricOracledbTableScansLong                               metricOracledbTableScansLong
+	metricOracledbTableScansShort                              metricOracledbTableScansShort
+	metricOracledbTablespaceDatafileSize                       metricOracledbTablespaceDatafileSize
+	metricOracledbTablespaceFreeSpace                          metricOracledbTablespaceFreeSpace
+	metricOracledbTablespaceLargestFreeSpace                   metricOracledbTablespaceLargestFreeSpace
+	metricOracledbTablespaceNumberOfDatafiles                  metricOracledbTablespaceNumberOfDatafiles
+	metricOracledbTablespaceOffline                            metricOracledbTablespaceOffline
+	metricOracledbTablespacePercentUsed                        metricOracledbTablespacePercentUsed
+	metricOracledbTablespaceSizeLimit                          metricOracledbTablespaceSizeLimit
+	metricOracledbTablespaceSizeUsage                          metricOracledbTablespaceSizeUsage
+	metricOracledbTablespaceStatus                             metricOracledbTablespaceStatus
+	metricOracledbTablespaceTotalSpace                         metricOracledbTablespaceTotalSpace
+	metricOracledbTablespaceUsagePercentage                    metricOracledbTablespaceUsagePercentage
+	metricOracledbTablespaceUsedSpace                          metricOracledbTablespaceUsedSpace
+	metricOracledbTempSpaceAllocated                           metricOracledbTempSpaceAllocated
+	metricOracledbTotalSessionsCreated                         metricOracledbTotalSessionsCreated
+	metricOracledbTransactionsLimit                            metricOracledbTransactionsLimit
+	metricOracledbTransactionsUsage                            metricOracledbTransactionsUsage
+	metricOracledbUserCommits                                  metricOracledbUserCommits
+	metricOracledbUserRollbacks                                metricOracledbUserRollbacks
+	metricOracledbWaitEvents                                   metricOracledbWaitEvents
+	metricOracledbWaitTime                                     metricOracledbWaitTime
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -3260,70 +9014,174 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                              mbc,
-		startTime:                                           pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                                       pmetric.NewMetrics(),
-		buildInfo:                                           settings.BuildInfo,
-		metricOracledbBufferCacheHitRatio:                   newMetricOracledbBufferCacheHitRatio(mbc.Metrics.OracledbBufferCacheHitRatio),
-		metricOracledbConsistentGets:                        newMetricOracledbConsistentGets(mbc.Metrics.OracledbConsistentGets),
-		metricOracledbCPUTime:                               newMetricOracledbCPUTime(mbc.Metrics.OracledbCPUTime),
-		metricOracledbDbBlockGets:                           newMetricOracledbDbBlockGets(mbc.Metrics.OracledbDbBlockGets),
-		metricOracledbDdlStatementsParallelized:             newMetricOracledbDdlStatementsParallelized(mbc.Metrics.OracledbDdlStatementsParallelized),
-		metricOracledbDmlLocksLimit:                         newMetricOracledbDmlLocksLimit(mbc.Metrics.OracledbDmlLocksLimit),
-		metricOracledbDmlLocksUsage:                         newMetricOracledbDmlLocksUsage(mbc.Metrics.OracledbDmlLocksUsage),
-		metricOracledbDmlStatementsParallelized:             newMetricOracledbDmlStatementsParallelized(mbc.Metrics.OracledbDmlStatementsParallelized),
-		metricOracledbEnqueueDeadlocks:                      newMetricOracledbEnqueueDeadlocks(mbc.Metrics.OracledbEnqueueDeadlocks),
-		metricOracledbEnqueueLocksLimit:                     newMetricOracledbEnqueueLocksLimit(mbc.Metrics.OracledbEnqueueLocksLimit),
-		metricOracledbEnqueueLocksUsage:                     newMetricOracledbEnqueueLocksUsage(mbc.Metrics.OracledbEnqueueLocksUsage),
-		metricOracledbEnqueueResourcesLimit:                 newMetricOracledbEnqueueResourcesLimit(mbc.Metrics.OracledbEnqueueResourcesLimit),
-		metricOracledbEnqueueResourcesUsage:                 newMetricOracledbEnqueueResourcesUsage(mbc.Metrics.OracledbEnqueueResourcesUsage),
-		metricOracledbExchangeDeadlocks:                     newMetricOracledbExchangeDeadlocks(mbc.Metrics.OracledbExchangeDeadlocks),
-		metricOracledbExecutions:                            newMetricOracledbExecutions(mbc.Metrics.OracledbExecutions),
-		metricOracledbHardParses:                            newMetricOracledbHardParses(mbc.Metrics.OracledbHardParses),
-		metricOracledbLibraryCacheHitRatio:                  newMetricOracledbLibraryCacheHitRatio(mbc.Metrics.OracledbLibraryCacheHitRatio),
-		metricOracledbLogicalReads:                          newMetricOracledbLogicalReads(mbc.Metrics.OracledbLogicalReads),
-		metricOracledbLogons:                                newMetricOracledbLogons(mbc.Metrics.OracledbLogons),
-		metricOracledbParallelOperationsDowngraded1To25Pct:  newMetricOracledbParallelOperationsDowngraded1To25Pct(mbc.Metrics.OracledbParallelOperationsDowngraded1To25Pct),
-		metricOracledbParallelOperationsDowngraded25To50Pct: newMetricOracledbParallelOperationsDowngraded25To50Pct(mbc.Metrics.OracledbParallelOperationsDowngraded25To50Pct),
-		metricOracledbParallelOperationsDowngraded50To75Pct: newMetricOracledbParallelOperationsDowngraded50To75Pct(mbc.Metrics.OracledbParallelOperationsDowngraded50To75Pct),
-		metricOracledbParallelOperationsDowngraded75To99Pct: newMetricOracledbParallelOperationsDowngraded75To99Pct(mbc.Metrics.OracledbParallelOperationsDowngraded75To99Pct),
-		metricOracledbParallelOperationsDowngradedToSerial:  newMetricOracledbParallelOperationsDowngradedToSerial(mbc.Metrics.OracledbParallelOperationsDowngradedToSerial),
-		metricOracledbParallelOperationsNotDowngraded:       newMetricOracledbParallelOperationsNotDowngraded(mbc.Metrics.OracledbParallelOperationsNotDowngraded),
-		metricOracledbParseCalls:                            newMetricOracledbParseCalls(mbc.Metrics.OracledbParseCalls),
-		metricOracledbPgaAllocatedMemory:                    newMetricOracledbPgaAllocatedMemory(mbc.Metrics.OracledbPgaAllocatedMemory),
-		metricOracledbPgaFreeableMemory:                     newMetricOracledbPgaFreeableMemory(mbc.Metrics.OracledbPgaFreeableMemory),
-		metricOracledbPgaMaximumMemory:                      newMetricOracledbPgaMaximumMemory(mbc.Metrics.OracledbPgaMaximumMemory),
-		metricOracledbPgaMemory:                             newMetricOracledbPgaMemory(mbc.Metrics.OracledbPgaMemory),
-		metricOracledbPgaUsedMemory:                         newMetricOracledbPgaUsedMemory(mbc.Metrics.OracledbPgaUsedMemory),
-		metricOracledbPhysicalReadBytes:                     newMetricOracledbPhysicalReadBytes(mbc.Metrics.OracledbPhysicalReadBytes),
-		metricOracledbPhysicalReadIoRequests:                newMetricOracledbPhysicalReadIoRequests(mbc.Metrics.OracledbPhysicalReadIoRequests),
-		metricOracledbPhysicalReads:                         newMetricOracledbPhysicalReads(mbc.Metrics.OracledbPhysicalReads),
-		metricOracledbPhysicalReadsDirect:                   newMetricOracledbPhysicalReadsDirect(mbc.Metrics.OracledbPhysicalReadsDirect),
-		metricOracledbPhysicalWriteBytes:                    newMetricOracledbPhysicalWriteBytes(mbc.Metrics.OracledbPhysicalWriteBytes),
-		metricOracledbPhysicalWriteIoRequests:               newMetricOracledbPhysicalWriteIoRequests(mbc.Metrics.OracledbPhysicalWriteIoRequests),
-		metricOracledbPhysicalWrites:                        newMetricOracledbPhysicalWrites(mbc.Metrics.OracledbPhysicalWrites),
-		metricOracledbPhysicalWritesDirect:                  newMetricOracledbPhysicalWritesDirect(mbc.Metrics.OracledbPhysicalWritesDirect),
-		metricOracledbProcessesLimit:                        newMetricOracledbProcessesLimit(mbc.Metrics.OracledbProcessesLimit),
-		metricOracledbProcessesUsage:                        newMetricOracledbProcessesUsage(mbc.Metrics.OracledbProcessesUsage),
-		metricOracledbQueriesParallelized:                   newMetricOracledbQueriesParallelized(mbc.Metrics.OracledbQueriesParallelized),
-		metricOracledbRedoSize:                              newMetricOracledbRedoSize(mbc.Metrics.OracledbRedoSize),
-		metricOracledbRowCacheHitRatio:                      newMetricOracledbRowCacheHitRatio(mbc.Metrics.OracledbRowCacheHitRatio),
-		metricOracledbSessions:                              newMetricOracledbSessions(mbc.Metrics.OracledbSessions),
-		metricOracledbSessionsLimit:                         newMetricOracledbSessionsLimit(mbc.Metrics.OracledbSessionsLimit),
-		metricOracledbSgaFixedSize:                          newMetricOracledbSgaFixedSize(mbc.Metrics.OracledbSgaFixedSize),
-		metricOracledbSharedPoolFree:                        newMetricOracledbSharedPoolFree(mbc.Metrics.OracledbSharedPoolFree),
-		metricOracledbTablespaceOffline:                     newMetricOracledbTablespaceOffline(mbc.Metrics.OracledbTablespaceOffline),
-		metricOracledbTablespaceSizeLimit:                   newMetricOracledbTablespaceSizeLimit(mbc.Metrics.OracledbTablespaceSizeLimit),
-		metricOracledbTablespaceSizeUsage:                   newMetricOracledbTablespaceSizeUsage(mbc.Metrics.OracledbTablespaceSizeUsage),
-		metricOracledbTablespaceUsagePercentage:             newMetricOracledbTablespaceUsagePercentage(mbc.Metrics.OracledbTablespaceUsagePercentage),
-		metricOracledbTransactionsLimit:                     newMetricOracledbTransactionsLimit(mbc.Metrics.OracledbTransactionsLimit),
-		metricOracledbTransactionsUsage:                     newMetricOracledbTransactionsUsage(mbc.Metrics.OracledbTransactionsUsage),
-		metricOracledbUserCommits:                           newMetricOracledbUserCommits(mbc.Metrics.OracledbUserCommits),
-		metricOracledbUserRollbacks:                         newMetricOracledbUserRollbacks(mbc.Metrics.OracledbUserRollbacks),
-		metricOracledbWaitEvents:                            newMetricOracledbWaitEvents(mbc.Metrics.OracledbWaitEvents),
-		metricOracledbWaitTime:                              newMetricOracledbWaitTime(mbc.Metrics.OracledbWaitTime),
-		resourceAttributeIncludeFilter:                      make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:                      make(map[string]filter.Filter),
+		config:        mbc,
+		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer: pmetric.NewMetrics(),
+		buildInfo:     settings.BuildInfo,
+		metricOracledbBackgroundCheckpointsCompleted:               newMetricOracledbBackgroundCheckpointsCompleted(mbc.Metrics.OracledbBackgroundCheckpointsCompleted),
+		metricOracledbBackgroundCPUUsage:                           newMetricOracledbBackgroundCPUUsage(mbc.Metrics.OracledbBackgroundCPUUsage),
+		metricOracledbBufferBusyWaits:                              newMetricOracledbBufferBusyWaits(mbc.Metrics.OracledbBufferBusyWaits),
+		metricOracledbBufferCacheHitRatio:                          newMetricOracledbBufferCacheHitRatio(mbc.Metrics.OracledbBufferCacheHitRatio),
+		metricOracledbBufferCacheSize:                              newMetricOracledbBufferCacheSize(mbc.Metrics.OracledbBufferCacheSize),
+		metricOracledbConsistentGets:                               newMetricOracledbConsistentGets(mbc.Metrics.OracledbConsistentGets),
+		metricOracledbCPUTime:                                      newMetricOracledbCPUTime(mbc.Metrics.OracledbCPUTime),
+		metricOracledbCPUUsagePercentage:                           newMetricOracledbCPUUsagePercentage(mbc.Metrics.OracledbCPUUsagePercentage),
+		metricOracledbDatabaseCPUTimeRatio:                         newMetricOracledbDatabaseCPUTimeRatio(mbc.Metrics.OracledbDatabaseCPUTimeRatio),
+		metricOracledbDatabaseWaitTimeRatio:                        newMetricOracledbDatabaseWaitTimeRatio(mbc.Metrics.OracledbDatabaseWaitTimeRatio),
+		metricOracledbDbBlockGets:                                  newMetricOracledbDbBlockGets(mbc.Metrics.OracledbDbBlockGets),
+		metricOracledbDdlStatementsParallelized:                    newMetricOracledbDdlStatementsParallelized(mbc.Metrics.OracledbDdlStatementsParallelized),
+		metricOracledbDiskFree:                                     newMetricOracledbDiskFree(mbc.Metrics.OracledbDiskFree),
+		metricOracledbDiskReads:                                    newMetricOracledbDiskReads(mbc.Metrics.OracledbDiskReads),
+		metricOracledbDiskTotal:                                    newMetricOracledbDiskTotal(mbc.Metrics.OracledbDiskTotal),
+		metricOracledbDiskUsed:                                     newMetricOracledbDiskUsed(mbc.Metrics.OracledbDiskUsed),
+		metricOracledbDiskUtilization:                              newMetricOracledbDiskUtilization(mbc.Metrics.OracledbDiskUtilization),
+		metricOracledbDiskWrites:                                   newMetricOracledbDiskWrites(mbc.Metrics.OracledbDiskWrites),
+		metricOracledbDmlLocksLimit:                                newMetricOracledbDmlLocksLimit(mbc.Metrics.OracledbDmlLocksLimit),
+		metricOracledbDmlLocksUsage:                                newMetricOracledbDmlLocksUsage(mbc.Metrics.OracledbDmlLocksUsage),
+		metricOracledbDmlStatementsParallelized:                    newMetricOracledbDmlStatementsParallelized(mbc.Metrics.OracledbDmlStatementsParallelized),
+		metricOracledbElapsedTime:                                  newMetricOracledbElapsedTime(mbc.Metrics.OracledbElapsedTime),
+		metricOracledbEnqueueDeadlocks:                             newMetricOracledbEnqueueDeadlocks(mbc.Metrics.OracledbEnqueueDeadlocks),
+		metricOracledbEnqueueLocksLimit:                            newMetricOracledbEnqueueLocksLimit(mbc.Metrics.OracledbEnqueueLocksLimit),
+		metricOracledbEnqueueLocksUsage:                            newMetricOracledbEnqueueLocksUsage(mbc.Metrics.OracledbEnqueueLocksUsage),
+		metricOracledbEnqueueResourcesLimit:                        newMetricOracledbEnqueueResourcesLimit(mbc.Metrics.OracledbEnqueueResourcesLimit),
+		metricOracledbEnqueueResourcesUsage:                        newMetricOracledbEnqueueResourcesUsage(mbc.Metrics.OracledbEnqueueResourcesUsage),
+		metricOracledbExchangeDeadlocks:                            newMetricOracledbExchangeDeadlocks(mbc.Metrics.OracledbExchangeDeadlocks),
+		metricOracledbExecutionCount:                               newMetricOracledbExecutionCount(mbc.Metrics.OracledbExecutionCount),
+		metricOracledbExecutions:                                   newMetricOracledbExecutions(mbc.Metrics.OracledbExecutions),
+		metricOracledbFailedConnections:                            newMetricOracledbFailedConnections(mbc.Metrics.OracledbFailedConnections),
+		metricOracledbFileIoWaitTime:                               newMetricOracledbFileIoWaitTime(mbc.Metrics.OracledbFileIoWaitTime),
+		metricOracledbGcCrBlocksReceived:                           newMetricOracledbGcCrBlocksReceived(mbc.Metrics.OracledbGcCrBlocksReceived),
+		metricOracledbGcCurrentBlocksReceived:                      newMetricOracledbGcCurrentBlocksReceived(mbc.Metrics.OracledbGcCurrentBlocksReceived),
+		metricOracledbHardParses:                                   newMetricOracledbHardParses(mbc.Metrics.OracledbHardParses),
+		metricOracledbIndexFastFullScans:                           newMetricOracledbIndexFastFullScans(mbc.Metrics.OracledbIndexFastFullScans),
+		metricOracledbIndexRangeScans:                              newMetricOracledbIndexRangeScans(mbc.Metrics.OracledbIndexRangeScans),
+		metricOracledbLeafNodeSplits:                               newMetricOracledbLeafNodeSplits(mbc.Metrics.OracledbLeafNodeSplits),
+		metricOracledbLibraryCacheHitRatio:                         newMetricOracledbLibraryCacheHitRatio(mbc.Metrics.OracledbLibraryCacheHitRatio),
+		metricOracledbLibraryCacheLockWaits:                        newMetricOracledbLibraryCacheLockWaits(mbc.Metrics.OracledbLibraryCacheLockWaits),
+		metricOracledbLibraryCachePinWaits:                         newMetricOracledbLibraryCachePinWaits(mbc.Metrics.OracledbLibraryCachePinWaits),
+		metricOracledbLockMemory:                                   newMetricOracledbLockMemory(mbc.Metrics.OracledbLockMemory),
+		metricOracledbLogFileSyncWaits:                             newMetricOracledbLogFileSyncWaits(mbc.Metrics.OracledbLogFileSyncWaits),
+		metricOracledbLogicalReads:                                 newMetricOracledbLogicalReads(mbc.Metrics.OracledbLogicalReads),
+		metricOracledbLogons:                                       newMetricOracledbLogons(mbc.Metrics.OracledbLogons),
+		metricOracledbNetworkBytesReceived:                         newMetricOracledbNetworkBytesReceived(mbc.Metrics.OracledbNetworkBytesReceived),
+		metricOracledbNetworkBytesSent:                             newMetricOracledbNetworkBytesSent(mbc.Metrics.OracledbNetworkBytesSent),
+		metricOracledbNetworkPacketsReceived:                       newMetricOracledbNetworkPacketsReceived(mbc.Metrics.OracledbNetworkPacketsReceived),
+		metricOracledbNetworkPacketsSent:                           newMetricOracledbNetworkPacketsSent(mbc.Metrics.OracledbNetworkPacketsSent),
+		metricOracledbNetworkTrafficVolume:                         newMetricOracledbNetworkTrafficVolume(mbc.Metrics.OracledbNetworkTrafficVolume),
+		metricOracledbOsLoad:                                       newMetricOracledbOsLoad(mbc.Metrics.OracledbOsLoad),
+		metricOracledbParallelOperationsDowngraded1To25Pct:         newMetricOracledbParallelOperationsDowngraded1To25Pct(mbc.Metrics.OracledbParallelOperationsDowngraded1To25Pct),
+		metricOracledbParallelOperationsDowngraded25To50Pct:        newMetricOracledbParallelOperationsDowngraded25To50Pct(mbc.Metrics.OracledbParallelOperationsDowngraded25To50Pct),
+		metricOracledbParallelOperationsDowngraded50To75Pct:        newMetricOracledbParallelOperationsDowngraded50To75Pct(mbc.Metrics.OracledbParallelOperationsDowngraded50To75Pct),
+		metricOracledbParallelOperationsDowngraded75To99Pct:        newMetricOracledbParallelOperationsDowngraded75To99Pct(mbc.Metrics.OracledbParallelOperationsDowngraded75To99Pct),
+		metricOracledbParallelOperationsDowngradedToSerial:         newMetricOracledbParallelOperationsDowngradedToSerial(mbc.Metrics.OracledbParallelOperationsDowngradedToSerial),
+		metricOracledbParallelOperationsNotDowngraded:              newMetricOracledbParallelOperationsNotDowngraded(mbc.Metrics.OracledbParallelOperationsNotDowngraded),
+		metricOracledbParseCalls:                                   newMetricOracledbParseCalls(mbc.Metrics.OracledbParseCalls),
+		metricOracledbPgaAggregateLimit:                            newMetricOracledbPgaAggregateLimit(mbc.Metrics.OracledbPgaAggregateLimit),
+		metricOracledbPgaAggregateTarget:                           newMetricOracledbPgaAggregateTarget(mbc.Metrics.OracledbPgaAggregateTarget),
+		metricOracledbPgaAllocatedMemory:                           newMetricOracledbPgaAllocatedMemory(mbc.Metrics.OracledbPgaAllocatedMemory),
+		metricOracledbPgaFreeableMemory:                            newMetricOracledbPgaFreeableMemory(mbc.Metrics.OracledbPgaFreeableMemory),
+		metricOracledbPgaGlobalMemoryBound:                         newMetricOracledbPgaGlobalMemoryBound(mbc.Metrics.OracledbPgaGlobalMemoryBound),
+		metricOracledbPgaMaximumMemory:                             newMetricOracledbPgaMaximumMemory(mbc.Metrics.OracledbPgaMaximumMemory),
+		metricOracledbPgaMemory:                                    newMetricOracledbPgaMemory(mbc.Metrics.OracledbPgaMemory),
+		metricOracledbPgaOverAllocationCount:                       newMetricOracledbPgaOverAllocationCount(mbc.Metrics.OracledbPgaOverAllocationCount),
+		metricOracledbPgaUsedMemory:                                newMetricOracledbPgaUsedMemory(mbc.Metrics.OracledbPgaUsedMemory),
+		metricOracledbPhysicalReadBytes:                            newMetricOracledbPhysicalReadBytes(mbc.Metrics.OracledbPhysicalReadBytes),
+		metricOracledbPhysicalReadIoRequests:                       newMetricOracledbPhysicalReadIoRequests(mbc.Metrics.OracledbPhysicalReadIoRequests),
+		metricOracledbPhysicalReads:                                newMetricOracledbPhysicalReads(mbc.Metrics.OracledbPhysicalReads),
+		metricOracledbPhysicalReadsDirect:                          newMetricOracledbPhysicalReadsDirect(mbc.Metrics.OracledbPhysicalReadsDirect),
+		metricOracledbPhysicalWriteBytes:                           newMetricOracledbPhysicalWriteBytes(mbc.Metrics.OracledbPhysicalWriteBytes),
+		metricOracledbPhysicalWriteIoRequests:                      newMetricOracledbPhysicalWriteIoRequests(mbc.Metrics.OracledbPhysicalWriteIoRequests),
+		metricOracledbPhysicalWrites:                               newMetricOracledbPhysicalWrites(mbc.Metrics.OracledbPhysicalWrites),
+		metricOracledbPhysicalWritesDirect:                         newMetricOracledbPhysicalWritesDirect(mbc.Metrics.OracledbPhysicalWritesDirect),
+		metricOracledbPinnedBuffers:                                newMetricOracledbPinnedBuffers(mbc.Metrics.OracledbPinnedBuffers),
+		metricOracledbProcessesLimit:                               newMetricOracledbProcessesLimit(mbc.Metrics.OracledbProcessesLimit),
+		metricOracledbProcessesUsage:                               newMetricOracledbProcessesUsage(mbc.Metrics.OracledbProcessesUsage),
+		metricOracledbQueriesParallelized:                          newMetricOracledbQueriesParallelized(mbc.Metrics.OracledbQueriesParallelized),
+		metricOracledbQueryAvgActiveSessions:                       newMetricOracledbQueryAvgActiveSessions(mbc.Metrics.OracledbQueryAvgActiveSessions),
+		metricOracledbQueryAvgBufferGets:                           newMetricOracledbQueryAvgBufferGets(mbc.Metrics.OracledbQueryAvgBufferGets),
+		metricOracledbQueryAvgCPUTime:                              newMetricOracledbQueryAvgCPUTime(mbc.Metrics.OracledbQueryAvgCPUTime),
+		metricOracledbQueryAvgDiskReads:                            newMetricOracledbQueryAvgDiskReads(mbc.Metrics.OracledbQueryAvgDiskReads),
+		metricOracledbQueryAvgElapsedTime:                          newMetricOracledbQueryAvgElapsedTime(mbc.Metrics.OracledbQueryAvgElapsedTime),
+		metricOracledbQueryAvgExecutionTime:                        newMetricOracledbQueryAvgExecutionTime(mbc.Metrics.OracledbQueryAvgExecutionTime),
+		metricOracledbQueryAvgExecutionsPerSec:                     newMetricOracledbQueryAvgExecutionsPerSec(mbc.Metrics.OracledbQueryAvgExecutionsPerSec),
+		metricOracledbQueryAvgRowsProcessed:                        newMetricOracledbQueryAvgRowsProcessed(mbc.Metrics.OracledbQueryAvgRowsProcessed),
+		metricOracledbQueryBlockedSessions:                         newMetricOracledbQueryBlockedSessions(mbc.Metrics.OracledbQueryBlockedSessions),
+		metricOracledbQueryBufferGetsPerExecution:                  newMetricOracledbQueryBufferGetsPerExecution(mbc.Metrics.OracledbQueryBufferGetsPerExecution),
+		metricOracledbQueryCPUTimePerExecution:                     newMetricOracledbQueryCPUTimePerExecution(mbc.Metrics.OracledbQueryCPUTimePerExecution),
+		metricOracledbQueryDiskReadsPerExecution:                   newMetricOracledbQueryDiskReadsPerExecution(mbc.Metrics.OracledbQueryDiskReadsPerExecution),
+		metricOracledbQueryElapsedTimePerExecution:                 newMetricOracledbQueryElapsedTimePerExecution(mbc.Metrics.OracledbQueryElapsedTimePerExecution),
+		metricOracledbQueryExecutionsDelta:                         newMetricOracledbQueryExecutionsDelta(mbc.Metrics.OracledbQueryExecutionsDelta),
+		metricOracledbQueryLongRunningQueries:                      newMetricOracledbQueryLongRunningQueries(mbc.Metrics.OracledbQueryLongRunningQueries),
+		metricOracledbQueryRowsProcessedPerExecution:               newMetricOracledbQueryRowsProcessedPerExecution(mbc.Metrics.OracledbQueryRowsProcessedPerExecution),
+		metricOracledbQueryTotalBufferGets:                         newMetricOracledbQueryTotalBufferGets(mbc.Metrics.OracledbQueryTotalBufferGets),
+		metricOracledbQueryTotalCPUTime:                            newMetricOracledbQueryTotalCPUTime(mbc.Metrics.OracledbQueryTotalCPUTime),
+		metricOracledbQueryTotalDiskReads:                          newMetricOracledbQueryTotalDiskReads(mbc.Metrics.OracledbQueryTotalDiskReads),
+		metricOracledbQueryTotalElapsedTime:                        newMetricOracledbQueryTotalElapsedTime(mbc.Metrics.OracledbQueryTotalElapsedTime),
+		metricOracledbQueryTotalExecutions:                         newMetricOracledbQueryTotalExecutions(mbc.Metrics.OracledbQueryTotalExecutions),
+		metricOracledbQueryTotalRowsProcessed:                      newMetricOracledbQueryTotalRowsProcessed(mbc.Metrics.OracledbQueryTotalRowsProcessed),
+		metricOracledbRedoSize:                                     newMetricOracledbRedoSize(mbc.Metrics.OracledbRedoSize),
+		metricOracledbResponseTimePerTransaction:                   newMetricOracledbResponseTimePerTransaction(mbc.Metrics.OracledbResponseTimePerTransaction),
+		metricOracledbRowCacheHitRatio:                             newMetricOracledbRowCacheHitRatio(mbc.Metrics.OracledbRowCacheHitRatio),
+		metricOracledbRowsFetched:                                  newMetricOracledbRowsFetched(mbc.Metrics.OracledbRowsFetched),
+		metricOracledbSessions:                                     newMetricOracledbSessions(mbc.Metrics.OracledbSessions),
+		metricOracledbSessionsLimit:                                newMetricOracledbSessionsLimit(mbc.Metrics.OracledbSessionsLimit),
+		metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads: newMetricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads(mbc.Metrics.OracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads),
+		metricOracledbSgaBufferCacheAdvisorySizeFactor:             newMetricOracledbSgaBufferCacheAdvisorySizeFactor(mbc.Metrics.OracledbSgaBufferCacheAdvisorySizeFactor),
+		metricOracledbSgaBufferCacheAdvisorySizeForEstimate:        newMetricOracledbSgaBufferCacheAdvisorySizeForEstimate(mbc.Metrics.OracledbSgaBufferCacheAdvisorySizeForEstimate),
+		metricOracledbSgaBufferCacheSize:                           newMetricOracledbSgaBufferCacheSize(mbc.Metrics.OracledbSgaBufferCacheSize),
+		metricOracledbSgaDataBufferCacheSize:                       newMetricOracledbSgaDataBufferCacheSize(mbc.Metrics.OracledbSgaDataBufferCacheSize),
+		metricOracledbSgaDatabaseBufferCache:                       newMetricOracledbSgaDatabaseBufferCache(mbc.Metrics.OracledbSgaDatabaseBufferCache),
+		metricOracledbSgaDefaultBufferPoolSize:                     newMetricOracledbSgaDefaultBufferPoolSize(mbc.Metrics.OracledbSgaDefaultBufferPoolSize),
+		metricOracledbSgaFixedBufferCacheSize:                      newMetricOracledbSgaFixedBufferCacheSize(mbc.Metrics.OracledbSgaFixedBufferCacheSize),
+		metricOracledbSgaFixedSize:                                 newMetricOracledbSgaFixedSize(mbc.Metrics.OracledbSgaFixedSize),
+		metricOracledbSgaJavaPoolSize:                              newMetricOracledbSgaJavaPoolSize(mbc.Metrics.OracledbSgaJavaPoolSize),
+		metricOracledbSgaKeepBufferPoolSize:                        newMetricOracledbSgaKeepBufferPoolSize(mbc.Metrics.OracledbSgaKeepBufferPoolSize),
+		metricOracledbSgaLargePoolSize:                             newMetricOracledbSgaLargePoolSize(mbc.Metrics.OracledbSgaLargePoolSize),
+		metricOracledbSgaLogBuffer:                                 newMetricOracledbSgaLogBuffer(mbc.Metrics.OracledbSgaLogBuffer),
+		metricOracledbSgaMaximumSize:                               newMetricOracledbSgaMaximumSize(mbc.Metrics.OracledbSgaMaximumSize),
+		metricOracledbSgaRecycleBufferPoolSize:                     newMetricOracledbSgaRecycleBufferPoolSize(mbc.Metrics.OracledbSgaRecycleBufferPoolSize),
+		metricOracledbSgaRedoBuffers:                               newMetricOracledbSgaRedoBuffers(mbc.Metrics.OracledbSgaRedoBuffers),
+		metricOracledbSgaReservedSharedPoolSize:                    newMetricOracledbSgaReservedSharedPoolSize(mbc.Metrics.OracledbSgaReservedSharedPoolSize),
+		metricOracledbSgaSharedIoPoolSize:                          newMetricOracledbSgaSharedIoPoolSize(mbc.Metrics.OracledbSgaSharedIoPoolSize),
+		metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved: newMetricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved(mbc.Metrics.OracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved),
+		metricOracledbSgaSharedPoolAdvisorySizeFactor:              newMetricOracledbSgaSharedPoolAdvisorySizeFactor(mbc.Metrics.OracledbSgaSharedPoolAdvisorySizeFactor),
+		metricOracledbSgaSharedPoolAdvisorySizeForEstimate:         newMetricOracledbSgaSharedPoolAdvisorySizeForEstimate(mbc.Metrics.OracledbSgaSharedPoolAdvisorySizeForEstimate),
+		metricOracledbSgaSharedPoolFreeMemory:                      newMetricOracledbSgaSharedPoolFreeMemory(mbc.Metrics.OracledbSgaSharedPoolFreeMemory),
+		metricOracledbSgaSharedPoolReservedFreeMemory:              newMetricOracledbSgaSharedPoolReservedFreeMemory(mbc.Metrics.OracledbSgaSharedPoolReservedFreeMemory),
+		metricOracledbSgaSharedPoolReservedUsedMemory:              newMetricOracledbSgaSharedPoolReservedUsedMemory(mbc.Metrics.OracledbSgaSharedPoolReservedUsedMemory),
+		metricOracledbSgaSharedPoolUsedMemory:                      newMetricOracledbSgaSharedPoolUsedMemory(mbc.Metrics.OracledbSgaSharedPoolUsedMemory),
+		metricOracledbSgaSize:                                      newMetricOracledbSgaSize(mbc.Metrics.OracledbSgaSize),
+		metricOracledbSgaStreamsPoolSize:                           newMetricOracledbSgaStreamsPoolSize(mbc.Metrics.OracledbSgaStreamsPoolSize),
+		metricOracledbSharedPoolFree:                               newMetricOracledbSharedPoolFree(mbc.Metrics.OracledbSharedPoolFree),
+		metricOracledbSharedPoolReservedSize:                       newMetricOracledbSharedPoolReservedSize(mbc.Metrics.OracledbSharedPoolReservedSize),
+		metricOracledbSharedPoolSize:                               newMetricOracledbSharedPoolSize(mbc.Metrics.OracledbSharedPoolSize),
+		metricOracledbSortSegmentSize:                              newMetricOracledbSortSegmentSize(mbc.Metrics.OracledbSortSegmentSize),
+		metricOracledbSQLAreaEvicted:                               newMetricOracledbSQLAreaEvicted(mbc.Metrics.OracledbSQLAreaEvicted),
+		metricOracledbTableFetchByRowid:                            newMetricOracledbTableFetchByRowid(mbc.Metrics.OracledbTableFetchByRowid),
+		metricOracledbTableScansLong:                               newMetricOracledbTableScansLong(mbc.Metrics.OracledbTableScansLong),
+		metricOracledbTableScansShort:                              newMetricOracledbTableScansShort(mbc.Metrics.OracledbTableScansShort),
+		metricOracledbTablespaceDatafileSize:                       newMetricOracledbTablespaceDatafileSize(mbc.Metrics.OracledbTablespaceDatafileSize),
+		metricOracledbTablespaceFreeSpace:                          newMetricOracledbTablespaceFreeSpace(mbc.Metrics.OracledbTablespaceFreeSpace),
+		metricOracledbTablespaceLargestFreeSpace:                   newMetricOracledbTablespaceLargestFreeSpace(mbc.Metrics.OracledbTablespaceLargestFreeSpace),
+		metricOracledbTablespaceNumberOfDatafiles:                  newMetricOracledbTablespaceNumberOfDatafiles(mbc.Metrics.OracledbTablespaceNumberOfDatafiles),
+		metricOracledbTablespaceOffline:                            newMetricOracledbTablespaceOffline(mbc.Metrics.OracledbTablespaceOffline),
+		metricOracledbTablespacePercentUsed:                        newMetricOracledbTablespacePercentUsed(mbc.Metrics.OracledbTablespacePercentUsed),
+		metricOracledbTablespaceSizeLimit:                          newMetricOracledbTablespaceSizeLimit(mbc.Metrics.OracledbTablespaceSizeLimit),
+		metricOracledbTablespaceSizeUsage:                          newMetricOracledbTablespaceSizeUsage(mbc.Metrics.OracledbTablespaceSizeUsage),
+		metricOracledbTablespaceStatus:                             newMetricOracledbTablespaceStatus(mbc.Metrics.OracledbTablespaceStatus),
+		metricOracledbTablespaceTotalSpace:                         newMetricOracledbTablespaceTotalSpace(mbc.Metrics.OracledbTablespaceTotalSpace),
+		metricOracledbTablespaceUsagePercentage:                    newMetricOracledbTablespaceUsagePercentage(mbc.Metrics.OracledbTablespaceUsagePercentage),
+		metricOracledbTablespaceUsedSpace:                          newMetricOracledbTablespaceUsedSpace(mbc.Metrics.OracledbTablespaceUsedSpace),
+		metricOracledbTempSpaceAllocated:                           newMetricOracledbTempSpaceAllocated(mbc.Metrics.OracledbTempSpaceAllocated),
+		metricOracledbTotalSessionsCreated:                         newMetricOracledbTotalSessionsCreated(mbc.Metrics.OracledbTotalSessionsCreated),
+		metricOracledbTransactionsLimit:                            newMetricOracledbTransactionsLimit(mbc.Metrics.OracledbTransactionsLimit),
+		metricOracledbTransactionsUsage:                            newMetricOracledbTransactionsUsage(mbc.Metrics.OracledbTransactionsUsage),
+		metricOracledbUserCommits:                                  newMetricOracledbUserCommits(mbc.Metrics.OracledbUserCommits),
+		metricOracledbUserRollbacks:                                newMetricOracledbUserRollbacks(mbc.Metrics.OracledbUserRollbacks),
+		metricOracledbWaitEvents:                                   newMetricOracledbWaitEvents(mbc.Metrics.OracledbWaitEvents),
+		metricOracledbWaitTime:                                     newMetricOracledbWaitTime(mbc.Metrics.OracledbWaitTime),
+		resourceAttributeIncludeFilter:                             make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:                             make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.HostName.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["host.name"] = filter.CreateFilter(mbc.ResourceAttributes.HostName.MetricsInclude)
@@ -3342,24 +9200,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 	}
 	if mbc.ResourceAttributes.OracledbInstanceName.MetricsExclude != nil {
 		mb.resourceAttributeExcludeFilter["oracledb.instance.name"] = filter.CreateFilter(mbc.ResourceAttributes.OracledbInstanceName.MetricsExclude)
-	}
-	if mbc.ResourceAttributes.OracledbLogFileName.MetricsInclude != nil {
-		mb.resourceAttributeIncludeFilter["oracledb.log.file.name"] = filter.CreateFilter(mbc.ResourceAttributes.OracledbLogFileName.MetricsInclude)
-	}
-	if mbc.ResourceAttributes.OracledbLogFileName.MetricsExclude != nil {
-		mb.resourceAttributeExcludeFilter["oracledb.log.file.name"] = filter.CreateFilter(mbc.ResourceAttributes.OracledbLogFileName.MetricsExclude)
-	}
-	if mbc.ResourceAttributes.OracledbLogFilePath.MetricsInclude != nil {
-		mb.resourceAttributeIncludeFilter["oracledb.log.file.path"] = filter.CreateFilter(mbc.ResourceAttributes.OracledbLogFilePath.MetricsInclude)
-	}
-	if mbc.ResourceAttributes.OracledbLogFilePath.MetricsExclude != nil {
-		mb.resourceAttributeExcludeFilter["oracledb.log.file.path"] = filter.CreateFilter(mbc.ResourceAttributes.OracledbLogFilePath.MetricsExclude)
-	}
-	if mbc.ResourceAttributes.OracledbLogSource.MetricsInclude != nil {
-		mb.resourceAttributeIncludeFilter["oracledb.log.source"] = filter.CreateFilter(mbc.ResourceAttributes.OracledbLogSource.MetricsInclude)
-	}
-	if mbc.ResourceAttributes.OracledbLogSource.MetricsExclude != nil {
-		mb.resourceAttributeExcludeFilter["oracledb.log.source"] = filter.CreateFilter(mbc.ResourceAttributes.OracledbLogSource.MetricsExclude)
 	}
 
 	for _, op := range options {
@@ -3430,25 +9270,57 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricOracledbBackgroundCheckpointsCompleted.emit(ils.Metrics())
+	mb.metricOracledbBackgroundCPUUsage.emit(ils.Metrics())
+	mb.metricOracledbBufferBusyWaits.emit(ils.Metrics())
 	mb.metricOracledbBufferCacheHitRatio.emit(ils.Metrics())
+	mb.metricOracledbBufferCacheSize.emit(ils.Metrics())
 	mb.metricOracledbConsistentGets.emit(ils.Metrics())
 	mb.metricOracledbCPUTime.emit(ils.Metrics())
+	mb.metricOracledbCPUUsagePercentage.emit(ils.Metrics())
+	mb.metricOracledbDatabaseCPUTimeRatio.emit(ils.Metrics())
+	mb.metricOracledbDatabaseWaitTimeRatio.emit(ils.Metrics())
 	mb.metricOracledbDbBlockGets.emit(ils.Metrics())
 	mb.metricOracledbDdlStatementsParallelized.emit(ils.Metrics())
+	mb.metricOracledbDiskFree.emit(ils.Metrics())
+	mb.metricOracledbDiskReads.emit(ils.Metrics())
+	mb.metricOracledbDiskTotal.emit(ils.Metrics())
+	mb.metricOracledbDiskUsed.emit(ils.Metrics())
+	mb.metricOracledbDiskUtilization.emit(ils.Metrics())
+	mb.metricOracledbDiskWrites.emit(ils.Metrics())
 	mb.metricOracledbDmlLocksLimit.emit(ils.Metrics())
 	mb.metricOracledbDmlLocksUsage.emit(ils.Metrics())
 	mb.metricOracledbDmlStatementsParallelized.emit(ils.Metrics())
+	mb.metricOracledbElapsedTime.emit(ils.Metrics())
 	mb.metricOracledbEnqueueDeadlocks.emit(ils.Metrics())
 	mb.metricOracledbEnqueueLocksLimit.emit(ils.Metrics())
 	mb.metricOracledbEnqueueLocksUsage.emit(ils.Metrics())
 	mb.metricOracledbEnqueueResourcesLimit.emit(ils.Metrics())
 	mb.metricOracledbEnqueueResourcesUsage.emit(ils.Metrics())
 	mb.metricOracledbExchangeDeadlocks.emit(ils.Metrics())
+	mb.metricOracledbExecutionCount.emit(ils.Metrics())
 	mb.metricOracledbExecutions.emit(ils.Metrics())
+	mb.metricOracledbFailedConnections.emit(ils.Metrics())
+	mb.metricOracledbFileIoWaitTime.emit(ils.Metrics())
+	mb.metricOracledbGcCrBlocksReceived.emit(ils.Metrics())
+	mb.metricOracledbGcCurrentBlocksReceived.emit(ils.Metrics())
 	mb.metricOracledbHardParses.emit(ils.Metrics())
+	mb.metricOracledbIndexFastFullScans.emit(ils.Metrics())
+	mb.metricOracledbIndexRangeScans.emit(ils.Metrics())
+	mb.metricOracledbLeafNodeSplits.emit(ils.Metrics())
 	mb.metricOracledbLibraryCacheHitRatio.emit(ils.Metrics())
+	mb.metricOracledbLibraryCacheLockWaits.emit(ils.Metrics())
+	mb.metricOracledbLibraryCachePinWaits.emit(ils.Metrics())
+	mb.metricOracledbLockMemory.emit(ils.Metrics())
+	mb.metricOracledbLogFileSyncWaits.emit(ils.Metrics())
 	mb.metricOracledbLogicalReads.emit(ils.Metrics())
 	mb.metricOracledbLogons.emit(ils.Metrics())
+	mb.metricOracledbNetworkBytesReceived.emit(ils.Metrics())
+	mb.metricOracledbNetworkBytesSent.emit(ils.Metrics())
+	mb.metricOracledbNetworkPacketsReceived.emit(ils.Metrics())
+	mb.metricOracledbNetworkPacketsSent.emit(ils.Metrics())
+	mb.metricOracledbNetworkTrafficVolume.emit(ils.Metrics())
+	mb.metricOracledbOsLoad.emit(ils.Metrics())
 	mb.metricOracledbParallelOperationsDowngraded1To25Pct.emit(ils.Metrics())
 	mb.metricOracledbParallelOperationsDowngraded25To50Pct.emit(ils.Metrics())
 	mb.metricOracledbParallelOperationsDowngraded50To75Pct.emit(ils.Metrics())
@@ -3456,10 +9328,14 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricOracledbParallelOperationsDowngradedToSerial.emit(ils.Metrics())
 	mb.metricOracledbParallelOperationsNotDowngraded.emit(ils.Metrics())
 	mb.metricOracledbParseCalls.emit(ils.Metrics())
+	mb.metricOracledbPgaAggregateLimit.emit(ils.Metrics())
+	mb.metricOracledbPgaAggregateTarget.emit(ils.Metrics())
 	mb.metricOracledbPgaAllocatedMemory.emit(ils.Metrics())
 	mb.metricOracledbPgaFreeableMemory.emit(ils.Metrics())
+	mb.metricOracledbPgaGlobalMemoryBound.emit(ils.Metrics())
 	mb.metricOracledbPgaMaximumMemory.emit(ils.Metrics())
 	mb.metricOracledbPgaMemory.emit(ils.Metrics())
+	mb.metricOracledbPgaOverAllocationCount.emit(ils.Metrics())
 	mb.metricOracledbPgaUsedMemory.emit(ils.Metrics())
 	mb.metricOracledbPhysicalReadBytes.emit(ils.Metrics())
 	mb.metricOracledbPhysicalReadIoRequests.emit(ils.Metrics())
@@ -3469,19 +9345,87 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricOracledbPhysicalWriteIoRequests.emit(ils.Metrics())
 	mb.metricOracledbPhysicalWrites.emit(ils.Metrics())
 	mb.metricOracledbPhysicalWritesDirect.emit(ils.Metrics())
+	mb.metricOracledbPinnedBuffers.emit(ils.Metrics())
 	mb.metricOracledbProcessesLimit.emit(ils.Metrics())
 	mb.metricOracledbProcessesUsage.emit(ils.Metrics())
 	mb.metricOracledbQueriesParallelized.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgActiveSessions.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgBufferGets.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgCPUTime.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgDiskReads.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgElapsedTime.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgExecutionTime.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgExecutionsPerSec.emit(ils.Metrics())
+	mb.metricOracledbQueryAvgRowsProcessed.emit(ils.Metrics())
+	mb.metricOracledbQueryBlockedSessions.emit(ils.Metrics())
+	mb.metricOracledbQueryBufferGetsPerExecution.emit(ils.Metrics())
+	mb.metricOracledbQueryCPUTimePerExecution.emit(ils.Metrics())
+	mb.metricOracledbQueryDiskReadsPerExecution.emit(ils.Metrics())
+	mb.metricOracledbQueryElapsedTimePerExecution.emit(ils.Metrics())
+	mb.metricOracledbQueryExecutionsDelta.emit(ils.Metrics())
+	mb.metricOracledbQueryLongRunningQueries.emit(ils.Metrics())
+	mb.metricOracledbQueryRowsProcessedPerExecution.emit(ils.Metrics())
+	mb.metricOracledbQueryTotalBufferGets.emit(ils.Metrics())
+	mb.metricOracledbQueryTotalCPUTime.emit(ils.Metrics())
+	mb.metricOracledbQueryTotalDiskReads.emit(ils.Metrics())
+	mb.metricOracledbQueryTotalElapsedTime.emit(ils.Metrics())
+	mb.metricOracledbQueryTotalExecutions.emit(ils.Metrics())
+	mb.metricOracledbQueryTotalRowsProcessed.emit(ils.Metrics())
 	mb.metricOracledbRedoSize.emit(ils.Metrics())
+	mb.metricOracledbResponseTimePerTransaction.emit(ils.Metrics())
 	mb.metricOracledbRowCacheHitRatio.emit(ils.Metrics())
+	mb.metricOracledbRowsFetched.emit(ils.Metrics())
 	mb.metricOracledbSessions.emit(ils.Metrics())
 	mb.metricOracledbSessionsLimit.emit(ils.Metrics())
+	mb.metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads.emit(ils.Metrics())
+	mb.metricOracledbSgaBufferCacheAdvisorySizeFactor.emit(ils.Metrics())
+	mb.metricOracledbSgaBufferCacheAdvisorySizeForEstimate.emit(ils.Metrics())
+	mb.metricOracledbSgaBufferCacheSize.emit(ils.Metrics())
+	mb.metricOracledbSgaDataBufferCacheSize.emit(ils.Metrics())
+	mb.metricOracledbSgaDatabaseBufferCache.emit(ils.Metrics())
+	mb.metricOracledbSgaDefaultBufferPoolSize.emit(ils.Metrics())
+	mb.metricOracledbSgaFixedBufferCacheSize.emit(ils.Metrics())
 	mb.metricOracledbSgaFixedSize.emit(ils.Metrics())
+	mb.metricOracledbSgaJavaPoolSize.emit(ils.Metrics())
+	mb.metricOracledbSgaKeepBufferPoolSize.emit(ils.Metrics())
+	mb.metricOracledbSgaLargePoolSize.emit(ils.Metrics())
+	mb.metricOracledbSgaLogBuffer.emit(ils.Metrics())
+	mb.metricOracledbSgaMaximumSize.emit(ils.Metrics())
+	mb.metricOracledbSgaRecycleBufferPoolSize.emit(ils.Metrics())
+	mb.metricOracledbSgaRedoBuffers.emit(ils.Metrics())
+	mb.metricOracledbSgaReservedSharedPoolSize.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedIoPoolSize.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedPoolAdvisorySizeFactor.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedPoolAdvisorySizeForEstimate.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedPoolFreeMemory.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedPoolReservedFreeMemory.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedPoolReservedUsedMemory.emit(ils.Metrics())
+	mb.metricOracledbSgaSharedPoolUsedMemory.emit(ils.Metrics())
+	mb.metricOracledbSgaSize.emit(ils.Metrics())
+	mb.metricOracledbSgaStreamsPoolSize.emit(ils.Metrics())
 	mb.metricOracledbSharedPoolFree.emit(ils.Metrics())
+	mb.metricOracledbSharedPoolReservedSize.emit(ils.Metrics())
+	mb.metricOracledbSharedPoolSize.emit(ils.Metrics())
+	mb.metricOracledbSortSegmentSize.emit(ils.Metrics())
+	mb.metricOracledbSQLAreaEvicted.emit(ils.Metrics())
+	mb.metricOracledbTableFetchByRowid.emit(ils.Metrics())
+	mb.metricOracledbTableScansLong.emit(ils.Metrics())
+	mb.metricOracledbTableScansShort.emit(ils.Metrics())
+	mb.metricOracledbTablespaceDatafileSize.emit(ils.Metrics())
+	mb.metricOracledbTablespaceFreeSpace.emit(ils.Metrics())
+	mb.metricOracledbTablespaceLargestFreeSpace.emit(ils.Metrics())
+	mb.metricOracledbTablespaceNumberOfDatafiles.emit(ils.Metrics())
 	mb.metricOracledbTablespaceOffline.emit(ils.Metrics())
+	mb.metricOracledbTablespacePercentUsed.emit(ils.Metrics())
 	mb.metricOracledbTablespaceSizeLimit.emit(ils.Metrics())
 	mb.metricOracledbTablespaceSizeUsage.emit(ils.Metrics())
+	mb.metricOracledbTablespaceStatus.emit(ils.Metrics())
+	mb.metricOracledbTablespaceTotalSpace.emit(ils.Metrics())
 	mb.metricOracledbTablespaceUsagePercentage.emit(ils.Metrics())
+	mb.metricOracledbTablespaceUsedSpace.emit(ils.Metrics())
+	mb.metricOracledbTempSpaceAllocated.emit(ils.Metrics())
+	mb.metricOracledbTotalSessionsCreated.emit(ils.Metrics())
 	mb.metricOracledbTransactionsLimit.emit(ils.Metrics())
 	mb.metricOracledbTransactionsUsage.emit(ils.Metrics())
 	mb.metricOracledbUserCommits.emit(ils.Metrics())
@@ -3519,9 +9463,29 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	return metrics
 }
 
+// RecordOracledbBackgroundCheckpointsCompletedDataPoint adds a data point to oracledb.background_checkpoints_completed metric.
+func (mb *MetricsBuilder) RecordOracledbBackgroundCheckpointsCompletedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbBackgroundCheckpointsCompleted.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbBackgroundCPUUsageDataPoint adds a data point to oracledb.background_cpu_usage metric.
+func (mb *MetricsBuilder) RecordOracledbBackgroundCPUUsageDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbBackgroundCPUUsage.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbBufferBusyWaitsDataPoint adds a data point to oracledb.buffer_busy_waits metric.
+func (mb *MetricsBuilder) RecordOracledbBufferBusyWaitsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbBufferBusyWaits.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbBufferCacheHitRatioDataPoint adds a data point to oracledb.buffer_cache_hit_ratio metric.
 func (mb *MetricsBuilder) RecordOracledbBufferCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricOracledbBufferCacheHitRatio.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbBufferCacheSizeDataPoint adds a data point to oracledb.buffer_cache_size metric.
+func (mb *MetricsBuilder) RecordOracledbBufferCacheSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbBufferCacheSize.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbConsistentGetsDataPoint adds a data point to oracledb.consistent_gets metric.
@@ -3534,6 +9498,21 @@ func (mb *MetricsBuilder) RecordOracledbCPUTimeDataPoint(ts pcommon.Timestamp, v
 	mb.metricOracledbCPUTime.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbCPUUsagePercentageDataPoint adds a data point to oracledb.cpu_usage_percentage metric.
+func (mb *MetricsBuilder) RecordOracledbCPUUsagePercentageDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbCPUUsagePercentage.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbDatabaseCPUTimeRatioDataPoint adds a data point to oracledb.database_cpu_time_ratio metric.
+func (mb *MetricsBuilder) RecordOracledbDatabaseCPUTimeRatioDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbDatabaseCPUTimeRatio.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbDatabaseWaitTimeRatioDataPoint adds a data point to oracledb.database_wait_time_ratio metric.
+func (mb *MetricsBuilder) RecordOracledbDatabaseWaitTimeRatioDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbDatabaseWaitTimeRatio.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbDbBlockGetsDataPoint adds a data point to oracledb.db_block_gets metric.
 func (mb *MetricsBuilder) RecordOracledbDbBlockGetsDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbDbBlockGets.recordDataPoint(mb.startTime, ts, val)
@@ -3542,6 +9521,36 @@ func (mb *MetricsBuilder) RecordOracledbDbBlockGetsDataPoint(ts pcommon.Timestam
 // RecordOracledbDdlStatementsParallelizedDataPoint adds a data point to oracledb.ddl_statements_parallelized metric.
 func (mb *MetricsBuilder) RecordOracledbDdlStatementsParallelizedDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbDdlStatementsParallelized.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbDiskFreeDataPoint adds a data point to oracledb.disk_free metric.
+func (mb *MetricsBuilder) RecordOracledbDiskFreeDataPoint(ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	mb.metricOracledbDiskFree.recordDataPoint(mb.startTime, ts, val, diskNameAttributeValue)
+}
+
+// RecordOracledbDiskReadsDataPoint adds a data point to oracledb.disk_reads metric.
+func (mb *MetricsBuilder) RecordOracledbDiskReadsDataPoint(ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	mb.metricOracledbDiskReads.recordDataPoint(mb.startTime, ts, val, diskNameAttributeValue)
+}
+
+// RecordOracledbDiskTotalDataPoint adds a data point to oracledb.disk_total metric.
+func (mb *MetricsBuilder) RecordOracledbDiskTotalDataPoint(ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	mb.metricOracledbDiskTotal.recordDataPoint(mb.startTime, ts, val, diskNameAttributeValue)
+}
+
+// RecordOracledbDiskUsedDataPoint adds a data point to oracledb.disk_used metric.
+func (mb *MetricsBuilder) RecordOracledbDiskUsedDataPoint(ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	mb.metricOracledbDiskUsed.recordDataPoint(mb.startTime, ts, val, diskNameAttributeValue)
+}
+
+// RecordOracledbDiskUtilizationDataPoint adds a data point to oracledb.disk_utilization metric.
+func (mb *MetricsBuilder) RecordOracledbDiskUtilizationDataPoint(ts pcommon.Timestamp, val float64, diskNameAttributeValue string) {
+	mb.metricOracledbDiskUtilization.recordDataPoint(mb.startTime, ts, val, diskNameAttributeValue)
+}
+
+// RecordOracledbDiskWritesDataPoint adds a data point to oracledb.disk_writes metric.
+func (mb *MetricsBuilder) RecordOracledbDiskWritesDataPoint(ts pcommon.Timestamp, val int64, diskNameAttributeValue string) {
+	mb.metricOracledbDiskWrites.recordDataPoint(mb.startTime, ts, val, diskNameAttributeValue)
 }
 
 // RecordOracledbDmlLocksLimitDataPoint adds a data point to oracledb.dml_locks_limit metric.
@@ -3557,6 +9566,11 @@ func (mb *MetricsBuilder) RecordOracledbDmlLocksUsageDataPoint(ts pcommon.Timest
 // RecordOracledbDmlStatementsParallelizedDataPoint adds a data point to oracledb.dml_statements_parallelized metric.
 func (mb *MetricsBuilder) RecordOracledbDmlStatementsParallelizedDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbDmlStatementsParallelized.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbElapsedTimeDataPoint adds a data point to oracledb.elapsed_time metric.
+func (mb *MetricsBuilder) RecordOracledbElapsedTimeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbElapsedTime.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbEnqueueDeadlocksDataPoint adds a data point to oracledb.enqueue_deadlocks metric.
@@ -3589,9 +9603,34 @@ func (mb *MetricsBuilder) RecordOracledbExchangeDeadlocksDataPoint(ts pcommon.Ti
 	mb.metricOracledbExchangeDeadlocks.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbExecutionCountDataPoint adds a data point to oracledb.execution_count metric.
+func (mb *MetricsBuilder) RecordOracledbExecutionCountDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbExecutionCount.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbExecutionsDataPoint adds a data point to oracledb.executions metric.
 func (mb *MetricsBuilder) RecordOracledbExecutionsDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbExecutions.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbFailedConnectionsDataPoint adds a data point to oracledb.failed_connections metric.
+func (mb *MetricsBuilder) RecordOracledbFailedConnectionsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbFailedConnections.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbFileIoWaitTimeDataPoint adds a data point to oracledb.file_io_wait_time metric.
+func (mb *MetricsBuilder) RecordOracledbFileIoWaitTimeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbFileIoWaitTime.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbGcCrBlocksReceivedDataPoint adds a data point to oracledb.gc_cr_blocks_received metric.
+func (mb *MetricsBuilder) RecordOracledbGcCrBlocksReceivedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbGcCrBlocksReceived.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbGcCurrentBlocksReceivedDataPoint adds a data point to oracledb.gc_current_blocks_received metric.
+func (mb *MetricsBuilder) RecordOracledbGcCurrentBlocksReceivedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbGcCurrentBlocksReceived.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbHardParsesDataPoint adds a data point to oracledb.hard_parses metric.
@@ -3599,9 +9638,44 @@ func (mb *MetricsBuilder) RecordOracledbHardParsesDataPoint(ts pcommon.Timestamp
 	mb.metricOracledbHardParses.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbIndexFastFullScansDataPoint adds a data point to oracledb.index_fast_full_scans metric.
+func (mb *MetricsBuilder) RecordOracledbIndexFastFullScansDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbIndexFastFullScans.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbIndexRangeScansDataPoint adds a data point to oracledb.index_range_scans metric.
+func (mb *MetricsBuilder) RecordOracledbIndexRangeScansDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbIndexRangeScans.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbLeafNodeSplitsDataPoint adds a data point to oracledb.leaf_node_splits metric.
+func (mb *MetricsBuilder) RecordOracledbLeafNodeSplitsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbLeafNodeSplits.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbLibraryCacheHitRatioDataPoint adds a data point to oracledb.library_cache_hit_ratio metric.
 func (mb *MetricsBuilder) RecordOracledbLibraryCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricOracledbLibraryCacheHitRatio.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbLibraryCacheLockWaitsDataPoint adds a data point to oracledb.library_cache_lock_waits metric.
+func (mb *MetricsBuilder) RecordOracledbLibraryCacheLockWaitsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbLibraryCacheLockWaits.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbLibraryCachePinWaitsDataPoint adds a data point to oracledb.library_cache_pin_waits metric.
+func (mb *MetricsBuilder) RecordOracledbLibraryCachePinWaitsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbLibraryCachePinWaits.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbLockMemoryDataPoint adds a data point to oracledb.lock_memory metric.
+func (mb *MetricsBuilder) RecordOracledbLockMemoryDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbLockMemory.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbLogFileSyncWaitsDataPoint adds a data point to oracledb.log_file_sync_waits metric.
+func (mb *MetricsBuilder) RecordOracledbLogFileSyncWaitsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbLogFileSyncWaits.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbLogicalReadsDataPoint adds a data point to oracledb.logical_reads metric.
@@ -3612,6 +9686,36 @@ func (mb *MetricsBuilder) RecordOracledbLogicalReadsDataPoint(ts pcommon.Timesta
 // RecordOracledbLogonsDataPoint adds a data point to oracledb.logons metric.
 func (mb *MetricsBuilder) RecordOracledbLogonsDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbLogons.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbNetworkBytesReceivedDataPoint adds a data point to oracledb.network_bytes_received metric.
+func (mb *MetricsBuilder) RecordOracledbNetworkBytesReceivedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbNetworkBytesReceived.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbNetworkBytesSentDataPoint adds a data point to oracledb.network_bytes_sent metric.
+func (mb *MetricsBuilder) RecordOracledbNetworkBytesSentDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbNetworkBytesSent.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbNetworkPacketsReceivedDataPoint adds a data point to oracledb.network_packets_received metric.
+func (mb *MetricsBuilder) RecordOracledbNetworkPacketsReceivedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbNetworkPacketsReceived.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbNetworkPacketsSentDataPoint adds a data point to oracledb.network_packets_sent metric.
+func (mb *MetricsBuilder) RecordOracledbNetworkPacketsSentDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbNetworkPacketsSent.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbNetworkTrafficVolumeDataPoint adds a data point to oracledb.network_traffic_volume metric.
+func (mb *MetricsBuilder) RecordOracledbNetworkTrafficVolumeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbNetworkTrafficVolume.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbOsLoadDataPoint adds a data point to oracledb.os_load metric.
+func (mb *MetricsBuilder) RecordOracledbOsLoadDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbOsLoad.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbParallelOperationsDowngraded1To25PctDataPoint adds a data point to oracledb.parallel_operations_downgraded_1_to_25_pct metric.
@@ -3649,6 +9753,16 @@ func (mb *MetricsBuilder) RecordOracledbParseCallsDataPoint(ts pcommon.Timestamp
 	mb.metricOracledbParseCalls.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbPgaAggregateLimitDataPoint adds a data point to oracledb.pga_aggregate_limit metric.
+func (mb *MetricsBuilder) RecordOracledbPgaAggregateLimitDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbPgaAggregateLimit.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbPgaAggregateTargetDataPoint adds a data point to oracledb.pga_aggregate_target metric.
+func (mb *MetricsBuilder) RecordOracledbPgaAggregateTargetDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbPgaAggregateTarget.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbPgaAllocatedMemoryDataPoint adds a data point to oracledb.pga_allocated_memory metric.
 func (mb *MetricsBuilder) RecordOracledbPgaAllocatedMemoryDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbPgaAllocatedMemory.recordDataPoint(mb.startTime, ts, val)
@@ -3659,6 +9773,11 @@ func (mb *MetricsBuilder) RecordOracledbPgaFreeableMemoryDataPoint(ts pcommon.Ti
 	mb.metricOracledbPgaFreeableMemory.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbPgaGlobalMemoryBoundDataPoint adds a data point to oracledb.pga_global_memory_bound metric.
+func (mb *MetricsBuilder) RecordOracledbPgaGlobalMemoryBoundDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbPgaGlobalMemoryBound.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbPgaMaximumMemoryDataPoint adds a data point to oracledb.pga_maximum_memory metric.
 func (mb *MetricsBuilder) RecordOracledbPgaMaximumMemoryDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbPgaMaximumMemory.recordDataPoint(mb.startTime, ts, val)
@@ -3667,6 +9786,11 @@ func (mb *MetricsBuilder) RecordOracledbPgaMaximumMemoryDataPoint(ts pcommon.Tim
 // RecordOracledbPgaMemoryDataPoint adds a data point to oracledb.pga_memory metric.
 func (mb *MetricsBuilder) RecordOracledbPgaMemoryDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbPgaMemory.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbPgaOverAllocationCountDataPoint adds a data point to oracledb.pga_over_allocation_count metric.
+func (mb *MetricsBuilder) RecordOracledbPgaOverAllocationCountDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbPgaOverAllocationCount.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbPgaUsedMemoryDataPoint adds a data point to oracledb.pga_used_memory metric.
@@ -3714,6 +9838,11 @@ func (mb *MetricsBuilder) RecordOracledbPhysicalWritesDirectDataPoint(ts pcommon
 	mb.metricOracledbPhysicalWritesDirect.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbPinnedBuffersDataPoint adds a data point to oracledb.pinned_buffers metric.
+func (mb *MetricsBuilder) RecordOracledbPinnedBuffersDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbPinnedBuffers.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbProcessesLimitDataPoint adds a data point to oracledb.processes_limit metric.
 func (mb *MetricsBuilder) RecordOracledbProcessesLimitDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbProcessesLimit.recordDataPoint(mb.startTime, ts, val)
@@ -3729,14 +9858,134 @@ func (mb *MetricsBuilder) RecordOracledbQueriesParallelizedDataPoint(ts pcommon.
 	mb.metricOracledbQueriesParallelized.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbQueryAvgActiveSessionsDataPoint adds a data point to oracledb.query_avg_active_sessions metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgActiveSessionsDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgActiveSessions.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryAvgBufferGetsDataPoint adds a data point to oracledb.query_avg_buffer_gets metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgBufferGetsDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgBufferGets.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryAvgCPUTimeDataPoint adds a data point to oracledb.query_avg_cpu_time metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgCPUTimeDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgCPUTime.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryAvgDiskReadsDataPoint adds a data point to oracledb.query_avg_disk_reads metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgDiskReads.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryAvgElapsedTimeDataPoint adds a data point to oracledb.query_avg_elapsed_time metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgElapsedTimeDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgElapsedTime.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryAvgExecutionTimeDataPoint adds a data point to oracledb.query_avg_execution_time metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgExecutionTimeDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgExecutionTime.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryAvgExecutionsPerSecDataPoint adds a data point to oracledb.query_avg_executions_per_sec metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgExecutionsPerSecDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgExecutionsPerSec.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryAvgRowsProcessedDataPoint adds a data point to oracledb.query_avg_rows_processed metric.
+func (mb *MetricsBuilder) RecordOracledbQueryAvgRowsProcessedDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbQueryAvgRowsProcessed.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryBlockedSessionsDataPoint adds a data point to oracledb.query_blocked_sessions metric.
+func (mb *MetricsBuilder) RecordOracledbQueryBlockedSessionsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbQueryBlockedSessions.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryBufferGetsPerExecutionDataPoint adds a data point to oracledb.query_buffer_gets_per_execution metric.
+func (mb *MetricsBuilder) RecordOracledbQueryBufferGetsPerExecutionDataPoint(ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryBufferGetsPerExecution.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryCPUTimePerExecutionDataPoint adds a data point to oracledb.query_cpu_time_per_execution metric.
+func (mb *MetricsBuilder) RecordOracledbQueryCPUTimePerExecutionDataPoint(ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryCPUTimePerExecution.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryDiskReadsPerExecutionDataPoint adds a data point to oracledb.query_disk_reads_per_execution metric.
+func (mb *MetricsBuilder) RecordOracledbQueryDiskReadsPerExecutionDataPoint(ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryDiskReadsPerExecution.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryElapsedTimePerExecutionDataPoint adds a data point to oracledb.query_elapsed_time_per_execution metric.
+func (mb *MetricsBuilder) RecordOracledbQueryElapsedTimePerExecutionDataPoint(ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryElapsedTimePerExecution.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryExecutionsDeltaDataPoint adds a data point to oracledb.query_executions_delta metric.
+func (mb *MetricsBuilder) RecordOracledbQueryExecutionsDeltaDataPoint(ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryExecutionsDelta.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryLongRunningQueriesDataPoint adds a data point to oracledb.query_long_running_queries metric.
+func (mb *MetricsBuilder) RecordOracledbQueryLongRunningQueriesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbQueryLongRunningQueries.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbQueryRowsProcessedPerExecutionDataPoint adds a data point to oracledb.query_rows_processed_per_execution metric.
+func (mb *MetricsBuilder) RecordOracledbQueryRowsProcessedPerExecutionDataPoint(ts pcommon.Timestamp, val float64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryRowsProcessedPerExecution.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryTotalBufferGetsDataPoint adds a data point to oracledb.query_total_buffer_gets metric.
+func (mb *MetricsBuilder) RecordOracledbQueryTotalBufferGetsDataPoint(ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryTotalBufferGets.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryTotalCPUTimeDataPoint adds a data point to oracledb.query_total_cpu_time metric.
+func (mb *MetricsBuilder) RecordOracledbQueryTotalCPUTimeDataPoint(ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryTotalCPUTime.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryTotalDiskReadsDataPoint adds a data point to oracledb.query_total_disk_reads metric.
+func (mb *MetricsBuilder) RecordOracledbQueryTotalDiskReadsDataPoint(ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryTotalDiskReads.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryTotalElapsedTimeDataPoint adds a data point to oracledb.query_total_elapsed_time metric.
+func (mb *MetricsBuilder) RecordOracledbQueryTotalElapsedTimeDataPoint(ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryTotalElapsedTime.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryTotalExecutionsDataPoint adds a data point to oracledb.query_total_executions metric.
+func (mb *MetricsBuilder) RecordOracledbQueryTotalExecutionsDataPoint(ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryTotalExecutions.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
+// RecordOracledbQueryTotalRowsProcessedDataPoint adds a data point to oracledb.query_total_rows_processed metric.
+func (mb *MetricsBuilder) RecordOracledbQueryTotalRowsProcessedDataPoint(ts pcommon.Timestamp, val int64, sqlIDAttributeValue string) {
+	mb.metricOracledbQueryTotalRowsProcessed.recordDataPoint(mb.startTime, ts, val, sqlIDAttributeValue)
+}
+
 // RecordOracledbRedoSizeDataPoint adds a data point to oracledb.redo_size metric.
 func (mb *MetricsBuilder) RecordOracledbRedoSizeDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbRedoSize.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbResponseTimePerTransactionDataPoint adds a data point to oracledb.response_time_per_transaction metric.
+func (mb *MetricsBuilder) RecordOracledbResponseTimePerTransactionDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricOracledbResponseTimePerTransaction.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbRowCacheHitRatioDataPoint adds a data point to oracledb.row_cache_hit_ratio metric.
 func (mb *MetricsBuilder) RecordOracledbRowCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricOracledbRowCacheHitRatio.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbRowsFetchedDataPoint adds a data point to oracledb.rows_fetched metric.
+func (mb *MetricsBuilder) RecordOracledbRowsFetchedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbRowsFetched.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbSessionsDataPoint adds a data point to oracledb.sessions metric.
@@ -3749,9 +9998,139 @@ func (mb *MetricsBuilder) RecordOracledbSessionsLimitDataPoint(ts pcommon.Timest
 	mb.metricOracledbSessionsLimit.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReadsDataPoint adds a data point to oracledb.sga_buffer_cache_advisory_estimated_physical_reads metric.
+func (mb *MetricsBuilder) RecordOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReadsDataPoint(ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	mb.metricOracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads.recordDataPoint(mb.startTime, ts, val, sizeFactorAttributeValue)
+}
+
+// RecordOracledbSgaBufferCacheAdvisorySizeFactorDataPoint adds a data point to oracledb.sga_buffer_cache_advisory_size_factor metric.
+func (mb *MetricsBuilder) RecordOracledbSgaBufferCacheAdvisorySizeFactorDataPoint(ts pcommon.Timestamp, val float64, sizeFactorAttributeValue string) {
+	mb.metricOracledbSgaBufferCacheAdvisorySizeFactor.recordDataPoint(mb.startTime, ts, val, sizeFactorAttributeValue)
+}
+
+// RecordOracledbSgaBufferCacheAdvisorySizeForEstimateDataPoint adds a data point to oracledb.sga_buffer_cache_advisory_size_for_estimate metric.
+func (mb *MetricsBuilder) RecordOracledbSgaBufferCacheAdvisorySizeForEstimateDataPoint(ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	mb.metricOracledbSgaBufferCacheAdvisorySizeForEstimate.recordDataPoint(mb.startTime, ts, val, sizeFactorAttributeValue)
+}
+
+// RecordOracledbSgaBufferCacheSizeDataPoint adds a data point to oracledb.sga_buffer_cache_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaBufferCacheSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaBufferCacheSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaDataBufferCacheSizeDataPoint adds a data point to oracledb.sga_data_buffer_cache_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaDataBufferCacheSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaDataBufferCacheSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaDatabaseBufferCacheDataPoint adds a data point to oracledb.sga_database_buffer_cache metric.
+func (mb *MetricsBuilder) RecordOracledbSgaDatabaseBufferCacheDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaDatabaseBufferCache.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaDefaultBufferPoolSizeDataPoint adds a data point to oracledb.sga_default_buffer_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaDefaultBufferPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaDefaultBufferPoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaFixedBufferCacheSizeDataPoint adds a data point to oracledb.sga_fixed_buffer_cache_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaFixedBufferCacheSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaFixedBufferCacheSize.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordOracledbSgaFixedSizeDataPoint adds a data point to oracledb.sga_fixed_size metric.
 func (mb *MetricsBuilder) RecordOracledbSgaFixedSizeDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricOracledbSgaFixedSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaJavaPoolSizeDataPoint adds a data point to oracledb.sga_java_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaJavaPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaJavaPoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaKeepBufferPoolSizeDataPoint adds a data point to oracledb.sga_keep_buffer_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaKeepBufferPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaKeepBufferPoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaLargePoolSizeDataPoint adds a data point to oracledb.sga_large_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaLargePoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaLargePoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaLogBufferDataPoint adds a data point to oracledb.sga_log_buffer metric.
+func (mb *MetricsBuilder) RecordOracledbSgaLogBufferDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaLogBuffer.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaMaximumSizeDataPoint adds a data point to oracledb.sga_maximum_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaMaximumSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaMaximumSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaRecycleBufferPoolSizeDataPoint adds a data point to oracledb.sga_recycle_buffer_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaRecycleBufferPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaRecycleBufferPoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaRedoBuffersDataPoint adds a data point to oracledb.sga_redo_buffers metric.
+func (mb *MetricsBuilder) RecordOracledbSgaRedoBuffersDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaRedoBuffers.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaReservedSharedPoolSizeDataPoint adds a data point to oracledb.sga_reserved_shared_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaReservedSharedPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaReservedSharedPoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaSharedIoPoolSizeDataPoint adds a data point to oracledb.sga_shared_io_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedIoPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaSharedIoPoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSavedDataPoint adds a data point to oracledb.sga_shared_pool_advisory_estimated_parse_time_saved metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSavedDataPoint(ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	mb.metricOracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved.recordDataPoint(mb.startTime, ts, val, sizeFactorAttributeValue)
+}
+
+// RecordOracledbSgaSharedPoolAdvisorySizeFactorDataPoint adds a data point to oracledb.sga_shared_pool_advisory_size_factor metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedPoolAdvisorySizeFactorDataPoint(ts pcommon.Timestamp, val float64, sizeFactorAttributeValue string) {
+	mb.metricOracledbSgaSharedPoolAdvisorySizeFactor.recordDataPoint(mb.startTime, ts, val, sizeFactorAttributeValue)
+}
+
+// RecordOracledbSgaSharedPoolAdvisorySizeForEstimateDataPoint adds a data point to oracledb.sga_shared_pool_advisory_size_for_estimate metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedPoolAdvisorySizeForEstimateDataPoint(ts pcommon.Timestamp, val int64, sizeFactorAttributeValue string) {
+	mb.metricOracledbSgaSharedPoolAdvisorySizeForEstimate.recordDataPoint(mb.startTime, ts, val, sizeFactorAttributeValue)
+}
+
+// RecordOracledbSgaSharedPoolFreeMemoryDataPoint adds a data point to oracledb.sga_shared_pool_free_memory metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedPoolFreeMemoryDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaSharedPoolFreeMemory.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaSharedPoolReservedFreeMemoryDataPoint adds a data point to oracledb.sga_shared_pool_reserved_free_memory metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedPoolReservedFreeMemoryDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaSharedPoolReservedFreeMemory.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaSharedPoolReservedUsedMemoryDataPoint adds a data point to oracledb.sga_shared_pool_reserved_used_memory metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedPoolReservedUsedMemoryDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaSharedPoolReservedUsedMemory.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaSharedPoolUsedMemoryDataPoint adds a data point to oracledb.sga_shared_pool_used_memory metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSharedPoolUsedMemoryDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaSharedPoolUsedMemory.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaSizeDataPoint adds a data point to oracledb.sga_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSgaStreamsPoolSizeDataPoint adds a data point to oracledb.sga_streams_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSgaStreamsPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSgaStreamsPoolSize.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbSharedPoolFreeDataPoint adds a data point to oracledb.shared_pool_free metric.
@@ -3759,9 +10138,69 @@ func (mb *MetricsBuilder) RecordOracledbSharedPoolFreeDataPoint(ts pcommon.Times
 	mb.metricOracledbSharedPoolFree.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordOracledbSharedPoolReservedSizeDataPoint adds a data point to oracledb.shared_pool_reserved_size metric.
+func (mb *MetricsBuilder) RecordOracledbSharedPoolReservedSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSharedPoolReservedSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSharedPoolSizeDataPoint adds a data point to oracledb.shared_pool_size metric.
+func (mb *MetricsBuilder) RecordOracledbSharedPoolSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSharedPoolSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSortSegmentSizeDataPoint adds a data point to oracledb.sort_segment_size metric.
+func (mb *MetricsBuilder) RecordOracledbSortSegmentSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSortSegmentSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbSQLAreaEvictedDataPoint adds a data point to oracledb.sql_area_evicted metric.
+func (mb *MetricsBuilder) RecordOracledbSQLAreaEvictedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbSQLAreaEvicted.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbTableFetchByRowidDataPoint adds a data point to oracledb.table_fetch_by_rowid metric.
+func (mb *MetricsBuilder) RecordOracledbTableFetchByRowidDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbTableFetchByRowid.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbTableScansLongDataPoint adds a data point to oracledb.table_scans_long metric.
+func (mb *MetricsBuilder) RecordOracledbTableScansLongDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbTableScansLong.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbTableScansShortDataPoint adds a data point to oracledb.table_scans_short metric.
+func (mb *MetricsBuilder) RecordOracledbTableScansShortDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbTableScansShort.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbTablespaceDatafileSizeDataPoint adds a data point to oracledb.tablespace_datafile_size metric.
+func (mb *MetricsBuilder) RecordOracledbTablespaceDatafileSizeDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, datafileNameAttributeValue string) {
+	mb.metricOracledbTablespaceDatafileSize.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue, datafileNameAttributeValue)
+}
+
+// RecordOracledbTablespaceFreeSpaceDataPoint adds a data point to oracledb.tablespace_free_space metric.
+func (mb *MetricsBuilder) RecordOracledbTablespaceFreeSpaceDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	mb.metricOracledbTablespaceFreeSpace.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
+// RecordOracledbTablespaceLargestFreeSpaceDataPoint adds a data point to oracledb.tablespace_largest_free_space metric.
+func (mb *MetricsBuilder) RecordOracledbTablespaceLargestFreeSpaceDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	mb.metricOracledbTablespaceLargestFreeSpace.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
+// RecordOracledbTablespaceNumberOfDatafilesDataPoint adds a data point to oracledb.tablespace_number_of_datafiles metric.
+func (mb *MetricsBuilder) RecordOracledbTablespaceNumberOfDatafilesDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	mb.metricOracledbTablespaceNumberOfDatafiles.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
 // RecordOracledbTablespaceOfflineDataPoint adds a data point to oracledb.tablespace_offline metric.
 func (mb *MetricsBuilder) RecordOracledbTablespaceOfflineDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
 	mb.metricOracledbTablespaceOffline.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
+// RecordOracledbTablespacePercentUsedDataPoint adds a data point to oracledb.tablespace_percent_used metric.
+func (mb *MetricsBuilder) RecordOracledbTablespacePercentUsedDataPoint(ts pcommon.Timestamp, val float64, tablespaceNameAttributeValue string) {
+	mb.metricOracledbTablespacePercentUsed.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
 }
 
 // RecordOracledbTablespaceSizeLimitDataPoint adds a data point to oracledb.tablespace_size_limit metric.
@@ -3774,9 +10213,34 @@ func (mb *MetricsBuilder) RecordOracledbTablespaceSizeUsageDataPoint(ts pcommon.
 	mb.metricOracledbTablespaceSizeUsage.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
 }
 
+// RecordOracledbTablespaceStatusDataPoint adds a data point to oracledb.tablespace_status metric.
+func (mb *MetricsBuilder) RecordOracledbTablespaceStatusDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, tablespaceStatusAttributeValue string) {
+	mb.metricOracledbTablespaceStatus.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue, tablespaceStatusAttributeValue)
+}
+
+// RecordOracledbTablespaceTotalSpaceDataPoint adds a data point to oracledb.tablespace_total_space metric.
+func (mb *MetricsBuilder) RecordOracledbTablespaceTotalSpaceDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	mb.metricOracledbTablespaceTotalSpace.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
 // RecordOracledbTablespaceUsagePercentageDataPoint adds a data point to oracledb.tablespace_usage_percentage metric.
 func (mb *MetricsBuilder) RecordOracledbTablespaceUsagePercentageDataPoint(ts pcommon.Timestamp, val float64, tablespaceNameAttributeValue string) {
 	mb.metricOracledbTablespaceUsagePercentage.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
+// RecordOracledbTablespaceUsedSpaceDataPoint adds a data point to oracledb.tablespace_used_space metric.
+func (mb *MetricsBuilder) RecordOracledbTablespaceUsedSpaceDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	mb.metricOracledbTablespaceUsedSpace.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
+// RecordOracledbTempSpaceAllocatedDataPoint adds a data point to oracledb.temp_space_allocated metric.
+func (mb *MetricsBuilder) RecordOracledbTempSpaceAllocatedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbTempSpaceAllocated.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordOracledbTotalSessionsCreatedDataPoint adds a data point to oracledb.total_sessions_created metric.
+func (mb *MetricsBuilder) RecordOracledbTotalSessionsCreatedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricOracledbTotalSessionsCreated.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordOracledbTransactionsLimitDataPoint adds a data point to oracledb.transactions_limit metric.

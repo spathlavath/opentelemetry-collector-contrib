@@ -12,6 +12,8 @@ import (
 
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 	"go.uber.org/multierr"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoracledbreceiver/internal/metadata"
 )
 
 var (
@@ -68,54 +70,6 @@ type QuerySample struct {
 	_ struct{}
 }
 
-// LogsConfig represents logs collection configuration
-type LogsConfig struct {
-	// Enable logs collection
-	EnableLogs bool `mapstructure:"enable_logs"`
-
-	// Log sources to collect
-	CollectAlertLogs   bool `mapstructure:"collect_alert_logs"`
-	CollectAuditLogs   bool `mapstructure:"collect_audit_logs"`
-	CollectTraceFiles  bool `mapstructure:"collect_trace_files"`
-	CollectArchiveLogs bool `mapstructure:"collect_archive_logs"`
-
-	// File paths for log collection
-	AlertLogPath   string `mapstructure:"alert_log_path"`   // Path to alert log directory
-	AuditLogPath   string `mapstructure:"audit_log_path"`   // Path to audit log directory
-	TraceLogPath   string `mapstructure:"trace_log_path"`   // Path to trace log directory
-	ArchiveLogPath string `mapstructure:"archive_log_path"` // Path to archive log directory
-
-	// Collection settings
-	PollInterval    string   `mapstructure:"poll_interval"`     // How often to check for new logs
-	MaxLogFileSize  int64    `mapstructure:"max_log_file_size"` // Maximum log file size to process (MB)
-	LogFilePatterns []string `mapstructure:"log_file_patterns"` // File patterns to match
-	ExcludePatterns []string `mapstructure:"exclude_patterns"`  // Patterns to exclude
-
-	// Parsing settings
-	ParseErrors        bool `mapstructure:"parse_errors"`         // Parse Oracle error codes
-	ParseStackTraces   bool `mapstructure:"parse_stack_traces"`   // Parse stack traces from logs
-	ParseSQLStatements bool `mapstructure:"parse_sql_statements"` // Extract SQL statements
-
-	// Log level filtering
-	MinLogLevel    string   `mapstructure:"min_log_level"`   // Minimum log level to collect
-	ExcludeLevels  []string `mapstructure:"exclude_levels"`  // Log levels to exclude
-	IncludeClasses []string `mapstructure:"include_classes"` // Oracle log classes to include
-	ExcludeClasses []string `mapstructure:"exclude_classes"` // Oracle log classes to exclude
-
-	// Database query-based log collection
-	QueryBasedCollection bool   `mapstructure:"query_based_collection"` // Use SQL queries to collect logs
-	AlertLogQuery        string `mapstructure:"alert_log_query"`        // SQL query for alert logs
-	AuditLogQuery        string `mapstructure:"audit_log_query"`        // SQL query for audit logs
-
-	// Advanced settings
-	PreserveBinaryLogs bool `mapstructure:"preserve_binary_logs"` // Include binary log content
-	MaxRetentionDays   int  `mapstructure:"max_retention_days"`   // Log retention period
-	BatchSize          int  `mapstructure:"batch_size"`           // Number of log entries per batch
-
-	// prevent unkeyed literal initialization
-	_ struct{}
-}
-
 // Config represents the receiver configuration
 type Config struct {
 	// Connection configuration (primary)
@@ -134,6 +88,7 @@ type Config struct {
 
 	// OpenTelemetry configuration
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
+	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
 
 	// Extended configuration
 	ExtendedConfig `mapstructure:",squash"`
@@ -142,9 +97,6 @@ type Config struct {
 	TopQueryCollection `mapstructure:"top_query_collection"`
 	QuerySample        `mapstructure:"query_sample_collection"`
 	TablespaceConfig   `mapstructure:"tablespace_config"`
-
-	// Logs configuration
-	LogsConfig `mapstructure:"logs"`
 }
 
 // Validate validates the configuration
@@ -163,11 +115,6 @@ func (c Config) Validate() error {
 
 	// Validate query configuration
 	if err := c.validateQueryConfig(); err != nil {
-		allErrs = multierr.Append(allErrs, err)
-	}
-
-	// Validate logs configuration
-	if err := c.validateLogsConfig(); err != nil {
 		allErrs = multierr.Append(allErrs, err)
 	}
 
@@ -328,68 +275,4 @@ func (c Config) GetEffectiveService() string {
 		return c.Service
 	}
 	return c.ServiceName
-}
-
-// validateLogsConfig validates logs collection configuration
-func (c Config) validateLogsConfig() error {
-	var allErrs error
-
-	// If logs are not enabled, skip validation
-	if !c.LogsConfig.EnableLogs {
-		return nil
-	}
-
-	// Validate that at least one log source is enabled
-	if !c.LogsConfig.CollectAlertLogs && !c.LogsConfig.CollectAuditLogs &&
-		!c.LogsConfig.CollectTraceFiles && !c.LogsConfig.CollectArchiveLogs &&
-		!c.LogsConfig.QueryBasedCollection {
-		allErrs = multierr.Append(allErrs, errors.New("at least one log source must be enabled when logs collection is enabled"))
-	}
-
-	// Validate file paths if file-based collection is enabled
-	if c.LogsConfig.CollectAlertLogs && c.LogsConfig.AlertLogPath == "" && !c.LogsConfig.QueryBasedCollection {
-		allErrs = multierr.Append(allErrs, errors.New("alert_log_path must be specified when collect_alert_logs is enabled"))
-	}
-
-	if c.LogsConfig.CollectAuditLogs && c.LogsConfig.AuditLogPath == "" && !c.LogsConfig.QueryBasedCollection {
-		allErrs = multierr.Append(allErrs, errors.New("audit_log_path must be specified when collect_audit_logs is enabled"))
-	}
-
-	if c.LogsConfig.CollectTraceFiles && c.LogsConfig.TraceLogPath == "" {
-		allErrs = multierr.Append(allErrs, errors.New("trace_log_path must be specified when collect_trace_files is enabled"))
-	}
-
-	if c.LogsConfig.CollectArchiveLogs && c.LogsConfig.ArchiveLogPath == "" {
-		allErrs = multierr.Append(allErrs, errors.New("archive_log_path must be specified when collect_archive_logs is enabled"))
-	}
-
-	// Validate numeric values
-	if c.LogsConfig.MaxLogFileSize < 0 {
-		allErrs = multierr.Append(allErrs, errors.New("max_log_file_size must be non-negative"))
-	}
-
-	if c.LogsConfig.MaxRetentionDays < 0 {
-		allErrs = multierr.Append(allErrs, errors.New("max_retention_days must be non-negative"))
-	}
-
-	if c.LogsConfig.BatchSize <= 0 {
-		allErrs = multierr.Append(allErrs, errors.New("batch_size must be positive"))
-	}
-
-	// Validate log level
-	validLevels := []string{"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", ""}
-	if c.LogsConfig.MinLogLevel != "" {
-		found := false
-		for _, level := range validLevels {
-			if c.LogsConfig.MinLogLevel == level {
-				found = true
-				break
-			}
-		}
-		if !found {
-			allErrs = multierr.Append(allErrs, fmt.Errorf("invalid min_log_level: %s, must be one of %v", c.LogsConfig.MinLogLevel, validLevels))
-		}
-	}
-
-	return allErrs
 }

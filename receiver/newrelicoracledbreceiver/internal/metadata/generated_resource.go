@@ -42,27 +42,6 @@ func (rb *ResourceBuilder) SetOracledbInstanceName(val string) {
 	}
 }
 
-// SetOracledbLogFileName sets provided value as "oracledb.log.file.name" attribute.
-func (rb *ResourceBuilder) SetOracledbLogFileName(val string) {
-	if rb.config.OracledbLogFileName.Enabled {
-		rb.res.Attributes().PutStr("oracledb.log.file.name", val)
-	}
-}
-
-// SetOracledbLogFilePath sets provided value as "oracledb.log.file.path" attribute.
-func (rb *ResourceBuilder) SetOracledbLogFilePath(val string) {
-	if rb.config.OracledbLogFilePath.Enabled {
-		rb.res.Attributes().PutStr("oracledb.log.file.path", val)
-	}
-}
-
-// SetOracledbLogSource sets provided value as "oracledb.log.source" attribute.
-func (rb *ResourceBuilder) SetOracledbLogSource(val string) {
-	if rb.config.OracledbLogSource.Enabled {
-		rb.res.Attributes().PutStr("oracledb.log.source", val)
-	}
-}
-
 // Emit returns the built resource and resets the internal builder state.
 func (rb *ResourceBuilder) Emit() pcommon.Resource {
 	r := rb.res

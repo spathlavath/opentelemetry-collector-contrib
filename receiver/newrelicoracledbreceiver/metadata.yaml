@@ -4,7 +4,6 @@ status:
   class: receiver
   stability:
     alpha: [metrics]
-    development: [logs]
   distributions: [contrib]
   codeowners:
     active: [dmitryax, crobert-1, atoulme]
@@ -16,18 +15,6 @@ resource_attributes:
     type: string
   host.name:
     description: The host name of Oracle Server
-    enabled: true
-    type: string
-  oracledb.log.source:
-    description: The source of the Oracle database log (alert, audit, trace, archive)
-    enabled: true
-    type: string
-  oracledb.log.file.name:
-    description: The name of the Oracle log file
-    enabled: true
-    type: string
-  oracledb.log.file.path:
-    description: The full path to the Oracle log file
     enabled: true
     type: string
   oracledb.database.sid:
@@ -44,6 +31,21 @@ attributes:
     type: string
   tablespace_name:
     description: Tablespace name
+    type: string
+  disk_name:
+    description: Name of the disk or storage device
+    type: string
+  sql_id:
+    description: SQL identifier for query tracking
+    type: string
+  size_factor:
+    description: Size factor for advisory calculations
+    type: string
+  datafile_name:
+    description: Name of the database datafile
+    type: string
+  tablespace_status:
+    description: Status of the tablespace (ONLINE, OFFLINE, READ ONLY)
     type: string
 
 metrics:
@@ -535,14 +537,848 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  # Database Core Performance Metrics
+  oracledb.cpu_usage_percentage:
+    enabled: false
+    description: Database CPU usage as a percentage of total available CPU
+    unit: "%"
+    gauge:
+      value_type: double
+
+  oracledb.elapsed_time:
+    enabled: false
+    description: Total elapsed time for database operations
+    unit: "us"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.total_sessions_created:
+    enabled: false
+    description: Total number of sessions created since instance startup
+    unit: "{sessions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.background_checkpoints_completed:
+    enabled: false
+    description: Number of background checkpoints completed
+    unit: "{checkpoints}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.background_cpu_usage:
+    enabled: false
+    description: CPU time used by background processes
+    unit: "us"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.buffer_busy_waits:
+    enabled: false
+    description: Number of buffer busy wait events
+    unit: "{waits}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.buffer_cache_size:
+    enabled: false
+    description: Size of the buffer cache in bytes
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.database_cpu_time_ratio:
+    enabled: false
+    description: Ratio of database CPU time to total elapsed time
+    unit: "%"
+    gauge:
+      value_type: double
+
+  oracledb.database_wait_time_ratio:
+    enabled: false
+    description: Ratio of database wait time to total elapsed time
+    unit: "%"
+    gauge:
+      value_type: double
+
+  oracledb.execution_count:
+    enabled: false
+    description: Total number of SQL statement executions
+    unit: "{executions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.failed_connections:
+    enabled: false
+    description: Number of failed connection attempts
+    unit: "{connections}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.file_io_wait_time:
+    enabled: false
+    description: Time spent waiting for file I/O operations
+    unit: "us"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.gc_cr_blocks_received:
+    enabled: false
+    description: Number of consistent read blocks received from remote instances
+    unit: "{blocks}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.gc_current_blocks_received:
+    enabled: false
+    description: Number of current blocks received from remote instances
+    unit: "{blocks}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.index_fast_full_scans:
+    enabled: false
+    description: Number of index fast full scans performed
+    unit: "{scans}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.index_range_scans:
+    enabled: false
+    description: Number of index range scans performed
+    unit: "{scans}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.leaf_node_splits:
+    enabled: false
+    description: Number of leaf node splits in B-tree indexes
+    unit: "{splits}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.library_cache_lock_waits:
+    enabled: false
+    description: Number of library cache lock waits
+    unit: "{waits}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.library_cache_pin_waits:
+    enabled: false
+    description: Number of library cache pin waits
+    unit: "{waits}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.log_file_sync_waits:
+    enabled: false
+    description: Number of log file sync waits
+    unit: "{waits}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.network_traffic_volume:
+    enabled: false
+    description: Total network traffic volume for database operations
+    unit: "By"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.os_load:
+    enabled: false
+    description: Operating system load average
+    unit: "1"
+    gauge:
+      value_type: double
+
+  oracledb.response_time_per_transaction:
+    enabled: false
+    description: Average response time per database transaction
+    unit: "ms"
+    gauge:
+      value_type: double
+
+  oracledb.rows_fetched:
+    enabled: false
+    description: Number of rows fetched by queries
+    unit: "{rows}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.sql_area_evicted:
+    enabled: false
+    description: Number of SQL statements evicted from shared pool
+    unit: "{statements}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.table_fetch_by_rowid:
+    enabled: false
+    description: Number of table fetches by rowid
+    unit: "{fetches}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.table_scans_long:
+    enabled: false
+    description: Number of long table scans (>5 blocks)
+    unit: "{scans}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.table_scans_short:
+    enabled: false
+    description: Number of short table scans (<=5 blocks)
+    unit: "{scans}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.temp_space_allocated:
+    enabled: false
+    description: Amount of temporary space allocated
+    unit: "By"
+    gauge:
+      value_type: int
+
+  # Memory Metrics
+  oracledb.lock_memory:
+    enabled: false
+    description: Amount of memory used for locks
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.pga_aggregate_limit:
+    enabled: false
+    description: PGA aggregate limit setting
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.pga_aggregate_target:
+    enabled: false
+    description: PGA aggregate target setting
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.pga_global_memory_bound:
+    enabled: false
+    description: PGA global memory bound
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.pga_over_allocation_count:
+    enabled: false
+    description: Number of PGA over-allocations
+    unit: "{allocations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.pinned_buffers:
+    enabled: false
+    description: Number of pinned buffers in buffer cache
+    unit: "{buffers}"
+    gauge:
+      value_type: int
+
+  oracledb.shared_pool_reserved_size:
+    enabled: false
+    description: Size of shared pool reserved area
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.shared_pool_size:
+    enabled: false
+    description: Total size of shared pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_buffer_cache_size:
+    enabled: false
+    description: Size of SGA buffer cache
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_data_buffer_cache_size:
+    enabled: false
+    description: Size of SGA data buffer cache
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_database_buffer_cache:
+    enabled: false
+    description: Size of SGA database buffer cache
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_default_buffer_pool_size:
+    enabled: false
+    description: Size of SGA default buffer pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_fixed_buffer_cache_size:
+    enabled: false
+    description: Size of SGA fixed buffer cache
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_java_pool_size:
+    enabled: false
+    description: Size of SGA Java pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_keep_buffer_pool_size:
+    enabled: false
+    description: Size of SGA keep buffer pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_large_pool_size:
+    enabled: false
+    description: Size of SGA large pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_log_buffer:
+    enabled: false
+    description: Size of SGA log buffer
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_maximum_size:
+    enabled: false
+    description: Maximum size of SGA
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_recycle_buffer_pool_size:
+    enabled: false
+    description: Size of SGA recycle buffer pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_redo_buffers:
+    enabled: false
+    description: Size of SGA redo buffers
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_reserved_shared_pool_size:
+    enabled: false
+    description: Size of SGA reserved shared pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_shared_io_pool_size:
+    enabled: false
+    description: Size of SGA shared I/O pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_shared_pool_free_memory:
+    enabled: false
+    description: Free memory in SGA shared pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_shared_pool_reserved_free_memory:
+    enabled: false
+    description: Free memory in SGA shared pool reserved area
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_shared_pool_reserved_used_memory:
+    enabled: false
+    description: Used memory in SGA shared pool reserved area
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_shared_pool_used_memory:
+    enabled: false
+    description: Used memory in SGA shared pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_size:
+    enabled: false
+    description: Total size of SGA
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sga_streams_pool_size:
+    enabled: false
+    description: Size of SGA streams pool
+    unit: "By"
+    gauge:
+      value_type: int
+
+  oracledb.sort_segment_size:
+    enabled: false
+    description: Size of sort segments
+    unit: "By"
+    gauge:
+      value_type: int
+
+  # Disk Metrics
+  oracledb.disk_free:
+    enabled: false
+    description: Free disk space for database files
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [disk_name]
+
+  oracledb.disk_reads:
+    enabled: false
+    description: Number of disk read operations
+    unit: "{reads}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [disk_name]
+
+  oracledb.disk_total:
+    enabled: false
+    description: Total disk space for database files
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [disk_name]
+
+  oracledb.disk_used:
+    enabled: false
+    description: Used disk space for database files
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [disk_name]
+
+  oracledb.disk_utilization:
+    enabled: false
+    description: Disk utilization percentage
+    unit: "%"
+    gauge:
+      value_type: double
+    attributes: [disk_name]
+
+  oracledb.disk_writes:
+    enabled: false
+    description: Number of disk write operations
+    unit: "{writes}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [disk_name]
+
+  # Network Metrics
+  oracledb.network_bytes_received:
+    enabled: false
+    description: Bytes received over network connections
+    unit: "By"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.network_bytes_sent:
+    enabled: false
+    description: Bytes sent over network connections
+    unit: "By"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.network_packets_received:
+    enabled: false
+    description: Packets received over network connections
+    unit: "{packets}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  oracledb.network_packets_sent:
+    enabled: false
+    description: Packets sent over network connections
+    unit: "{packets}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  # Query Performance Metrics
+  oracledb.query_avg_active_sessions:
+    enabled: false
+    description: Average number of active sessions running queries
+    unit: "{sessions}"
+    gauge:
+      value_type: double
+
+  oracledb.query_avg_cpu_time:
+    enabled: false
+    description: Average CPU time per query execution
+    unit: "us"
+    gauge:
+      value_type: double
+
+  oracledb.query_avg_elapsed_time:
+    enabled: false
+    description: Average elapsed time per query execution
+    unit: "us"
+    gauge:
+      value_type: double
+
+  oracledb.query_avg_execution_time:
+    enabled: false
+    description: Average execution time for queries
+    unit: "us"
+    gauge:
+      value_type: double
+
+  oracledb.query_avg_executions_per_sec:
+    enabled: false
+    description: Average number of query executions per second
+    unit: "{executions}/s"
+    gauge:
+      value_type: double
+
+  oracledb.query_avg_buffer_gets:
+    enabled: false
+    description: Average buffer gets per query execution
+    unit: "{gets}"
+    gauge:
+      value_type: double
+
+  oracledb.query_avg_disk_reads:
+    enabled: false
+    description: Average disk reads per query execution
+    unit: "{reads}"
+    gauge:
+      value_type: double
+
+  oracledb.query_avg_rows_processed:
+    enabled: false
+    description: Average rows processed per query execution
+    unit: "{rows}"
+    gauge:
+      value_type: double
+
+  oracledb.query_blocked_sessions:
+    enabled: false
+    description: Number of blocked sessions waiting for queries
+    unit: "{sessions}"
+    gauge:
+      value_type: int
+
+  oracledb.query_buffer_gets_per_execution:
+    enabled: false
+    description: Buffer gets per execution for specific queries
+    unit: "{gets}"
+    gauge:
+      value_type: double
+    attributes: [sql_id]
+
+  oracledb.query_cpu_time_per_execution:
+    enabled: false
+    description: CPU time per execution for specific queries
+    unit: "us"
+    gauge:
+      value_type: double
+    attributes: [sql_id]
+
+  oracledb.query_disk_reads_per_execution:
+    enabled: false
+    description: Disk reads per execution for specific queries
+    unit: "{reads}"
+    gauge:
+      value_type: double
+    attributes: [sql_id]
+
+  oracledb.query_elapsed_time_per_execution:
+    enabled: false
+    description: Elapsed time per execution for specific queries
+    unit: "us"
+    gauge:
+      value_type: double
+    attributes: [sql_id]
+
+  oracledb.query_executions_delta:
+    enabled: false
+    description: Change in query executions since last measurement
+    unit: "{executions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: delta
+    attributes: [sql_id]
+
+  oracledb.query_long_running_queries:
+    enabled: false
+    description: Number of long-running queries (>5 minutes)
+    unit: "{queries}"
+    gauge:
+      value_type: int
+
+  oracledb.query_rows_processed_per_execution:
+    enabled: false
+    description: Rows processed per execution for specific queries
+    unit: "{rows}"
+    gauge:
+      value_type: double
+    attributes: [sql_id]
+
+  oracledb.query_total_buffer_gets:
+    enabled: false
+    description: Total buffer gets for specific queries
+    unit: "{gets}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [sql_id]
+
+  oracledb.query_total_cpu_time:
+    enabled: false
+    description: Total CPU time for specific queries
+    unit: "us"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [sql_id]
+
+  oracledb.query_total_disk_reads:
+    enabled: false
+    description: Total disk reads for specific queries
+    unit: "{reads}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [sql_id]
+
+  oracledb.query_total_elapsed_time:
+    enabled: false
+    description: Total elapsed time for specific queries
+    unit: "us"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [sql_id]
+
+  oracledb.query_total_executions:
+    enabled: false
+    description: Total executions for specific queries
+    unit: "{executions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [sql_id]
+
+  oracledb.query_total_rows_processed:
+    enabled: false
+    description: Total rows processed for specific queries
+    unit: "{rows}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes: [sql_id]
+
+  # SGA Advisory Metrics
+  oracledb.sga_buffer_cache_advisory_size_for_estimate:
+    enabled: false
+    description: Buffer cache size for advisory estimate
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [size_factor]
+
+  oracledb.sga_buffer_cache_advisory_size_factor:
+    enabled: false
+    description: Size factor for buffer cache advisory
+    unit: "1"
+    gauge:
+      value_type: double
+    attributes: [size_factor]
+
+  oracledb.sga_buffer_cache_advisory_estimated_physical_reads:
+    enabled: false
+    description: Estimated physical reads for buffer cache advisory
+    unit: "{reads}"
+    gauge:
+      value_type: int
+    attributes: [size_factor]
+
+  oracledb.sga_shared_pool_advisory_size_for_estimate:
+    enabled: false
+    description: Shared pool size for advisory estimate
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [size_factor]
+
+  oracledb.sga_shared_pool_advisory_size_factor:
+    enabled: false
+    description: Size factor for shared pool advisory
+    unit: "1"
+    gauge:
+      value_type: double
+    attributes: [size_factor]
+
+  oracledb.sga_shared_pool_advisory_estimated_parse_time_saved:
+    enabled: false
+    description: Estimated parse time saved for shared pool advisory
+    unit: "us"
+    gauge:
+      value_type: int
+    attributes: [size_factor]
+
+  # Detailed Tablespace Metrics
+  oracledb.tablespace_datafile_size:
+    enabled: false
+    description: Size of tablespace datafiles
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [tablespace_name, datafile_name]
+
+  oracledb.tablespace_free_space:
+    enabled: false
+    description: Free space in tablespace
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [tablespace_name]
+
+  oracledb.tablespace_largest_free_space:
+    enabled: false
+    description: Largest contiguous free space in tablespace
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [tablespace_name]
+
+  oracledb.tablespace_number_of_datafiles:
+    enabled: false
+    description: Number of datafiles in tablespace
+    unit: "{files}"
+    gauge:
+      value_type: int
+    attributes: [tablespace_name]
+
+  oracledb.tablespace_percent_used:
+    enabled: false
+    description: Percentage of tablespace used
+    unit: "%"
+    gauge:
+      value_type: double
+    attributes: [tablespace_name]
+
+  oracledb.tablespace_status:
+    enabled: false
+    description: Status of tablespace (online=1, offline=0)
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [tablespace_name, tablespace_status]
+
+  oracledb.tablespace_total_space:
+    enabled: false
+    description: Total space allocated to tablespace
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [tablespace_name]
+
+  oracledb.tablespace_used_space:
+    enabled: false
+    description: Used space in tablespace
+    unit: "By"
+    gauge:
+      value_type: int
+    attributes: [tablespace_name]
+
 tests:
   config:
     endpoint: localhost:1521
     username: testuser
     password: testpass
     service: testservice
-    logs:
-      enable_logs: true
-      collect_alert_logs: true
-      alert_log_path: "/tmp/alert_test.log"
-      batch_size: 100

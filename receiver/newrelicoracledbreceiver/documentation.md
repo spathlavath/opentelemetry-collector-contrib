@@ -309,6 +309,62 @@ metrics:
     enabled: true
 ```
 
+### oracledb.background_checkpoints_completed
+
+Number of background checkpoints completed
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {checkpoints} | Sum | Int | Cumulative | true |
+
+### oracledb.background_cpu_usage
+
+CPU time used by background processes
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| us | Sum | Int | Cumulative | true |
+
+### oracledb.buffer_busy_waits
+
+Number of buffer busy wait events
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {waits} | Sum | Int | Cumulative | true |
+
+### oracledb.buffer_cache_size
+
+Size of the buffer cache in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.cpu_usage_percentage
+
+Database CPU usage as a percentage of total available CPU
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+### oracledb.database_cpu_time_ratio
+
+Ratio of database CPU time to total elapsed time
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+### oracledb.database_wait_time_ratio
+
+Ratio of database wait time to total elapsed time
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
 ### oracledb.ddl_statements_parallelized
 
 Number of DDL statements executed in parallel
@@ -316,6 +372,90 @@ Number of DDL statements executed in parallel
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {statements} | Sum | Int | Cumulative | true |
+
+### oracledb.disk_free
+
+Free disk space for database files
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| disk_name | Name of the disk or storage device | Any Str | false |
+
+### oracledb.disk_reads
+
+Number of disk read operations
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {reads} | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| disk_name | Name of the disk or storage device | Any Str | false |
+
+### oracledb.disk_total
+
+Total disk space for database files
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| disk_name | Name of the disk or storage device | Any Str | false |
+
+### oracledb.disk_used
+
+Used disk space for database files
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| disk_name | Name of the disk or storage device | Any Str | false |
+
+### oracledb.disk_utilization
+
+Disk utilization percentage
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| disk_name | Name of the disk or storage device | Any Str | false |
+
+### oracledb.disk_writes
+
+Number of disk write operations
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {writes} | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| disk_name | Name of the disk or storage device | Any Str | false |
 
 ### oracledb.dml_statements_parallelized
 
@@ -325,6 +465,78 @@ Number of DML statements executed in parallel
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {statements} | Sum | Int | Cumulative | true |
 
+### oracledb.elapsed_time
+
+Total elapsed time for database operations
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| us | Sum | Int | Cumulative | true |
+
+### oracledb.execution_count
+
+Total number of SQL statement executions
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {executions} | Sum | Int | Cumulative | true |
+
+### oracledb.failed_connections
+
+Number of failed connection attempts
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {connections} | Sum | Int | Cumulative | true |
+
+### oracledb.file_io_wait_time
+
+Time spent waiting for file I/O operations
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| us | Sum | Int | Cumulative | true |
+
+### oracledb.gc_cr_blocks_received
+
+Number of consistent read blocks received from remote instances
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true |
+
+### oracledb.gc_current_blocks_received
+
+Number of current blocks received from remote instances
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true |
+
+### oracledb.index_fast_full_scans
+
+Number of index fast full scans performed
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {scans} | Sum | Int | Cumulative | true |
+
+### oracledb.index_range_scans
+
+Number of index range scans performed
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {scans} | Sum | Int | Cumulative | true |
+
+### oracledb.leaf_node_splits
+
+Number of leaf node splits in B-tree indexes
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {splits} | Sum | Int | Cumulative | true |
+
 ### oracledb.library_cache_hit_ratio
 
 Library cache hit ratio
@@ -333,6 +545,38 @@ Library cache hit ratio
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
 
+### oracledb.library_cache_lock_waits
+
+Number of library cache lock waits
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {waits} | Sum | Int | Cumulative | true |
+
+### oracledb.library_cache_pin_waits
+
+Number of library cache pin waits
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {waits} | Sum | Int | Cumulative | true |
+
+### oracledb.lock_memory
+
+Amount of memory used for locks
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.log_file_sync_waits
+
+Number of log file sync waits
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {waits} | Sum | Int | Cumulative | true |
+
 ### oracledb.logons
 
 Number of logon operations
@@ -340,6 +584,54 @@ Number of logon operations
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {operations} | Sum | Int | Cumulative | true |
+
+### oracledb.network_bytes_received
+
+Bytes received over network connections
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| By | Sum | Int | Cumulative | true |
+
+### oracledb.network_bytes_sent
+
+Bytes sent over network connections
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| By | Sum | Int | Cumulative | true |
+
+### oracledb.network_packets_received
+
+Packets received over network connections
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {packets} | Sum | Int | Cumulative | true |
+
+### oracledb.network_packets_sent
+
+Packets sent over network connections
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {packets} | Sum | Int | Cumulative | true |
+
+### oracledb.network_traffic_volume
+
+Total network traffic volume for database operations
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| By | Sum | Int | Cumulative | true |
+
+### oracledb.os_load
+
+Operating system load average
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
 
 ### oracledb.parallel_operations_downgraded_1_to_25_pct
 
@@ -389,6 +681,22 @@ Number of times parallel execution was executed at the requested degree of paral
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {executions} | Sum | Int | Cumulative | true |
 
+### oracledb.pga_aggregate_limit
+
+PGA aggregate limit setting
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.pga_aggregate_target
+
+PGA aggregate target setting
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### oracledb.pga_allocated_memory
 
 PGA memory allocated by process
@@ -405,6 +713,14 @@ PGA freeable memory
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### oracledb.pga_global_memory_bound
+
+PGA global memory bound
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### oracledb.pga_maximum_memory
 
 Maximum PGA memory ever allocated
@@ -412,6 +728,14 @@ Maximum PGA memory ever allocated
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
+
+### oracledb.pga_over_allocation_count
+
+Number of PGA over-allocations
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {allocations} | Sum | Int | Cumulative | true |
 
 ### oracledb.pga_used_memory
 
@@ -469,6 +793,14 @@ Physical writes direct
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {writes} | Sum | Int | Cumulative | true |
 
+### oracledb.pinned_buffers
+
+Number of pinned buffers in buffer cache
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {buffers} | Gauge | Int |
+
 ### oracledb.queries_parallelized
 
 Number of queries executed in parallel
@@ -476,6 +808,254 @@ Number of queries executed in parallel
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {queries} | Sum | Int | Cumulative | true |
+
+### oracledb.query_avg_active_sessions
+
+Average number of active sessions running queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Double |
+
+### oracledb.query_avg_buffer_gets
+
+Average buffer gets per query execution
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {gets} | Gauge | Double |
+
+### oracledb.query_avg_cpu_time
+
+Average CPU time per query execution
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Double |
+
+### oracledb.query_avg_disk_reads
+
+Average disk reads per query execution
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Double |
+
+### oracledb.query_avg_elapsed_time
+
+Average elapsed time per query execution
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Double |
+
+### oracledb.query_avg_execution_time
+
+Average execution time for queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Double |
+
+### oracledb.query_avg_executions_per_sec
+
+Average number of query executions per second
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions}/s | Gauge | Double |
+
+### oracledb.query_avg_rows_processed
+
+Average rows processed per query execution
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Double |
+
+### oracledb.query_blocked_sessions
+
+Number of blocked sessions waiting for queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+### oracledb.query_buffer_gets_per_execution
+
+Buffer gets per execution for specific queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {gets} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_cpu_time_per_execution
+
+CPU time per execution for specific queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_disk_reads_per_execution
+
+Disk reads per execution for specific queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_elapsed_time_per_execution
+
+Elapsed time per execution for specific queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_executions_delta
+
+Change in query executions since last measurement
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {executions} | Sum | Int | Delta | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_long_running_queries
+
+Number of long-running queries (>5 minutes)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {queries} | Gauge | Int |
+
+### oracledb.query_rows_processed_per_execution
+
+Rows processed per execution for specific queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_total_buffer_gets
+
+Total buffer gets for specific queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {gets} | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_total_cpu_time
+
+Total CPU time for specific queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| us | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_total_disk_reads
+
+Total disk reads for specific queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {reads} | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_total_elapsed_time
+
+Total elapsed time for specific queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| us | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_total_executions
+
+Total executions for specific queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {executions} | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
+
+### oracledb.query_total_rows_processed
+
+Total rows processed for specific queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {rows} | Sum | Int | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| sql_id | SQL identifier for query tracking | Any Str | false |
 
 ### oracledb.redo_size
 
@@ -485,6 +1065,14 @@ Redo log size
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | By | Sum | Int | Cumulative | true |
 
+### oracledb.response_time_per_transaction
+
+Average response time per database transaction
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
 ### oracledb.row_cache_hit_ratio
 
 Row cache hit ratio
@@ -493,6 +1081,96 @@ Row cache hit ratio
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
 
+### oracledb.rows_fetched
+
+Number of rows fetched by queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {rows} | Sum | Int | Cumulative | true |
+
+### oracledb.sga_buffer_cache_advisory_estimated_physical_reads
+
+Estimated physical reads for buffer cache advisory
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| size_factor | Size factor for advisory calculations | Any Str | false |
+
+### oracledb.sga_buffer_cache_advisory_size_factor
+
+Size factor for buffer cache advisory
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| size_factor | Size factor for advisory calculations | Any Str | false |
+
+### oracledb.sga_buffer_cache_advisory_size_for_estimate
+
+Buffer cache size for advisory estimate
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| size_factor | Size factor for advisory calculations | Any Str | false |
+
+### oracledb.sga_buffer_cache_size
+
+Size of SGA buffer cache
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_data_buffer_cache_size
+
+Size of SGA data buffer cache
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_database_buffer_cache
+
+Size of SGA database buffer cache
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_default_buffer_pool_size
+
+Size of SGA default buffer pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_fixed_buffer_cache_size
+
+Size of SGA fixed buffer cache
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### oracledb.sga_fixed_size
 
 SGA fixed size in bytes
@@ -500,6 +1178,354 @@ SGA fixed size in bytes
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
+
+### oracledb.sga_java_pool_size
+
+Size of SGA Java pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_keep_buffer_pool_size
+
+Size of SGA keep buffer pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_large_pool_size
+
+Size of SGA large pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_log_buffer
+
+Size of SGA log buffer
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_maximum_size
+
+Maximum size of SGA
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_recycle_buffer_pool_size
+
+Size of SGA recycle buffer pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_redo_buffers
+
+Size of SGA redo buffers
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_reserved_shared_pool_size
+
+Size of SGA reserved shared pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_shared_io_pool_size
+
+Size of SGA shared I/O pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_shared_pool_advisory_estimated_parse_time_saved
+
+Estimated parse time saved for shared pool advisory
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| size_factor | Size factor for advisory calculations | Any Str | false |
+
+### oracledb.sga_shared_pool_advisory_size_factor
+
+Size factor for shared pool advisory
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| size_factor | Size factor for advisory calculations | Any Str | false |
+
+### oracledb.sga_shared_pool_advisory_size_for_estimate
+
+Shared pool size for advisory estimate
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| size_factor | Size factor for advisory calculations | Any Str | false |
+
+### oracledb.sga_shared_pool_free_memory
+
+Free memory in SGA shared pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_shared_pool_reserved_free_memory
+
+Free memory in SGA shared pool reserved area
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_shared_pool_reserved_used_memory
+
+Used memory in SGA shared pool reserved area
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_shared_pool_used_memory
+
+Used memory in SGA shared pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_size
+
+Total size of SGA
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sga_streams_pool_size
+
+Size of SGA streams pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.shared_pool_reserved_size
+
+Size of shared pool reserved area
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.shared_pool_size
+
+Total size of shared pool
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sort_segment_size
+
+Size of sort segments
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.sql_area_evicted
+
+Number of SQL statements evicted from shared pool
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {statements} | Sum | Int | Cumulative | true |
+
+### oracledb.table_fetch_by_rowid
+
+Number of table fetches by rowid
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {fetches} | Sum | Int | Cumulative | true |
+
+### oracledb.table_scans_long
+
+Number of long table scans (>5 blocks)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {scans} | Sum | Int | Cumulative | true |
+
+### oracledb.table_scans_short
+
+Number of short table scans (<=5 blocks)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {scans} | Sum | Int | Cumulative | true |
+
+### oracledb.tablespace_datafile_size
+
+Size of tablespace datafiles
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+| datafile_name | Name of the database datafile | Any Str | false |
+
+### oracledb.tablespace_free_space
+
+Free space in tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+
+### oracledb.tablespace_largest_free_space
+
+Largest contiguous free space in tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+
+### oracledb.tablespace_number_of_datafiles
+
+Number of datafiles in tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {files} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+
+### oracledb.tablespace_percent_used
+
+Percentage of tablespace used
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+
+### oracledb.tablespace_status
+
+Status of tablespace (online=1, offline=0)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+| tablespace_status | Status of the tablespace (ONLINE, OFFLINE, READ ONLY) | Any Str | false |
+
+### oracledb.tablespace_total_space
+
+Total space allocated to tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+
+### oracledb.tablespace_used_space
+
+Used space in tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+
+### oracledb.temp_space_allocated
+
+Amount of temporary space allocated
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### oracledb.total_sessions_created
+
+Total number of sessions created since instance startup
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {sessions} | Sum | Int | Cumulative | true |
 
 ### oracledb.wait_events
 
@@ -524,6 +1550,3 @@ Total time waited for events
 | host.name | The host name of Oracle Server | Any Str | true |
 | oracledb.database.sid | The Oracle database system identifier (SID) | Any Str | true |
 | oracledb.instance.name | The name of the Oracle instance that data is coming from. | Any Str | true |
-| oracledb.log.file.name | The name of the Oracle log file | Any Str | true |
-| oracledb.log.file.path | The full path to the Oracle log file | Any Str | true |
-| oracledb.log.source | The source of the Oracle database log (alert, audit, trace, archive) | Any Str | true |

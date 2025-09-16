@@ -28,70 +28,186 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
-	OracledbBufferCacheHitRatio                   MetricConfig `mapstructure:"oracledb.buffer_cache_hit_ratio"`
-	OracledbConsistentGets                        MetricConfig `mapstructure:"oracledb.consistent_gets"`
-	OracledbCPUTime                               MetricConfig `mapstructure:"oracledb.cpu_time"`
-	OracledbDbBlockGets                           MetricConfig `mapstructure:"oracledb.db_block_gets"`
-	OracledbDdlStatementsParallelized             MetricConfig `mapstructure:"oracledb.ddl_statements_parallelized"`
-	OracledbDmlLocksLimit                         MetricConfig `mapstructure:"oracledb.dml_locks_limit"`
-	OracledbDmlLocksUsage                         MetricConfig `mapstructure:"oracledb.dml_locks_usage"`
-	OracledbDmlStatementsParallelized             MetricConfig `mapstructure:"oracledb.dml_statements_parallelized"`
-	OracledbEnqueueDeadlocks                      MetricConfig `mapstructure:"oracledb.enqueue_deadlocks"`
-	OracledbEnqueueLocksLimit                     MetricConfig `mapstructure:"oracledb.enqueue_locks_limit"`
-	OracledbEnqueueLocksUsage                     MetricConfig `mapstructure:"oracledb.enqueue_locks_usage"`
-	OracledbEnqueueResourcesLimit                 MetricConfig `mapstructure:"oracledb.enqueue_resources_limit"`
-	OracledbEnqueueResourcesUsage                 MetricConfig `mapstructure:"oracledb.enqueue_resources_usage"`
-	OracledbExchangeDeadlocks                     MetricConfig `mapstructure:"oracledb.exchange_deadlocks"`
-	OracledbExecutions                            MetricConfig `mapstructure:"oracledb.executions"`
-	OracledbHardParses                            MetricConfig `mapstructure:"oracledb.hard_parses"`
-	OracledbLibraryCacheHitRatio                  MetricConfig `mapstructure:"oracledb.library_cache_hit_ratio"`
-	OracledbLogicalReads                          MetricConfig `mapstructure:"oracledb.logical_reads"`
-	OracledbLogons                                MetricConfig `mapstructure:"oracledb.logons"`
-	OracledbParallelOperationsDowngraded1To25Pct  MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_1_to_25_pct"`
-	OracledbParallelOperationsDowngraded25To50Pct MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_25_to_50_pct"`
-	OracledbParallelOperationsDowngraded50To75Pct MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_50_to_75_pct"`
-	OracledbParallelOperationsDowngraded75To99Pct MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_75_to_99_pct"`
-	OracledbParallelOperationsDowngradedToSerial  MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_to_serial"`
-	OracledbParallelOperationsNotDowngraded       MetricConfig `mapstructure:"oracledb.parallel_operations_not_downgraded"`
-	OracledbParseCalls                            MetricConfig `mapstructure:"oracledb.parse_calls"`
-	OracledbPgaAllocatedMemory                    MetricConfig `mapstructure:"oracledb.pga_allocated_memory"`
-	OracledbPgaFreeableMemory                     MetricConfig `mapstructure:"oracledb.pga_freeable_memory"`
-	OracledbPgaMaximumMemory                      MetricConfig `mapstructure:"oracledb.pga_maximum_memory"`
-	OracledbPgaMemory                             MetricConfig `mapstructure:"oracledb.pga_memory"`
-	OracledbPgaUsedMemory                         MetricConfig `mapstructure:"oracledb.pga_used_memory"`
-	OracledbPhysicalReadBytes                     MetricConfig `mapstructure:"oracledb.physical_read_bytes"`
-	OracledbPhysicalReadIoRequests                MetricConfig `mapstructure:"oracledb.physical_read_io_requests"`
-	OracledbPhysicalReads                         MetricConfig `mapstructure:"oracledb.physical_reads"`
-	OracledbPhysicalReadsDirect                   MetricConfig `mapstructure:"oracledb.physical_reads_direct"`
-	OracledbPhysicalWriteBytes                    MetricConfig `mapstructure:"oracledb.physical_write_bytes"`
-	OracledbPhysicalWriteIoRequests               MetricConfig `mapstructure:"oracledb.physical_write_io_requests"`
-	OracledbPhysicalWrites                        MetricConfig `mapstructure:"oracledb.physical_writes"`
-	OracledbPhysicalWritesDirect                  MetricConfig `mapstructure:"oracledb.physical_writes_direct"`
-	OracledbProcessesLimit                        MetricConfig `mapstructure:"oracledb.processes_limit"`
-	OracledbProcessesUsage                        MetricConfig `mapstructure:"oracledb.processes_usage"`
-	OracledbQueriesParallelized                   MetricConfig `mapstructure:"oracledb.queries_parallelized"`
-	OracledbRedoSize                              MetricConfig `mapstructure:"oracledb.redo_size"`
-	OracledbRowCacheHitRatio                      MetricConfig `mapstructure:"oracledb.row_cache_hit_ratio"`
-	OracledbSessions                              MetricConfig `mapstructure:"oracledb.sessions"`
-	OracledbSessionsLimit                         MetricConfig `mapstructure:"oracledb.sessions_limit"`
-	OracledbSgaFixedSize                          MetricConfig `mapstructure:"oracledb.sga_fixed_size"`
-	OracledbSharedPoolFree                        MetricConfig `mapstructure:"oracledb.shared_pool_free"`
-	OracledbTablespaceOffline                     MetricConfig `mapstructure:"oracledb.tablespace_offline"`
-	OracledbTablespaceSizeLimit                   MetricConfig `mapstructure:"oracledb.tablespace_size_limit"`
-	OracledbTablespaceSizeUsage                   MetricConfig `mapstructure:"oracledb.tablespace_size_usage"`
-	OracledbTablespaceUsagePercentage             MetricConfig `mapstructure:"oracledb.tablespace_usage_percentage"`
-	OracledbTransactionsLimit                     MetricConfig `mapstructure:"oracledb.transactions_limit"`
-	OracledbTransactionsUsage                     MetricConfig `mapstructure:"oracledb.transactions_usage"`
-	OracledbUserCommits                           MetricConfig `mapstructure:"oracledb.user_commits"`
-	OracledbUserRollbacks                         MetricConfig `mapstructure:"oracledb.user_rollbacks"`
-	OracledbWaitEvents                            MetricConfig `mapstructure:"oracledb.wait_events"`
-	OracledbWaitTime                              MetricConfig `mapstructure:"oracledb.wait_time"`
+	OracledbBackgroundCheckpointsCompleted               MetricConfig `mapstructure:"oracledb.background_checkpoints_completed"`
+	OracledbBackgroundCPUUsage                           MetricConfig `mapstructure:"oracledb.background_cpu_usage"`
+	OracledbBufferBusyWaits                              MetricConfig `mapstructure:"oracledb.buffer_busy_waits"`
+	OracledbBufferCacheHitRatio                          MetricConfig `mapstructure:"oracledb.buffer_cache_hit_ratio"`
+	OracledbBufferCacheSize                              MetricConfig `mapstructure:"oracledb.buffer_cache_size"`
+	OracledbConsistentGets                               MetricConfig `mapstructure:"oracledb.consistent_gets"`
+	OracledbCPUTime                                      MetricConfig `mapstructure:"oracledb.cpu_time"`
+	OracledbCPUUsagePercentage                           MetricConfig `mapstructure:"oracledb.cpu_usage_percentage"`
+	OracledbDatabaseCPUTimeRatio                         MetricConfig `mapstructure:"oracledb.database_cpu_time_ratio"`
+	OracledbDatabaseWaitTimeRatio                        MetricConfig `mapstructure:"oracledb.database_wait_time_ratio"`
+	OracledbDbBlockGets                                  MetricConfig `mapstructure:"oracledb.db_block_gets"`
+	OracledbDdlStatementsParallelized                    MetricConfig `mapstructure:"oracledb.ddl_statements_parallelized"`
+	OracledbDiskFree                                     MetricConfig `mapstructure:"oracledb.disk_free"`
+	OracledbDiskReads                                    MetricConfig `mapstructure:"oracledb.disk_reads"`
+	OracledbDiskTotal                                    MetricConfig `mapstructure:"oracledb.disk_total"`
+	OracledbDiskUsed                                     MetricConfig `mapstructure:"oracledb.disk_used"`
+	OracledbDiskUtilization                              MetricConfig `mapstructure:"oracledb.disk_utilization"`
+	OracledbDiskWrites                                   MetricConfig `mapstructure:"oracledb.disk_writes"`
+	OracledbDmlLocksLimit                                MetricConfig `mapstructure:"oracledb.dml_locks_limit"`
+	OracledbDmlLocksUsage                                MetricConfig `mapstructure:"oracledb.dml_locks_usage"`
+	OracledbDmlStatementsParallelized                    MetricConfig `mapstructure:"oracledb.dml_statements_parallelized"`
+	OracledbElapsedTime                                  MetricConfig `mapstructure:"oracledb.elapsed_time"`
+	OracledbEnqueueDeadlocks                             MetricConfig `mapstructure:"oracledb.enqueue_deadlocks"`
+	OracledbEnqueueLocksLimit                            MetricConfig `mapstructure:"oracledb.enqueue_locks_limit"`
+	OracledbEnqueueLocksUsage                            MetricConfig `mapstructure:"oracledb.enqueue_locks_usage"`
+	OracledbEnqueueResourcesLimit                        MetricConfig `mapstructure:"oracledb.enqueue_resources_limit"`
+	OracledbEnqueueResourcesUsage                        MetricConfig `mapstructure:"oracledb.enqueue_resources_usage"`
+	OracledbExchangeDeadlocks                            MetricConfig `mapstructure:"oracledb.exchange_deadlocks"`
+	OracledbExecutionCount                               MetricConfig `mapstructure:"oracledb.execution_count"`
+	OracledbExecutions                                   MetricConfig `mapstructure:"oracledb.executions"`
+	OracledbFailedConnections                            MetricConfig `mapstructure:"oracledb.failed_connections"`
+	OracledbFileIoWaitTime                               MetricConfig `mapstructure:"oracledb.file_io_wait_time"`
+	OracledbGcCrBlocksReceived                           MetricConfig `mapstructure:"oracledb.gc_cr_blocks_received"`
+	OracledbGcCurrentBlocksReceived                      MetricConfig `mapstructure:"oracledb.gc_current_blocks_received"`
+	OracledbHardParses                                   MetricConfig `mapstructure:"oracledb.hard_parses"`
+	OracledbIndexFastFullScans                           MetricConfig `mapstructure:"oracledb.index_fast_full_scans"`
+	OracledbIndexRangeScans                              MetricConfig `mapstructure:"oracledb.index_range_scans"`
+	OracledbLeafNodeSplits                               MetricConfig `mapstructure:"oracledb.leaf_node_splits"`
+	OracledbLibraryCacheHitRatio                         MetricConfig `mapstructure:"oracledb.library_cache_hit_ratio"`
+	OracledbLibraryCacheLockWaits                        MetricConfig `mapstructure:"oracledb.library_cache_lock_waits"`
+	OracledbLibraryCachePinWaits                         MetricConfig `mapstructure:"oracledb.library_cache_pin_waits"`
+	OracledbLockMemory                                   MetricConfig `mapstructure:"oracledb.lock_memory"`
+	OracledbLogFileSyncWaits                             MetricConfig `mapstructure:"oracledb.log_file_sync_waits"`
+	OracledbLogicalReads                                 MetricConfig `mapstructure:"oracledb.logical_reads"`
+	OracledbLogons                                       MetricConfig `mapstructure:"oracledb.logons"`
+	OracledbNetworkBytesReceived                         MetricConfig `mapstructure:"oracledb.network_bytes_received"`
+	OracledbNetworkBytesSent                             MetricConfig `mapstructure:"oracledb.network_bytes_sent"`
+	OracledbNetworkPacketsReceived                       MetricConfig `mapstructure:"oracledb.network_packets_received"`
+	OracledbNetworkPacketsSent                           MetricConfig `mapstructure:"oracledb.network_packets_sent"`
+	OracledbNetworkTrafficVolume                         MetricConfig `mapstructure:"oracledb.network_traffic_volume"`
+	OracledbOsLoad                                       MetricConfig `mapstructure:"oracledb.os_load"`
+	OracledbParallelOperationsDowngraded1To25Pct         MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_1_to_25_pct"`
+	OracledbParallelOperationsDowngraded25To50Pct        MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_25_to_50_pct"`
+	OracledbParallelOperationsDowngraded50To75Pct        MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_50_to_75_pct"`
+	OracledbParallelOperationsDowngraded75To99Pct        MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_75_to_99_pct"`
+	OracledbParallelOperationsDowngradedToSerial         MetricConfig `mapstructure:"oracledb.parallel_operations_downgraded_to_serial"`
+	OracledbParallelOperationsNotDowngraded              MetricConfig `mapstructure:"oracledb.parallel_operations_not_downgraded"`
+	OracledbParseCalls                                   MetricConfig `mapstructure:"oracledb.parse_calls"`
+	OracledbPgaAggregateLimit                            MetricConfig `mapstructure:"oracledb.pga_aggregate_limit"`
+	OracledbPgaAggregateTarget                           MetricConfig `mapstructure:"oracledb.pga_aggregate_target"`
+	OracledbPgaAllocatedMemory                           MetricConfig `mapstructure:"oracledb.pga_allocated_memory"`
+	OracledbPgaFreeableMemory                            MetricConfig `mapstructure:"oracledb.pga_freeable_memory"`
+	OracledbPgaGlobalMemoryBound                         MetricConfig `mapstructure:"oracledb.pga_global_memory_bound"`
+	OracledbPgaMaximumMemory                             MetricConfig `mapstructure:"oracledb.pga_maximum_memory"`
+	OracledbPgaMemory                                    MetricConfig `mapstructure:"oracledb.pga_memory"`
+	OracledbPgaOverAllocationCount                       MetricConfig `mapstructure:"oracledb.pga_over_allocation_count"`
+	OracledbPgaUsedMemory                                MetricConfig `mapstructure:"oracledb.pga_used_memory"`
+	OracledbPhysicalReadBytes                            MetricConfig `mapstructure:"oracledb.physical_read_bytes"`
+	OracledbPhysicalReadIoRequests                       MetricConfig `mapstructure:"oracledb.physical_read_io_requests"`
+	OracledbPhysicalReads                                MetricConfig `mapstructure:"oracledb.physical_reads"`
+	OracledbPhysicalReadsDirect                          MetricConfig `mapstructure:"oracledb.physical_reads_direct"`
+	OracledbPhysicalWriteBytes                           MetricConfig `mapstructure:"oracledb.physical_write_bytes"`
+	OracledbPhysicalWriteIoRequests                      MetricConfig `mapstructure:"oracledb.physical_write_io_requests"`
+	OracledbPhysicalWrites                               MetricConfig `mapstructure:"oracledb.physical_writes"`
+	OracledbPhysicalWritesDirect                         MetricConfig `mapstructure:"oracledb.physical_writes_direct"`
+	OracledbPinnedBuffers                                MetricConfig `mapstructure:"oracledb.pinned_buffers"`
+	OracledbProcessesLimit                               MetricConfig `mapstructure:"oracledb.processes_limit"`
+	OracledbProcessesUsage                               MetricConfig `mapstructure:"oracledb.processes_usage"`
+	OracledbQueriesParallelized                          MetricConfig `mapstructure:"oracledb.queries_parallelized"`
+	OracledbQueryAvgActiveSessions                       MetricConfig `mapstructure:"oracledb.query_avg_active_sessions"`
+	OracledbQueryAvgBufferGets                           MetricConfig `mapstructure:"oracledb.query_avg_buffer_gets"`
+	OracledbQueryAvgCPUTime                              MetricConfig `mapstructure:"oracledb.query_avg_cpu_time"`
+	OracledbQueryAvgDiskReads                            MetricConfig `mapstructure:"oracledb.query_avg_disk_reads"`
+	OracledbQueryAvgElapsedTime                          MetricConfig `mapstructure:"oracledb.query_avg_elapsed_time"`
+	OracledbQueryAvgExecutionTime                        MetricConfig `mapstructure:"oracledb.query_avg_execution_time"`
+	OracledbQueryAvgExecutionsPerSec                     MetricConfig `mapstructure:"oracledb.query_avg_executions_per_sec"`
+	OracledbQueryAvgRowsProcessed                        MetricConfig `mapstructure:"oracledb.query_avg_rows_processed"`
+	OracledbQueryBlockedSessions                         MetricConfig `mapstructure:"oracledb.query_blocked_sessions"`
+	OracledbQueryBufferGetsPerExecution                  MetricConfig `mapstructure:"oracledb.query_buffer_gets_per_execution"`
+	OracledbQueryCPUTimePerExecution                     MetricConfig `mapstructure:"oracledb.query_cpu_time_per_execution"`
+	OracledbQueryDiskReadsPerExecution                   MetricConfig `mapstructure:"oracledb.query_disk_reads_per_execution"`
+	OracledbQueryElapsedTimePerExecution                 MetricConfig `mapstructure:"oracledb.query_elapsed_time_per_execution"`
+	OracledbQueryExecutionsDelta                         MetricConfig `mapstructure:"oracledb.query_executions_delta"`
+	OracledbQueryLongRunningQueries                      MetricConfig `mapstructure:"oracledb.query_long_running_queries"`
+	OracledbQueryRowsProcessedPerExecution               MetricConfig `mapstructure:"oracledb.query_rows_processed_per_execution"`
+	OracledbQueryTotalBufferGets                         MetricConfig `mapstructure:"oracledb.query_total_buffer_gets"`
+	OracledbQueryTotalCPUTime                            MetricConfig `mapstructure:"oracledb.query_total_cpu_time"`
+	OracledbQueryTotalDiskReads                          MetricConfig `mapstructure:"oracledb.query_total_disk_reads"`
+	OracledbQueryTotalElapsedTime                        MetricConfig `mapstructure:"oracledb.query_total_elapsed_time"`
+	OracledbQueryTotalExecutions                         MetricConfig `mapstructure:"oracledb.query_total_executions"`
+	OracledbQueryTotalRowsProcessed                      MetricConfig `mapstructure:"oracledb.query_total_rows_processed"`
+	OracledbRedoSize                                     MetricConfig `mapstructure:"oracledb.redo_size"`
+	OracledbResponseTimePerTransaction                   MetricConfig `mapstructure:"oracledb.response_time_per_transaction"`
+	OracledbRowCacheHitRatio                             MetricConfig `mapstructure:"oracledb.row_cache_hit_ratio"`
+	OracledbRowsFetched                                  MetricConfig `mapstructure:"oracledb.rows_fetched"`
+	OracledbSessions                                     MetricConfig `mapstructure:"oracledb.sessions"`
+	OracledbSessionsLimit                                MetricConfig `mapstructure:"oracledb.sessions_limit"`
+	OracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads MetricConfig `mapstructure:"oracledb.sga_buffer_cache_advisory_estimated_physical_reads"`
+	OracledbSgaBufferCacheAdvisorySizeFactor             MetricConfig `mapstructure:"oracledb.sga_buffer_cache_advisory_size_factor"`
+	OracledbSgaBufferCacheAdvisorySizeForEstimate        MetricConfig `mapstructure:"oracledb.sga_buffer_cache_advisory_size_for_estimate"`
+	OracledbSgaBufferCacheSize                           MetricConfig `mapstructure:"oracledb.sga_buffer_cache_size"`
+	OracledbSgaDataBufferCacheSize                       MetricConfig `mapstructure:"oracledb.sga_data_buffer_cache_size"`
+	OracledbSgaDatabaseBufferCache                       MetricConfig `mapstructure:"oracledb.sga_database_buffer_cache"`
+	OracledbSgaDefaultBufferPoolSize                     MetricConfig `mapstructure:"oracledb.sga_default_buffer_pool_size"`
+	OracledbSgaFixedBufferCacheSize                      MetricConfig `mapstructure:"oracledb.sga_fixed_buffer_cache_size"`
+	OracledbSgaFixedSize                                 MetricConfig `mapstructure:"oracledb.sga_fixed_size"`
+	OracledbSgaJavaPoolSize                              MetricConfig `mapstructure:"oracledb.sga_java_pool_size"`
+	OracledbSgaKeepBufferPoolSize                        MetricConfig `mapstructure:"oracledb.sga_keep_buffer_pool_size"`
+	OracledbSgaLargePoolSize                             MetricConfig `mapstructure:"oracledb.sga_large_pool_size"`
+	OracledbSgaLogBuffer                                 MetricConfig `mapstructure:"oracledb.sga_log_buffer"`
+	OracledbSgaMaximumSize                               MetricConfig `mapstructure:"oracledb.sga_maximum_size"`
+	OracledbSgaRecycleBufferPoolSize                     MetricConfig `mapstructure:"oracledb.sga_recycle_buffer_pool_size"`
+	OracledbSgaRedoBuffers                               MetricConfig `mapstructure:"oracledb.sga_redo_buffers"`
+	OracledbSgaReservedSharedPoolSize                    MetricConfig `mapstructure:"oracledb.sga_reserved_shared_pool_size"`
+	OracledbSgaSharedIoPoolSize                          MetricConfig `mapstructure:"oracledb.sga_shared_io_pool_size"`
+	OracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved MetricConfig `mapstructure:"oracledb.sga_shared_pool_advisory_estimated_parse_time_saved"`
+	OracledbSgaSharedPoolAdvisorySizeFactor              MetricConfig `mapstructure:"oracledb.sga_shared_pool_advisory_size_factor"`
+	OracledbSgaSharedPoolAdvisorySizeForEstimate         MetricConfig `mapstructure:"oracledb.sga_shared_pool_advisory_size_for_estimate"`
+	OracledbSgaSharedPoolFreeMemory                      MetricConfig `mapstructure:"oracledb.sga_shared_pool_free_memory"`
+	OracledbSgaSharedPoolReservedFreeMemory              MetricConfig `mapstructure:"oracledb.sga_shared_pool_reserved_free_memory"`
+	OracledbSgaSharedPoolReservedUsedMemory              MetricConfig `mapstructure:"oracledb.sga_shared_pool_reserved_used_memory"`
+	OracledbSgaSharedPoolUsedMemory                      MetricConfig `mapstructure:"oracledb.sga_shared_pool_used_memory"`
+	OracledbSgaSize                                      MetricConfig `mapstructure:"oracledb.sga_size"`
+	OracledbSgaStreamsPoolSize                           MetricConfig `mapstructure:"oracledb.sga_streams_pool_size"`
+	OracledbSharedPoolFree                               MetricConfig `mapstructure:"oracledb.shared_pool_free"`
+	OracledbSharedPoolReservedSize                       MetricConfig `mapstructure:"oracledb.shared_pool_reserved_size"`
+	OracledbSharedPoolSize                               MetricConfig `mapstructure:"oracledb.shared_pool_size"`
+	OracledbSortSegmentSize                              MetricConfig `mapstructure:"oracledb.sort_segment_size"`
+	OracledbSQLAreaEvicted                               MetricConfig `mapstructure:"oracledb.sql_area_evicted"`
+	OracledbTableFetchByRowid                            MetricConfig `mapstructure:"oracledb.table_fetch_by_rowid"`
+	OracledbTableScansLong                               MetricConfig `mapstructure:"oracledb.table_scans_long"`
+	OracledbTableScansShort                              MetricConfig `mapstructure:"oracledb.table_scans_short"`
+	OracledbTablespaceDatafileSize                       MetricConfig `mapstructure:"oracledb.tablespace_datafile_size"`
+	OracledbTablespaceFreeSpace                          MetricConfig `mapstructure:"oracledb.tablespace_free_space"`
+	OracledbTablespaceLargestFreeSpace                   MetricConfig `mapstructure:"oracledb.tablespace_largest_free_space"`
+	OracledbTablespaceNumberOfDatafiles                  MetricConfig `mapstructure:"oracledb.tablespace_number_of_datafiles"`
+	OracledbTablespaceOffline                            MetricConfig `mapstructure:"oracledb.tablespace_offline"`
+	OracledbTablespacePercentUsed                        MetricConfig `mapstructure:"oracledb.tablespace_percent_used"`
+	OracledbTablespaceSizeLimit                          MetricConfig `mapstructure:"oracledb.tablespace_size_limit"`
+	OracledbTablespaceSizeUsage                          MetricConfig `mapstructure:"oracledb.tablespace_size_usage"`
+	OracledbTablespaceStatus                             MetricConfig `mapstructure:"oracledb.tablespace_status"`
+	OracledbTablespaceTotalSpace                         MetricConfig `mapstructure:"oracledb.tablespace_total_space"`
+	OracledbTablespaceUsagePercentage                    MetricConfig `mapstructure:"oracledb.tablespace_usage_percentage"`
+	OracledbTablespaceUsedSpace                          MetricConfig `mapstructure:"oracledb.tablespace_used_space"`
+	OracledbTempSpaceAllocated                           MetricConfig `mapstructure:"oracledb.temp_space_allocated"`
+	OracledbTotalSessionsCreated                         MetricConfig `mapstructure:"oracledb.total_sessions_created"`
+	OracledbTransactionsLimit                            MetricConfig `mapstructure:"oracledb.transactions_limit"`
+	OracledbTransactionsUsage                            MetricConfig `mapstructure:"oracledb.transactions_usage"`
+	OracledbUserCommits                                  MetricConfig `mapstructure:"oracledb.user_commits"`
+	OracledbUserRollbacks                                MetricConfig `mapstructure:"oracledb.user_rollbacks"`
+	OracledbWaitEvents                                   MetricConfig `mapstructure:"oracledb.wait_events"`
+	OracledbWaitTime                                     MetricConfig `mapstructure:"oracledb.wait_time"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		OracledbBackgroundCheckpointsCompleted: MetricConfig{
+			Enabled: false,
+		},
+		OracledbBackgroundCPUUsage: MetricConfig{
+			Enabled: false,
+		},
+		OracledbBufferBusyWaits: MetricConfig{
+			Enabled: false,
+		},
 		OracledbBufferCacheHitRatio: MetricConfig{
 			Enabled: true,
+		},
+		OracledbBufferCacheSize: MetricConfig{
+			Enabled: false,
 		},
 		OracledbConsistentGets: MetricConfig{
 			Enabled: true,
@@ -99,10 +215,37 @@ func DefaultMetricsConfig() MetricsConfig {
 		OracledbCPUTime: MetricConfig{
 			Enabled: true,
 		},
+		OracledbCPUUsagePercentage: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDatabaseCPUTimeRatio: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDatabaseWaitTimeRatio: MetricConfig{
+			Enabled: false,
+		},
 		OracledbDbBlockGets: MetricConfig{
 			Enabled: true,
 		},
 		OracledbDdlStatementsParallelized: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDiskFree: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDiskReads: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDiskTotal: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDiskUsed: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDiskUtilization: MetricConfig{
+			Enabled: false,
+		},
+		OracledbDiskWrites: MetricConfig{
 			Enabled: false,
 		},
 		OracledbDmlLocksLimit: MetricConfig{
@@ -112,6 +255,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		OracledbDmlStatementsParallelized: MetricConfig{
+			Enabled: false,
+		},
+		OracledbElapsedTime: MetricConfig{
 			Enabled: false,
 		},
 		OracledbEnqueueDeadlocks: MetricConfig{
@@ -132,19 +278,73 @@ func DefaultMetricsConfig() MetricsConfig {
 		OracledbExchangeDeadlocks: MetricConfig{
 			Enabled: true,
 		},
+		OracledbExecutionCount: MetricConfig{
+			Enabled: false,
+		},
 		OracledbExecutions: MetricConfig{
 			Enabled: true,
+		},
+		OracledbFailedConnections: MetricConfig{
+			Enabled: false,
+		},
+		OracledbFileIoWaitTime: MetricConfig{
+			Enabled: false,
+		},
+		OracledbGcCrBlocksReceived: MetricConfig{
+			Enabled: false,
+		},
+		OracledbGcCurrentBlocksReceived: MetricConfig{
+			Enabled: false,
 		},
 		OracledbHardParses: MetricConfig{
 			Enabled: true,
 		},
+		OracledbIndexFastFullScans: MetricConfig{
+			Enabled: false,
+		},
+		OracledbIndexRangeScans: MetricConfig{
+			Enabled: false,
+		},
+		OracledbLeafNodeSplits: MetricConfig{
+			Enabled: false,
+		},
 		OracledbLibraryCacheHitRatio: MetricConfig{
+			Enabled: false,
+		},
+		OracledbLibraryCacheLockWaits: MetricConfig{
+			Enabled: false,
+		},
+		OracledbLibraryCachePinWaits: MetricConfig{
+			Enabled: false,
+		},
+		OracledbLockMemory: MetricConfig{
+			Enabled: false,
+		},
+		OracledbLogFileSyncWaits: MetricConfig{
 			Enabled: false,
 		},
 		OracledbLogicalReads: MetricConfig{
 			Enabled: true,
 		},
 		OracledbLogons: MetricConfig{
+			Enabled: false,
+		},
+		OracledbNetworkBytesReceived: MetricConfig{
+			Enabled: false,
+		},
+		OracledbNetworkBytesSent: MetricConfig{
+			Enabled: false,
+		},
+		OracledbNetworkPacketsReceived: MetricConfig{
+			Enabled: false,
+		},
+		OracledbNetworkPacketsSent: MetricConfig{
+			Enabled: false,
+		},
+		OracledbNetworkTrafficVolume: MetricConfig{
+			Enabled: false,
+		},
+		OracledbOsLoad: MetricConfig{
 			Enabled: false,
 		},
 		OracledbParallelOperationsDowngraded1To25Pct: MetricConfig{
@@ -168,10 +368,19 @@ func DefaultMetricsConfig() MetricsConfig {
 		OracledbParseCalls: MetricConfig{
 			Enabled: true,
 		},
+		OracledbPgaAggregateLimit: MetricConfig{
+			Enabled: false,
+		},
+		OracledbPgaAggregateTarget: MetricConfig{
+			Enabled: false,
+		},
 		OracledbPgaAllocatedMemory: MetricConfig{
 			Enabled: false,
 		},
 		OracledbPgaFreeableMemory: MetricConfig{
+			Enabled: false,
+		},
+		OracledbPgaGlobalMemoryBound: MetricConfig{
 			Enabled: false,
 		},
 		OracledbPgaMaximumMemory: MetricConfig{
@@ -179,6 +388,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		},
 		OracledbPgaMemory: MetricConfig{
 			Enabled: true,
+		},
+		OracledbPgaOverAllocationCount: MetricConfig{
+			Enabled: false,
 		},
 		OracledbPgaUsedMemory: MetricConfig{
 			Enabled: false,
@@ -207,6 +419,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		OracledbPhysicalWritesDirect: MetricConfig{
 			Enabled: false,
 		},
+		OracledbPinnedBuffers: MetricConfig{
+			Enabled: false,
+		},
 		OracledbProcessesLimit: MetricConfig{
 			Enabled: true,
 		},
@@ -216,10 +431,82 @@ func DefaultMetricsConfig() MetricsConfig {
 		OracledbQueriesParallelized: MetricConfig{
 			Enabled: false,
 		},
+		OracledbQueryAvgActiveSessions: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryAvgBufferGets: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryAvgCPUTime: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryAvgDiskReads: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryAvgElapsedTime: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryAvgExecutionTime: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryAvgExecutionsPerSec: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryAvgRowsProcessed: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryBlockedSessions: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryBufferGetsPerExecution: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryCPUTimePerExecution: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryDiskReadsPerExecution: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryElapsedTimePerExecution: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryExecutionsDelta: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryLongRunningQueries: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryRowsProcessedPerExecution: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryTotalBufferGets: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryTotalCPUTime: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryTotalDiskReads: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryTotalElapsedTime: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryTotalExecutions: MetricConfig{
+			Enabled: false,
+		},
+		OracledbQueryTotalRowsProcessed: MetricConfig{
+			Enabled: false,
+		},
 		OracledbRedoSize: MetricConfig{
 			Enabled: false,
 		},
+		OracledbResponseTimePerTransaction: MetricConfig{
+			Enabled: false,
+		},
 		OracledbRowCacheHitRatio: MetricConfig{
+			Enabled: false,
+		},
+		OracledbRowsFetched: MetricConfig{
 			Enabled: false,
 		},
 		OracledbSessions: MetricConfig{
@@ -228,14 +515,128 @@ func DefaultMetricsConfig() MetricsConfig {
 		OracledbSessionsLimit: MetricConfig{
 			Enabled: true,
 		},
+		OracledbSgaBufferCacheAdvisoryEstimatedPhysicalReads: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaBufferCacheAdvisorySizeFactor: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaBufferCacheAdvisorySizeForEstimate: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaBufferCacheSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaDataBufferCacheSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaDatabaseBufferCache: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaDefaultBufferPoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaFixedBufferCacheSize: MetricConfig{
+			Enabled: false,
+		},
 		OracledbSgaFixedSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaJavaPoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaKeepBufferPoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaLargePoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaLogBuffer: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaMaximumSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaRecycleBufferPoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaRedoBuffers: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaReservedSharedPoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedIoPoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedPoolAdvisoryEstimatedParseTimeSaved: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedPoolAdvisorySizeFactor: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedPoolAdvisorySizeForEstimate: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedPoolFreeMemory: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedPoolReservedFreeMemory: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedPoolReservedUsedMemory: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSharedPoolUsedMemory: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSgaStreamsPoolSize: MetricConfig{
 			Enabled: false,
 		},
 		OracledbSharedPoolFree: MetricConfig{
 			Enabled: true,
 		},
+		OracledbSharedPoolReservedSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSharedPoolSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSortSegmentSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbSQLAreaEvicted: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTableFetchByRowid: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTableScansLong: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTableScansShort: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTablespaceDatafileSize: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTablespaceFreeSpace: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTablespaceLargestFreeSpace: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTablespaceNumberOfDatafiles: MetricConfig{
+			Enabled: false,
+		},
 		OracledbTablespaceOffline: MetricConfig{
 			Enabled: true,
+		},
+		OracledbTablespacePercentUsed: MetricConfig{
+			Enabled: false,
 		},
 		OracledbTablespaceSizeLimit: MetricConfig{
 			Enabled: true,
@@ -243,8 +644,23 @@ func DefaultMetricsConfig() MetricsConfig {
 		OracledbTablespaceSizeUsage: MetricConfig{
 			Enabled: true,
 		},
+		OracledbTablespaceStatus: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTablespaceTotalSpace: MetricConfig{
+			Enabled: false,
+		},
 		OracledbTablespaceUsagePercentage: MetricConfig{
 			Enabled: true,
+		},
+		OracledbTablespaceUsedSpace: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTempSpaceAllocated: MetricConfig{
+			Enabled: false,
+		},
+		OracledbTotalSessionsCreated: MetricConfig{
+			Enabled: false,
 		},
 		OracledbTransactionsLimit: MetricConfig{
 			Enabled: true,
@@ -298,9 +714,6 @@ type ResourceAttributesConfig struct {
 	HostName             ResourceAttributeConfig `mapstructure:"host.name"`
 	OracledbDatabaseSid  ResourceAttributeConfig `mapstructure:"oracledb.database.sid"`
 	OracledbInstanceName ResourceAttributeConfig `mapstructure:"oracledb.instance.name"`
-	OracledbLogFileName  ResourceAttributeConfig `mapstructure:"oracledb.log.file.name"`
-	OracledbLogFilePath  ResourceAttributeConfig `mapstructure:"oracledb.log.file.path"`
-	OracledbLogSource    ResourceAttributeConfig `mapstructure:"oracledb.log.source"`
 }
 
 func DefaultResourceAttributesConfig() ResourceAttributesConfig {
@@ -312,15 +725,6 @@ func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 			Enabled: true,
 		},
 		OracledbInstanceName: ResourceAttributeConfig{
-			Enabled: true,
-		},
-		OracledbLogFileName: ResourceAttributeConfig{
-			Enabled: true,
-		},
-		OracledbLogFilePath: ResourceAttributeConfig{
-			Enabled: true,
-		},
-		OracledbLogSource: ResourceAttributeConfig{
 			Enabled: true,
 		},
 	}

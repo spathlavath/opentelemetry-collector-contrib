@@ -6,7 +6,6 @@ package newrelicoracledbreceiver // import "github.com/open-telemetry/openteleme
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -14,6 +13,8 @@ import (
 	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/scraper"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoracledbreceiver/internal/metadata"
 )
 
 const (
@@ -33,7 +34,6 @@ func NewFactory() receiver.Factory {
 		component.MustNewType(typeStr),
 		createDefaultConfig,
 		receiver.WithMetrics(createMetricsReceiver, stability),
-		receiver.WithLogs(createLogsReceiver, stability),
 	)
 }
 
@@ -42,7 +42,8 @@ func createDefaultConfig() component.Config {
 	cfg.CollectionInterval = defaultInterval
 
 	return &Config{
-		ControllerConfig: cfg,
+		ControllerConfig:     cfg,
+		MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig(),
 		ExtendedConfig: ExtendedConfig{
 			ExtendedMetrics:       false,
 			MaxOpenConnections:    10,
@@ -64,34 +65,6 @@ func createDefaultConfig() component.Config {
 		TablespaceConfig: TablespaceConfig{
 			IncludeTablespaces: []string{},
 			ExcludeTablespaces: []string{},
-		},
-		LogsConfig: LogsConfig{
-			EnableLogs:           false,
-			CollectAlertLogs:     true,
-			CollectAuditLogs:     false,
-			CollectTraceFiles:    false,
-			CollectArchiveLogs:   false,
-			AlertLogPath:         "/opt/oracle/diag/rdbms/*/alert_*.log",
-			AuditLogPath:         "/opt/oracle/admin/*/audit/",
-			TraceLogPath:         "/opt/oracle/diag/rdbms/*/trace/",
-			ArchiveLogPath:       "/opt/oracle/diag/rdbms/*/archive/",
-			PollInterval:         "30s",
-			MaxLogFileSize:       100, // 100MB
-			LogFilePatterns:      []string{"*.log", "*.trc", "*.aud"},
-			ExcludePatterns:      []string{"*background*", "*alert*.old*"},
-			ParseErrors:          true,
-			ParseStackTraces:     false,
-			ParseSQLStatements:   false,
-			MinLogLevel:          "INFO",
-			ExcludeLevels:        []string{},
-			IncludeClasses:       []string{},
-			ExcludeClasses:       []string{},
-			QueryBasedCollection: false,
-			AlertLogQuery:        "",
-			AuditLogQuery:        "",
-			PreserveBinaryLogs:   false,
-			MaxRetentionDays:     30,
-			BatchSize:            100,
 		},
 	}
 }
@@ -123,28 +96,4 @@ func createMetricsReceiver(_ context.Context, settings receiver.Settings, rConf 
 		consumer,
 		opt,
 	)
-}
-
-func createLogsReceiver(_ context.Context, settings receiver.Settings, rConf component.Config, consumer consumer.Logs) (receiver.Logs, error) {
-	cfg, ok := rConf.(*Config)
-	if !ok {
-		return nil, errors.New("invalid configuration type")
-	}
-
-	if err := cfg.Validate(); err != nil {
-		return nil, err
-	}
-
-	// Check if logs are enabled
-	if !cfg.LogsConfig.EnableLogs {
-		return nil, errors.New("logs collection is not enabled in configuration")
-	}
-
-	// Create logs receiver
-	logsReceiver, err := NewLogsReceiver(cfg, settings, consumer)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create logs receiver: %w", err)
-	}
-
-	return logsReceiver, nil
 }

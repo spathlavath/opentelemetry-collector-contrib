@@ -16,18 +16,15 @@ func TestResourceBuilder(t *testing.T) {
 			rb.SetHostName("host.name-val")
 			rb.SetOracledbDatabaseSid("oracledb.database.sid-val")
 			rb.SetOracledbInstanceName("oracledb.instance.name-val")
-			rb.SetOracledbLogFileName("oracledb.log.file.name-val")
-			rb.SetOracledbLogFilePath("oracledb.log.file.path-val")
-			rb.SetOracledbLogSource("oracledb.log.source-val")
 
 			res := rb.Emit()
 			assert.Equal(t, 0, rb.Emit().Attributes().Len()) // Second call should return empty Resource
 
 			switch tt {
 			case "default":
-				assert.Equal(t, 6, res.Attributes().Len())
+				assert.Equal(t, 3, res.Attributes().Len())
 			case "all_set":
-				assert.Equal(t, 6, res.Attributes().Len())
+				assert.Equal(t, 3, res.Attributes().Len())
 			case "none_set":
 				assert.Equal(t, 0, res.Attributes().Len())
 				return
@@ -49,21 +46,6 @@ func TestResourceBuilder(t *testing.T) {
 			assert.True(t, ok)
 			if ok {
 				assert.Equal(t, "oracledb.instance.name-val", val.Str())
-			}
-			val, ok = res.Attributes().Get("oracledb.log.file.name")
-			assert.True(t, ok)
-			if ok {
-				assert.Equal(t, "oracledb.log.file.name-val", val.Str())
-			}
-			val, ok = res.Attributes().Get("oracledb.log.file.path")
-			assert.True(t, ok)
-			if ok {
-				assert.Equal(t, "oracledb.log.file.path-val", val.Str())
-			}
-			val, ok = res.Attributes().Get("oracledb.log.source")
-			assert.True(t, ok)
-			if ok {
-				assert.Equal(t, "oracledb.log.source-val", val.Str())
 			}
 		})
 	}
