@@ -1059,6 +1059,14 @@ metrics:
       value_type: double
     unit: ms
 
+  # Additional missing disk metrics
+  newrelic.oracle.disk.physical_write_io_requests_per_second:
+    description: Physical write I/O requests per second (non-total)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{requests}/s"
+
   # Additional Memory Metrics
   newrelic.oracle.memory.buffer_cache_hit_ratio:
     description: Buffer cache hit ratio
