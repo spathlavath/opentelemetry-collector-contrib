@@ -142,6 +142,94 @@ func (s *oracleScraper) Scrape(ctx context.Context) (pmetric.Metrics, error) {
 		}
 	}()
 
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectParseMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("parse metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectScanMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("scan metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectEnqueueMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("enqueue metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectGlobalCacheMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("global cache metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectResourceLimitMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("resource limit metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectCacheHitMissMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("cache hit/miss metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectSessionMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("session metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectUserCallMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("user call metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectSortsMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("sorts metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectRollbackSegmentMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("rollback segment metrics: %w", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := s.collectRedoLogMetrics(instanceInfo); err != nil {
+			errors <- fmt.Errorf("redo log metrics: %w", err)
+		}
+	}()
+
 	// Wait for all collections to complete
 	wg.Wait()
 	close(errors)
@@ -590,6 +678,517 @@ func (s *oracleScraper) collectMiscMetrics(instanceInfo *instanceInfo) error {
 
 		s.mb.RecordNewrelicOracleLockedAccountsDataPoint(
 			pcommon.NewTimestampFromTime(time.Now()), lockedAccounts, strconv.Itoa(instID))
+	}
+
+	return nil
+}
+
+// collectParseMetrics collects parsing-related metrics
+func (s *oracleScraper) collectParseMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'Total Parse Count Per Sec',
+			'Total Parse Count Per Txn',
+			'Hard Parse Count Per Sec',
+			'Hard Parse Count Per Txn',
+			'Parse Failure Count Per Sec',
+			'Parse Failure Count Per Txn'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "Total Parse Count Per Sec":
+			s.mb.RecordNewrelicOracleDbTotalParseCountPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Total Parse Count Per Txn":
+			s.mb.RecordNewrelicOracleDbTotalParseCountPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Hard Parse Count Per Sec":
+			s.mb.RecordNewrelicOracleDbHardParseCountPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Hard Parse Count Per Txn":
+			s.mb.RecordNewrelicOracleDbHardParseCountPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Parse Failure Count Per Sec":
+			s.mb.RecordNewrelicOracleDbParseFailureCountPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Parse Failure Count Per Txn":
+			s.mb.RecordNewrelicOracleDbParseFailureCountPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectScanMetrics collects scan-related metrics
+func (s *oracleScraper) collectScanMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'Full Index Scans Per Sec',
+			'Full Index Scans Per Txn',
+			'Total Index Scans Per Sec',
+			'Total Index Scans Per Txn',
+			'Long Table Scans Per Sec',
+			'Long Table Scans Per Txn',
+			'Total Table Scans Per Sec',
+			'Total Table Scans Per Txn'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "Full Index Scans Per Sec":
+			s.mb.RecordNewrelicOracleDbFullIndexScansPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Full Index Scans Per Txn":
+			s.mb.RecordNewrelicOracleDbFullIndexScansPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Total Index Scans Per Sec":
+			s.mb.RecordNewrelicOracleDbTotalIndexScansPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Total Index Scans Per Txn":
+			s.mb.RecordNewrelicOracleDbTotalIndexScansPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Long Table Scans Per Sec":
+			s.mb.RecordNewrelicOracleDbLongTableScansPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Long Table Scans Per Txn":
+			s.mb.RecordNewrelicOracleDbLongTableScansPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Total Table Scans Per Sec":
+			s.mb.RecordNewrelicOracleDbTotalTableScansPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Total Table Scans Per Txn":
+			s.mb.RecordNewrelicOracleDbTotalTableScansPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectEnqueueMetrics collects enqueue-related metrics
+func (s *oracleScraper) collectEnqueueMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'Enqueue Timeouts Per Sec',
+			'Enqueue Timeouts Per Txn',
+			'Enqueue Waits Per Sec',
+			'Enqueue Waits Per Txn',
+			'Enqueue Deadlocks Per Sec',
+			'Enqueue Deadlocks Per Txn',
+			'Enqueue Requests Per Sec',
+			'Enqueue Requests Per Txn'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "Enqueue Timeouts Per Sec":
+			s.mb.RecordNewrelicOracleDbEnqueueTimeoutsPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Enqueue Timeouts Per Txn":
+			s.mb.RecordNewrelicOracleDbEnqueueTimeoutsPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Enqueue Waits Per Sec":
+			s.mb.RecordNewrelicOracleDbEnqueueWaitsPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Enqueue Waits Per Txn":
+			s.mb.RecordNewrelicOracleDbEnqueueWaitsPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Enqueue Deadlocks Per Sec":
+			s.mb.RecordNewrelicOracleDbEnqueueDeadlocksPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Enqueue Deadlocks Per Txn":
+			s.mb.RecordNewrelicOracleDbEnqueueDeadlocksPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Enqueue Requests Per Sec":
+			s.mb.RecordNewrelicOracleDbEnqueueRequestsPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Enqueue Requests Per Txn":
+			s.mb.RecordNewrelicOracleDbEnqueueRequestsPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectGlobalCacheMetrics collects RAC global cache metrics
+func (s *oracleScraper) collectGlobalCacheMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'GC CR Block Received Per Second',
+			'GC CR Block Received Per Txn',
+			'GC Current Block Received Per Second',
+			'GC Current Block Received Per Txn',
+			'Global Cache Average CR Get Time',
+			'Global Cache Average Current Get Time'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "GC CR Block Received Per Second":
+			s.mb.RecordNewrelicOracleDbGcCrBlockReceivedPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "GC CR Block Received Per Txn":
+			s.mb.RecordNewrelicOracleDbGcCrBlockReceivedPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "GC Current Block Received Per Second":
+			s.mb.RecordNewrelicOracleDbGcCurrentBlockReceivedPerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "GC Current Block Received Per Txn":
+			s.mb.RecordNewrelicOracleDbGcCurrentBlockReceivedPerTransactionDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Global Cache Average CR Get Time":
+			s.mb.RecordNewrelicOracleDbGlobalCacheAverageCrGetTimeDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Global Cache Average Current Get Time":
+			s.mb.RecordNewrelicOracleDbGlobalCacheAverageCurrentGetTimeDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectResourceLimitMetrics collects resource limit metrics
+func (s *oracleScraper) collectResourceLimitMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'Process Limit %',
+			'Session Limit %',
+			'User Limit %',
+			'Shared Pool Free %',
+			'PGA Cache Hit %',
+			'Streams Pool Usage Percentage'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "Process Limit %":
+			s.mb.RecordNewrelicOracleDbProcessLimitPercentageDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Session Limit %":
+			s.mb.RecordNewrelicOracleDbSessionLimitPercentageDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "User Limit %":
+			s.mb.RecordNewrelicOracleDbUserLimitPercentageDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Shared Pool Free %":
+			s.mb.RecordNewrelicOracleDbSharedPoolFreePercentageDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "PGA Cache Hit %":
+			s.mb.RecordNewrelicOracleDbPgaCacheHitPercentageDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Streams Pool Usage Percentage":
+			s.mb.RecordNewrelicOracleDbStreamsPoolUsagePercentageDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectCacheHitMissMetrics collects cache hit/miss metrics
+func (s *oracleScraper) collectCacheHitMissMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'Row Cache Hit Ratio',
+			'Row Cache Miss Ratio',
+			'Library Cache Hit Ratio',
+			'Library Cache Miss Ratio',
+			'Cursor Cache Hit Ratio'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "Row Cache Hit Ratio":
+			s.mb.RecordNewrelicOracleDbRowCacheHitRatioDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Row Cache Miss Ratio":
+			s.mb.RecordNewrelicOracleDbRowCacheMissRatioDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Library Cache Hit Ratio":
+			s.mb.RecordNewrelicOracleDbLibraryCacheHitRatioDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Library Cache Miss Ratio":
+			s.mb.RecordNewrelicOracleDbLibraryCacheMissRatioDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Cursor Cache Hit Ratio":
+			s.mb.RecordNewrelicOracleDbCursorCacheHitsPerAttemptsDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectSessionMetrics collects session-related metrics
+func (s *oracleScraper) collectSessionMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'Average Active Sessions',
+			'Active Serial Sessions',
+			'Active Parallel Sessions',
+			'Current OS Load',
+			'Host CPU Usage Per Sec',
+			'Background CPU Usage Per Sec',
+			'Background Time Per Sec'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "Average Active Sessions":
+			s.mb.RecordNewrelicOracleDbAverageActiveSessionsDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Active Serial Sessions":
+			s.mb.RecordNewrelicOracleDbActiveSerialSessionsDataPoint(pcommon.NewTimestampFromTime(time.Now()), int64(value))
+		case "Active Parallel Sessions":
+			s.mb.RecordNewrelicOracleDbActiveParallelSessionsDataPoint(pcommon.NewTimestampFromTime(time.Now()), int64(value))
+		case "Current OS Load":
+			s.mb.RecordNewrelicOracleDbOsLoadDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Host CPU Usage Per Sec":
+			s.mb.RecordNewrelicOracleDbHostCPUUsagePerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Background CPU Usage Per Sec":
+			s.mb.RecordNewrelicOracleDbBackgroundCPUUsagePerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Background Time Per Sec":
+			s.mb.RecordNewrelicOracleDbBackgroundTimePerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectUserCallMetrics collects user call related metrics
+func (s *oracleScraper) collectUserCallMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT INST_ID, METRIC_NAME, VALUE
+		FROM gv$sysmetric
+		WHERE METRIC_NAME IN (
+			'DB Block Changes Per User Call',
+			'DB Block Gets Per User Call',
+			'Executions Per User Call',
+			'Logical Reads Per User Call',
+			'Total Sorts Per User Call',
+			'Total Table Scans Per User Call',
+			'Execute Without Parse Ratio',
+			'Captured user calls',
+			'Txns Per Logon',
+			'Database Time Per Sec'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var metricName string
+		var value float64
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			continue
+		}
+
+		switch metricName {
+		case "DB Block Changes Per User Call":
+			s.mb.RecordNewrelicOracleDbBlockChangesPerUserCallDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "DB Block Gets Per User Call":
+			s.mb.RecordNewrelicOracleDbBlockGetsPerUserCallDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Executions Per User Call":
+			s.mb.RecordNewrelicOracleDbExecutionsPerUserCallDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Total Sorts Per User Call":
+			s.mb.RecordNewrelicOracleDbSortsPerUserCallDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Total Table Scans Per User Call":
+			s.mb.RecordNewrelicOracleDbTableScansPerUserCallDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Execute Without Parse Ratio":
+			s.mb.RecordNewrelicOracleDbExecuteWithoutParseRatioDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Captured user calls":
+			s.mb.RecordNewrelicOracleDbCapturedUserCallsDataPoint(pcommon.NewTimestampFromTime(time.Now()), int64(value))
+		case "Txns Per Logon":
+			s.mb.RecordNewrelicOracleDbTransactionsPerLogonDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "Database Time Per Sec":
+			s.mb.RecordNewrelicOracleDbDatabaseCPUTimePerSecondDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectSortsMetrics collects sorts metrics
+func (s *oracleScraper) collectSortsMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT inst.inst_id, sysstat.name, sysstat.value
+		FROM GV$SYSSTAT sysstat, GV$INSTANCE inst
+		WHERE sysstat.inst_id=inst.inst_id 
+		AND sysstat.name IN ('sorts (memory)', 'sorts (disk)')`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var instID int
+		var name string
+		var value int64
+		if err := rows.Scan(&instID, &name, &value); err != nil {
+			continue
+		}
+
+		switch name {
+		case "sorts (memory)":
+			s.mb.RecordNewrelicOracleSortsMemoryBytesDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		case "sorts (disk)":
+			s.mb.RecordNewrelicOracleSortsDiskBytesDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+		}
+	}
+
+	return nil
+}
+
+// collectRollbackSegmentMetrics collects rollback segment metrics
+func (s *oracleScraper) collectRollbackSegmentMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT
+			SUM(stat.gets) AS gets,
+			sum(stat.waits) AS waits,
+			sum(stat.waits)/sum(stat.gets) AS ratio,
+			inst.inst_id
+		FROM GV$ROLLSTAT stat, GV$INSTANCE inst
+		WHERE stat.inst_id=inst.inst_id
+		GROUP BY inst.inst_id`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var gets, waits int64
+		var ratio float64
+		var instID int
+		if err := rows.Scan(&gets, &waits, &ratio, &instID); err != nil {
+			continue
+		}
+
+		s.mb.RecordNewrelicOracleRollbackSegmentsGetsDataPoint(pcommon.NewTimestampFromTime(time.Now()), gets)
+		s.mb.RecordNewrelicOracleRollbackSegmentsWaitsDataPoint(pcommon.NewTimestampFromTime(time.Now()), waits)
+		s.mb.RecordNewrelicOracleRollbackSegmentsRatioWaitDataPoint(pcommon.NewTimestampFromTime(time.Now()), ratio)
+	}
+
+	return nil
+}
+
+// collectRedoLogMetrics collects redo log metrics
+func (s *oracleScraper) collectRedoLogMetrics(instanceInfo *instanceInfo) error {
+	query := `
+		SELECT
+			sysevent.total_waits,
+			inst.inst_id,
+			sysevent.event
+		FROM
+			GV$SYSTEM_EVENT sysevent,
+			GV$INSTANCE inst
+		WHERE sysevent.inst_id=inst.inst_id
+		AND sysevent.event IN (
+			'log file parallel write',
+			'log file switch completion',
+			'log file switch (check',
+			'log file switch (arch'
+		)`
+
+	rows, err := s.dbClient.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var totalWaits int64
+		var instID int
+		var event string
+		if err := rows.Scan(&totalWaits, &instID, &event); err != nil {
+			continue
+		}
+
+		if strings.Contains(event, "log file parallel write") {
+			s.mb.RecordNewrelicOracleRedoLogWaitsDataPoint(pcommon.NewTimestampFromTime(time.Now()), totalWaits)
+		} else if strings.Contains(event, "log file switch completion") {
+			s.mb.RecordNewrelicOracleRedoLogFileSwitchDataPoint(pcommon.NewTimestampFromTime(time.Now()), totalWaits)
+		} else if strings.Contains(event, "log file switch (check") {
+			s.mb.RecordNewrelicOracleRedoLogFileSwitchCheckpointIncompleteDataPoint(pcommon.NewTimestampFromTime(time.Now()), totalWaits)
+		} else if strings.Contains(event, "log file switch (arch") {
+			s.mb.RecordNewrelicOracleRedoLogFileSwitchArchivingNeededDataPoint(pcommon.NewTimestampFromTime(time.Now()), totalWaits)
+		}
 	}
 
 	return nil
