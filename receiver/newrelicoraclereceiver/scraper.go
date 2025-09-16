@@ -477,24 +477,26 @@ func (s *oracleScraper) collectTablespaceMetrics() error {
 		for i, ts := range s.config.TablespaceWhitelist {
 			quotedTablespaces[i] = fmt.Sprintf("'%s'", ts)
 		}
-		whereClause = fmt.Sprintf(" WHERE a.TABLESPACE_NAME IN (%s)", strings.Join(quotedTablespaces, ","))
+		whereClause = fmt.Sprintf(" AND dt.TABLESPACE_NAME IN (%s)", strings.Join(quotedTablespaces, ","))
 	}
 
 	query := fmt.Sprintf(`
-		SELECT a.TABLESPACE_NAME,
-			a.USED_PERCENT,
-			a.USED_SPACE * b.BLOCK_SIZE AS USED,
-			a.TABLESPACE_SIZE * b.BLOCK_SIZE AS SIZE,
-			b.TABLESPACE_OFFLINE AS OFFLINE
-		FROM DBA_TABLESPACE_USAGE_METRICS a
-		JOIN (
-			SELECT
-				TABLESPACE_NAME,
-				BLOCK_SIZE,
-				MAX(CASE WHEN status = 'OFFLINE' THEN 1 ELSE 0 END) AS TABLESPACE_OFFLINE
-			FROM DBA_TABLESPACES
-			GROUP BY TABLESPACE_NAME, BLOCK_SIZE
-		) b ON a.TABLESPACE_NAME = b.TABLESPACE_NAME%s`, whereClause)
+		SELECT 
+			dt.TABLESPACE_NAME,
+			ROUND((dt.BYTES - NVL(fs.BYTES, 0)) / dt.BYTES * 100, 2) AS USED_PERCENT,
+			(dt.BYTES - NVL(fs.BYTES, 0)) AS USED,
+			dt.BYTES AS SIZE,
+			0 AS OFFLINE
+		FROM 
+			(SELECT TABLESPACE_NAME, SUM(BYTES) AS BYTES 
+			 FROM DBA_DATA_FILES 
+			 GROUP BY TABLESPACE_NAME) dt
+		LEFT JOIN 
+			(SELECT TABLESPACE_NAME, SUM(BYTES) AS BYTES 
+			 FROM DBA_FREE_SPACE 
+			 GROUP BY TABLESPACE_NAME) fs
+		ON dt.TABLESPACE_NAME = fs.TABLESPACE_NAME
+		WHERE 1=1%s`, whereClause)
 
 	rows, err := s.dbClient.Query(query)
 	if err != nil {
