@@ -7,7 +7,7 @@ import (
 	"database/sql"
 	"time"
 
-	_ "github.com/godror/godror" // Oracle database driver
+	_ "github.com/sijms/go-ora/v2" // Oracle database driver
 )
 
 // DBClient is an interface for database operations
@@ -26,7 +26,7 @@ type oracleDBClient struct {
 func newOracleDBClient(cfg *Config) (DBClient, error) {
 	connectionString := cfg.GetConnectionString()
 
-	db, err := sql.Open("godror", connectionString)
+	db, err := sql.Open("oracle", connectionString)
 	if err != nil {
 		return nil, err
 	}
