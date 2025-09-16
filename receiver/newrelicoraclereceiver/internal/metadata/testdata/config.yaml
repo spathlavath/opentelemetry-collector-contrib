@@ -1,0 +1,799 @@
+default:
+all_set:
+  metrics:
+    newrelic.oracle.db.active_parallel_sessions:
+      enabled: true
+    newrelic.oracle.db.active_serial_sessions:
+      enabled: true
+    newrelic.oracle.db.average_active_sessions:
+      enabled: true
+    newrelic.oracle.db.background_checkpoints_per_second:
+      enabled: true
+    newrelic.oracle.db.background_cpu_usage_per_second:
+      enabled: true
+    newrelic.oracle.db.background_time_per_second:
+      enabled: true
+    newrelic.oracle.db.block_changes_per_second:
+      enabled: true
+    newrelic.oracle.db.block_changes_per_transaction:
+      enabled: true
+    newrelic.oracle.db.block_changes_per_user_call:
+      enabled: true
+    newrelic.oracle.db.block_gets_per_second:
+      enabled: true
+    newrelic.oracle.db.block_gets_per_transaction:
+      enabled: true
+    newrelic.oracle.db.block_gets_per_user_call:
+      enabled: true
+    newrelic.oracle.db.branch_node_splits_per_second:
+      enabled: true
+    newrelic.oracle.db.branch_node_splits_per_transaction:
+      enabled: true
+    newrelic.oracle.db.captured_user_calls:
+      enabled: true
+    newrelic.oracle.db.consistent_read_changes_per_second:
+      enabled: true
+    newrelic.oracle.db.consistent_read_changes_per_transaction:
+      enabled: true
+    newrelic.oracle.db.consistent_read_gets_per_second:
+      enabled: true
+    newrelic.oracle.db.consistent_read_gets_per_transaction:
+      enabled: true
+    newrelic.oracle.db.cpu_time_ratio:
+      enabled: true
+    newrelic.oracle.db.cpu_usage_per_second:
+      enabled: true
+    newrelic.oracle.db.cpu_usage_per_transaction:
+      enabled: true
+    newrelic.oracle.db.cr_blocks_created_per_second:
+      enabled: true
+    newrelic.oracle.db.cr_blocks_created_per_transaction:
+      enabled: true
+    newrelic.oracle.db.cr_undo_records_applied_per_second:
+      enabled: true
+    newrelic.oracle.db.cr_undo_records_applied_per_transaction:
+      enabled: true
+    newrelic.oracle.db.current_logons:
+      enabled: true
+    newrelic.oracle.db.current_open_cursors:
+      enabled: true
+    newrelic.oracle.db.cursor_cache_hits_per_attempts:
+      enabled: true
+    newrelic.oracle.db.database_cpu_time_per_second:
+      enabled: true
+    newrelic.oracle.db.dbwr_checkpoints_per_second:
+      enabled: true
+    newrelic.oracle.db.enqueue_deadlocks_per_second:
+      enabled: true
+    newrelic.oracle.db.enqueue_deadlocks_per_transaction:
+      enabled: true
+    newrelic.oracle.db.enqueue_requests_per_second:
+      enabled: true
+    newrelic.oracle.db.enqueue_requests_per_transaction:
+      enabled: true
+    newrelic.oracle.db.enqueue_timeouts_per_second:
+      enabled: true
+    newrelic.oracle.db.enqueue_timeouts_per_transaction:
+      enabled: true
+    newrelic.oracle.db.enqueue_waits_per_second:
+      enabled: true
+    newrelic.oracle.db.enqueue_waits_per_transaction:
+      enabled: true
+    newrelic.oracle.db.execute_without_parse_ratio:
+      enabled: true
+    newrelic.oracle.db.executions_per_second:
+      enabled: true
+    newrelic.oracle.db.executions_per_transaction:
+      enabled: true
+    newrelic.oracle.db.executions_per_user_call:
+      enabled: true
+    newrelic.oracle.db.full_index_scans_per_second:
+      enabled: true
+    newrelic.oracle.db.full_index_scans_per_transaction:
+      enabled: true
+    newrelic.oracle.db.gc_cr_block_received_per_second:
+      enabled: true
+    newrelic.oracle.db.gc_cr_block_received_per_transaction:
+      enabled: true
+    newrelic.oracle.db.gc_current_block_received_per_second:
+      enabled: true
+    newrelic.oracle.db.gc_current_block_received_per_transaction:
+      enabled: true
+    newrelic.oracle.db.global_cache_average_cr_get_time:
+      enabled: true
+    newrelic.oracle.db.global_cache_average_current_get_time:
+      enabled: true
+    newrelic.oracle.db.hard_parse_count_per_second:
+      enabled: true
+    newrelic.oracle.db.hard_parse_count_per_transaction:
+      enabled: true
+    newrelic.oracle.db.host_cpu_usage_per_second:
+      enabled: true
+    newrelic.oracle.db.host_cpu_utilization:
+      enabled: true
+    newrelic.oracle.db.leaf_node_splits_per_second:
+      enabled: true
+    newrelic.oracle.db.leaf_node_splits_per_transaction:
+      enabled: true
+    newrelic.oracle.db.library_cache_hit_ratio:
+      enabled: true
+    newrelic.oracle.db.library_cache_miss_ratio:
+      enabled: true
+    newrelic.oracle.db.logical_reads_per_second:
+      enabled: true
+    newrelic.oracle.db.logical_reads_per_transaction:
+      enabled: true
+    newrelic.oracle.db.logons_per_second:
+      enabled: true
+    newrelic.oracle.db.logons_per_transaction:
+      enabled: true
+    newrelic.oracle.db.long_table_scans_per_second:
+      enabled: true
+    newrelic.oracle.db.long_table_scans_per_transaction:
+      enabled: true
+    newrelic.oracle.db.open_cursors_per_second:
+      enabled: true
+    newrelic.oracle.db.open_cursors_per_transaction:
+      enabled: true
+    newrelic.oracle.db.os_load:
+      enabled: true
+    newrelic.oracle.db.parse_failure_count_per_second:
+      enabled: true
+    newrelic.oracle.db.parse_failure_count_per_transaction:
+      enabled: true
+    newrelic.oracle.db.pga_cache_hit_percentage:
+      enabled: true
+    newrelic.oracle.db.physical_read_bytes_per_second:
+      enabled: true
+    newrelic.oracle.db.physical_read_io_requests_per_second:
+      enabled: true
+    newrelic.oracle.db.physical_reads_per_second:
+      enabled: true
+    newrelic.oracle.db.physical_write_bytes_per_second:
+      enabled: true
+    newrelic.oracle.db.physical_writes_per_second:
+      enabled: true
+    newrelic.oracle.db.process_limit_percentage:
+      enabled: true
+    newrelic.oracle.db.recursive_calls_per_second:
+      enabled: true
+    newrelic.oracle.db.recursive_calls_per_transaction:
+      enabled: true
+    newrelic.oracle.db.redo_writes_per_second:
+      enabled: true
+    newrelic.oracle.db.redo_writes_per_transaction:
+      enabled: true
+    newrelic.oracle.db.response_time_per_transaction:
+      enabled: true
+    newrelic.oracle.db.row_cache_hit_ratio:
+      enabled: true
+    newrelic.oracle.db.row_cache_miss_ratio:
+      enabled: true
+    newrelic.oracle.db.rows_per_sort:
+      enabled: true
+    newrelic.oracle.db.session_count:
+      enabled: true
+    newrelic.oracle.db.session_limit_percentage:
+      enabled: true
+    newrelic.oracle.db.shared_pool_free_percentage:
+      enabled: true
+    newrelic.oracle.db.soft_parse_ratio:
+      enabled: true
+    newrelic.oracle.db.sorts_per_user_call:
+      enabled: true
+    newrelic.oracle.db.sql_service_response_time:
+      enabled: true
+    newrelic.oracle.db.streams_pool_usage_percentage:
+      enabled: true
+    newrelic.oracle.db.table_scans_per_user_call:
+      enabled: true
+    newrelic.oracle.db.total_index_scans_per_second:
+      enabled: true
+    newrelic.oracle.db.total_index_scans_per_transaction:
+      enabled: true
+    newrelic.oracle.db.total_parse_count_per_second:
+      enabled: true
+    newrelic.oracle.db.total_parse_count_per_transaction:
+      enabled: true
+    newrelic.oracle.db.total_table_scans_per_second:
+      enabled: true
+    newrelic.oracle.db.total_table_scans_per_transaction:
+      enabled: true
+    newrelic.oracle.db.transactions_per_logon:
+      enabled: true
+    newrelic.oracle.db.user_calls_per_second:
+      enabled: true
+    newrelic.oracle.db.user_calls_per_transaction:
+      enabled: true
+    newrelic.oracle.db.user_calls_ratio:
+      enabled: true
+    newrelic.oracle.db.user_commits_per_second:
+      enabled: true
+    newrelic.oracle.db.user_commits_percentage:
+      enabled: true
+    newrelic.oracle.db.user_limit_percentage:
+      enabled: true
+    newrelic.oracle.db.user_rollback_undo_records_applied_per_second:
+      enabled: true
+    newrelic.oracle.db.user_rollback_undo_records_applied_per_transaction:
+      enabled: true
+    newrelic.oracle.db.user_rollbacks_per_second:
+      enabled: true
+    newrelic.oracle.db.user_rollbacks_percentage:
+      enabled: true
+    newrelic.oracle.db.wait_time_ratio:
+      enabled: true
+    newrelic.oracle.disk.blocks_read:
+      enabled: true
+    newrelic.oracle.disk.blocks_written:
+      enabled: true
+    newrelic.oracle.disk.logical_reads_per_user_call:
+      enabled: true
+    newrelic.oracle.disk.physical_lobs_reads_per_second:
+      enabled: true
+    newrelic.oracle.disk.physical_lobs_writes_per_second:
+      enabled: true
+    newrelic.oracle.disk.physical_read_bytes_per_second:
+      enabled: true
+    newrelic.oracle.disk.physical_read_io_requests_per_second:
+      enabled: true
+    newrelic.oracle.disk.physical_reads_per_second:
+      enabled: true
+    newrelic.oracle.disk.physical_write_bytes_per_second:
+      enabled: true
+    newrelic.oracle.disk.physical_write_total_io_requests_per_second:
+      enabled: true
+    newrelic.oracle.disk.physical_writes_per_second:
+      enabled: true
+    newrelic.oracle.disk.read_time_milliseconds:
+      enabled: true
+    newrelic.oracle.disk.reads:
+      enabled: true
+    newrelic.oracle.disk.sort_per_second:
+      enabled: true
+    newrelic.oracle.disk.sort_per_transaction:
+      enabled: true
+    newrelic.oracle.disk.temp_space_used_bytes:
+      enabled: true
+    newrelic.oracle.disk.write_time_milliseconds:
+      enabled: true
+    newrelic.oracle.disk.writes:
+      enabled: true
+    newrelic.oracle.locked_accounts:
+      enabled: true
+    newrelic.oracle.long_running_queries:
+      enabled: true
+    newrelic.oracle.memory.buffer_cache_hit_ratio:
+      enabled: true
+    newrelic.oracle.memory.global_cache_blocks_corrupted:
+      enabled: true
+    newrelic.oracle.memory.global_cache_blocks_lost:
+      enabled: true
+    newrelic.oracle.memory.pga_allocated_bytes:
+      enabled: true
+    newrelic.oracle.memory.pga_freeable_bytes:
+      enabled: true
+    newrelic.oracle.memory.pga_in_use_bytes:
+      enabled: true
+    newrelic.oracle.memory.pga_max_size_bytes:
+      enabled: true
+    newrelic.oracle.memory.redo_allocation_hit_ratio:
+      enabled: true
+    newrelic.oracle.memory.redo_generated_bytes_per_second:
+      enabled: true
+    newrelic.oracle.memory.redo_generated_bytes_per_transaction:
+      enabled: true
+    newrelic.oracle.memory.sorts_ratio:
+      enabled: true
+    newrelic.oracle.network.io_megabytes_per_second:
+      enabled: true
+    newrelic.oracle.network.io_requests_per_second:
+      enabled: true
+    newrelic.oracle.network.traffic_bytes_per_second:
+      enabled: true
+    newrelic.oracle.query.physical_lobs_reads_per_transaction:
+      enabled: true
+    newrelic.oracle.query.physical_lobs_writes_per_transaction:
+      enabled: true
+    newrelic.oracle.query.physical_reads_per_transaction:
+      enabled: true
+    newrelic.oracle.query.physical_writes_per_transaction:
+      enabled: true
+    newrelic.oracle.query.transactions_per_second:
+      enabled: true
+    newrelic.oracle.redo_log.file_switch:
+      enabled: true
+    newrelic.oracle.redo_log.file_switch_archiving_needed:
+      enabled: true
+    newrelic.oracle.redo_log.file_switch_checkpoint_incomplete:
+      enabled: true
+    newrelic.oracle.redo_log.waits:
+      enabled: true
+    newrelic.oracle.rollback_segments.gets:
+      enabled: true
+    newrelic.oracle.rollback_segments.ratio_wait:
+      enabled: true
+    newrelic.oracle.rollback_segments.waits:
+      enabled: true
+    newrelic.oracle.sga.buffer_busy_waits:
+      enabled: true
+    newrelic.oracle.sga.fixed_size_bytes:
+      enabled: true
+    newrelic.oracle.sga.free_buffer_inspected:
+      enabled: true
+    newrelic.oracle.sga.free_buffer_waits:
+      enabled: true
+    newrelic.oracle.sga.hit_ratio:
+      enabled: true
+    newrelic.oracle.sga.log_buffer_allocation_retries_ratio:
+      enabled: true
+    newrelic.oracle.sga.log_buffer_redo_allocation_retries:
+      enabled: true
+    newrelic.oracle.sga.log_buffer_redo_entries:
+      enabled: true
+    newrelic.oracle.sga.log_buffer_space_waits:
+      enabled: true
+    newrelic.oracle.sga.redo_buffers_bytes:
+      enabled: true
+    newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio:
+      enabled: true
+    newrelic.oracle.sga.shared_pool_library_cache_hit_ratio:
+      enabled: true
+    newrelic.oracle.sga.shared_pool_library_cache_reload_ratio:
+      enabled: true
+    newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_bytes:
+      enabled: true
+    newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes:
+      enabled: true
+    newrelic.oracle.sga.uga_total_memory_bytes:
+      enabled: true
+    newrelic.oracle.sorts.disk_bytes:
+      enabled: true
+    newrelic.oracle.sorts.memory_bytes:
+      enabled: true
+    newrelic.oracle.tablespace.is_offline:
+      enabled: true
+    newrelic.oracle.tablespace.offline_cdb_datafiles:
+      enabled: true
+    newrelic.oracle.tablespace.offline_pdb_datafiles:
+      enabled: true
+    newrelic.oracle.tablespace.pdb_datafiles_non_write:
+      enabled: true
+    newrelic.oracle.tablespace.space_consumed_bytes:
+      enabled: true
+    newrelic.oracle.tablespace.space_reserved_bytes:
+      enabled: true
+    newrelic.oracle.tablespace.space_used_percentage:
+      enabled: true
+  resource_attributes:
+    host.name:
+      enabled: true
+    newrelic.oracle.db.id:
+      enabled: true
+    newrelic.oracle.global.name:
+      enabled: true
+    newrelic.oracle.instance.id:
+      enabled: true
+    newrelic.oracle.instance.name:
+      enabled: true
+none_set:
+  metrics:
+    newrelic.oracle.db.active_parallel_sessions:
+      enabled: false
+    newrelic.oracle.db.active_serial_sessions:
+      enabled: false
+    newrelic.oracle.db.average_active_sessions:
+      enabled: false
+    newrelic.oracle.db.background_checkpoints_per_second:
+      enabled: false
+    newrelic.oracle.db.background_cpu_usage_per_second:
+      enabled: false
+    newrelic.oracle.db.background_time_per_second:
+      enabled: false
+    newrelic.oracle.db.block_changes_per_second:
+      enabled: false
+    newrelic.oracle.db.block_changes_per_transaction:
+      enabled: false
+    newrelic.oracle.db.block_changes_per_user_call:
+      enabled: false
+    newrelic.oracle.db.block_gets_per_second:
+      enabled: false
+    newrelic.oracle.db.block_gets_per_transaction:
+      enabled: false
+    newrelic.oracle.db.block_gets_per_user_call:
+      enabled: false
+    newrelic.oracle.db.branch_node_splits_per_second:
+      enabled: false
+    newrelic.oracle.db.branch_node_splits_per_transaction:
+      enabled: false
+    newrelic.oracle.db.captured_user_calls:
+      enabled: false
+    newrelic.oracle.db.consistent_read_changes_per_second:
+      enabled: false
+    newrelic.oracle.db.consistent_read_changes_per_transaction:
+      enabled: false
+    newrelic.oracle.db.consistent_read_gets_per_second:
+      enabled: false
+    newrelic.oracle.db.consistent_read_gets_per_transaction:
+      enabled: false
+    newrelic.oracle.db.cpu_time_ratio:
+      enabled: false
+    newrelic.oracle.db.cpu_usage_per_second:
+      enabled: false
+    newrelic.oracle.db.cpu_usage_per_transaction:
+      enabled: false
+    newrelic.oracle.db.cr_blocks_created_per_second:
+      enabled: false
+    newrelic.oracle.db.cr_blocks_created_per_transaction:
+      enabled: false
+    newrelic.oracle.db.cr_undo_records_applied_per_second:
+      enabled: false
+    newrelic.oracle.db.cr_undo_records_applied_per_transaction:
+      enabled: false
+    newrelic.oracle.db.current_logons:
+      enabled: false
+    newrelic.oracle.db.current_open_cursors:
+      enabled: false
+    newrelic.oracle.db.cursor_cache_hits_per_attempts:
+      enabled: false
+    newrelic.oracle.db.database_cpu_time_per_second:
+      enabled: false
+    newrelic.oracle.db.dbwr_checkpoints_per_second:
+      enabled: false
+    newrelic.oracle.db.enqueue_deadlocks_per_second:
+      enabled: false
+    newrelic.oracle.db.enqueue_deadlocks_per_transaction:
+      enabled: false
+    newrelic.oracle.db.enqueue_requests_per_second:
+      enabled: false
+    newrelic.oracle.db.enqueue_requests_per_transaction:
+      enabled: false
+    newrelic.oracle.db.enqueue_timeouts_per_second:
+      enabled: false
+    newrelic.oracle.db.enqueue_timeouts_per_transaction:
+      enabled: false
+    newrelic.oracle.db.enqueue_waits_per_second:
+      enabled: false
+    newrelic.oracle.db.enqueue_waits_per_transaction:
+      enabled: false
+    newrelic.oracle.db.execute_without_parse_ratio:
+      enabled: false
+    newrelic.oracle.db.executions_per_second:
+      enabled: false
+    newrelic.oracle.db.executions_per_transaction:
+      enabled: false
+    newrelic.oracle.db.executions_per_user_call:
+      enabled: false
+    newrelic.oracle.db.full_index_scans_per_second:
+      enabled: false
+    newrelic.oracle.db.full_index_scans_per_transaction:
+      enabled: false
+    newrelic.oracle.db.gc_cr_block_received_per_second:
+      enabled: false
+    newrelic.oracle.db.gc_cr_block_received_per_transaction:
+      enabled: false
+    newrelic.oracle.db.gc_current_block_received_per_second:
+      enabled: false
+    newrelic.oracle.db.gc_current_block_received_per_transaction:
+      enabled: false
+    newrelic.oracle.db.global_cache_average_cr_get_time:
+      enabled: false
+    newrelic.oracle.db.global_cache_average_current_get_time:
+      enabled: false
+    newrelic.oracle.db.hard_parse_count_per_second:
+      enabled: false
+    newrelic.oracle.db.hard_parse_count_per_transaction:
+      enabled: false
+    newrelic.oracle.db.host_cpu_usage_per_second:
+      enabled: false
+    newrelic.oracle.db.host_cpu_utilization:
+      enabled: false
+    newrelic.oracle.db.leaf_node_splits_per_second:
+      enabled: false
+    newrelic.oracle.db.leaf_node_splits_per_transaction:
+      enabled: false
+    newrelic.oracle.db.library_cache_hit_ratio:
+      enabled: false
+    newrelic.oracle.db.library_cache_miss_ratio:
+      enabled: false
+    newrelic.oracle.db.logical_reads_per_second:
+      enabled: false
+    newrelic.oracle.db.logical_reads_per_transaction:
+      enabled: false
+    newrelic.oracle.db.logons_per_second:
+      enabled: false
+    newrelic.oracle.db.logons_per_transaction:
+      enabled: false
+    newrelic.oracle.db.long_table_scans_per_second:
+      enabled: false
+    newrelic.oracle.db.long_table_scans_per_transaction:
+      enabled: false
+    newrelic.oracle.db.open_cursors_per_second:
+      enabled: false
+    newrelic.oracle.db.open_cursors_per_transaction:
+      enabled: false
+    newrelic.oracle.db.os_load:
+      enabled: false
+    newrelic.oracle.db.parse_failure_count_per_second:
+      enabled: false
+    newrelic.oracle.db.parse_failure_count_per_transaction:
+      enabled: false
+    newrelic.oracle.db.pga_cache_hit_percentage:
+      enabled: false
+    newrelic.oracle.db.physical_read_bytes_per_second:
+      enabled: false
+    newrelic.oracle.db.physical_read_io_requests_per_second:
+      enabled: false
+    newrelic.oracle.db.physical_reads_per_second:
+      enabled: false
+    newrelic.oracle.db.physical_write_bytes_per_second:
+      enabled: false
+    newrelic.oracle.db.physical_writes_per_second:
+      enabled: false
+    newrelic.oracle.db.process_limit_percentage:
+      enabled: false
+    newrelic.oracle.db.recursive_calls_per_second:
+      enabled: false
+    newrelic.oracle.db.recursive_calls_per_transaction:
+      enabled: false
+    newrelic.oracle.db.redo_writes_per_second:
+      enabled: false
+    newrelic.oracle.db.redo_writes_per_transaction:
+      enabled: false
+    newrelic.oracle.db.response_time_per_transaction:
+      enabled: false
+    newrelic.oracle.db.row_cache_hit_ratio:
+      enabled: false
+    newrelic.oracle.db.row_cache_miss_ratio:
+      enabled: false
+    newrelic.oracle.db.rows_per_sort:
+      enabled: false
+    newrelic.oracle.db.session_count:
+      enabled: false
+    newrelic.oracle.db.session_limit_percentage:
+      enabled: false
+    newrelic.oracle.db.shared_pool_free_percentage:
+      enabled: false
+    newrelic.oracle.db.soft_parse_ratio:
+      enabled: false
+    newrelic.oracle.db.sorts_per_user_call:
+      enabled: false
+    newrelic.oracle.db.sql_service_response_time:
+      enabled: false
+    newrelic.oracle.db.streams_pool_usage_percentage:
+      enabled: false
+    newrelic.oracle.db.table_scans_per_user_call:
+      enabled: false
+    newrelic.oracle.db.total_index_scans_per_second:
+      enabled: false
+    newrelic.oracle.db.total_index_scans_per_transaction:
+      enabled: false
+    newrelic.oracle.db.total_parse_count_per_second:
+      enabled: false
+    newrelic.oracle.db.total_parse_count_per_transaction:
+      enabled: false
+    newrelic.oracle.db.total_table_scans_per_second:
+      enabled: false
+    newrelic.oracle.db.total_table_scans_per_transaction:
+      enabled: false
+    newrelic.oracle.db.transactions_per_logon:
+      enabled: false
+    newrelic.oracle.db.user_calls_per_second:
+      enabled: false
+    newrelic.oracle.db.user_calls_per_transaction:
+      enabled: false
+    newrelic.oracle.db.user_calls_ratio:
+      enabled: false
+    newrelic.oracle.db.user_commits_per_second:
+      enabled: false
+    newrelic.oracle.db.user_commits_percentage:
+      enabled: false
+    newrelic.oracle.db.user_limit_percentage:
+      enabled: false
+    newrelic.oracle.db.user_rollback_undo_records_applied_per_second:
+      enabled: false
+    newrelic.oracle.db.user_rollback_undo_records_applied_per_transaction:
+      enabled: false
+    newrelic.oracle.db.user_rollbacks_per_second:
+      enabled: false
+    newrelic.oracle.db.user_rollbacks_percentage:
+      enabled: false
+    newrelic.oracle.db.wait_time_ratio:
+      enabled: false
+    newrelic.oracle.disk.blocks_read:
+      enabled: false
+    newrelic.oracle.disk.blocks_written:
+      enabled: false
+    newrelic.oracle.disk.logical_reads_per_user_call:
+      enabled: false
+    newrelic.oracle.disk.physical_lobs_reads_per_second:
+      enabled: false
+    newrelic.oracle.disk.physical_lobs_writes_per_second:
+      enabled: false
+    newrelic.oracle.disk.physical_read_bytes_per_second:
+      enabled: false
+    newrelic.oracle.disk.physical_read_io_requests_per_second:
+      enabled: false
+    newrelic.oracle.disk.physical_reads_per_second:
+      enabled: false
+    newrelic.oracle.disk.physical_write_bytes_per_second:
+      enabled: false
+    newrelic.oracle.disk.physical_write_total_io_requests_per_second:
+      enabled: false
+    newrelic.oracle.disk.physical_writes_per_second:
+      enabled: false
+    newrelic.oracle.disk.read_time_milliseconds:
+      enabled: false
+    newrelic.oracle.disk.reads:
+      enabled: false
+    newrelic.oracle.disk.sort_per_second:
+      enabled: false
+    newrelic.oracle.disk.sort_per_transaction:
+      enabled: false
+    newrelic.oracle.disk.temp_space_used_bytes:
+      enabled: false
+    newrelic.oracle.disk.write_time_milliseconds:
+      enabled: false
+    newrelic.oracle.disk.writes:
+      enabled: false
+    newrelic.oracle.locked_accounts:
+      enabled: false
+    newrelic.oracle.long_running_queries:
+      enabled: false
+    newrelic.oracle.memory.buffer_cache_hit_ratio:
+      enabled: false
+    newrelic.oracle.memory.global_cache_blocks_corrupted:
+      enabled: false
+    newrelic.oracle.memory.global_cache_blocks_lost:
+      enabled: false
+    newrelic.oracle.memory.pga_allocated_bytes:
+      enabled: false
+    newrelic.oracle.memory.pga_freeable_bytes:
+      enabled: false
+    newrelic.oracle.memory.pga_in_use_bytes:
+      enabled: false
+    newrelic.oracle.memory.pga_max_size_bytes:
+      enabled: false
+    newrelic.oracle.memory.redo_allocation_hit_ratio:
+      enabled: false
+    newrelic.oracle.memory.redo_generated_bytes_per_second:
+      enabled: false
+    newrelic.oracle.memory.redo_generated_bytes_per_transaction:
+      enabled: false
+    newrelic.oracle.memory.sorts_ratio:
+      enabled: false
+    newrelic.oracle.network.io_megabytes_per_second:
+      enabled: false
+    newrelic.oracle.network.io_requests_per_second:
+      enabled: false
+    newrelic.oracle.network.traffic_bytes_per_second:
+      enabled: false
+    newrelic.oracle.query.physical_lobs_reads_per_transaction:
+      enabled: false
+    newrelic.oracle.query.physical_lobs_writes_per_transaction:
+      enabled: false
+    newrelic.oracle.query.physical_reads_per_transaction:
+      enabled: false
+    newrelic.oracle.query.physical_writes_per_transaction:
+      enabled: false
+    newrelic.oracle.query.transactions_per_second:
+      enabled: false
+    newrelic.oracle.redo_log.file_switch:
+      enabled: false
+    newrelic.oracle.redo_log.file_switch_archiving_needed:
+      enabled: false
+    newrelic.oracle.redo_log.file_switch_checkpoint_incomplete:
+      enabled: false
+    newrelic.oracle.redo_log.waits:
+      enabled: false
+    newrelic.oracle.rollback_segments.gets:
+      enabled: false
+    newrelic.oracle.rollback_segments.ratio_wait:
+      enabled: false
+    newrelic.oracle.rollback_segments.waits:
+      enabled: false
+    newrelic.oracle.sga.buffer_busy_waits:
+      enabled: false
+    newrelic.oracle.sga.fixed_size_bytes:
+      enabled: false
+    newrelic.oracle.sga.free_buffer_inspected:
+      enabled: false
+    newrelic.oracle.sga.free_buffer_waits:
+      enabled: false
+    newrelic.oracle.sga.hit_ratio:
+      enabled: false
+    newrelic.oracle.sga.log_buffer_allocation_retries_ratio:
+      enabled: false
+    newrelic.oracle.sga.log_buffer_redo_allocation_retries:
+      enabled: false
+    newrelic.oracle.sga.log_buffer_redo_entries:
+      enabled: false
+    newrelic.oracle.sga.log_buffer_space_waits:
+      enabled: false
+    newrelic.oracle.sga.redo_buffers_bytes:
+      enabled: false
+    newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio:
+      enabled: false
+    newrelic.oracle.sga.shared_pool_library_cache_hit_ratio:
+      enabled: false
+    newrelic.oracle.sga.shared_pool_library_cache_reload_ratio:
+      enabled: false
+    newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_bytes:
+      enabled: false
+    newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes:
+      enabled: false
+    newrelic.oracle.sga.uga_total_memory_bytes:
+      enabled: false
+    newrelic.oracle.sorts.disk_bytes:
+      enabled: false
+    newrelic.oracle.sorts.memory_bytes:
+      enabled: false
+    newrelic.oracle.tablespace.is_offline:
+      enabled: false
+    newrelic.oracle.tablespace.offline_cdb_datafiles:
+      enabled: false
+    newrelic.oracle.tablespace.offline_pdb_datafiles:
+      enabled: false
+    newrelic.oracle.tablespace.pdb_datafiles_non_write:
+      enabled: false
+    newrelic.oracle.tablespace.space_consumed_bytes:
+      enabled: false
+    newrelic.oracle.tablespace.space_reserved_bytes:
+      enabled: false
+    newrelic.oracle.tablespace.space_used_percentage:
+      enabled: false
+  resource_attributes:
+    host.name:
+      enabled: false
+    newrelic.oracle.db.id:
+      enabled: false
+    newrelic.oracle.global.name:
+      enabled: false
+    newrelic.oracle.instance.id:
+      enabled: false
+    newrelic.oracle.instance.name:
+      enabled: false
+filter_set_include:
+  resource_attributes:
+    host.name:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+    newrelic.oracle.db.id:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+    newrelic.oracle.global.name:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+    newrelic.oracle.instance.id:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+    newrelic.oracle.instance.name:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+filter_set_exclude:
+  resource_attributes:
+    host.name:
+      enabled: true
+      metrics_exclude:
+        - strict: "host.name-val"
+    newrelic.oracle.db.id:
+      enabled: true
+      metrics_exclude:
+        - strict: "newrelic.oracle.db.id-val"
+    newrelic.oracle.global.name:
+      enabled: true
+      metrics_exclude:
+        - strict: "newrelic.oracle.global.name-val"
+    newrelic.oracle.instance.id:
+      enabled: true
+      metrics_exclude:
+        - strict: "newrelic.oracle.instance.id-val"
+    newrelic.oracle.instance.name:
+      enabled: true
+      metrics_exclude:
+        - strict: "newrelic.oracle.instance.name-val"
