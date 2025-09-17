@@ -500,7 +500,7 @@ func (s *oracleScraper) collectDatabaseMetrics(instanceInfo *instanceInfo) error
 
 		switch metricName {
 		case "SQL Service Response Time":
-			s.mb.RecordNewrelicOracleDbSQLServiceResponseTimeDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
+			s.mb.RecordNewrelicOracleQuerySQLServiceResponseTimeDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
 		case "Database Wait Time Ratio":
 			s.mb.RecordNewrelicOracleDbWaitTimeRatioDataPoint(pcommon.NewTimestampFromTime(time.Now()), value)
 		case "Database CPU Time Ratio":
@@ -565,7 +565,7 @@ func (s *oracleScraper) collectTablespaceMetrics() error {
 		for i, ts := range s.config.TablespaceWhitelist {
 			quotedTablespaces[i] = fmt.Sprintf("'%s'", ts)
 		}
-		whereClause = fmt.Sprintf(" AND dt.TABLESPACE_NAME IN (%s)", strings.Join(quotedTablespaces, ","))
+		whereClause = fmt.Sprintf(" WHERE dt.TABLESPACE_NAME IN (%s)", strings.Join(quotedTablespaces, ","))
 	}
 
 	query := fmt.Sprintf(`
@@ -583,8 +583,7 @@ func (s *oracleScraper) collectTablespaceMetrics() error {
 			(SELECT TABLESPACE_NAME, SUM(BYTES) AS BYTES 
 			 FROM DBA_FREE_SPACE 
 			 GROUP BY TABLESPACE_NAME) fs
-		ON dt.TABLESPACE_NAME = fs.TABLESPACE_NAME
-		WHERE 1=1%s`, whereClause)
+		ON dt.TABLESPACE_NAME = fs.TABLESPACE_NAME%s`, whereClause)
 
 	rows, err := s.dbClient.Query(query)
 	if err != nil {

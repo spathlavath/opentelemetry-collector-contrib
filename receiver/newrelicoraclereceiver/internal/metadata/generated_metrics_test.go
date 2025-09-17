@@ -182,6 +182,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleDbCursorCacheHitRatioDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleDbCursorCacheHitsPerAttemptsDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -258,6 +262,14 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleDbGcCrBlockRecievedPerSecondDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleDbGcCrBlockRecievedPerTransactionDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleDbGcCurrentBlockReceivedPerSecondDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -270,7 +282,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecondDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleDbGlobalCacheAverageCurrentGetTimeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecondDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -550,11 +570,23 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleDiskPhysicalWriteIoRequestsPerSecondDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecondDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicOracleDiskPhysicalWritesPerSecondDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleDiskReadTimeInMilisecondsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleDiskReadTimeInMillisecondsDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -578,11 +610,27 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleDiskTempSpaceUsedInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleDiskWriteTimeInMilisecondsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleDiskWriteTimeInMillisecondsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleDiskWriteTimeMillisecondsDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicOracleDiskWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleInstanceCdbDatafilesOfflineDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -610,7 +658,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleMemoryPgaAllocatedInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleMemoryPgaFreeableBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleMemoryPgaFreeableInBytesDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -618,7 +674,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleMemoryPgaInUseInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleMemoryPgaMaxSizeBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleMemoryPgaMaxSizeInBytesDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -646,6 +710,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleNetworkTrafficBytePerSecondDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleNetworkTrafficBytesPerSecondDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -666,6 +734,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleQuerySQLServiceResponseTimeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleQueryTransactionsPerSecondDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -679,6 +751,18 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicOracleRedoLogFileSwitchCheckpointIncompleteDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleRedoLogLogFileSwitchDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleRedoLogLogFileSwitchArchivingNeededDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleRedoLogLogFileSwitchCheckpointIncompleteDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -703,6 +787,10 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicOracleSgaFixedSizeBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleSgaFixedSizeInBytesDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -738,6 +826,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleSgaRedoBuffersInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleSgaSharedPoolDictCacheMissRatioDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -754,7 +846,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytesDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -762,7 +862,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleSgaUgaTotalMemoryInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleSortsDiskBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleSortsDiskInBytesDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -770,19 +878,23 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleSortsMemoryInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleTablespaceIsOfflineDataPoint(ts, 1, "tablespace_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicOracleTablespaceOfflineCdbDatafilesDataPoint(ts, 1, "tablespace_name-val")
+			mb.RecordNewrelicOracleTablespaceOfflineCdbDatafilesDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicOracleTablespaceOfflinePdbDatafilesDataPoint(ts, 1, "tablespace_name-val")
+			mb.RecordNewrelicOracleTablespaceOfflinePdbDatafilesDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicOracleTablespacePdbDatafilesNonWriteDataPoint(ts, 1, "tablespace_name-val")
+			mb.RecordNewrelicOracleTablespacePdbDatafilesNonWriteDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -790,7 +902,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicOracleTablespaceSpaceConsumedInBytesDataPoint(ts, 1, "tablespace_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicOracleTablespaceSpaceReservedBytesDataPoint(ts, 1, "tablespace_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicOracleTablespaceSpaceReservedInBytesDataPoint(ts, 1, "tablespace_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1160,6 +1280,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.db.cursor_cache_hit_ratio":
+					assert.False(t, validatedMetrics["newrelic.oracle.db.cursor_cache_hit_ratio"], "Found a duplicate in the metrics slice: newrelic.oracle.db.cursor_cache_hit_ratio")
+					validatedMetrics["newrelic.oracle.db.cursor_cache_hit_ratio"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Cursor cache hit ratio", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "newrelic.oracle.db.cursor_cache_hits_per_attempts":
 					assert.False(t, validatedMetrics["newrelic.oracle.db.cursor_cache_hits_per_attempts"], "Found a duplicate in the metrics slice: newrelic.oracle.db.cursor_cache_hits_per_attempts")
 					validatedMetrics["newrelic.oracle.db.cursor_cache_hits_per_attempts"] = true
@@ -1388,6 +1520,30 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.db.gc_cr_block_recieved_per_second":
+					assert.False(t, validatedMetrics["newrelic.oracle.db.gc_cr_block_recieved_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.db.gc_cr_block_recieved_per_second")
+					validatedMetrics["newrelic.oracle.db.gc_cr_block_recieved_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "GC CR Block Received Per Second (misspelling from nri-oracle)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.db.gc_cr_block_recieved_per_transaction":
+					assert.False(t, validatedMetrics["newrelic.oracle.db.gc_cr_block_recieved_per_transaction"], "Found a duplicate in the metrics slice: newrelic.oracle.db.gc_cr_block_recieved_per_transaction")
+					validatedMetrics["newrelic.oracle.db.gc_cr_block_recieved_per_transaction"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "GC CR Block Received Per Transaction (misspelling from nri-oracle)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}/{transaction}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "newrelic.oracle.db.gc_current_block_received_per_second":
 					assert.False(t, validatedMetrics["newrelic.oracle.db.gc_current_block_received_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.db.gc_current_block_received_per_second")
 					validatedMetrics["newrelic.oracle.db.gc_current_block_received_per_second"] = true
@@ -1424,12 +1580,36 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.db.global_cache_average_cr_get_time_per_second":
+					assert.False(t, validatedMetrics["newrelic.oracle.db.global_cache_average_cr_get_time_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.db.global_cache_average_cr_get_time_per_second")
+					validatedMetrics["newrelic.oracle.db.global_cache_average_cr_get_time_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Global cache average CR get time per second", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "newrelic.oracle.db.global_cache_average_current_get_time":
 					assert.False(t, validatedMetrics["newrelic.oracle.db.global_cache_average_current_get_time"], "Found a duplicate in the metrics slice: newrelic.oracle.db.global_cache_average_current_get_time")
 					validatedMetrics["newrelic.oracle.db.global_cache_average_current_get_time"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Global cache average current get time", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.db.global_cache_average_current_get_time_per_second":
+					assert.False(t, validatedMetrics["newrelic.oracle.db.global_cache_average_current_get_time_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.db.global_cache_average_current_get_time_per_second")
+					validatedMetrics["newrelic.oracle.db.global_cache_average_current_get_time_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Global cache average current get time per second", ms.At(i).Description())
 					assert.Equal(t, "s", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -1910,7 +2090,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "SQL service response time", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
+					assert.Equal(t, "ms", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -2268,6 +2448,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.disk.physical_write_io_requests_per_second":
+					assert.False(t, validatedMetrics["newrelic.oracle.disk.physical_write_io_requests_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.physical_write_io_requests_per_second")
+					validatedMetrics["newrelic.oracle.disk.physical_write_io_requests_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Physical write I/O requests per second", ms.At(i).Description())
+					assert.Equal(t, "1/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "newrelic.oracle.disk.physical_write_total_io_requests_per_second":
 					assert.False(t, validatedMetrics["newrelic.oracle.disk.physical_write_total_io_requests_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.physical_write_total_io_requests_per_second")
 					validatedMetrics["newrelic.oracle.disk.physical_write_total_io_requests_per_second"] = true
@@ -2287,6 +2479,32 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Physical writes per second", ms.At(i).Description())
 					assert.Equal(t, "{writes}/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.disk.read_time_in_miliseconds":
+					assert.False(t, validatedMetrics["newrelic.oracle.disk.read_time_in_miliseconds"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.read_time_in_miliseconds")
+					validatedMetrics["newrelic.oracle.disk.read_time_in_miliseconds"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Amount of file read time (misspelling from nri-oracle)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityUnspecified, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.disk.read_time_in_milliseconds":
+					assert.False(t, validatedMetrics["newrelic.oracle.disk.read_time_in_milliseconds"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.read_time_in_milliseconds")
+					validatedMetrics["newrelic.oracle.disk.read_time_in_milliseconds"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Disk read time in milliseconds", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -2356,6 +2574,44 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.disk.temp_space_used_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.disk.temp_space_used_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.temp_space_used_in_bytes")
+					validatedMetrics["newrelic.oracle.disk.temp_space_used_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Temporary space used in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.disk.write_time_in_miliseconds":
+					assert.False(t, validatedMetrics["newrelic.oracle.disk.write_time_in_miliseconds"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.write_time_in_miliseconds")
+					validatedMetrics["newrelic.oracle.disk.write_time_in_miliseconds"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Amount of file write time (misspelling from nri-oracle)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityUnspecified, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.disk.write_time_in_milliseconds":
+					assert.False(t, validatedMetrics["newrelic.oracle.disk.write_time_in_milliseconds"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.write_time_in_milliseconds")
+					validatedMetrics["newrelic.oracle.disk.write_time_in_milliseconds"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Disk write time in milliseconds", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "newrelic.oracle.disk.write_time_milliseconds":
 					assert.False(t, validatedMetrics["newrelic.oracle.disk.write_time_milliseconds"], "Found a duplicate in the metrics slice: newrelic.oracle.disk.write_time_milliseconds")
 					validatedMetrics["newrelic.oracle.disk.write_time_milliseconds"] = true
@@ -2380,6 +2636,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.True(t, ms.At(i).Sum().IsMonotonic())
 					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
 					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.instance.cdb_datafiles_offline":
+					assert.False(t, validatedMetrics["newrelic.oracle.instance.cdb_datafiles_offline"], "Found a duplicate in the metrics slice: newrelic.oracle.instance.cdb_datafiles_offline")
+					validatedMetrics["newrelic.oracle.instance.cdb_datafiles_offline"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "CDB datafiles offline count", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -2462,9 +2730,33 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.memory.pga_allocated_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.memory.pga_allocated_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.memory.pga_allocated_in_bytes")
+					validatedMetrics["newrelic.oracle.memory.pga_allocated_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "PGA allocated memory in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelic.oracle.memory.pga_freeable_bytes":
 					assert.False(t, validatedMetrics["newrelic.oracle.memory.pga_freeable_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.memory.pga_freeable_bytes")
 					validatedMetrics["newrelic.oracle.memory.pga_freeable_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "PGA freeable memory in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.memory.pga_freeable_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.memory.pga_freeable_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.memory.pga_freeable_in_bytes")
+					validatedMetrics["newrelic.oracle.memory.pga_freeable_in_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "PGA freeable memory in bytes", ms.At(i).Description())
@@ -2486,9 +2778,33 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.memory.pga_in_use_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.memory.pga_in_use_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.memory.pga_in_use_in_bytes")
+					validatedMetrics["newrelic.oracle.memory.pga_in_use_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "PGA in use memory in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelic.oracle.memory.pga_max_size_bytes":
 					assert.False(t, validatedMetrics["newrelic.oracle.memory.pga_max_size_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.memory.pga_max_size_bytes")
 					validatedMetrics["newrelic.oracle.memory.pga_max_size_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "PGA maximum size in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.memory.pga_max_size_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.memory.pga_max_size_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.memory.pga_max_size_in_bytes")
+					validatedMetrics["newrelic.oracle.memory.pga_max_size_in_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "PGA maximum size in bytes", ms.At(i).Description())
@@ -2551,7 +2867,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelic.oracle.network.io_megabytes_per_second"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "I/O megabytes per second", ms.At(i).Description())
+					assert.Equal(t, "Network I/O megabytes per second", ms.At(i).Description())
 					assert.Equal(t, "MBy/s", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -2563,8 +2879,20 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelic.oracle.network.io_requests_per_second"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "I/O requests per second", ms.At(i).Description())
-					assert.Equal(t, "{requests}/s", ms.At(i).Unit())
+					assert.Equal(t, "Network I/O requests per second", ms.At(i).Description())
+					assert.Equal(t, "1/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.network.traffic_byte_per_second":
+					assert.False(t, validatedMetrics["newrelic.oracle.network.traffic_byte_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.network.traffic_byte_per_second")
+					validatedMetrics["newrelic.oracle.network.traffic_byte_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Network traffic bytes per second", ms.At(i).Description())
+					assert.Equal(t, "By/s", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -2630,6 +2958,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelic.oracle.query.sql_service_response_time":
+					assert.False(t, validatedMetrics["newrelic.oracle.query.sql_service_response_time"], "Found a duplicate in the metrics slice: newrelic.oracle.query.sql_service_response_time")
+					validatedMetrics["newrelic.oracle.query.sql_service_response_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "SQL service response time in milliseconds", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "newrelic.oracle.query.transactions_per_second":
 					assert.False(t, validatedMetrics["newrelic.oracle.query.transactions_per_second"], "Found a duplicate in the metrics slice: newrelic.oracle.query.transactions_per_second")
 					validatedMetrics["newrelic.oracle.query.transactions_per_second"] = true
@@ -2674,6 +3014,48 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, "Log file switch due to checkpoint incomplete", ms.At(i).Description())
 					assert.Equal(t, "{switches}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.redo_log.log_file_switch":
+					assert.False(t, validatedMetrics["newrelic.oracle.redo_log.log_file_switch"], "Found a duplicate in the metrics slice: newrelic.oracle.redo_log.log_file_switch")
+					validatedMetrics["newrelic.oracle.redo_log.log_file_switch"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Redo log file switch count", ms.At(i).Description())
+					assert.Equal(t, "{switches}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityUnspecified, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.redo_log.log_file_switch_archiving_needed":
+					assert.False(t, validatedMetrics["newrelic.oracle.redo_log.log_file_switch_archiving_needed"], "Found a duplicate in the metrics slice: newrelic.oracle.redo_log.log_file_switch_archiving_needed")
+					validatedMetrics["newrelic.oracle.redo_log.log_file_switch_archiving_needed"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Redo log file switch (archiving needed)", ms.At(i).Description())
+					assert.Equal(t, "{switches}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityUnspecified, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete":
+					assert.False(t, validatedMetrics["newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete"], "Found a duplicate in the metrics slice: newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete")
+					validatedMetrics["newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Redo log file switch (checkpoint incomplete)", ms.At(i).Description())
+					assert.Equal(t, "{switches}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityUnspecified, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -2744,6 +3126,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "SGA fixed size area in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.sga.fixed_size_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.sga.fixed_size_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sga.fixed_size_in_bytes")
+					validatedMetrics["newrelic.oracle.sga.fixed_size_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "SGA fixed size in bytes", ms.At(i).Description())
 					assert.Equal(t, "By", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -2846,6 +3240,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.sga.redo_buffers_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.sga.redo_buffers_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sga.redo_buffers_in_bytes")
+					validatedMetrics["newrelic.oracle.sga.redo_buffers_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "SGA redo buffers in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio":
 					assert.False(t, validatedMetrics["newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio"], "Found a duplicate in the metrics slice: newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio")
 					validatedMetrics["newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio"] = true
@@ -2894,9 +3300,33 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes")
+					validatedMetrics["newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Shared pool library cache shareable memory per statement in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes":
 					assert.False(t, validatedMetrics["newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes")
 					validatedMetrics["newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Shared pool library cache shareable memory per user in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes")
+					validatedMetrics["newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Shared pool library cache shareable memory per user in bytes", ms.At(i).Description())
@@ -2918,12 +3348,36 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.sga.uga_total_memory_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.sga.uga_total_memory_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sga.uga_total_memory_in_bytes")
+					validatedMetrics["newrelic.oracle.sga.uga_total_memory_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "SGA UGA total memory in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelic.oracle.sorts.disk_bytes":
 					assert.False(t, validatedMetrics["newrelic.oracle.sorts.disk_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sorts.disk_bytes")
 					validatedMetrics["newrelic.oracle.sorts.disk_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Sorts performed on disk in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.sorts.disk_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.sorts.disk_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sorts.disk_in_bytes")
+					validatedMetrics["newrelic.oracle.sorts.disk_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Sorts disk usage in bytes", ms.At(i).Description())
 					assert.Equal(t, "By", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -2942,12 +3396,24 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.sorts.memory_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.sorts.memory_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.sorts.memory_in_bytes")
+					validatedMetrics["newrelic.oracle.sorts.memory_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Sorts memory usage in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelic.oracle.tablespace.is_offline":
 					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.is_offline"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.is_offline")
 					validatedMetrics["newrelic.oracle.tablespace.is_offline"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Tablespace offline status (1 if offline, 0 if online)", ms.At(i).Description())
+					assert.Equal(t, "Tablespace offline status", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -2962,38 +3428,44 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelic.oracle.tablespace.offline_cdb_datafiles"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of offline CDB datafiles in tablespace", ms.At(i).Description())
-					assert.Equal(t, "{datafiles}", ms.At(i).Unit())
+					assert.Equal(t, "Offline CDB datafiles count", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("tablespace_name")
-					assert.True(t, ok)
-					assert.Equal(t, "tablespace_name-val", attrVal.Str())
 				case "newrelic.oracle.tablespace.offline_pdb_datafiles":
 					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.offline_pdb_datafiles"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.offline_pdb_datafiles")
 					validatedMetrics["newrelic.oracle.tablespace.offline_pdb_datafiles"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of offline PDB datafiles in tablespace", ms.At(i).Description())
-					assert.Equal(t, "{datafiles}", ms.At(i).Unit())
+					assert.Equal(t, "Offline PDB datafiles count", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("tablespace_name")
-					assert.True(t, ok)
-					assert.Equal(t, "tablespace_name-val", attrVal.Str())
 				case "newrelic.oracle.tablespace.pdb_datafiles_non_write":
 					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.pdb_datafiles_non_write"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.pdb_datafiles_non_write")
 					validatedMetrics["newrelic.oracle.tablespace.pdb_datafiles_non_write"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of PDB datafiles in non-write mode in tablespace", ms.At(i).Description())
-					assert.Equal(t, "{datafiles}", ms.At(i).Unit())
+					assert.Equal(t, "PDB datafiles in non-write mode", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelic.oracle.tablespace.space_consumed_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.space_consumed_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.space_consumed_bytes")
+					validatedMetrics["newrelic.oracle.tablespace.space_consumed_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Tablespace space consumed in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -3002,9 +3474,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("tablespace_name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace_name-val", attrVal.Str())
-				case "newrelic.oracle.tablespace.space_consumed_bytes":
-					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.space_consumed_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.space_consumed_bytes")
-					validatedMetrics["newrelic.oracle.tablespace.space_consumed_bytes"] = true
+				case "newrelic.oracle.tablespace.space_consumed_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.space_consumed_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.space_consumed_in_bytes")
+					validatedMetrics["newrelic.oracle.tablespace.space_consumed_in_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Tablespace space consumed in bytes", ms.At(i).Description())
@@ -3032,13 +3504,28 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("tablespace_name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace_name-val", attrVal.Str())
+				case "newrelic.oracle.tablespace.space_reserved_in_bytes":
+					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.space_reserved_in_bytes"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.space_reserved_in_bytes")
+					validatedMetrics["newrelic.oracle.tablespace.space_reserved_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Tablespace space reserved in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("tablespace_name")
+					assert.True(t, ok)
+					assert.Equal(t, "tablespace_name-val", attrVal.Str())
 				case "newrelic.oracle.tablespace.space_used_percentage":
 					assert.False(t, validatedMetrics["newrelic.oracle.tablespace.space_used_percentage"], "Found a duplicate in the metrics slice: newrelic.oracle.tablespace.space_used_percentage")
 					validatedMetrics["newrelic.oracle.tablespace.space_used_percentage"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Tablespace space used percentage", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.Equal(t, "%", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())

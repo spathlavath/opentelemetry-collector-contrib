@@ -39,7 +39,6 @@ attributes:
     type: string
 
 metrics:
-  # SGA Metrics
   newrelic.oracle.sga.hit_ratio:
     description: SGA buffer cache hit ratio
     enabled: true
@@ -152,7 +151,6 @@ metrics:
       value_type: int
     unit: "{buffers}"
 
-  # Memory Metrics
   newrelic.oracle.memory.pga_in_use_bytes:
     description: PGA memory in use in bytes
     enabled: true
@@ -230,7 +228,6 @@ metrics:
       value_type: int
     unit: "{blocks}"
 
-  # Disk I/O Metrics
   newrelic.oracle.disk.reads:
     description: Physical disk reads
     enabled: true
@@ -369,7 +366,6 @@ metrics:
       value_type: double
     unit: "{writes}/s"
 
-  # Query Metrics
   newrelic.oracle.query.transactions_per_second:
     description: User transactions per second
     enabled: true
@@ -405,7 +401,6 @@ metrics:
       value_type: double
     unit: "{writes}/{transaction}"
 
-  # Database Metrics
   newrelic.oracle.db.logons_per_transaction:
     description: Logons per transaction
     enabled: true
@@ -924,84 +919,16 @@ metrics:
       value_type: double
     unit: ms
 
-  # Additional Database Metrics  
-  newrelic.oracle.db.gc_cr_block_received_per_second:
-    description: GC CR blocks received per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  newrelic.oracle.db.gc_cr_block_received_per_transaction:
-    description: GC CR blocks received per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  # Additional Disk Metrics
-  newrelic.oracle.disk.blocks_read:
-    description: Total blocks read
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.disk.blocks_written:
-    description: Total blocks written
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.disk.logical_reads_per_user_call:
-    description: Logical reads per user call
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.disk.physical_lobs_reads_per_second:
-    description: Physical LOB reads per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  newrelic.oracle.disk.physical_lobs_writes_per_second:
-    description: Physical LOB writes per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  newrelic.oracle.disk.physical_read_bytes_per_second:
-    description: Physical read bytes per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: By/s
 
-  newrelic.oracle.disk.physical_read_io_requests_per_second:
-    description: Physical read I/O requests per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  newrelic.oracle.disk.physical_reads_per_second:
-    description: Physical reads per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  newrelic.oracle.disk.physical_write_bytes_per_second:
-    description: Physical write bytes per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: By/s
 
   newrelic.oracle.disk.physical_write_io_requests_per_second:
     description: Physical write I/O requests per second
@@ -1010,19 +937,7 @@ metrics:
       value_type: double
     unit: "1/s"
 
-  newrelic.oracle.disk.physical_writes_per_second:
-    description: Physical writes per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  newrelic.oracle.disk.physical_write_total_io_requests_per_second:
-    description: Physical write total I/O requests per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
   newrelic.oracle.disk.read_time_in_milliseconds:
     description: Disk read time in milliseconds
@@ -1031,19 +946,7 @@ metrics:
       value_type: double
     unit: ms
 
-  newrelic.oracle.disk.sort_per_second:
-    description: Sorts per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  newrelic.oracle.disk.sort_per_transaction:
-    description: Sorts per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
   newrelic.oracle.disk.temp_space_used_in_bytes:
     description: Temporary space used in bytes
@@ -1059,27 +962,8 @@ metrics:
       value_type: double
     unit: ms
 
-  # Additional Memory Metrics
-  newrelic.oracle.memory.buffer_cache_hit_ratio:
-    description: Buffer cache hit ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.memory.global_cache_blocks_corrupted:
-    description: Global cache blocks corrupted
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.memory.global_cache_blocks_lost:
-    description: Global cache blocks lost
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
   newrelic.oracle.memory.pga_allocated_in_bytes:
     description: PGA allocated memory in bytes
@@ -1109,35 +993,10 @@ metrics:
       value_type: int
     unit: By
 
-  newrelic.oracle.memory.redo_allocation_hit_ratio:
-    description: Redo allocation hit ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.memory.redo_generated_bytes_per_second:
-    description: Redo generated bytes per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: By/s
 
-  newrelic.oracle.memory.redo_generated_bytes_per_transaction:
-    description: Redo generated bytes per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: By
 
-  newrelic.oracle.memory.sorts_ratio:
-    description: Sorts ratio (memory vs disk)
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  # Additional Network Metrics
   newrelic.oracle.network.io_megabytes_per_second:
     description: Network I/O megabytes per second
     enabled: true
@@ -1159,84 +1018,16 @@ metrics:
       value_type: double
     unit: By/s
 
-  # Additional Query Metrics
-  newrelic.oracle.query.physical_lobs_reads_per_transaction:
-    description: Physical LOB reads per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.query.physical_lobs_writes_per_transaction:
-    description: Physical LOB writes per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.query.physical_reads_per_transaction:
-    description: Physical reads per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.query.physical_writes_per_transaction:
-    description: Physical writes per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.query.transactions_per_second:
-    description: Transactions per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1/s"
 
-  # Additional SGA Metrics
-  newrelic.oracle.sga.buffer_busy_waits:
-    description: SGA buffer busy waits
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.sga.free_buffer_inspected:
-    description: SGA free buffers inspected
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.sga.free_buffer_waits:
-    description: SGA free buffer waits
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.sga.log_buffer_allocation_retries_ratio:
-    description: SGA log buffer allocation retries ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.sga.log_buffer_redo_allocation_retries:
-    description: SGA log buffer redo allocation retries
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.sga.log_buffer_redo_entries:
-    description: SGA log buffer redo entries
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
   newrelic.oracle.sga.uga_total_memory_in_bytes:
     description: SGA UGA total memory in bytes
@@ -1245,7 +1036,6 @@ metrics:
       value_type: int
     unit: By
 
-  # Additional Tablespace Metrics
   newrelic.oracle.tablespace.is_offline:
     description: Tablespace offline status
     enabled: true
@@ -1299,33 +1089,12 @@ metrics:
     unit: "%"
     attributes: [tablespace_name]
 
-  # Database ID and Instance Metrics
-  newrelic.oracle.db.id:
-    description: Database ID
-    enabled: true
-    gauge:
-      value_type: string
-    unit: "1"
 
   newrelic.oracle.instance.cdb_datafiles_offline:
     description: CDB datafiles offline count
     enabled: true
     gauge:
       value_type: int
-    unit: "1"
-
-  newrelic.oracle.instance.db_id_instance_metric:
-    description: Database ID instance metric
-    enabled: true
-    gauge:
-      value_type: string
-    unit: "1"
-
-  newrelic.oracle.instance.db_id_tablespace_metric:
-    description: Database ID tablespace metric
-    enabled: true
-    gauge:
-      value_type: string
     unit: "1"
 
   newrelic.oracle.db.wait_time_ratio:
@@ -1587,7 +1356,6 @@ metrics:
       value_type: double
     unit: "{writes}/s"
 
-  # Network Metrics
   newrelic.oracle.network.traffic_bytes_per_second:
     description: Network traffic volume per second
     enabled: true
@@ -1595,21 +1363,8 @@ metrics:
       value_type: double
     unit: "By/s"
 
-  newrelic.oracle.network.io_megabytes_per_second:
-    description: I/O megabytes per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "MBy/s"
 
-  newrelic.oracle.network.io_requests_per_second:
-    description: I/O requests per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{requests}/s"
 
-  # Sorts Metrics
   newrelic.oracle.sorts.memory_bytes:
     description: Sorts performed in memory in bytes
     enabled: true
@@ -1624,107 +1379,20 @@ metrics:
       value_type: int
     unit: By
 
-  # Parse Metrics
-  newrelic.oracle.db.total_parse_count_per_second:
-    description: Total parse count per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{parses}/s"
 
-  newrelic.oracle.db.total_parse_count_per_transaction:
-    description: Total parse count per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{parses}/{transaction}"
 
-  newrelic.oracle.db.hard_parse_count_per_second:
-    description: Hard parse count per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{parses}/s"
 
-  newrelic.oracle.db.hard_parse_count_per_transaction:
-    description: Hard parse count per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{parses}/{transaction}"
 
-  newrelic.oracle.db.parse_failure_count_per_second:
-    description: Parse failure count per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{failures}/s"
 
-  newrelic.oracle.db.parse_failure_count_per_transaction:
-    description: Parse failure count per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{failures}/{transaction}"
 
-  # Scan Metrics
-  newrelic.oracle.db.full_index_scans_per_second:
-    description: Full index scans per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/s"
 
-  newrelic.oracle.db.full_index_scans_per_transaction:
-    description: Full index scans per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/{transaction}"
 
-  newrelic.oracle.db.total_index_scans_per_second:
-    description: Total index scans per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/s"
 
-  newrelic.oracle.db.total_index_scans_per_transaction:
-    description: Total index scans per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/{transaction}"
 
-  newrelic.oracle.db.long_table_scans_per_second:
-    description: Long table scans per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/s"
 
-  newrelic.oracle.db.long_table_scans_per_transaction:
-    description: Long table scans per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/{transaction}"
 
-  newrelic.oracle.db.total_table_scans_per_second:
-    description: Total table scans per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/s"
 
-  newrelic.oracle.db.total_table_scans_per_transaction:
-    description: Total table scans per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/{transaction}"
 
-  # Cursor Metrics
   newrelic.oracle.db.cursor_cache_hit_ratio:
     description: Cursor cache hit ratio
     enabled: true
@@ -1732,106 +1400,19 @@ metrics:
       value_type: double
     unit: "1"
 
-  # Checkpoint Metrics
-  newrelic.oracle.db.dbwr_checkpoints_per_second:
-    description: DBWR checkpoints per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{checkpoints}/s"
 
-  newrelic.oracle.db.background_checkpoints_per_second:
-    description: Background checkpoints per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{checkpoints}/s"
 
-  # Enqueue Metrics
-  newrelic.oracle.db.enqueue_timeouts_per_second:
-    description: Enqueue timeouts per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{timeouts}/s"
 
-  newrelic.oracle.db.enqueue_timeouts_per_transaction:
-    description: Enqueue timeouts per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{timeouts}/{transaction}"
 
-  newrelic.oracle.db.enqueue_waits_per_second:
-    description: Enqueue waits per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{waits}/s"
 
-  newrelic.oracle.db.enqueue_waits_per_transaction:
-    description: Enqueue waits per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{waits}/{transaction}"
 
-  newrelic.oracle.db.enqueue_deadlocks_per_second:
-    description: Enqueue deadlocks per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{deadlocks}/s"
 
-  newrelic.oracle.db.enqueue_deadlocks_per_transaction:
-    description: Enqueue deadlocks per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{deadlocks}/{transaction}"
 
-  newrelic.oracle.db.enqueue_requests_per_second:
-    description: Enqueue requests per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{requests}/s"
 
-  newrelic.oracle.db.enqueue_requests_per_transaction:
-    description: Enqueue requests per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{requests}/{transaction}"
 
-  # Global Cache (RAC) Metrics
-  newrelic.oracle.db.gc_cr_block_received_per_second:
-    description: Global cache CR blocks received per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{blocks}/s"
 
-  newrelic.oracle.db.gc_cr_block_received_per_transaction:
-    description: Global cache CR blocks received per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{blocks}/{transaction}"
 
-  newrelic.oracle.db.gc_current_block_received_per_second:
-    description: Global cache current blocks received per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{blocks}/s"
 
-  newrelic.oracle.db.gc_current_block_received_per_transaction:
-    description: Global cache current blocks received per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{blocks}/{transaction}"
 
   newrelic.oracle.db.global_cache_average_cr_get_time_per_second:
     description: Global cache average CR get time per second
@@ -1847,225 +1428,36 @@ metrics:
       value_type: double
     unit: s
 
-  # Resource Limit Metrics
-  newrelic.oracle.db.process_limit_percentage:
-    description: Process limit percentage
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.session_limit_percentage:
-    description: Session limit percentage
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.user_limit_percentage:
-    description: User limit percentage
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.shared_pool_free_percentage:
-    description: Shared pool free percentage
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.pga_cache_hit_percentage:
-    description: PGA cache hit percentage
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.streams_pool_usage_percentage:
-    description: Streams pool usage percentage
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  # Cache Hit/Miss Metrics
-  newrelic.oracle.db.row_cache_hit_ratio:
-    description: Row cache hit ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.row_cache_miss_ratio:
-    description: Row cache miss ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.library_cache_hit_ratio:
-    description: Library cache hit ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.library_cache_miss_ratio:
-    description: Library cache miss ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  # OS Level Metrics
-  newrelic.oracle.db.os_load:
-    description: Current OS load
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.host_cpu_usage_per_second:
-    description: Host CPU usage per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{cpu}/s"
 
-  # Session Metrics
-  newrelic.oracle.db.average_active_sessions:
-    description: Average active sessions
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{sessions}"
 
-  newrelic.oracle.db.active_serial_sessions:
-    description: Active serial sessions
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{sessions}"
 
-  newrelic.oracle.db.active_parallel_sessions:
-    description: Active parallel sessions
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{sessions}"
 
-  # Background Process Metrics
-  newrelic.oracle.db.background_cpu_usage_per_second:
-    description: Background CPU usage per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{cpu}/s"
 
-  newrelic.oracle.db.background_time_per_second:
-    description: Background time per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
 
-  # User Call Metrics
-  newrelic.oracle.db.block_changes_per_user_call:
-    description: DB block changes per user call
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{changes}/{call}"
 
-  newrelic.oracle.db.block_gets_per_user_call:
-    description: DB block gets per user call
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{gets}/{call}"
 
-  newrelic.oracle.db.executions_per_user_call:
-    description: Executions per user call
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{executions}/{call}"
 
-  newrelic.oracle.db.sorts_per_user_call:
-    description: Total sorts per user call
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{sorts}/{call}"
 
-  newrelic.oracle.db.table_scans_per_user_call:
-    description: Total table scans per user call
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{scans}/{call}"
 
-  # LOB Metrics
-  newrelic.oracle.query.physical_lobs_reads_per_transaction:
-    description: Physical LOB reads per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{reads}/{transaction}"
 
-  newrelic.oracle.query.physical_lobs_writes_per_transaction:
-    description: Physical LOB writes per transaction
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{writes}/{transaction}"
 
-  newrelic.oracle.disk.physical_lobs_reads_per_second:
-    description: Physical LOB reads per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{reads}/s"
 
-  newrelic.oracle.disk.physical_lobs_writes_per_second:
-    description: Physical LOB writes per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{writes}/s"
 
-  # Additional Execution Metrics
-  newrelic.oracle.db.execute_without_parse_ratio:
-    description: Execute without parse ratio
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.db.captured_user_calls:
-    description: Captured user calls
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{calls}"
 
-  newrelic.oracle.db.transactions_per_logon:
-    description: Transactions per logon
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{transactions}/{logon}"
 
-  newrelic.oracle.db.database_cpu_time_per_second:
-    description: Database CPU time per second
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
 
-  # Rollback Segments Metrics
   newrelic.oracle.rollback_segments.gets:
     description: Rollback segment gets
     enabled: true
@@ -2087,7 +1479,6 @@ metrics:
       value_type: double
     unit: "1"
 
-  # Redo Log Metrics
   newrelic.oracle.redo_log.waits:
     description: Redo log waits
     enabled: true
@@ -2116,7 +1507,6 @@ metrics:
       value_type: int
     unit: "{switches}"
 
-  # Tablespace Metrics
   newrelic.oracle.tablespace.space_consumed_bytes:
     attributes: [tablespace_name]
     description: Tablespace space consumed in bytes
@@ -2133,47 +1523,11 @@ metrics:
       value_type: int
     unit: By
 
-  newrelic.oracle.tablespace.space_used_percentage:
-    attributes: [tablespace_name]
-    description: Tablespace space used percentage
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
 
-  newrelic.oracle.tablespace.is_offline:
-    attributes: [tablespace_name]
-    description: Tablespace offline status (1 if offline, 0 if online)
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
 
-  newrelic.oracle.tablespace.offline_pdb_datafiles:
-    attributes: [tablespace_name]
-    description: Number of offline PDB datafiles in tablespace
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{datafiles}"
 
-  newrelic.oracle.tablespace.offline_cdb_datafiles:
-    attributes: [tablespace_name]
-    description: Number of offline CDB datafiles in tablespace
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{datafiles}"
 
-  newrelic.oracle.tablespace.pdb_datafiles_non_write:
-    attributes: [tablespace_name]
-    description: Number of PDB datafiles in non-write mode in tablespace
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{datafiles}"
 
-  # Instance Metrics
   newrelic.oracle.locked_accounts:
     attributes: [instance_id]
     description: Number of locked user accounts
@@ -2190,9 +1544,108 @@ metrics:
       value_type: int
     unit: "{queries}"
 
+  # Missing metrics for 100% nri-oracle parity
+  newrelic.oracle.db.gc_cr_block_recieved_per_second:
+    description: GC CR Block Received Per Second (misspelling from nri-oracle)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{blocks}/s"
+
+  newrelic.oracle.db.gc_cr_block_recieved_per_transaction:
+    description: GC CR Block Received Per Transaction (misspelling from nri-oracle)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{blocks}/{transaction}"
+
+  newrelic.oracle.db.sql_service_response_time:
+    description: SQL service response time
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "ms"
+
+  newrelic.oracle.disk.read_time_in_miliseconds:
+    description: Amount of file read time (misspelling from nri-oracle)
+    enabled: true
+    sum:
+      value_type: double
+      monotonic: true
+    unit: "ms"
+
+  newrelic.oracle.disk.write_time_in_miliseconds:
+    description: Amount of file write time (misspelling from nri-oracle)
+    enabled: true
+    sum:
+      value_type: double
+      monotonic: true
+    unit: "ms"
+
+  newrelic.oracle.redo_log.log_file_switch:
+    description: Redo log file switch count
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+    unit: "{switches}"
+
+  newrelic.oracle.redo_log.log_file_switch_archiving_needed:
+    description: Redo log file switch (archiving needed)
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+    unit: "{switches}"
+
+  newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete:
+    description: Redo log file switch (checkpoint incomplete)
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+    unit: "{switches}"
+
+  newrelic.oracle.sga.fixed_size_in_bytes:
+    description: SGA fixed size in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "By"
+
+  newrelic.oracle.sga.redo_buffers_in_bytes:
+    description: SGA redo buffers in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "By"
+
+  newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes:
+    description: Shared pool library cache shareable memory per statement in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "By"
+
+  newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes:
+    description: Shared pool library cache shareable memory per user in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "By"
+
+  newrelic.oracle.sorts.disk_in_bytes:
+    description: Sorts disk usage in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "By"
+
+  newrelic.oracle.sorts.memory_in_bytes:
+    description: Sorts memory usage in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "By"
+
 tests:
-  config:
-  goleak:
-    ignore:
-      any:
-      - "github.com/cihub/seelog.(*asyncLoopLogger).processQueue"

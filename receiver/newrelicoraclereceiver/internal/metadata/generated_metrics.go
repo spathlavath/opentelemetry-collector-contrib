@@ -97,6 +97,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleDbCurrentOpenCursors: metricInfo{
 		Name: "newrelic.oracle.db.current_open_cursors",
 	},
+	NewrelicOracleDbCursorCacheHitRatio: metricInfo{
+		Name: "newrelic.oracle.db.cursor_cache_hit_ratio",
+	},
 	NewrelicOracleDbCursorCacheHitsPerAttempts: metricInfo{
 		Name: "newrelic.oracle.db.cursor_cache_hits_per_attempts",
 	},
@@ -154,6 +157,12 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleDbGcCrBlockReceivedPerTransaction: metricInfo{
 		Name: "newrelic.oracle.db.gc_cr_block_received_per_transaction",
 	},
+	NewrelicOracleDbGcCrBlockRecievedPerSecond: metricInfo{
+		Name: "newrelic.oracle.db.gc_cr_block_recieved_per_second",
+	},
+	NewrelicOracleDbGcCrBlockRecievedPerTransaction: metricInfo{
+		Name: "newrelic.oracle.db.gc_cr_block_recieved_per_transaction",
+	},
 	NewrelicOracleDbGcCurrentBlockReceivedPerSecond: metricInfo{
 		Name: "newrelic.oracle.db.gc_current_block_received_per_second",
 	},
@@ -163,8 +172,14 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleDbGlobalCacheAverageCrGetTime: metricInfo{
 		Name: "newrelic.oracle.db.global_cache_average_cr_get_time",
 	},
+	NewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond: metricInfo{
+		Name: "newrelic.oracle.db.global_cache_average_cr_get_time_per_second",
+	},
 	NewrelicOracleDbGlobalCacheAverageCurrentGetTime: metricInfo{
 		Name: "newrelic.oracle.db.global_cache_average_current_get_time",
+	},
+	NewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond: metricInfo{
+		Name: "newrelic.oracle.db.global_cache_average_current_get_time_per_second",
 	},
 	NewrelicOracleDbHardParseCountPerSecond: metricInfo{
 		Name: "newrelic.oracle.db.hard_parse_count_per_second",
@@ -373,11 +388,20 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleDiskPhysicalWriteBytesPerSecond: metricInfo{
 		Name: "newrelic.oracle.disk.physical_write_bytes_per_second",
 	},
+	NewrelicOracleDiskPhysicalWriteIoRequestsPerSecond: metricInfo{
+		Name: "newrelic.oracle.disk.physical_write_io_requests_per_second",
+	},
 	NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond: metricInfo{
 		Name: "newrelic.oracle.disk.physical_write_total_io_requests_per_second",
 	},
 	NewrelicOracleDiskPhysicalWritesPerSecond: metricInfo{
 		Name: "newrelic.oracle.disk.physical_writes_per_second",
+	},
+	NewrelicOracleDiskReadTimeInMiliseconds: metricInfo{
+		Name: "newrelic.oracle.disk.read_time_in_miliseconds",
+	},
+	NewrelicOracleDiskReadTimeInMilliseconds: metricInfo{
+		Name: "newrelic.oracle.disk.read_time_in_milliseconds",
 	},
 	NewrelicOracleDiskReadTimeMilliseconds: metricInfo{
 		Name: "newrelic.oracle.disk.read_time_milliseconds",
@@ -394,11 +418,23 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleDiskTempSpaceUsedBytes: metricInfo{
 		Name: "newrelic.oracle.disk.temp_space_used_bytes",
 	},
+	NewrelicOracleDiskTempSpaceUsedInBytes: metricInfo{
+		Name: "newrelic.oracle.disk.temp_space_used_in_bytes",
+	},
+	NewrelicOracleDiskWriteTimeInMiliseconds: metricInfo{
+		Name: "newrelic.oracle.disk.write_time_in_miliseconds",
+	},
+	NewrelicOracleDiskWriteTimeInMilliseconds: metricInfo{
+		Name: "newrelic.oracle.disk.write_time_in_milliseconds",
+	},
 	NewrelicOracleDiskWriteTimeMilliseconds: metricInfo{
 		Name: "newrelic.oracle.disk.write_time_milliseconds",
 	},
 	NewrelicOracleDiskWrites: metricInfo{
 		Name: "newrelic.oracle.disk.writes",
+	},
+	NewrelicOracleInstanceCdbDatafilesOffline: metricInfo{
+		Name: "newrelic.oracle.instance.cdb_datafiles_offline",
 	},
 	NewrelicOracleLockedAccounts: metricInfo{
 		Name: "newrelic.oracle.locked_accounts",
@@ -418,14 +454,26 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleMemoryPgaAllocatedBytes: metricInfo{
 		Name: "newrelic.oracle.memory.pga_allocated_bytes",
 	},
+	NewrelicOracleMemoryPgaAllocatedInBytes: metricInfo{
+		Name: "newrelic.oracle.memory.pga_allocated_in_bytes",
+	},
 	NewrelicOracleMemoryPgaFreeableBytes: metricInfo{
 		Name: "newrelic.oracle.memory.pga_freeable_bytes",
+	},
+	NewrelicOracleMemoryPgaFreeableInBytes: metricInfo{
+		Name: "newrelic.oracle.memory.pga_freeable_in_bytes",
 	},
 	NewrelicOracleMemoryPgaInUseBytes: metricInfo{
 		Name: "newrelic.oracle.memory.pga_in_use_bytes",
 	},
+	NewrelicOracleMemoryPgaInUseInBytes: metricInfo{
+		Name: "newrelic.oracle.memory.pga_in_use_in_bytes",
+	},
 	NewrelicOracleMemoryPgaMaxSizeBytes: metricInfo{
 		Name: "newrelic.oracle.memory.pga_max_size_bytes",
+	},
+	NewrelicOracleMemoryPgaMaxSizeInBytes: metricInfo{
+		Name: "newrelic.oracle.memory.pga_max_size_in_bytes",
 	},
 	NewrelicOracleMemoryRedoAllocationHitRatio: metricInfo{
 		Name: "newrelic.oracle.memory.redo_allocation_hit_ratio",
@@ -445,6 +493,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleNetworkIoRequestsPerSecond: metricInfo{
 		Name: "newrelic.oracle.network.io_requests_per_second",
 	},
+	NewrelicOracleNetworkTrafficBytePerSecond: metricInfo{
+		Name: "newrelic.oracle.network.traffic_byte_per_second",
+	},
 	NewrelicOracleNetworkTrafficBytesPerSecond: metricInfo{
 		Name: "newrelic.oracle.network.traffic_bytes_per_second",
 	},
@@ -460,6 +511,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleQueryPhysicalWritesPerTransaction: metricInfo{
 		Name: "newrelic.oracle.query.physical_writes_per_transaction",
 	},
+	NewrelicOracleQuerySQLServiceResponseTime: metricInfo{
+		Name: "newrelic.oracle.query.sql_service_response_time",
+	},
 	NewrelicOracleQueryTransactionsPerSecond: metricInfo{
 		Name: "newrelic.oracle.query.transactions_per_second",
 	},
@@ -471,6 +525,15 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicOracleRedoLogFileSwitchCheckpointIncomplete: metricInfo{
 		Name: "newrelic.oracle.redo_log.file_switch_checkpoint_incomplete",
+	},
+	NewrelicOracleRedoLogLogFileSwitch: metricInfo{
+		Name: "newrelic.oracle.redo_log.log_file_switch",
+	},
+	NewrelicOracleRedoLogLogFileSwitchArchivingNeeded: metricInfo{
+		Name: "newrelic.oracle.redo_log.log_file_switch_archiving_needed",
+	},
+	NewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete: metricInfo{
+		Name: "newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete",
 	},
 	NewrelicOracleRedoLogWaits: metricInfo{
 		Name: "newrelic.oracle.redo_log.waits",
@@ -489,6 +552,9 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicOracleSgaFixedSizeBytes: metricInfo{
 		Name: "newrelic.oracle.sga.fixed_size_bytes",
+	},
+	NewrelicOracleSgaFixedSizeInBytes: metricInfo{
+		Name: "newrelic.oracle.sga.fixed_size_in_bytes",
 	},
 	NewrelicOracleSgaFreeBufferInspected: metricInfo{
 		Name: "newrelic.oracle.sga.free_buffer_inspected",
@@ -514,6 +580,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleSgaRedoBuffersBytes: metricInfo{
 		Name: "newrelic.oracle.sga.redo_buffers_bytes",
 	},
+	NewrelicOracleSgaRedoBuffersInBytes: metricInfo{
+		Name: "newrelic.oracle.sga.redo_buffers_in_bytes",
+	},
 	NewrelicOracleSgaSharedPoolDictCacheMissRatio: metricInfo{
 		Name: "newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio",
 	},
@@ -526,17 +595,32 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes: metricInfo{
 		Name: "newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_bytes",
 	},
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes: metricInfo{
+		Name: "newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes",
+	},
 	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes: metricInfo{
 		Name: "newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes",
+	},
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes: metricInfo{
+		Name: "newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes",
 	},
 	NewrelicOracleSgaUgaTotalMemoryBytes: metricInfo{
 		Name: "newrelic.oracle.sga.uga_total_memory_bytes",
 	},
+	NewrelicOracleSgaUgaTotalMemoryInBytes: metricInfo{
+		Name: "newrelic.oracle.sga.uga_total_memory_in_bytes",
+	},
 	NewrelicOracleSortsDiskBytes: metricInfo{
 		Name: "newrelic.oracle.sorts.disk_bytes",
 	},
+	NewrelicOracleSortsDiskInBytes: metricInfo{
+		Name: "newrelic.oracle.sorts.disk_in_bytes",
+	},
 	NewrelicOracleSortsMemoryBytes: metricInfo{
 		Name: "newrelic.oracle.sorts.memory_bytes",
+	},
+	NewrelicOracleSortsMemoryInBytes: metricInfo{
+		Name: "newrelic.oracle.sorts.memory_in_bytes",
 	},
 	NewrelicOracleTablespaceIsOffline: metricInfo{
 		Name: "newrelic.oracle.tablespace.is_offline",
@@ -553,8 +637,14 @@ var MetricsInfo = metricsInfo{
 	NewrelicOracleTablespaceSpaceConsumedBytes: metricInfo{
 		Name: "newrelic.oracle.tablespace.space_consumed_bytes",
 	},
+	NewrelicOracleTablespaceSpaceConsumedInBytes: metricInfo{
+		Name: "newrelic.oracle.tablespace.space_consumed_in_bytes",
+	},
 	NewrelicOracleTablespaceSpaceReservedBytes: metricInfo{
 		Name: "newrelic.oracle.tablespace.space_reserved_bytes",
+	},
+	NewrelicOracleTablespaceSpaceReservedInBytes: metricInfo{
+		Name: "newrelic.oracle.tablespace.space_reserved_in_bytes",
 	},
 	NewrelicOracleTablespaceSpaceUsedPercentage: metricInfo{
 		Name: "newrelic.oracle.tablespace.space_used_percentage",
@@ -562,188 +652,218 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
-	NewrelicOracleDbActiveParallelSessions                                  metricInfo
-	NewrelicOracleDbActiveSerialSessions                                    metricInfo
-	NewrelicOracleDbAverageActiveSessions                                   metricInfo
-	NewrelicOracleDbBackgroundCheckpointsPerSecond                          metricInfo
-	NewrelicOracleDbBackgroundCPUUsagePerSecond                             metricInfo
-	NewrelicOracleDbBackgroundTimePerSecond                                 metricInfo
-	NewrelicOracleDbBlockChangesPerSecond                                   metricInfo
-	NewrelicOracleDbBlockChangesPerTransaction                              metricInfo
-	NewrelicOracleDbBlockChangesPerUserCall                                 metricInfo
-	NewrelicOracleDbBlockGetsPerSecond                                      metricInfo
-	NewrelicOracleDbBlockGetsPerTransaction                                 metricInfo
-	NewrelicOracleDbBlockGetsPerUserCall                                    metricInfo
-	NewrelicOracleDbBranchNodeSplitsPerSecond                               metricInfo
-	NewrelicOracleDbBranchNodeSplitsPerTransaction                          metricInfo
-	NewrelicOracleDbCapturedUserCalls                                       metricInfo
-	NewrelicOracleDbConsistentReadChangesPerSecond                          metricInfo
-	NewrelicOracleDbConsistentReadChangesPerTransaction                     metricInfo
-	NewrelicOracleDbConsistentReadGetsPerSecond                             metricInfo
-	NewrelicOracleDbConsistentReadGetsPerTransaction                        metricInfo
-	NewrelicOracleDbCPUTimeRatio                                            metricInfo
-	NewrelicOracleDbCPUUsagePerSecond                                       metricInfo
-	NewrelicOracleDbCPUUsagePerTransaction                                  metricInfo
-	NewrelicOracleDbCrBlocksCreatedPerSecond                                metricInfo
-	NewrelicOracleDbCrBlocksCreatedPerTransaction                           metricInfo
-	NewrelicOracleDbCrUndoRecordsAppliedPerSecond                           metricInfo
-	NewrelicOracleDbCrUndoRecordsAppliedPerTransaction                      metricInfo
-	NewrelicOracleDbCurrentLogons                                           metricInfo
-	NewrelicOracleDbCurrentOpenCursors                                      metricInfo
-	NewrelicOracleDbCursorCacheHitsPerAttempts                              metricInfo
-	NewrelicOracleDbDatabaseCPUTimePerSecond                                metricInfo
-	NewrelicOracleDbDbwrCheckpointsPerSecond                                metricInfo
-	NewrelicOracleDbEnqueueDeadlocksPerSecond                               metricInfo
-	NewrelicOracleDbEnqueueDeadlocksPerTransaction                          metricInfo
-	NewrelicOracleDbEnqueueRequestsPerSecond                                metricInfo
-	NewrelicOracleDbEnqueueRequestsPerTransaction                           metricInfo
-	NewrelicOracleDbEnqueueTimeoutsPerSecond                                metricInfo
-	NewrelicOracleDbEnqueueTimeoutsPerTransaction                           metricInfo
-	NewrelicOracleDbEnqueueWaitsPerSecond                                   metricInfo
-	NewrelicOracleDbEnqueueWaitsPerTransaction                              metricInfo
-	NewrelicOracleDbExecuteWithoutParseRatio                                metricInfo
-	NewrelicOracleDbExecutionsPerSecond                                     metricInfo
-	NewrelicOracleDbExecutionsPerTransaction                                metricInfo
-	NewrelicOracleDbExecutionsPerUserCall                                   metricInfo
-	NewrelicOracleDbFullIndexScansPerSecond                                 metricInfo
-	NewrelicOracleDbFullIndexScansPerTransaction                            metricInfo
-	NewrelicOracleDbGcCrBlockReceivedPerSecond                              metricInfo
-	NewrelicOracleDbGcCrBlockReceivedPerTransaction                         metricInfo
-	NewrelicOracleDbGcCurrentBlockReceivedPerSecond                         metricInfo
-	NewrelicOracleDbGcCurrentBlockReceivedPerTransaction                    metricInfo
-	NewrelicOracleDbGlobalCacheAverageCrGetTime                             metricInfo
-	NewrelicOracleDbGlobalCacheAverageCurrentGetTime                        metricInfo
-	NewrelicOracleDbHardParseCountPerSecond                                 metricInfo
-	NewrelicOracleDbHardParseCountPerTransaction                            metricInfo
-	NewrelicOracleDbHostCPUUsagePerSecond                                   metricInfo
-	NewrelicOracleDbHostCPUUtilization                                      metricInfo
-	NewrelicOracleDbLeafNodeSplitsPerSecond                                 metricInfo
-	NewrelicOracleDbLeafNodeSplitsPerTransaction                            metricInfo
-	NewrelicOracleDbLibraryCacheHitRatio                                    metricInfo
-	NewrelicOracleDbLibraryCacheMissRatio                                   metricInfo
-	NewrelicOracleDbLogicalReadsPerSecond                                   metricInfo
-	NewrelicOracleDbLogicalReadsPerTransaction                              metricInfo
-	NewrelicOracleDbLogonsPerSecond                                         metricInfo
-	NewrelicOracleDbLogonsPerTransaction                                    metricInfo
-	NewrelicOracleDbLongTableScansPerSecond                                 metricInfo
-	NewrelicOracleDbLongTableScansPerTransaction                            metricInfo
-	NewrelicOracleDbOpenCursorsPerSecond                                    metricInfo
-	NewrelicOracleDbOpenCursorsPerTransaction                               metricInfo
-	NewrelicOracleDbOsLoad                                                  metricInfo
-	NewrelicOracleDbParseFailureCountPerSecond                              metricInfo
-	NewrelicOracleDbParseFailureCountPerTransaction                         metricInfo
-	NewrelicOracleDbPgaCacheHitPercentage                                   metricInfo
-	NewrelicOracleDbPhysicalReadBytesPerSecond                              metricInfo
-	NewrelicOracleDbPhysicalReadIoRequestsPerSecond                         metricInfo
-	NewrelicOracleDbPhysicalReadsPerSecond                                  metricInfo
-	NewrelicOracleDbPhysicalWriteBytesPerSecond                             metricInfo
-	NewrelicOracleDbPhysicalWritesPerSecond                                 metricInfo
-	NewrelicOracleDbProcessLimitPercentage                                  metricInfo
-	NewrelicOracleDbRecursiveCallsPerSecond                                 metricInfo
-	NewrelicOracleDbRecursiveCallsPerTransaction                            metricInfo
-	NewrelicOracleDbRedoWritesPerSecond                                     metricInfo
-	NewrelicOracleDbRedoWritesPerTransaction                                metricInfo
-	NewrelicOracleDbResponseTimePerTransaction                              metricInfo
-	NewrelicOracleDbRowCacheHitRatio                                        metricInfo
-	NewrelicOracleDbRowCacheMissRatio                                       metricInfo
-	NewrelicOracleDbRowsPerSort                                             metricInfo
-	NewrelicOracleDbSessionCount                                            metricInfo
-	NewrelicOracleDbSessionLimitPercentage                                  metricInfo
-	NewrelicOracleDbSharedPoolFreePercentage                                metricInfo
-	NewrelicOracleDbSoftParseRatio                                          metricInfo
-	NewrelicOracleDbSortsPerUserCall                                        metricInfo
-	NewrelicOracleDbSQLServiceResponseTime                                  metricInfo
-	NewrelicOracleDbStreamsPoolUsagePercentage                              metricInfo
-	NewrelicOracleDbTableScansPerUserCall                                   metricInfo
-	NewrelicOracleDbTotalIndexScansPerSecond                                metricInfo
-	NewrelicOracleDbTotalIndexScansPerTransaction                           metricInfo
-	NewrelicOracleDbTotalParseCountPerSecond                                metricInfo
-	NewrelicOracleDbTotalParseCountPerTransaction                           metricInfo
-	NewrelicOracleDbTotalTableScansPerSecond                                metricInfo
-	NewrelicOracleDbTotalTableScansPerTransaction                           metricInfo
-	NewrelicOracleDbTransactionsPerLogon                                    metricInfo
-	NewrelicOracleDbUserCallsPerSecond                                      metricInfo
-	NewrelicOracleDbUserCallsPerTransaction                                 metricInfo
-	NewrelicOracleDbUserCallsRatio                                          metricInfo
-	NewrelicOracleDbUserCommitsPerSecond                                    metricInfo
-	NewrelicOracleDbUserCommitsPercentage                                   metricInfo
-	NewrelicOracleDbUserLimitPercentage                                     metricInfo
-	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond                 metricInfo
-	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction            metricInfo
-	NewrelicOracleDbUserRollbacksPerSecond                                  metricInfo
-	NewrelicOracleDbUserRollbacksPercentage                                 metricInfo
-	NewrelicOracleDbWaitTimeRatio                                           metricInfo
-	NewrelicOracleDiskBlocksRead                                            metricInfo
-	NewrelicOracleDiskBlocksWritten                                         metricInfo
-	NewrelicOracleDiskLogicalReadsPerUserCall                               metricInfo
-	NewrelicOracleDiskPhysicalLobsReadsPerSecond                            metricInfo
-	NewrelicOracleDiskPhysicalLobsWritesPerSecond                           metricInfo
-	NewrelicOracleDiskPhysicalReadBytesPerSecond                            metricInfo
-	NewrelicOracleDiskPhysicalReadIoRequestsPerSecond                       metricInfo
-	NewrelicOracleDiskPhysicalReadsPerSecond                                metricInfo
-	NewrelicOracleDiskPhysicalWriteBytesPerSecond                           metricInfo
-	NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond                 metricInfo
-	NewrelicOracleDiskPhysicalWritesPerSecond                               metricInfo
-	NewrelicOracleDiskReadTimeMilliseconds                                  metricInfo
-	NewrelicOracleDiskReads                                                 metricInfo
-	NewrelicOracleDiskSortPerSecond                                         metricInfo
-	NewrelicOracleDiskSortPerTransaction                                    metricInfo
-	NewrelicOracleDiskTempSpaceUsedBytes                                    metricInfo
-	NewrelicOracleDiskWriteTimeMilliseconds                                 metricInfo
-	NewrelicOracleDiskWrites                                                metricInfo
-	NewrelicOracleLockedAccounts                                            metricInfo
-	NewrelicOracleLongRunningQueries                                        metricInfo
-	NewrelicOracleMemoryBufferCacheHitRatio                                 metricInfo
-	NewrelicOracleMemoryGlobalCacheBlocksCorrupted                          metricInfo
-	NewrelicOracleMemoryGlobalCacheBlocksLost                               metricInfo
-	NewrelicOracleMemoryPgaAllocatedBytes                                   metricInfo
-	NewrelicOracleMemoryPgaFreeableBytes                                    metricInfo
-	NewrelicOracleMemoryPgaInUseBytes                                       metricInfo
-	NewrelicOracleMemoryPgaMaxSizeBytes                                     metricInfo
-	NewrelicOracleMemoryRedoAllocationHitRatio                              metricInfo
-	NewrelicOracleMemoryRedoGeneratedBytesPerSecond                         metricInfo
-	NewrelicOracleMemoryRedoGeneratedBytesPerTransaction                    metricInfo
-	NewrelicOracleMemorySortsRatio                                          metricInfo
-	NewrelicOracleNetworkIoMegabytesPerSecond                               metricInfo
-	NewrelicOracleNetworkIoRequestsPerSecond                                metricInfo
-	NewrelicOracleNetworkTrafficBytesPerSecond                              metricInfo
-	NewrelicOracleQueryPhysicalLobsReadsPerTransaction                      metricInfo
-	NewrelicOracleQueryPhysicalLobsWritesPerTransaction                     metricInfo
-	NewrelicOracleQueryPhysicalReadsPerTransaction                          metricInfo
-	NewrelicOracleQueryPhysicalWritesPerTransaction                         metricInfo
-	NewrelicOracleQueryTransactionsPerSecond                                metricInfo
-	NewrelicOracleRedoLogFileSwitch                                         metricInfo
-	NewrelicOracleRedoLogFileSwitchArchivingNeeded                          metricInfo
-	NewrelicOracleRedoLogFileSwitchCheckpointIncomplete                     metricInfo
-	NewrelicOracleRedoLogWaits                                              metricInfo
-	NewrelicOracleRollbackSegmentsGets                                      metricInfo
-	NewrelicOracleRollbackSegmentsRatioWait                                 metricInfo
-	NewrelicOracleRollbackSegmentsWaits                                     metricInfo
-	NewrelicOracleSgaBufferBusyWaits                                        metricInfo
-	NewrelicOracleSgaFixedSizeBytes                                         metricInfo
-	NewrelicOracleSgaFreeBufferInspected                                    metricInfo
-	NewrelicOracleSgaFreeBufferWaits                                        metricInfo
-	NewrelicOracleSgaHitRatio                                               metricInfo
-	NewrelicOracleSgaLogBufferAllocationRetriesRatio                        metricInfo
-	NewrelicOracleSgaLogBufferRedoAllocationRetries                         metricInfo
-	NewrelicOracleSgaLogBufferRedoEntries                                   metricInfo
-	NewrelicOracleSgaLogBufferSpaceWaits                                    metricInfo
-	NewrelicOracleSgaRedoBuffersBytes                                       metricInfo
-	NewrelicOracleSgaSharedPoolDictCacheMissRatio                           metricInfo
-	NewrelicOracleSgaSharedPoolLibraryCacheHitRatio                         metricInfo
-	NewrelicOracleSgaSharedPoolLibraryCacheReloadRatio                      metricInfo
-	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes metricInfo
-	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes      metricInfo
-	NewrelicOracleSgaUgaTotalMemoryBytes                                    metricInfo
-	NewrelicOracleSortsDiskBytes                                            metricInfo
-	NewrelicOracleSortsMemoryBytes                                          metricInfo
-	NewrelicOracleTablespaceIsOffline                                       metricInfo
-	NewrelicOracleTablespaceOfflineCdbDatafiles                             metricInfo
-	NewrelicOracleTablespaceOfflinePdbDatafiles                             metricInfo
-	NewrelicOracleTablespacePdbDatafilesNonWrite                            metricInfo
-	NewrelicOracleTablespaceSpaceConsumedBytes                              metricInfo
-	NewrelicOracleTablespaceSpaceReservedBytes                              metricInfo
-	NewrelicOracleTablespaceSpaceUsedPercentage                             metricInfo
+	NewrelicOracleDbActiveParallelSessions                                    metricInfo
+	NewrelicOracleDbActiveSerialSessions                                      metricInfo
+	NewrelicOracleDbAverageActiveSessions                                     metricInfo
+	NewrelicOracleDbBackgroundCheckpointsPerSecond                            metricInfo
+	NewrelicOracleDbBackgroundCPUUsagePerSecond                               metricInfo
+	NewrelicOracleDbBackgroundTimePerSecond                                   metricInfo
+	NewrelicOracleDbBlockChangesPerSecond                                     metricInfo
+	NewrelicOracleDbBlockChangesPerTransaction                                metricInfo
+	NewrelicOracleDbBlockChangesPerUserCall                                   metricInfo
+	NewrelicOracleDbBlockGetsPerSecond                                        metricInfo
+	NewrelicOracleDbBlockGetsPerTransaction                                   metricInfo
+	NewrelicOracleDbBlockGetsPerUserCall                                      metricInfo
+	NewrelicOracleDbBranchNodeSplitsPerSecond                                 metricInfo
+	NewrelicOracleDbBranchNodeSplitsPerTransaction                            metricInfo
+	NewrelicOracleDbCapturedUserCalls                                         metricInfo
+	NewrelicOracleDbConsistentReadChangesPerSecond                            metricInfo
+	NewrelicOracleDbConsistentReadChangesPerTransaction                       metricInfo
+	NewrelicOracleDbConsistentReadGetsPerSecond                               metricInfo
+	NewrelicOracleDbConsistentReadGetsPerTransaction                          metricInfo
+	NewrelicOracleDbCPUTimeRatio                                              metricInfo
+	NewrelicOracleDbCPUUsagePerSecond                                         metricInfo
+	NewrelicOracleDbCPUUsagePerTransaction                                    metricInfo
+	NewrelicOracleDbCrBlocksCreatedPerSecond                                  metricInfo
+	NewrelicOracleDbCrBlocksCreatedPerTransaction                             metricInfo
+	NewrelicOracleDbCrUndoRecordsAppliedPerSecond                             metricInfo
+	NewrelicOracleDbCrUndoRecordsAppliedPerTransaction                        metricInfo
+	NewrelicOracleDbCurrentLogons                                             metricInfo
+	NewrelicOracleDbCurrentOpenCursors                                        metricInfo
+	NewrelicOracleDbCursorCacheHitRatio                                       metricInfo
+	NewrelicOracleDbCursorCacheHitsPerAttempts                                metricInfo
+	NewrelicOracleDbDatabaseCPUTimePerSecond                                  metricInfo
+	NewrelicOracleDbDbwrCheckpointsPerSecond                                  metricInfo
+	NewrelicOracleDbEnqueueDeadlocksPerSecond                                 metricInfo
+	NewrelicOracleDbEnqueueDeadlocksPerTransaction                            metricInfo
+	NewrelicOracleDbEnqueueRequestsPerSecond                                  metricInfo
+	NewrelicOracleDbEnqueueRequestsPerTransaction                             metricInfo
+	NewrelicOracleDbEnqueueTimeoutsPerSecond                                  metricInfo
+	NewrelicOracleDbEnqueueTimeoutsPerTransaction                             metricInfo
+	NewrelicOracleDbEnqueueWaitsPerSecond                                     metricInfo
+	NewrelicOracleDbEnqueueWaitsPerTransaction                                metricInfo
+	NewrelicOracleDbExecuteWithoutParseRatio                                  metricInfo
+	NewrelicOracleDbExecutionsPerSecond                                       metricInfo
+	NewrelicOracleDbExecutionsPerTransaction                                  metricInfo
+	NewrelicOracleDbExecutionsPerUserCall                                     metricInfo
+	NewrelicOracleDbFullIndexScansPerSecond                                   metricInfo
+	NewrelicOracleDbFullIndexScansPerTransaction                              metricInfo
+	NewrelicOracleDbGcCrBlockReceivedPerSecond                                metricInfo
+	NewrelicOracleDbGcCrBlockReceivedPerTransaction                           metricInfo
+	NewrelicOracleDbGcCrBlockRecievedPerSecond                                metricInfo
+	NewrelicOracleDbGcCrBlockRecievedPerTransaction                           metricInfo
+	NewrelicOracleDbGcCurrentBlockReceivedPerSecond                           metricInfo
+	NewrelicOracleDbGcCurrentBlockReceivedPerTransaction                      metricInfo
+	NewrelicOracleDbGlobalCacheAverageCrGetTime                               metricInfo
+	NewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond                      metricInfo
+	NewrelicOracleDbGlobalCacheAverageCurrentGetTime                          metricInfo
+	NewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond                 metricInfo
+	NewrelicOracleDbHardParseCountPerSecond                                   metricInfo
+	NewrelicOracleDbHardParseCountPerTransaction                              metricInfo
+	NewrelicOracleDbHostCPUUsagePerSecond                                     metricInfo
+	NewrelicOracleDbHostCPUUtilization                                        metricInfo
+	NewrelicOracleDbLeafNodeSplitsPerSecond                                   metricInfo
+	NewrelicOracleDbLeafNodeSplitsPerTransaction                              metricInfo
+	NewrelicOracleDbLibraryCacheHitRatio                                      metricInfo
+	NewrelicOracleDbLibraryCacheMissRatio                                     metricInfo
+	NewrelicOracleDbLogicalReadsPerSecond                                     metricInfo
+	NewrelicOracleDbLogicalReadsPerTransaction                                metricInfo
+	NewrelicOracleDbLogonsPerSecond                                           metricInfo
+	NewrelicOracleDbLogonsPerTransaction                                      metricInfo
+	NewrelicOracleDbLongTableScansPerSecond                                   metricInfo
+	NewrelicOracleDbLongTableScansPerTransaction                              metricInfo
+	NewrelicOracleDbOpenCursorsPerSecond                                      metricInfo
+	NewrelicOracleDbOpenCursorsPerTransaction                                 metricInfo
+	NewrelicOracleDbOsLoad                                                    metricInfo
+	NewrelicOracleDbParseFailureCountPerSecond                                metricInfo
+	NewrelicOracleDbParseFailureCountPerTransaction                           metricInfo
+	NewrelicOracleDbPgaCacheHitPercentage                                     metricInfo
+	NewrelicOracleDbPhysicalReadBytesPerSecond                                metricInfo
+	NewrelicOracleDbPhysicalReadIoRequestsPerSecond                           metricInfo
+	NewrelicOracleDbPhysicalReadsPerSecond                                    metricInfo
+	NewrelicOracleDbPhysicalWriteBytesPerSecond                               metricInfo
+	NewrelicOracleDbPhysicalWritesPerSecond                                   metricInfo
+	NewrelicOracleDbProcessLimitPercentage                                    metricInfo
+	NewrelicOracleDbRecursiveCallsPerSecond                                   metricInfo
+	NewrelicOracleDbRecursiveCallsPerTransaction                              metricInfo
+	NewrelicOracleDbRedoWritesPerSecond                                       metricInfo
+	NewrelicOracleDbRedoWritesPerTransaction                                  metricInfo
+	NewrelicOracleDbResponseTimePerTransaction                                metricInfo
+	NewrelicOracleDbRowCacheHitRatio                                          metricInfo
+	NewrelicOracleDbRowCacheMissRatio                                         metricInfo
+	NewrelicOracleDbRowsPerSort                                               metricInfo
+	NewrelicOracleDbSessionCount                                              metricInfo
+	NewrelicOracleDbSessionLimitPercentage                                    metricInfo
+	NewrelicOracleDbSharedPoolFreePercentage                                  metricInfo
+	NewrelicOracleDbSoftParseRatio                                            metricInfo
+	NewrelicOracleDbSortsPerUserCall                                          metricInfo
+	NewrelicOracleDbSQLServiceResponseTime                                    metricInfo
+	NewrelicOracleDbStreamsPoolUsagePercentage                                metricInfo
+	NewrelicOracleDbTableScansPerUserCall                                     metricInfo
+	NewrelicOracleDbTotalIndexScansPerSecond                                  metricInfo
+	NewrelicOracleDbTotalIndexScansPerTransaction                             metricInfo
+	NewrelicOracleDbTotalParseCountPerSecond                                  metricInfo
+	NewrelicOracleDbTotalParseCountPerTransaction                             metricInfo
+	NewrelicOracleDbTotalTableScansPerSecond                                  metricInfo
+	NewrelicOracleDbTotalTableScansPerTransaction                             metricInfo
+	NewrelicOracleDbTransactionsPerLogon                                      metricInfo
+	NewrelicOracleDbUserCallsPerSecond                                        metricInfo
+	NewrelicOracleDbUserCallsPerTransaction                                   metricInfo
+	NewrelicOracleDbUserCallsRatio                                            metricInfo
+	NewrelicOracleDbUserCommitsPerSecond                                      metricInfo
+	NewrelicOracleDbUserCommitsPercentage                                     metricInfo
+	NewrelicOracleDbUserLimitPercentage                                       metricInfo
+	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond                   metricInfo
+	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction              metricInfo
+	NewrelicOracleDbUserRollbacksPerSecond                                    metricInfo
+	NewrelicOracleDbUserRollbacksPercentage                                   metricInfo
+	NewrelicOracleDbWaitTimeRatio                                             metricInfo
+	NewrelicOracleDiskBlocksRead                                              metricInfo
+	NewrelicOracleDiskBlocksWritten                                           metricInfo
+	NewrelicOracleDiskLogicalReadsPerUserCall                                 metricInfo
+	NewrelicOracleDiskPhysicalLobsReadsPerSecond                              metricInfo
+	NewrelicOracleDiskPhysicalLobsWritesPerSecond                             metricInfo
+	NewrelicOracleDiskPhysicalReadBytesPerSecond                              metricInfo
+	NewrelicOracleDiskPhysicalReadIoRequestsPerSecond                         metricInfo
+	NewrelicOracleDiskPhysicalReadsPerSecond                                  metricInfo
+	NewrelicOracleDiskPhysicalWriteBytesPerSecond                             metricInfo
+	NewrelicOracleDiskPhysicalWriteIoRequestsPerSecond                        metricInfo
+	NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond                   metricInfo
+	NewrelicOracleDiskPhysicalWritesPerSecond                                 metricInfo
+	NewrelicOracleDiskReadTimeInMiliseconds                                   metricInfo
+	NewrelicOracleDiskReadTimeInMilliseconds                                  metricInfo
+	NewrelicOracleDiskReadTimeMilliseconds                                    metricInfo
+	NewrelicOracleDiskReads                                                   metricInfo
+	NewrelicOracleDiskSortPerSecond                                           metricInfo
+	NewrelicOracleDiskSortPerTransaction                                      metricInfo
+	NewrelicOracleDiskTempSpaceUsedBytes                                      metricInfo
+	NewrelicOracleDiskTempSpaceUsedInBytes                                    metricInfo
+	NewrelicOracleDiskWriteTimeInMiliseconds                                  metricInfo
+	NewrelicOracleDiskWriteTimeInMilliseconds                                 metricInfo
+	NewrelicOracleDiskWriteTimeMilliseconds                                   metricInfo
+	NewrelicOracleDiskWrites                                                  metricInfo
+	NewrelicOracleInstanceCdbDatafilesOffline                                 metricInfo
+	NewrelicOracleLockedAccounts                                              metricInfo
+	NewrelicOracleLongRunningQueries                                          metricInfo
+	NewrelicOracleMemoryBufferCacheHitRatio                                   metricInfo
+	NewrelicOracleMemoryGlobalCacheBlocksCorrupted                            metricInfo
+	NewrelicOracleMemoryGlobalCacheBlocksLost                                 metricInfo
+	NewrelicOracleMemoryPgaAllocatedBytes                                     metricInfo
+	NewrelicOracleMemoryPgaAllocatedInBytes                                   metricInfo
+	NewrelicOracleMemoryPgaFreeableBytes                                      metricInfo
+	NewrelicOracleMemoryPgaFreeableInBytes                                    metricInfo
+	NewrelicOracleMemoryPgaInUseBytes                                         metricInfo
+	NewrelicOracleMemoryPgaInUseInBytes                                       metricInfo
+	NewrelicOracleMemoryPgaMaxSizeBytes                                       metricInfo
+	NewrelicOracleMemoryPgaMaxSizeInBytes                                     metricInfo
+	NewrelicOracleMemoryRedoAllocationHitRatio                                metricInfo
+	NewrelicOracleMemoryRedoGeneratedBytesPerSecond                           metricInfo
+	NewrelicOracleMemoryRedoGeneratedBytesPerTransaction                      metricInfo
+	NewrelicOracleMemorySortsRatio                                            metricInfo
+	NewrelicOracleNetworkIoMegabytesPerSecond                                 metricInfo
+	NewrelicOracleNetworkIoRequestsPerSecond                                  metricInfo
+	NewrelicOracleNetworkTrafficBytePerSecond                                 metricInfo
+	NewrelicOracleNetworkTrafficBytesPerSecond                                metricInfo
+	NewrelicOracleQueryPhysicalLobsReadsPerTransaction                        metricInfo
+	NewrelicOracleQueryPhysicalLobsWritesPerTransaction                       metricInfo
+	NewrelicOracleQueryPhysicalReadsPerTransaction                            metricInfo
+	NewrelicOracleQueryPhysicalWritesPerTransaction                           metricInfo
+	NewrelicOracleQuerySQLServiceResponseTime                                 metricInfo
+	NewrelicOracleQueryTransactionsPerSecond                                  metricInfo
+	NewrelicOracleRedoLogFileSwitch                                           metricInfo
+	NewrelicOracleRedoLogFileSwitchArchivingNeeded                            metricInfo
+	NewrelicOracleRedoLogFileSwitchCheckpointIncomplete                       metricInfo
+	NewrelicOracleRedoLogLogFileSwitch                                        metricInfo
+	NewrelicOracleRedoLogLogFileSwitchArchivingNeeded                         metricInfo
+	NewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete                    metricInfo
+	NewrelicOracleRedoLogWaits                                                metricInfo
+	NewrelicOracleRollbackSegmentsGets                                        metricInfo
+	NewrelicOracleRollbackSegmentsRatioWait                                   metricInfo
+	NewrelicOracleRollbackSegmentsWaits                                       metricInfo
+	NewrelicOracleSgaBufferBusyWaits                                          metricInfo
+	NewrelicOracleSgaFixedSizeBytes                                           metricInfo
+	NewrelicOracleSgaFixedSizeInBytes                                         metricInfo
+	NewrelicOracleSgaFreeBufferInspected                                      metricInfo
+	NewrelicOracleSgaFreeBufferWaits                                          metricInfo
+	NewrelicOracleSgaHitRatio                                                 metricInfo
+	NewrelicOracleSgaLogBufferAllocationRetriesRatio                          metricInfo
+	NewrelicOracleSgaLogBufferRedoAllocationRetries                           metricInfo
+	NewrelicOracleSgaLogBufferRedoEntries                                     metricInfo
+	NewrelicOracleSgaLogBufferSpaceWaits                                      metricInfo
+	NewrelicOracleSgaRedoBuffersBytes                                         metricInfo
+	NewrelicOracleSgaRedoBuffersInBytes                                       metricInfo
+	NewrelicOracleSgaSharedPoolDictCacheMissRatio                             metricInfo
+	NewrelicOracleSgaSharedPoolLibraryCacheHitRatio                           metricInfo
+	NewrelicOracleSgaSharedPoolLibraryCacheReloadRatio                        metricInfo
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes   metricInfo
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes metricInfo
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes        metricInfo
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes      metricInfo
+	NewrelicOracleSgaUgaTotalMemoryBytes                                      metricInfo
+	NewrelicOracleSgaUgaTotalMemoryInBytes                                    metricInfo
+	NewrelicOracleSortsDiskBytes                                              metricInfo
+	NewrelicOracleSortsDiskInBytes                                            metricInfo
+	NewrelicOracleSortsMemoryBytes                                            metricInfo
+	NewrelicOracleSortsMemoryInBytes                                          metricInfo
+	NewrelicOracleTablespaceIsOffline                                         metricInfo
+	NewrelicOracleTablespaceOfflineCdbDatafiles                               metricInfo
+	NewrelicOracleTablespaceOfflinePdbDatafiles                               metricInfo
+	NewrelicOracleTablespacePdbDatafilesNonWrite                              metricInfo
+	NewrelicOracleTablespaceSpaceConsumedBytes                                metricInfo
+	NewrelicOracleTablespaceSpaceConsumedInBytes                              metricInfo
+	NewrelicOracleTablespaceSpaceReservedBytes                                metricInfo
+	NewrelicOracleTablespaceSpaceReservedInBytes                              metricInfo
+	NewrelicOracleTablespaceSpaceUsedPercentage                               metricInfo
 }
 
 type metricInfo struct {
@@ -2122,6 +2242,55 @@ func newMetricNewrelicOracleDbCurrentOpenCursors(cfg MetricConfig) metricNewreli
 	return m
 }
 
+type metricNewrelicOracleDbCursorCacheHitRatio struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.db.cursor_cache_hit_ratio metric with initial data.
+func (m *metricNewrelicOracleDbCursorCacheHitRatio) init() {
+	m.data.SetName("newrelic.oracle.db.cursor_cache_hit_ratio")
+	m.data.SetDescription("Cursor cache hit ratio")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDbCursorCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDbCursorCacheHitRatio) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDbCursorCacheHitRatio) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDbCursorCacheHitRatio(cfg MetricConfig) metricNewrelicOracleDbCursorCacheHitRatio {
+	m := metricNewrelicOracleDbCursorCacheHitRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleDbCursorCacheHitsPerAttempts struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3053,6 +3222,104 @@ func newMetricNewrelicOracleDbGcCrBlockReceivedPerTransaction(cfg MetricConfig) 
 	return m
 }
 
+type metricNewrelicOracleDbGcCrBlockRecievedPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.db.gc_cr_block_recieved_per_second metric with initial data.
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerSecond) init() {
+	m.data.SetName("newrelic.oracle.db.gc_cr_block_recieved_per_second")
+	m.data.SetDescription("GC CR Block Received Per Second (misspelling from nri-oracle)")
+	m.data.SetUnit("{blocks}/s")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDbGcCrBlockRecievedPerSecond(cfg MetricConfig) metricNewrelicOracleDbGcCrBlockRecievedPerSecond {
+	m := metricNewrelicOracleDbGcCrBlockRecievedPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleDbGcCrBlockRecievedPerTransaction struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.db.gc_cr_block_recieved_per_transaction metric with initial data.
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerTransaction) init() {
+	m.data.SetName("newrelic.oracle.db.gc_cr_block_recieved_per_transaction")
+	m.data.SetDescription("GC CR Block Received Per Transaction (misspelling from nri-oracle)")
+	m.data.SetUnit("{blocks}/{transaction}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerTransaction) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDbGcCrBlockRecievedPerTransaction) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDbGcCrBlockRecievedPerTransaction(cfg MetricConfig) metricNewrelicOracleDbGcCrBlockRecievedPerTransaction {
+	m := metricNewrelicOracleDbGcCrBlockRecievedPerTransaction{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3200,6 +3467,55 @@ func newMetricNewrelicOracleDbGlobalCacheAverageCrGetTime(cfg MetricConfig) metr
 	return m
 }
 
+type metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.db.global_cache_average_cr_get_time_per_second metric with initial data.
+func (m *metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond) init() {
+	m.data.SetName("newrelic.oracle.db.global_cache_average_cr_get_time_per_second")
+	m.data.SetDescription("Global cache average CR get time per second")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond(cfg MetricConfig) metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond {
+	m := metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3242,6 +3558,55 @@ func (m *metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime) emit(metrics pm
 
 func newMetricNewrelicOracleDbGlobalCacheAverageCurrentGetTime(cfg MetricConfig) metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime {
 	m := metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.db.global_cache_average_current_get_time_per_second metric with initial data.
+func (m *metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond) init() {
+	m.data.SetName("newrelic.oracle.db.global_cache_average_current_get_time_per_second")
+	m.data.SetDescription("Global cache average current get time per second")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond(cfg MetricConfig) metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond {
+	m := metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -5170,7 +5535,7 @@ type metricNewrelicOracleDbSQLServiceResponseTime struct {
 func (m *metricNewrelicOracleDbSQLServiceResponseTime) init() {
 	m.data.SetName("newrelic.oracle.db.sql_service_response_time")
 	m.data.SetDescription("SQL service response time")
-	m.data.SetUnit("s")
+	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 }
 
@@ -6634,6 +6999,55 @@ func newMetricNewrelicOracleDiskPhysicalWriteBytesPerSecond(cfg MetricConfig) me
 	return m
 }
 
+type metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.disk.physical_write_io_requests_per_second metric with initial data.
+func (m *metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond) init() {
+	m.data.SetName("newrelic.oracle.disk.physical_write_io_requests_per_second")
+	m.data.SetDescription("Physical write I/O requests per second")
+	m.data.SetUnit("1/s")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond(cfg MetricConfig) metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond {
+	m := metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -6725,6 +7139,106 @@ func (m *metricNewrelicOracleDiskPhysicalWritesPerSecond) emit(metrics pmetric.M
 
 func newMetricNewrelicOracleDiskPhysicalWritesPerSecond(cfg MetricConfig) metricNewrelicOracleDiskPhysicalWritesPerSecond {
 	m := metricNewrelicOracleDiskPhysicalWritesPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleDiskReadTimeInMiliseconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.disk.read_time_in_miliseconds metric with initial data.
+func (m *metricNewrelicOracleDiskReadTimeInMiliseconds) init() {
+	m.data.SetName("newrelic.oracle.disk.read_time_in_miliseconds")
+	m.data.SetDescription("Amount of file read time (misspelling from nri-oracle)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityUnspecified)
+}
+
+func (m *metricNewrelicOracleDiskReadTimeInMiliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDiskReadTimeInMiliseconds) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDiskReadTimeInMiliseconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDiskReadTimeInMiliseconds(cfg MetricConfig) metricNewrelicOracleDiskReadTimeInMiliseconds {
+	m := metricNewrelicOracleDiskReadTimeInMiliseconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleDiskReadTimeInMilliseconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.disk.read_time_in_milliseconds metric with initial data.
+func (m *metricNewrelicOracleDiskReadTimeInMilliseconds) init() {
+	m.data.SetName("newrelic.oracle.disk.read_time_in_milliseconds")
+	m.data.SetDescription("Disk read time in milliseconds")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDiskReadTimeInMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDiskReadTimeInMilliseconds) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDiskReadTimeInMilliseconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDiskReadTimeInMilliseconds(cfg MetricConfig) metricNewrelicOracleDiskReadTimeInMilliseconds {
+	m := metricNewrelicOracleDiskReadTimeInMilliseconds{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -6981,6 +7495,155 @@ func newMetricNewrelicOracleDiskTempSpaceUsedBytes(cfg MetricConfig) metricNewre
 	return m
 }
 
+type metricNewrelicOracleDiskTempSpaceUsedInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.disk.temp_space_used_in_bytes metric with initial data.
+func (m *metricNewrelicOracleDiskTempSpaceUsedInBytes) init() {
+	m.data.SetName("newrelic.oracle.disk.temp_space_used_in_bytes")
+	m.data.SetDescription("Temporary space used in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDiskTempSpaceUsedInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDiskTempSpaceUsedInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDiskTempSpaceUsedInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDiskTempSpaceUsedInBytes(cfg MetricConfig) metricNewrelicOracleDiskTempSpaceUsedInBytes {
+	m := metricNewrelicOracleDiskTempSpaceUsedInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleDiskWriteTimeInMiliseconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.disk.write_time_in_miliseconds metric with initial data.
+func (m *metricNewrelicOracleDiskWriteTimeInMiliseconds) init() {
+	m.data.SetName("newrelic.oracle.disk.write_time_in_miliseconds")
+	m.data.SetDescription("Amount of file write time (misspelling from nri-oracle)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityUnspecified)
+}
+
+func (m *metricNewrelicOracleDiskWriteTimeInMiliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDiskWriteTimeInMiliseconds) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDiskWriteTimeInMiliseconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDiskWriteTimeInMiliseconds(cfg MetricConfig) metricNewrelicOracleDiskWriteTimeInMiliseconds {
+	m := metricNewrelicOracleDiskWriteTimeInMiliseconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleDiskWriteTimeInMilliseconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.disk.write_time_in_milliseconds metric with initial data.
+func (m *metricNewrelicOracleDiskWriteTimeInMilliseconds) init() {
+	m.data.SetName("newrelic.oracle.disk.write_time_in_milliseconds")
+	m.data.SetDescription("Disk write time in milliseconds")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleDiskWriteTimeInMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleDiskWriteTimeInMilliseconds) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleDiskWriteTimeInMilliseconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleDiskWriteTimeInMilliseconds(cfg MetricConfig) metricNewrelicOracleDiskWriteTimeInMilliseconds {
+	m := metricNewrelicOracleDiskWriteTimeInMilliseconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleDiskWriteTimeMilliseconds struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -7076,6 +7739,55 @@ func (m *metricNewrelicOracleDiskWrites) emit(metrics pmetric.MetricSlice) {
 
 func newMetricNewrelicOracleDiskWrites(cfg MetricConfig) metricNewrelicOracleDiskWrites {
 	m := metricNewrelicOracleDiskWrites{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleInstanceCdbDatafilesOffline struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.instance.cdb_datafiles_offline metric with initial data.
+func (m *metricNewrelicOracleInstanceCdbDatafilesOffline) init() {
+	m.data.SetName("newrelic.oracle.instance.cdb_datafiles_offline")
+	m.data.SetDescription("CDB datafiles offline count")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleInstanceCdbDatafilesOffline) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleInstanceCdbDatafilesOffline) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleInstanceCdbDatafilesOffline) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleInstanceCdbDatafilesOffline(cfg MetricConfig) metricNewrelicOracleInstanceCdbDatafilesOffline {
+	m := metricNewrelicOracleInstanceCdbDatafilesOffline{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -7381,6 +8093,55 @@ func newMetricNewrelicOracleMemoryPgaAllocatedBytes(cfg MetricConfig) metricNewr
 	return m
 }
 
+type metricNewrelicOracleMemoryPgaAllocatedInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.memory.pga_allocated_in_bytes metric with initial data.
+func (m *metricNewrelicOracleMemoryPgaAllocatedInBytes) init() {
+	m.data.SetName("newrelic.oracle.memory.pga_allocated_in_bytes")
+	m.data.SetDescription("PGA allocated memory in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleMemoryPgaAllocatedInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleMemoryPgaAllocatedInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleMemoryPgaAllocatedInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleMemoryPgaAllocatedInBytes(cfg MetricConfig) metricNewrelicOracleMemoryPgaAllocatedInBytes {
+	m := metricNewrelicOracleMemoryPgaAllocatedInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleMemoryPgaFreeableBytes struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -7423,6 +8184,55 @@ func (m *metricNewrelicOracleMemoryPgaFreeableBytes) emit(metrics pmetric.Metric
 
 func newMetricNewrelicOracleMemoryPgaFreeableBytes(cfg MetricConfig) metricNewrelicOracleMemoryPgaFreeableBytes {
 	m := metricNewrelicOracleMemoryPgaFreeableBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleMemoryPgaFreeableInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.memory.pga_freeable_in_bytes metric with initial data.
+func (m *metricNewrelicOracleMemoryPgaFreeableInBytes) init() {
+	m.data.SetName("newrelic.oracle.memory.pga_freeable_in_bytes")
+	m.data.SetDescription("PGA freeable memory in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleMemoryPgaFreeableInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleMemoryPgaFreeableInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleMemoryPgaFreeableInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleMemoryPgaFreeableInBytes(cfg MetricConfig) metricNewrelicOracleMemoryPgaFreeableInBytes {
+	m := metricNewrelicOracleMemoryPgaFreeableInBytes{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -7479,6 +8289,55 @@ func newMetricNewrelicOracleMemoryPgaInUseBytes(cfg MetricConfig) metricNewrelic
 	return m
 }
 
+type metricNewrelicOracleMemoryPgaInUseInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.memory.pga_in_use_in_bytes metric with initial data.
+func (m *metricNewrelicOracleMemoryPgaInUseInBytes) init() {
+	m.data.SetName("newrelic.oracle.memory.pga_in_use_in_bytes")
+	m.data.SetDescription("PGA in use memory in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleMemoryPgaInUseInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleMemoryPgaInUseInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleMemoryPgaInUseInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleMemoryPgaInUseInBytes(cfg MetricConfig) metricNewrelicOracleMemoryPgaInUseInBytes {
+	m := metricNewrelicOracleMemoryPgaInUseInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleMemoryPgaMaxSizeBytes struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -7521,6 +8380,55 @@ func (m *metricNewrelicOracleMemoryPgaMaxSizeBytes) emit(metrics pmetric.MetricS
 
 func newMetricNewrelicOracleMemoryPgaMaxSizeBytes(cfg MetricConfig) metricNewrelicOracleMemoryPgaMaxSizeBytes {
 	m := metricNewrelicOracleMemoryPgaMaxSizeBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleMemoryPgaMaxSizeInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.memory.pga_max_size_in_bytes metric with initial data.
+func (m *metricNewrelicOracleMemoryPgaMaxSizeInBytes) init() {
+	m.data.SetName("newrelic.oracle.memory.pga_max_size_in_bytes")
+	m.data.SetDescription("PGA maximum size in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleMemoryPgaMaxSizeInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleMemoryPgaMaxSizeInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleMemoryPgaMaxSizeInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleMemoryPgaMaxSizeInBytes(cfg MetricConfig) metricNewrelicOracleMemoryPgaMaxSizeInBytes {
+	m := metricNewrelicOracleMemoryPgaMaxSizeInBytes{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -7733,7 +8641,7 @@ type metricNewrelicOracleNetworkIoMegabytesPerSecond struct {
 // init fills newrelic.oracle.network.io_megabytes_per_second metric with initial data.
 func (m *metricNewrelicOracleNetworkIoMegabytesPerSecond) init() {
 	m.data.SetName("newrelic.oracle.network.io_megabytes_per_second")
-	m.data.SetDescription("I/O megabytes per second")
+	m.data.SetDescription("Network I/O megabytes per second")
 	m.data.SetUnit("MBy/s")
 	m.data.SetEmptyGauge()
 }
@@ -7782,8 +8690,8 @@ type metricNewrelicOracleNetworkIoRequestsPerSecond struct {
 // init fills newrelic.oracle.network.io_requests_per_second metric with initial data.
 func (m *metricNewrelicOracleNetworkIoRequestsPerSecond) init() {
 	m.data.SetName("newrelic.oracle.network.io_requests_per_second")
-	m.data.SetDescription("I/O requests per second")
-	m.data.SetUnit("{requests}/s")
+	m.data.SetDescription("Network I/O requests per second")
+	m.data.SetUnit("1/s")
 	m.data.SetEmptyGauge()
 }
 
@@ -7815,6 +8723,55 @@ func (m *metricNewrelicOracleNetworkIoRequestsPerSecond) emit(metrics pmetric.Me
 
 func newMetricNewrelicOracleNetworkIoRequestsPerSecond(cfg MetricConfig) metricNewrelicOracleNetworkIoRequestsPerSecond {
 	m := metricNewrelicOracleNetworkIoRequestsPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleNetworkTrafficBytePerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.network.traffic_byte_per_second metric with initial data.
+func (m *metricNewrelicOracleNetworkTrafficBytePerSecond) init() {
+	m.data.SetName("newrelic.oracle.network.traffic_byte_per_second")
+	m.data.SetDescription("Network traffic bytes per second")
+	m.data.SetUnit("By/s")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleNetworkTrafficBytePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleNetworkTrafficBytePerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleNetworkTrafficBytePerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleNetworkTrafficBytePerSecond(cfg MetricConfig) metricNewrelicOracleNetworkTrafficBytePerSecond {
+	m := metricNewrelicOracleNetworkTrafficBytePerSecond{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -8067,6 +9024,55 @@ func newMetricNewrelicOracleQueryPhysicalWritesPerTransaction(cfg MetricConfig) 
 	return m
 }
 
+type metricNewrelicOracleQuerySQLServiceResponseTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.query.sql_service_response_time metric with initial data.
+func (m *metricNewrelicOracleQuerySQLServiceResponseTime) init() {
+	m.data.SetName("newrelic.oracle.query.sql_service_response_time")
+	m.data.SetDescription("SQL service response time in milliseconds")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleQuerySQLServiceResponseTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleQuerySQLServiceResponseTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleQuerySQLServiceResponseTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleQuerySQLServiceResponseTime(cfg MetricConfig) metricNewrelicOracleQuerySQLServiceResponseTime {
+	m := metricNewrelicOracleQuerySQLServiceResponseTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleQueryTransactionsPerSecond struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -8256,6 +9262,159 @@ func (m *metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete) emit(metrics
 
 func newMetricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete(cfg MetricConfig) metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete {
 	m := metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleRedoLogLogFileSwitch struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.redo_log.log_file_switch metric with initial data.
+func (m *metricNewrelicOracleRedoLogLogFileSwitch) init() {
+	m.data.SetName("newrelic.oracle.redo_log.log_file_switch")
+	m.data.SetDescription("Redo log file switch count")
+	m.data.SetUnit("{switches}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityUnspecified)
+}
+
+func (m *metricNewrelicOracleRedoLogLogFileSwitch) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleRedoLogLogFileSwitch) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleRedoLogLogFileSwitch) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleRedoLogLogFileSwitch(cfg MetricConfig) metricNewrelicOracleRedoLogLogFileSwitch {
+	m := metricNewrelicOracleRedoLogLogFileSwitch{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.redo_log.log_file_switch_archiving_needed metric with initial data.
+func (m *metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded) init() {
+	m.data.SetName("newrelic.oracle.redo_log.log_file_switch_archiving_needed")
+	m.data.SetDescription("Redo log file switch (archiving needed)")
+	m.data.SetUnit("{switches}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityUnspecified)
+}
+
+func (m *metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded(cfg MetricConfig) metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded {
+	m := metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete metric with initial data.
+func (m *metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete) init() {
+	m.data.SetName("newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete")
+	m.data.SetDescription("Redo log file switch (checkpoint incomplete)")
+	m.data.SetUnit("{switches}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityUnspecified)
+}
+
+func (m *metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete(cfg MetricConfig) metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete {
+	m := metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -8550,6 +9709,55 @@ func (m *metricNewrelicOracleSgaFixedSizeBytes) emit(metrics pmetric.MetricSlice
 
 func newMetricNewrelicOracleSgaFixedSizeBytes(cfg MetricConfig) metricNewrelicOracleSgaFixedSizeBytes {
 	m := metricNewrelicOracleSgaFixedSizeBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleSgaFixedSizeInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.sga.fixed_size_in_bytes metric with initial data.
+func (m *metricNewrelicOracleSgaFixedSizeInBytes) init() {
+	m.data.SetName("newrelic.oracle.sga.fixed_size_in_bytes")
+	m.data.SetDescription("SGA fixed size in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleSgaFixedSizeInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleSgaFixedSizeInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleSgaFixedSizeInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleSgaFixedSizeInBytes(cfg MetricConfig) metricNewrelicOracleSgaFixedSizeInBytes {
+	m := metricNewrelicOracleSgaFixedSizeInBytes{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -8949,6 +10157,55 @@ func newMetricNewrelicOracleSgaRedoBuffersBytes(cfg MetricConfig) metricNewrelic
 	return m
 }
 
+type metricNewrelicOracleSgaRedoBuffersInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.sga.redo_buffers_in_bytes metric with initial data.
+func (m *metricNewrelicOracleSgaRedoBuffersInBytes) init() {
+	m.data.SetName("newrelic.oracle.sga.redo_buffers_in_bytes")
+	m.data.SetDescription("SGA redo buffers in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleSgaRedoBuffersInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleSgaRedoBuffersInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleSgaRedoBuffersInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleSgaRedoBuffersInBytes(cfg MetricConfig) metricNewrelicOracleSgaRedoBuffersInBytes {
+	m := metricNewrelicOracleSgaRedoBuffersInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleSgaSharedPoolDictCacheMissRatio struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9145,6 +10402,55 @@ func newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatement
 	return m
 }
 
+type metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes metric with initial data.
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes) init() {
+	m.data.SetName("newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes")
+	m.data.SetDescription("Shared pool library cache shareable memory per statement in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes(cfg MetricConfig) metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes {
+	m := metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9187,6 +10493,55 @@ func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserByte
 
 func newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes(cfg MetricConfig) metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes {
 	m := metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes metric with initial data.
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes) init() {
+	m.data.SetName("newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes")
+	m.data.SetDescription("Shared pool library cache shareable memory per user in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes(cfg MetricConfig) metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes {
+	m := metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9243,6 +10598,55 @@ func newMetricNewrelicOracleSgaUgaTotalMemoryBytes(cfg MetricConfig) metricNewre
 	return m
 }
 
+type metricNewrelicOracleSgaUgaTotalMemoryInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.sga.uga_total_memory_in_bytes metric with initial data.
+func (m *metricNewrelicOracleSgaUgaTotalMemoryInBytes) init() {
+	m.data.SetName("newrelic.oracle.sga.uga_total_memory_in_bytes")
+	m.data.SetDescription("SGA UGA total memory in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleSgaUgaTotalMemoryInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleSgaUgaTotalMemoryInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleSgaUgaTotalMemoryInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleSgaUgaTotalMemoryInBytes(cfg MetricConfig) metricNewrelicOracleSgaUgaTotalMemoryInBytes {
+	m := metricNewrelicOracleSgaUgaTotalMemoryInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleSortsDiskBytes struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9285,6 +10689,55 @@ func (m *metricNewrelicOracleSortsDiskBytes) emit(metrics pmetric.MetricSlice) {
 
 func newMetricNewrelicOracleSortsDiskBytes(cfg MetricConfig) metricNewrelicOracleSortsDiskBytes {
 	m := metricNewrelicOracleSortsDiskBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicOracleSortsDiskInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.sorts.disk_in_bytes metric with initial data.
+func (m *metricNewrelicOracleSortsDiskInBytes) init() {
+	m.data.SetName("newrelic.oracle.sorts.disk_in_bytes")
+	m.data.SetDescription("Sorts disk usage in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleSortsDiskInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleSortsDiskInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleSortsDiskInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleSortsDiskInBytes(cfg MetricConfig) metricNewrelicOracleSortsDiskInBytes {
+	m := metricNewrelicOracleSortsDiskInBytes{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9341,6 +10794,55 @@ func newMetricNewrelicOracleSortsMemoryBytes(cfg MetricConfig) metricNewrelicOra
 	return m
 }
 
+type metricNewrelicOracleSortsMemoryInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.sorts.memory_in_bytes metric with initial data.
+func (m *metricNewrelicOracleSortsMemoryInBytes) init() {
+	m.data.SetName("newrelic.oracle.sorts.memory_in_bytes")
+	m.data.SetDescription("Sorts memory usage in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicOracleSortsMemoryInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleSortsMemoryInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleSortsMemoryInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleSortsMemoryInBytes(cfg MetricConfig) metricNewrelicOracleSortsMemoryInBytes {
+	m := metricNewrelicOracleSortsMemoryInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleTablespaceIsOffline struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9350,7 +10852,7 @@ type metricNewrelicOracleTablespaceIsOffline struct {
 // init fills newrelic.oracle.tablespace.is_offline metric with initial data.
 func (m *metricNewrelicOracleTablespaceIsOffline) init() {
 	m.data.SetName("newrelic.oracle.tablespace.is_offline")
-	m.data.SetDescription("Tablespace offline status (1 if offline, 0 if online)")
+	m.data.SetDescription("Tablespace offline status")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9401,13 +10903,12 @@ type metricNewrelicOracleTablespaceOfflineCdbDatafiles struct {
 // init fills newrelic.oracle.tablespace.offline_cdb_datafiles metric with initial data.
 func (m *metricNewrelicOracleTablespaceOfflineCdbDatafiles) init() {
 	m.data.SetName("newrelic.oracle.tablespace.offline_cdb_datafiles")
-	m.data.SetDescription("Number of offline CDB datafiles in tablespace")
-	m.data.SetUnit("{datafiles}")
+	m.data.SetDescription("Offline CDB datafiles count")
+	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicOracleTablespaceOfflineCdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicOracleTablespaceOfflineCdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9415,7 +10916,6 @@ func (m *metricNewrelicOracleTablespaceOfflineCdbDatafiles) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -9452,13 +10952,12 @@ type metricNewrelicOracleTablespaceOfflinePdbDatafiles struct {
 // init fills newrelic.oracle.tablespace.offline_pdb_datafiles metric with initial data.
 func (m *metricNewrelicOracleTablespaceOfflinePdbDatafiles) init() {
 	m.data.SetName("newrelic.oracle.tablespace.offline_pdb_datafiles")
-	m.data.SetDescription("Number of offline PDB datafiles in tablespace")
-	m.data.SetUnit("{datafiles}")
+	m.data.SetDescription("Offline PDB datafiles count")
+	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicOracleTablespaceOfflinePdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicOracleTablespaceOfflinePdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9466,7 +10965,6 @@ func (m *metricNewrelicOracleTablespaceOfflinePdbDatafiles) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -9503,13 +11001,12 @@ type metricNewrelicOracleTablespacePdbDatafilesNonWrite struct {
 // init fills newrelic.oracle.tablespace.pdb_datafiles_non_write metric with initial data.
 func (m *metricNewrelicOracleTablespacePdbDatafilesNonWrite) init() {
 	m.data.SetName("newrelic.oracle.tablespace.pdb_datafiles_non_write")
-	m.data.SetDescription("Number of PDB datafiles in non-write mode in tablespace")
-	m.data.SetUnit("{datafiles}")
+	m.data.SetDescription("PDB datafiles in non-write mode")
+	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicOracleTablespacePdbDatafilesNonWrite) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicOracleTablespacePdbDatafilesNonWrite) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9517,7 +11014,6 @@ func (m *metricNewrelicOracleTablespacePdbDatafilesNonWrite) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -9596,6 +11092,57 @@ func newMetricNewrelicOracleTablespaceSpaceConsumedBytes(cfg MetricConfig) metri
 	return m
 }
 
+type metricNewrelicOracleTablespaceSpaceConsumedInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.tablespace.space_consumed_in_bytes metric with initial data.
+func (m *metricNewrelicOracleTablespaceSpaceConsumedInBytes) init() {
+	m.data.SetName("newrelic.oracle.tablespace.space_consumed_in_bytes")
+	m.data.SetDescription("Tablespace space consumed in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicOracleTablespaceSpaceConsumedInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleTablespaceSpaceConsumedInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleTablespaceSpaceConsumedInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleTablespaceSpaceConsumedInBytes(cfg MetricConfig) metricNewrelicOracleTablespaceSpaceConsumedInBytes {
+	m := metricNewrelicOracleTablespaceSpaceConsumedInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleTablespaceSpaceReservedBytes struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9647,6 +11194,57 @@ func newMetricNewrelicOracleTablespaceSpaceReservedBytes(cfg MetricConfig) metri
 	return m
 }
 
+type metricNewrelicOracleTablespaceSpaceReservedInBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelic.oracle.tablespace.space_reserved_in_bytes metric with initial data.
+func (m *metricNewrelicOracleTablespaceSpaceReservedInBytes) init() {
+	m.data.SetName("newrelic.oracle.tablespace.space_reserved_in_bytes")
+	m.data.SetDescription("Tablespace space reserved in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicOracleTablespaceSpaceReservedInBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("tablespace_name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicOracleTablespaceSpaceReservedInBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicOracleTablespaceSpaceReservedInBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicOracleTablespaceSpaceReservedInBytes(cfg MetricConfig) metricNewrelicOracleTablespaceSpaceReservedInBytes {
+	m := metricNewrelicOracleTablespaceSpaceReservedInBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicOracleTablespaceSpaceUsedPercentage struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9657,7 +11255,7 @@ type metricNewrelicOracleTablespaceSpaceUsedPercentage struct {
 func (m *metricNewrelicOracleTablespaceSpaceUsedPercentage) init() {
 	m.data.SetName("newrelic.oracle.tablespace.space_used_percentage")
 	m.data.SetDescription("Tablespace space used percentage")
-	m.data.SetUnit("1")
+	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -9701,195 +11299,225 @@ func newMetricNewrelicOracleTablespaceSpaceUsedPercentage(cfg MetricConfig) metr
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                                                                        MetricsBuilderConfig // config of the metrics builder.
-	startTime                                                                     pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                                                               int                  // maximum observed number of metrics per resource.
-	metricsBuffer                                                                 pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                                                                     component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter                                                map[string]filter.Filter
-	resourceAttributeExcludeFilter                                                map[string]filter.Filter
-	metricNewrelicOracleDbActiveParallelSessions                                  metricNewrelicOracleDbActiveParallelSessions
-	metricNewrelicOracleDbActiveSerialSessions                                    metricNewrelicOracleDbActiveSerialSessions
-	metricNewrelicOracleDbAverageActiveSessions                                   metricNewrelicOracleDbAverageActiveSessions
-	metricNewrelicOracleDbBackgroundCheckpointsPerSecond                          metricNewrelicOracleDbBackgroundCheckpointsPerSecond
-	metricNewrelicOracleDbBackgroundCPUUsagePerSecond                             metricNewrelicOracleDbBackgroundCPUUsagePerSecond
-	metricNewrelicOracleDbBackgroundTimePerSecond                                 metricNewrelicOracleDbBackgroundTimePerSecond
-	metricNewrelicOracleDbBlockChangesPerSecond                                   metricNewrelicOracleDbBlockChangesPerSecond
-	metricNewrelicOracleDbBlockChangesPerTransaction                              metricNewrelicOracleDbBlockChangesPerTransaction
-	metricNewrelicOracleDbBlockChangesPerUserCall                                 metricNewrelicOracleDbBlockChangesPerUserCall
-	metricNewrelicOracleDbBlockGetsPerSecond                                      metricNewrelicOracleDbBlockGetsPerSecond
-	metricNewrelicOracleDbBlockGetsPerTransaction                                 metricNewrelicOracleDbBlockGetsPerTransaction
-	metricNewrelicOracleDbBlockGetsPerUserCall                                    metricNewrelicOracleDbBlockGetsPerUserCall
-	metricNewrelicOracleDbBranchNodeSplitsPerSecond                               metricNewrelicOracleDbBranchNodeSplitsPerSecond
-	metricNewrelicOracleDbBranchNodeSplitsPerTransaction                          metricNewrelicOracleDbBranchNodeSplitsPerTransaction
-	metricNewrelicOracleDbCapturedUserCalls                                       metricNewrelicOracleDbCapturedUserCalls
-	metricNewrelicOracleDbConsistentReadChangesPerSecond                          metricNewrelicOracleDbConsistentReadChangesPerSecond
-	metricNewrelicOracleDbConsistentReadChangesPerTransaction                     metricNewrelicOracleDbConsistentReadChangesPerTransaction
-	metricNewrelicOracleDbConsistentReadGetsPerSecond                             metricNewrelicOracleDbConsistentReadGetsPerSecond
-	metricNewrelicOracleDbConsistentReadGetsPerTransaction                        metricNewrelicOracleDbConsistentReadGetsPerTransaction
-	metricNewrelicOracleDbCPUTimeRatio                                            metricNewrelicOracleDbCPUTimeRatio
-	metricNewrelicOracleDbCPUUsagePerSecond                                       metricNewrelicOracleDbCPUUsagePerSecond
-	metricNewrelicOracleDbCPUUsagePerTransaction                                  metricNewrelicOracleDbCPUUsagePerTransaction
-	metricNewrelicOracleDbCrBlocksCreatedPerSecond                                metricNewrelicOracleDbCrBlocksCreatedPerSecond
-	metricNewrelicOracleDbCrBlocksCreatedPerTransaction                           metricNewrelicOracleDbCrBlocksCreatedPerTransaction
-	metricNewrelicOracleDbCrUndoRecordsAppliedPerSecond                           metricNewrelicOracleDbCrUndoRecordsAppliedPerSecond
-	metricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction                      metricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction
-	metricNewrelicOracleDbCurrentLogons                                           metricNewrelicOracleDbCurrentLogons
-	metricNewrelicOracleDbCurrentOpenCursors                                      metricNewrelicOracleDbCurrentOpenCursors
-	metricNewrelicOracleDbCursorCacheHitsPerAttempts                              metricNewrelicOracleDbCursorCacheHitsPerAttempts
-	metricNewrelicOracleDbDatabaseCPUTimePerSecond                                metricNewrelicOracleDbDatabaseCPUTimePerSecond
-	metricNewrelicOracleDbDbwrCheckpointsPerSecond                                metricNewrelicOracleDbDbwrCheckpointsPerSecond
-	metricNewrelicOracleDbEnqueueDeadlocksPerSecond                               metricNewrelicOracleDbEnqueueDeadlocksPerSecond
-	metricNewrelicOracleDbEnqueueDeadlocksPerTransaction                          metricNewrelicOracleDbEnqueueDeadlocksPerTransaction
-	metricNewrelicOracleDbEnqueueRequestsPerSecond                                metricNewrelicOracleDbEnqueueRequestsPerSecond
-	metricNewrelicOracleDbEnqueueRequestsPerTransaction                           metricNewrelicOracleDbEnqueueRequestsPerTransaction
-	metricNewrelicOracleDbEnqueueTimeoutsPerSecond                                metricNewrelicOracleDbEnqueueTimeoutsPerSecond
-	metricNewrelicOracleDbEnqueueTimeoutsPerTransaction                           metricNewrelicOracleDbEnqueueTimeoutsPerTransaction
-	metricNewrelicOracleDbEnqueueWaitsPerSecond                                   metricNewrelicOracleDbEnqueueWaitsPerSecond
-	metricNewrelicOracleDbEnqueueWaitsPerTransaction                              metricNewrelicOracleDbEnqueueWaitsPerTransaction
-	metricNewrelicOracleDbExecuteWithoutParseRatio                                metricNewrelicOracleDbExecuteWithoutParseRatio
-	metricNewrelicOracleDbExecutionsPerSecond                                     metricNewrelicOracleDbExecutionsPerSecond
-	metricNewrelicOracleDbExecutionsPerTransaction                                metricNewrelicOracleDbExecutionsPerTransaction
-	metricNewrelicOracleDbExecutionsPerUserCall                                   metricNewrelicOracleDbExecutionsPerUserCall
-	metricNewrelicOracleDbFullIndexScansPerSecond                                 metricNewrelicOracleDbFullIndexScansPerSecond
-	metricNewrelicOracleDbFullIndexScansPerTransaction                            metricNewrelicOracleDbFullIndexScansPerTransaction
-	metricNewrelicOracleDbGcCrBlockReceivedPerSecond                              metricNewrelicOracleDbGcCrBlockReceivedPerSecond
-	metricNewrelicOracleDbGcCrBlockReceivedPerTransaction                         metricNewrelicOracleDbGcCrBlockReceivedPerTransaction
-	metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond                         metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond
-	metricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction                    metricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction
-	metricNewrelicOracleDbGlobalCacheAverageCrGetTime                             metricNewrelicOracleDbGlobalCacheAverageCrGetTime
-	metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime                        metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime
-	metricNewrelicOracleDbHardParseCountPerSecond                                 metricNewrelicOracleDbHardParseCountPerSecond
-	metricNewrelicOracleDbHardParseCountPerTransaction                            metricNewrelicOracleDbHardParseCountPerTransaction
-	metricNewrelicOracleDbHostCPUUsagePerSecond                                   metricNewrelicOracleDbHostCPUUsagePerSecond
-	metricNewrelicOracleDbHostCPUUtilization                                      metricNewrelicOracleDbHostCPUUtilization
-	metricNewrelicOracleDbLeafNodeSplitsPerSecond                                 metricNewrelicOracleDbLeafNodeSplitsPerSecond
-	metricNewrelicOracleDbLeafNodeSplitsPerTransaction                            metricNewrelicOracleDbLeafNodeSplitsPerTransaction
-	metricNewrelicOracleDbLibraryCacheHitRatio                                    metricNewrelicOracleDbLibraryCacheHitRatio
-	metricNewrelicOracleDbLibraryCacheMissRatio                                   metricNewrelicOracleDbLibraryCacheMissRatio
-	metricNewrelicOracleDbLogicalReadsPerSecond                                   metricNewrelicOracleDbLogicalReadsPerSecond
-	metricNewrelicOracleDbLogicalReadsPerTransaction                              metricNewrelicOracleDbLogicalReadsPerTransaction
-	metricNewrelicOracleDbLogonsPerSecond                                         metricNewrelicOracleDbLogonsPerSecond
-	metricNewrelicOracleDbLogonsPerTransaction                                    metricNewrelicOracleDbLogonsPerTransaction
-	metricNewrelicOracleDbLongTableScansPerSecond                                 metricNewrelicOracleDbLongTableScansPerSecond
-	metricNewrelicOracleDbLongTableScansPerTransaction                            metricNewrelicOracleDbLongTableScansPerTransaction
-	metricNewrelicOracleDbOpenCursorsPerSecond                                    metricNewrelicOracleDbOpenCursorsPerSecond
-	metricNewrelicOracleDbOpenCursorsPerTransaction                               metricNewrelicOracleDbOpenCursorsPerTransaction
-	metricNewrelicOracleDbOsLoad                                                  metricNewrelicOracleDbOsLoad
-	metricNewrelicOracleDbParseFailureCountPerSecond                              metricNewrelicOracleDbParseFailureCountPerSecond
-	metricNewrelicOracleDbParseFailureCountPerTransaction                         metricNewrelicOracleDbParseFailureCountPerTransaction
-	metricNewrelicOracleDbPgaCacheHitPercentage                                   metricNewrelicOracleDbPgaCacheHitPercentage
-	metricNewrelicOracleDbPhysicalReadBytesPerSecond                              metricNewrelicOracleDbPhysicalReadBytesPerSecond
-	metricNewrelicOracleDbPhysicalReadIoRequestsPerSecond                         metricNewrelicOracleDbPhysicalReadIoRequestsPerSecond
-	metricNewrelicOracleDbPhysicalReadsPerSecond                                  metricNewrelicOracleDbPhysicalReadsPerSecond
-	metricNewrelicOracleDbPhysicalWriteBytesPerSecond                             metricNewrelicOracleDbPhysicalWriteBytesPerSecond
-	metricNewrelicOracleDbPhysicalWritesPerSecond                                 metricNewrelicOracleDbPhysicalWritesPerSecond
-	metricNewrelicOracleDbProcessLimitPercentage                                  metricNewrelicOracleDbProcessLimitPercentage
-	metricNewrelicOracleDbRecursiveCallsPerSecond                                 metricNewrelicOracleDbRecursiveCallsPerSecond
-	metricNewrelicOracleDbRecursiveCallsPerTransaction                            metricNewrelicOracleDbRecursiveCallsPerTransaction
-	metricNewrelicOracleDbRedoWritesPerSecond                                     metricNewrelicOracleDbRedoWritesPerSecond
-	metricNewrelicOracleDbRedoWritesPerTransaction                                metricNewrelicOracleDbRedoWritesPerTransaction
-	metricNewrelicOracleDbResponseTimePerTransaction                              metricNewrelicOracleDbResponseTimePerTransaction
-	metricNewrelicOracleDbRowCacheHitRatio                                        metricNewrelicOracleDbRowCacheHitRatio
-	metricNewrelicOracleDbRowCacheMissRatio                                       metricNewrelicOracleDbRowCacheMissRatio
-	metricNewrelicOracleDbRowsPerSort                                             metricNewrelicOracleDbRowsPerSort
-	metricNewrelicOracleDbSessionCount                                            metricNewrelicOracleDbSessionCount
-	metricNewrelicOracleDbSessionLimitPercentage                                  metricNewrelicOracleDbSessionLimitPercentage
-	metricNewrelicOracleDbSharedPoolFreePercentage                                metricNewrelicOracleDbSharedPoolFreePercentage
-	metricNewrelicOracleDbSoftParseRatio                                          metricNewrelicOracleDbSoftParseRatio
-	metricNewrelicOracleDbSortsPerUserCall                                        metricNewrelicOracleDbSortsPerUserCall
-	metricNewrelicOracleDbSQLServiceResponseTime                                  metricNewrelicOracleDbSQLServiceResponseTime
-	metricNewrelicOracleDbStreamsPoolUsagePercentage                              metricNewrelicOracleDbStreamsPoolUsagePercentage
-	metricNewrelicOracleDbTableScansPerUserCall                                   metricNewrelicOracleDbTableScansPerUserCall
-	metricNewrelicOracleDbTotalIndexScansPerSecond                                metricNewrelicOracleDbTotalIndexScansPerSecond
-	metricNewrelicOracleDbTotalIndexScansPerTransaction                           metricNewrelicOracleDbTotalIndexScansPerTransaction
-	metricNewrelicOracleDbTotalParseCountPerSecond                                metricNewrelicOracleDbTotalParseCountPerSecond
-	metricNewrelicOracleDbTotalParseCountPerTransaction                           metricNewrelicOracleDbTotalParseCountPerTransaction
-	metricNewrelicOracleDbTotalTableScansPerSecond                                metricNewrelicOracleDbTotalTableScansPerSecond
-	metricNewrelicOracleDbTotalTableScansPerTransaction                           metricNewrelicOracleDbTotalTableScansPerTransaction
-	metricNewrelicOracleDbTransactionsPerLogon                                    metricNewrelicOracleDbTransactionsPerLogon
-	metricNewrelicOracleDbUserCallsPerSecond                                      metricNewrelicOracleDbUserCallsPerSecond
-	metricNewrelicOracleDbUserCallsPerTransaction                                 metricNewrelicOracleDbUserCallsPerTransaction
-	metricNewrelicOracleDbUserCallsRatio                                          metricNewrelicOracleDbUserCallsRatio
-	metricNewrelicOracleDbUserCommitsPerSecond                                    metricNewrelicOracleDbUserCommitsPerSecond
-	metricNewrelicOracleDbUserCommitsPercentage                                   metricNewrelicOracleDbUserCommitsPercentage
-	metricNewrelicOracleDbUserLimitPercentage                                     metricNewrelicOracleDbUserLimitPercentage
-	metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond                 metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond
-	metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction            metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction
-	metricNewrelicOracleDbUserRollbacksPerSecond                                  metricNewrelicOracleDbUserRollbacksPerSecond
-	metricNewrelicOracleDbUserRollbacksPercentage                                 metricNewrelicOracleDbUserRollbacksPercentage
-	metricNewrelicOracleDbWaitTimeRatio                                           metricNewrelicOracleDbWaitTimeRatio
-	metricNewrelicOracleDiskBlocksRead                                            metricNewrelicOracleDiskBlocksRead
-	metricNewrelicOracleDiskBlocksWritten                                         metricNewrelicOracleDiskBlocksWritten
-	metricNewrelicOracleDiskLogicalReadsPerUserCall                               metricNewrelicOracleDiskLogicalReadsPerUserCall
-	metricNewrelicOracleDiskPhysicalLobsReadsPerSecond                            metricNewrelicOracleDiskPhysicalLobsReadsPerSecond
-	metricNewrelicOracleDiskPhysicalLobsWritesPerSecond                           metricNewrelicOracleDiskPhysicalLobsWritesPerSecond
-	metricNewrelicOracleDiskPhysicalReadBytesPerSecond                            metricNewrelicOracleDiskPhysicalReadBytesPerSecond
-	metricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond                       metricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond
-	metricNewrelicOracleDiskPhysicalReadsPerSecond                                metricNewrelicOracleDiskPhysicalReadsPerSecond
-	metricNewrelicOracleDiskPhysicalWriteBytesPerSecond                           metricNewrelicOracleDiskPhysicalWriteBytesPerSecond
-	metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond                 metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond
-	metricNewrelicOracleDiskPhysicalWritesPerSecond                               metricNewrelicOracleDiskPhysicalWritesPerSecond
-	metricNewrelicOracleDiskReadTimeMilliseconds                                  metricNewrelicOracleDiskReadTimeMilliseconds
-	metricNewrelicOracleDiskReads                                                 metricNewrelicOracleDiskReads
-	metricNewrelicOracleDiskSortPerSecond                                         metricNewrelicOracleDiskSortPerSecond
-	metricNewrelicOracleDiskSortPerTransaction                                    metricNewrelicOracleDiskSortPerTransaction
-	metricNewrelicOracleDiskTempSpaceUsedBytes                                    metricNewrelicOracleDiskTempSpaceUsedBytes
-	metricNewrelicOracleDiskWriteTimeMilliseconds                                 metricNewrelicOracleDiskWriteTimeMilliseconds
-	metricNewrelicOracleDiskWrites                                                metricNewrelicOracleDiskWrites
-	metricNewrelicOracleLockedAccounts                                            metricNewrelicOracleLockedAccounts
-	metricNewrelicOracleLongRunningQueries                                        metricNewrelicOracleLongRunningQueries
-	metricNewrelicOracleMemoryBufferCacheHitRatio                                 metricNewrelicOracleMemoryBufferCacheHitRatio
-	metricNewrelicOracleMemoryGlobalCacheBlocksCorrupted                          metricNewrelicOracleMemoryGlobalCacheBlocksCorrupted
-	metricNewrelicOracleMemoryGlobalCacheBlocksLost                               metricNewrelicOracleMemoryGlobalCacheBlocksLost
-	metricNewrelicOracleMemoryPgaAllocatedBytes                                   metricNewrelicOracleMemoryPgaAllocatedBytes
-	metricNewrelicOracleMemoryPgaFreeableBytes                                    metricNewrelicOracleMemoryPgaFreeableBytes
-	metricNewrelicOracleMemoryPgaInUseBytes                                       metricNewrelicOracleMemoryPgaInUseBytes
-	metricNewrelicOracleMemoryPgaMaxSizeBytes                                     metricNewrelicOracleMemoryPgaMaxSizeBytes
-	metricNewrelicOracleMemoryRedoAllocationHitRatio                              metricNewrelicOracleMemoryRedoAllocationHitRatio
-	metricNewrelicOracleMemoryRedoGeneratedBytesPerSecond                         metricNewrelicOracleMemoryRedoGeneratedBytesPerSecond
-	metricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction                    metricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction
-	metricNewrelicOracleMemorySortsRatio                                          metricNewrelicOracleMemorySortsRatio
-	metricNewrelicOracleNetworkIoMegabytesPerSecond                               metricNewrelicOracleNetworkIoMegabytesPerSecond
-	metricNewrelicOracleNetworkIoRequestsPerSecond                                metricNewrelicOracleNetworkIoRequestsPerSecond
-	metricNewrelicOracleNetworkTrafficBytesPerSecond                              metricNewrelicOracleNetworkTrafficBytesPerSecond
-	metricNewrelicOracleQueryPhysicalLobsReadsPerTransaction                      metricNewrelicOracleQueryPhysicalLobsReadsPerTransaction
-	metricNewrelicOracleQueryPhysicalLobsWritesPerTransaction                     metricNewrelicOracleQueryPhysicalLobsWritesPerTransaction
-	metricNewrelicOracleQueryPhysicalReadsPerTransaction                          metricNewrelicOracleQueryPhysicalReadsPerTransaction
-	metricNewrelicOracleQueryPhysicalWritesPerTransaction                         metricNewrelicOracleQueryPhysicalWritesPerTransaction
-	metricNewrelicOracleQueryTransactionsPerSecond                                metricNewrelicOracleQueryTransactionsPerSecond
-	metricNewrelicOracleRedoLogFileSwitch                                         metricNewrelicOracleRedoLogFileSwitch
-	metricNewrelicOracleRedoLogFileSwitchArchivingNeeded                          metricNewrelicOracleRedoLogFileSwitchArchivingNeeded
-	metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete                     metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete
-	metricNewrelicOracleRedoLogWaits                                              metricNewrelicOracleRedoLogWaits
-	metricNewrelicOracleRollbackSegmentsGets                                      metricNewrelicOracleRollbackSegmentsGets
-	metricNewrelicOracleRollbackSegmentsRatioWait                                 metricNewrelicOracleRollbackSegmentsRatioWait
-	metricNewrelicOracleRollbackSegmentsWaits                                     metricNewrelicOracleRollbackSegmentsWaits
-	metricNewrelicOracleSgaBufferBusyWaits                                        metricNewrelicOracleSgaBufferBusyWaits
-	metricNewrelicOracleSgaFixedSizeBytes                                         metricNewrelicOracleSgaFixedSizeBytes
-	metricNewrelicOracleSgaFreeBufferInspected                                    metricNewrelicOracleSgaFreeBufferInspected
-	metricNewrelicOracleSgaFreeBufferWaits                                        metricNewrelicOracleSgaFreeBufferWaits
-	metricNewrelicOracleSgaHitRatio                                               metricNewrelicOracleSgaHitRatio
-	metricNewrelicOracleSgaLogBufferAllocationRetriesRatio                        metricNewrelicOracleSgaLogBufferAllocationRetriesRatio
-	metricNewrelicOracleSgaLogBufferRedoAllocationRetries                         metricNewrelicOracleSgaLogBufferRedoAllocationRetries
-	metricNewrelicOracleSgaLogBufferRedoEntries                                   metricNewrelicOracleSgaLogBufferRedoEntries
-	metricNewrelicOracleSgaLogBufferSpaceWaits                                    metricNewrelicOracleSgaLogBufferSpaceWaits
-	metricNewrelicOracleSgaRedoBuffersBytes                                       metricNewrelicOracleSgaRedoBuffersBytes
-	metricNewrelicOracleSgaSharedPoolDictCacheMissRatio                           metricNewrelicOracleSgaSharedPoolDictCacheMissRatio
-	metricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio                         metricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio
-	metricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio                      metricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio
-	metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes
-	metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes      metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes
-	metricNewrelicOracleSgaUgaTotalMemoryBytes                                    metricNewrelicOracleSgaUgaTotalMemoryBytes
-	metricNewrelicOracleSortsDiskBytes                                            metricNewrelicOracleSortsDiskBytes
-	metricNewrelicOracleSortsMemoryBytes                                          metricNewrelicOracleSortsMemoryBytes
-	metricNewrelicOracleTablespaceIsOffline                                       metricNewrelicOracleTablespaceIsOffline
-	metricNewrelicOracleTablespaceOfflineCdbDatafiles                             metricNewrelicOracleTablespaceOfflineCdbDatafiles
-	metricNewrelicOracleTablespaceOfflinePdbDatafiles                             metricNewrelicOracleTablespaceOfflinePdbDatafiles
-	metricNewrelicOracleTablespacePdbDatafilesNonWrite                            metricNewrelicOracleTablespacePdbDatafilesNonWrite
-	metricNewrelicOracleTablespaceSpaceConsumedBytes                              metricNewrelicOracleTablespaceSpaceConsumedBytes
-	metricNewrelicOracleTablespaceSpaceReservedBytes                              metricNewrelicOracleTablespaceSpaceReservedBytes
-	metricNewrelicOracleTablespaceSpaceUsedPercentage                             metricNewrelicOracleTablespaceSpaceUsedPercentage
+	config                                                                          MetricsBuilderConfig // config of the metrics builder.
+	startTime                                                                       pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                                                                 int                  // maximum observed number of metrics per resource.
+	metricsBuffer                                                                   pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                                                                       component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter                                                  map[string]filter.Filter
+	resourceAttributeExcludeFilter                                                  map[string]filter.Filter
+	metricNewrelicOracleDbActiveParallelSessions                                    metricNewrelicOracleDbActiveParallelSessions
+	metricNewrelicOracleDbActiveSerialSessions                                      metricNewrelicOracleDbActiveSerialSessions
+	metricNewrelicOracleDbAverageActiveSessions                                     metricNewrelicOracleDbAverageActiveSessions
+	metricNewrelicOracleDbBackgroundCheckpointsPerSecond                            metricNewrelicOracleDbBackgroundCheckpointsPerSecond
+	metricNewrelicOracleDbBackgroundCPUUsagePerSecond                               metricNewrelicOracleDbBackgroundCPUUsagePerSecond
+	metricNewrelicOracleDbBackgroundTimePerSecond                                   metricNewrelicOracleDbBackgroundTimePerSecond
+	metricNewrelicOracleDbBlockChangesPerSecond                                     metricNewrelicOracleDbBlockChangesPerSecond
+	metricNewrelicOracleDbBlockChangesPerTransaction                                metricNewrelicOracleDbBlockChangesPerTransaction
+	metricNewrelicOracleDbBlockChangesPerUserCall                                   metricNewrelicOracleDbBlockChangesPerUserCall
+	metricNewrelicOracleDbBlockGetsPerSecond                                        metricNewrelicOracleDbBlockGetsPerSecond
+	metricNewrelicOracleDbBlockGetsPerTransaction                                   metricNewrelicOracleDbBlockGetsPerTransaction
+	metricNewrelicOracleDbBlockGetsPerUserCall                                      metricNewrelicOracleDbBlockGetsPerUserCall
+	metricNewrelicOracleDbBranchNodeSplitsPerSecond                                 metricNewrelicOracleDbBranchNodeSplitsPerSecond
+	metricNewrelicOracleDbBranchNodeSplitsPerTransaction                            metricNewrelicOracleDbBranchNodeSplitsPerTransaction
+	metricNewrelicOracleDbCapturedUserCalls                                         metricNewrelicOracleDbCapturedUserCalls
+	metricNewrelicOracleDbConsistentReadChangesPerSecond                            metricNewrelicOracleDbConsistentReadChangesPerSecond
+	metricNewrelicOracleDbConsistentReadChangesPerTransaction                       metricNewrelicOracleDbConsistentReadChangesPerTransaction
+	metricNewrelicOracleDbConsistentReadGetsPerSecond                               metricNewrelicOracleDbConsistentReadGetsPerSecond
+	metricNewrelicOracleDbConsistentReadGetsPerTransaction                          metricNewrelicOracleDbConsistentReadGetsPerTransaction
+	metricNewrelicOracleDbCPUTimeRatio                                              metricNewrelicOracleDbCPUTimeRatio
+	metricNewrelicOracleDbCPUUsagePerSecond                                         metricNewrelicOracleDbCPUUsagePerSecond
+	metricNewrelicOracleDbCPUUsagePerTransaction                                    metricNewrelicOracleDbCPUUsagePerTransaction
+	metricNewrelicOracleDbCrBlocksCreatedPerSecond                                  metricNewrelicOracleDbCrBlocksCreatedPerSecond
+	metricNewrelicOracleDbCrBlocksCreatedPerTransaction                             metricNewrelicOracleDbCrBlocksCreatedPerTransaction
+	metricNewrelicOracleDbCrUndoRecordsAppliedPerSecond                             metricNewrelicOracleDbCrUndoRecordsAppliedPerSecond
+	metricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction                        metricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction
+	metricNewrelicOracleDbCurrentLogons                                             metricNewrelicOracleDbCurrentLogons
+	metricNewrelicOracleDbCurrentOpenCursors                                        metricNewrelicOracleDbCurrentOpenCursors
+	metricNewrelicOracleDbCursorCacheHitRatio                                       metricNewrelicOracleDbCursorCacheHitRatio
+	metricNewrelicOracleDbCursorCacheHitsPerAttempts                                metricNewrelicOracleDbCursorCacheHitsPerAttempts
+	metricNewrelicOracleDbDatabaseCPUTimePerSecond                                  metricNewrelicOracleDbDatabaseCPUTimePerSecond
+	metricNewrelicOracleDbDbwrCheckpointsPerSecond                                  metricNewrelicOracleDbDbwrCheckpointsPerSecond
+	metricNewrelicOracleDbEnqueueDeadlocksPerSecond                                 metricNewrelicOracleDbEnqueueDeadlocksPerSecond
+	metricNewrelicOracleDbEnqueueDeadlocksPerTransaction                            metricNewrelicOracleDbEnqueueDeadlocksPerTransaction
+	metricNewrelicOracleDbEnqueueRequestsPerSecond                                  metricNewrelicOracleDbEnqueueRequestsPerSecond
+	metricNewrelicOracleDbEnqueueRequestsPerTransaction                             metricNewrelicOracleDbEnqueueRequestsPerTransaction
+	metricNewrelicOracleDbEnqueueTimeoutsPerSecond                                  metricNewrelicOracleDbEnqueueTimeoutsPerSecond
+	metricNewrelicOracleDbEnqueueTimeoutsPerTransaction                             metricNewrelicOracleDbEnqueueTimeoutsPerTransaction
+	metricNewrelicOracleDbEnqueueWaitsPerSecond                                     metricNewrelicOracleDbEnqueueWaitsPerSecond
+	metricNewrelicOracleDbEnqueueWaitsPerTransaction                                metricNewrelicOracleDbEnqueueWaitsPerTransaction
+	metricNewrelicOracleDbExecuteWithoutParseRatio                                  metricNewrelicOracleDbExecuteWithoutParseRatio
+	metricNewrelicOracleDbExecutionsPerSecond                                       metricNewrelicOracleDbExecutionsPerSecond
+	metricNewrelicOracleDbExecutionsPerTransaction                                  metricNewrelicOracleDbExecutionsPerTransaction
+	metricNewrelicOracleDbExecutionsPerUserCall                                     metricNewrelicOracleDbExecutionsPerUserCall
+	metricNewrelicOracleDbFullIndexScansPerSecond                                   metricNewrelicOracleDbFullIndexScansPerSecond
+	metricNewrelicOracleDbFullIndexScansPerTransaction                              metricNewrelicOracleDbFullIndexScansPerTransaction
+	metricNewrelicOracleDbGcCrBlockReceivedPerSecond                                metricNewrelicOracleDbGcCrBlockReceivedPerSecond
+	metricNewrelicOracleDbGcCrBlockReceivedPerTransaction                           metricNewrelicOracleDbGcCrBlockReceivedPerTransaction
+	metricNewrelicOracleDbGcCrBlockRecievedPerSecond                                metricNewrelicOracleDbGcCrBlockRecievedPerSecond
+	metricNewrelicOracleDbGcCrBlockRecievedPerTransaction                           metricNewrelicOracleDbGcCrBlockRecievedPerTransaction
+	metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond                           metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond
+	metricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction                      metricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction
+	metricNewrelicOracleDbGlobalCacheAverageCrGetTime                               metricNewrelicOracleDbGlobalCacheAverageCrGetTime
+	metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond                      metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond
+	metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime                          metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime
+	metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond                 metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond
+	metricNewrelicOracleDbHardParseCountPerSecond                                   metricNewrelicOracleDbHardParseCountPerSecond
+	metricNewrelicOracleDbHardParseCountPerTransaction                              metricNewrelicOracleDbHardParseCountPerTransaction
+	metricNewrelicOracleDbHostCPUUsagePerSecond                                     metricNewrelicOracleDbHostCPUUsagePerSecond
+	metricNewrelicOracleDbHostCPUUtilization                                        metricNewrelicOracleDbHostCPUUtilization
+	metricNewrelicOracleDbLeafNodeSplitsPerSecond                                   metricNewrelicOracleDbLeafNodeSplitsPerSecond
+	metricNewrelicOracleDbLeafNodeSplitsPerTransaction                              metricNewrelicOracleDbLeafNodeSplitsPerTransaction
+	metricNewrelicOracleDbLibraryCacheHitRatio                                      metricNewrelicOracleDbLibraryCacheHitRatio
+	metricNewrelicOracleDbLibraryCacheMissRatio                                     metricNewrelicOracleDbLibraryCacheMissRatio
+	metricNewrelicOracleDbLogicalReadsPerSecond                                     metricNewrelicOracleDbLogicalReadsPerSecond
+	metricNewrelicOracleDbLogicalReadsPerTransaction                                metricNewrelicOracleDbLogicalReadsPerTransaction
+	metricNewrelicOracleDbLogonsPerSecond                                           metricNewrelicOracleDbLogonsPerSecond
+	metricNewrelicOracleDbLogonsPerTransaction                                      metricNewrelicOracleDbLogonsPerTransaction
+	metricNewrelicOracleDbLongTableScansPerSecond                                   metricNewrelicOracleDbLongTableScansPerSecond
+	metricNewrelicOracleDbLongTableScansPerTransaction                              metricNewrelicOracleDbLongTableScansPerTransaction
+	metricNewrelicOracleDbOpenCursorsPerSecond                                      metricNewrelicOracleDbOpenCursorsPerSecond
+	metricNewrelicOracleDbOpenCursorsPerTransaction                                 metricNewrelicOracleDbOpenCursorsPerTransaction
+	metricNewrelicOracleDbOsLoad                                                    metricNewrelicOracleDbOsLoad
+	metricNewrelicOracleDbParseFailureCountPerSecond                                metricNewrelicOracleDbParseFailureCountPerSecond
+	metricNewrelicOracleDbParseFailureCountPerTransaction                           metricNewrelicOracleDbParseFailureCountPerTransaction
+	metricNewrelicOracleDbPgaCacheHitPercentage                                     metricNewrelicOracleDbPgaCacheHitPercentage
+	metricNewrelicOracleDbPhysicalReadBytesPerSecond                                metricNewrelicOracleDbPhysicalReadBytesPerSecond
+	metricNewrelicOracleDbPhysicalReadIoRequestsPerSecond                           metricNewrelicOracleDbPhysicalReadIoRequestsPerSecond
+	metricNewrelicOracleDbPhysicalReadsPerSecond                                    metricNewrelicOracleDbPhysicalReadsPerSecond
+	metricNewrelicOracleDbPhysicalWriteBytesPerSecond                               metricNewrelicOracleDbPhysicalWriteBytesPerSecond
+	metricNewrelicOracleDbPhysicalWritesPerSecond                                   metricNewrelicOracleDbPhysicalWritesPerSecond
+	metricNewrelicOracleDbProcessLimitPercentage                                    metricNewrelicOracleDbProcessLimitPercentage
+	metricNewrelicOracleDbRecursiveCallsPerSecond                                   metricNewrelicOracleDbRecursiveCallsPerSecond
+	metricNewrelicOracleDbRecursiveCallsPerTransaction                              metricNewrelicOracleDbRecursiveCallsPerTransaction
+	metricNewrelicOracleDbRedoWritesPerSecond                                       metricNewrelicOracleDbRedoWritesPerSecond
+	metricNewrelicOracleDbRedoWritesPerTransaction                                  metricNewrelicOracleDbRedoWritesPerTransaction
+	metricNewrelicOracleDbResponseTimePerTransaction                                metricNewrelicOracleDbResponseTimePerTransaction
+	metricNewrelicOracleDbRowCacheHitRatio                                          metricNewrelicOracleDbRowCacheHitRatio
+	metricNewrelicOracleDbRowCacheMissRatio                                         metricNewrelicOracleDbRowCacheMissRatio
+	metricNewrelicOracleDbRowsPerSort                                               metricNewrelicOracleDbRowsPerSort
+	metricNewrelicOracleDbSessionCount                                              metricNewrelicOracleDbSessionCount
+	metricNewrelicOracleDbSessionLimitPercentage                                    metricNewrelicOracleDbSessionLimitPercentage
+	metricNewrelicOracleDbSharedPoolFreePercentage                                  metricNewrelicOracleDbSharedPoolFreePercentage
+	metricNewrelicOracleDbSoftParseRatio                                            metricNewrelicOracleDbSoftParseRatio
+	metricNewrelicOracleDbSortsPerUserCall                                          metricNewrelicOracleDbSortsPerUserCall
+	metricNewrelicOracleDbSQLServiceResponseTime                                    metricNewrelicOracleDbSQLServiceResponseTime
+	metricNewrelicOracleDbStreamsPoolUsagePercentage                                metricNewrelicOracleDbStreamsPoolUsagePercentage
+	metricNewrelicOracleDbTableScansPerUserCall                                     metricNewrelicOracleDbTableScansPerUserCall
+	metricNewrelicOracleDbTotalIndexScansPerSecond                                  metricNewrelicOracleDbTotalIndexScansPerSecond
+	metricNewrelicOracleDbTotalIndexScansPerTransaction                             metricNewrelicOracleDbTotalIndexScansPerTransaction
+	metricNewrelicOracleDbTotalParseCountPerSecond                                  metricNewrelicOracleDbTotalParseCountPerSecond
+	metricNewrelicOracleDbTotalParseCountPerTransaction                             metricNewrelicOracleDbTotalParseCountPerTransaction
+	metricNewrelicOracleDbTotalTableScansPerSecond                                  metricNewrelicOracleDbTotalTableScansPerSecond
+	metricNewrelicOracleDbTotalTableScansPerTransaction                             metricNewrelicOracleDbTotalTableScansPerTransaction
+	metricNewrelicOracleDbTransactionsPerLogon                                      metricNewrelicOracleDbTransactionsPerLogon
+	metricNewrelicOracleDbUserCallsPerSecond                                        metricNewrelicOracleDbUserCallsPerSecond
+	metricNewrelicOracleDbUserCallsPerTransaction                                   metricNewrelicOracleDbUserCallsPerTransaction
+	metricNewrelicOracleDbUserCallsRatio                                            metricNewrelicOracleDbUserCallsRatio
+	metricNewrelicOracleDbUserCommitsPerSecond                                      metricNewrelicOracleDbUserCommitsPerSecond
+	metricNewrelicOracleDbUserCommitsPercentage                                     metricNewrelicOracleDbUserCommitsPercentage
+	metricNewrelicOracleDbUserLimitPercentage                                       metricNewrelicOracleDbUserLimitPercentage
+	metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond                   metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond
+	metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction              metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction
+	metricNewrelicOracleDbUserRollbacksPerSecond                                    metricNewrelicOracleDbUserRollbacksPerSecond
+	metricNewrelicOracleDbUserRollbacksPercentage                                   metricNewrelicOracleDbUserRollbacksPercentage
+	metricNewrelicOracleDbWaitTimeRatio                                             metricNewrelicOracleDbWaitTimeRatio
+	metricNewrelicOracleDiskBlocksRead                                              metricNewrelicOracleDiskBlocksRead
+	metricNewrelicOracleDiskBlocksWritten                                           metricNewrelicOracleDiskBlocksWritten
+	metricNewrelicOracleDiskLogicalReadsPerUserCall                                 metricNewrelicOracleDiskLogicalReadsPerUserCall
+	metricNewrelicOracleDiskPhysicalLobsReadsPerSecond                              metricNewrelicOracleDiskPhysicalLobsReadsPerSecond
+	metricNewrelicOracleDiskPhysicalLobsWritesPerSecond                             metricNewrelicOracleDiskPhysicalLobsWritesPerSecond
+	metricNewrelicOracleDiskPhysicalReadBytesPerSecond                              metricNewrelicOracleDiskPhysicalReadBytesPerSecond
+	metricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond                         metricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond
+	metricNewrelicOracleDiskPhysicalReadsPerSecond                                  metricNewrelicOracleDiskPhysicalReadsPerSecond
+	metricNewrelicOracleDiskPhysicalWriteBytesPerSecond                             metricNewrelicOracleDiskPhysicalWriteBytesPerSecond
+	metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond                        metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond
+	metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond                   metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond
+	metricNewrelicOracleDiskPhysicalWritesPerSecond                                 metricNewrelicOracleDiskPhysicalWritesPerSecond
+	metricNewrelicOracleDiskReadTimeInMiliseconds                                   metricNewrelicOracleDiskReadTimeInMiliseconds
+	metricNewrelicOracleDiskReadTimeInMilliseconds                                  metricNewrelicOracleDiskReadTimeInMilliseconds
+	metricNewrelicOracleDiskReadTimeMilliseconds                                    metricNewrelicOracleDiskReadTimeMilliseconds
+	metricNewrelicOracleDiskReads                                                   metricNewrelicOracleDiskReads
+	metricNewrelicOracleDiskSortPerSecond                                           metricNewrelicOracleDiskSortPerSecond
+	metricNewrelicOracleDiskSortPerTransaction                                      metricNewrelicOracleDiskSortPerTransaction
+	metricNewrelicOracleDiskTempSpaceUsedBytes                                      metricNewrelicOracleDiskTempSpaceUsedBytes
+	metricNewrelicOracleDiskTempSpaceUsedInBytes                                    metricNewrelicOracleDiskTempSpaceUsedInBytes
+	metricNewrelicOracleDiskWriteTimeInMiliseconds                                  metricNewrelicOracleDiskWriteTimeInMiliseconds
+	metricNewrelicOracleDiskWriteTimeInMilliseconds                                 metricNewrelicOracleDiskWriteTimeInMilliseconds
+	metricNewrelicOracleDiskWriteTimeMilliseconds                                   metricNewrelicOracleDiskWriteTimeMilliseconds
+	metricNewrelicOracleDiskWrites                                                  metricNewrelicOracleDiskWrites
+	metricNewrelicOracleInstanceCdbDatafilesOffline                                 metricNewrelicOracleInstanceCdbDatafilesOffline
+	metricNewrelicOracleLockedAccounts                                              metricNewrelicOracleLockedAccounts
+	metricNewrelicOracleLongRunningQueries                                          metricNewrelicOracleLongRunningQueries
+	metricNewrelicOracleMemoryBufferCacheHitRatio                                   metricNewrelicOracleMemoryBufferCacheHitRatio
+	metricNewrelicOracleMemoryGlobalCacheBlocksCorrupted                            metricNewrelicOracleMemoryGlobalCacheBlocksCorrupted
+	metricNewrelicOracleMemoryGlobalCacheBlocksLost                                 metricNewrelicOracleMemoryGlobalCacheBlocksLost
+	metricNewrelicOracleMemoryPgaAllocatedBytes                                     metricNewrelicOracleMemoryPgaAllocatedBytes
+	metricNewrelicOracleMemoryPgaAllocatedInBytes                                   metricNewrelicOracleMemoryPgaAllocatedInBytes
+	metricNewrelicOracleMemoryPgaFreeableBytes                                      metricNewrelicOracleMemoryPgaFreeableBytes
+	metricNewrelicOracleMemoryPgaFreeableInBytes                                    metricNewrelicOracleMemoryPgaFreeableInBytes
+	metricNewrelicOracleMemoryPgaInUseBytes                                         metricNewrelicOracleMemoryPgaInUseBytes
+	metricNewrelicOracleMemoryPgaInUseInBytes                                       metricNewrelicOracleMemoryPgaInUseInBytes
+	metricNewrelicOracleMemoryPgaMaxSizeBytes                                       metricNewrelicOracleMemoryPgaMaxSizeBytes
+	metricNewrelicOracleMemoryPgaMaxSizeInBytes                                     metricNewrelicOracleMemoryPgaMaxSizeInBytes
+	metricNewrelicOracleMemoryRedoAllocationHitRatio                                metricNewrelicOracleMemoryRedoAllocationHitRatio
+	metricNewrelicOracleMemoryRedoGeneratedBytesPerSecond                           metricNewrelicOracleMemoryRedoGeneratedBytesPerSecond
+	metricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction                      metricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction
+	metricNewrelicOracleMemorySortsRatio                                            metricNewrelicOracleMemorySortsRatio
+	metricNewrelicOracleNetworkIoMegabytesPerSecond                                 metricNewrelicOracleNetworkIoMegabytesPerSecond
+	metricNewrelicOracleNetworkIoRequestsPerSecond                                  metricNewrelicOracleNetworkIoRequestsPerSecond
+	metricNewrelicOracleNetworkTrafficBytePerSecond                                 metricNewrelicOracleNetworkTrafficBytePerSecond
+	metricNewrelicOracleNetworkTrafficBytesPerSecond                                metricNewrelicOracleNetworkTrafficBytesPerSecond
+	metricNewrelicOracleQueryPhysicalLobsReadsPerTransaction                        metricNewrelicOracleQueryPhysicalLobsReadsPerTransaction
+	metricNewrelicOracleQueryPhysicalLobsWritesPerTransaction                       metricNewrelicOracleQueryPhysicalLobsWritesPerTransaction
+	metricNewrelicOracleQueryPhysicalReadsPerTransaction                            metricNewrelicOracleQueryPhysicalReadsPerTransaction
+	metricNewrelicOracleQueryPhysicalWritesPerTransaction                           metricNewrelicOracleQueryPhysicalWritesPerTransaction
+	metricNewrelicOracleQuerySQLServiceResponseTime                                 metricNewrelicOracleQuerySQLServiceResponseTime
+	metricNewrelicOracleQueryTransactionsPerSecond                                  metricNewrelicOracleQueryTransactionsPerSecond
+	metricNewrelicOracleRedoLogFileSwitch                                           metricNewrelicOracleRedoLogFileSwitch
+	metricNewrelicOracleRedoLogFileSwitchArchivingNeeded                            metricNewrelicOracleRedoLogFileSwitchArchivingNeeded
+	metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete                       metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete
+	metricNewrelicOracleRedoLogLogFileSwitch                                        metricNewrelicOracleRedoLogLogFileSwitch
+	metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded                         metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded
+	metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete                    metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete
+	metricNewrelicOracleRedoLogWaits                                                metricNewrelicOracleRedoLogWaits
+	metricNewrelicOracleRollbackSegmentsGets                                        metricNewrelicOracleRollbackSegmentsGets
+	metricNewrelicOracleRollbackSegmentsRatioWait                                   metricNewrelicOracleRollbackSegmentsRatioWait
+	metricNewrelicOracleRollbackSegmentsWaits                                       metricNewrelicOracleRollbackSegmentsWaits
+	metricNewrelicOracleSgaBufferBusyWaits                                          metricNewrelicOracleSgaBufferBusyWaits
+	metricNewrelicOracleSgaFixedSizeBytes                                           metricNewrelicOracleSgaFixedSizeBytes
+	metricNewrelicOracleSgaFixedSizeInBytes                                         metricNewrelicOracleSgaFixedSizeInBytes
+	metricNewrelicOracleSgaFreeBufferInspected                                      metricNewrelicOracleSgaFreeBufferInspected
+	metricNewrelicOracleSgaFreeBufferWaits                                          metricNewrelicOracleSgaFreeBufferWaits
+	metricNewrelicOracleSgaHitRatio                                                 metricNewrelicOracleSgaHitRatio
+	metricNewrelicOracleSgaLogBufferAllocationRetriesRatio                          metricNewrelicOracleSgaLogBufferAllocationRetriesRatio
+	metricNewrelicOracleSgaLogBufferRedoAllocationRetries                           metricNewrelicOracleSgaLogBufferRedoAllocationRetries
+	metricNewrelicOracleSgaLogBufferRedoEntries                                     metricNewrelicOracleSgaLogBufferRedoEntries
+	metricNewrelicOracleSgaLogBufferSpaceWaits                                      metricNewrelicOracleSgaLogBufferSpaceWaits
+	metricNewrelicOracleSgaRedoBuffersBytes                                         metricNewrelicOracleSgaRedoBuffersBytes
+	metricNewrelicOracleSgaRedoBuffersInBytes                                       metricNewrelicOracleSgaRedoBuffersInBytes
+	metricNewrelicOracleSgaSharedPoolDictCacheMissRatio                             metricNewrelicOracleSgaSharedPoolDictCacheMissRatio
+	metricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio                           metricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio
+	metricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio                        metricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio
+	metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes   metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes
+	metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes
+	metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes        metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes
+	metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes      metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes
+	metricNewrelicOracleSgaUgaTotalMemoryBytes                                      metricNewrelicOracleSgaUgaTotalMemoryBytes
+	metricNewrelicOracleSgaUgaTotalMemoryInBytes                                    metricNewrelicOracleSgaUgaTotalMemoryInBytes
+	metricNewrelicOracleSortsDiskBytes                                              metricNewrelicOracleSortsDiskBytes
+	metricNewrelicOracleSortsDiskInBytes                                            metricNewrelicOracleSortsDiskInBytes
+	metricNewrelicOracleSortsMemoryBytes                                            metricNewrelicOracleSortsMemoryBytes
+	metricNewrelicOracleSortsMemoryInBytes                                          metricNewrelicOracleSortsMemoryInBytes
+	metricNewrelicOracleTablespaceIsOffline                                         metricNewrelicOracleTablespaceIsOffline
+	metricNewrelicOracleTablespaceOfflineCdbDatafiles                               metricNewrelicOracleTablespaceOfflineCdbDatafiles
+	metricNewrelicOracleTablespaceOfflinePdbDatafiles                               metricNewrelicOracleTablespaceOfflinePdbDatafiles
+	metricNewrelicOracleTablespacePdbDatafilesNonWrite                              metricNewrelicOracleTablespacePdbDatafilesNonWrite
+	metricNewrelicOracleTablespaceSpaceConsumedBytes                                metricNewrelicOracleTablespaceSpaceConsumedBytes
+	metricNewrelicOracleTablespaceSpaceConsumedInBytes                              metricNewrelicOracleTablespaceSpaceConsumedInBytes
+	metricNewrelicOracleTablespaceSpaceReservedBytes                                metricNewrelicOracleTablespaceSpaceReservedBytes
+	metricNewrelicOracleTablespaceSpaceReservedInBytes                              metricNewrelicOracleTablespaceSpaceReservedInBytes
+	metricNewrelicOracleTablespaceSpaceUsedPercentage                               metricNewrelicOracleTablespaceSpaceUsedPercentage
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -9915,190 +11543,220 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		startTime:     pcommon.NewTimestampFromTime(time.Now()),
 		metricsBuffer: pmetric.NewMetrics(),
 		buildInfo:     settings.BuildInfo,
-		metricNewrelicOracleDbActiveParallelSessions:                                  newMetricNewrelicOracleDbActiveParallelSessions(mbc.Metrics.NewrelicOracleDbActiveParallelSessions),
-		metricNewrelicOracleDbActiveSerialSessions:                                    newMetricNewrelicOracleDbActiveSerialSessions(mbc.Metrics.NewrelicOracleDbActiveSerialSessions),
-		metricNewrelicOracleDbAverageActiveSessions:                                   newMetricNewrelicOracleDbAverageActiveSessions(mbc.Metrics.NewrelicOracleDbAverageActiveSessions),
-		metricNewrelicOracleDbBackgroundCheckpointsPerSecond:                          newMetricNewrelicOracleDbBackgroundCheckpointsPerSecond(mbc.Metrics.NewrelicOracleDbBackgroundCheckpointsPerSecond),
-		metricNewrelicOracleDbBackgroundCPUUsagePerSecond:                             newMetricNewrelicOracleDbBackgroundCPUUsagePerSecond(mbc.Metrics.NewrelicOracleDbBackgroundCPUUsagePerSecond),
-		metricNewrelicOracleDbBackgroundTimePerSecond:                                 newMetricNewrelicOracleDbBackgroundTimePerSecond(mbc.Metrics.NewrelicOracleDbBackgroundTimePerSecond),
-		metricNewrelicOracleDbBlockChangesPerSecond:                                   newMetricNewrelicOracleDbBlockChangesPerSecond(mbc.Metrics.NewrelicOracleDbBlockChangesPerSecond),
-		metricNewrelicOracleDbBlockChangesPerTransaction:                              newMetricNewrelicOracleDbBlockChangesPerTransaction(mbc.Metrics.NewrelicOracleDbBlockChangesPerTransaction),
-		metricNewrelicOracleDbBlockChangesPerUserCall:                                 newMetricNewrelicOracleDbBlockChangesPerUserCall(mbc.Metrics.NewrelicOracleDbBlockChangesPerUserCall),
-		metricNewrelicOracleDbBlockGetsPerSecond:                                      newMetricNewrelicOracleDbBlockGetsPerSecond(mbc.Metrics.NewrelicOracleDbBlockGetsPerSecond),
-		metricNewrelicOracleDbBlockGetsPerTransaction:                                 newMetricNewrelicOracleDbBlockGetsPerTransaction(mbc.Metrics.NewrelicOracleDbBlockGetsPerTransaction),
-		metricNewrelicOracleDbBlockGetsPerUserCall:                                    newMetricNewrelicOracleDbBlockGetsPerUserCall(mbc.Metrics.NewrelicOracleDbBlockGetsPerUserCall),
-		metricNewrelicOracleDbBranchNodeSplitsPerSecond:                               newMetricNewrelicOracleDbBranchNodeSplitsPerSecond(mbc.Metrics.NewrelicOracleDbBranchNodeSplitsPerSecond),
-		metricNewrelicOracleDbBranchNodeSplitsPerTransaction:                          newMetricNewrelicOracleDbBranchNodeSplitsPerTransaction(mbc.Metrics.NewrelicOracleDbBranchNodeSplitsPerTransaction),
-		metricNewrelicOracleDbCapturedUserCalls:                                       newMetricNewrelicOracleDbCapturedUserCalls(mbc.Metrics.NewrelicOracleDbCapturedUserCalls),
-		metricNewrelicOracleDbConsistentReadChangesPerSecond:                          newMetricNewrelicOracleDbConsistentReadChangesPerSecond(mbc.Metrics.NewrelicOracleDbConsistentReadChangesPerSecond),
-		metricNewrelicOracleDbConsistentReadChangesPerTransaction:                     newMetricNewrelicOracleDbConsistentReadChangesPerTransaction(mbc.Metrics.NewrelicOracleDbConsistentReadChangesPerTransaction),
-		metricNewrelicOracleDbConsistentReadGetsPerSecond:                             newMetricNewrelicOracleDbConsistentReadGetsPerSecond(mbc.Metrics.NewrelicOracleDbConsistentReadGetsPerSecond),
-		metricNewrelicOracleDbConsistentReadGetsPerTransaction:                        newMetricNewrelicOracleDbConsistentReadGetsPerTransaction(mbc.Metrics.NewrelicOracleDbConsistentReadGetsPerTransaction),
-		metricNewrelicOracleDbCPUTimeRatio:                                            newMetricNewrelicOracleDbCPUTimeRatio(mbc.Metrics.NewrelicOracleDbCPUTimeRatio),
-		metricNewrelicOracleDbCPUUsagePerSecond:                                       newMetricNewrelicOracleDbCPUUsagePerSecond(mbc.Metrics.NewrelicOracleDbCPUUsagePerSecond),
-		metricNewrelicOracleDbCPUUsagePerTransaction:                                  newMetricNewrelicOracleDbCPUUsagePerTransaction(mbc.Metrics.NewrelicOracleDbCPUUsagePerTransaction),
-		metricNewrelicOracleDbCrBlocksCreatedPerSecond:                                newMetricNewrelicOracleDbCrBlocksCreatedPerSecond(mbc.Metrics.NewrelicOracleDbCrBlocksCreatedPerSecond),
-		metricNewrelicOracleDbCrBlocksCreatedPerTransaction:                           newMetricNewrelicOracleDbCrBlocksCreatedPerTransaction(mbc.Metrics.NewrelicOracleDbCrBlocksCreatedPerTransaction),
-		metricNewrelicOracleDbCrUndoRecordsAppliedPerSecond:                           newMetricNewrelicOracleDbCrUndoRecordsAppliedPerSecond(mbc.Metrics.NewrelicOracleDbCrUndoRecordsAppliedPerSecond),
-		metricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction:                      newMetricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction(mbc.Metrics.NewrelicOracleDbCrUndoRecordsAppliedPerTransaction),
-		metricNewrelicOracleDbCurrentLogons:                                           newMetricNewrelicOracleDbCurrentLogons(mbc.Metrics.NewrelicOracleDbCurrentLogons),
-		metricNewrelicOracleDbCurrentOpenCursors:                                      newMetricNewrelicOracleDbCurrentOpenCursors(mbc.Metrics.NewrelicOracleDbCurrentOpenCursors),
-		metricNewrelicOracleDbCursorCacheHitsPerAttempts:                              newMetricNewrelicOracleDbCursorCacheHitsPerAttempts(mbc.Metrics.NewrelicOracleDbCursorCacheHitsPerAttempts),
-		metricNewrelicOracleDbDatabaseCPUTimePerSecond:                                newMetricNewrelicOracleDbDatabaseCPUTimePerSecond(mbc.Metrics.NewrelicOracleDbDatabaseCPUTimePerSecond),
-		metricNewrelicOracleDbDbwrCheckpointsPerSecond:                                newMetricNewrelicOracleDbDbwrCheckpointsPerSecond(mbc.Metrics.NewrelicOracleDbDbwrCheckpointsPerSecond),
-		metricNewrelicOracleDbEnqueueDeadlocksPerSecond:                               newMetricNewrelicOracleDbEnqueueDeadlocksPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueDeadlocksPerSecond),
-		metricNewrelicOracleDbEnqueueDeadlocksPerTransaction:                          newMetricNewrelicOracleDbEnqueueDeadlocksPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueDeadlocksPerTransaction),
-		metricNewrelicOracleDbEnqueueRequestsPerSecond:                                newMetricNewrelicOracleDbEnqueueRequestsPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueRequestsPerSecond),
-		metricNewrelicOracleDbEnqueueRequestsPerTransaction:                           newMetricNewrelicOracleDbEnqueueRequestsPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueRequestsPerTransaction),
-		metricNewrelicOracleDbEnqueueTimeoutsPerSecond:                                newMetricNewrelicOracleDbEnqueueTimeoutsPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueTimeoutsPerSecond),
-		metricNewrelicOracleDbEnqueueTimeoutsPerTransaction:                           newMetricNewrelicOracleDbEnqueueTimeoutsPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueTimeoutsPerTransaction),
-		metricNewrelicOracleDbEnqueueWaitsPerSecond:                                   newMetricNewrelicOracleDbEnqueueWaitsPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueWaitsPerSecond),
-		metricNewrelicOracleDbEnqueueWaitsPerTransaction:                              newMetricNewrelicOracleDbEnqueueWaitsPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueWaitsPerTransaction),
-		metricNewrelicOracleDbExecuteWithoutParseRatio:                                newMetricNewrelicOracleDbExecuteWithoutParseRatio(mbc.Metrics.NewrelicOracleDbExecuteWithoutParseRatio),
-		metricNewrelicOracleDbExecutionsPerSecond:                                     newMetricNewrelicOracleDbExecutionsPerSecond(mbc.Metrics.NewrelicOracleDbExecutionsPerSecond),
-		metricNewrelicOracleDbExecutionsPerTransaction:                                newMetricNewrelicOracleDbExecutionsPerTransaction(mbc.Metrics.NewrelicOracleDbExecutionsPerTransaction),
-		metricNewrelicOracleDbExecutionsPerUserCall:                                   newMetricNewrelicOracleDbExecutionsPerUserCall(mbc.Metrics.NewrelicOracleDbExecutionsPerUserCall),
-		metricNewrelicOracleDbFullIndexScansPerSecond:                                 newMetricNewrelicOracleDbFullIndexScansPerSecond(mbc.Metrics.NewrelicOracleDbFullIndexScansPerSecond),
-		metricNewrelicOracleDbFullIndexScansPerTransaction:                            newMetricNewrelicOracleDbFullIndexScansPerTransaction(mbc.Metrics.NewrelicOracleDbFullIndexScansPerTransaction),
-		metricNewrelicOracleDbGcCrBlockReceivedPerSecond:                              newMetricNewrelicOracleDbGcCrBlockReceivedPerSecond(mbc.Metrics.NewrelicOracleDbGcCrBlockReceivedPerSecond),
-		metricNewrelicOracleDbGcCrBlockReceivedPerTransaction:                         newMetricNewrelicOracleDbGcCrBlockReceivedPerTransaction(mbc.Metrics.NewrelicOracleDbGcCrBlockReceivedPerTransaction),
-		metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond:                         newMetricNewrelicOracleDbGcCurrentBlockReceivedPerSecond(mbc.Metrics.NewrelicOracleDbGcCurrentBlockReceivedPerSecond),
-		metricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction:                    newMetricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction(mbc.Metrics.NewrelicOracleDbGcCurrentBlockReceivedPerTransaction),
-		metricNewrelicOracleDbGlobalCacheAverageCrGetTime:                             newMetricNewrelicOracleDbGlobalCacheAverageCrGetTime(mbc.Metrics.NewrelicOracleDbGlobalCacheAverageCrGetTime),
-		metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime:                        newMetricNewrelicOracleDbGlobalCacheAverageCurrentGetTime(mbc.Metrics.NewrelicOracleDbGlobalCacheAverageCurrentGetTime),
-		metricNewrelicOracleDbHardParseCountPerSecond:                                 newMetricNewrelicOracleDbHardParseCountPerSecond(mbc.Metrics.NewrelicOracleDbHardParseCountPerSecond),
-		metricNewrelicOracleDbHardParseCountPerTransaction:                            newMetricNewrelicOracleDbHardParseCountPerTransaction(mbc.Metrics.NewrelicOracleDbHardParseCountPerTransaction),
-		metricNewrelicOracleDbHostCPUUsagePerSecond:                                   newMetricNewrelicOracleDbHostCPUUsagePerSecond(mbc.Metrics.NewrelicOracleDbHostCPUUsagePerSecond),
-		metricNewrelicOracleDbHostCPUUtilization:                                      newMetricNewrelicOracleDbHostCPUUtilization(mbc.Metrics.NewrelicOracleDbHostCPUUtilization),
-		metricNewrelicOracleDbLeafNodeSplitsPerSecond:                                 newMetricNewrelicOracleDbLeafNodeSplitsPerSecond(mbc.Metrics.NewrelicOracleDbLeafNodeSplitsPerSecond),
-		metricNewrelicOracleDbLeafNodeSplitsPerTransaction:                            newMetricNewrelicOracleDbLeafNodeSplitsPerTransaction(mbc.Metrics.NewrelicOracleDbLeafNodeSplitsPerTransaction),
-		metricNewrelicOracleDbLibraryCacheHitRatio:                                    newMetricNewrelicOracleDbLibraryCacheHitRatio(mbc.Metrics.NewrelicOracleDbLibraryCacheHitRatio),
-		metricNewrelicOracleDbLibraryCacheMissRatio:                                   newMetricNewrelicOracleDbLibraryCacheMissRatio(mbc.Metrics.NewrelicOracleDbLibraryCacheMissRatio),
-		metricNewrelicOracleDbLogicalReadsPerSecond:                                   newMetricNewrelicOracleDbLogicalReadsPerSecond(mbc.Metrics.NewrelicOracleDbLogicalReadsPerSecond),
-		metricNewrelicOracleDbLogicalReadsPerTransaction:                              newMetricNewrelicOracleDbLogicalReadsPerTransaction(mbc.Metrics.NewrelicOracleDbLogicalReadsPerTransaction),
-		metricNewrelicOracleDbLogonsPerSecond:                                         newMetricNewrelicOracleDbLogonsPerSecond(mbc.Metrics.NewrelicOracleDbLogonsPerSecond),
-		metricNewrelicOracleDbLogonsPerTransaction:                                    newMetricNewrelicOracleDbLogonsPerTransaction(mbc.Metrics.NewrelicOracleDbLogonsPerTransaction),
-		metricNewrelicOracleDbLongTableScansPerSecond:                                 newMetricNewrelicOracleDbLongTableScansPerSecond(mbc.Metrics.NewrelicOracleDbLongTableScansPerSecond),
-		metricNewrelicOracleDbLongTableScansPerTransaction:                            newMetricNewrelicOracleDbLongTableScansPerTransaction(mbc.Metrics.NewrelicOracleDbLongTableScansPerTransaction),
-		metricNewrelicOracleDbOpenCursorsPerSecond:                                    newMetricNewrelicOracleDbOpenCursorsPerSecond(mbc.Metrics.NewrelicOracleDbOpenCursorsPerSecond),
-		metricNewrelicOracleDbOpenCursorsPerTransaction:                               newMetricNewrelicOracleDbOpenCursorsPerTransaction(mbc.Metrics.NewrelicOracleDbOpenCursorsPerTransaction),
-		metricNewrelicOracleDbOsLoad:                                                  newMetricNewrelicOracleDbOsLoad(mbc.Metrics.NewrelicOracleDbOsLoad),
-		metricNewrelicOracleDbParseFailureCountPerSecond:                              newMetricNewrelicOracleDbParseFailureCountPerSecond(mbc.Metrics.NewrelicOracleDbParseFailureCountPerSecond),
-		metricNewrelicOracleDbParseFailureCountPerTransaction:                         newMetricNewrelicOracleDbParseFailureCountPerTransaction(mbc.Metrics.NewrelicOracleDbParseFailureCountPerTransaction),
-		metricNewrelicOracleDbPgaCacheHitPercentage:                                   newMetricNewrelicOracleDbPgaCacheHitPercentage(mbc.Metrics.NewrelicOracleDbPgaCacheHitPercentage),
-		metricNewrelicOracleDbPhysicalReadBytesPerSecond:                              newMetricNewrelicOracleDbPhysicalReadBytesPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalReadBytesPerSecond),
-		metricNewrelicOracleDbPhysicalReadIoRequestsPerSecond:                         newMetricNewrelicOracleDbPhysicalReadIoRequestsPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalReadIoRequestsPerSecond),
-		metricNewrelicOracleDbPhysicalReadsPerSecond:                                  newMetricNewrelicOracleDbPhysicalReadsPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalReadsPerSecond),
-		metricNewrelicOracleDbPhysicalWriteBytesPerSecond:                             newMetricNewrelicOracleDbPhysicalWriteBytesPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalWriteBytesPerSecond),
-		metricNewrelicOracleDbPhysicalWritesPerSecond:                                 newMetricNewrelicOracleDbPhysicalWritesPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalWritesPerSecond),
-		metricNewrelicOracleDbProcessLimitPercentage:                                  newMetricNewrelicOracleDbProcessLimitPercentage(mbc.Metrics.NewrelicOracleDbProcessLimitPercentage),
-		metricNewrelicOracleDbRecursiveCallsPerSecond:                                 newMetricNewrelicOracleDbRecursiveCallsPerSecond(mbc.Metrics.NewrelicOracleDbRecursiveCallsPerSecond),
-		metricNewrelicOracleDbRecursiveCallsPerTransaction:                            newMetricNewrelicOracleDbRecursiveCallsPerTransaction(mbc.Metrics.NewrelicOracleDbRecursiveCallsPerTransaction),
-		metricNewrelicOracleDbRedoWritesPerSecond:                                     newMetricNewrelicOracleDbRedoWritesPerSecond(mbc.Metrics.NewrelicOracleDbRedoWritesPerSecond),
-		metricNewrelicOracleDbRedoWritesPerTransaction:                                newMetricNewrelicOracleDbRedoWritesPerTransaction(mbc.Metrics.NewrelicOracleDbRedoWritesPerTransaction),
-		metricNewrelicOracleDbResponseTimePerTransaction:                              newMetricNewrelicOracleDbResponseTimePerTransaction(mbc.Metrics.NewrelicOracleDbResponseTimePerTransaction),
-		metricNewrelicOracleDbRowCacheHitRatio:                                        newMetricNewrelicOracleDbRowCacheHitRatio(mbc.Metrics.NewrelicOracleDbRowCacheHitRatio),
-		metricNewrelicOracleDbRowCacheMissRatio:                                       newMetricNewrelicOracleDbRowCacheMissRatio(mbc.Metrics.NewrelicOracleDbRowCacheMissRatio),
-		metricNewrelicOracleDbRowsPerSort:                                             newMetricNewrelicOracleDbRowsPerSort(mbc.Metrics.NewrelicOracleDbRowsPerSort),
-		metricNewrelicOracleDbSessionCount:                                            newMetricNewrelicOracleDbSessionCount(mbc.Metrics.NewrelicOracleDbSessionCount),
-		metricNewrelicOracleDbSessionLimitPercentage:                                  newMetricNewrelicOracleDbSessionLimitPercentage(mbc.Metrics.NewrelicOracleDbSessionLimitPercentage),
-		metricNewrelicOracleDbSharedPoolFreePercentage:                                newMetricNewrelicOracleDbSharedPoolFreePercentage(mbc.Metrics.NewrelicOracleDbSharedPoolFreePercentage),
-		metricNewrelicOracleDbSoftParseRatio:                                          newMetricNewrelicOracleDbSoftParseRatio(mbc.Metrics.NewrelicOracleDbSoftParseRatio),
-		metricNewrelicOracleDbSortsPerUserCall:                                        newMetricNewrelicOracleDbSortsPerUserCall(mbc.Metrics.NewrelicOracleDbSortsPerUserCall),
-		metricNewrelicOracleDbSQLServiceResponseTime:                                  newMetricNewrelicOracleDbSQLServiceResponseTime(mbc.Metrics.NewrelicOracleDbSQLServiceResponseTime),
-		metricNewrelicOracleDbStreamsPoolUsagePercentage:                              newMetricNewrelicOracleDbStreamsPoolUsagePercentage(mbc.Metrics.NewrelicOracleDbStreamsPoolUsagePercentage),
-		metricNewrelicOracleDbTableScansPerUserCall:                                   newMetricNewrelicOracleDbTableScansPerUserCall(mbc.Metrics.NewrelicOracleDbTableScansPerUserCall),
-		metricNewrelicOracleDbTotalIndexScansPerSecond:                                newMetricNewrelicOracleDbTotalIndexScansPerSecond(mbc.Metrics.NewrelicOracleDbTotalIndexScansPerSecond),
-		metricNewrelicOracleDbTotalIndexScansPerTransaction:                           newMetricNewrelicOracleDbTotalIndexScansPerTransaction(mbc.Metrics.NewrelicOracleDbTotalIndexScansPerTransaction),
-		metricNewrelicOracleDbTotalParseCountPerSecond:                                newMetricNewrelicOracleDbTotalParseCountPerSecond(mbc.Metrics.NewrelicOracleDbTotalParseCountPerSecond),
-		metricNewrelicOracleDbTotalParseCountPerTransaction:                           newMetricNewrelicOracleDbTotalParseCountPerTransaction(mbc.Metrics.NewrelicOracleDbTotalParseCountPerTransaction),
-		metricNewrelicOracleDbTotalTableScansPerSecond:                                newMetricNewrelicOracleDbTotalTableScansPerSecond(mbc.Metrics.NewrelicOracleDbTotalTableScansPerSecond),
-		metricNewrelicOracleDbTotalTableScansPerTransaction:                           newMetricNewrelicOracleDbTotalTableScansPerTransaction(mbc.Metrics.NewrelicOracleDbTotalTableScansPerTransaction),
-		metricNewrelicOracleDbTransactionsPerLogon:                                    newMetricNewrelicOracleDbTransactionsPerLogon(mbc.Metrics.NewrelicOracleDbTransactionsPerLogon),
-		metricNewrelicOracleDbUserCallsPerSecond:                                      newMetricNewrelicOracleDbUserCallsPerSecond(mbc.Metrics.NewrelicOracleDbUserCallsPerSecond),
-		metricNewrelicOracleDbUserCallsPerTransaction:                                 newMetricNewrelicOracleDbUserCallsPerTransaction(mbc.Metrics.NewrelicOracleDbUserCallsPerTransaction),
-		metricNewrelicOracleDbUserCallsRatio:                                          newMetricNewrelicOracleDbUserCallsRatio(mbc.Metrics.NewrelicOracleDbUserCallsRatio),
-		metricNewrelicOracleDbUserCommitsPerSecond:                                    newMetricNewrelicOracleDbUserCommitsPerSecond(mbc.Metrics.NewrelicOracleDbUserCommitsPerSecond),
-		metricNewrelicOracleDbUserCommitsPercentage:                                   newMetricNewrelicOracleDbUserCommitsPercentage(mbc.Metrics.NewrelicOracleDbUserCommitsPercentage),
-		metricNewrelicOracleDbUserLimitPercentage:                                     newMetricNewrelicOracleDbUserLimitPercentage(mbc.Metrics.NewrelicOracleDbUserLimitPercentage),
-		metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond:                 newMetricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond(mbc.Metrics.NewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond),
-		metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction:            newMetricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction(mbc.Metrics.NewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction),
-		metricNewrelicOracleDbUserRollbacksPerSecond:                                  newMetricNewrelicOracleDbUserRollbacksPerSecond(mbc.Metrics.NewrelicOracleDbUserRollbacksPerSecond),
-		metricNewrelicOracleDbUserRollbacksPercentage:                                 newMetricNewrelicOracleDbUserRollbacksPercentage(mbc.Metrics.NewrelicOracleDbUserRollbacksPercentage),
-		metricNewrelicOracleDbWaitTimeRatio:                                           newMetricNewrelicOracleDbWaitTimeRatio(mbc.Metrics.NewrelicOracleDbWaitTimeRatio),
-		metricNewrelicOracleDiskBlocksRead:                                            newMetricNewrelicOracleDiskBlocksRead(mbc.Metrics.NewrelicOracleDiskBlocksRead),
-		metricNewrelicOracleDiskBlocksWritten:                                         newMetricNewrelicOracleDiskBlocksWritten(mbc.Metrics.NewrelicOracleDiskBlocksWritten),
-		metricNewrelicOracleDiskLogicalReadsPerUserCall:                               newMetricNewrelicOracleDiskLogicalReadsPerUserCall(mbc.Metrics.NewrelicOracleDiskLogicalReadsPerUserCall),
-		metricNewrelicOracleDiskPhysicalLobsReadsPerSecond:                            newMetricNewrelicOracleDiskPhysicalLobsReadsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalLobsReadsPerSecond),
-		metricNewrelicOracleDiskPhysicalLobsWritesPerSecond:                           newMetricNewrelicOracleDiskPhysicalLobsWritesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalLobsWritesPerSecond),
-		metricNewrelicOracleDiskPhysicalReadBytesPerSecond:                            newMetricNewrelicOracleDiskPhysicalReadBytesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalReadBytesPerSecond),
-		metricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond:                       newMetricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalReadIoRequestsPerSecond),
-		metricNewrelicOracleDiskPhysicalReadsPerSecond:                                newMetricNewrelicOracleDiskPhysicalReadsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalReadsPerSecond),
-		metricNewrelicOracleDiskPhysicalWriteBytesPerSecond:                           newMetricNewrelicOracleDiskPhysicalWriteBytesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalWriteBytesPerSecond),
-		metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond:                 newMetricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond),
-		metricNewrelicOracleDiskPhysicalWritesPerSecond:                               newMetricNewrelicOracleDiskPhysicalWritesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalWritesPerSecond),
-		metricNewrelicOracleDiskReadTimeMilliseconds:                                  newMetricNewrelicOracleDiskReadTimeMilliseconds(mbc.Metrics.NewrelicOracleDiskReadTimeMilliseconds),
-		metricNewrelicOracleDiskReads:                                                 newMetricNewrelicOracleDiskReads(mbc.Metrics.NewrelicOracleDiskReads),
-		metricNewrelicOracleDiskSortPerSecond:                                         newMetricNewrelicOracleDiskSortPerSecond(mbc.Metrics.NewrelicOracleDiskSortPerSecond),
-		metricNewrelicOracleDiskSortPerTransaction:                                    newMetricNewrelicOracleDiskSortPerTransaction(mbc.Metrics.NewrelicOracleDiskSortPerTransaction),
-		metricNewrelicOracleDiskTempSpaceUsedBytes:                                    newMetricNewrelicOracleDiskTempSpaceUsedBytes(mbc.Metrics.NewrelicOracleDiskTempSpaceUsedBytes),
-		metricNewrelicOracleDiskWriteTimeMilliseconds:                                 newMetricNewrelicOracleDiskWriteTimeMilliseconds(mbc.Metrics.NewrelicOracleDiskWriteTimeMilliseconds),
-		metricNewrelicOracleDiskWrites:                                                newMetricNewrelicOracleDiskWrites(mbc.Metrics.NewrelicOracleDiskWrites),
-		metricNewrelicOracleLockedAccounts:                                            newMetricNewrelicOracleLockedAccounts(mbc.Metrics.NewrelicOracleLockedAccounts),
-		metricNewrelicOracleLongRunningQueries:                                        newMetricNewrelicOracleLongRunningQueries(mbc.Metrics.NewrelicOracleLongRunningQueries),
-		metricNewrelicOracleMemoryBufferCacheHitRatio:                                 newMetricNewrelicOracleMemoryBufferCacheHitRatio(mbc.Metrics.NewrelicOracleMemoryBufferCacheHitRatio),
-		metricNewrelicOracleMemoryGlobalCacheBlocksCorrupted:                          newMetricNewrelicOracleMemoryGlobalCacheBlocksCorrupted(mbc.Metrics.NewrelicOracleMemoryGlobalCacheBlocksCorrupted),
-		metricNewrelicOracleMemoryGlobalCacheBlocksLost:                               newMetricNewrelicOracleMemoryGlobalCacheBlocksLost(mbc.Metrics.NewrelicOracleMemoryGlobalCacheBlocksLost),
-		metricNewrelicOracleMemoryPgaAllocatedBytes:                                   newMetricNewrelicOracleMemoryPgaAllocatedBytes(mbc.Metrics.NewrelicOracleMemoryPgaAllocatedBytes),
-		metricNewrelicOracleMemoryPgaFreeableBytes:                                    newMetricNewrelicOracleMemoryPgaFreeableBytes(mbc.Metrics.NewrelicOracleMemoryPgaFreeableBytes),
-		metricNewrelicOracleMemoryPgaInUseBytes:                                       newMetricNewrelicOracleMemoryPgaInUseBytes(mbc.Metrics.NewrelicOracleMemoryPgaInUseBytes),
-		metricNewrelicOracleMemoryPgaMaxSizeBytes:                                     newMetricNewrelicOracleMemoryPgaMaxSizeBytes(mbc.Metrics.NewrelicOracleMemoryPgaMaxSizeBytes),
-		metricNewrelicOracleMemoryRedoAllocationHitRatio:                              newMetricNewrelicOracleMemoryRedoAllocationHitRatio(mbc.Metrics.NewrelicOracleMemoryRedoAllocationHitRatio),
-		metricNewrelicOracleMemoryRedoGeneratedBytesPerSecond:                         newMetricNewrelicOracleMemoryRedoGeneratedBytesPerSecond(mbc.Metrics.NewrelicOracleMemoryRedoGeneratedBytesPerSecond),
-		metricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction:                    newMetricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction(mbc.Metrics.NewrelicOracleMemoryRedoGeneratedBytesPerTransaction),
-		metricNewrelicOracleMemorySortsRatio:                                          newMetricNewrelicOracleMemorySortsRatio(mbc.Metrics.NewrelicOracleMemorySortsRatio),
-		metricNewrelicOracleNetworkIoMegabytesPerSecond:                               newMetricNewrelicOracleNetworkIoMegabytesPerSecond(mbc.Metrics.NewrelicOracleNetworkIoMegabytesPerSecond),
-		metricNewrelicOracleNetworkIoRequestsPerSecond:                                newMetricNewrelicOracleNetworkIoRequestsPerSecond(mbc.Metrics.NewrelicOracleNetworkIoRequestsPerSecond),
-		metricNewrelicOracleNetworkTrafficBytesPerSecond:                              newMetricNewrelicOracleNetworkTrafficBytesPerSecond(mbc.Metrics.NewrelicOracleNetworkTrafficBytesPerSecond),
-		metricNewrelicOracleQueryPhysicalLobsReadsPerTransaction:                      newMetricNewrelicOracleQueryPhysicalLobsReadsPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalLobsReadsPerTransaction),
-		metricNewrelicOracleQueryPhysicalLobsWritesPerTransaction:                     newMetricNewrelicOracleQueryPhysicalLobsWritesPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalLobsWritesPerTransaction),
-		metricNewrelicOracleQueryPhysicalReadsPerTransaction:                          newMetricNewrelicOracleQueryPhysicalReadsPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalReadsPerTransaction),
-		metricNewrelicOracleQueryPhysicalWritesPerTransaction:                         newMetricNewrelicOracleQueryPhysicalWritesPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalWritesPerTransaction),
-		metricNewrelicOracleQueryTransactionsPerSecond:                                newMetricNewrelicOracleQueryTransactionsPerSecond(mbc.Metrics.NewrelicOracleQueryTransactionsPerSecond),
-		metricNewrelicOracleRedoLogFileSwitch:                                         newMetricNewrelicOracleRedoLogFileSwitch(mbc.Metrics.NewrelicOracleRedoLogFileSwitch),
-		metricNewrelicOracleRedoLogFileSwitchArchivingNeeded:                          newMetricNewrelicOracleRedoLogFileSwitchArchivingNeeded(mbc.Metrics.NewrelicOracleRedoLogFileSwitchArchivingNeeded),
-		metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete:                     newMetricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete(mbc.Metrics.NewrelicOracleRedoLogFileSwitchCheckpointIncomplete),
-		metricNewrelicOracleRedoLogWaits:                                              newMetricNewrelicOracleRedoLogWaits(mbc.Metrics.NewrelicOracleRedoLogWaits),
-		metricNewrelicOracleRollbackSegmentsGets:                                      newMetricNewrelicOracleRollbackSegmentsGets(mbc.Metrics.NewrelicOracleRollbackSegmentsGets),
-		metricNewrelicOracleRollbackSegmentsRatioWait:                                 newMetricNewrelicOracleRollbackSegmentsRatioWait(mbc.Metrics.NewrelicOracleRollbackSegmentsRatioWait),
-		metricNewrelicOracleRollbackSegmentsWaits:                                     newMetricNewrelicOracleRollbackSegmentsWaits(mbc.Metrics.NewrelicOracleRollbackSegmentsWaits),
-		metricNewrelicOracleSgaBufferBusyWaits:                                        newMetricNewrelicOracleSgaBufferBusyWaits(mbc.Metrics.NewrelicOracleSgaBufferBusyWaits),
-		metricNewrelicOracleSgaFixedSizeBytes:                                         newMetricNewrelicOracleSgaFixedSizeBytes(mbc.Metrics.NewrelicOracleSgaFixedSizeBytes),
-		metricNewrelicOracleSgaFreeBufferInspected:                                    newMetricNewrelicOracleSgaFreeBufferInspected(mbc.Metrics.NewrelicOracleSgaFreeBufferInspected),
-		metricNewrelicOracleSgaFreeBufferWaits:                                        newMetricNewrelicOracleSgaFreeBufferWaits(mbc.Metrics.NewrelicOracleSgaFreeBufferWaits),
-		metricNewrelicOracleSgaHitRatio:                                               newMetricNewrelicOracleSgaHitRatio(mbc.Metrics.NewrelicOracleSgaHitRatio),
-		metricNewrelicOracleSgaLogBufferAllocationRetriesRatio:                        newMetricNewrelicOracleSgaLogBufferAllocationRetriesRatio(mbc.Metrics.NewrelicOracleSgaLogBufferAllocationRetriesRatio),
-		metricNewrelicOracleSgaLogBufferRedoAllocationRetries:                         newMetricNewrelicOracleSgaLogBufferRedoAllocationRetries(mbc.Metrics.NewrelicOracleSgaLogBufferRedoAllocationRetries),
-		metricNewrelicOracleSgaLogBufferRedoEntries:                                   newMetricNewrelicOracleSgaLogBufferRedoEntries(mbc.Metrics.NewrelicOracleSgaLogBufferRedoEntries),
-		metricNewrelicOracleSgaLogBufferSpaceWaits:                                    newMetricNewrelicOracleSgaLogBufferSpaceWaits(mbc.Metrics.NewrelicOracleSgaLogBufferSpaceWaits),
-		metricNewrelicOracleSgaRedoBuffersBytes:                                       newMetricNewrelicOracleSgaRedoBuffersBytes(mbc.Metrics.NewrelicOracleSgaRedoBuffersBytes),
-		metricNewrelicOracleSgaSharedPoolDictCacheMissRatio:                           newMetricNewrelicOracleSgaSharedPoolDictCacheMissRatio(mbc.Metrics.NewrelicOracleSgaSharedPoolDictCacheMissRatio),
-		metricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio:                         newMetricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheHitRatio),
-		metricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio:                      newMetricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheReloadRatio),
-		metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes: newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes),
-		metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes:      newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes),
-		metricNewrelicOracleSgaUgaTotalMemoryBytes:                                    newMetricNewrelicOracleSgaUgaTotalMemoryBytes(mbc.Metrics.NewrelicOracleSgaUgaTotalMemoryBytes),
-		metricNewrelicOracleSortsDiskBytes:                                            newMetricNewrelicOracleSortsDiskBytes(mbc.Metrics.NewrelicOracleSortsDiskBytes),
-		metricNewrelicOracleSortsMemoryBytes:                                          newMetricNewrelicOracleSortsMemoryBytes(mbc.Metrics.NewrelicOracleSortsMemoryBytes),
-		metricNewrelicOracleTablespaceIsOffline:                                       newMetricNewrelicOracleTablespaceIsOffline(mbc.Metrics.NewrelicOracleTablespaceIsOffline),
-		metricNewrelicOracleTablespaceOfflineCdbDatafiles:                             newMetricNewrelicOracleTablespaceOfflineCdbDatafiles(mbc.Metrics.NewrelicOracleTablespaceOfflineCdbDatafiles),
-		metricNewrelicOracleTablespaceOfflinePdbDatafiles:                             newMetricNewrelicOracleTablespaceOfflinePdbDatafiles(mbc.Metrics.NewrelicOracleTablespaceOfflinePdbDatafiles),
-		metricNewrelicOracleTablespacePdbDatafilesNonWrite:                            newMetricNewrelicOracleTablespacePdbDatafilesNonWrite(mbc.Metrics.NewrelicOracleTablespacePdbDatafilesNonWrite),
-		metricNewrelicOracleTablespaceSpaceConsumedBytes:                              newMetricNewrelicOracleTablespaceSpaceConsumedBytes(mbc.Metrics.NewrelicOracleTablespaceSpaceConsumedBytes),
-		metricNewrelicOracleTablespaceSpaceReservedBytes:                              newMetricNewrelicOracleTablespaceSpaceReservedBytes(mbc.Metrics.NewrelicOracleTablespaceSpaceReservedBytes),
-		metricNewrelicOracleTablespaceSpaceUsedPercentage:                             newMetricNewrelicOracleTablespaceSpaceUsedPercentage(mbc.Metrics.NewrelicOracleTablespaceSpaceUsedPercentage),
-		resourceAttributeIncludeFilter:                                                make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:                                                make(map[string]filter.Filter),
+		metricNewrelicOracleDbActiveParallelSessions:                                    newMetricNewrelicOracleDbActiveParallelSessions(mbc.Metrics.NewrelicOracleDbActiveParallelSessions),
+		metricNewrelicOracleDbActiveSerialSessions:                                      newMetricNewrelicOracleDbActiveSerialSessions(mbc.Metrics.NewrelicOracleDbActiveSerialSessions),
+		metricNewrelicOracleDbAverageActiveSessions:                                     newMetricNewrelicOracleDbAverageActiveSessions(mbc.Metrics.NewrelicOracleDbAverageActiveSessions),
+		metricNewrelicOracleDbBackgroundCheckpointsPerSecond:                            newMetricNewrelicOracleDbBackgroundCheckpointsPerSecond(mbc.Metrics.NewrelicOracleDbBackgroundCheckpointsPerSecond),
+		metricNewrelicOracleDbBackgroundCPUUsagePerSecond:                               newMetricNewrelicOracleDbBackgroundCPUUsagePerSecond(mbc.Metrics.NewrelicOracleDbBackgroundCPUUsagePerSecond),
+		metricNewrelicOracleDbBackgroundTimePerSecond:                                   newMetricNewrelicOracleDbBackgroundTimePerSecond(mbc.Metrics.NewrelicOracleDbBackgroundTimePerSecond),
+		metricNewrelicOracleDbBlockChangesPerSecond:                                     newMetricNewrelicOracleDbBlockChangesPerSecond(mbc.Metrics.NewrelicOracleDbBlockChangesPerSecond),
+		metricNewrelicOracleDbBlockChangesPerTransaction:                                newMetricNewrelicOracleDbBlockChangesPerTransaction(mbc.Metrics.NewrelicOracleDbBlockChangesPerTransaction),
+		metricNewrelicOracleDbBlockChangesPerUserCall:                                   newMetricNewrelicOracleDbBlockChangesPerUserCall(mbc.Metrics.NewrelicOracleDbBlockChangesPerUserCall),
+		metricNewrelicOracleDbBlockGetsPerSecond:                                        newMetricNewrelicOracleDbBlockGetsPerSecond(mbc.Metrics.NewrelicOracleDbBlockGetsPerSecond),
+		metricNewrelicOracleDbBlockGetsPerTransaction:                                   newMetricNewrelicOracleDbBlockGetsPerTransaction(mbc.Metrics.NewrelicOracleDbBlockGetsPerTransaction),
+		metricNewrelicOracleDbBlockGetsPerUserCall:                                      newMetricNewrelicOracleDbBlockGetsPerUserCall(mbc.Metrics.NewrelicOracleDbBlockGetsPerUserCall),
+		metricNewrelicOracleDbBranchNodeSplitsPerSecond:                                 newMetricNewrelicOracleDbBranchNodeSplitsPerSecond(mbc.Metrics.NewrelicOracleDbBranchNodeSplitsPerSecond),
+		metricNewrelicOracleDbBranchNodeSplitsPerTransaction:                            newMetricNewrelicOracleDbBranchNodeSplitsPerTransaction(mbc.Metrics.NewrelicOracleDbBranchNodeSplitsPerTransaction),
+		metricNewrelicOracleDbCapturedUserCalls:                                         newMetricNewrelicOracleDbCapturedUserCalls(mbc.Metrics.NewrelicOracleDbCapturedUserCalls),
+		metricNewrelicOracleDbConsistentReadChangesPerSecond:                            newMetricNewrelicOracleDbConsistentReadChangesPerSecond(mbc.Metrics.NewrelicOracleDbConsistentReadChangesPerSecond),
+		metricNewrelicOracleDbConsistentReadChangesPerTransaction:                       newMetricNewrelicOracleDbConsistentReadChangesPerTransaction(mbc.Metrics.NewrelicOracleDbConsistentReadChangesPerTransaction),
+		metricNewrelicOracleDbConsistentReadGetsPerSecond:                               newMetricNewrelicOracleDbConsistentReadGetsPerSecond(mbc.Metrics.NewrelicOracleDbConsistentReadGetsPerSecond),
+		metricNewrelicOracleDbConsistentReadGetsPerTransaction:                          newMetricNewrelicOracleDbConsistentReadGetsPerTransaction(mbc.Metrics.NewrelicOracleDbConsistentReadGetsPerTransaction),
+		metricNewrelicOracleDbCPUTimeRatio:                                              newMetricNewrelicOracleDbCPUTimeRatio(mbc.Metrics.NewrelicOracleDbCPUTimeRatio),
+		metricNewrelicOracleDbCPUUsagePerSecond:                                         newMetricNewrelicOracleDbCPUUsagePerSecond(mbc.Metrics.NewrelicOracleDbCPUUsagePerSecond),
+		metricNewrelicOracleDbCPUUsagePerTransaction:                                    newMetricNewrelicOracleDbCPUUsagePerTransaction(mbc.Metrics.NewrelicOracleDbCPUUsagePerTransaction),
+		metricNewrelicOracleDbCrBlocksCreatedPerSecond:                                  newMetricNewrelicOracleDbCrBlocksCreatedPerSecond(mbc.Metrics.NewrelicOracleDbCrBlocksCreatedPerSecond),
+		metricNewrelicOracleDbCrBlocksCreatedPerTransaction:                             newMetricNewrelicOracleDbCrBlocksCreatedPerTransaction(mbc.Metrics.NewrelicOracleDbCrBlocksCreatedPerTransaction),
+		metricNewrelicOracleDbCrUndoRecordsAppliedPerSecond:                             newMetricNewrelicOracleDbCrUndoRecordsAppliedPerSecond(mbc.Metrics.NewrelicOracleDbCrUndoRecordsAppliedPerSecond),
+		metricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction:                        newMetricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction(mbc.Metrics.NewrelicOracleDbCrUndoRecordsAppliedPerTransaction),
+		metricNewrelicOracleDbCurrentLogons:                                             newMetricNewrelicOracleDbCurrentLogons(mbc.Metrics.NewrelicOracleDbCurrentLogons),
+		metricNewrelicOracleDbCurrentOpenCursors:                                        newMetricNewrelicOracleDbCurrentOpenCursors(mbc.Metrics.NewrelicOracleDbCurrentOpenCursors),
+		metricNewrelicOracleDbCursorCacheHitRatio:                                       newMetricNewrelicOracleDbCursorCacheHitRatio(mbc.Metrics.NewrelicOracleDbCursorCacheHitRatio),
+		metricNewrelicOracleDbCursorCacheHitsPerAttempts:                                newMetricNewrelicOracleDbCursorCacheHitsPerAttempts(mbc.Metrics.NewrelicOracleDbCursorCacheHitsPerAttempts),
+		metricNewrelicOracleDbDatabaseCPUTimePerSecond:                                  newMetricNewrelicOracleDbDatabaseCPUTimePerSecond(mbc.Metrics.NewrelicOracleDbDatabaseCPUTimePerSecond),
+		metricNewrelicOracleDbDbwrCheckpointsPerSecond:                                  newMetricNewrelicOracleDbDbwrCheckpointsPerSecond(mbc.Metrics.NewrelicOracleDbDbwrCheckpointsPerSecond),
+		metricNewrelicOracleDbEnqueueDeadlocksPerSecond:                                 newMetricNewrelicOracleDbEnqueueDeadlocksPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueDeadlocksPerSecond),
+		metricNewrelicOracleDbEnqueueDeadlocksPerTransaction:                            newMetricNewrelicOracleDbEnqueueDeadlocksPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueDeadlocksPerTransaction),
+		metricNewrelicOracleDbEnqueueRequestsPerSecond:                                  newMetricNewrelicOracleDbEnqueueRequestsPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueRequestsPerSecond),
+		metricNewrelicOracleDbEnqueueRequestsPerTransaction:                             newMetricNewrelicOracleDbEnqueueRequestsPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueRequestsPerTransaction),
+		metricNewrelicOracleDbEnqueueTimeoutsPerSecond:                                  newMetricNewrelicOracleDbEnqueueTimeoutsPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueTimeoutsPerSecond),
+		metricNewrelicOracleDbEnqueueTimeoutsPerTransaction:                             newMetricNewrelicOracleDbEnqueueTimeoutsPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueTimeoutsPerTransaction),
+		metricNewrelicOracleDbEnqueueWaitsPerSecond:                                     newMetricNewrelicOracleDbEnqueueWaitsPerSecond(mbc.Metrics.NewrelicOracleDbEnqueueWaitsPerSecond),
+		metricNewrelicOracleDbEnqueueWaitsPerTransaction:                                newMetricNewrelicOracleDbEnqueueWaitsPerTransaction(mbc.Metrics.NewrelicOracleDbEnqueueWaitsPerTransaction),
+		metricNewrelicOracleDbExecuteWithoutParseRatio:                                  newMetricNewrelicOracleDbExecuteWithoutParseRatio(mbc.Metrics.NewrelicOracleDbExecuteWithoutParseRatio),
+		metricNewrelicOracleDbExecutionsPerSecond:                                       newMetricNewrelicOracleDbExecutionsPerSecond(mbc.Metrics.NewrelicOracleDbExecutionsPerSecond),
+		metricNewrelicOracleDbExecutionsPerTransaction:                                  newMetricNewrelicOracleDbExecutionsPerTransaction(mbc.Metrics.NewrelicOracleDbExecutionsPerTransaction),
+		metricNewrelicOracleDbExecutionsPerUserCall:                                     newMetricNewrelicOracleDbExecutionsPerUserCall(mbc.Metrics.NewrelicOracleDbExecutionsPerUserCall),
+		metricNewrelicOracleDbFullIndexScansPerSecond:                                   newMetricNewrelicOracleDbFullIndexScansPerSecond(mbc.Metrics.NewrelicOracleDbFullIndexScansPerSecond),
+		metricNewrelicOracleDbFullIndexScansPerTransaction:                              newMetricNewrelicOracleDbFullIndexScansPerTransaction(mbc.Metrics.NewrelicOracleDbFullIndexScansPerTransaction),
+		metricNewrelicOracleDbGcCrBlockReceivedPerSecond:                                newMetricNewrelicOracleDbGcCrBlockReceivedPerSecond(mbc.Metrics.NewrelicOracleDbGcCrBlockReceivedPerSecond),
+		metricNewrelicOracleDbGcCrBlockReceivedPerTransaction:                           newMetricNewrelicOracleDbGcCrBlockReceivedPerTransaction(mbc.Metrics.NewrelicOracleDbGcCrBlockReceivedPerTransaction),
+		metricNewrelicOracleDbGcCrBlockRecievedPerSecond:                                newMetricNewrelicOracleDbGcCrBlockRecievedPerSecond(mbc.Metrics.NewrelicOracleDbGcCrBlockRecievedPerSecond),
+		metricNewrelicOracleDbGcCrBlockRecievedPerTransaction:                           newMetricNewrelicOracleDbGcCrBlockRecievedPerTransaction(mbc.Metrics.NewrelicOracleDbGcCrBlockRecievedPerTransaction),
+		metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond:                           newMetricNewrelicOracleDbGcCurrentBlockReceivedPerSecond(mbc.Metrics.NewrelicOracleDbGcCurrentBlockReceivedPerSecond),
+		metricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction:                      newMetricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction(mbc.Metrics.NewrelicOracleDbGcCurrentBlockReceivedPerTransaction),
+		metricNewrelicOracleDbGlobalCacheAverageCrGetTime:                               newMetricNewrelicOracleDbGlobalCacheAverageCrGetTime(mbc.Metrics.NewrelicOracleDbGlobalCacheAverageCrGetTime),
+		metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond:                      newMetricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond(mbc.Metrics.NewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond),
+		metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime:                          newMetricNewrelicOracleDbGlobalCacheAverageCurrentGetTime(mbc.Metrics.NewrelicOracleDbGlobalCacheAverageCurrentGetTime),
+		metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond:                 newMetricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond(mbc.Metrics.NewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond),
+		metricNewrelicOracleDbHardParseCountPerSecond:                                   newMetricNewrelicOracleDbHardParseCountPerSecond(mbc.Metrics.NewrelicOracleDbHardParseCountPerSecond),
+		metricNewrelicOracleDbHardParseCountPerTransaction:                              newMetricNewrelicOracleDbHardParseCountPerTransaction(mbc.Metrics.NewrelicOracleDbHardParseCountPerTransaction),
+		metricNewrelicOracleDbHostCPUUsagePerSecond:                                     newMetricNewrelicOracleDbHostCPUUsagePerSecond(mbc.Metrics.NewrelicOracleDbHostCPUUsagePerSecond),
+		metricNewrelicOracleDbHostCPUUtilization:                                        newMetricNewrelicOracleDbHostCPUUtilization(mbc.Metrics.NewrelicOracleDbHostCPUUtilization),
+		metricNewrelicOracleDbLeafNodeSplitsPerSecond:                                   newMetricNewrelicOracleDbLeafNodeSplitsPerSecond(mbc.Metrics.NewrelicOracleDbLeafNodeSplitsPerSecond),
+		metricNewrelicOracleDbLeafNodeSplitsPerTransaction:                              newMetricNewrelicOracleDbLeafNodeSplitsPerTransaction(mbc.Metrics.NewrelicOracleDbLeafNodeSplitsPerTransaction),
+		metricNewrelicOracleDbLibraryCacheHitRatio:                                      newMetricNewrelicOracleDbLibraryCacheHitRatio(mbc.Metrics.NewrelicOracleDbLibraryCacheHitRatio),
+		metricNewrelicOracleDbLibraryCacheMissRatio:                                     newMetricNewrelicOracleDbLibraryCacheMissRatio(mbc.Metrics.NewrelicOracleDbLibraryCacheMissRatio),
+		metricNewrelicOracleDbLogicalReadsPerSecond:                                     newMetricNewrelicOracleDbLogicalReadsPerSecond(mbc.Metrics.NewrelicOracleDbLogicalReadsPerSecond),
+		metricNewrelicOracleDbLogicalReadsPerTransaction:                                newMetricNewrelicOracleDbLogicalReadsPerTransaction(mbc.Metrics.NewrelicOracleDbLogicalReadsPerTransaction),
+		metricNewrelicOracleDbLogonsPerSecond:                                           newMetricNewrelicOracleDbLogonsPerSecond(mbc.Metrics.NewrelicOracleDbLogonsPerSecond),
+		metricNewrelicOracleDbLogonsPerTransaction:                                      newMetricNewrelicOracleDbLogonsPerTransaction(mbc.Metrics.NewrelicOracleDbLogonsPerTransaction),
+		metricNewrelicOracleDbLongTableScansPerSecond:                                   newMetricNewrelicOracleDbLongTableScansPerSecond(mbc.Metrics.NewrelicOracleDbLongTableScansPerSecond),
+		metricNewrelicOracleDbLongTableScansPerTransaction:                              newMetricNewrelicOracleDbLongTableScansPerTransaction(mbc.Metrics.NewrelicOracleDbLongTableScansPerTransaction),
+		metricNewrelicOracleDbOpenCursorsPerSecond:                                      newMetricNewrelicOracleDbOpenCursorsPerSecond(mbc.Metrics.NewrelicOracleDbOpenCursorsPerSecond),
+		metricNewrelicOracleDbOpenCursorsPerTransaction:                                 newMetricNewrelicOracleDbOpenCursorsPerTransaction(mbc.Metrics.NewrelicOracleDbOpenCursorsPerTransaction),
+		metricNewrelicOracleDbOsLoad:                                                    newMetricNewrelicOracleDbOsLoad(mbc.Metrics.NewrelicOracleDbOsLoad),
+		metricNewrelicOracleDbParseFailureCountPerSecond:                                newMetricNewrelicOracleDbParseFailureCountPerSecond(mbc.Metrics.NewrelicOracleDbParseFailureCountPerSecond),
+		metricNewrelicOracleDbParseFailureCountPerTransaction:                           newMetricNewrelicOracleDbParseFailureCountPerTransaction(mbc.Metrics.NewrelicOracleDbParseFailureCountPerTransaction),
+		metricNewrelicOracleDbPgaCacheHitPercentage:                                     newMetricNewrelicOracleDbPgaCacheHitPercentage(mbc.Metrics.NewrelicOracleDbPgaCacheHitPercentage),
+		metricNewrelicOracleDbPhysicalReadBytesPerSecond:                                newMetricNewrelicOracleDbPhysicalReadBytesPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalReadBytesPerSecond),
+		metricNewrelicOracleDbPhysicalReadIoRequestsPerSecond:                           newMetricNewrelicOracleDbPhysicalReadIoRequestsPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalReadIoRequestsPerSecond),
+		metricNewrelicOracleDbPhysicalReadsPerSecond:                                    newMetricNewrelicOracleDbPhysicalReadsPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalReadsPerSecond),
+		metricNewrelicOracleDbPhysicalWriteBytesPerSecond:                               newMetricNewrelicOracleDbPhysicalWriteBytesPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalWriteBytesPerSecond),
+		metricNewrelicOracleDbPhysicalWritesPerSecond:                                   newMetricNewrelicOracleDbPhysicalWritesPerSecond(mbc.Metrics.NewrelicOracleDbPhysicalWritesPerSecond),
+		metricNewrelicOracleDbProcessLimitPercentage:                                    newMetricNewrelicOracleDbProcessLimitPercentage(mbc.Metrics.NewrelicOracleDbProcessLimitPercentage),
+		metricNewrelicOracleDbRecursiveCallsPerSecond:                                   newMetricNewrelicOracleDbRecursiveCallsPerSecond(mbc.Metrics.NewrelicOracleDbRecursiveCallsPerSecond),
+		metricNewrelicOracleDbRecursiveCallsPerTransaction:                              newMetricNewrelicOracleDbRecursiveCallsPerTransaction(mbc.Metrics.NewrelicOracleDbRecursiveCallsPerTransaction),
+		metricNewrelicOracleDbRedoWritesPerSecond:                                       newMetricNewrelicOracleDbRedoWritesPerSecond(mbc.Metrics.NewrelicOracleDbRedoWritesPerSecond),
+		metricNewrelicOracleDbRedoWritesPerTransaction:                                  newMetricNewrelicOracleDbRedoWritesPerTransaction(mbc.Metrics.NewrelicOracleDbRedoWritesPerTransaction),
+		metricNewrelicOracleDbResponseTimePerTransaction:                                newMetricNewrelicOracleDbResponseTimePerTransaction(mbc.Metrics.NewrelicOracleDbResponseTimePerTransaction),
+		metricNewrelicOracleDbRowCacheHitRatio:                                          newMetricNewrelicOracleDbRowCacheHitRatio(mbc.Metrics.NewrelicOracleDbRowCacheHitRatio),
+		metricNewrelicOracleDbRowCacheMissRatio:                                         newMetricNewrelicOracleDbRowCacheMissRatio(mbc.Metrics.NewrelicOracleDbRowCacheMissRatio),
+		metricNewrelicOracleDbRowsPerSort:                                               newMetricNewrelicOracleDbRowsPerSort(mbc.Metrics.NewrelicOracleDbRowsPerSort),
+		metricNewrelicOracleDbSessionCount:                                              newMetricNewrelicOracleDbSessionCount(mbc.Metrics.NewrelicOracleDbSessionCount),
+		metricNewrelicOracleDbSessionLimitPercentage:                                    newMetricNewrelicOracleDbSessionLimitPercentage(mbc.Metrics.NewrelicOracleDbSessionLimitPercentage),
+		metricNewrelicOracleDbSharedPoolFreePercentage:                                  newMetricNewrelicOracleDbSharedPoolFreePercentage(mbc.Metrics.NewrelicOracleDbSharedPoolFreePercentage),
+		metricNewrelicOracleDbSoftParseRatio:                                            newMetricNewrelicOracleDbSoftParseRatio(mbc.Metrics.NewrelicOracleDbSoftParseRatio),
+		metricNewrelicOracleDbSortsPerUserCall:                                          newMetricNewrelicOracleDbSortsPerUserCall(mbc.Metrics.NewrelicOracleDbSortsPerUserCall),
+		metricNewrelicOracleDbSQLServiceResponseTime:                                    newMetricNewrelicOracleDbSQLServiceResponseTime(mbc.Metrics.NewrelicOracleDbSQLServiceResponseTime),
+		metricNewrelicOracleDbStreamsPoolUsagePercentage:                                newMetricNewrelicOracleDbStreamsPoolUsagePercentage(mbc.Metrics.NewrelicOracleDbStreamsPoolUsagePercentage),
+		metricNewrelicOracleDbTableScansPerUserCall:                                     newMetricNewrelicOracleDbTableScansPerUserCall(mbc.Metrics.NewrelicOracleDbTableScansPerUserCall),
+		metricNewrelicOracleDbTotalIndexScansPerSecond:                                  newMetricNewrelicOracleDbTotalIndexScansPerSecond(mbc.Metrics.NewrelicOracleDbTotalIndexScansPerSecond),
+		metricNewrelicOracleDbTotalIndexScansPerTransaction:                             newMetricNewrelicOracleDbTotalIndexScansPerTransaction(mbc.Metrics.NewrelicOracleDbTotalIndexScansPerTransaction),
+		metricNewrelicOracleDbTotalParseCountPerSecond:                                  newMetricNewrelicOracleDbTotalParseCountPerSecond(mbc.Metrics.NewrelicOracleDbTotalParseCountPerSecond),
+		metricNewrelicOracleDbTotalParseCountPerTransaction:                             newMetricNewrelicOracleDbTotalParseCountPerTransaction(mbc.Metrics.NewrelicOracleDbTotalParseCountPerTransaction),
+		metricNewrelicOracleDbTotalTableScansPerSecond:                                  newMetricNewrelicOracleDbTotalTableScansPerSecond(mbc.Metrics.NewrelicOracleDbTotalTableScansPerSecond),
+		metricNewrelicOracleDbTotalTableScansPerTransaction:                             newMetricNewrelicOracleDbTotalTableScansPerTransaction(mbc.Metrics.NewrelicOracleDbTotalTableScansPerTransaction),
+		metricNewrelicOracleDbTransactionsPerLogon:                                      newMetricNewrelicOracleDbTransactionsPerLogon(mbc.Metrics.NewrelicOracleDbTransactionsPerLogon),
+		metricNewrelicOracleDbUserCallsPerSecond:                                        newMetricNewrelicOracleDbUserCallsPerSecond(mbc.Metrics.NewrelicOracleDbUserCallsPerSecond),
+		metricNewrelicOracleDbUserCallsPerTransaction:                                   newMetricNewrelicOracleDbUserCallsPerTransaction(mbc.Metrics.NewrelicOracleDbUserCallsPerTransaction),
+		metricNewrelicOracleDbUserCallsRatio:                                            newMetricNewrelicOracleDbUserCallsRatio(mbc.Metrics.NewrelicOracleDbUserCallsRatio),
+		metricNewrelicOracleDbUserCommitsPerSecond:                                      newMetricNewrelicOracleDbUserCommitsPerSecond(mbc.Metrics.NewrelicOracleDbUserCommitsPerSecond),
+		metricNewrelicOracleDbUserCommitsPercentage:                                     newMetricNewrelicOracleDbUserCommitsPercentage(mbc.Metrics.NewrelicOracleDbUserCommitsPercentage),
+		metricNewrelicOracleDbUserLimitPercentage:                                       newMetricNewrelicOracleDbUserLimitPercentage(mbc.Metrics.NewrelicOracleDbUserLimitPercentage),
+		metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond:                   newMetricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond(mbc.Metrics.NewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond),
+		metricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction:              newMetricNewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction(mbc.Metrics.NewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction),
+		metricNewrelicOracleDbUserRollbacksPerSecond:                                    newMetricNewrelicOracleDbUserRollbacksPerSecond(mbc.Metrics.NewrelicOracleDbUserRollbacksPerSecond),
+		metricNewrelicOracleDbUserRollbacksPercentage:                                   newMetricNewrelicOracleDbUserRollbacksPercentage(mbc.Metrics.NewrelicOracleDbUserRollbacksPercentage),
+		metricNewrelicOracleDbWaitTimeRatio:                                             newMetricNewrelicOracleDbWaitTimeRatio(mbc.Metrics.NewrelicOracleDbWaitTimeRatio),
+		metricNewrelicOracleDiskBlocksRead:                                              newMetricNewrelicOracleDiskBlocksRead(mbc.Metrics.NewrelicOracleDiskBlocksRead),
+		metricNewrelicOracleDiskBlocksWritten:                                           newMetricNewrelicOracleDiskBlocksWritten(mbc.Metrics.NewrelicOracleDiskBlocksWritten),
+		metricNewrelicOracleDiskLogicalReadsPerUserCall:                                 newMetricNewrelicOracleDiskLogicalReadsPerUserCall(mbc.Metrics.NewrelicOracleDiskLogicalReadsPerUserCall),
+		metricNewrelicOracleDiskPhysicalLobsReadsPerSecond:                              newMetricNewrelicOracleDiskPhysicalLobsReadsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalLobsReadsPerSecond),
+		metricNewrelicOracleDiskPhysicalLobsWritesPerSecond:                             newMetricNewrelicOracleDiskPhysicalLobsWritesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalLobsWritesPerSecond),
+		metricNewrelicOracleDiskPhysicalReadBytesPerSecond:                              newMetricNewrelicOracleDiskPhysicalReadBytesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalReadBytesPerSecond),
+		metricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond:                         newMetricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalReadIoRequestsPerSecond),
+		metricNewrelicOracleDiskPhysicalReadsPerSecond:                                  newMetricNewrelicOracleDiskPhysicalReadsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalReadsPerSecond),
+		metricNewrelicOracleDiskPhysicalWriteBytesPerSecond:                             newMetricNewrelicOracleDiskPhysicalWriteBytesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalWriteBytesPerSecond),
+		metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond:                        newMetricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalWriteIoRequestsPerSecond),
+		metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond:                   newMetricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond),
+		metricNewrelicOracleDiskPhysicalWritesPerSecond:                                 newMetricNewrelicOracleDiskPhysicalWritesPerSecond(mbc.Metrics.NewrelicOracleDiskPhysicalWritesPerSecond),
+		metricNewrelicOracleDiskReadTimeInMiliseconds:                                   newMetricNewrelicOracleDiskReadTimeInMiliseconds(mbc.Metrics.NewrelicOracleDiskReadTimeInMiliseconds),
+		metricNewrelicOracleDiskReadTimeInMilliseconds:                                  newMetricNewrelicOracleDiskReadTimeInMilliseconds(mbc.Metrics.NewrelicOracleDiskReadTimeInMilliseconds),
+		metricNewrelicOracleDiskReadTimeMilliseconds:                                    newMetricNewrelicOracleDiskReadTimeMilliseconds(mbc.Metrics.NewrelicOracleDiskReadTimeMilliseconds),
+		metricNewrelicOracleDiskReads:                                                   newMetricNewrelicOracleDiskReads(mbc.Metrics.NewrelicOracleDiskReads),
+		metricNewrelicOracleDiskSortPerSecond:                                           newMetricNewrelicOracleDiskSortPerSecond(mbc.Metrics.NewrelicOracleDiskSortPerSecond),
+		metricNewrelicOracleDiskSortPerTransaction:                                      newMetricNewrelicOracleDiskSortPerTransaction(mbc.Metrics.NewrelicOracleDiskSortPerTransaction),
+		metricNewrelicOracleDiskTempSpaceUsedBytes:                                      newMetricNewrelicOracleDiskTempSpaceUsedBytes(mbc.Metrics.NewrelicOracleDiskTempSpaceUsedBytes),
+		metricNewrelicOracleDiskTempSpaceUsedInBytes:                                    newMetricNewrelicOracleDiskTempSpaceUsedInBytes(mbc.Metrics.NewrelicOracleDiskTempSpaceUsedInBytes),
+		metricNewrelicOracleDiskWriteTimeInMiliseconds:                                  newMetricNewrelicOracleDiskWriteTimeInMiliseconds(mbc.Metrics.NewrelicOracleDiskWriteTimeInMiliseconds),
+		metricNewrelicOracleDiskWriteTimeInMilliseconds:                                 newMetricNewrelicOracleDiskWriteTimeInMilliseconds(mbc.Metrics.NewrelicOracleDiskWriteTimeInMilliseconds),
+		metricNewrelicOracleDiskWriteTimeMilliseconds:                                   newMetricNewrelicOracleDiskWriteTimeMilliseconds(mbc.Metrics.NewrelicOracleDiskWriteTimeMilliseconds),
+		metricNewrelicOracleDiskWrites:                                                  newMetricNewrelicOracleDiskWrites(mbc.Metrics.NewrelicOracleDiskWrites),
+		metricNewrelicOracleInstanceCdbDatafilesOffline:                                 newMetricNewrelicOracleInstanceCdbDatafilesOffline(mbc.Metrics.NewrelicOracleInstanceCdbDatafilesOffline),
+		metricNewrelicOracleLockedAccounts:                                              newMetricNewrelicOracleLockedAccounts(mbc.Metrics.NewrelicOracleLockedAccounts),
+		metricNewrelicOracleLongRunningQueries:                                          newMetricNewrelicOracleLongRunningQueries(mbc.Metrics.NewrelicOracleLongRunningQueries),
+		metricNewrelicOracleMemoryBufferCacheHitRatio:                                   newMetricNewrelicOracleMemoryBufferCacheHitRatio(mbc.Metrics.NewrelicOracleMemoryBufferCacheHitRatio),
+		metricNewrelicOracleMemoryGlobalCacheBlocksCorrupted:                            newMetricNewrelicOracleMemoryGlobalCacheBlocksCorrupted(mbc.Metrics.NewrelicOracleMemoryGlobalCacheBlocksCorrupted),
+		metricNewrelicOracleMemoryGlobalCacheBlocksLost:                                 newMetricNewrelicOracleMemoryGlobalCacheBlocksLost(mbc.Metrics.NewrelicOracleMemoryGlobalCacheBlocksLost),
+		metricNewrelicOracleMemoryPgaAllocatedBytes:                                     newMetricNewrelicOracleMemoryPgaAllocatedBytes(mbc.Metrics.NewrelicOracleMemoryPgaAllocatedBytes),
+		metricNewrelicOracleMemoryPgaAllocatedInBytes:                                   newMetricNewrelicOracleMemoryPgaAllocatedInBytes(mbc.Metrics.NewrelicOracleMemoryPgaAllocatedInBytes),
+		metricNewrelicOracleMemoryPgaFreeableBytes:                                      newMetricNewrelicOracleMemoryPgaFreeableBytes(mbc.Metrics.NewrelicOracleMemoryPgaFreeableBytes),
+		metricNewrelicOracleMemoryPgaFreeableInBytes:                                    newMetricNewrelicOracleMemoryPgaFreeableInBytes(mbc.Metrics.NewrelicOracleMemoryPgaFreeableInBytes),
+		metricNewrelicOracleMemoryPgaInUseBytes:                                         newMetricNewrelicOracleMemoryPgaInUseBytes(mbc.Metrics.NewrelicOracleMemoryPgaInUseBytes),
+		metricNewrelicOracleMemoryPgaInUseInBytes:                                       newMetricNewrelicOracleMemoryPgaInUseInBytes(mbc.Metrics.NewrelicOracleMemoryPgaInUseInBytes),
+		metricNewrelicOracleMemoryPgaMaxSizeBytes:                                       newMetricNewrelicOracleMemoryPgaMaxSizeBytes(mbc.Metrics.NewrelicOracleMemoryPgaMaxSizeBytes),
+		metricNewrelicOracleMemoryPgaMaxSizeInBytes:                                     newMetricNewrelicOracleMemoryPgaMaxSizeInBytes(mbc.Metrics.NewrelicOracleMemoryPgaMaxSizeInBytes),
+		metricNewrelicOracleMemoryRedoAllocationHitRatio:                                newMetricNewrelicOracleMemoryRedoAllocationHitRatio(mbc.Metrics.NewrelicOracleMemoryRedoAllocationHitRatio),
+		metricNewrelicOracleMemoryRedoGeneratedBytesPerSecond:                           newMetricNewrelicOracleMemoryRedoGeneratedBytesPerSecond(mbc.Metrics.NewrelicOracleMemoryRedoGeneratedBytesPerSecond),
+		metricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction:                      newMetricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction(mbc.Metrics.NewrelicOracleMemoryRedoGeneratedBytesPerTransaction),
+		metricNewrelicOracleMemorySortsRatio:                                            newMetricNewrelicOracleMemorySortsRatio(mbc.Metrics.NewrelicOracleMemorySortsRatio),
+		metricNewrelicOracleNetworkIoMegabytesPerSecond:                                 newMetricNewrelicOracleNetworkIoMegabytesPerSecond(mbc.Metrics.NewrelicOracleNetworkIoMegabytesPerSecond),
+		metricNewrelicOracleNetworkIoRequestsPerSecond:                                  newMetricNewrelicOracleNetworkIoRequestsPerSecond(mbc.Metrics.NewrelicOracleNetworkIoRequestsPerSecond),
+		metricNewrelicOracleNetworkTrafficBytePerSecond:                                 newMetricNewrelicOracleNetworkTrafficBytePerSecond(mbc.Metrics.NewrelicOracleNetworkTrafficBytePerSecond),
+		metricNewrelicOracleNetworkTrafficBytesPerSecond:                                newMetricNewrelicOracleNetworkTrafficBytesPerSecond(mbc.Metrics.NewrelicOracleNetworkTrafficBytesPerSecond),
+		metricNewrelicOracleQueryPhysicalLobsReadsPerTransaction:                        newMetricNewrelicOracleQueryPhysicalLobsReadsPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalLobsReadsPerTransaction),
+		metricNewrelicOracleQueryPhysicalLobsWritesPerTransaction:                       newMetricNewrelicOracleQueryPhysicalLobsWritesPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalLobsWritesPerTransaction),
+		metricNewrelicOracleQueryPhysicalReadsPerTransaction:                            newMetricNewrelicOracleQueryPhysicalReadsPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalReadsPerTransaction),
+		metricNewrelicOracleQueryPhysicalWritesPerTransaction:                           newMetricNewrelicOracleQueryPhysicalWritesPerTransaction(mbc.Metrics.NewrelicOracleQueryPhysicalWritesPerTransaction),
+		metricNewrelicOracleQuerySQLServiceResponseTime:                                 newMetricNewrelicOracleQuerySQLServiceResponseTime(mbc.Metrics.NewrelicOracleQuerySQLServiceResponseTime),
+		metricNewrelicOracleQueryTransactionsPerSecond:                                  newMetricNewrelicOracleQueryTransactionsPerSecond(mbc.Metrics.NewrelicOracleQueryTransactionsPerSecond),
+		metricNewrelicOracleRedoLogFileSwitch:                                           newMetricNewrelicOracleRedoLogFileSwitch(mbc.Metrics.NewrelicOracleRedoLogFileSwitch),
+		metricNewrelicOracleRedoLogFileSwitchArchivingNeeded:                            newMetricNewrelicOracleRedoLogFileSwitchArchivingNeeded(mbc.Metrics.NewrelicOracleRedoLogFileSwitchArchivingNeeded),
+		metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete:                       newMetricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete(mbc.Metrics.NewrelicOracleRedoLogFileSwitchCheckpointIncomplete),
+		metricNewrelicOracleRedoLogLogFileSwitch:                                        newMetricNewrelicOracleRedoLogLogFileSwitch(mbc.Metrics.NewrelicOracleRedoLogLogFileSwitch),
+		metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded:                         newMetricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded(mbc.Metrics.NewrelicOracleRedoLogLogFileSwitchArchivingNeeded),
+		metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete:                    newMetricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete(mbc.Metrics.NewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete),
+		metricNewrelicOracleRedoLogWaits:                                                newMetricNewrelicOracleRedoLogWaits(mbc.Metrics.NewrelicOracleRedoLogWaits),
+		metricNewrelicOracleRollbackSegmentsGets:                                        newMetricNewrelicOracleRollbackSegmentsGets(mbc.Metrics.NewrelicOracleRollbackSegmentsGets),
+		metricNewrelicOracleRollbackSegmentsRatioWait:                                   newMetricNewrelicOracleRollbackSegmentsRatioWait(mbc.Metrics.NewrelicOracleRollbackSegmentsRatioWait),
+		metricNewrelicOracleRollbackSegmentsWaits:                                       newMetricNewrelicOracleRollbackSegmentsWaits(mbc.Metrics.NewrelicOracleRollbackSegmentsWaits),
+		metricNewrelicOracleSgaBufferBusyWaits:                                          newMetricNewrelicOracleSgaBufferBusyWaits(mbc.Metrics.NewrelicOracleSgaBufferBusyWaits),
+		metricNewrelicOracleSgaFixedSizeBytes:                                           newMetricNewrelicOracleSgaFixedSizeBytes(mbc.Metrics.NewrelicOracleSgaFixedSizeBytes),
+		metricNewrelicOracleSgaFixedSizeInBytes:                                         newMetricNewrelicOracleSgaFixedSizeInBytes(mbc.Metrics.NewrelicOracleSgaFixedSizeInBytes),
+		metricNewrelicOracleSgaFreeBufferInspected:                                      newMetricNewrelicOracleSgaFreeBufferInspected(mbc.Metrics.NewrelicOracleSgaFreeBufferInspected),
+		metricNewrelicOracleSgaFreeBufferWaits:                                          newMetricNewrelicOracleSgaFreeBufferWaits(mbc.Metrics.NewrelicOracleSgaFreeBufferWaits),
+		metricNewrelicOracleSgaHitRatio:                                                 newMetricNewrelicOracleSgaHitRatio(mbc.Metrics.NewrelicOracleSgaHitRatio),
+		metricNewrelicOracleSgaLogBufferAllocationRetriesRatio:                          newMetricNewrelicOracleSgaLogBufferAllocationRetriesRatio(mbc.Metrics.NewrelicOracleSgaLogBufferAllocationRetriesRatio),
+		metricNewrelicOracleSgaLogBufferRedoAllocationRetries:                           newMetricNewrelicOracleSgaLogBufferRedoAllocationRetries(mbc.Metrics.NewrelicOracleSgaLogBufferRedoAllocationRetries),
+		metricNewrelicOracleSgaLogBufferRedoEntries:                                     newMetricNewrelicOracleSgaLogBufferRedoEntries(mbc.Metrics.NewrelicOracleSgaLogBufferRedoEntries),
+		metricNewrelicOracleSgaLogBufferSpaceWaits:                                      newMetricNewrelicOracleSgaLogBufferSpaceWaits(mbc.Metrics.NewrelicOracleSgaLogBufferSpaceWaits),
+		metricNewrelicOracleSgaRedoBuffersBytes:                                         newMetricNewrelicOracleSgaRedoBuffersBytes(mbc.Metrics.NewrelicOracleSgaRedoBuffersBytes),
+		metricNewrelicOracleSgaRedoBuffersInBytes:                                       newMetricNewrelicOracleSgaRedoBuffersInBytes(mbc.Metrics.NewrelicOracleSgaRedoBuffersInBytes),
+		metricNewrelicOracleSgaSharedPoolDictCacheMissRatio:                             newMetricNewrelicOracleSgaSharedPoolDictCacheMissRatio(mbc.Metrics.NewrelicOracleSgaSharedPoolDictCacheMissRatio),
+		metricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio:                           newMetricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheHitRatio),
+		metricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio:                        newMetricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheReloadRatio),
+		metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes:   newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes),
+		metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes: newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes),
+		metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes:        newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes),
+		metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes:      newMetricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes(mbc.Metrics.NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes),
+		metricNewrelicOracleSgaUgaTotalMemoryBytes:                                      newMetricNewrelicOracleSgaUgaTotalMemoryBytes(mbc.Metrics.NewrelicOracleSgaUgaTotalMemoryBytes),
+		metricNewrelicOracleSgaUgaTotalMemoryInBytes:                                    newMetricNewrelicOracleSgaUgaTotalMemoryInBytes(mbc.Metrics.NewrelicOracleSgaUgaTotalMemoryInBytes),
+		metricNewrelicOracleSortsDiskBytes:                                              newMetricNewrelicOracleSortsDiskBytes(mbc.Metrics.NewrelicOracleSortsDiskBytes),
+		metricNewrelicOracleSortsDiskInBytes:                                            newMetricNewrelicOracleSortsDiskInBytes(mbc.Metrics.NewrelicOracleSortsDiskInBytes),
+		metricNewrelicOracleSortsMemoryBytes:                                            newMetricNewrelicOracleSortsMemoryBytes(mbc.Metrics.NewrelicOracleSortsMemoryBytes),
+		metricNewrelicOracleSortsMemoryInBytes:                                          newMetricNewrelicOracleSortsMemoryInBytes(mbc.Metrics.NewrelicOracleSortsMemoryInBytes),
+		metricNewrelicOracleTablespaceIsOffline:                                         newMetricNewrelicOracleTablespaceIsOffline(mbc.Metrics.NewrelicOracleTablespaceIsOffline),
+		metricNewrelicOracleTablespaceOfflineCdbDatafiles:                               newMetricNewrelicOracleTablespaceOfflineCdbDatafiles(mbc.Metrics.NewrelicOracleTablespaceOfflineCdbDatafiles),
+		metricNewrelicOracleTablespaceOfflinePdbDatafiles:                               newMetricNewrelicOracleTablespaceOfflinePdbDatafiles(mbc.Metrics.NewrelicOracleTablespaceOfflinePdbDatafiles),
+		metricNewrelicOracleTablespacePdbDatafilesNonWrite:                              newMetricNewrelicOracleTablespacePdbDatafilesNonWrite(mbc.Metrics.NewrelicOracleTablespacePdbDatafilesNonWrite),
+		metricNewrelicOracleTablespaceSpaceConsumedBytes:                                newMetricNewrelicOracleTablespaceSpaceConsumedBytes(mbc.Metrics.NewrelicOracleTablespaceSpaceConsumedBytes),
+		metricNewrelicOracleTablespaceSpaceConsumedInBytes:                              newMetricNewrelicOracleTablespaceSpaceConsumedInBytes(mbc.Metrics.NewrelicOracleTablespaceSpaceConsumedInBytes),
+		metricNewrelicOracleTablespaceSpaceReservedBytes:                                newMetricNewrelicOracleTablespaceSpaceReservedBytes(mbc.Metrics.NewrelicOracleTablespaceSpaceReservedBytes),
+		metricNewrelicOracleTablespaceSpaceReservedInBytes:                              newMetricNewrelicOracleTablespaceSpaceReservedInBytes(mbc.Metrics.NewrelicOracleTablespaceSpaceReservedInBytes),
+		metricNewrelicOracleTablespaceSpaceUsedPercentage:                               newMetricNewrelicOracleTablespaceSpaceUsedPercentage(mbc.Metrics.NewrelicOracleTablespaceSpaceUsedPercentage),
+		resourceAttributeIncludeFilter:                                                  make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:                                                  make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.HostName.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["host.name"] = filter.CreateFilter(mbc.ResourceAttributes.HostName.MetricsInclude)
@@ -10227,6 +11885,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicOracleDbCrUndoRecordsAppliedPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbCurrentLogons.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbCurrentOpenCursors.emit(ils.Metrics())
+	mb.metricNewrelicOracleDbCursorCacheHitRatio.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbCursorCacheHitsPerAttempts.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbDatabaseCPUTimePerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbDbwrCheckpointsPerSecond.emit(ils.Metrics())
@@ -10246,10 +11905,14 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicOracleDbFullIndexScansPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbGcCrBlockReceivedPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbGcCrBlockReceivedPerTransaction.emit(ils.Metrics())
+	mb.metricNewrelicOracleDbGcCrBlockRecievedPerSecond.emit(ils.Metrics())
+	mb.metricNewrelicOracleDbGcCrBlockRecievedPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbGcCurrentBlockReceivedPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbGlobalCacheAverageCrGetTime.emit(ils.Metrics())
+	mb.metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime.emit(ils.Metrics())
+	mb.metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbHardParseCountPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbHardParseCountPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleDbHostCPUUsagePerSecond.emit(ils.Metrics())
@@ -10319,45 +11982,62 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicOracleDiskPhysicalReadIoRequestsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskPhysicalReadsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskPhysicalWriteBytesPerSecond.emit(ils.Metrics())
+	mb.metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskPhysicalWritesPerSecond.emit(ils.Metrics())
+	mb.metricNewrelicOracleDiskReadTimeInMiliseconds.emit(ils.Metrics())
+	mb.metricNewrelicOracleDiskReadTimeInMilliseconds.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskReadTimeMilliseconds.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskReads.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskSortPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskSortPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskTempSpaceUsedBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleDiskTempSpaceUsedInBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleDiskWriteTimeInMiliseconds.emit(ils.Metrics())
+	mb.metricNewrelicOracleDiskWriteTimeInMilliseconds.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskWriteTimeMilliseconds.emit(ils.Metrics())
 	mb.metricNewrelicOracleDiskWrites.emit(ils.Metrics())
+	mb.metricNewrelicOracleInstanceCdbDatafilesOffline.emit(ils.Metrics())
 	mb.metricNewrelicOracleLockedAccounts.emit(ils.Metrics())
 	mb.metricNewrelicOracleLongRunningQueries.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryBufferCacheHitRatio.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryGlobalCacheBlocksCorrupted.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryGlobalCacheBlocksLost.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryPgaAllocatedBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleMemoryPgaAllocatedInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryPgaFreeableBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleMemoryPgaFreeableInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryPgaInUseBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleMemoryPgaInUseInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryPgaMaxSizeBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleMemoryPgaMaxSizeInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryRedoAllocationHitRatio.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryRedoGeneratedBytesPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemoryRedoGeneratedBytesPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleMemorySortsRatio.emit(ils.Metrics())
 	mb.metricNewrelicOracleNetworkIoMegabytesPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleNetworkIoRequestsPerSecond.emit(ils.Metrics())
+	mb.metricNewrelicOracleNetworkTrafficBytePerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleNetworkTrafficBytesPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleQueryPhysicalLobsReadsPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleQueryPhysicalLobsWritesPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleQueryPhysicalReadsPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicOracleQueryPhysicalWritesPerTransaction.emit(ils.Metrics())
+	mb.metricNewrelicOracleQuerySQLServiceResponseTime.emit(ils.Metrics())
 	mb.metricNewrelicOracleQueryTransactionsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicOracleRedoLogFileSwitch.emit(ils.Metrics())
 	mb.metricNewrelicOracleRedoLogFileSwitchArchivingNeeded.emit(ils.Metrics())
 	mb.metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete.emit(ils.Metrics())
+	mb.metricNewrelicOracleRedoLogLogFileSwitch.emit(ils.Metrics())
+	mb.metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded.emit(ils.Metrics())
+	mb.metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete.emit(ils.Metrics())
 	mb.metricNewrelicOracleRedoLogWaits.emit(ils.Metrics())
 	mb.metricNewrelicOracleRollbackSegmentsGets.emit(ils.Metrics())
 	mb.metricNewrelicOracleRollbackSegmentsRatioWait.emit(ils.Metrics())
 	mb.metricNewrelicOracleRollbackSegmentsWaits.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaBufferBusyWaits.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaFixedSizeBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleSgaFixedSizeInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaFreeBufferInspected.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaFreeBufferWaits.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaHitRatio.emit(ils.Metrics())
@@ -10366,20 +12046,28 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicOracleSgaLogBufferRedoEntries.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaLogBufferSpaceWaits.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaRedoBuffersBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleSgaRedoBuffersInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaSharedPoolDictCacheMissRatio.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheHitRatio.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheReloadRatio.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleSgaUgaTotalMemoryBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleSgaUgaTotalMemoryInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleSortsDiskBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleSortsDiskInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleSortsMemoryBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleSortsMemoryInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleTablespaceIsOffline.emit(ils.Metrics())
 	mb.metricNewrelicOracleTablespaceOfflineCdbDatafiles.emit(ils.Metrics())
 	mb.metricNewrelicOracleTablespaceOfflinePdbDatafiles.emit(ils.Metrics())
 	mb.metricNewrelicOracleTablespacePdbDatafilesNonWrite.emit(ils.Metrics())
 	mb.metricNewrelicOracleTablespaceSpaceConsumedBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleTablespaceSpaceConsumedInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleTablespaceSpaceReservedBytes.emit(ils.Metrics())
+	mb.metricNewrelicOracleTablespaceSpaceReservedInBytes.emit(ils.Metrics())
 	mb.metricNewrelicOracleTablespaceSpaceUsedPercentage.emit(ils.Metrics())
 
 	for _, op := range options {
@@ -10552,6 +12240,11 @@ func (mb *MetricsBuilder) RecordNewrelicOracleDbCurrentOpenCursorsDataPoint(ts p
 	mb.metricNewrelicOracleDbCurrentOpenCursors.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleDbCursorCacheHitRatioDataPoint adds a data point to newrelic.oracle.db.cursor_cache_hit_ratio metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDbCursorCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDbCursorCacheHitRatio.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleDbCursorCacheHitsPerAttemptsDataPoint adds a data point to newrelic.oracle.db.cursor_cache_hits_per_attempts metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleDbCursorCacheHitsPerAttemptsDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleDbCursorCacheHitsPerAttempts.recordDataPoint(mb.startTime, ts, val)
@@ -10647,6 +12340,16 @@ func (mb *MetricsBuilder) RecordNewrelicOracleDbGcCrBlockReceivedPerTransactionD
 	mb.metricNewrelicOracleDbGcCrBlockReceivedPerTransaction.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleDbGcCrBlockRecievedPerSecondDataPoint adds a data point to newrelic.oracle.db.gc_cr_block_recieved_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDbGcCrBlockRecievedPerSecondDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDbGcCrBlockRecievedPerSecond.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleDbGcCrBlockRecievedPerTransactionDataPoint adds a data point to newrelic.oracle.db.gc_cr_block_recieved_per_transaction metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDbGcCrBlockRecievedPerTransactionDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDbGcCrBlockRecievedPerTransaction.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleDbGcCurrentBlockReceivedPerSecondDataPoint adds a data point to newrelic.oracle.db.gc_current_block_received_per_second metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleDbGcCurrentBlockReceivedPerSecondDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleDbGcCurrentBlockReceivedPerSecond.recordDataPoint(mb.startTime, ts, val)
@@ -10662,9 +12365,19 @@ func (mb *MetricsBuilder) RecordNewrelicOracleDbGlobalCacheAverageCrGetTimeDataP
 	mb.metricNewrelicOracleDbGlobalCacheAverageCrGetTime.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecondDataPoint adds a data point to newrelic.oracle.db.global_cache_average_cr_get_time_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecondDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleDbGlobalCacheAverageCurrentGetTimeDataPoint adds a data point to newrelic.oracle.db.global_cache_average_current_get_time metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleDbGlobalCacheAverageCurrentGetTimeDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleDbGlobalCacheAverageCurrentGetTime.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecondDataPoint adds a data point to newrelic.oracle.db.global_cache_average_current_get_time_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecondDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleDbHardParseCountPerSecondDataPoint adds a data point to newrelic.oracle.db.hard_parse_count_per_second metric.
@@ -11012,6 +12725,11 @@ func (mb *MetricsBuilder) RecordNewrelicOracleDiskPhysicalWriteBytesPerSecondDat
 	mb.metricNewrelicOracleDiskPhysicalWriteBytesPerSecond.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleDiskPhysicalWriteIoRequestsPerSecondDataPoint adds a data point to newrelic.oracle.disk.physical_write_io_requests_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDiskPhysicalWriteIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDiskPhysicalWriteIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecondDataPoint adds a data point to newrelic.oracle.disk.physical_write_total_io_requests_per_second metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val)
@@ -11020,6 +12738,16 @@ func (mb *MetricsBuilder) RecordNewrelicOracleDiskPhysicalWriteTotalIoRequestsPe
 // RecordNewrelicOracleDiskPhysicalWritesPerSecondDataPoint adds a data point to newrelic.oracle.disk.physical_writes_per_second metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleDiskPhysicalWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleDiskPhysicalWritesPerSecond.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleDiskReadTimeInMilisecondsDataPoint adds a data point to newrelic.oracle.disk.read_time_in_miliseconds metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDiskReadTimeInMilisecondsDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDiskReadTimeInMiliseconds.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleDiskReadTimeInMillisecondsDataPoint adds a data point to newrelic.oracle.disk.read_time_in_milliseconds metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDiskReadTimeInMillisecondsDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDiskReadTimeInMilliseconds.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleDiskReadTimeMillisecondsDataPoint adds a data point to newrelic.oracle.disk.read_time_milliseconds metric.
@@ -11047,6 +12775,21 @@ func (mb *MetricsBuilder) RecordNewrelicOracleDiskTempSpaceUsedBytesDataPoint(ts
 	mb.metricNewrelicOracleDiskTempSpaceUsedBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleDiskTempSpaceUsedInBytesDataPoint adds a data point to newrelic.oracle.disk.temp_space_used_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDiskTempSpaceUsedInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleDiskTempSpaceUsedInBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleDiskWriteTimeInMilisecondsDataPoint adds a data point to newrelic.oracle.disk.write_time_in_miliseconds metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDiskWriteTimeInMilisecondsDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDiskWriteTimeInMiliseconds.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleDiskWriteTimeInMillisecondsDataPoint adds a data point to newrelic.oracle.disk.write_time_in_milliseconds metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleDiskWriteTimeInMillisecondsDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleDiskWriteTimeInMilliseconds.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleDiskWriteTimeMillisecondsDataPoint adds a data point to newrelic.oracle.disk.write_time_milliseconds metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleDiskWriteTimeMillisecondsDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleDiskWriteTimeMilliseconds.recordDataPoint(mb.startTime, ts, val)
@@ -11055,6 +12798,11 @@ func (mb *MetricsBuilder) RecordNewrelicOracleDiskWriteTimeMillisecondsDataPoint
 // RecordNewrelicOracleDiskWritesDataPoint adds a data point to newrelic.oracle.disk.writes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleDiskWritesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleDiskWrites.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleInstanceCdbDatafilesOfflineDataPoint adds a data point to newrelic.oracle.instance.cdb_datafiles_offline metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleInstanceCdbDatafilesOfflineDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleInstanceCdbDatafilesOffline.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleLockedAccountsDataPoint adds a data point to newrelic.oracle.locked_accounts metric.
@@ -11087,9 +12835,19 @@ func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaAllocatedBytesDataPoint(t
 	mb.metricNewrelicOracleMemoryPgaAllocatedBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleMemoryPgaAllocatedInBytesDataPoint adds a data point to newrelic.oracle.memory.pga_allocated_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaAllocatedInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleMemoryPgaAllocatedInBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleMemoryPgaFreeableBytesDataPoint adds a data point to newrelic.oracle.memory.pga_freeable_bytes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaFreeableBytesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleMemoryPgaFreeableBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleMemoryPgaFreeableInBytesDataPoint adds a data point to newrelic.oracle.memory.pga_freeable_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaFreeableInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleMemoryPgaFreeableInBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleMemoryPgaInUseBytesDataPoint adds a data point to newrelic.oracle.memory.pga_in_use_bytes metric.
@@ -11097,9 +12855,19 @@ func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaInUseBytesDataPoint(ts pc
 	mb.metricNewrelicOracleMemoryPgaInUseBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleMemoryPgaInUseInBytesDataPoint adds a data point to newrelic.oracle.memory.pga_in_use_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaInUseInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleMemoryPgaInUseInBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleMemoryPgaMaxSizeBytesDataPoint adds a data point to newrelic.oracle.memory.pga_max_size_bytes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaMaxSizeBytesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleMemoryPgaMaxSizeBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleMemoryPgaMaxSizeInBytesDataPoint adds a data point to newrelic.oracle.memory.pga_max_size_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleMemoryPgaMaxSizeInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleMemoryPgaMaxSizeInBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleMemoryRedoAllocationHitRatioDataPoint adds a data point to newrelic.oracle.memory.redo_allocation_hit_ratio metric.
@@ -11132,6 +12900,11 @@ func (mb *MetricsBuilder) RecordNewrelicOracleNetworkIoRequestsPerSecondDataPoin
 	mb.metricNewrelicOracleNetworkIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleNetworkTrafficBytePerSecondDataPoint adds a data point to newrelic.oracle.network.traffic_byte_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleNetworkTrafficBytePerSecondDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleNetworkTrafficBytePerSecond.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleNetworkTrafficBytesPerSecondDataPoint adds a data point to newrelic.oracle.network.traffic_bytes_per_second metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleNetworkTrafficBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleNetworkTrafficBytesPerSecond.recordDataPoint(mb.startTime, ts, val)
@@ -11157,6 +12930,11 @@ func (mb *MetricsBuilder) RecordNewrelicOracleQueryPhysicalWritesPerTransactionD
 	mb.metricNewrelicOracleQueryPhysicalWritesPerTransaction.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleQuerySQLServiceResponseTimeDataPoint adds a data point to newrelic.oracle.query.sql_service_response_time metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleQuerySQLServiceResponseTimeDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicOracleQuerySQLServiceResponseTime.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleQueryTransactionsPerSecondDataPoint adds a data point to newrelic.oracle.query.transactions_per_second metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleQueryTransactionsPerSecondDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleQueryTransactionsPerSecond.recordDataPoint(mb.startTime, ts, val)
@@ -11175,6 +12953,21 @@ func (mb *MetricsBuilder) RecordNewrelicOracleRedoLogFileSwitchArchivingNeededDa
 // RecordNewrelicOracleRedoLogFileSwitchCheckpointIncompleteDataPoint adds a data point to newrelic.oracle.redo_log.file_switch_checkpoint_incomplete metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleRedoLogFileSwitchCheckpointIncompleteDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleRedoLogFileSwitchCheckpointIncomplete.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleRedoLogLogFileSwitchDataPoint adds a data point to newrelic.oracle.redo_log.log_file_switch metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleRedoLogLogFileSwitchDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleRedoLogLogFileSwitch.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleRedoLogLogFileSwitchArchivingNeededDataPoint adds a data point to newrelic.oracle.redo_log.log_file_switch_archiving_needed metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleRedoLogLogFileSwitchArchivingNeededDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleRedoLogLogFileSwitchArchivingNeeded.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleRedoLogLogFileSwitchCheckpointIncompleteDataPoint adds a data point to newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleRedoLogLogFileSwitchCheckpointIncompleteDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleRedoLogWaitsDataPoint adds a data point to newrelic.oracle.redo_log.waits metric.
@@ -11205,6 +12998,11 @@ func (mb *MetricsBuilder) RecordNewrelicOracleSgaBufferBusyWaitsDataPoint(ts pco
 // RecordNewrelicOracleSgaFixedSizeBytesDataPoint adds a data point to newrelic.oracle.sga.fixed_size_bytes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleSgaFixedSizeBytesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleSgaFixedSizeBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleSgaFixedSizeInBytesDataPoint adds a data point to newrelic.oracle.sga.fixed_size_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleSgaFixedSizeInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleSgaFixedSizeInBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleSgaFreeBufferInspectedDataPoint adds a data point to newrelic.oracle.sga.free_buffer_inspected metric.
@@ -11247,6 +13045,11 @@ func (mb *MetricsBuilder) RecordNewrelicOracleSgaRedoBuffersBytesDataPoint(ts pc
 	mb.metricNewrelicOracleSgaRedoBuffersBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleSgaRedoBuffersInBytesDataPoint adds a data point to newrelic.oracle.sga.redo_buffers_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleSgaRedoBuffersInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleSgaRedoBuffersInBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleSgaSharedPoolDictCacheMissRatioDataPoint adds a data point to newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleSgaSharedPoolDictCacheMissRatioDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicOracleSgaSharedPoolDictCacheMissRatio.recordDataPoint(mb.startTime, ts, val)
@@ -11267,9 +13070,19 @@ func (mb *MetricsBuilder) RecordNewrelicOracleSgaSharedPoolLibraryCacheShareable
 	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytesDataPoint adds a data point to newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytesDataPoint adds a data point to newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytesDataPoint adds a data point to newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleSgaUgaTotalMemoryBytesDataPoint adds a data point to newrelic.oracle.sga.uga_total_memory_bytes metric.
@@ -11277,14 +13090,29 @@ func (mb *MetricsBuilder) RecordNewrelicOracleSgaUgaTotalMemoryBytesDataPoint(ts
 	mb.metricNewrelicOracleSgaUgaTotalMemoryBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleSgaUgaTotalMemoryInBytesDataPoint adds a data point to newrelic.oracle.sga.uga_total_memory_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleSgaUgaTotalMemoryInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleSgaUgaTotalMemoryInBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleSortsDiskBytesDataPoint adds a data point to newrelic.oracle.sorts.disk_bytes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleSortsDiskBytesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleSortsDiskBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicOracleSortsDiskInBytesDataPoint adds a data point to newrelic.oracle.sorts.disk_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleSortsDiskInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleSortsDiskInBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicOracleSortsMemoryBytesDataPoint adds a data point to newrelic.oracle.sorts.memory_bytes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleSortsMemoryBytesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicOracleSortsMemoryBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicOracleSortsMemoryInBytesDataPoint adds a data point to newrelic.oracle.sorts.memory_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleSortsMemoryInBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleSortsMemoryInBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleTablespaceIsOfflineDataPoint adds a data point to newrelic.oracle.tablespace.is_offline metric.
@@ -11293,18 +13121,18 @@ func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceIsOfflineDataPoint(ts pc
 }
 
 // RecordNewrelicOracleTablespaceOfflineCdbDatafilesDataPoint adds a data point to newrelic.oracle.tablespace.offline_cdb_datafiles metric.
-func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceOfflineCdbDatafilesDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicOracleTablespaceOfflineCdbDatafiles.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceOfflineCdbDatafilesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleTablespaceOfflineCdbDatafiles.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleTablespaceOfflinePdbDatafilesDataPoint adds a data point to newrelic.oracle.tablespace.offline_pdb_datafiles metric.
-func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceOfflinePdbDatafilesDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicOracleTablespaceOfflinePdbDatafiles.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceOfflinePdbDatafilesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleTablespaceOfflinePdbDatafiles.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleTablespacePdbDatafilesNonWriteDataPoint adds a data point to newrelic.oracle.tablespace.pdb_datafiles_non_write metric.
-func (mb *MetricsBuilder) RecordNewrelicOracleTablespacePdbDatafilesNonWriteDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicOracleTablespacePdbDatafilesNonWrite.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicOracleTablespacePdbDatafilesNonWriteDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicOracleTablespacePdbDatafilesNonWrite.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicOracleTablespaceSpaceConsumedBytesDataPoint adds a data point to newrelic.oracle.tablespace.space_consumed_bytes metric.
@@ -11312,9 +13140,19 @@ func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceSpaceConsumedBytesDataPo
 	mb.metricNewrelicOracleTablespaceSpaceConsumedBytes.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
 }
 
+// RecordNewrelicOracleTablespaceSpaceConsumedInBytesDataPoint adds a data point to newrelic.oracle.tablespace.space_consumed_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceSpaceConsumedInBytesDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicOracleTablespaceSpaceConsumedInBytes.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
 // RecordNewrelicOracleTablespaceSpaceReservedBytesDataPoint adds a data point to newrelic.oracle.tablespace.space_reserved_bytes metric.
 func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceSpaceReservedBytesDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
 	mb.metricNewrelicOracleTablespaceSpaceReservedBytes.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
+}
+
+// RecordNewrelicOracleTablespaceSpaceReservedInBytesDataPoint adds a data point to newrelic.oracle.tablespace.space_reserved_in_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicOracleTablespaceSpaceReservedInBytesDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicOracleTablespaceSpaceReservedInBytes.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicOracleTablespaceSpaceUsedPercentageDataPoint adds a data point to newrelic.oracle.tablespace.space_used_percentage metric.
