@@ -236,6 +236,14 @@ Current open cursors count
 | ---- | ----------- | ---------- |
 | {cursors} | Gauge | Int |
 
+### newrelic.oracle.db.cursor_cache_hit_ratio
+
+Cursor cache hit ratio
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
 ### newrelic.oracle.db.cursor_cache_hits_per_attempts
 
 Cursor cache hit ratio
@@ -388,6 +396,22 @@ GC CR block received per transaction
 | ---- | ----------- | ---------- |
 | {blocks}/{transaction} | Gauge | Double |
 
+### newrelic.oracle.db.gc_cr_block_recieved_per_second
+
+GC CR Block Received Per Second (misspelling from nri-oracle)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {blocks}/s | Gauge | Double |
+
+### newrelic.oracle.db.gc_cr_block_recieved_per_transaction
+
+GC CR Block Received Per Transaction (misspelling from nri-oracle)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {blocks}/{transaction} | Gauge | Double |
+
 ### newrelic.oracle.db.gc_current_block_received_per_second
 
 GC current block received per second
@@ -412,9 +436,25 @@ Global cache average CR get time
 | ---- | ----------- | ---------- |
 | s | Gauge | Double |
 
+### newrelic.oracle.db.global_cache_average_cr_get_time_per_second
+
+Global cache average CR get time per second
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Double |
+
 ### newrelic.oracle.db.global_cache_average_current_get_time
 
 Global cache average current get time
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Double |
+
+### newrelic.oracle.db.global_cache_average_current_get_time_per_second
+
+Global cache average current get time per second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -738,7 +778,7 @@ SQL service response time
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| ms | Gauge | Double |
 
 ### newrelic.oracle.db.streams_pool_usage_percentage
 
@@ -972,6 +1012,14 @@ Physical write bytes per second
 | ---- | ----------- | ---------- |
 | By/s | Gauge | Double |
 
+### newrelic.oracle.disk.physical_write_io_requests_per_second
+
+Physical write I/O requests per second
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1/s | Gauge | Double |
+
 ### newrelic.oracle.disk.physical_write_total_io_requests_per_second
 
 Physical write total I/O requests per second
@@ -987,6 +1035,22 @@ Physical writes per second
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {writes}/s | Gauge | Double |
+
+### newrelic.oracle.disk.read_time_in_miliseconds
+
+Amount of file read time (misspelling from nri-oracle)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| ms | Sum | Double | Unspecified | true |
+
+### newrelic.oracle.disk.read_time_in_milliseconds
+
+Disk read time in milliseconds
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
 
 ### newrelic.oracle.disk.read_time_milliseconds
 
@@ -1028,6 +1092,30 @@ Temporary space used in bytes
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### newrelic.oracle.disk.temp_space_used_in_bytes
+
+Temporary space used in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### newrelic.oracle.disk.write_time_in_miliseconds
+
+Amount of file write time (misspelling from nri-oracle)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| ms | Sum | Double | Unspecified | true |
+
+### newrelic.oracle.disk.write_time_in_milliseconds
+
+Disk write time in milliseconds
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
 ### newrelic.oracle.disk.write_time_milliseconds
 
 Disk write time in milliseconds
@@ -1043,6 +1131,14 @@ Physical disk writes
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {writes} | Sum | Int | Cumulative | true |
+
+### newrelic.oracle.instance.cdb_datafiles_offline
+
+CDB datafiles offline count
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
 
 ### newrelic.oracle.locked_accounts
 
@@ -1104,7 +1200,23 @@ PGA memory allocated in bytes
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### newrelic.oracle.memory.pga_allocated_in_bytes
+
+PGA allocated memory in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### newrelic.oracle.memory.pga_freeable_bytes
+
+PGA freeable memory in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### newrelic.oracle.memory.pga_freeable_in_bytes
 
 PGA freeable memory in bytes
 
@@ -1120,7 +1232,23 @@ PGA memory in use in bytes
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### newrelic.oracle.memory.pga_in_use_in_bytes
+
+PGA in use memory in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### newrelic.oracle.memory.pga_max_size_bytes
+
+PGA maximum size in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### newrelic.oracle.memory.pga_max_size_in_bytes
 
 PGA maximum size in bytes
 
@@ -1162,7 +1290,7 @@ Memory sorts ratio
 
 ### newrelic.oracle.network.io_megabytes_per_second
 
-I/O megabytes per second
+Network I/O megabytes per second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1170,11 +1298,19 @@ I/O megabytes per second
 
 ### newrelic.oracle.network.io_requests_per_second
 
-I/O requests per second
+Network I/O requests per second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {requests}/s | Gauge | Double |
+| 1/s | Gauge | Double |
+
+### newrelic.oracle.network.traffic_byte_per_second
+
+Network traffic bytes per second
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
 
 ### newrelic.oracle.network.traffic_bytes_per_second
 
@@ -1216,6 +1352,14 @@ Physical writes per transaction
 | ---- | ----------- | ---------- |
 | {writes}/{transaction} | Gauge | Double |
 
+### newrelic.oracle.query.sql_service_response_time
+
+SQL service response time in milliseconds
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
 ### newrelic.oracle.query.transactions_per_second
 
 User transactions per second
@@ -1247,6 +1391,30 @@ Log file switch due to checkpoint incomplete
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {switches} | Gauge | Int |
+
+### newrelic.oracle.redo_log.log_file_switch
+
+Redo log file switch count
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {switches} | Sum | Int | Unspecified | true |
+
+### newrelic.oracle.redo_log.log_file_switch_archiving_needed
+
+Redo log file switch (archiving needed)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {switches} | Sum | Int | Unspecified | true |
+
+### newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete
+
+Redo log file switch (checkpoint incomplete)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {switches} | Sum | Int | Unspecified | true |
 
 ### newrelic.oracle.redo_log.waits
 
@@ -1291,6 +1459,14 @@ Buffer busy waits
 ### newrelic.oracle.sga.fixed_size_bytes
 
 SGA fixed size area in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### newrelic.oracle.sga.fixed_size_in_bytes
+
+SGA fixed size in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1360,6 +1536,14 @@ SGA redo buffers size in bytes
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### newrelic.oracle.sga.redo_buffers_in_bytes
+
+SGA redo buffers in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio
 
 Shared pool dictionary cache miss ratio
@@ -1392,7 +1576,23 @@ Shared pool library cache shareable memory per statement in bytes
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes
+
+Shared pool library cache shareable memory per statement in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes
+
+Shared pool library cache shareable memory per user in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes
 
 Shared pool library cache shareable memory per user in bytes
 
@@ -1408,9 +1608,25 @@ UGA total memory in bytes
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### newrelic.oracle.sga.uga_total_memory_in_bytes
+
+SGA UGA total memory in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### newrelic.oracle.sorts.disk_bytes
 
 Sorts performed on disk in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### newrelic.oracle.sorts.disk_in_bytes
+
+Sorts disk usage in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1424,9 +1640,17 @@ Sorts performed in memory in bytes
 | ---- | ----------- | ---------- |
 | By | Gauge | Int |
 
+### newrelic.oracle.sorts.memory_in_bytes
+
+Sorts memory usage in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
 ### newrelic.oracle.tablespace.is_offline
 
-Tablespace offline status (1 if offline, 0 if online)
+Tablespace offline status
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1440,39 +1664,35 @@ Tablespace offline status (1 if offline, 0 if online)
 
 ### newrelic.oracle.tablespace.offline_cdb_datafiles
 
-Number of offline CDB datafiles in tablespace
+Offline CDB datafiles count
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {datafiles} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| tablespace_name | Tablespace name | Any Str | false |
+| 1 | Gauge | Int |
 
 ### newrelic.oracle.tablespace.offline_pdb_datafiles
 
-Number of offline PDB datafiles in tablespace
+Offline PDB datafiles count
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {datafiles} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| tablespace_name | Tablespace name | Any Str | false |
+| 1 | Gauge | Int |
 
 ### newrelic.oracle.tablespace.pdb_datafiles_non_write
 
-Number of PDB datafiles in non-write mode in tablespace
+PDB datafiles in non-write mode
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {datafiles} | Gauge | Int |
+| 1 | Gauge | Int |
+
+### newrelic.oracle.tablespace.space_consumed_bytes
+
+Tablespace space consumed in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
 
 #### Attributes
 
@@ -1480,7 +1700,7 @@ Number of PDB datafiles in non-write mode in tablespace
 | ---- | ----------- | ------ | -------- |
 | tablespace_name | Tablespace name | Any Str | false |
 
-### newrelic.oracle.tablespace.space_consumed_bytes
+### newrelic.oracle.tablespace.space_consumed_in_bytes
 
 Tablespace space consumed in bytes
 
@@ -1508,13 +1728,27 @@ Tablespace space reserved in bytes
 | ---- | ----------- | ------ | -------- |
 | tablespace_name | Tablespace name | Any Str | false |
 
+### newrelic.oracle.tablespace.space_reserved_in_bytes
+
+Tablespace space reserved in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| tablespace_name | Tablespace name | Any Str | false |
+
 ### newrelic.oracle.tablespace.space_used_percentage
 
 Tablespace space used percentage
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| % | Gauge | Double |
 
 #### Attributes
 

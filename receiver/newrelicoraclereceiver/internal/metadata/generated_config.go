@@ -28,188 +28,218 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
-	NewrelicOracleDbActiveParallelSessions                                  MetricConfig `mapstructure:"newrelic.oracle.db.active_parallel_sessions"`
-	NewrelicOracleDbActiveSerialSessions                                    MetricConfig `mapstructure:"newrelic.oracle.db.active_serial_sessions"`
-	NewrelicOracleDbAverageActiveSessions                                   MetricConfig `mapstructure:"newrelic.oracle.db.average_active_sessions"`
-	NewrelicOracleDbBackgroundCheckpointsPerSecond                          MetricConfig `mapstructure:"newrelic.oracle.db.background_checkpoints_per_second"`
-	NewrelicOracleDbBackgroundCPUUsagePerSecond                             MetricConfig `mapstructure:"newrelic.oracle.db.background_cpu_usage_per_second"`
-	NewrelicOracleDbBackgroundTimePerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.background_time_per_second"`
-	NewrelicOracleDbBlockChangesPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.block_changes_per_second"`
-	NewrelicOracleDbBlockChangesPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.block_changes_per_transaction"`
-	NewrelicOracleDbBlockChangesPerUserCall                                 MetricConfig `mapstructure:"newrelic.oracle.db.block_changes_per_user_call"`
-	NewrelicOracleDbBlockGetsPerSecond                                      MetricConfig `mapstructure:"newrelic.oracle.db.block_gets_per_second"`
-	NewrelicOracleDbBlockGetsPerTransaction                                 MetricConfig `mapstructure:"newrelic.oracle.db.block_gets_per_transaction"`
-	NewrelicOracleDbBlockGetsPerUserCall                                    MetricConfig `mapstructure:"newrelic.oracle.db.block_gets_per_user_call"`
-	NewrelicOracleDbBranchNodeSplitsPerSecond                               MetricConfig `mapstructure:"newrelic.oracle.db.branch_node_splits_per_second"`
-	NewrelicOracleDbBranchNodeSplitsPerTransaction                          MetricConfig `mapstructure:"newrelic.oracle.db.branch_node_splits_per_transaction"`
-	NewrelicOracleDbCapturedUserCalls                                       MetricConfig `mapstructure:"newrelic.oracle.db.captured_user_calls"`
-	NewrelicOracleDbConsistentReadChangesPerSecond                          MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_changes_per_second"`
-	NewrelicOracleDbConsistentReadChangesPerTransaction                     MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_changes_per_transaction"`
-	NewrelicOracleDbConsistentReadGetsPerSecond                             MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_gets_per_second"`
-	NewrelicOracleDbConsistentReadGetsPerTransaction                        MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_gets_per_transaction"`
-	NewrelicOracleDbCPUTimeRatio                                            MetricConfig `mapstructure:"newrelic.oracle.db.cpu_time_ratio"`
-	NewrelicOracleDbCPUUsagePerSecond                                       MetricConfig `mapstructure:"newrelic.oracle.db.cpu_usage_per_second"`
-	NewrelicOracleDbCPUUsagePerTransaction                                  MetricConfig `mapstructure:"newrelic.oracle.db.cpu_usage_per_transaction"`
-	NewrelicOracleDbCrBlocksCreatedPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.cr_blocks_created_per_second"`
-	NewrelicOracleDbCrBlocksCreatedPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.cr_blocks_created_per_transaction"`
-	NewrelicOracleDbCrUndoRecordsAppliedPerSecond                           MetricConfig `mapstructure:"newrelic.oracle.db.cr_undo_records_applied_per_second"`
-	NewrelicOracleDbCrUndoRecordsAppliedPerTransaction                      MetricConfig `mapstructure:"newrelic.oracle.db.cr_undo_records_applied_per_transaction"`
-	NewrelicOracleDbCurrentLogons                                           MetricConfig `mapstructure:"newrelic.oracle.db.current_logons"`
-	NewrelicOracleDbCurrentOpenCursors                                      MetricConfig `mapstructure:"newrelic.oracle.db.current_open_cursors"`
-	NewrelicOracleDbCursorCacheHitsPerAttempts                              MetricConfig `mapstructure:"newrelic.oracle.db.cursor_cache_hits_per_attempts"`
-	NewrelicOracleDbDatabaseCPUTimePerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.database_cpu_time_per_second"`
-	NewrelicOracleDbDbwrCheckpointsPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.dbwr_checkpoints_per_second"`
-	NewrelicOracleDbEnqueueDeadlocksPerSecond                               MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_deadlocks_per_second"`
-	NewrelicOracleDbEnqueueDeadlocksPerTransaction                          MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_deadlocks_per_transaction"`
-	NewrelicOracleDbEnqueueRequestsPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_requests_per_second"`
-	NewrelicOracleDbEnqueueRequestsPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_requests_per_transaction"`
-	NewrelicOracleDbEnqueueTimeoutsPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_timeouts_per_second"`
-	NewrelicOracleDbEnqueueTimeoutsPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_timeouts_per_transaction"`
-	NewrelicOracleDbEnqueueWaitsPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_waits_per_second"`
-	NewrelicOracleDbEnqueueWaitsPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_waits_per_transaction"`
-	NewrelicOracleDbExecuteWithoutParseRatio                                MetricConfig `mapstructure:"newrelic.oracle.db.execute_without_parse_ratio"`
-	NewrelicOracleDbExecutionsPerSecond                                     MetricConfig `mapstructure:"newrelic.oracle.db.executions_per_second"`
-	NewrelicOracleDbExecutionsPerTransaction                                MetricConfig `mapstructure:"newrelic.oracle.db.executions_per_transaction"`
-	NewrelicOracleDbExecutionsPerUserCall                                   MetricConfig `mapstructure:"newrelic.oracle.db.executions_per_user_call"`
-	NewrelicOracleDbFullIndexScansPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.full_index_scans_per_second"`
-	NewrelicOracleDbFullIndexScansPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.db.full_index_scans_per_transaction"`
-	NewrelicOracleDbGcCrBlockReceivedPerSecond                              MetricConfig `mapstructure:"newrelic.oracle.db.gc_cr_block_received_per_second"`
-	NewrelicOracleDbGcCrBlockReceivedPerTransaction                         MetricConfig `mapstructure:"newrelic.oracle.db.gc_cr_block_received_per_transaction"`
-	NewrelicOracleDbGcCurrentBlockReceivedPerSecond                         MetricConfig `mapstructure:"newrelic.oracle.db.gc_current_block_received_per_second"`
-	NewrelicOracleDbGcCurrentBlockReceivedPerTransaction                    MetricConfig `mapstructure:"newrelic.oracle.db.gc_current_block_received_per_transaction"`
-	NewrelicOracleDbGlobalCacheAverageCrGetTime                             MetricConfig `mapstructure:"newrelic.oracle.db.global_cache_average_cr_get_time"`
-	NewrelicOracleDbGlobalCacheAverageCurrentGetTime                        MetricConfig `mapstructure:"newrelic.oracle.db.global_cache_average_current_get_time"`
-	NewrelicOracleDbHardParseCountPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.hard_parse_count_per_second"`
-	NewrelicOracleDbHardParseCountPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.db.hard_parse_count_per_transaction"`
-	NewrelicOracleDbHostCPUUsagePerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.host_cpu_usage_per_second"`
-	NewrelicOracleDbHostCPUUtilization                                      MetricConfig `mapstructure:"newrelic.oracle.db.host_cpu_utilization"`
-	NewrelicOracleDbLeafNodeSplitsPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.leaf_node_splits_per_second"`
-	NewrelicOracleDbLeafNodeSplitsPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.db.leaf_node_splits_per_transaction"`
-	NewrelicOracleDbLibraryCacheHitRatio                                    MetricConfig `mapstructure:"newrelic.oracle.db.library_cache_hit_ratio"`
-	NewrelicOracleDbLibraryCacheMissRatio                                   MetricConfig `mapstructure:"newrelic.oracle.db.library_cache_miss_ratio"`
-	NewrelicOracleDbLogicalReadsPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.logical_reads_per_second"`
-	NewrelicOracleDbLogicalReadsPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.logical_reads_per_transaction"`
-	NewrelicOracleDbLogonsPerSecond                                         MetricConfig `mapstructure:"newrelic.oracle.db.logons_per_second"`
-	NewrelicOracleDbLogonsPerTransaction                                    MetricConfig `mapstructure:"newrelic.oracle.db.logons_per_transaction"`
-	NewrelicOracleDbLongTableScansPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.long_table_scans_per_second"`
-	NewrelicOracleDbLongTableScansPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.db.long_table_scans_per_transaction"`
-	NewrelicOracleDbOpenCursorsPerSecond                                    MetricConfig `mapstructure:"newrelic.oracle.db.open_cursors_per_second"`
-	NewrelicOracleDbOpenCursorsPerTransaction                               MetricConfig `mapstructure:"newrelic.oracle.db.open_cursors_per_transaction"`
-	NewrelicOracleDbOsLoad                                                  MetricConfig `mapstructure:"newrelic.oracle.db.os_load"`
-	NewrelicOracleDbParseFailureCountPerSecond                              MetricConfig `mapstructure:"newrelic.oracle.db.parse_failure_count_per_second"`
-	NewrelicOracleDbParseFailureCountPerTransaction                         MetricConfig `mapstructure:"newrelic.oracle.db.parse_failure_count_per_transaction"`
-	NewrelicOracleDbPgaCacheHitPercentage                                   MetricConfig `mapstructure:"newrelic.oracle.db.pga_cache_hit_percentage"`
-	NewrelicOracleDbPhysicalReadBytesPerSecond                              MetricConfig `mapstructure:"newrelic.oracle.db.physical_read_bytes_per_second"`
-	NewrelicOracleDbPhysicalReadIoRequestsPerSecond                         MetricConfig `mapstructure:"newrelic.oracle.db.physical_read_io_requests_per_second"`
-	NewrelicOracleDbPhysicalReadsPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.physical_reads_per_second"`
-	NewrelicOracleDbPhysicalWriteBytesPerSecond                             MetricConfig `mapstructure:"newrelic.oracle.db.physical_write_bytes_per_second"`
-	NewrelicOracleDbPhysicalWritesPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.physical_writes_per_second"`
-	NewrelicOracleDbProcessLimitPercentage                                  MetricConfig `mapstructure:"newrelic.oracle.db.process_limit_percentage"`
-	NewrelicOracleDbRecursiveCallsPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.recursive_calls_per_second"`
-	NewrelicOracleDbRecursiveCallsPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.db.recursive_calls_per_transaction"`
-	NewrelicOracleDbRedoWritesPerSecond                                     MetricConfig `mapstructure:"newrelic.oracle.db.redo_writes_per_second"`
-	NewrelicOracleDbRedoWritesPerTransaction                                MetricConfig `mapstructure:"newrelic.oracle.db.redo_writes_per_transaction"`
-	NewrelicOracleDbResponseTimePerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.response_time_per_transaction"`
-	NewrelicOracleDbRowCacheHitRatio                                        MetricConfig `mapstructure:"newrelic.oracle.db.row_cache_hit_ratio"`
-	NewrelicOracleDbRowCacheMissRatio                                       MetricConfig `mapstructure:"newrelic.oracle.db.row_cache_miss_ratio"`
-	NewrelicOracleDbRowsPerSort                                             MetricConfig `mapstructure:"newrelic.oracle.db.rows_per_sort"`
-	NewrelicOracleDbSessionCount                                            MetricConfig `mapstructure:"newrelic.oracle.db.session_count"`
-	NewrelicOracleDbSessionLimitPercentage                                  MetricConfig `mapstructure:"newrelic.oracle.db.session_limit_percentage"`
-	NewrelicOracleDbSharedPoolFreePercentage                                MetricConfig `mapstructure:"newrelic.oracle.db.shared_pool_free_percentage"`
-	NewrelicOracleDbSoftParseRatio                                          MetricConfig `mapstructure:"newrelic.oracle.db.soft_parse_ratio"`
-	NewrelicOracleDbSortsPerUserCall                                        MetricConfig `mapstructure:"newrelic.oracle.db.sorts_per_user_call"`
-	NewrelicOracleDbSQLServiceResponseTime                                  MetricConfig `mapstructure:"newrelic.oracle.db.sql_service_response_time"`
-	NewrelicOracleDbStreamsPoolUsagePercentage                              MetricConfig `mapstructure:"newrelic.oracle.db.streams_pool_usage_percentage"`
-	NewrelicOracleDbTableScansPerUserCall                                   MetricConfig `mapstructure:"newrelic.oracle.db.table_scans_per_user_call"`
-	NewrelicOracleDbTotalIndexScansPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.total_index_scans_per_second"`
-	NewrelicOracleDbTotalIndexScansPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.total_index_scans_per_transaction"`
-	NewrelicOracleDbTotalParseCountPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.total_parse_count_per_second"`
-	NewrelicOracleDbTotalParseCountPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.total_parse_count_per_transaction"`
-	NewrelicOracleDbTotalTableScansPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.total_table_scans_per_second"`
-	NewrelicOracleDbTotalTableScansPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.total_table_scans_per_transaction"`
-	NewrelicOracleDbTransactionsPerLogon                                    MetricConfig `mapstructure:"newrelic.oracle.db.transactions_per_logon"`
-	NewrelicOracleDbUserCallsPerSecond                                      MetricConfig `mapstructure:"newrelic.oracle.db.user_calls_per_second"`
-	NewrelicOracleDbUserCallsPerTransaction                                 MetricConfig `mapstructure:"newrelic.oracle.db.user_calls_per_transaction"`
-	NewrelicOracleDbUserCallsRatio                                          MetricConfig `mapstructure:"newrelic.oracle.db.user_calls_ratio"`
-	NewrelicOracleDbUserCommitsPerSecond                                    MetricConfig `mapstructure:"newrelic.oracle.db.user_commits_per_second"`
-	NewrelicOracleDbUserCommitsPercentage                                   MetricConfig `mapstructure:"newrelic.oracle.db.user_commits_percentage"`
-	NewrelicOracleDbUserLimitPercentage                                     MetricConfig `mapstructure:"newrelic.oracle.db.user_limit_percentage"`
-	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond                 MetricConfig `mapstructure:"newrelic.oracle.db.user_rollback_undo_records_applied_per_second"`
-	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction            MetricConfig `mapstructure:"newrelic.oracle.db.user_rollback_undo_records_applied_per_transaction"`
-	NewrelicOracleDbUserRollbacksPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.user_rollbacks_per_second"`
-	NewrelicOracleDbUserRollbacksPercentage                                 MetricConfig `mapstructure:"newrelic.oracle.db.user_rollbacks_percentage"`
-	NewrelicOracleDbWaitTimeRatio                                           MetricConfig `mapstructure:"newrelic.oracle.db.wait_time_ratio"`
-	NewrelicOracleDiskBlocksRead                                            MetricConfig `mapstructure:"newrelic.oracle.disk.blocks_read"`
-	NewrelicOracleDiskBlocksWritten                                         MetricConfig `mapstructure:"newrelic.oracle.disk.blocks_written"`
-	NewrelicOracleDiskLogicalReadsPerUserCall                               MetricConfig `mapstructure:"newrelic.oracle.disk.logical_reads_per_user_call"`
-	NewrelicOracleDiskPhysicalLobsReadsPerSecond                            MetricConfig `mapstructure:"newrelic.oracle.disk.physical_lobs_reads_per_second"`
-	NewrelicOracleDiskPhysicalLobsWritesPerSecond                           MetricConfig `mapstructure:"newrelic.oracle.disk.physical_lobs_writes_per_second"`
-	NewrelicOracleDiskPhysicalReadBytesPerSecond                            MetricConfig `mapstructure:"newrelic.oracle.disk.physical_read_bytes_per_second"`
-	NewrelicOracleDiskPhysicalReadIoRequestsPerSecond                       MetricConfig `mapstructure:"newrelic.oracle.disk.physical_read_io_requests_per_second"`
-	NewrelicOracleDiskPhysicalReadsPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.disk.physical_reads_per_second"`
-	NewrelicOracleDiskPhysicalWriteBytesPerSecond                           MetricConfig `mapstructure:"newrelic.oracle.disk.physical_write_bytes_per_second"`
-	NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond                 MetricConfig `mapstructure:"newrelic.oracle.disk.physical_write_total_io_requests_per_second"`
-	NewrelicOracleDiskPhysicalWritesPerSecond                               MetricConfig `mapstructure:"newrelic.oracle.disk.physical_writes_per_second"`
-	NewrelicOracleDiskReadTimeMilliseconds                                  MetricConfig `mapstructure:"newrelic.oracle.disk.read_time_milliseconds"`
-	NewrelicOracleDiskReads                                                 MetricConfig `mapstructure:"newrelic.oracle.disk.reads"`
-	NewrelicOracleDiskSortPerSecond                                         MetricConfig `mapstructure:"newrelic.oracle.disk.sort_per_second"`
-	NewrelicOracleDiskSortPerTransaction                                    MetricConfig `mapstructure:"newrelic.oracle.disk.sort_per_transaction"`
-	NewrelicOracleDiskTempSpaceUsedBytes                                    MetricConfig `mapstructure:"newrelic.oracle.disk.temp_space_used_bytes"`
-	NewrelicOracleDiskWriteTimeMilliseconds                                 MetricConfig `mapstructure:"newrelic.oracle.disk.write_time_milliseconds"`
-	NewrelicOracleDiskWrites                                                MetricConfig `mapstructure:"newrelic.oracle.disk.writes"`
-	NewrelicOracleLockedAccounts                                            MetricConfig `mapstructure:"newrelic.oracle.locked_accounts"`
-	NewrelicOracleLongRunningQueries                                        MetricConfig `mapstructure:"newrelic.oracle.long_running_queries"`
-	NewrelicOracleMemoryBufferCacheHitRatio                                 MetricConfig `mapstructure:"newrelic.oracle.memory.buffer_cache_hit_ratio"`
-	NewrelicOracleMemoryGlobalCacheBlocksCorrupted                          MetricConfig `mapstructure:"newrelic.oracle.memory.global_cache_blocks_corrupted"`
-	NewrelicOracleMemoryGlobalCacheBlocksLost                               MetricConfig `mapstructure:"newrelic.oracle.memory.global_cache_blocks_lost"`
-	NewrelicOracleMemoryPgaAllocatedBytes                                   MetricConfig `mapstructure:"newrelic.oracle.memory.pga_allocated_bytes"`
-	NewrelicOracleMemoryPgaFreeableBytes                                    MetricConfig `mapstructure:"newrelic.oracle.memory.pga_freeable_bytes"`
-	NewrelicOracleMemoryPgaInUseBytes                                       MetricConfig `mapstructure:"newrelic.oracle.memory.pga_in_use_bytes"`
-	NewrelicOracleMemoryPgaMaxSizeBytes                                     MetricConfig `mapstructure:"newrelic.oracle.memory.pga_max_size_bytes"`
-	NewrelicOracleMemoryRedoAllocationHitRatio                              MetricConfig `mapstructure:"newrelic.oracle.memory.redo_allocation_hit_ratio"`
-	NewrelicOracleMemoryRedoGeneratedBytesPerSecond                         MetricConfig `mapstructure:"newrelic.oracle.memory.redo_generated_bytes_per_second"`
-	NewrelicOracleMemoryRedoGeneratedBytesPerTransaction                    MetricConfig `mapstructure:"newrelic.oracle.memory.redo_generated_bytes_per_transaction"`
-	NewrelicOracleMemorySortsRatio                                          MetricConfig `mapstructure:"newrelic.oracle.memory.sorts_ratio"`
-	NewrelicOracleNetworkIoMegabytesPerSecond                               MetricConfig `mapstructure:"newrelic.oracle.network.io_megabytes_per_second"`
-	NewrelicOracleNetworkIoRequestsPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.network.io_requests_per_second"`
-	NewrelicOracleNetworkTrafficBytesPerSecond                              MetricConfig `mapstructure:"newrelic.oracle.network.traffic_bytes_per_second"`
-	NewrelicOracleQueryPhysicalLobsReadsPerTransaction                      MetricConfig `mapstructure:"newrelic.oracle.query.physical_lobs_reads_per_transaction"`
-	NewrelicOracleQueryPhysicalLobsWritesPerTransaction                     MetricConfig `mapstructure:"newrelic.oracle.query.physical_lobs_writes_per_transaction"`
-	NewrelicOracleQueryPhysicalReadsPerTransaction                          MetricConfig `mapstructure:"newrelic.oracle.query.physical_reads_per_transaction"`
-	NewrelicOracleQueryPhysicalWritesPerTransaction                         MetricConfig `mapstructure:"newrelic.oracle.query.physical_writes_per_transaction"`
-	NewrelicOracleQueryTransactionsPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.query.transactions_per_second"`
-	NewrelicOracleRedoLogFileSwitch                                         MetricConfig `mapstructure:"newrelic.oracle.redo_log.file_switch"`
-	NewrelicOracleRedoLogFileSwitchArchivingNeeded                          MetricConfig `mapstructure:"newrelic.oracle.redo_log.file_switch_archiving_needed"`
-	NewrelicOracleRedoLogFileSwitchCheckpointIncomplete                     MetricConfig `mapstructure:"newrelic.oracle.redo_log.file_switch_checkpoint_incomplete"`
-	NewrelicOracleRedoLogWaits                                              MetricConfig `mapstructure:"newrelic.oracle.redo_log.waits"`
-	NewrelicOracleRollbackSegmentsGets                                      MetricConfig `mapstructure:"newrelic.oracle.rollback_segments.gets"`
-	NewrelicOracleRollbackSegmentsRatioWait                                 MetricConfig `mapstructure:"newrelic.oracle.rollback_segments.ratio_wait"`
-	NewrelicOracleRollbackSegmentsWaits                                     MetricConfig `mapstructure:"newrelic.oracle.rollback_segments.waits"`
-	NewrelicOracleSgaBufferBusyWaits                                        MetricConfig `mapstructure:"newrelic.oracle.sga.buffer_busy_waits"`
-	NewrelicOracleSgaFixedSizeBytes                                         MetricConfig `mapstructure:"newrelic.oracle.sga.fixed_size_bytes"`
-	NewrelicOracleSgaFreeBufferInspected                                    MetricConfig `mapstructure:"newrelic.oracle.sga.free_buffer_inspected"`
-	NewrelicOracleSgaFreeBufferWaits                                        MetricConfig `mapstructure:"newrelic.oracle.sga.free_buffer_waits"`
-	NewrelicOracleSgaHitRatio                                               MetricConfig `mapstructure:"newrelic.oracle.sga.hit_ratio"`
-	NewrelicOracleSgaLogBufferAllocationRetriesRatio                        MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_allocation_retries_ratio"`
-	NewrelicOracleSgaLogBufferRedoAllocationRetries                         MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_redo_allocation_retries"`
-	NewrelicOracleSgaLogBufferRedoEntries                                   MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_redo_entries"`
-	NewrelicOracleSgaLogBufferSpaceWaits                                    MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_space_waits"`
-	NewrelicOracleSgaRedoBuffersBytes                                       MetricConfig `mapstructure:"newrelic.oracle.sga.redo_buffers_bytes"`
-	NewrelicOracleSgaSharedPoolDictCacheMissRatio                           MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio"`
-	NewrelicOracleSgaSharedPoolLibraryCacheHitRatio                         MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_hit_ratio"`
-	NewrelicOracleSgaSharedPoolLibraryCacheReloadRatio                      MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_reload_ratio"`
-	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_bytes"`
-	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes      MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes"`
-	NewrelicOracleSgaUgaTotalMemoryBytes                                    MetricConfig `mapstructure:"newrelic.oracle.sga.uga_total_memory_bytes"`
-	NewrelicOracleSortsDiskBytes                                            MetricConfig `mapstructure:"newrelic.oracle.sorts.disk_bytes"`
-	NewrelicOracleSortsMemoryBytes                                          MetricConfig `mapstructure:"newrelic.oracle.sorts.memory_bytes"`
-	NewrelicOracleTablespaceIsOffline                                       MetricConfig `mapstructure:"newrelic.oracle.tablespace.is_offline"`
-	NewrelicOracleTablespaceOfflineCdbDatafiles                             MetricConfig `mapstructure:"newrelic.oracle.tablespace.offline_cdb_datafiles"`
-	NewrelicOracleTablespaceOfflinePdbDatafiles                             MetricConfig `mapstructure:"newrelic.oracle.tablespace.offline_pdb_datafiles"`
-	NewrelicOracleTablespacePdbDatafilesNonWrite                            MetricConfig `mapstructure:"newrelic.oracle.tablespace.pdb_datafiles_non_write"`
-	NewrelicOracleTablespaceSpaceConsumedBytes                              MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_consumed_bytes"`
-	NewrelicOracleTablespaceSpaceReservedBytes                              MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_reserved_bytes"`
-	NewrelicOracleTablespaceSpaceUsedPercentage                             MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_used_percentage"`
+	NewrelicOracleDbActiveParallelSessions                                    MetricConfig `mapstructure:"newrelic.oracle.db.active_parallel_sessions"`
+	NewrelicOracleDbActiveSerialSessions                                      MetricConfig `mapstructure:"newrelic.oracle.db.active_serial_sessions"`
+	NewrelicOracleDbAverageActiveSessions                                     MetricConfig `mapstructure:"newrelic.oracle.db.average_active_sessions"`
+	NewrelicOracleDbBackgroundCheckpointsPerSecond                            MetricConfig `mapstructure:"newrelic.oracle.db.background_checkpoints_per_second"`
+	NewrelicOracleDbBackgroundCPUUsagePerSecond                               MetricConfig `mapstructure:"newrelic.oracle.db.background_cpu_usage_per_second"`
+	NewrelicOracleDbBackgroundTimePerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.background_time_per_second"`
+	NewrelicOracleDbBlockChangesPerSecond                                     MetricConfig `mapstructure:"newrelic.oracle.db.block_changes_per_second"`
+	NewrelicOracleDbBlockChangesPerTransaction                                MetricConfig `mapstructure:"newrelic.oracle.db.block_changes_per_transaction"`
+	NewrelicOracleDbBlockChangesPerUserCall                                   MetricConfig `mapstructure:"newrelic.oracle.db.block_changes_per_user_call"`
+	NewrelicOracleDbBlockGetsPerSecond                                        MetricConfig `mapstructure:"newrelic.oracle.db.block_gets_per_second"`
+	NewrelicOracleDbBlockGetsPerTransaction                                   MetricConfig `mapstructure:"newrelic.oracle.db.block_gets_per_transaction"`
+	NewrelicOracleDbBlockGetsPerUserCall                                      MetricConfig `mapstructure:"newrelic.oracle.db.block_gets_per_user_call"`
+	NewrelicOracleDbBranchNodeSplitsPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.branch_node_splits_per_second"`
+	NewrelicOracleDbBranchNodeSplitsPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.db.branch_node_splits_per_transaction"`
+	NewrelicOracleDbCapturedUserCalls                                         MetricConfig `mapstructure:"newrelic.oracle.db.captured_user_calls"`
+	NewrelicOracleDbConsistentReadChangesPerSecond                            MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_changes_per_second"`
+	NewrelicOracleDbConsistentReadChangesPerTransaction                       MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_changes_per_transaction"`
+	NewrelicOracleDbConsistentReadGetsPerSecond                               MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_gets_per_second"`
+	NewrelicOracleDbConsistentReadGetsPerTransaction                          MetricConfig `mapstructure:"newrelic.oracle.db.consistent_read_gets_per_transaction"`
+	NewrelicOracleDbCPUTimeRatio                                              MetricConfig `mapstructure:"newrelic.oracle.db.cpu_time_ratio"`
+	NewrelicOracleDbCPUUsagePerSecond                                         MetricConfig `mapstructure:"newrelic.oracle.db.cpu_usage_per_second"`
+	NewrelicOracleDbCPUUsagePerTransaction                                    MetricConfig `mapstructure:"newrelic.oracle.db.cpu_usage_per_transaction"`
+	NewrelicOracleDbCrBlocksCreatedPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.cr_blocks_created_per_second"`
+	NewrelicOracleDbCrBlocksCreatedPerTransaction                             MetricConfig `mapstructure:"newrelic.oracle.db.cr_blocks_created_per_transaction"`
+	NewrelicOracleDbCrUndoRecordsAppliedPerSecond                             MetricConfig `mapstructure:"newrelic.oracle.db.cr_undo_records_applied_per_second"`
+	NewrelicOracleDbCrUndoRecordsAppliedPerTransaction                        MetricConfig `mapstructure:"newrelic.oracle.db.cr_undo_records_applied_per_transaction"`
+	NewrelicOracleDbCurrentLogons                                             MetricConfig `mapstructure:"newrelic.oracle.db.current_logons"`
+	NewrelicOracleDbCurrentOpenCursors                                        MetricConfig `mapstructure:"newrelic.oracle.db.current_open_cursors"`
+	NewrelicOracleDbCursorCacheHitRatio                                       MetricConfig `mapstructure:"newrelic.oracle.db.cursor_cache_hit_ratio"`
+	NewrelicOracleDbCursorCacheHitsPerAttempts                                MetricConfig `mapstructure:"newrelic.oracle.db.cursor_cache_hits_per_attempts"`
+	NewrelicOracleDbDatabaseCPUTimePerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.database_cpu_time_per_second"`
+	NewrelicOracleDbDbwrCheckpointsPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.dbwr_checkpoints_per_second"`
+	NewrelicOracleDbEnqueueDeadlocksPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_deadlocks_per_second"`
+	NewrelicOracleDbEnqueueDeadlocksPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_deadlocks_per_transaction"`
+	NewrelicOracleDbEnqueueRequestsPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_requests_per_second"`
+	NewrelicOracleDbEnqueueRequestsPerTransaction                             MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_requests_per_transaction"`
+	NewrelicOracleDbEnqueueTimeoutsPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_timeouts_per_second"`
+	NewrelicOracleDbEnqueueTimeoutsPerTransaction                             MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_timeouts_per_transaction"`
+	NewrelicOracleDbEnqueueWaitsPerSecond                                     MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_waits_per_second"`
+	NewrelicOracleDbEnqueueWaitsPerTransaction                                MetricConfig `mapstructure:"newrelic.oracle.db.enqueue_waits_per_transaction"`
+	NewrelicOracleDbExecuteWithoutParseRatio                                  MetricConfig `mapstructure:"newrelic.oracle.db.execute_without_parse_ratio"`
+	NewrelicOracleDbExecutionsPerSecond                                       MetricConfig `mapstructure:"newrelic.oracle.db.executions_per_second"`
+	NewrelicOracleDbExecutionsPerTransaction                                  MetricConfig `mapstructure:"newrelic.oracle.db.executions_per_transaction"`
+	NewrelicOracleDbExecutionsPerUserCall                                     MetricConfig `mapstructure:"newrelic.oracle.db.executions_per_user_call"`
+	NewrelicOracleDbFullIndexScansPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.full_index_scans_per_second"`
+	NewrelicOracleDbFullIndexScansPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.full_index_scans_per_transaction"`
+	NewrelicOracleDbGcCrBlockReceivedPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.gc_cr_block_received_per_second"`
+	NewrelicOracleDbGcCrBlockReceivedPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.gc_cr_block_received_per_transaction"`
+	NewrelicOracleDbGcCrBlockRecievedPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.gc_cr_block_recieved_per_second"`
+	NewrelicOracleDbGcCrBlockRecievedPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.gc_cr_block_recieved_per_transaction"`
+	NewrelicOracleDbGcCurrentBlockReceivedPerSecond                           MetricConfig `mapstructure:"newrelic.oracle.db.gc_current_block_received_per_second"`
+	NewrelicOracleDbGcCurrentBlockReceivedPerTransaction                      MetricConfig `mapstructure:"newrelic.oracle.db.gc_current_block_received_per_transaction"`
+	NewrelicOracleDbGlobalCacheAverageCrGetTime                               MetricConfig `mapstructure:"newrelic.oracle.db.global_cache_average_cr_get_time"`
+	NewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond                      MetricConfig `mapstructure:"newrelic.oracle.db.global_cache_average_cr_get_time_per_second"`
+	NewrelicOracleDbGlobalCacheAverageCurrentGetTime                          MetricConfig `mapstructure:"newrelic.oracle.db.global_cache_average_current_get_time"`
+	NewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond                 MetricConfig `mapstructure:"newrelic.oracle.db.global_cache_average_current_get_time_per_second"`
+	NewrelicOracleDbHardParseCountPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.hard_parse_count_per_second"`
+	NewrelicOracleDbHardParseCountPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.hard_parse_count_per_transaction"`
+	NewrelicOracleDbHostCPUUsagePerSecond                                     MetricConfig `mapstructure:"newrelic.oracle.db.host_cpu_usage_per_second"`
+	NewrelicOracleDbHostCPUUtilization                                        MetricConfig `mapstructure:"newrelic.oracle.db.host_cpu_utilization"`
+	NewrelicOracleDbLeafNodeSplitsPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.leaf_node_splits_per_second"`
+	NewrelicOracleDbLeafNodeSplitsPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.leaf_node_splits_per_transaction"`
+	NewrelicOracleDbLibraryCacheHitRatio                                      MetricConfig `mapstructure:"newrelic.oracle.db.library_cache_hit_ratio"`
+	NewrelicOracleDbLibraryCacheMissRatio                                     MetricConfig `mapstructure:"newrelic.oracle.db.library_cache_miss_ratio"`
+	NewrelicOracleDbLogicalReadsPerSecond                                     MetricConfig `mapstructure:"newrelic.oracle.db.logical_reads_per_second"`
+	NewrelicOracleDbLogicalReadsPerTransaction                                MetricConfig `mapstructure:"newrelic.oracle.db.logical_reads_per_transaction"`
+	NewrelicOracleDbLogonsPerSecond                                           MetricConfig `mapstructure:"newrelic.oracle.db.logons_per_second"`
+	NewrelicOracleDbLogonsPerTransaction                                      MetricConfig `mapstructure:"newrelic.oracle.db.logons_per_transaction"`
+	NewrelicOracleDbLongTableScansPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.long_table_scans_per_second"`
+	NewrelicOracleDbLongTableScansPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.long_table_scans_per_transaction"`
+	NewrelicOracleDbOpenCursorsPerSecond                                      MetricConfig `mapstructure:"newrelic.oracle.db.open_cursors_per_second"`
+	NewrelicOracleDbOpenCursorsPerTransaction                                 MetricConfig `mapstructure:"newrelic.oracle.db.open_cursors_per_transaction"`
+	NewrelicOracleDbOsLoad                                                    MetricConfig `mapstructure:"newrelic.oracle.db.os_load"`
+	NewrelicOracleDbParseFailureCountPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.parse_failure_count_per_second"`
+	NewrelicOracleDbParseFailureCountPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.db.parse_failure_count_per_transaction"`
+	NewrelicOracleDbPgaCacheHitPercentage                                     MetricConfig `mapstructure:"newrelic.oracle.db.pga_cache_hit_percentage"`
+	NewrelicOracleDbPhysicalReadBytesPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.db.physical_read_bytes_per_second"`
+	NewrelicOracleDbPhysicalReadIoRequestsPerSecond                           MetricConfig `mapstructure:"newrelic.oracle.db.physical_read_io_requests_per_second"`
+	NewrelicOracleDbPhysicalReadsPerSecond                                    MetricConfig `mapstructure:"newrelic.oracle.db.physical_reads_per_second"`
+	NewrelicOracleDbPhysicalWriteBytesPerSecond                               MetricConfig `mapstructure:"newrelic.oracle.db.physical_write_bytes_per_second"`
+	NewrelicOracleDbPhysicalWritesPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.physical_writes_per_second"`
+	NewrelicOracleDbProcessLimitPercentage                                    MetricConfig `mapstructure:"newrelic.oracle.db.process_limit_percentage"`
+	NewrelicOracleDbRecursiveCallsPerSecond                                   MetricConfig `mapstructure:"newrelic.oracle.db.recursive_calls_per_second"`
+	NewrelicOracleDbRecursiveCallsPerTransaction                              MetricConfig `mapstructure:"newrelic.oracle.db.recursive_calls_per_transaction"`
+	NewrelicOracleDbRedoWritesPerSecond                                       MetricConfig `mapstructure:"newrelic.oracle.db.redo_writes_per_second"`
+	NewrelicOracleDbRedoWritesPerTransaction                                  MetricConfig `mapstructure:"newrelic.oracle.db.redo_writes_per_transaction"`
+	NewrelicOracleDbResponseTimePerTransaction                                MetricConfig `mapstructure:"newrelic.oracle.db.response_time_per_transaction"`
+	NewrelicOracleDbRowCacheHitRatio                                          MetricConfig `mapstructure:"newrelic.oracle.db.row_cache_hit_ratio"`
+	NewrelicOracleDbRowCacheMissRatio                                         MetricConfig `mapstructure:"newrelic.oracle.db.row_cache_miss_ratio"`
+	NewrelicOracleDbRowsPerSort                                               MetricConfig `mapstructure:"newrelic.oracle.db.rows_per_sort"`
+	NewrelicOracleDbSessionCount                                              MetricConfig `mapstructure:"newrelic.oracle.db.session_count"`
+	NewrelicOracleDbSessionLimitPercentage                                    MetricConfig `mapstructure:"newrelic.oracle.db.session_limit_percentage"`
+	NewrelicOracleDbSharedPoolFreePercentage                                  MetricConfig `mapstructure:"newrelic.oracle.db.shared_pool_free_percentage"`
+	NewrelicOracleDbSoftParseRatio                                            MetricConfig `mapstructure:"newrelic.oracle.db.soft_parse_ratio"`
+	NewrelicOracleDbSortsPerUserCall                                          MetricConfig `mapstructure:"newrelic.oracle.db.sorts_per_user_call"`
+	NewrelicOracleDbSQLServiceResponseTime                                    MetricConfig `mapstructure:"newrelic.oracle.db.sql_service_response_time"`
+	NewrelicOracleDbStreamsPoolUsagePercentage                                MetricConfig `mapstructure:"newrelic.oracle.db.streams_pool_usage_percentage"`
+	NewrelicOracleDbTableScansPerUserCall                                     MetricConfig `mapstructure:"newrelic.oracle.db.table_scans_per_user_call"`
+	NewrelicOracleDbTotalIndexScansPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.total_index_scans_per_second"`
+	NewrelicOracleDbTotalIndexScansPerTransaction                             MetricConfig `mapstructure:"newrelic.oracle.db.total_index_scans_per_transaction"`
+	NewrelicOracleDbTotalParseCountPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.total_parse_count_per_second"`
+	NewrelicOracleDbTotalParseCountPerTransaction                             MetricConfig `mapstructure:"newrelic.oracle.db.total_parse_count_per_transaction"`
+	NewrelicOracleDbTotalTableScansPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.db.total_table_scans_per_second"`
+	NewrelicOracleDbTotalTableScansPerTransaction                             MetricConfig `mapstructure:"newrelic.oracle.db.total_table_scans_per_transaction"`
+	NewrelicOracleDbTransactionsPerLogon                                      MetricConfig `mapstructure:"newrelic.oracle.db.transactions_per_logon"`
+	NewrelicOracleDbUserCallsPerSecond                                        MetricConfig `mapstructure:"newrelic.oracle.db.user_calls_per_second"`
+	NewrelicOracleDbUserCallsPerTransaction                                   MetricConfig `mapstructure:"newrelic.oracle.db.user_calls_per_transaction"`
+	NewrelicOracleDbUserCallsRatio                                            MetricConfig `mapstructure:"newrelic.oracle.db.user_calls_ratio"`
+	NewrelicOracleDbUserCommitsPerSecond                                      MetricConfig `mapstructure:"newrelic.oracle.db.user_commits_per_second"`
+	NewrelicOracleDbUserCommitsPercentage                                     MetricConfig `mapstructure:"newrelic.oracle.db.user_commits_percentage"`
+	NewrelicOracleDbUserLimitPercentage                                       MetricConfig `mapstructure:"newrelic.oracle.db.user_limit_percentage"`
+	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerSecond                   MetricConfig `mapstructure:"newrelic.oracle.db.user_rollback_undo_records_applied_per_second"`
+	NewrelicOracleDbUserRollbackUndoRecordsAppliedPerTransaction              MetricConfig `mapstructure:"newrelic.oracle.db.user_rollback_undo_records_applied_per_transaction"`
+	NewrelicOracleDbUserRollbacksPerSecond                                    MetricConfig `mapstructure:"newrelic.oracle.db.user_rollbacks_per_second"`
+	NewrelicOracleDbUserRollbacksPercentage                                   MetricConfig `mapstructure:"newrelic.oracle.db.user_rollbacks_percentage"`
+	NewrelicOracleDbWaitTimeRatio                                             MetricConfig `mapstructure:"newrelic.oracle.db.wait_time_ratio"`
+	NewrelicOracleDiskBlocksRead                                              MetricConfig `mapstructure:"newrelic.oracle.disk.blocks_read"`
+	NewrelicOracleDiskBlocksWritten                                           MetricConfig `mapstructure:"newrelic.oracle.disk.blocks_written"`
+	NewrelicOracleDiskLogicalReadsPerUserCall                                 MetricConfig `mapstructure:"newrelic.oracle.disk.logical_reads_per_user_call"`
+	NewrelicOracleDiskPhysicalLobsReadsPerSecond                              MetricConfig `mapstructure:"newrelic.oracle.disk.physical_lobs_reads_per_second"`
+	NewrelicOracleDiskPhysicalLobsWritesPerSecond                             MetricConfig `mapstructure:"newrelic.oracle.disk.physical_lobs_writes_per_second"`
+	NewrelicOracleDiskPhysicalReadBytesPerSecond                              MetricConfig `mapstructure:"newrelic.oracle.disk.physical_read_bytes_per_second"`
+	NewrelicOracleDiskPhysicalReadIoRequestsPerSecond                         MetricConfig `mapstructure:"newrelic.oracle.disk.physical_read_io_requests_per_second"`
+	NewrelicOracleDiskPhysicalReadsPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.disk.physical_reads_per_second"`
+	NewrelicOracleDiskPhysicalWriteBytesPerSecond                             MetricConfig `mapstructure:"newrelic.oracle.disk.physical_write_bytes_per_second"`
+	NewrelicOracleDiskPhysicalWriteIoRequestsPerSecond                        MetricConfig `mapstructure:"newrelic.oracle.disk.physical_write_io_requests_per_second"`
+	NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond                   MetricConfig `mapstructure:"newrelic.oracle.disk.physical_write_total_io_requests_per_second"`
+	NewrelicOracleDiskPhysicalWritesPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.disk.physical_writes_per_second"`
+	NewrelicOracleDiskReadTimeInMiliseconds                                   MetricConfig `mapstructure:"newrelic.oracle.disk.read_time_in_miliseconds"`
+	NewrelicOracleDiskReadTimeInMilliseconds                                  MetricConfig `mapstructure:"newrelic.oracle.disk.read_time_in_milliseconds"`
+	NewrelicOracleDiskReadTimeMilliseconds                                    MetricConfig `mapstructure:"newrelic.oracle.disk.read_time_milliseconds"`
+	NewrelicOracleDiskReads                                                   MetricConfig `mapstructure:"newrelic.oracle.disk.reads"`
+	NewrelicOracleDiskSortPerSecond                                           MetricConfig `mapstructure:"newrelic.oracle.disk.sort_per_second"`
+	NewrelicOracleDiskSortPerTransaction                                      MetricConfig `mapstructure:"newrelic.oracle.disk.sort_per_transaction"`
+	NewrelicOracleDiskTempSpaceUsedBytes                                      MetricConfig `mapstructure:"newrelic.oracle.disk.temp_space_used_bytes"`
+	NewrelicOracleDiskTempSpaceUsedInBytes                                    MetricConfig `mapstructure:"newrelic.oracle.disk.temp_space_used_in_bytes"`
+	NewrelicOracleDiskWriteTimeInMiliseconds                                  MetricConfig `mapstructure:"newrelic.oracle.disk.write_time_in_miliseconds"`
+	NewrelicOracleDiskWriteTimeInMilliseconds                                 MetricConfig `mapstructure:"newrelic.oracle.disk.write_time_in_milliseconds"`
+	NewrelicOracleDiskWriteTimeMilliseconds                                   MetricConfig `mapstructure:"newrelic.oracle.disk.write_time_milliseconds"`
+	NewrelicOracleDiskWrites                                                  MetricConfig `mapstructure:"newrelic.oracle.disk.writes"`
+	NewrelicOracleInstanceCdbDatafilesOffline                                 MetricConfig `mapstructure:"newrelic.oracle.instance.cdb_datafiles_offline"`
+	NewrelicOracleLockedAccounts                                              MetricConfig `mapstructure:"newrelic.oracle.locked_accounts"`
+	NewrelicOracleLongRunningQueries                                          MetricConfig `mapstructure:"newrelic.oracle.long_running_queries"`
+	NewrelicOracleMemoryBufferCacheHitRatio                                   MetricConfig `mapstructure:"newrelic.oracle.memory.buffer_cache_hit_ratio"`
+	NewrelicOracleMemoryGlobalCacheBlocksCorrupted                            MetricConfig `mapstructure:"newrelic.oracle.memory.global_cache_blocks_corrupted"`
+	NewrelicOracleMemoryGlobalCacheBlocksLost                                 MetricConfig `mapstructure:"newrelic.oracle.memory.global_cache_blocks_lost"`
+	NewrelicOracleMemoryPgaAllocatedBytes                                     MetricConfig `mapstructure:"newrelic.oracle.memory.pga_allocated_bytes"`
+	NewrelicOracleMemoryPgaAllocatedInBytes                                   MetricConfig `mapstructure:"newrelic.oracle.memory.pga_allocated_in_bytes"`
+	NewrelicOracleMemoryPgaFreeableBytes                                      MetricConfig `mapstructure:"newrelic.oracle.memory.pga_freeable_bytes"`
+	NewrelicOracleMemoryPgaFreeableInBytes                                    MetricConfig `mapstructure:"newrelic.oracle.memory.pga_freeable_in_bytes"`
+	NewrelicOracleMemoryPgaInUseBytes                                         MetricConfig `mapstructure:"newrelic.oracle.memory.pga_in_use_bytes"`
+	NewrelicOracleMemoryPgaInUseInBytes                                       MetricConfig `mapstructure:"newrelic.oracle.memory.pga_in_use_in_bytes"`
+	NewrelicOracleMemoryPgaMaxSizeBytes                                       MetricConfig `mapstructure:"newrelic.oracle.memory.pga_max_size_bytes"`
+	NewrelicOracleMemoryPgaMaxSizeInBytes                                     MetricConfig `mapstructure:"newrelic.oracle.memory.pga_max_size_in_bytes"`
+	NewrelicOracleMemoryRedoAllocationHitRatio                                MetricConfig `mapstructure:"newrelic.oracle.memory.redo_allocation_hit_ratio"`
+	NewrelicOracleMemoryRedoGeneratedBytesPerSecond                           MetricConfig `mapstructure:"newrelic.oracle.memory.redo_generated_bytes_per_second"`
+	NewrelicOracleMemoryRedoGeneratedBytesPerTransaction                      MetricConfig `mapstructure:"newrelic.oracle.memory.redo_generated_bytes_per_transaction"`
+	NewrelicOracleMemorySortsRatio                                            MetricConfig `mapstructure:"newrelic.oracle.memory.sorts_ratio"`
+	NewrelicOracleNetworkIoMegabytesPerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.network.io_megabytes_per_second"`
+	NewrelicOracleNetworkIoRequestsPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.network.io_requests_per_second"`
+	NewrelicOracleNetworkTrafficBytePerSecond                                 MetricConfig `mapstructure:"newrelic.oracle.network.traffic_byte_per_second"`
+	NewrelicOracleNetworkTrafficBytesPerSecond                                MetricConfig `mapstructure:"newrelic.oracle.network.traffic_bytes_per_second"`
+	NewrelicOracleQueryPhysicalLobsReadsPerTransaction                        MetricConfig `mapstructure:"newrelic.oracle.query.physical_lobs_reads_per_transaction"`
+	NewrelicOracleQueryPhysicalLobsWritesPerTransaction                       MetricConfig `mapstructure:"newrelic.oracle.query.physical_lobs_writes_per_transaction"`
+	NewrelicOracleQueryPhysicalReadsPerTransaction                            MetricConfig `mapstructure:"newrelic.oracle.query.physical_reads_per_transaction"`
+	NewrelicOracleQueryPhysicalWritesPerTransaction                           MetricConfig `mapstructure:"newrelic.oracle.query.physical_writes_per_transaction"`
+	NewrelicOracleQuerySQLServiceResponseTime                                 MetricConfig `mapstructure:"newrelic.oracle.query.sql_service_response_time"`
+	NewrelicOracleQueryTransactionsPerSecond                                  MetricConfig `mapstructure:"newrelic.oracle.query.transactions_per_second"`
+	NewrelicOracleRedoLogFileSwitch                                           MetricConfig `mapstructure:"newrelic.oracle.redo_log.file_switch"`
+	NewrelicOracleRedoLogFileSwitchArchivingNeeded                            MetricConfig `mapstructure:"newrelic.oracle.redo_log.file_switch_archiving_needed"`
+	NewrelicOracleRedoLogFileSwitchCheckpointIncomplete                       MetricConfig `mapstructure:"newrelic.oracle.redo_log.file_switch_checkpoint_incomplete"`
+	NewrelicOracleRedoLogLogFileSwitch                                        MetricConfig `mapstructure:"newrelic.oracle.redo_log.log_file_switch"`
+	NewrelicOracleRedoLogLogFileSwitchArchivingNeeded                         MetricConfig `mapstructure:"newrelic.oracle.redo_log.log_file_switch_archiving_needed"`
+	NewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete                    MetricConfig `mapstructure:"newrelic.oracle.redo_log.log_file_switch_checkpoint_incomplete"`
+	NewrelicOracleRedoLogWaits                                                MetricConfig `mapstructure:"newrelic.oracle.redo_log.waits"`
+	NewrelicOracleRollbackSegmentsGets                                        MetricConfig `mapstructure:"newrelic.oracle.rollback_segments.gets"`
+	NewrelicOracleRollbackSegmentsRatioWait                                   MetricConfig `mapstructure:"newrelic.oracle.rollback_segments.ratio_wait"`
+	NewrelicOracleRollbackSegmentsWaits                                       MetricConfig `mapstructure:"newrelic.oracle.rollback_segments.waits"`
+	NewrelicOracleSgaBufferBusyWaits                                          MetricConfig `mapstructure:"newrelic.oracle.sga.buffer_busy_waits"`
+	NewrelicOracleSgaFixedSizeBytes                                           MetricConfig `mapstructure:"newrelic.oracle.sga.fixed_size_bytes"`
+	NewrelicOracleSgaFixedSizeInBytes                                         MetricConfig `mapstructure:"newrelic.oracle.sga.fixed_size_in_bytes"`
+	NewrelicOracleSgaFreeBufferInspected                                      MetricConfig `mapstructure:"newrelic.oracle.sga.free_buffer_inspected"`
+	NewrelicOracleSgaFreeBufferWaits                                          MetricConfig `mapstructure:"newrelic.oracle.sga.free_buffer_waits"`
+	NewrelicOracleSgaHitRatio                                                 MetricConfig `mapstructure:"newrelic.oracle.sga.hit_ratio"`
+	NewrelicOracleSgaLogBufferAllocationRetriesRatio                          MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_allocation_retries_ratio"`
+	NewrelicOracleSgaLogBufferRedoAllocationRetries                           MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_redo_allocation_retries"`
+	NewrelicOracleSgaLogBufferRedoEntries                                     MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_redo_entries"`
+	NewrelicOracleSgaLogBufferSpaceWaits                                      MetricConfig `mapstructure:"newrelic.oracle.sga.log_buffer_space_waits"`
+	NewrelicOracleSgaRedoBuffersBytes                                         MetricConfig `mapstructure:"newrelic.oracle.sga.redo_buffers_bytes"`
+	NewrelicOracleSgaRedoBuffersInBytes                                       MetricConfig `mapstructure:"newrelic.oracle.sga.redo_buffers_in_bytes"`
+	NewrelicOracleSgaSharedPoolDictCacheMissRatio                             MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_dict_cache_miss_ratio"`
+	NewrelicOracleSgaSharedPoolLibraryCacheHitRatio                           MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_hit_ratio"`
+	NewrelicOracleSgaSharedPoolLibraryCacheReloadRatio                        MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_reload_ratio"`
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes   MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_bytes"`
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_statement_in_bytes"`
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes        MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_bytes"`
+	NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes      MetricConfig `mapstructure:"newrelic.oracle.sga.shared_pool_library_cache_shareable_memory_per_user_in_bytes"`
+	NewrelicOracleSgaUgaTotalMemoryBytes                                      MetricConfig `mapstructure:"newrelic.oracle.sga.uga_total_memory_bytes"`
+	NewrelicOracleSgaUgaTotalMemoryInBytes                                    MetricConfig `mapstructure:"newrelic.oracle.sga.uga_total_memory_in_bytes"`
+	NewrelicOracleSortsDiskBytes                                              MetricConfig `mapstructure:"newrelic.oracle.sorts.disk_bytes"`
+	NewrelicOracleSortsDiskInBytes                                            MetricConfig `mapstructure:"newrelic.oracle.sorts.disk_in_bytes"`
+	NewrelicOracleSortsMemoryBytes                                            MetricConfig `mapstructure:"newrelic.oracle.sorts.memory_bytes"`
+	NewrelicOracleSortsMemoryInBytes                                          MetricConfig `mapstructure:"newrelic.oracle.sorts.memory_in_bytes"`
+	NewrelicOracleTablespaceIsOffline                                         MetricConfig `mapstructure:"newrelic.oracle.tablespace.is_offline"`
+	NewrelicOracleTablespaceOfflineCdbDatafiles                               MetricConfig `mapstructure:"newrelic.oracle.tablespace.offline_cdb_datafiles"`
+	NewrelicOracleTablespaceOfflinePdbDatafiles                               MetricConfig `mapstructure:"newrelic.oracle.tablespace.offline_pdb_datafiles"`
+	NewrelicOracleTablespacePdbDatafilesNonWrite                              MetricConfig `mapstructure:"newrelic.oracle.tablespace.pdb_datafiles_non_write"`
+	NewrelicOracleTablespaceSpaceConsumedBytes                                MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_consumed_bytes"`
+	NewrelicOracleTablespaceSpaceConsumedInBytes                              MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_consumed_in_bytes"`
+	NewrelicOracleTablespaceSpaceReservedBytes                                MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_reserved_bytes"`
+	NewrelicOracleTablespaceSpaceReservedInBytes                              MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_reserved_in_bytes"`
+	NewrelicOracleTablespaceSpaceUsedPercentage                               MetricConfig `mapstructure:"newrelic.oracle.tablespace.space_used_percentage"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -298,6 +328,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleDbCurrentOpenCursors: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleDbCursorCacheHitRatio: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleDbCursorCacheHitsPerAttempts: MetricConfig{
 			Enabled: true,
 		},
@@ -355,6 +388,12 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleDbGcCrBlockReceivedPerTransaction: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleDbGcCrBlockRecievedPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleDbGcCrBlockRecievedPerTransaction: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleDbGcCurrentBlockReceivedPerSecond: MetricConfig{
 			Enabled: true,
 		},
@@ -364,7 +403,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleDbGlobalCacheAverageCrGetTime: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleDbGlobalCacheAverageCrGetTimePerSecond: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleDbGlobalCacheAverageCurrentGetTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleDbGlobalCacheAverageCurrentGetTimePerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleDbHardParseCountPerSecond: MetricConfig{
@@ -574,10 +619,19 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleDiskPhysicalWriteBytesPerSecond: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleDiskPhysicalWriteIoRequestsPerSecond: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleDiskPhysicalWriteTotalIoRequestsPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleDiskPhysicalWritesPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleDiskReadTimeInMiliseconds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleDiskReadTimeInMilliseconds: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleDiskReadTimeMilliseconds: MetricConfig{
@@ -595,10 +649,22 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleDiskTempSpaceUsedBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleDiskTempSpaceUsedInBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleDiskWriteTimeInMiliseconds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleDiskWriteTimeInMilliseconds: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleDiskWriteTimeMilliseconds: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleDiskWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleInstanceCdbDatafilesOffline: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleLockedAccounts: MetricConfig{
@@ -619,13 +685,25 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleMemoryPgaAllocatedBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleMemoryPgaAllocatedInBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleMemoryPgaFreeableBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleMemoryPgaFreeableInBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleMemoryPgaInUseBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleMemoryPgaInUseInBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleMemoryPgaMaxSizeBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleMemoryPgaMaxSizeInBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleMemoryRedoAllocationHitRatio: MetricConfig{
@@ -646,6 +724,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleNetworkIoRequestsPerSecond: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleNetworkTrafficBytePerSecond: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleNetworkTrafficBytesPerSecond: MetricConfig{
 			Enabled: true,
 		},
@@ -661,6 +742,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleQueryPhysicalWritesPerTransaction: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleQuerySQLServiceResponseTime: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleQueryTransactionsPerSecond: MetricConfig{
 			Enabled: true,
 		},
@@ -671,6 +755,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicOracleRedoLogFileSwitchCheckpointIncomplete: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleRedoLogLogFileSwitch: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleRedoLogLogFileSwitchArchivingNeeded: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleRedoLogLogFileSwitchCheckpointIncomplete: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleRedoLogWaits: MetricConfig{
@@ -689,6 +782,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicOracleSgaFixedSizeBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleSgaFixedSizeInBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleSgaFreeBufferInspected: MetricConfig{
@@ -715,6 +811,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleSgaRedoBuffersBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleSgaRedoBuffersInBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleSgaSharedPoolDictCacheMissRatio: MetricConfig{
 			Enabled: true,
 		},
@@ -727,16 +826,31 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerStatementInBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleSgaSharedPoolLibraryCacheShareableMemoryPerUserInBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleSgaUgaTotalMemoryBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleSgaUgaTotalMemoryInBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleSortsDiskBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleSortsDiskInBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleSortsMemoryBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleSortsMemoryInBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleTablespaceIsOffline: MetricConfig{
@@ -754,7 +868,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicOracleTablespaceSpaceConsumedBytes: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicOracleTablespaceSpaceConsumedInBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicOracleTablespaceSpaceReservedBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicOracleTablespaceSpaceReservedInBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicOracleTablespaceSpaceUsedPercentage: MetricConfig{
