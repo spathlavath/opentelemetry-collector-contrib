@@ -129,6 +129,7 @@ func (s *oracleScraper) Scrape(ctx context.Context) (pmetric.Metrics, error) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
+		// Collect tablespace metrics (now fixed)
 		if err := s.collectTablespaceMetrics(); err != nil {
 			errors <- fmt.Errorf("tablespace metrics: %w", err)
 		}
@@ -573,7 +574,7 @@ func (s *oracleScraper) collectTablespaceMetrics() error {
 			dt.TABLESPACE_NAME,
 			ROUND((dt.BYTES - NVL(fs.BYTES, 0)) / dt.BYTES * 100, 2) AS USED_PERCENT,
 			(dt.BYTES - NVL(fs.BYTES, 0)) AS USED,
-			dt.BYTES AS SIZE,
+			dt.BYTES AS TOTAL_SIZE,
 			0 AS OFFLINE
 		FROM 
 			(SELECT TABLESPACE_NAME, SUM(BYTES) AS BYTES 
