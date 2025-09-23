@@ -192,6 +192,51 @@ Log file parallel write waits
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle instance ID | Any Str | false |
 
+### newrelicoracledb.rollback_segments.gets
+
+Number of gets on rollback segment headers
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {gets} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.rollback_segments.ratio_wait
+
+Ratio of waits to gets on rollback segment headers
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {ratio} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.rollback_segments.waits
+
+Number of waits on rollback segment headers
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
 ### newrelicoracledb.sessions.count
 
 Total number of active Oracle database sessions

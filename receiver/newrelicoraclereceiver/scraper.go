@@ -36,6 +36,8 @@ type newRelicOracleScraper struct {
 	pdbSysMetricsScraper *scrapers.PDBSysMetricsScraper
 	// Redo log waits scraper for redo log and system event wait metrics
 	redoLogWaitsScraper *scrapers.RedoLogWaitsScraper
+	// Rollback segments scraper for rollback segment statistics
+	rollbackSegmentsScraper *scrapers.RollbackSegmentsScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -86,6 +88,10 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	s.redoLogWaitsScraper = scrapers.NewRedoLogWaitsScraper(s.db, s.logger, s.mb, s, s.instanceName)
 	s.logger.Info("Oracle redo log waits scraper initialized", zap.String("instance", s.instanceName))
 
+	// Initialize rollback segments scraper (always enabled as the metrics have individual enable/disable flags)
+	s.rollbackSegmentsScraper = scrapers.NewRollbackSegmentsScraper(s.db, s.logger, s.mb, s.instanceName, s)
+	s.logger.Info("Oracle rollback segments scraper initialized", zap.String("instance", s.instanceName))
+
 	return nil
 }
 
@@ -110,6 +116,11 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	// Scrape redo log waits metrics (always enabled as individual metrics have enable/disable flags)
 	if s.redoLogWaitsScraper != nil {
 		scrapeErrors = append(scrapeErrors, s.redoLogWaitsScraper.ScrapeRedoLogWaits(ctx)...)
+	}
+
+	// Scrape rollback segments metrics (always enabled as individual metrics have enable/disable flags)
+	if s.rollbackSegmentsScraper != nil {
+		scrapeErrors = append(scrapeErrors, s.rollbackSegmentsScraper.ScrapeRollbackSegments(ctx)...)
 	}
 
 	// Build the resource with instance and host information

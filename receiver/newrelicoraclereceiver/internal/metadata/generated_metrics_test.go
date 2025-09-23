@@ -142,6 +142,18 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbRollbackSegmentsRatioWaitDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbSessionsCountDataPoint(ts, 1, "newrelic.entity_name-val")
 
 			defaultMetricsCount++
@@ -529,6 +541,60 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Log file parallel write waits", ms.At(i).Description())
+					assert.Equal(t, "{waits}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("instance.id")
+					assert.True(t, ok)
+					assert.Equal(t, "instance.id-val", attrVal.Str())
+				case "newrelicoracledb.rollback_segments.gets":
+					assert.False(t, validatedMetrics["newrelicoracledb.rollback_segments.gets"], "Found a duplicate in the metrics slice: newrelicoracledb.rollback_segments.gets")
+					validatedMetrics["newrelicoracledb.rollback_segments.gets"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of gets on rollback segment headers", ms.At(i).Description())
+					assert.Equal(t, "{gets}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("instance.id")
+					assert.True(t, ok)
+					assert.Equal(t, "instance.id-val", attrVal.Str())
+				case "newrelicoracledb.rollback_segments.ratio_wait":
+					assert.False(t, validatedMetrics["newrelicoracledb.rollback_segments.ratio_wait"], "Found a duplicate in the metrics slice: newrelicoracledb.rollback_segments.ratio_wait")
+					validatedMetrics["newrelicoracledb.rollback_segments.ratio_wait"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Ratio of waits to gets on rollback segment headers", ms.At(i).Description())
+					assert.Equal(t, "{ratio}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("instance.id")
+					assert.True(t, ok)
+					assert.Equal(t, "instance.id-val", attrVal.Str())
+				case "newrelicoracledb.rollback_segments.waits":
+					assert.False(t, validatedMetrics["newrelicoracledb.rollback_segments.waits"], "Found a duplicate in the metrics slice: newrelicoracledb.rollback_segments.waits")
+					validatedMetrics["newrelicoracledb.rollback_segments.waits"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of waits on rollback segment headers", ms.At(i).Description())
 					assert.Equal(t, "{waits}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())

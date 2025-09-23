@@ -48,6 +48,9 @@ type MetricsConfig struct {
 	NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch_archiving_needed"`
 	NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete"`
 	NewrelicoracledbRedoLogWaits                             MetricConfig `mapstructure:"newrelicoracledb.redo_log.waits"`
+	NewrelicoracledbRollbackSegmentsGets                     MetricConfig `mapstructure:"newrelicoracledb.rollback_segments.gets"`
+	NewrelicoracledbRollbackSegmentsRatioWait                MetricConfig `mapstructure:"newrelicoracledb.rollback_segments.ratio_wait"`
+	NewrelicoracledbRollbackSegmentsWaits                    MetricConfig `mapstructure:"newrelicoracledb.rollback_segments.waits"`
 	NewrelicoracledbSessionsCount                            MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
 	NewrelicoracledbSgaBufferBusyWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.buffer_busy_waits"`
 	NewrelicoracledbSgaFreeBufferInspected                   MetricConfig `mapstructure:"newrelicoracledb.sga.free_buffer_inspected"`
@@ -114,6 +117,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbRedoLogWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRollbackSegmentsGets: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRollbackSegmentsRatioWait: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRollbackSegmentsWaits: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSessionsCount: MetricConfig{

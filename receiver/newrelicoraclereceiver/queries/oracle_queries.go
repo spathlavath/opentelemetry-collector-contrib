@@ -23,4 +23,16 @@ const (
 			GV$SYSTEM_EVENT sysevent,
 			GV$INSTANCE inst
 		WHERE sysevent.inst_id=inst.inst_id`
+
+	// RollbackSegmentsSQL retrieves rollback segment statistics from gv$rollstat
+	// This matches the approach used in nri-oracledb oracleRollbackSegments metric group
+	RollbackSegmentsSQL = `
+		SELECT
+			SUM(stat.gets) AS gets,
+			sum(stat.waits) AS waits,
+			sum(stat.waits)/sum(stat.gets) AS ratio,
+			inst.inst_id
+		FROM GV$ROLLSTAT stat, GV$INSTANCE inst
+		WHERE stat.inst_id=inst.inst_id
+		GROUP BY inst.inst_id`
 )
