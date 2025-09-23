@@ -93,21 +93,37 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 		)
 
 		// Map events to metrics based on the original New Relic implementation
+		matched := false
 		switch {
 		case strings.Contains(event, "log file parallel write"):
 			s.mb.RecordNewrelicoracledbRedoLogWaitsDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
 		case strings.Contains(event, "log file switch completion"):
 			s.mb.RecordNewrelicoracledbRedoLogLogFileSwitchDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
 		case strings.Contains(event, "log file switch (check"):
 			s.mb.RecordNewrelicoracledbRedoLogLogFileSwitchCheckpointIncompleteDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
 		case strings.Contains(event, "log file switch (arch"):
 			s.mb.RecordNewrelicoracledbRedoLogLogFileSwitchArchivingNeededDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
 		case strings.Contains(event, "buffer busy waits"):
 			s.mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(now, totalWaits, s.instanceName, instanceID)
-		case strings.Contains(event, "freeBufferWaits"):
+			matched = true
+		case strings.Contains(event, "free buffer waits"):
 			s.mb.RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
 		case strings.Contains(event, "free buffer inspected"):
 			s.mb.RecordNewrelicoracledbSgaFreeBufferInspectedDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		}
+
+		if !matched {
+			// Log unmatched events for debugging
+			s.logger.Info("Unmatched system event found", 
+				zap.String("event", event), 
+				zap.Int64("total_waits", totalWaits),
+				zap.String("instance_id", instanceID))
 		}
 
 		metricCount++
