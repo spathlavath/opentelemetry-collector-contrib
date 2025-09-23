@@ -70,9 +70,10 @@ func NewRedoLogWaitsScraper(
 func (s *RedoLogWaitsScraper) initializeMetricsMapping() {
 	s.metricsMapping = []RedoLogWaitsMapping{
 		{
-			OracleEventIdentifier: "log file parallel write",
-			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogWaitsDataPoint,
-			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogWaits.Enabled,
+			// Map "log file sync" to log_file_sync metric - this is the primary redo log wait event
+			OracleEventIdentifier: "log file sync",
+			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogLogFileSyncDataPoint,
+			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSync.Enabled,
 		},
 		{
 			OracleEventIdentifier: "log file switch completion",
@@ -80,12 +81,15 @@ func (s *RedoLogWaitsScraper) initializeMetricsMapping() {
 			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSwitch.Enabled,
 		},
 		{
-			OracleEventIdentifier: "log file switch (check",
+			// Fixed: use correct event name with full text
+			OracleEventIdentifier: "log file switch (checkpoint incomplete)",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogLogFileSwitchCheckpointIncompleteDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete.Enabled,
 		},
 		{
-			OracleEventIdentifier: "log file switch (arch",
+			// Note: "log file switch (archiving needed)" event doesn't exist in this Oracle instance
+			// Keep the mapping but it won't match anything, which is fine
+			OracleEventIdentifier: "log file switch (archiving needed)",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogLogFileSwitchArchivingNeededDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded.Enabled,
 		},
@@ -95,7 +99,8 @@ func (s *RedoLogWaitsScraper) initializeMetricsMapping() {
 			Enabled:               s.config.GetMetrics().NewrelicoracledbSgaBufferBusyWaits.Enabled,
 		},
 		{
-			OracleEventIdentifier: "freeBufferWaits",
+			// Fixed: Oracle uses spaces, not camelCase
+			OracleEventIdentifier: "free buffer waits",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbSgaFreeBufferWaits.Enabled,
 		},

@@ -39,6 +39,8 @@ all_set:
       enabled: true
     newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete:
       enabled: true
+    newrelicoracledb.redo_log.log_file_sync:
+      enabled: true
     newrelicoracledb.redo_log.waits:
       enabled: true
     newrelicoracledb.sessions.count:
@@ -93,6 +95,8 @@ none_set:
     newrelicoracledb.redo_log.log_file_switch_archiving_needed:
       enabled: false
     newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete:
+      enabled: false
+    newrelicoracledb.redo_log.log_file_sync:
       enabled: false
     newrelicoracledb.redo_log.waits:
       enabled: false
