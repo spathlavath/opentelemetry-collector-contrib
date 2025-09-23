@@ -27,11 +27,12 @@ var (
 )
 
 type Config struct {
-	DataSource                     string `mapstructure:"datasource"`
-	Endpoint                       string `mapstructure:"endpoint"`
-	Password                       string `mapstructure:"password"`
-	Service                        string `mapstructure:"service"`
-	Username                       string `mapstructure:"username"`
+	DataSource                     string   `mapstructure:"datasource"`
+	Endpoint                       string   `mapstructure:"endpoint"`
+	Password                       string   `mapstructure:"password"`
+	Service                        string   `mapstructure:"service"`
+	Username                       string   `mapstructure:"username"`
+	SkipMetricsGroups              []string `mapstructure:"skip_metrics_groups"`
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
 }

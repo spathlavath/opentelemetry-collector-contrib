@@ -1,0 +1,54 @@
+receivers:
+  newrelicoracledb:
+    endpoint: localhost:1521
+    username: system
+    password: Passw0rd!
+    service: FREEPDB1
+    collection_interval: 10s
+    # Remove "slow_query_metrics" from skip list to enable slow query collection
+    skip_metrics_groups: ["tablespace_metrics"]
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  batch:
+
+  resource:
+    attributes:
+    - action: insert
+      key: environment
+      value: test
+    - action: insert
+      key: deployment.environment
+      value: docker
+    - action: insert
+      key: host.type
+      value: database
+
+exporters:
+  debug:
+    verbosity: detailed
+  
+  # OTLP exporter configuration for New Relic
+  otlp/newrelic:
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+    headers:
+      api-key: "*******"  # Replace with your actual New Relic API key
+
+extensions:
+  health_check:
+  pprof:
+
+service:
+  telemetry:
+    metrics:
+      level: none  # Disable internal metrics to avoid port conflicts
+  extensions: [health_check, pprof]
+  pipelines:
+    metrics:
+      receivers: [newrelicoracledb]
+      processors: [memory_limiter, resource, batch]
+      exporters: [debug, otlp/newrelic]  # Send to both debug and New Relic
