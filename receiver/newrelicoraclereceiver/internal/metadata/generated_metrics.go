@@ -16,10 +16,14 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSessionsCount: metricInfo{
 		Name: "newrelicoracledb.sessions.count",
 	},
+	NewrelicoracledbTotalWaitTime: metricInfo{
+		Name: "newrelicoracledb.total_wait_time",
+	},
 }
 
 type metricsInfo struct {
 	NewrelicoracledbSessionsCount metricInfo
+	NewrelicoracledbTotalWaitTime metricInfo
 }
 
 type metricInfo struct {
@@ -77,6 +81,62 @@ func newMetricNewrelicoracledbSessionsCount(cfg MetricConfig) metricNewrelicorac
 	return m
 }
 
+type metricNewrelicoracledbTotalWaitTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.total_wait_time metric with initial data.
+func (m *metricNewrelicoracledbTotalWaitTime) init() {
+	m.data.SetName("newrelicoracledb.total_wait_time")
+	m.data.SetDescription("Total wait time for a given query")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbTotalWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query.text", queryTextAttributeValue)
+	dp.Attributes().PutStr("wait.category", waitCategoryAttributeValue)
+	dp.Attributes().PutStr("wait.event.name", waitEventNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbTotalWaitTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbTotalWaitTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbTotalWaitTime(cfg MetricConfig) metricNewrelicoracledbTotalWaitTime {
+	m := metricNewrelicoracledbTotalWaitTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
@@ -88,6 +148,7 @@ type MetricsBuilder struct {
 	resourceAttributeIncludeFilter      map[string]filter.Filter
 	resourceAttributeExcludeFilter      map[string]filter.Filter
 	metricNewrelicoracledbSessionsCount metricNewrelicoracledbSessionsCount
+	metricNewrelicoracledbTotalWaitTime metricNewrelicoracledbTotalWaitTime
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -114,6 +175,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricsBuffer:                       pmetric.NewMetrics(),
 		buildInfo:                           settings.BuildInfo,
 		metricNewrelicoracledbSessionsCount: newMetricNewrelicoracledbSessionsCount(mbc.Metrics.NewrelicoracledbSessionsCount),
+		metricNewrelicoracledbTotalWaitTime: newMetricNewrelicoracledbTotalWaitTime(mbc.Metrics.NewrelicoracledbTotalWaitTime),
 		resourceAttributeIncludeFilter:      make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:      make(map[string]filter.Filter),
 	}
@@ -199,6 +261,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
 	mb.metricNewrelicoracledbSessionsCount.emit(ils.Metrics())
+	mb.metricNewrelicoracledbTotalWaitTime.emit(ils.Metrics())
 
 	for _, op := range options {
 		op.apply(rm)
@@ -233,6 +296,11 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 // RecordNewrelicoracledbSessionsCountDataPoint adds a data point to newrelicoracledb.sessions.count metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSessionsCountDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string) {
 	mb.metricNewrelicoracledbSessionsCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue)
+}
+
+// RecordNewrelicoracledbTotalWaitTimeDataPoint adds a data point to newrelicoracledb.total_wait_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbTotalWaitTimeDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
+	mb.metricNewrelicoracledbTotalWaitTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, waitCategoryAttributeValue, waitEventNameAttributeValue)
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,
