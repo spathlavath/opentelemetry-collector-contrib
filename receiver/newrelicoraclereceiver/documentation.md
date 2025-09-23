@@ -266,6 +266,21 @@ Buffer busy waits
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle instance ID | Any Str | false |
 
+### newrelicoracledb.sga.fixed_size_bytes
+
+SGA fixed size area in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
 ### newrelicoracledb.sga.free_buffer_inspected
 
 Free buffer inspected waits
@@ -288,6 +303,21 @@ Free buffer waits
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.sga.redo_buffers_bytes
+
+SGA redo buffers area in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
 
 #### Attributes
 

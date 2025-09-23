@@ -53,8 +53,10 @@ type MetricsConfig struct {
 	NewrelicoracledbRollbackSegmentsWaits                    MetricConfig `mapstructure:"newrelicoracledb.rollback_segments.waits"`
 	NewrelicoracledbSessionsCount                            MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
 	NewrelicoracledbSgaBufferBusyWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.buffer_busy_waits"`
+	NewrelicoracledbSgaFixedSizeBytes                        MetricConfig `mapstructure:"newrelicoracledb.sga.fixed_size_bytes"`
 	NewrelicoracledbSgaFreeBufferInspected                   MetricConfig `mapstructure:"newrelicoracledb.sga.free_buffer_inspected"`
 	NewrelicoracledbSgaFreeBufferWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.free_buffer_waits"`
+	NewrelicoracledbSgaRedoBuffersBytes                      MetricConfig `mapstructure:"newrelicoracledb.sga.redo_buffers_bytes"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -134,10 +136,16 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbSgaBufferBusyWaits: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbSgaFixedSizeBytes: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSgaFreeBufferInspected: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSgaFreeBufferWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSgaRedoBuffersBytes: MetricConfig{
 			Enabled: true,
 		},
 	}

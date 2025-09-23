@@ -88,11 +88,17 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSgaBufferBusyWaits: metricInfo{
 		Name: "newrelicoracledb.sga.buffer_busy_waits",
 	},
+	NewrelicoracledbSgaFixedSizeBytes: metricInfo{
+		Name: "newrelicoracledb.sga.fixed_size_bytes",
+	},
 	NewrelicoracledbSgaFreeBufferInspected: metricInfo{
 		Name: "newrelicoracledb.sga.free_buffer_inspected",
 	},
 	NewrelicoracledbSgaFreeBufferWaits: metricInfo{
 		Name: "newrelicoracledb.sga.free_buffer_waits",
+	},
+	NewrelicoracledbSgaRedoBuffersBytes: metricInfo{
+		Name: "newrelicoracledb.sga.redo_buffers_bytes",
 	},
 }
 
@@ -122,8 +128,10 @@ type metricsInfo struct {
 	NewrelicoracledbRollbackSegmentsWaits                    metricInfo
 	NewrelicoracledbSessionsCount                            metricInfo
 	NewrelicoracledbSgaBufferBusyWaits                       metricInfo
+	NewrelicoracledbSgaFixedSizeBytes                        metricInfo
 	NewrelicoracledbSgaFreeBufferInspected                   metricInfo
 	NewrelicoracledbSgaFreeBufferWaits                       metricInfo
+	NewrelicoracledbSgaRedoBuffersBytes                      metricInfo
 }
 
 type metricInfo struct {
@@ -1429,6 +1437,58 @@ func newMetricNewrelicoracledbSgaBufferBusyWaits(cfg MetricConfig) metricNewreli
 	return m
 }
 
+type metricNewrelicoracledbSgaFixedSizeBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.sga.fixed_size_bytes metric with initial data.
+func (m *metricNewrelicoracledbSgaFixedSizeBytes) init() {
+	m.data.SetName("newrelicoracledb.sga.fixed_size_bytes")
+	m.data.SetDescription("SGA fixed size area in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSgaFixedSizeBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSgaFixedSizeBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSgaFixedSizeBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSgaFixedSizeBytes(cfg MetricConfig) metricNewrelicoracledbSgaFixedSizeBytes {
+	m := metricNewrelicoracledbSgaFixedSizeBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbSgaFreeBufferInspected struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1533,6 +1593,58 @@ func newMetricNewrelicoracledbSgaFreeBufferWaits(cfg MetricConfig) metricNewreli
 	return m
 }
 
+type metricNewrelicoracledbSgaRedoBuffersBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.sga.redo_buffers_bytes metric with initial data.
+func (m *metricNewrelicoracledbSgaRedoBuffersBytes) init() {
+	m.data.SetName("newrelicoracledb.sga.redo_buffers_bytes")
+	m.data.SetDescription("SGA redo buffers area in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSgaRedoBuffersBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSgaRedoBuffersBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSgaRedoBuffersBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSgaRedoBuffersBytes(cfg MetricConfig) metricNewrelicoracledbSgaRedoBuffersBytes {
+	m := metricNewrelicoracledbSgaRedoBuffersBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
@@ -1568,8 +1680,10 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbRollbackSegmentsWaits                    metricNewrelicoracledbRollbackSegmentsWaits
 	metricNewrelicoracledbSessionsCount                            metricNewrelicoracledbSessionsCount
 	metricNewrelicoracledbSgaBufferBusyWaits                       metricNewrelicoracledbSgaBufferBusyWaits
+	metricNewrelicoracledbSgaFixedSizeBytes                        metricNewrelicoracledbSgaFixedSizeBytes
 	metricNewrelicoracledbSgaFreeBufferInspected                   metricNewrelicoracledbSgaFreeBufferInspected
 	metricNewrelicoracledbSgaFreeBufferWaits                       metricNewrelicoracledbSgaFreeBufferWaits
+	metricNewrelicoracledbSgaRedoBuffersBytes                      metricNewrelicoracledbSgaRedoBuffersBytes
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -1620,8 +1734,10 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbRollbackSegmentsWaits:                    newMetricNewrelicoracledbRollbackSegmentsWaits(mbc.Metrics.NewrelicoracledbRollbackSegmentsWaits),
 		metricNewrelicoracledbSessionsCount:                            newMetricNewrelicoracledbSessionsCount(mbc.Metrics.NewrelicoracledbSessionsCount),
 		metricNewrelicoracledbSgaBufferBusyWaits:                       newMetricNewrelicoracledbSgaBufferBusyWaits(mbc.Metrics.NewrelicoracledbSgaBufferBusyWaits),
+		metricNewrelicoracledbSgaFixedSizeBytes:                        newMetricNewrelicoracledbSgaFixedSizeBytes(mbc.Metrics.NewrelicoracledbSgaFixedSizeBytes),
 		metricNewrelicoracledbSgaFreeBufferInspected:                   newMetricNewrelicoracledbSgaFreeBufferInspected(mbc.Metrics.NewrelicoracledbSgaFreeBufferInspected),
 		metricNewrelicoracledbSgaFreeBufferWaits:                       newMetricNewrelicoracledbSgaFreeBufferWaits(mbc.Metrics.NewrelicoracledbSgaFreeBufferWaits),
+		metricNewrelicoracledbSgaRedoBuffersBytes:                      newMetricNewrelicoracledbSgaRedoBuffersBytes(mbc.Metrics.NewrelicoracledbSgaRedoBuffersBytes),
 		resourceAttributeIncludeFilter:                                 make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:                                 make(map[string]filter.Filter),
 	}
@@ -1731,8 +1847,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbRollbackSegmentsWaits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSessionsCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaBufferBusyWaits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSgaFixedSizeBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaFreeBufferInspected.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaFreeBufferWaits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSgaRedoBuffersBytes.emit(ils.Metrics())
 
 	for _, op := range options {
 		op.apply(rm)
@@ -1889,6 +2007,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(ts p
 	mb.metricNewrelicoracledbSgaBufferBusyWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
 }
 
+// RecordNewrelicoracledbSgaFixedSizeBytesDataPoint adds a data point to newrelicoracledb.sga.fixed_size_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaFixedSizeBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
 // RecordNewrelicoracledbSgaFreeBufferInspectedDataPoint adds a data point to newrelicoracledb.sga.free_buffer_inspected metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferInspectedDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbSgaFreeBufferInspected.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
@@ -1897,6 +2020,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferInspectedDataPoint(
 // RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint adds a data point to newrelicoracledb.sga.free_buffer_waits metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbSgaFreeBufferWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint adds a data point to newrelicoracledb.sga.redo_buffers_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaRedoBuffersBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,

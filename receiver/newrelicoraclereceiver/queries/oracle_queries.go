@@ -35,4 +35,12 @@ const (
 		FROM GV$ROLLSTAT stat, GV$INSTANCE inst
 		WHERE stat.inst_id=inst.inst_id
 		GROUP BY inst.inst_id`
+
+	// SGAMetricsSQL retrieves SGA metrics from gv$sga
+	// This matches the approach used in nri-oracledb oracleSGA metric group
+	SGAMetricsSQL = `
+		SELECT inst.inst_id, sga.name, sga.value
+		FROM GV$SGA sga, GV$INSTANCE inst
+		WHERE sga.inst_id=inst.inst_id 
+		AND sga.name IN ('Fixed Size', 'Redo Buffers')`
 )

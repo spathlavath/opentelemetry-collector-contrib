@@ -38,6 +38,8 @@ type newRelicOracleScraper struct {
 	redoLogWaitsScraper *scrapers.RedoLogWaitsScraper
 	// Rollback segments scraper for rollback segment statistics
 	rollbackSegmentsScraper *scrapers.RollbackSegmentsScraper
+	// SGA scraper for SGA metrics (Fixed Size and Redo Buffers)
+	sgaScraper *scrapers.SGAScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -92,6 +94,10 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	s.rollbackSegmentsScraper = scrapers.NewRollbackSegmentsScraper(s.db, s.logger, s.mb, s.instanceName, s)
 	s.logger.Info("Oracle rollback segments scraper initialized", zap.String("instance", s.instanceName))
 
+	// Initialize SGA scraper (always enabled as the metrics have individual enable/disable flags)
+	s.sgaScraper = scrapers.NewSGAScraper(s.db, s.logger, s.mb, s.instanceName, s)
+	s.logger.Info("Oracle SGA scraper initialized", zap.String("instance", s.instanceName))
+
 	return nil
 }
 
@@ -121,6 +127,11 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	// Scrape rollback segments metrics (always enabled as individual metrics have enable/disable flags)
 	if s.rollbackSegmentsScraper != nil {
 		scrapeErrors = append(scrapeErrors, s.rollbackSegmentsScraper.ScrapeRollbackSegments(ctx)...)
+	}
+
+	// Scrape SGA metrics (always enabled as individual metrics have enable/disable flags)
+	if s.sgaScraper != nil {
+		scrapeErrors = append(scrapeErrors, s.sgaScraper.ScrapeSGA(ctx)...)
 	}
 
 	// Build the resource with instance and host information

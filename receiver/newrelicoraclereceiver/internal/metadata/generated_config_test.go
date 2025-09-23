@@ -52,8 +52,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbRollbackSegmentsWaits:                    MetricConfig{Enabled: true},
 					NewrelicoracledbSessionsCount:                            MetricConfig{Enabled: true},
 					NewrelicoracledbSgaBufferBusyWaits:                       MetricConfig{Enabled: true},
+					NewrelicoracledbSgaFixedSizeBytes:                        MetricConfig{Enabled: true},
 					NewrelicoracledbSgaFreeBufferInspected:                   MetricConfig{Enabled: true},
 					NewrelicoracledbSgaFreeBufferWaits:                       MetricConfig{Enabled: true},
+					NewrelicoracledbSgaRedoBuffersBytes:                      MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: true},
@@ -90,8 +92,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbRollbackSegmentsWaits:                    MetricConfig{Enabled: false},
 					NewrelicoracledbSessionsCount:                            MetricConfig{Enabled: false},
 					NewrelicoracledbSgaBufferBusyWaits:                       MetricConfig{Enabled: false},
+					NewrelicoracledbSgaFixedSizeBytes:                        MetricConfig{Enabled: false},
 					NewrelicoracledbSgaFreeBufferInspected:                   MetricConfig{Enabled: false},
 					NewrelicoracledbSgaFreeBufferWaits:                       MetricConfig{Enabled: false},
+					NewrelicoracledbSgaRedoBuffersBytes:                      MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: false},

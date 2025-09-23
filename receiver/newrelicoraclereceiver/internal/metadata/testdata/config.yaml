@@ -51,9 +51,13 @@ all_set:
       enabled: true
     newrelicoracledb.sga.buffer_busy_waits:
       enabled: true
+    newrelicoracledb.sga.fixed_size_bytes:
+      enabled: true
     newrelicoracledb.sga.free_buffer_inspected:
       enabled: true
     newrelicoracledb.sga.free_buffer_waits:
+      enabled: true
+    newrelicoracledb.sga.redo_buffers_bytes:
       enabled: true
   resource_attributes:
     host.name:
@@ -112,9 +116,13 @@ none_set:
       enabled: false
     newrelicoracledb.sga.buffer_busy_waits:
       enabled: false
+    newrelicoracledb.sga.fixed_size_bytes:
+      enabled: false
     newrelicoracledb.sga.free_buffer_inspected:
       enabled: false
     newrelicoracledb.sga.free_buffer_waits:
+      enabled: false
+    newrelicoracledb.sga.redo_buffers_bytes:
       enabled: false
   resource_attributes:
     host.name:
