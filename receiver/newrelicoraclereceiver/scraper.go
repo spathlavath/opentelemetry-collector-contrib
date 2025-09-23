@@ -77,28 +77,18 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	s.logger.Debug("Begin New Relic Oracle scrape")
 
 	var scrapeErrors []error
-	// var allMetrics pmetric.Metrics
 
 	// Scrape session count metric
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
 
-	// Scrape query wait metrics and merge them
-	queryWaitMetrics, queryWaitErrors := s.queryWaitScraper.ScrapeQueryWaitMetrics(ctx)
-	scrapeErrors = append(scrapeErrors, queryWaitErrors...)
+	// Scrape query wait metrics
+	scrapeErrors = append(scrapeErrors, s.queryWaitScraper.ScrapeQueryWaitMetrics(ctx)...)
 
 	// Build the main resource with instance and host information
 	rb := s.mb.NewResourceBuilder()
 	rb.SetNewrelicoracledbInstanceName(s.instanceName)
 	rb.SetHostName(s.hostName)
 	out := s.mb.Emit(metadata.WithResource(rb.Emit()))
-
-	// Merge query wait metrics into the main output
-	if queryWaitMetrics.ResourceMetrics().Len() > 0 {
-		// Copy query wait metrics resource to the output
-		queryWaitResourceMetrics := queryWaitMetrics.ResourceMetrics().At(0)
-		outResourceMetrics := out.ResourceMetrics().AppendEmpty()
-		queryWaitResourceMetrics.CopyTo(outResourceMetrics)
-	}
 
 	s.logger.Debug("Done New Relic Oracle scraping", zap.Int("total_errors", len(scrapeErrors)))
 	if len(scrapeErrors) > 0 {

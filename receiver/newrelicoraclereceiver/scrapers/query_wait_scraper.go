@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
@@ -49,17 +48,13 @@ func NewQueryWaitScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Lo
 }
 
 // ScrapeQueryWaitMetrics collects Oracle query wait metrics
-func (s *QueryWaitScraper) ScrapeQueryWaitMetrics(ctx context.Context) (pmetric.Metrics, []error) {
+func (s *QueryWaitScraper) ScrapeQueryWaitMetrics(ctx context.Context) []error {
 	var errors []error
 
-	// Create a new metrics object for query wait metrics
-	metrics := pmetric.NewMetrics()
-	resourceMetrics := metrics.ResourceMetrics().AppendEmpty()
-
-	// Add resource attributes
-	resource := resourceMetrics.Resource()
-	resource.Attributes().PutStr("newrelicoracledb.instance.name", s.instanceName)
-	resource.Attributes().PutStr("host.name", s.instanceName)
+	// Check if the metric is enabled
+	if !s.config.Metrics.NewrelicoracledbQueryWaitTime.Enabled {
+		return errors
+	}
 
 	s.logger.Debug("Scraping Oracle query wait metrics")
 
@@ -69,16 +64,13 @@ func (s *QueryWaitScraper) ScrapeQueryWaitMetrics(ctx context.Context) (pmetric.
 	rows, err := s.db.QueryContext(ctx, queries.QueryWaitMetricsQuery)
 	if err != nil {
 		errors = append(errors, fmt.Errorf("error executing query wait metrics query: %w", err))
-		return metrics, errors
+		return errors
 	}
 	defer rows.Close()
 
-	scopeMetrics := resourceMetrics.ScopeMetrics().AppendEmpty()
-	scope := scopeMetrics.Scope()
-	scope.SetName("newrelicoracledb")
-	scope.SetVersion("1.0.0")
-
 	var recordCount int
+	now := pcommon.NewTimestampFromTime(time.Now())
+
 	for rows.Next() {
 		var metric QueryWaitMetric
 
@@ -96,54 +88,47 @@ func (s *QueryWaitScraper) ScrapeQueryWaitMetrics(ctx context.Context) (pmetric.
 			continue
 		}
 
-		// Create a metric point for each query wait record
-		queryWaitMetric := scopeMetrics.Metrics().AppendEmpty()
-		queryWaitMetric.SetName("newrelicoracledb.query.wait_time")
-		queryWaitMetric.SetDescription("Oracle query wait time metrics")
-		queryWaitMetric.SetUnit("ms")
-
-		gauge := queryWaitMetric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-
-		// Set timestamp - convert from Oracle epoch (seconds) to nanoseconds
-		if metric.Timestamp > 0 {
-			timestampNs := int64(metric.Timestamp * 1000000) // Convert milliseconds to nanoseconds
-			dataPoint.SetTimestamp(pcommon.Timestamp(timestampNs))
-		} else {
-			dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		}
-
-		// Set the value (total wait time in milliseconds)
-		if metric.TotalWaitTimeMs.Valid {
-			dataPoint.SetDoubleValue(metric.TotalWaitTimeMs.Float64)
-		} else {
-			dataPoint.SetDoubleValue(0)
-		}
-
-		// Add attributes to the data point
-		attributes := dataPoint.Attributes()
-
+		// Prepare attribute values
+		queryText := ""
 		if metric.QueryText.Valid {
-			attributes.PutStr("query_text", metric.QueryText.String)
+			queryText = metric.QueryText.String
 		}
 
+		queryID := ""
 		if metric.QueryID.Valid {
-			attributes.PutStr("query_id", metric.QueryID.String)
+			queryID = metric.QueryID.String
 		}
 
+		database := ""
 		if metric.Database.Valid {
-			attributes.PutStr("database", metric.Database.String)
-		} else {
-			attributes.PutStr("database", "")
+			database = metric.Database.String
 		}
 
+		waitEventName := ""
 		if metric.WaitEventName.Valid {
-			attributes.PutStr("wait_event_name", metric.WaitEventName.String)
+			waitEventName = metric.WaitEventName.String
 		}
 
+		waitCategory := ""
 		if metric.WaitCategory.Valid {
-			attributes.PutStr("wait_category", metric.WaitCategory.String)
+			waitCategory = metric.WaitCategory.String
 		}
+
+		waitTimeMs := 0.0
+		if metric.TotalWaitTimeMs.Valid {
+			waitTimeMs = metric.TotalWaitTimeMs.Float64
+		}
+
+		// Record the data point using the generated metadata builder
+		s.mb.RecordNewrelicoracledbQueryWaitTimeDataPoint(
+			now,
+			waitTimeMs,
+			queryText,
+			queryID,
+			database,
+			waitEventName,
+			waitCategory,
+		)
 
 		recordCount++
 	}
@@ -156,5 +141,5 @@ func (s *QueryWaitScraper) ScrapeQueryWaitMetrics(ctx context.Context) (pmetric.
 		zap.Int("record_count", recordCount),
 		zap.String("instance", s.instanceName))
 
-	return metrics, errors
+	return errors
 }

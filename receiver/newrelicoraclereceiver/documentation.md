@@ -12,6 +12,24 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.query.wait_time
+
+Oracle query wait time metrics
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_text | SQL query text | Any Str | false |
+| query_id | Unique identifier for the query | Any Str | false |
+| database | Database name | Any Str | false |
+| wait_event_name | Name of the wait event | Any Str | false |
+| wait_category | Category of the wait event | Any Str | false |
+
 ### newrelicoracledb.sessions.count
 
 Total number of active Oracle database sessions

@@ -70,6 +70,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbQueryWaitTimeDataPoint(ts, 1, "query_text-val", "query_id-val", "database-val", "wait_event_name-val", "wait_category-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbSessionsCountDataPoint(ts, 1, "newrelic.entity_name-val")
 
 			rb := mb.NewResourceBuilder()
@@ -97,6 +101,33 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "newrelicoracledb.query.wait_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.query.wait_time"], "Found a duplicate in the metrics slice: newrelicoracledb.query.wait_time")
+					validatedMetrics["newrelicoracledb.query.wait_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Oracle query wait time metrics", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database")
+					assert.True(t, ok)
+					assert.Equal(t, "database-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
 				case "newrelicoracledb.sessions.count":
 					assert.False(t, validatedMetrics["newrelicoracledb.sessions.count"], "Found a duplicate in the metrics slice: newrelicoracledb.sessions.count")
 					validatedMetrics["newrelicoracledb.sessions.count"] = true

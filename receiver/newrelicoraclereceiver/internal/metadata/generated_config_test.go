@@ -27,6 +27,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbQueryWaitTime: MetricConfig{Enabled: true},
 					NewrelicoracledbSessionsCount: MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
@@ -39,6 +40,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbQueryWaitTime: MetricConfig{Enabled: false},
 					NewrelicoracledbSessionsCount: MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
