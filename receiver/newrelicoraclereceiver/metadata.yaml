@@ -179,6 +179,16 @@ metrics:
       - newrelic.entity_name
       - instance.id
 
+  newrelicoracledb.redo_log.sync:
+    description: Total waits for log file sync events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
   newrelicoracledb.sga.buffer_busy_waits:
     description: Total buffer busy waits
     enabled: true
