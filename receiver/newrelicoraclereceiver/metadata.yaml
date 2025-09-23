@@ -208,16 +208,6 @@ metrics:
       - newrelic.entity_name
       - instance.id
 
-  newrelicoracledb.redo_log.log_file_sync:
-    description: Log file sync waits
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{waits}"
-    attributes:
-      - newrelic.entity_name
-      - instance.id
-
   newrelicoracledb.redo_log.log_file_switch:
     description: Log file switch completion waits
     enabled: true

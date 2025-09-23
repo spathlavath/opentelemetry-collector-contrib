@@ -177,21 +177,6 @@ Log file switch (checkpoint incomplete) waits
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle instance ID | Any Str | false |
 
-### newrelicoracledb.redo_log.log_file_sync
-
-Log file sync waits
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {waits} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| instance.id | Oracle instance ID | Any Str | false |
-
 ### newrelicoracledb.redo_log.waits
 
 Log file parallel write waits

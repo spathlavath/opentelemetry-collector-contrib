@@ -47,7 +47,6 @@ type MetricsConfig struct {
 	NewrelicoracledbRedoLogLogFileSwitch                     MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch"`
 	NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch_archiving_needed"`
 	NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete"`
-	NewrelicoracledbRedoLogLogFileSync                       MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_sync"`
 	NewrelicoracledbRedoLogWaits                             MetricConfig `mapstructure:"newrelicoracledb.redo_log.waits"`
 	NewrelicoracledbSessionsCount                            MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
 	NewrelicoracledbSgaBufferBusyWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.buffer_busy_waits"`
@@ -112,9 +111,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRedoLogLogFileSync: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbRedoLogWaits: MetricConfig{

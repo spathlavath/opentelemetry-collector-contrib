@@ -66,45 +66,47 @@ func NewRedoLogWaitsScraper(
 }
 
 // initializeMetricsMapping creates the exact mapping from nri-oracledb oracleRedoLogWaits
-// Uses strings.Contains matching pattern for event identification
+// Uses strings.Contains matching pattern for event identification - matches nri-oracledb exactly
 func (s *RedoLogWaitsScraper) initializeMetricsMapping() {
 	s.metricsMapping = []RedoLogWaitsMapping{
 		{
-			// Map "log file sync" to log_file_sync metric - this is the primary redo log wait event
-			OracleEventIdentifier: "log file sync",
-			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogLogFileSyncDataPoint,
-			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSync.Enabled,
+			// nri-oracledb: "log file parallel write" -> "redoLog.waits"
+			OracleEventIdentifier: "log file parallel write",
+			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogWaitsDataPoint,
+			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogWaits.Enabled,
 		},
 		{
+			// nri-oracledb: "log file switch completion" -> "redoLog.logFileSwitch"
 			OracleEventIdentifier: "log file switch completion",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogLogFileSwitchDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSwitch.Enabled,
 		},
 		{
-			// Fixed: use correct event name with full text
-			OracleEventIdentifier: "log file switch (checkpoint incomplete)",
+			// nri-oracledb: "log file switch (check" -> "redoLog.logFileSwitchCheckpointIncomplete"
+			OracleEventIdentifier: "log file switch (check",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogLogFileSwitchCheckpointIncompleteDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete.Enabled,
 		},
 		{
-			// Note: "log file switch (archiving needed)" event doesn't exist in this Oracle instance
-			// Keep the mapping but it won't match anything, which is fine
-			OracleEventIdentifier: "log file switch (archiving needed)",
+			// nri-oracledb: "log file switch (arch" -> "redoLog.logFileSwitchArchivingNeeded"
+			OracleEventIdentifier: "log file switch (arch",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbRedoLogLogFileSwitchArchivingNeededDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded.Enabled,
 		},
 		{
+			// nri-oracledb: "buffer busy waits" -> "sga.bufferBusyWaits"
 			OracleEventIdentifier: "buffer busy waits",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbSgaBufferBusyWaits.Enabled,
 		},
 		{
-			// Fixed: Oracle uses spaces, not camelCase
-			OracleEventIdentifier: "free buffer waits",
+			// nri-oracledb: "freeBufferWaits" -> "sga.freeBufferWaits"
+			OracleEventIdentifier: "freeBufferWaits",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbSgaFreeBufferWaits.Enabled,
 		},
 		{
+			// nri-oracledb: "free buffer inspected" -> "sga.freeBufferInspected"
 			OracleEventIdentifier: "free buffer inspected",
 			RecordFunc:            (*metadata.MetricsBuilder).RecordNewrelicoracledbSgaFreeBufferInspectedDataPoint,
 			Enabled:               s.config.GetMetrics().NewrelicoracledbSgaFreeBufferInspected.Enabled,
@@ -117,62 +119,53 @@ func (s *RedoLogWaitsScraper) initializeMetricsMapping() {
 func (s *RedoLogWaitsScraper) ScrapeRedoLogWaits(ctx context.Context) []error {
 	var errors []error
 
-	s.logger.Debug("Scraping Oracle redo log waits metrics using gv$system_event")
-
-	// Execute redo log waits query using the exact same query as nri-oracledb
+	// Execute the RedoLogWaitsSQL query
 	rows, err := s.db.QueryContext(ctx, queries.RedoLogWaitsSQL)
 	if err != nil {
-		errors = append(errors, fmt.Errorf("error executing redo log waits query: %w", err))
+		errors = append(errors, fmt.Errorf("failed to execute RedoLogWaitsSQL query: %w", err))
 		return errors
 	}
 	defer rows.Close()
 
-	now := pcommon.NewTimestampFromTime(time.Now())
-	processedCount := 0
-	matchedCount := 0
-
-	// Process rows using the same pattern as nri-oracledb oracleRedoLogWaits metricsGenerator
+	// Process each row returned by the query
 	for rows.Next() {
-		var totalWaits int64
-		var instID int64
-		var event string
-
-		err := rows.Scan(&totalWaits, &instID, &event)
+		err := s.processRow(rows)
 		if err != nil {
-			errors = append(errors, fmt.Errorf("error scanning redo log waits row: %w", err))
-			continue
-		}
-
-		processedCount++
-
-		// Match the metric using strings.Contains as in nri-oracledb
-		for _, mapping := range s.metricsMapping {
-			if mapping.Enabled && strings.Contains(event, mapping.OracleEventIdentifier) {
-				// Record the metric using the appropriate function
-				mapping.RecordFunc(s.mb, now, totalWaits, s.instanceName, strconv.FormatInt(instID, 10))
-
-				s.logger.Debug("Recorded redo log waits metric",
-					zap.String("oracle_event", event),
-					zap.String("event_identifier", mapping.OracleEventIdentifier),
-					zap.Int64("total_waits", totalWaits),
-					zap.Int64("instance_id", instID),
-					zap.String("instance", s.instanceName))
-
-				matchedCount++
-				break // Stop after first match, as in nri-oracledb
-			}
+			errors = append(errors, fmt.Errorf("error processing row: %w", err))
 		}
 	}
 
+	// Check for any errors that occurred during row iteration
 	if err := rows.Err(); err != nil {
-		errors = append(errors, fmt.Errorf("error iterating redo log waits rows: %w", err))
-		return errors
+		errors = append(errors, fmt.Errorf("error iterating over rows: %w", err))
 	}
-
-	s.logger.Debug("Completed redo log waits collection",
-		zap.Int("processed_rows", processedCount),
-		zap.Int("matched_metrics", matchedCount),
-		zap.String("instance", s.instanceName))
 
 	return errors
+}
+
+// processRow processes a single row from the RedoLogWaitsSQL query
+// Matches the exact pattern used in nri-oracledb oracleRedoLogWaits metricsGenerator
+func (s *RedoLogWaitsScraper) processRow(rows *sql.Rows) error {
+	var totalWaits int64
+	var instID int64
+	var event string
+
+	err := rows.Scan(&totalWaits, &instID, &event)
+	if err != nil {
+		return fmt.Errorf("error scanning row: %w", err)
+	}
+
+	// Use timestamp at scan time like nri-oracledb
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// Match the metric using strings.Contains as in nri-oracledb
+	for _, mapping := range s.metricsMapping {
+		if mapping.Enabled && strings.Contains(event, mapping.OracleEventIdentifier) {
+			// Record the metric using the appropriate function
+			mapping.RecordFunc(s.mb, now, totalWaits, s.instanceName, strconv.FormatInt(instID, 10))
+			break // Stop after first match, as in nri-oracledb
+		}
+	}
+
+	return nil
 }

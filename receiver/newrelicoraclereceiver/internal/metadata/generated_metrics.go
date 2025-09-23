@@ -70,9 +70,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete: metricInfo{
 		Name: "newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete",
 	},
-	NewrelicoracledbRedoLogLogFileSync: metricInfo{
-		Name: "newrelicoracledb.redo_log.log_file_sync",
-	},
 	NewrelicoracledbRedoLogWaits: metricInfo{
 		Name: "newrelicoracledb.redo_log.waits",
 	},
@@ -110,7 +107,6 @@ type metricsInfo struct {
 	NewrelicoracledbRedoLogLogFileSwitch                     metricInfo
 	NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      metricInfo
 	NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete metricInfo
-	NewrelicoracledbRedoLogLogFileSync                       metricInfo
 	NewrelicoracledbRedoLogWaits                             metricInfo
 	NewrelicoracledbSessionsCount                            metricInfo
 	NewrelicoracledbSgaBufferBusyWaits                       metricInfo
@@ -1110,58 +1106,6 @@ func newMetricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete(cfg Metri
 	return m
 }
 
-type metricNewrelicoracledbRedoLogLogFileSync struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.redo_log.log_file_sync metric with initial data.
-func (m *metricNewrelicoracledbRedoLogLogFileSync) init() {
-	m.data.SetName("newrelicoracledb.redo_log.log_file_sync")
-	m.data.SetDescription("Log file sync waits")
-	m.data.SetUnit("{waits}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbRedoLogLogFileSync) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbRedoLogLogFileSync) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbRedoLogLogFileSync) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbRedoLogLogFileSync(cfg MetricConfig) metricNewrelicoracledbRedoLogLogFileSync {
-	m := metricNewrelicoracledbRedoLogLogFileSync{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbRedoLogWaits struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1450,7 +1394,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbRedoLogLogFileSwitch                     metricNewrelicoracledbRedoLogLogFileSwitch
 	metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded
 	metricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete metricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete
-	metricNewrelicoracledbRedoLogLogFileSync                       metricNewrelicoracledbRedoLogLogFileSync
 	metricNewrelicoracledbRedoLogWaits                             metricNewrelicoracledbRedoLogWaits
 	metricNewrelicoracledbSessionsCount                            metricNewrelicoracledbSessionsCount
 	metricNewrelicoracledbSgaBufferBusyWaits                       metricNewrelicoracledbSgaBufferBusyWaits
@@ -1500,7 +1443,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbRedoLogLogFileSwitch:                     newMetricNewrelicoracledbRedoLogLogFileSwitch(mbc.Metrics.NewrelicoracledbRedoLogLogFileSwitch),
 		metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded:      newMetricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded(mbc.Metrics.NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded),
 		metricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete: newMetricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete(mbc.Metrics.NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete),
-		metricNewrelicoracledbRedoLogLogFileSync:                       newMetricNewrelicoracledbRedoLogLogFileSync(mbc.Metrics.NewrelicoracledbRedoLogLogFileSync),
 		metricNewrelicoracledbRedoLogWaits:                             newMetricNewrelicoracledbRedoLogWaits(mbc.Metrics.NewrelicoracledbRedoLogWaits),
 		metricNewrelicoracledbSessionsCount:                            newMetricNewrelicoracledbSessionsCount(mbc.Metrics.NewrelicoracledbSessionsCount),
 		metricNewrelicoracledbSgaBufferBusyWaits:                       newMetricNewrelicoracledbSgaBufferBusyWaits(mbc.Metrics.NewrelicoracledbSgaBufferBusyWaits),
@@ -1609,7 +1551,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbRedoLogLogFileSwitch.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete.emit(ils.Metrics())
-	mb.metricNewrelicoracledbRedoLogLogFileSync.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogWaits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSessionsCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaBufferBusyWaits.emit(ils.Metrics())
@@ -1739,11 +1680,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogLogFileSwitchArchivingNee
 // RecordNewrelicoracledbRedoLogLogFileSwitchCheckpointIncompleteDataPoint adds a data point to newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogLogFileSwitchCheckpointIncompleteDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
-}
-
-// RecordNewrelicoracledbRedoLogLogFileSyncDataPoint adds a data point to newrelicoracledb.redo_log.log_file_sync metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogLogFileSyncDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRedoLogLogFileSync.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRedoLogWaitsDataPoint adds a data point to newrelicoracledb.redo_log.waits metric.
