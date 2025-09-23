@@ -11,4 +11,16 @@ const (
 	// PDBSysMetricsSQL retrieves all system metrics from gv$con_sysmetric
 	// This matches the approach used in nri-oracledb for PDB container metrics
 	PDBSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM gv$con_sysmetric"
+
+	// RedoLogWaitsSQL retrieves redo log and system event waits from gv$system_event
+	// This matches the approach used in nri-oracledb oracleRedoLogWaits metric group
+	RedoLogWaitsSQL = `
+		SELECT
+			sysevent.total_waits,
+			inst.inst_id,
+			sysevent.event
+		FROM
+			GV$SYSTEM_EVENT sysevent,
+			GV$INSTANCE inst
+		WHERE sysevent.inst_id=inst.inst_id`
 )

@@ -132,6 +132,66 @@ User Transaction Per Second in PDB
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle instance ID | Any Str | false |
 
+### newrelicoracledb.redo_log.log_file_switch
+
+Log file switch completion waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.redo_log.log_file_switch_archiving_needed
+
+Log file switch (archiving needed) waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete
+
+Log file switch (checkpoint incomplete) waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.redo_log.waits
+
+Log file parallel write waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
 ### newrelicoracledb.sessions.count
 
 Total number of active Oracle database sessions
@@ -145,6 +205,51 @@ Total number of active Oracle database sessions
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+
+### newrelicoracledb.sga.buffer_busy_waits
+
+Buffer busy waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.sga.free_buffer_inspected
+
+Free buffer inspected waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.sga.free_buffer_waits
+
+Free buffer waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
 
 ## Optional Metrics
 

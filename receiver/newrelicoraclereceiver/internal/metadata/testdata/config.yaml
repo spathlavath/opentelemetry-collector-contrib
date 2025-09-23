@@ -33,7 +33,21 @@ all_set:
       enabled: true
     newrelicoracledb.pdb.transactions.per_second:
       enabled: true
+    newrelicoracledb.redo_log.log_file_switch:
+      enabled: true
+    newrelicoracledb.redo_log.log_file_switch_archiving_needed:
+      enabled: true
+    newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete:
+      enabled: true
+    newrelicoracledb.redo_log.waits:
+      enabled: true
     newrelicoracledb.sessions.count:
+      enabled: true
+    newrelicoracledb.sga.buffer_busy_waits:
+      enabled: true
+    newrelicoracledb.sga.free_buffer_inspected:
+      enabled: true
+    newrelicoracledb.sga.free_buffer_waits:
       enabled: true
   resource_attributes:
     host.name:
@@ -74,7 +88,21 @@ none_set:
       enabled: false
     newrelicoracledb.pdb.transactions.per_second:
       enabled: false
+    newrelicoracledb.redo_log.log_file_switch:
+      enabled: false
+    newrelicoracledb.redo_log.log_file_switch_archiving_needed:
+      enabled: false
+    newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete:
+      enabled: false
+    newrelicoracledb.redo_log.waits:
+      enabled: false
     newrelicoracledb.sessions.count:
+      enabled: false
+    newrelicoracledb.sga.buffer_busy_waits:
+      enabled: false
+    newrelicoracledb.sga.free_buffer_inspected:
+      enabled: false
+    newrelicoracledb.sga.free_buffer_waits:
       enabled: false
   resource_attributes:
     host.name:
