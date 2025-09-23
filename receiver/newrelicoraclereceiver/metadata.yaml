@@ -22,6 +22,21 @@ attributes:
   newrelic.entity_name:
     description: New Relic entity name for the metric
     type: string
+  query_text:
+    description: SQL query text
+    type: string
+  query_id:
+    description: Unique identifier for the query
+    type: string
+  database:
+    description: Database name
+    type: string
+  wait_event_name:
+    description: Name of the wait event
+    type: string
+  wait_category:
+    description: Category of the wait event
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -32,6 +47,19 @@ metrics:
     unit: "{sessions}"
     attributes:
       - newrelic.entity_name
+  
+  newrelicoracledb.query.wait_time:
+    description: Oracle query wait time metrics
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "ms"
+    attributes:
+      - query_text
+      - query_id
+      - database
+      - wait_event_name
+      - wait_category
 
 tests:
   config:
