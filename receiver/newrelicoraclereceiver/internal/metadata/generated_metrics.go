@@ -13,6 +13,33 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	NewrelicoracledbConcurrencyEnqueueRoFastObjectReuse: metricInfo{
+		Name: "newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse",
+	},
+	NewrelicoracledbConcurrencyReadByOtherSession: metricInfo{
+		Name: "newrelicoracledb.concurrency.read_by_other_session",
+	},
+	NewrelicoracledbIoControlFileParallelWrite: metricInfo{
+		Name: "newrelicoracledb.io.control_file_parallel_write",
+	},
+	NewrelicoracledbIoControlFileSequentialRead: metricInfo{
+		Name: "newrelicoracledb.io.control_file_sequential_read",
+	},
+	NewrelicoracledbIoDataFileInitWrite: metricInfo{
+		Name: "newrelicoracledb.io.data_file_init_write",
+	},
+	NewrelicoracledbIoDbFileScatteredRead: metricInfo{
+		Name: "newrelicoracledb.io.db_file_scattered_read",
+	},
+	NewrelicoracledbIoDbFileSequentialRead: metricInfo{
+		Name: "newrelicoracledb.io.db_file_sequential_read",
+	},
+	NewrelicoracledbIoDiskFileOperations: metricInfo{
+		Name: "newrelicoracledb.io.disk_file_operations",
+	},
+	NewrelicoracledbIoLocalWriteWait: metricInfo{
+		Name: "newrelicoracledb.io.local_write_wait",
+	},
 	NewrelicoracledbLockedAccounts: metricInfo{
 		Name: "newrelicoracledb.locked_accounts",
 	},
@@ -42,6 +69,9 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicoracledbSgaFreeBufferWaits: metricInfo{
 		Name: "newrelicoracledb.sga.free_buffer_waits",
+	},
+	NewrelicoracledbSynchronizationDirectPathSync: metricInfo{
+		Name: "newrelicoracledb.synchronization.direct_path_sync",
 	},
 	NewrelicoracledbTablespaceDbID: metricInfo{
 		Name: "newrelicoracledb.tablespace.db_id",
@@ -73,6 +103,15 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	NewrelicoracledbConcurrencyEnqueueRoFastObjectReuse      metricInfo
+	NewrelicoracledbConcurrencyReadByOtherSession            metricInfo
+	NewrelicoracledbIoControlFileParallelWrite               metricInfo
+	NewrelicoracledbIoControlFileSequentialRead              metricInfo
+	NewrelicoracledbIoDataFileInitWrite                      metricInfo
+	NewrelicoracledbIoDbFileScatteredRead                    metricInfo
+	NewrelicoracledbIoDbFileSequentialRead                   metricInfo
+	NewrelicoracledbIoDiskFileOperations                     metricInfo
+	NewrelicoracledbIoLocalWriteWait                         metricInfo
 	NewrelicoracledbLockedAccounts                           metricInfo
 	NewrelicoracledbRedoLogLogFileSwitch                     metricInfo
 	NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      metricInfo
@@ -83,6 +122,7 @@ type metricsInfo struct {
 	NewrelicoracledbSgaBufferBusyWaits                       metricInfo
 	NewrelicoracledbSgaFreeBufferInspected                   metricInfo
 	NewrelicoracledbSgaFreeBufferWaits                       metricInfo
+	NewrelicoracledbSynchronizationDirectPathSync            metricInfo
 	NewrelicoracledbTablespaceDbID                           metricInfo
 	NewrelicoracledbTablespaceGlobalName                     metricInfo
 	NewrelicoracledbTablespaceIsOffline                      metricInfo
@@ -96,6 +136,474 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse metric with initial data.
+func (m *metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse) init() {
+	m.data.SetName("newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse")
+	m.data.SetDescription("Total waits for enqueue RO fast object reuse events")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse(cfg MetricConfig) metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse {
+	m := metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConcurrencyReadByOtherSession struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.concurrency.read_by_other_session metric with initial data.
+func (m *metricNewrelicoracledbConcurrencyReadByOtherSession) init() {
+	m.data.SetName("newrelicoracledb.concurrency.read_by_other_session")
+	m.data.SetDescription("Total waits for read by other session events")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConcurrencyReadByOtherSession) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConcurrencyReadByOtherSession) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConcurrencyReadByOtherSession) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConcurrencyReadByOtherSession(cfg MetricConfig) metricNewrelicoracledbConcurrencyReadByOtherSession {
+	m := metricNewrelicoracledbConcurrencyReadByOtherSession{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbIoControlFileParallelWrite struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.io.control_file_parallel_write metric with initial data.
+func (m *metricNewrelicoracledbIoControlFileParallelWrite) init() {
+	m.data.SetName("newrelicoracledb.io.control_file_parallel_write")
+	m.data.SetDescription("Total waits for control file parallel write operations")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbIoControlFileParallelWrite) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbIoControlFileParallelWrite) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbIoControlFileParallelWrite) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbIoControlFileParallelWrite(cfg MetricConfig) metricNewrelicoracledbIoControlFileParallelWrite {
+	m := metricNewrelicoracledbIoControlFileParallelWrite{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbIoControlFileSequentialRead struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.io.control_file_sequential_read metric with initial data.
+func (m *metricNewrelicoracledbIoControlFileSequentialRead) init() {
+	m.data.SetName("newrelicoracledb.io.control_file_sequential_read")
+	m.data.SetDescription("Total waits for control file sequential read operations")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbIoControlFileSequentialRead) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbIoControlFileSequentialRead) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbIoControlFileSequentialRead) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbIoControlFileSequentialRead(cfg MetricConfig) metricNewrelicoracledbIoControlFileSequentialRead {
+	m := metricNewrelicoracledbIoControlFileSequentialRead{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbIoDataFileInitWrite struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.io.data_file_init_write metric with initial data.
+func (m *metricNewrelicoracledbIoDataFileInitWrite) init() {
+	m.data.SetName("newrelicoracledb.io.data_file_init_write")
+	m.data.SetDescription("Total waits for data file initialization write operations")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbIoDataFileInitWrite) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbIoDataFileInitWrite) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbIoDataFileInitWrite) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbIoDataFileInitWrite(cfg MetricConfig) metricNewrelicoracledbIoDataFileInitWrite {
+	m := metricNewrelicoracledbIoDataFileInitWrite{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbIoDbFileScatteredRead struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.io.db_file_scattered_read metric with initial data.
+func (m *metricNewrelicoracledbIoDbFileScatteredRead) init() {
+	m.data.SetName("newrelicoracledb.io.db_file_scattered_read")
+	m.data.SetDescription("Total waits for database file scattered read operations")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbIoDbFileScatteredRead) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbIoDbFileScatteredRead) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbIoDbFileScatteredRead) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbIoDbFileScatteredRead(cfg MetricConfig) metricNewrelicoracledbIoDbFileScatteredRead {
+	m := metricNewrelicoracledbIoDbFileScatteredRead{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbIoDbFileSequentialRead struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.io.db_file_sequential_read metric with initial data.
+func (m *metricNewrelicoracledbIoDbFileSequentialRead) init() {
+	m.data.SetName("newrelicoracledb.io.db_file_sequential_read")
+	m.data.SetDescription("Total waits for database file sequential read operations")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbIoDbFileSequentialRead) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbIoDbFileSequentialRead) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbIoDbFileSequentialRead) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbIoDbFileSequentialRead(cfg MetricConfig) metricNewrelicoracledbIoDbFileSequentialRead {
+	m := metricNewrelicoracledbIoDbFileSequentialRead{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbIoDiskFileOperations struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.io.disk_file_operations metric with initial data.
+func (m *metricNewrelicoracledbIoDiskFileOperations) init() {
+	m.data.SetName("newrelicoracledb.io.disk_file_operations")
+	m.data.SetDescription("Total waits for disk file operations I/O")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbIoDiskFileOperations) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbIoDiskFileOperations) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbIoDiskFileOperations) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbIoDiskFileOperations(cfg MetricConfig) metricNewrelicoracledbIoDiskFileOperations {
+	m := metricNewrelicoracledbIoDiskFileOperations{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbIoLocalWriteWait struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.io.local_write_wait metric with initial data.
+func (m *metricNewrelicoracledbIoLocalWriteWait) init() {
+	m.data.SetName("newrelicoracledb.io.local_write_wait")
+	m.data.SetDescription("Total waits for local write operations")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbIoLocalWriteWait) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbIoLocalWriteWait) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbIoLocalWriteWait) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbIoLocalWriteWait(cfg MetricConfig) metricNewrelicoracledbIoLocalWriteWait {
+	m := metricNewrelicoracledbIoLocalWriteWait{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricNewrelicoracledbLockedAccounts struct {
@@ -617,6 +1125,58 @@ func newMetricNewrelicoracledbSgaFreeBufferWaits(cfg MetricConfig) metricNewreli
 	return m
 }
 
+type metricNewrelicoracledbSynchronizationDirectPathSync struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.synchronization.direct_path_sync metric with initial data.
+func (m *metricNewrelicoracledbSynchronizationDirectPathSync) init() {
+	m.data.SetName("newrelicoracledb.synchronization.direct_path_sync")
+	m.data.SetDescription("Total waits for direct path sync operations")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSynchronizationDirectPathSync) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSynchronizationDirectPathSync) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSynchronizationDirectPathSync) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSynchronizationDirectPathSync(cfg MetricConfig) metricNewrelicoracledbSynchronizationDirectPathSync {
+	m := metricNewrelicoracledbSynchronizationDirectPathSync{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbTablespaceDbID struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1095,6 +1655,15 @@ type MetricsBuilder struct {
 	buildInfo                                                      component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                                 map[string]filter.Filter
 	resourceAttributeExcludeFilter                                 map[string]filter.Filter
+	metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse      metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse
+	metricNewrelicoracledbConcurrencyReadByOtherSession            metricNewrelicoracledbConcurrencyReadByOtherSession
+	metricNewrelicoracledbIoControlFileParallelWrite               metricNewrelicoracledbIoControlFileParallelWrite
+	metricNewrelicoracledbIoControlFileSequentialRead              metricNewrelicoracledbIoControlFileSequentialRead
+	metricNewrelicoracledbIoDataFileInitWrite                      metricNewrelicoracledbIoDataFileInitWrite
+	metricNewrelicoracledbIoDbFileScatteredRead                    metricNewrelicoracledbIoDbFileScatteredRead
+	metricNewrelicoracledbIoDbFileSequentialRead                   metricNewrelicoracledbIoDbFileSequentialRead
+	metricNewrelicoracledbIoDiskFileOperations                     metricNewrelicoracledbIoDiskFileOperations
+	metricNewrelicoracledbIoLocalWriteWait                         metricNewrelicoracledbIoLocalWriteWait
 	metricNewrelicoracledbLockedAccounts                           metricNewrelicoracledbLockedAccounts
 	metricNewrelicoracledbRedoLogLogFileSwitch                     metricNewrelicoracledbRedoLogLogFileSwitch
 	metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded
@@ -1105,6 +1674,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbSgaBufferBusyWaits                       metricNewrelicoracledbSgaBufferBusyWaits
 	metricNewrelicoracledbSgaFreeBufferInspected                   metricNewrelicoracledbSgaFreeBufferInspected
 	metricNewrelicoracledbSgaFreeBufferWaits                       metricNewrelicoracledbSgaFreeBufferWaits
+	metricNewrelicoracledbSynchronizationDirectPathSync            metricNewrelicoracledbSynchronizationDirectPathSync
 	metricNewrelicoracledbTablespaceDbID                           metricNewrelicoracledbTablespaceDbID
 	metricNewrelicoracledbTablespaceGlobalName                     metricNewrelicoracledbTablespaceGlobalName
 	metricNewrelicoracledbTablespaceIsOffline                      metricNewrelicoracledbTablespaceIsOffline
@@ -1135,11 +1705,20 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                               mbc,
-		startTime:                            pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                        pmetric.NewMetrics(),
-		buildInfo:                            settings.BuildInfo,
-		metricNewrelicoracledbLockedAccounts: newMetricNewrelicoracledbLockedAccounts(mbc.Metrics.NewrelicoracledbLockedAccounts),
+		config:        mbc,
+		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer: pmetric.NewMetrics(),
+		buildInfo:     settings.BuildInfo,
+		metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse:      newMetricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse(mbc.Metrics.NewrelicoracledbConcurrencyEnqueueRoFastObjectReuse),
+		metricNewrelicoracledbConcurrencyReadByOtherSession:            newMetricNewrelicoracledbConcurrencyReadByOtherSession(mbc.Metrics.NewrelicoracledbConcurrencyReadByOtherSession),
+		metricNewrelicoracledbIoControlFileParallelWrite:               newMetricNewrelicoracledbIoControlFileParallelWrite(mbc.Metrics.NewrelicoracledbIoControlFileParallelWrite),
+		metricNewrelicoracledbIoControlFileSequentialRead:              newMetricNewrelicoracledbIoControlFileSequentialRead(mbc.Metrics.NewrelicoracledbIoControlFileSequentialRead),
+		metricNewrelicoracledbIoDataFileInitWrite:                      newMetricNewrelicoracledbIoDataFileInitWrite(mbc.Metrics.NewrelicoracledbIoDataFileInitWrite),
+		metricNewrelicoracledbIoDbFileScatteredRead:                    newMetricNewrelicoracledbIoDbFileScatteredRead(mbc.Metrics.NewrelicoracledbIoDbFileScatteredRead),
+		metricNewrelicoracledbIoDbFileSequentialRead:                   newMetricNewrelicoracledbIoDbFileSequentialRead(mbc.Metrics.NewrelicoracledbIoDbFileSequentialRead),
+		metricNewrelicoracledbIoDiskFileOperations:                     newMetricNewrelicoracledbIoDiskFileOperations(mbc.Metrics.NewrelicoracledbIoDiskFileOperations),
+		metricNewrelicoracledbIoLocalWriteWait:                         newMetricNewrelicoracledbIoLocalWriteWait(mbc.Metrics.NewrelicoracledbIoLocalWriteWait),
+		metricNewrelicoracledbLockedAccounts:                           newMetricNewrelicoracledbLockedAccounts(mbc.Metrics.NewrelicoracledbLockedAccounts),
 		metricNewrelicoracledbRedoLogLogFileSwitch:                     newMetricNewrelicoracledbRedoLogLogFileSwitch(mbc.Metrics.NewrelicoracledbRedoLogLogFileSwitch),
 		metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded:      newMetricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded(mbc.Metrics.NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded),
 		metricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete: newMetricNewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete(mbc.Metrics.NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete),
@@ -1149,6 +1728,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbSgaBufferBusyWaits:                       newMetricNewrelicoracledbSgaBufferBusyWaits(mbc.Metrics.NewrelicoracledbSgaBufferBusyWaits),
 		metricNewrelicoracledbSgaFreeBufferInspected:                   newMetricNewrelicoracledbSgaFreeBufferInspected(mbc.Metrics.NewrelicoracledbSgaFreeBufferInspected),
 		metricNewrelicoracledbSgaFreeBufferWaits:                       newMetricNewrelicoracledbSgaFreeBufferWaits(mbc.Metrics.NewrelicoracledbSgaFreeBufferWaits),
+		metricNewrelicoracledbSynchronizationDirectPathSync:            newMetricNewrelicoracledbSynchronizationDirectPathSync(mbc.Metrics.NewrelicoracledbSynchronizationDirectPathSync),
 		metricNewrelicoracledbTablespaceDbID:                           newMetricNewrelicoracledbTablespaceDbID(mbc.Metrics.NewrelicoracledbTablespaceDbID),
 		metricNewrelicoracledbTablespaceGlobalName:                     newMetricNewrelicoracledbTablespaceGlobalName(mbc.Metrics.NewrelicoracledbTablespaceGlobalName),
 		metricNewrelicoracledbTablespaceIsOffline:                      newMetricNewrelicoracledbTablespaceIsOffline(mbc.Metrics.NewrelicoracledbTablespaceIsOffline),
@@ -1242,6 +1822,15 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConcurrencyReadByOtherSession.emit(ils.Metrics())
+	mb.metricNewrelicoracledbIoControlFileParallelWrite.emit(ils.Metrics())
+	mb.metricNewrelicoracledbIoControlFileSequentialRead.emit(ils.Metrics())
+	mb.metricNewrelicoracledbIoDataFileInitWrite.emit(ils.Metrics())
+	mb.metricNewrelicoracledbIoDbFileScatteredRead.emit(ils.Metrics())
+	mb.metricNewrelicoracledbIoDbFileSequentialRead.emit(ils.Metrics())
+	mb.metricNewrelicoracledbIoDiskFileOperations.emit(ils.Metrics())
+	mb.metricNewrelicoracledbIoLocalWriteWait.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLockedAccounts.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogLogFileSwitch.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogLogFileSwitchArchivingNeeded.emit(ils.Metrics())
@@ -1252,6 +1841,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbSgaBufferBusyWaits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaFreeBufferInspected.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaFreeBufferWaits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSynchronizationDirectPathSync.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceDbID.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceGlobalName.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceIsOffline.emit(ils.Metrics())
@@ -1290,6 +1880,51 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordNewrelicoracledbConcurrencyEnqueueRoFastObjectReuseDataPoint adds a data point to newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConcurrencyEnqueueRoFastObjectReuseDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbConcurrencyEnqueueRoFastObjectReuse.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbConcurrencyReadByOtherSessionDataPoint adds a data point to newrelicoracledb.concurrency.read_by_other_session metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConcurrencyReadByOtherSessionDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbConcurrencyReadByOtherSession.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbIoControlFileParallelWriteDataPoint adds a data point to newrelicoracledb.io.control_file_parallel_write metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbIoControlFileParallelWriteDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbIoControlFileParallelWrite.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbIoControlFileSequentialReadDataPoint adds a data point to newrelicoracledb.io.control_file_sequential_read metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbIoControlFileSequentialReadDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbIoControlFileSequentialRead.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbIoDataFileInitWriteDataPoint adds a data point to newrelicoracledb.io.data_file_init_write metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbIoDataFileInitWriteDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbIoDataFileInitWrite.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbIoDbFileScatteredReadDataPoint adds a data point to newrelicoracledb.io.db_file_scattered_read metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbIoDbFileScatteredReadDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbIoDbFileScatteredRead.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbIoDbFileSequentialReadDataPoint adds a data point to newrelicoracledb.io.db_file_sequential_read metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbIoDbFileSequentialReadDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbIoDbFileSequentialRead.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbIoDiskFileOperationsDataPoint adds a data point to newrelicoracledb.io.disk_file_operations metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbIoDiskFileOperationsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbIoDiskFileOperations.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbIoLocalWriteWaitDataPoint adds a data point to newrelicoracledb.io.local_write_wait metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbIoLocalWriteWaitDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbIoLocalWriteWait.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.
@@ -1340,6 +1975,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferInspectedDataPoint(
 // RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint adds a data point to newrelicoracledb.sga.free_buffer_waits metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbSgaFreeBufferWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbSynchronizationDirectPathSyncDataPoint adds a data point to newrelicoracledb.synchronization.direct_path_sync metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSynchronizationDirectPathSyncDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSynchronizationDirectPathSync.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceDbIDDataPoint adds a data point to newrelicoracledb.tablespace.db_id metric.

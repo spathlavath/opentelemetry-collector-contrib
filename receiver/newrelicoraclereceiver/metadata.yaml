@@ -219,6 +219,106 @@ metrics:
       - newrelic.entity_name
       - instance.id
 
+  newrelicoracledb.io.db_file_sequential_read:
+    description: Total waits for database file sequential read operations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.io.db_file_scattered_read:
+    description: Total waits for database file scattered read operations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.io.control_file_sequential_read:
+    description: Total waits for control file sequential read operations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.io.control_file_parallel_write:
+    description: Total waits for control file parallel write operations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.io.disk_file_operations:
+    description: Total waits for disk file operations I/O
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.io.local_write_wait:
+    description: Total waits for local write operations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.io.data_file_init_write:
+    description: Total waits for data file initialization write operations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.concurrency.read_by_other_session:
+    description: Total waits for read by other session events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse:
+    description: Total waits for enqueue RO fast object reuse events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.synchronization.direct_path_sync:
+    description: Total waits for direct path sync operations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
 tests:
   config:
   goleak:

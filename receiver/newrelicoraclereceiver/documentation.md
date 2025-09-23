@@ -12,6 +12,141 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse
+
+Total waits for enqueue RO fast object reuse events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.concurrency.read_by_other_session
+
+Total waits for read by other session events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.io.control_file_parallel_write
+
+Total waits for control file parallel write operations
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.io.control_file_sequential_read
+
+Total waits for control file sequential read operations
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.io.data_file_init_write
+
+Total waits for data file initialization write operations
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.io.db_file_scattered_read
+
+Total waits for database file scattered read operations
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.io.db_file_sequential_read
+
+Total waits for database file sequential read operations
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.io.disk_file_operations
+
+Total waits for disk file operations I/O
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.io.local_write_wait
+
+Total waits for local write operations
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
 ### newrelicoracledb.locked_accounts
 
 Count of locked user accounts in the database
@@ -149,6 +284,21 @@ Total free buffer inspected events
 ### newrelicoracledb.sga.free_buffer_waits
 
 Total free buffer waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.synchronization.direct_path_sync
+
+Total waits for direct path sync operations
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |

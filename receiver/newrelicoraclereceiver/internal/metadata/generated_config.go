@@ -28,6 +28,15 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
+	NewrelicoracledbConcurrencyEnqueueRoFastObjectReuse      MetricConfig `mapstructure:"newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse"`
+	NewrelicoracledbConcurrencyReadByOtherSession            MetricConfig `mapstructure:"newrelicoracledb.concurrency.read_by_other_session"`
+	NewrelicoracledbIoControlFileParallelWrite               MetricConfig `mapstructure:"newrelicoracledb.io.control_file_parallel_write"`
+	NewrelicoracledbIoControlFileSequentialRead              MetricConfig `mapstructure:"newrelicoracledb.io.control_file_sequential_read"`
+	NewrelicoracledbIoDataFileInitWrite                      MetricConfig `mapstructure:"newrelicoracledb.io.data_file_init_write"`
+	NewrelicoracledbIoDbFileScatteredRead                    MetricConfig `mapstructure:"newrelicoracledb.io.db_file_scattered_read"`
+	NewrelicoracledbIoDbFileSequentialRead                   MetricConfig `mapstructure:"newrelicoracledb.io.db_file_sequential_read"`
+	NewrelicoracledbIoDiskFileOperations                     MetricConfig `mapstructure:"newrelicoracledb.io.disk_file_operations"`
+	NewrelicoracledbIoLocalWriteWait                         MetricConfig `mapstructure:"newrelicoracledb.io.local_write_wait"`
 	NewrelicoracledbLockedAccounts                           MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
 	NewrelicoracledbRedoLogLogFileSwitch                     MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch"`
 	NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch_archiving_needed"`
@@ -38,6 +47,7 @@ type MetricsConfig struct {
 	NewrelicoracledbSgaBufferBusyWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.buffer_busy_waits"`
 	NewrelicoracledbSgaFreeBufferInspected                   MetricConfig `mapstructure:"newrelicoracledb.sga.free_buffer_inspected"`
 	NewrelicoracledbSgaFreeBufferWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.free_buffer_waits"`
+	NewrelicoracledbSynchronizationDirectPathSync            MetricConfig `mapstructure:"newrelicoracledb.synchronization.direct_path_sync"`
 	NewrelicoracledbTablespaceDbID                           MetricConfig `mapstructure:"newrelicoracledb.tablespace.db_id"`
 	NewrelicoracledbTablespaceGlobalName                     MetricConfig `mapstructure:"newrelicoracledb.tablespace.global_name"`
 	NewrelicoracledbTablespaceIsOffline                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.is_offline"`
@@ -51,6 +61,33 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		NewrelicoracledbConcurrencyEnqueueRoFastObjectReuse: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConcurrencyReadByOtherSession: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIoControlFileParallelWrite: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIoControlFileSequentialRead: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIoDataFileInitWrite: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIoDbFileScatteredRead: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIoDbFileSequentialRead: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIoDiskFileOperations: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIoLocalWriteWait: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbLockedAccounts: MetricConfig{
 			Enabled: true,
 		},
@@ -79,6 +116,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbSgaFreeBufferWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSynchronizationDirectPathSync: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbTablespaceDbID: MetricConfig{

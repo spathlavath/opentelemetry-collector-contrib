@@ -1,6 +1,24 @@
 default:
 all_set:
   metrics:
+    newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse:
+      enabled: true
+    newrelicoracledb.concurrency.read_by_other_session:
+      enabled: true
+    newrelicoracledb.io.control_file_parallel_write:
+      enabled: true
+    newrelicoracledb.io.control_file_sequential_read:
+      enabled: true
+    newrelicoracledb.io.data_file_init_write:
+      enabled: true
+    newrelicoracledb.io.db_file_scattered_read:
+      enabled: true
+    newrelicoracledb.io.db_file_sequential_read:
+      enabled: true
+    newrelicoracledb.io.disk_file_operations:
+      enabled: true
+    newrelicoracledb.io.local_write_wait:
+      enabled: true
     newrelicoracledb.locked_accounts:
       enabled: true
     newrelicoracledb.redo_log.log_file_switch:
@@ -20,6 +38,8 @@ all_set:
     newrelicoracledb.sga.free_buffer_inspected:
       enabled: true
     newrelicoracledb.sga.free_buffer_waits:
+      enabled: true
+    newrelicoracledb.synchronization.direct_path_sync:
       enabled: true
     newrelicoracledb.tablespace.db_id:
       enabled: true
@@ -46,6 +66,24 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    newrelicoracledb.concurrency.enqueue_ro_fast_object_reuse:
+      enabled: false
+    newrelicoracledb.concurrency.read_by_other_session:
+      enabled: false
+    newrelicoracledb.io.control_file_parallel_write:
+      enabled: false
+    newrelicoracledb.io.control_file_sequential_read:
+      enabled: false
+    newrelicoracledb.io.data_file_init_write:
+      enabled: false
+    newrelicoracledb.io.db_file_scattered_read:
+      enabled: false
+    newrelicoracledb.io.db_file_sequential_read:
+      enabled: false
+    newrelicoracledb.io.disk_file_operations:
+      enabled: false
+    newrelicoracledb.io.local_write_wait:
+      enabled: false
     newrelicoracledb.locked_accounts:
       enabled: false
     newrelicoracledb.redo_log.log_file_switch:
@@ -65,6 +103,8 @@ none_set:
     newrelicoracledb.sga.free_buffer_inspected:
       enabled: false
     newrelicoracledb.sga.free_buffer_waits:
+      enabled: false
+    newrelicoracledb.synchronization.direct_path_sync:
       enabled: false
     newrelicoracledb.tablespace.db_id:
       enabled: false

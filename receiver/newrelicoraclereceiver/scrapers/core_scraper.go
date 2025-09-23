@@ -95,6 +95,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 		// Map events to metrics based on actual Oracle system events available
 		matched := false
 		switch {
+		// Redo log events
 		case strings.Contains(event, "log file switch completion"):
 			s.mb.RecordNewrelicoracledbRedoLogLogFileSwitchDataPoint(now, totalWaits, s.instanceName, instanceID)
 			matched = true
@@ -104,8 +105,46 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 		case strings.Contains(event, "log file sync"):
 			s.mb.RecordNewrelicoracledbRedoLogSyncDataPoint(now, totalWaits, s.instanceName, instanceID)
 			matched = true
+		
+		// SGA/Buffer events
 		case strings.Contains(event, "buffer busy waits"):
 			s.mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		
+		// High-volume I/O events
+		case strings.Contains(event, "db file sequential read"):
+			s.mb.RecordNewrelicoracledbIoDbFileSequentialReadDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		case strings.Contains(event, "db file scattered read"):
+			s.mb.RecordNewrelicoracledbIoDbFileScatteredReadDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		case strings.Contains(event, "control file sequential read"):
+			s.mb.RecordNewrelicoracledbIoControlFileSequentialReadDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		case strings.Contains(event, "control file parallel write"):
+			s.mb.RecordNewrelicoracledbIoControlFileParallelWriteDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		case strings.Contains(event, "Disk file operations I/O"):
+			s.mb.RecordNewrelicoracledbIoDiskFileOperationsDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		case strings.Contains(event, "local write wait"):
+			s.mb.RecordNewrelicoracledbIoLocalWriteWaitDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		case strings.Contains(event, "Data file init write"):
+			s.mb.RecordNewrelicoracledbIoDataFileInitWriteDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		
+		// Concurrency events
+		case strings.Contains(event, "read by other session"):
+			s.mb.RecordNewrelicoracledbConcurrencyReadByOtherSessionDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		case strings.Contains(event, "enq: RO - fast object reuse"):
+			s.mb.RecordNewrelicoracledbConcurrencyEnqueueRoFastObjectReuseDataPoint(now, totalWaits, s.instanceName, instanceID)
+			matched = true
+		
+		// Synchronization events
+		case strings.Contains(event, "direct path sync"):
+			s.mb.RecordNewrelicoracledbSynchronizationDirectPathSyncDataPoint(now, totalWaits, s.instanceName, instanceID)
 			matched = true
 		}
 
