@@ -29,11 +29,15 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
 	NewrelicoracledbSessionsCount MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
+	NewrelicoracledbTotalWaitTime MetricConfig `mapstructure:"newrelicoracledb.total_wait_time"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
 		NewrelicoracledbSessionsCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbTotalWaitTime: MetricConfig{
 			Enabled: true,
 		},
 	}
@@ -44,10 +48,10 @@ type ResourceAttributeConfig struct {
 	Enabled bool `mapstructure:"enabled"`
 	// Experimental: MetricsInclude defines a list of filters for attribute values.
 	// If the list is not empty, only metrics with matching resource attribute values will be emitted.
-	MetricsInclude []filter.Config `mapstructure:"metrics_include"`
 	// Experimental: MetricsExclude defines a list of filters for attribute values.
 	// If the list is not empty, metrics with matching resource attribute values will not be emitted.
 	// MetricsInclude has higher priority than MetricsExclude.
+	MetricsInclude []filter.Config `mapstructure:"metrics_include"`
 	MetricsExclude []filter.Config `mapstructure:"metrics_exclude"`
 
 	enabledSetByUser bool

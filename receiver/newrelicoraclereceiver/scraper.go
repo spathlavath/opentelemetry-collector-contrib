@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	// keepalive for connection 
+	// keepalive for connection
 	keepAlive = 30 * time.Second
 )
 
@@ -31,8 +31,9 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Only keep session scraper for simplicity
-	sessionScraper       *scrapers.SessionScraper
-	
+	sessionScraper *scrapers.SessionScraper
+	waitScraper    *scrapers.WaitScraper
+
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
 	dbProviderFunc       dbProviderFunc
@@ -64,10 +65,11 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	if err != nil {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
-	
+
 	// Initialize session scraper with direct DB connection
 	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	
+	s.waitScraper = scrapers.NewWaitScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
 	return nil
 }
 
@@ -78,13 +80,14 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	// Only scrape session count metric - keeping it simple
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
+	scrapeErrors = append(scrapeErrors, s.waitScraper.ScrapeWaitTime(ctx)...)
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()
 	rb.SetNewrelicoracledbInstanceName(s.instanceName)
 	rb.SetHostName(s.hostName)
 	out := s.mb.Emit(metadata.WithResource(rb.Emit()))
-	
+
 	s.logger.Debug("Done New Relic Oracle scraping", zap.Int("total_errors", len(scrapeErrors)))
 	if len(scrapeErrors) > 0 {
 		return out, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
