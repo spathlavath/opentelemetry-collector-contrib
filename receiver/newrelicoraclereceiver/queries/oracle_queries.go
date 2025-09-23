@@ -3,14 +3,12 @@
 
 package queries
 
-// Oracle SQL query for session count metric
+// Oracle SQL queries for metrics collection
 const (
+	// SessionCountSQL retrieves the count of user sessions
 	SessionCountSQL = "SELECT COUNT(*) as SESSION_COUNT FROM v$session WHERE type = 'USER'"
-)
 
-// Oracle SQL query for PDB system metrics
-const (
 	// PDBSysMetricsSQL retrieves all system metrics from gv$con_sysmetric
-	// This matches the approach used in nri-oracledb for simplicity
+	// This matches the approach used in nri-oracledb for PDB container metrics
 	PDBSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM gv$con_sysmetric"
 )

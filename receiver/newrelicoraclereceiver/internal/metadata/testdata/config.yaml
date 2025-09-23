@@ -1,6 +1,38 @@
 default:
 all_set:
   metrics:
+    newrelicoracledb.pdb.cpu.usage_per_second:
+      enabled: true
+    newrelicoracledb.pdb.cpu.usage_per_transaction:
+      enabled: true
+    newrelicoracledb.pdb.database.cpu_time_ratio:
+      enabled: true
+    newrelicoracledb.pdb.database.wait_time_ratio:
+      enabled: true
+    newrelicoracledb.pdb.executions.per_second:
+      enabled: true
+    newrelicoracledb.pdb.executions.per_transaction:
+      enabled: true
+    newrelicoracledb.pdb.network.traffic_volume_per_second:
+      enabled: true
+    newrelicoracledb.pdb.physical_reads.bytes_per_second:
+      enabled: true
+    newrelicoracledb.pdb.response_time.sql_service:
+      enabled: true
+    newrelicoracledb.pdb.sessions.active_parallel:
+      enabled: true
+    newrelicoracledb.pdb.sessions.active_serial:
+      enabled: true
+    newrelicoracledb.pdb.sessions.average_active:
+      enabled: true
+    newrelicoracledb.pdb.sessions.count:
+      enabled: true
+    newrelicoracledb.pdb.sessions.current_logons:
+      enabled: true
+    newrelicoracledb.pdb.sessions.current_open_cursors:
+      enabled: true
+    newrelicoracledb.pdb.transactions.per_second:
+      enabled: true
     newrelicoracledb.sessions.count:
       enabled: true
   resource_attributes:
@@ -10,6 +42,38 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    newrelicoracledb.pdb.cpu.usage_per_second:
+      enabled: false
+    newrelicoracledb.pdb.cpu.usage_per_transaction:
+      enabled: false
+    newrelicoracledb.pdb.database.cpu_time_ratio:
+      enabled: false
+    newrelicoracledb.pdb.database.wait_time_ratio:
+      enabled: false
+    newrelicoracledb.pdb.executions.per_second:
+      enabled: false
+    newrelicoracledb.pdb.executions.per_transaction:
+      enabled: false
+    newrelicoracledb.pdb.network.traffic_volume_per_second:
+      enabled: false
+    newrelicoracledb.pdb.physical_reads.bytes_per_second:
+      enabled: false
+    newrelicoracledb.pdb.response_time.sql_service:
+      enabled: false
+    newrelicoracledb.pdb.sessions.active_parallel:
+      enabled: false
+    newrelicoracledb.pdb.sessions.active_serial:
+      enabled: false
+    newrelicoracledb.pdb.sessions.average_active:
+      enabled: false
+    newrelicoracledb.pdb.sessions.count:
+      enabled: false
+    newrelicoracledb.pdb.sessions.current_logons:
+      enabled: false
+    newrelicoracledb.pdb.sessions.current_open_cursors:
+      enabled: false
+    newrelicoracledb.pdb.transactions.per_second:
+      enabled: false
     newrelicoracledb.sessions.count:
       enabled: false
   resource_attributes:

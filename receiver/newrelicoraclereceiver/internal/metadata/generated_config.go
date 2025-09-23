@@ -28,11 +28,75 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
-	NewrelicoracledbSessionsCount MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
+	NewrelicoracledbPdbCPUUsagePerSecond             MetricConfig `mapstructure:"newrelicoracledb.pdb.cpu.usage_per_second"`
+	NewrelicoracledbPdbCPUUsagePerTransaction        MetricConfig `mapstructure:"newrelicoracledb.pdb.cpu.usage_per_transaction"`
+	NewrelicoracledbPdbDatabaseCPUTimeRatio          MetricConfig `mapstructure:"newrelicoracledb.pdb.database.cpu_time_ratio"`
+	NewrelicoracledbPdbDatabaseWaitTimeRatio         MetricConfig `mapstructure:"newrelicoracledb.pdb.database.wait_time_ratio"`
+	NewrelicoracledbPdbExecutionsPerSecond           MetricConfig `mapstructure:"newrelicoracledb.pdb.executions.per_second"`
+	NewrelicoracledbPdbExecutionsPerTransaction      MetricConfig `mapstructure:"newrelicoracledb.pdb.executions.per_transaction"`
+	NewrelicoracledbPdbNetworkTrafficVolumePerSecond MetricConfig `mapstructure:"newrelicoracledb.pdb.network.traffic_volume_per_second"`
+	NewrelicoracledbPdbPhysicalReadsBytesPerSecond   MetricConfig `mapstructure:"newrelicoracledb.pdb.physical_reads.bytes_per_second"`
+	NewrelicoracledbPdbResponseTimeSQLService        MetricConfig `mapstructure:"newrelicoracledb.pdb.response_time.sql_service"`
+	NewrelicoracledbPdbSessionsActiveParallel        MetricConfig `mapstructure:"newrelicoracledb.pdb.sessions.active_parallel"`
+	NewrelicoracledbPdbSessionsActiveSerial          MetricConfig `mapstructure:"newrelicoracledb.pdb.sessions.active_serial"`
+	NewrelicoracledbPdbSessionsAverageActive         MetricConfig `mapstructure:"newrelicoracledb.pdb.sessions.average_active"`
+	NewrelicoracledbPdbSessionsCount                 MetricConfig `mapstructure:"newrelicoracledb.pdb.sessions.count"`
+	NewrelicoracledbPdbSessionsCurrentLogons         MetricConfig `mapstructure:"newrelicoracledb.pdb.sessions.current_logons"`
+	NewrelicoracledbPdbSessionsCurrentOpenCursors    MetricConfig `mapstructure:"newrelicoracledb.pdb.sessions.current_open_cursors"`
+	NewrelicoracledbPdbTransactionsPerSecond         MetricConfig `mapstructure:"newrelicoracledb.pdb.transactions.per_second"`
+	NewrelicoracledbSessionsCount                    MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		NewrelicoracledbPdbCPUUsagePerSecond: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbCPUUsagePerTransaction: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbDatabaseCPUTimeRatio: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbDatabaseWaitTimeRatio: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbExecutionsPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbExecutionsPerTransaction: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbNetworkTrafficVolumePerSecond: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbPhysicalReadsBytesPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbResponseTimeSQLService: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbSessionsActiveParallel: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbSessionsActiveSerial: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbSessionsAverageActive: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbSessionsCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbSessionsCurrentLogons: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbSessionsCurrentOpenCursors: MetricConfig{
+			Enabled: false,
+		},
+		NewrelicoracledbPdbTransactionsPerSecond: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSessionsCount: MetricConfig{
 			Enabled: true,
 		},

@@ -23,7 +23,7 @@ func TestCreateDefaultConfig(t *testing.T) {
 func TestCreateReceiver(t *testing.T) {
 	factory := NewFactory()
 	cfg := factory.CreateDefaultConfig()
-	
+
 	// Set required config fields for testing
 	config := cfg.(*Config)
 	config.DataSource = "oracle://user:password@localhost:1521/XE"

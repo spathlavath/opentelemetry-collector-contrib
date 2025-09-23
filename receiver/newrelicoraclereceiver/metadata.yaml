@@ -22,6 +22,9 @@ attributes:
   newrelic.entity_name:
     description: New Relic entity name for the metric
     type: string
+  instance.id:
+    description: Oracle instance ID
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -32,6 +35,167 @@ metrics:
     unit: "{sessions}"
     attributes:
       - newrelic.entity_name
+
+  # PDB System Metrics from gv$con_sysmetric
+  newrelicoracledb.pdb.sessions.active_parallel:
+    description: Active Parallel Sessions in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.sessions.active_serial:
+    description: Active Serial Sessions in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.sessions.average_active:
+    description: Average Active Sessions in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.cpu.usage_per_second:
+    description: CPU Usage Per Second in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.cpu.usage_per_transaction:
+    description: CPU Usage Per Transaction in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.sessions.current_logons:
+    description: Current Logons Count in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "{logons}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.sessions.current_open_cursors:
+    description: Current Open Cursors Count in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "{cursors}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.database.cpu_time_ratio:
+    description: Database CPU Time Ratio in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.database.wait_time_ratio:
+    description: Database Wait Time Ratio in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.executions.per_second:
+    description: Executions Per Second in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{executions}/s"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.executions.per_transaction:
+    description: Executions Per Transaction in PDB
+    enabled: false
+    gauge:
+      value_type: double
+    unit: "{executions}/{transaction}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.network.traffic_volume_per_second:
+    description: Network Traffic Volume Per Second in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "By/s"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.physical_reads.bytes_per_second:
+    description: Physical Read Total Bytes Per Second in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "By/s"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.sessions.count:
+    description: Session Count in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.response_time.sql_service:
+    description: SQL Service Response Time in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "ms"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.pdb.transactions.per_second:
+    description: User Transaction Per Second in PDB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{transactions}/s"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
 
 tests:
   config:

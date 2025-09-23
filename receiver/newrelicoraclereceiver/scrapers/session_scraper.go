@@ -11,14 +11,14 @@ import (
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
-	
+
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 // SessionScraper handles session count Oracle metric
 type SessionScraper struct {
-	db           *sql.DB          // Direct DB connection passed from main scraper
+	db           *sql.DB // Direct DB connection passed from main scraper
 	mb           *metadata.MetricsBuilder
 	logger       *zap.Logger
 	instanceName string
@@ -39,17 +39,17 @@ func NewSessionScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logg
 // ScrapeSessionCount collects Oracle session count metric
 func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 	var errors []error
-	
+
 	if !s.config.Metrics.NewrelicoracledbSessionsCount.Enabled {
 		return errors
 	}
 
 	s.logger.Debug("Scraping Oracle session count")
 	now := pcommon.NewTimestampFromTime(time.Now())
-	
+
 	// Execute session count query directly using the shared DB connection
 	s.logger.Debug("Executing session count query", zap.String("sql", queries.SessionCountSQL))
-	
+
 	var sessionCount int64
 	err := s.db.QueryRowContext(ctx, queries.SessionCountSQL).Scan(&sessionCount)
 	if err != nil {
@@ -60,10 +60,10 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 		errors = append(errors, fmt.Errorf("error executing session count query: %w", err))
 		return errors
 	}
-	
+
 	// Record the metric
 	s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, sessionCount, s.instanceName)
 	s.logger.Debug("Collected Oracle session count", zap.Int64("count", sessionCount), zap.String("instance", s.instanceName))
-	
+
 	return errors
 }

@@ -34,8 +34,8 @@ func TestConfig_Validate(t *testing.T) {
 			expectErr: false,
 		},
 		{
-			name: "invalid config - missing all connection info",
-			config: Config{},
+			name:      "invalid config - missing all connection info",
+			config:    Config{},
 			expectErr: true,
 		},
 		{

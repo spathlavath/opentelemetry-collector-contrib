@@ -100,7 +100,7 @@ func getInstanceName(datasource string) (string, error) {
 	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
 		return datasource[atIndex+1:], nil
 	}
-	
+
 	// Fallback to URL parsing for oracle:// format
 	datasourceURL, err := url.Parse(datasource)
 	if err != nil {
@@ -121,7 +121,7 @@ func getHostName(datasource string) (string, error) {
 		}
 		return hostPart, nil
 	}
-	
+
 	// Fallback to URL parsing for oracle:// format
 	datasourceURL, err := url.Parse(datasource)
 	if err != nil {

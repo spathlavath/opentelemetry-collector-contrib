@@ -13,17 +13,913 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	NewrelicoracledbPdbCPUUsagePerSecond: metricInfo{
+		Name: "newrelicoracledb.pdb.cpu.usage_per_second",
+	},
+	NewrelicoracledbPdbCPUUsagePerTransaction: metricInfo{
+		Name: "newrelicoracledb.pdb.cpu.usage_per_transaction",
+	},
+	NewrelicoracledbPdbDatabaseCPUTimeRatio: metricInfo{
+		Name: "newrelicoracledb.pdb.database.cpu_time_ratio",
+	},
+	NewrelicoracledbPdbDatabaseWaitTimeRatio: metricInfo{
+		Name: "newrelicoracledb.pdb.database.wait_time_ratio",
+	},
+	NewrelicoracledbPdbExecutionsPerSecond: metricInfo{
+		Name: "newrelicoracledb.pdb.executions.per_second",
+	},
+	NewrelicoracledbPdbExecutionsPerTransaction: metricInfo{
+		Name: "newrelicoracledb.pdb.executions.per_transaction",
+	},
+	NewrelicoracledbPdbNetworkTrafficVolumePerSecond: metricInfo{
+		Name: "newrelicoracledb.pdb.network.traffic_volume_per_second",
+	},
+	NewrelicoracledbPdbPhysicalReadsBytesPerSecond: metricInfo{
+		Name: "newrelicoracledb.pdb.physical_reads.bytes_per_second",
+	},
+	NewrelicoracledbPdbResponseTimeSQLService: metricInfo{
+		Name: "newrelicoracledb.pdb.response_time.sql_service",
+	},
+	NewrelicoracledbPdbSessionsActiveParallel: metricInfo{
+		Name: "newrelicoracledb.pdb.sessions.active_parallel",
+	},
+	NewrelicoracledbPdbSessionsActiveSerial: metricInfo{
+		Name: "newrelicoracledb.pdb.sessions.active_serial",
+	},
+	NewrelicoracledbPdbSessionsAverageActive: metricInfo{
+		Name: "newrelicoracledb.pdb.sessions.average_active",
+	},
+	NewrelicoracledbPdbSessionsCount: metricInfo{
+		Name: "newrelicoracledb.pdb.sessions.count",
+	},
+	NewrelicoracledbPdbSessionsCurrentLogons: metricInfo{
+		Name: "newrelicoracledb.pdb.sessions.current_logons",
+	},
+	NewrelicoracledbPdbSessionsCurrentOpenCursors: metricInfo{
+		Name: "newrelicoracledb.pdb.sessions.current_open_cursors",
+	},
+	NewrelicoracledbPdbTransactionsPerSecond: metricInfo{
+		Name: "newrelicoracledb.pdb.transactions.per_second",
+	},
 	NewrelicoracledbSessionsCount: metricInfo{
 		Name: "newrelicoracledb.sessions.count",
 	},
 }
 
 type metricsInfo struct {
-	NewrelicoracledbSessionsCount metricInfo
+	NewrelicoracledbPdbCPUUsagePerSecond             metricInfo
+	NewrelicoracledbPdbCPUUsagePerTransaction        metricInfo
+	NewrelicoracledbPdbDatabaseCPUTimeRatio          metricInfo
+	NewrelicoracledbPdbDatabaseWaitTimeRatio         metricInfo
+	NewrelicoracledbPdbExecutionsPerSecond           metricInfo
+	NewrelicoracledbPdbExecutionsPerTransaction      metricInfo
+	NewrelicoracledbPdbNetworkTrafficVolumePerSecond metricInfo
+	NewrelicoracledbPdbPhysicalReadsBytesPerSecond   metricInfo
+	NewrelicoracledbPdbResponseTimeSQLService        metricInfo
+	NewrelicoracledbPdbSessionsActiveParallel        metricInfo
+	NewrelicoracledbPdbSessionsActiveSerial          metricInfo
+	NewrelicoracledbPdbSessionsAverageActive         metricInfo
+	NewrelicoracledbPdbSessionsCount                 metricInfo
+	NewrelicoracledbPdbSessionsCurrentLogons         metricInfo
+	NewrelicoracledbPdbSessionsCurrentOpenCursors    metricInfo
+	NewrelicoracledbPdbTransactionsPerSecond         metricInfo
+	NewrelicoracledbSessionsCount                    metricInfo
 }
 
 type metricInfo struct {
 	Name string
+}
+
+type metricNewrelicoracledbPdbCPUUsagePerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.cpu.usage_per_second metric with initial data.
+func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) init() {
+	m.data.SetName("newrelicoracledb.pdb.cpu.usage_per_second")
+	m.data.SetDescription("CPU Usage Per Second in PDB")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbCPUUsagePerSecond(cfg MetricConfig) metricNewrelicoracledbPdbCPUUsagePerSecond {
+	m := metricNewrelicoracledbPdbCPUUsagePerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbCPUUsagePerTransaction struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.cpu.usage_per_transaction metric with initial data.
+func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) init() {
+	m.data.SetName("newrelicoracledb.pdb.cpu.usage_per_transaction")
+	m.data.SetDescription("CPU Usage Per Transaction in PDB")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbCPUUsagePerTransaction(cfg MetricConfig) metricNewrelicoracledbPdbCPUUsagePerTransaction {
+	m := metricNewrelicoracledbPdbCPUUsagePerTransaction{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbDatabaseCPUTimeRatio struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.database.cpu_time_ratio metric with initial data.
+func (m *metricNewrelicoracledbPdbDatabaseCPUTimeRatio) init() {
+	m.data.SetName("newrelicoracledb.pdb.database.cpu_time_ratio")
+	m.data.SetDescription("Database CPU Time Ratio in PDB")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbDatabaseCPUTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbDatabaseCPUTimeRatio) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbDatabaseCPUTimeRatio) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbDatabaseCPUTimeRatio(cfg MetricConfig) metricNewrelicoracledbPdbDatabaseCPUTimeRatio {
+	m := metricNewrelicoracledbPdbDatabaseCPUTimeRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbDatabaseWaitTimeRatio struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.database.wait_time_ratio metric with initial data.
+func (m *metricNewrelicoracledbPdbDatabaseWaitTimeRatio) init() {
+	m.data.SetName("newrelicoracledb.pdb.database.wait_time_ratio")
+	m.data.SetDescription("Database Wait Time Ratio in PDB")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbDatabaseWaitTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbDatabaseWaitTimeRatio) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbDatabaseWaitTimeRatio) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbDatabaseWaitTimeRatio(cfg MetricConfig) metricNewrelicoracledbPdbDatabaseWaitTimeRatio {
+	m := metricNewrelicoracledbPdbDatabaseWaitTimeRatio{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbExecutionsPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.executions.per_second metric with initial data.
+func (m *metricNewrelicoracledbPdbExecutionsPerSecond) init() {
+	m.data.SetName("newrelicoracledb.pdb.executions.per_second")
+	m.data.SetDescription("Executions Per Second in PDB")
+	m.data.SetUnit("{executions}/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbExecutionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbExecutionsPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbExecutionsPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbExecutionsPerSecond(cfg MetricConfig) metricNewrelicoracledbPdbExecutionsPerSecond {
+	m := metricNewrelicoracledbPdbExecutionsPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbExecutionsPerTransaction struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.executions.per_transaction metric with initial data.
+func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) init() {
+	m.data.SetName("newrelicoracledb.pdb.executions.per_transaction")
+	m.data.SetDescription("Executions Per Transaction in PDB")
+	m.data.SetUnit("{executions}/{transaction}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbExecutionsPerTransaction(cfg MetricConfig) metricNewrelicoracledbPdbExecutionsPerTransaction {
+	m := metricNewrelicoracledbPdbExecutionsPerTransaction{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.network.traffic_volume_per_second metric with initial data.
+func (m *metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond) init() {
+	m.data.SetName("newrelicoracledb.pdb.network.traffic_volume_per_second")
+	m.data.SetDescription("Network Traffic Volume Per Second in PDB")
+	m.data.SetUnit("By/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbNetworkTrafficVolumePerSecond(cfg MetricConfig) metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond {
+	m := metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.physical_reads.bytes_per_second metric with initial data.
+func (m *metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond) init() {
+	m.data.SetName("newrelicoracledb.pdb.physical_reads.bytes_per_second")
+	m.data.SetDescription("Physical Read Total Bytes Per Second in PDB")
+	m.data.SetUnit("By/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbPhysicalReadsBytesPerSecond(cfg MetricConfig) metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond {
+	m := metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbResponseTimeSQLService struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.response_time.sql_service metric with initial data.
+func (m *metricNewrelicoracledbPdbResponseTimeSQLService) init() {
+	m.data.SetName("newrelicoracledb.pdb.response_time.sql_service")
+	m.data.SetDescription("SQL Service Response Time in PDB")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbResponseTimeSQLService) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbResponseTimeSQLService) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbResponseTimeSQLService) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbResponseTimeSQLService(cfg MetricConfig) metricNewrelicoracledbPdbResponseTimeSQLService {
+	m := metricNewrelicoracledbPdbResponseTimeSQLService{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbSessionsActiveParallel struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.sessions.active_parallel metric with initial data.
+func (m *metricNewrelicoracledbPdbSessionsActiveParallel) init() {
+	m.data.SetName("newrelicoracledb.pdb.sessions.active_parallel")
+	m.data.SetDescription("Active Parallel Sessions in PDB")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbSessionsActiveParallel) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbSessionsActiveParallel) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbSessionsActiveParallel) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbSessionsActiveParallel(cfg MetricConfig) metricNewrelicoracledbPdbSessionsActiveParallel {
+	m := metricNewrelicoracledbPdbSessionsActiveParallel{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbSessionsActiveSerial struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.sessions.active_serial metric with initial data.
+func (m *metricNewrelicoracledbPdbSessionsActiveSerial) init() {
+	m.data.SetName("newrelicoracledb.pdb.sessions.active_serial")
+	m.data.SetDescription("Active Serial Sessions in PDB")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbSessionsActiveSerial) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbSessionsActiveSerial) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbSessionsActiveSerial) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbSessionsActiveSerial(cfg MetricConfig) metricNewrelicoracledbPdbSessionsActiveSerial {
+	m := metricNewrelicoracledbPdbSessionsActiveSerial{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbSessionsAverageActive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.sessions.average_active metric with initial data.
+func (m *metricNewrelicoracledbPdbSessionsAverageActive) init() {
+	m.data.SetName("newrelicoracledb.pdb.sessions.average_active")
+	m.data.SetDescription("Average Active Sessions in PDB")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbSessionsAverageActive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbSessionsAverageActive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbSessionsAverageActive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbSessionsAverageActive(cfg MetricConfig) metricNewrelicoracledbPdbSessionsAverageActive {
+	m := metricNewrelicoracledbPdbSessionsAverageActive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbSessionsCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.sessions.count metric with initial data.
+func (m *metricNewrelicoracledbPdbSessionsCount) init() {
+	m.data.SetName("newrelicoracledb.pdb.sessions.count")
+	m.data.SetDescription("Session Count in PDB")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbSessionsCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbSessionsCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbSessionsCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbSessionsCount(cfg MetricConfig) metricNewrelicoracledbPdbSessionsCount {
+	m := metricNewrelicoracledbPdbSessionsCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbSessionsCurrentLogons struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.sessions.current_logons metric with initial data.
+func (m *metricNewrelicoracledbPdbSessionsCurrentLogons) init() {
+	m.data.SetName("newrelicoracledb.pdb.sessions.current_logons")
+	m.data.SetDescription("Current Logons Count in PDB")
+	m.data.SetUnit("{logons}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbSessionsCurrentLogons) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbSessionsCurrentLogons) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbSessionsCurrentLogons) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbSessionsCurrentLogons(cfg MetricConfig) metricNewrelicoracledbPdbSessionsCurrentLogons {
+	m := metricNewrelicoracledbPdbSessionsCurrentLogons{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbSessionsCurrentOpenCursors struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.sessions.current_open_cursors metric with initial data.
+func (m *metricNewrelicoracledbPdbSessionsCurrentOpenCursors) init() {
+	m.data.SetName("newrelicoracledb.pdb.sessions.current_open_cursors")
+	m.data.SetDescription("Current Open Cursors Count in PDB")
+	m.data.SetUnit("{cursors}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbSessionsCurrentOpenCursors) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbSessionsCurrentOpenCursors) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbSessionsCurrentOpenCursors) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbSessionsCurrentOpenCursors(cfg MetricConfig) metricNewrelicoracledbPdbSessionsCurrentOpenCursors {
+	m := metricNewrelicoracledbPdbSessionsCurrentOpenCursors{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPdbTransactionsPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.transactions.per_second metric with initial data.
+func (m *metricNewrelicoracledbPdbTransactionsPerSecond) init() {
+	m.data.SetName("newrelicoracledb.pdb.transactions.per_second")
+	m.data.SetDescription("User Transaction Per Second in PDB")
+	m.data.SetUnit("{transactions}/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbTransactionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbTransactionsPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbTransactionsPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbTransactionsPerSecond(cfg MetricConfig) metricNewrelicoracledbPdbTransactionsPerSecond {
+	m := metricNewrelicoracledbPdbTransactionsPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricNewrelicoracledbSessionsCount struct {
@@ -80,14 +976,30 @@ func newMetricNewrelicoracledbSessionsCount(cfg MetricConfig) metricNewrelicorac
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                              MetricsBuilderConfig // config of the metrics builder.
-	startTime                           pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                     int                  // maximum observed number of metrics per resource.
-	metricsBuffer                       pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                           component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter      map[string]filter.Filter
-	resourceAttributeExcludeFilter      map[string]filter.Filter
-	metricNewrelicoracledbSessionsCount metricNewrelicoracledbSessionsCount
+	config                                                 MetricsBuilderConfig // config of the metrics builder.
+	startTime                                              pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                                        int                  // maximum observed number of metrics per resource.
+	metricsBuffer                                          pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                                              component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter                         map[string]filter.Filter
+	resourceAttributeExcludeFilter                         map[string]filter.Filter
+	metricNewrelicoracledbPdbCPUUsagePerSecond             metricNewrelicoracledbPdbCPUUsagePerSecond
+	metricNewrelicoracledbPdbCPUUsagePerTransaction        metricNewrelicoracledbPdbCPUUsagePerTransaction
+	metricNewrelicoracledbPdbDatabaseCPUTimeRatio          metricNewrelicoracledbPdbDatabaseCPUTimeRatio
+	metricNewrelicoracledbPdbDatabaseWaitTimeRatio         metricNewrelicoracledbPdbDatabaseWaitTimeRatio
+	metricNewrelicoracledbPdbExecutionsPerSecond           metricNewrelicoracledbPdbExecutionsPerSecond
+	metricNewrelicoracledbPdbExecutionsPerTransaction      metricNewrelicoracledbPdbExecutionsPerTransaction
+	metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond
+	metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond   metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond
+	metricNewrelicoracledbPdbResponseTimeSQLService        metricNewrelicoracledbPdbResponseTimeSQLService
+	metricNewrelicoracledbPdbSessionsActiveParallel        metricNewrelicoracledbPdbSessionsActiveParallel
+	metricNewrelicoracledbPdbSessionsActiveSerial          metricNewrelicoracledbPdbSessionsActiveSerial
+	metricNewrelicoracledbPdbSessionsAverageActive         metricNewrelicoracledbPdbSessionsAverageActive
+	metricNewrelicoracledbPdbSessionsCount                 metricNewrelicoracledbPdbSessionsCount
+	metricNewrelicoracledbPdbSessionsCurrentLogons         metricNewrelicoracledbPdbSessionsCurrentLogons
+	metricNewrelicoracledbPdbSessionsCurrentOpenCursors    metricNewrelicoracledbPdbSessionsCurrentOpenCursors
+	metricNewrelicoracledbPdbTransactionsPerSecond         metricNewrelicoracledbPdbTransactionsPerSecond
+	metricNewrelicoracledbSessionsCount                    metricNewrelicoracledbSessionsCount
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -109,13 +1021,29 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                              mbc,
-		startTime:                           pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                       pmetric.NewMetrics(),
-		buildInfo:                           settings.BuildInfo,
-		metricNewrelicoracledbSessionsCount: newMetricNewrelicoracledbSessionsCount(mbc.Metrics.NewrelicoracledbSessionsCount),
-		resourceAttributeIncludeFilter:      make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:      make(map[string]filter.Filter),
+		config:        mbc,
+		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer: pmetric.NewMetrics(),
+		buildInfo:     settings.BuildInfo,
+		metricNewrelicoracledbPdbCPUUsagePerSecond:             newMetricNewrelicoracledbPdbCPUUsagePerSecond(mbc.Metrics.NewrelicoracledbPdbCPUUsagePerSecond),
+		metricNewrelicoracledbPdbCPUUsagePerTransaction:        newMetricNewrelicoracledbPdbCPUUsagePerTransaction(mbc.Metrics.NewrelicoracledbPdbCPUUsagePerTransaction),
+		metricNewrelicoracledbPdbDatabaseCPUTimeRatio:          newMetricNewrelicoracledbPdbDatabaseCPUTimeRatio(mbc.Metrics.NewrelicoracledbPdbDatabaseCPUTimeRatio),
+		metricNewrelicoracledbPdbDatabaseWaitTimeRatio:         newMetricNewrelicoracledbPdbDatabaseWaitTimeRatio(mbc.Metrics.NewrelicoracledbPdbDatabaseWaitTimeRatio),
+		metricNewrelicoracledbPdbExecutionsPerSecond:           newMetricNewrelicoracledbPdbExecutionsPerSecond(mbc.Metrics.NewrelicoracledbPdbExecutionsPerSecond),
+		metricNewrelicoracledbPdbExecutionsPerTransaction:      newMetricNewrelicoracledbPdbExecutionsPerTransaction(mbc.Metrics.NewrelicoracledbPdbExecutionsPerTransaction),
+		metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond: newMetricNewrelicoracledbPdbNetworkTrafficVolumePerSecond(mbc.Metrics.NewrelicoracledbPdbNetworkTrafficVolumePerSecond),
+		metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond:   newMetricNewrelicoracledbPdbPhysicalReadsBytesPerSecond(mbc.Metrics.NewrelicoracledbPdbPhysicalReadsBytesPerSecond),
+		metricNewrelicoracledbPdbResponseTimeSQLService:        newMetricNewrelicoracledbPdbResponseTimeSQLService(mbc.Metrics.NewrelicoracledbPdbResponseTimeSQLService),
+		metricNewrelicoracledbPdbSessionsActiveParallel:        newMetricNewrelicoracledbPdbSessionsActiveParallel(mbc.Metrics.NewrelicoracledbPdbSessionsActiveParallel),
+		metricNewrelicoracledbPdbSessionsActiveSerial:          newMetricNewrelicoracledbPdbSessionsActiveSerial(mbc.Metrics.NewrelicoracledbPdbSessionsActiveSerial),
+		metricNewrelicoracledbPdbSessionsAverageActive:         newMetricNewrelicoracledbPdbSessionsAverageActive(mbc.Metrics.NewrelicoracledbPdbSessionsAverageActive),
+		metricNewrelicoracledbPdbSessionsCount:                 newMetricNewrelicoracledbPdbSessionsCount(mbc.Metrics.NewrelicoracledbPdbSessionsCount),
+		metricNewrelicoracledbPdbSessionsCurrentLogons:         newMetricNewrelicoracledbPdbSessionsCurrentLogons(mbc.Metrics.NewrelicoracledbPdbSessionsCurrentLogons),
+		metricNewrelicoracledbPdbSessionsCurrentOpenCursors:    newMetricNewrelicoracledbPdbSessionsCurrentOpenCursors(mbc.Metrics.NewrelicoracledbPdbSessionsCurrentOpenCursors),
+		metricNewrelicoracledbPdbTransactionsPerSecond:         newMetricNewrelicoracledbPdbTransactionsPerSecond(mbc.Metrics.NewrelicoracledbPdbTransactionsPerSecond),
+		metricNewrelicoracledbSessionsCount:                    newMetricNewrelicoracledbSessionsCount(mbc.Metrics.NewrelicoracledbSessionsCount),
+		resourceAttributeIncludeFilter:                         make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:                         make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.HostName.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["host.name"] = filter.CreateFilter(mbc.ResourceAttributes.HostName.MetricsInclude)
@@ -198,6 +1126,22 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricNewrelicoracledbPdbCPUUsagePerSecond.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbCPUUsagePerTransaction.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbDatabaseCPUTimeRatio.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbDatabaseWaitTimeRatio.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbExecutionsPerSecond.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbExecutionsPerTransaction.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbResponseTimeSQLService.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbSessionsActiveParallel.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbSessionsActiveSerial.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbSessionsAverageActive.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbSessionsCount.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbSessionsCurrentLogons.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbSessionsCurrentOpenCursors.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbTransactionsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSessionsCount.emit(ils.Metrics())
 
 	for _, op := range options {
@@ -228,6 +1172,86 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint adds a data point to newrelicoracledb.pdb.cpu.usage_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint adds a data point to newrelicoracledb.pdb.cpu.usage_per_transaction metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbCPUUsagePerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbDatabaseCPUTimeRatioDataPoint adds a data point to newrelicoracledb.pdb.database.cpu_time_ratio metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDatabaseCPUTimeRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbDatabaseCPUTimeRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbDatabaseWaitTimeRatioDataPoint adds a data point to newrelicoracledb.pdb.database.wait_time_ratio metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDatabaseWaitTimeRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbDatabaseWaitTimeRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.executions.per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbExecutionsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.executions.per_transaction metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbExecutionsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbNetworkTrafficVolumePerSecondDataPoint adds a data point to newrelicoracledb.pdb.network.traffic_volume_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbNetworkTrafficVolumePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbNetworkTrafficVolumePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbPhysicalReadsBytesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.physical_reads.bytes_per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalReadsBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbPhysicalReadsBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbResponseTimeSQLServiceDataPoint adds a data point to newrelicoracledb.pdb.response_time.sql_service metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbResponseTimeSQLServiceDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbResponseTimeSQLService.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbSessionsActiveParallelDataPoint adds a data point to newrelicoracledb.pdb.sessions.active_parallel metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionsActiveParallelDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSessionsActiveParallel.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbSessionsActiveSerialDataPoint adds a data point to newrelicoracledb.pdb.sessions.active_serial metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionsActiveSerialDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSessionsActiveSerial.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbSessionsAverageActiveDataPoint adds a data point to newrelicoracledb.pdb.sessions.average_active metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionsAverageActiveDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSessionsAverageActive.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbSessionsCountDataPoint adds a data point to newrelicoracledb.pdb.sessions.count metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionsCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSessionsCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbSessionsCurrentLogonsDataPoint adds a data point to newrelicoracledb.pdb.sessions.current_logons metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionsCurrentLogonsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSessionsCurrentLogons.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbSessionsCurrentOpenCursorsDataPoint adds a data point to newrelicoracledb.pdb.sessions.current_open_cursors metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionsCurrentOpenCursorsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSessionsCurrentOpenCursors.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.transactions.per_second metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbTransactionsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSessionsCountDataPoint adds a data point to newrelicoracledb.sessions.count metric.

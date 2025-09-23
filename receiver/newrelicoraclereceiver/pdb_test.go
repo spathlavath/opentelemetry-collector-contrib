@@ -7,18 +7,18 @@ import (
 	"testing"
 
 	"go.uber.org/zap"
-	
+
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 )
 
 func TestPDBSysMetricsScraperCreation(t *testing.T) {
 	logger := zap.NewNop()
-	
+
 	// Test creating the scraper with nil DB (should not panic)
 	var config metadata.MetricsBuilderConfig
 	scraper := scrapers.NewPDBSysMetricsScraper(nil, nil, logger, "test-instance", config)
-	
+
 	if scraper == nil {
 		t.Error("Expected non-nil scraper, got nil")
 	}

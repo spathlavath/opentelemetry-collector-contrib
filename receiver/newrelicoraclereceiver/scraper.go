@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	// keepalive for connection 
+	// keepalive for connection
 	keepAlive = 30 * time.Second
 )
 
@@ -31,10 +31,10 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Session scraper for basic session metrics
-	sessionScraper       *scrapers.SessionScraper
+	sessionScraper *scrapers.SessionScraper
 	// PDB system metrics scraper for comprehensive system metrics
 	pdbSysMetricsScraper *scrapers.PDBSysMetricsScraper
-	
+
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
 	dbProviderFunc       dbProviderFunc
@@ -44,9 +44,10 @@ type newRelicOracleScraper struct {
 	scrapeCfg            scraperhelper.ControllerConfig
 	startTime            pcommon.Timestamp
 	metricsBuilderConfig metadata.MetricsBuilderConfig
+	enablePDBSysMetrics  bool
 }
 
-func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig metadata.MetricsBuilderConfig, scrapeCfg scraperhelper.ControllerConfig, logger *zap.Logger, providerFunc dbProviderFunc, instanceName, hostName string) (scraper.Metrics, error) {
+func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig metadata.MetricsBuilderConfig, scrapeCfg scraperhelper.ControllerConfig, logger *zap.Logger, providerFunc dbProviderFunc, instanceName, hostName string, enablePDBSysMetrics bool) (scraper.Metrics, error) {
 	s := &newRelicOracleScraper{
 		mb:                   metricsBuilder,
 		dbProviderFunc:       providerFunc,
@@ -55,6 +56,7 @@ func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig me
 		metricsBuilderConfig: metricsBuilderConfig,
 		instanceName:         instanceName,
 		hostName:             hostName,
+		enablePDBSysMetrics:  enablePDBSysMetrics,
 	}
 	return scraper.NewMetrics(s.scrape, scraper.WithShutdown(s.shutdown), scraper.WithStart(s.start))
 }
@@ -66,15 +68,18 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	if err != nil {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
-	
+
 	// Initialize session scraper with direct DB connection
 	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	
-	// Initialize PDB system metrics scraper
-	s.pdbSysMetricsScraper = scrapers.NewPDBSysMetricsScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	
-	s.logger.Info("Oracle scrapers initialized", zap.String("instance", s.instanceName))
-	
+
+	// Initialize PDB system metrics scraper only if enabled
+	if s.enablePDBSysMetrics {
+		s.pdbSysMetricsScraper = scrapers.NewPDBSysMetricsScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+		s.logger.Info("Oracle scrapers initialized with PDB metrics enabled", zap.String("instance", s.instanceName))
+	} else {
+		s.logger.Info("Oracle scrapers initialized with PDB metrics disabled", zap.String("instance", s.instanceName))
+	}
+
 	return nil
 }
 
@@ -85,16 +90,18 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	// Scrape session count metric
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
-	
-	// Scrape PDB system metrics
-	scrapeErrors = append(scrapeErrors, s.pdbSysMetricsScraper.ScrapePDBSysMetrics(ctx)...)
+
+	// Scrape PDB system metrics only if enabled
+	if s.enablePDBSysMetrics && s.pdbSysMetricsScraper != nil {
+		scrapeErrors = append(scrapeErrors, s.pdbSysMetricsScraper.ScrapePDBSysMetrics(ctx)...)
+	}
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()
 	rb.SetNewrelicoracledbInstanceName(s.instanceName)
 	rb.SetHostName(s.hostName)
 	out := s.mb.Emit(metadata.WithResource(rb.Emit()))
-	
+
 	s.logger.Debug("Done New Relic Oracle scraping", zap.Int("total_errors", len(scrapeErrors)))
 	if len(scrapeErrors) > 0 {
 		return out, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))

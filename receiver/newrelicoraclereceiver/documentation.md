@@ -12,6 +12,126 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.pdb.cpu.usage_per_second
+
+CPU Usage Per Second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.executions.per_second
+
+Executions Per Second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions}/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.network.traffic_volume_per_second
+
+Network Traffic Volume Per Second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.physical_reads.bytes_per_second
+
+Physical Read Total Bytes Per Second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.response_time.sql_service
+
+SQL Service Response Time in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.sessions.active_parallel
+
+Active Parallel Sessions in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.sessions.count
+
+Session Count in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.transactions.per_second
+
+User Transaction Per Second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {transactions}/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
 ### newrelicoracledb.sessions.count
 
 Total number of active Oracle database sessions
@@ -25,6 +145,136 @@ Total number of active Oracle database sessions
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+
+## Optional Metrics
+
+The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: true
+```
+
+### newrelicoracledb.pdb.cpu.usage_per_transaction
+
+CPU Usage Per Transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.database.cpu_time_ratio
+
+Database CPU Time Ratio in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.database.wait_time_ratio
+
+Database Wait Time Ratio in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.executions.per_transaction
+
+Executions Per Transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions}/{transaction} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.sessions.active_serial
+
+Active Serial Sessions in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.sessions.average_active
+
+Average Active Sessions in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.sessions.current_logons
+
+Current Logons Count in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {logons} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.sessions.current_open_cursors
+
+Current Open Cursors Count in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {cursors} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle instance ID | Any Str | false |
 
 ## Resource Attributes
 
