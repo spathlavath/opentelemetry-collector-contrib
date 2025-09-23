@@ -139,6 +139,76 @@ metrics:
       - newrelic.entity_name
       - instance.id
 
+  newrelicoracledb.redo_log.waits:
+    description: Total waits for log file parallel write events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.redo_log.log_file_switch:
+    description: Total waits for log file switch completion events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete:
+    description: Total waits for log file switch checkpoint incomplete events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.redo_log.log_file_switch_archiving_needed:
+    description: Total waits for log file switch archiving needed events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.sga.buffer_busy_waits:
+    description: Total buffer busy waits
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.sga.free_buffer_waits:
+    description: Total free buffer waits
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.sga.free_buffer_inspected:
+    description: Total free buffer inspected events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
 tests:
   config:
   goleak:

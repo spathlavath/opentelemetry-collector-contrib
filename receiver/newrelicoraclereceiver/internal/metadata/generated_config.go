@@ -28,17 +28,24 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
-	NewrelicoracledbLockedAccounts                MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
-	NewrelicoracledbSessionsCount                 MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
-	NewrelicoracledbTablespaceDbID                MetricConfig `mapstructure:"newrelicoracledb.tablespace.db_id"`
-	NewrelicoracledbTablespaceGlobalName          MetricConfig `mapstructure:"newrelicoracledb.tablespace.global_name"`
-	NewrelicoracledbTablespaceIsOffline           MetricConfig `mapstructure:"newrelicoracledb.tablespace.is_offline"`
-	NewrelicoracledbTablespaceOfflineCdbDatafiles MetricConfig `mapstructure:"newrelicoracledb.tablespace.offline_cdb_datafiles"`
-	NewrelicoracledbTablespaceOfflinePdbDatafiles MetricConfig `mapstructure:"newrelicoracledb.tablespace.offline_pdb_datafiles"`
-	NewrelicoracledbTablespacePdbNonWriteMode     MetricConfig `mapstructure:"newrelicoracledb.tablespace.pdb_non_write_mode"`
-	NewrelicoracledbTablespaceSpaceConsumedBytes  MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_consumed_bytes"`
-	NewrelicoracledbTablespaceSpaceReservedBytes  MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_reserved_bytes"`
-	NewrelicoracledbTablespaceSpaceUsedPercentage MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_used_percentage"`
+	NewrelicoracledbLockedAccounts                           MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
+	NewrelicoracledbRedoLogLogFileSwitch                     MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch"`
+	NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded      MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch_archiving_needed"`
+	NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete MetricConfig `mapstructure:"newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete"`
+	NewrelicoracledbRedoLogWaits                             MetricConfig `mapstructure:"newrelicoracledb.redo_log.waits"`
+	NewrelicoracledbSessionsCount                            MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
+	NewrelicoracledbSgaBufferBusyWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.buffer_busy_waits"`
+	NewrelicoracledbSgaFreeBufferInspected                   MetricConfig `mapstructure:"newrelicoracledb.sga.free_buffer_inspected"`
+	NewrelicoracledbSgaFreeBufferWaits                       MetricConfig `mapstructure:"newrelicoracledb.sga.free_buffer_waits"`
+	NewrelicoracledbTablespaceDbID                           MetricConfig `mapstructure:"newrelicoracledb.tablespace.db_id"`
+	NewrelicoracledbTablespaceGlobalName                     MetricConfig `mapstructure:"newrelicoracledb.tablespace.global_name"`
+	NewrelicoracledbTablespaceIsOffline                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.is_offline"`
+	NewrelicoracledbTablespaceOfflineCdbDatafiles            MetricConfig `mapstructure:"newrelicoracledb.tablespace.offline_cdb_datafiles"`
+	NewrelicoracledbTablespaceOfflinePdbDatafiles            MetricConfig `mapstructure:"newrelicoracledb.tablespace.offline_pdb_datafiles"`
+	NewrelicoracledbTablespacePdbNonWriteMode                MetricConfig `mapstructure:"newrelicoracledb.tablespace.pdb_non_write_mode"`
+	NewrelicoracledbTablespaceSpaceConsumedBytes             MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_consumed_bytes"`
+	NewrelicoracledbTablespaceSpaceReservedBytes             MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_reserved_bytes"`
+	NewrelicoracledbTablespaceSpaceUsedPercentage            MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_used_percentage"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -46,7 +53,28 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbLockedAccounts: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbRedoLogLogFileSwitch: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRedoLogLogFileSwitchArchivingNeeded: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRedoLogLogFileSwitchCheckpointIncomplete: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRedoLogWaits: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSessionsCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSgaBufferBusyWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSgaFreeBufferInspected: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSgaFreeBufferWaits: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbTablespaceDbID: MetricConfig{

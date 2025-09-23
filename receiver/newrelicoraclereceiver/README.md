@@ -7,6 +7,17 @@ The New Relic Oracle Receiver is an OpenTelemetry receiver that collects Oracle 
 This receiver currently collects the following Oracle metrics:
 
 - **Session Count**: Total number of active Oracle database sessions (`newrelicoracledb.sessions.count`)
+- **Tablespace Metrics**: Various tablespace-related metrics including space usage and status
+- **Locked Accounts**: Count of locked user accounts in the database (`newrelicoracledb.locked_accounts`)
+- **Redo Log Wait Metrics**: 
+  - Log file parallel write waits (`newrelicoracledb.redo_log.waits`)
+  - Log file switch completion waits (`newrelicoracledb.redo_log.log_file_switch`)
+  - Log file switch checkpoint incomplete waits (`newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete`)
+  - Log file switch archiving needed waits (`newrelicoracledb.redo_log.log_file_switch_archiving_needed`)
+- **SGA Buffer Metrics**:
+  - Buffer busy waits (`newrelicoracledb.sga.buffer_busy_waits`)
+  - Free buffer waits (`newrelicoracledb.sga.free_buffer_waits`)  
+  - Free buffer inspected events (`newrelicoracledb.sga.free_buffer_inspected`)
 
 ## Configuration
 
@@ -51,16 +62,32 @@ receivers:
 - Oracle database (tested with Oracle 11g, 12c, 19c, and later)
 - Oracle user with appropriate permissions to query system views:
   - `SELECT` permission on `v$session`
+  - `SELECT` permission on `GV$SYSTEM_EVENT` and `GV$INSTANCE` (for redo log wait metrics)
+  - `SELECT` permission on various DBA and system views for tablespace and account metrics
 
 ## Metrics
 
-### `newrelicoracledb.sessions.count`
+For a complete list of all available metrics, see the [documentation.md](documentation.md) file.
 
-- **Description**: Total number of active Oracle database sessions
-- **Type**: Gauge
-- **Unit**: sessions
-- **Attributes**: 
-  - `newrelic.entity_name`: New Relic entity name for the metric
+### Key Metrics Overview
+
+#### Core Database Metrics
+- `newrelicoracledb.sessions.count`: Active database sessions
+- `newrelicoracledb.locked_accounts`: Count of locked user accounts
+
+#### Redo Log Wait Metrics  
+- `newrelicoracledb.redo_log.waits`: Log file parallel write waits
+- `newrelicoracledb.redo_log.log_file_switch`: Log file switch completion waits
+- `newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete`: Checkpoint incomplete waits
+- `newrelicoracledb.redo_log.log_file_switch_archiving_needed`: Archiving needed waits
+
+#### SGA Buffer Metrics
+- `newrelicoracledb.sga.buffer_busy_waits`: Buffer busy waits  
+- `newrelicoracledb.sga.free_buffer_waits`: Free buffer waits
+- `newrelicoracledb.sga.free_buffer_inspected`: Free buffer inspected events
+
+#### Tablespace Metrics
+- Various tablespace space usage, status, and health metrics
 
 ## Resource Attributes
 

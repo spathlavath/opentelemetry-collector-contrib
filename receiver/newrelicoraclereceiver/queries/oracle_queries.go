@@ -77,4 +77,15 @@ const (
 				AND a.account_status != 'OPEN'
 		) l,
 		gv$instance i`
+
+	// Redo log waits metrics query
+	RedoLogWaitsSQL = `
+		SELECT
+			sysevent.total_waits,
+			inst.inst_id,
+			sysevent.event
+		FROM
+			GV$SYSTEM_EVENT sysevent,
+			GV$INSTANCE inst
+		WHERE sysevent.inst_id=inst.inst_id`
 )

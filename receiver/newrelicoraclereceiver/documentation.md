@@ -27,6 +27,66 @@ Count of locked user accounts in the database
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
+### newrelicoracledb.redo_log.log_file_switch
+
+Total waits for log file switch completion events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.redo_log.log_file_switch_archiving_needed
+
+Total waits for log file switch archiving needed events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.redo_log.log_file_switch_checkpoint_incomplete
+
+Total waits for log file switch checkpoint incomplete events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.redo_log.waits
+
+Total waits for log file parallel write events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
 ### newrelicoracledb.sessions.count
 
 Total number of active Oracle database sessions
@@ -40,6 +100,51 @@ Total number of active Oracle database sessions
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+
+### newrelicoracledb.sga.buffer_busy_waits
+
+Total buffer busy waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.sga.free_buffer_inspected
+
+Total free buffer inspected events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.sga.free_buffer_waits
+
+Total free buffer waits
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.tablespace.db_id
 
