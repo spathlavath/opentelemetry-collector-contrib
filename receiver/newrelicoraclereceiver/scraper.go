@@ -34,6 +34,8 @@ type newRelicOracleScraper struct {
 	sessionScraper *scrapers.SessionScraper
 	// PDB system metrics scraper for comprehensive system metrics
 	pdbSysMetricsScraper *scrapers.PDBSysMetricsScraper
+	// Redo log waits scraper for redo log and system event wait metrics
+	redoLogWaitsScraper *scrapers.RedoLogWaitsScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -80,7 +82,16 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 		s.logger.Info("Oracle scrapers initialized with PDB metrics disabled", zap.String("instance", s.instanceName))
 	}
 
+	// Initialize redo log waits scraper (always enabled as the metrics have individual enable/disable flags)
+	s.redoLogWaitsScraper = scrapers.NewRedoLogWaitsScraper(s.db, s.logger, s.mb, s, s.instanceName)
+	s.logger.Info("Oracle redo log waits scraper initialized", zap.String("instance", s.instanceName))
+
 	return nil
+}
+
+// GetMetrics implements the scrapers.Config interface
+func (s *newRelicOracleScraper) GetMetrics() metadata.MetricsConfig {
+	return s.metricsBuilderConfig.Metrics
 }
 
 func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
@@ -94,6 +105,11 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	// Scrape PDB system metrics only if enabled
 	if s.enablePDBSysMetrics && s.pdbSysMetricsScraper != nil {
 		scrapeErrors = append(scrapeErrors, s.pdbSysMetricsScraper.ScrapePDBSysMetrics(ctx)...)
+	}
+
+	// Scrape redo log waits metrics (always enabled as individual metrics have enable/disable flags)
+	if s.redoLogWaitsScraper != nil {
+		scrapeErrors = append(scrapeErrors, s.redoLogWaitsScraper.ScrapeRedoLogWaits(ctx)...)
 	}
 
 	// Build the resource with instance and host information

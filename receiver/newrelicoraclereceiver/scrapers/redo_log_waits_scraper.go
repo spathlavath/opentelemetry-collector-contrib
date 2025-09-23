@@ -21,9 +21,9 @@ import (
 // RedoLogWaitsMapping represents the mapping between Oracle event names and OpenTelemetry metrics
 // This follows the exact same pattern as nri-oracledb oracleRedoLogWaits metric group
 type RedoLogWaitsMapping struct {
-	OracleEventIdentifier string                                                                                       // Event substring to match (like "log file parallel write")
-	RecordFunc            func(*metadata.MetricsBuilder, pcommon.Timestamp, int64, string, string)                   // Function to record the metric
-	Enabled               bool                                                                                         // Whether this metric is enabled
+	OracleEventIdentifier string                                                                   // Event substring to match (like "log file parallel write")
+	RecordFunc            func(*metadata.MetricsBuilder, pcommon.Timestamp, int64, string, string) // Function to record the metric
+	Enabled               bool                                                                     // Whether this metric is enabled
 }
 
 // RedoLogWaitsScraper collects Oracle redo log and system event waits metrics
