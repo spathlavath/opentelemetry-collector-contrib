@@ -39,6 +39,7 @@ func createDefaultConfig() component.Config {
 	return &Config{
 		ControllerConfig:     cfg,
 		MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig(),
+		EnablePDBSysMetrics:  false, // Disabled by default for backward compatibility
 	}
 }
 
@@ -65,7 +66,7 @@ func createReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetricsFunc 
 
 		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, settings.Logger, func() (*sql.DB, error) {
 			return sqlOpenerFunc(getDataSource(*sqlCfg))
-		}, instanceName, hostName)
+		}, instanceName, hostName, sqlCfg.EnablePDBSysMetrics)
 		if err != nil {
 			return nil, err
 		}

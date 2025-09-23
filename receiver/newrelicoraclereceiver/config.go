@@ -32,6 +32,8 @@ type Config struct {
 	Password                       string `mapstructure:"password"`
 	Service                        string `mapstructure:"service"`
 	Username                       string `mapstructure:"username"`
+	// EnablePDBSysMetrics enables collection of Oracle PDB system metrics from gv$con_sysmetric
+	EnablePDBSysMetrics            bool   `mapstructure:"enable_pdb_sys_metrics"`
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
 }

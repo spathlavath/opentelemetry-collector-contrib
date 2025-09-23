@@ -30,8 +30,10 @@ const (
 type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
-	// Only keep session scraper for simplicity
+	// Session scraper for basic session metrics
 	sessionScraper       *scrapers.SessionScraper
+	// PDB system metrics scraper for comprehensive system metrics
+	pdbSysMetricsScraper *scrapers.PDBSysMetricsScraper
 	
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -68,6 +70,11 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	// Initialize session scraper with direct DB connection
 	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 	
+	// Initialize PDB system metrics scraper
+	s.pdbSysMetricsScraper = scrapers.NewPDBSysMetricsScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	
+	s.logger.Info("Oracle scrapers initialized", zap.String("instance", s.instanceName))
+	
 	return nil
 }
 
@@ -76,8 +83,11 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	var scrapeErrors []error
 
-	// Only scrape session count metric - keeping it simple
+	// Scrape session count metric
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
+	
+	// Scrape PDB system metrics
+	scrapeErrors = append(scrapeErrors, s.pdbSysMetricsScraper.ScrapePDBSysMetrics(ctx)...)
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()
