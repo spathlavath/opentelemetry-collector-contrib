@@ -19,27 +19,25 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 )
 
 const (
-	// Main session count SQL - keeping for backward compatibility
-	sessionCountSQL = queries.SessionCountSQL
+	// keepalive for connection
+	keepAlive = 30 * time.Second
 )
 
 type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Scrapers
-	sessionScraper   *scrapers.SessionScraper
 	slowQueryScraper *scrapers.SlowQueryScraper
+	config           *Config
 
 	// Database and configuration
-	db                   *sql.DB
-	config               *Config
-	clientProviderFunc   models.ClientProviderFunc
+	db *sql.DB
+	// Only keep session scraper for simplicity
+	sessionScraper       *scrapers.SessionScraper
 	mb                   *metadata.MetricsBuilder
 	dbProviderFunc       dbProviderFunc
 	logger               *zap.Logger
@@ -50,14 +48,13 @@ type newRelicOracleScraper struct {
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig metadata.MetricsBuilderConfig, scrapeCfg scraperhelper.ControllerConfig, logger *zap.Logger, providerFunc dbProviderFunc, clientProviderFunc models.ClientProviderFunc, instanceName, hostName string, config *Config) (scraper.Metrics, error) {
+func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig metadata.MetricsBuilderConfig, scrapeCfg scraperhelper.ControllerConfig, logger *zap.Logger, providerFunc dbProviderFunc, instanceName, hostName string, config *Config) (scraper.Metrics, error) {
 	s := &newRelicOracleScraper{
 		mb:                   metricsBuilder,
-		metricsBuilderConfig: metricsBuilderConfig,
-		scrapeCfg:            scrapeCfg,
-		logger:               logger,
 		dbProviderFunc:       providerFunc,
-		clientProviderFunc:   clientProviderFunc,
+		logger:               logger,
+		scrapeCfg:            scrapeCfg,
+		metricsBuilderConfig: metricsBuilderConfig,
 		instanceName:         instanceName,
 		hostName:             hostName,
 		config:               config,
@@ -73,11 +70,8 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
 
-	// Create a client for the session scraper to use
-	client := s.clientProviderFunc(s.db, sessionCountSQL, s.logger)
-
 	// Initialize scrapers
-	s.sessionScraper = scrapers.NewSessionScraper(client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 	s.slowQueryScraper = scrapers.NewSlowQueryScraper(s.logger)
 
 	return nil
