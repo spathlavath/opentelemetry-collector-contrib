@@ -39,7 +39,7 @@ func NewWaitScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger,
 // ScrapeWaitTime collects Oracle wait time metrics
 func (s *WaitScraper) ScrapeWaitTime(ctx context.Context) []error {
 	var errors []error
-	s.logger.Debug("Scraping Oracle wait time metrics")
+	s.logger.Info("Scraping Oracle wait time metrics (WaitScraper)", zap.String("instance", s.instanceName))
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	rows, err := s.db.QueryContext(ctx, queries.QueryWaitMetricsQuery)
@@ -71,7 +71,17 @@ func (s *WaitScraper) ScrapeWaitTime(ctx context.Context) []error {
 
 		// Assuming RecordNewrelicoracledbTotalWaitTimeDataPoint and RecordNewrelicoracledbWaitingTasksCountDataPoint exist
 		// and have a signature that accepts these attributes.
+		s.logger.Info("About to record wait event data point (WaitScraper)",
+			zap.String("database", databaseName),
+			zap.String("query_id", queryID),
+			zap.String("wait_category", waitCategory),
+			zap.String("wait_event", waitEventName),
+			zap.Int64("wait_time_ms", totalWaitTimeMs),
+		)
+
 		s.mb.RecordNewrelicoracledbTotalWaitTimeDataPoint(now, totalWaitTimeMs, s.instanceName, databaseName, queryID, queryText, waitCategory, waitEventName)
+
+		s.logger.Info("Successfully recorded wait event data point (WaitScraper)")
 		// s.mb.RecordNewrelicoracledbWaitingTasksCountDataPoint(now, waitingTasksCount, s.instanceName, databaseName, queryID, queryText, waitCategory, waitEventName)
 		rowCount++
 	}
@@ -80,7 +90,14 @@ func (s *WaitScraper) ScrapeWaitTime(ctx context.Context) []error {
 		errors = append(errors, fmt.Errorf("error iterating wait time rows: %w", err))
 	}
 
-	s.logger.Debug("Collected Oracle wait time metrics", zap.Int("rows", rowCount), zap.String("instance", s.instanceName))
+	if rowCount == 0 {
+		s.logger.Warn("No wait time data found - query returned 0 rows (WaitScraper)")
+	}
+
+	s.logger.Info("Completed wait time scraping (WaitScraper)",
+		zap.Int("metrics_collected", rowCount),
+		zap.String("instance", s.instanceName),
+	)
 
 	return errors
 }
