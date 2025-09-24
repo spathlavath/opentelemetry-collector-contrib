@@ -60,9 +60,20 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 		s.logger.Info("Recent ASH data test", zap.Int("rows_last_30_min", recentAshCount))
 	}
 
+	// Choose which query to use based on recent data availability
+	queryToUse := queries.WaitEventsQuery
+	queryType := "main_query"
+	if recentAshCount == 0 {
+		s.logger.Info("No recent ASH data found, using fallback query with 2-hour window")
+		queryToUse = queries.WaitEventsFallbackQuery
+		queryType = "fallback_query"
+	}
+
 	// Execute the wait metrics query
-	s.logger.Info("Executing wait metrics query", zap.String("query", queries.WaitEventsQuery))
-	rows, err := s.db.QueryContext(ctx, queries.WaitEventsQuery)
+	s.logger.Info("Executing wait metrics query",
+		zap.String("query_type", queryType),
+		zap.String("query", queryToUse))
+	rows, err := s.db.QueryContext(ctx, queryToUse)
 	if err != nil {
 		s.logger.Error("Failed to execute wait events query", zap.Error(err))
 		errors = append(errors, fmt.Errorf("error executing wait events query: %w", err))
