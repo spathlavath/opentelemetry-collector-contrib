@@ -39,6 +39,17 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 	var errors []error
 	s.logger.Info("Starting Oracle wait events scraping", zap.String("instance", s.instanceName))
 
+	// Add early check to see if we can execute any query
+	s.logger.Info("Testing database connection for wait events")
+	testRow := s.db.QueryRowContext(ctx, "SELECT 1 FROM dual")
+	var testVal int
+	if err := testRow.Scan(&testVal); err != nil {
+		s.logger.Error("Database connection test failed for wait events", zap.Error(err))
+		errors = append(errors, fmt.Errorf("database connection test failed: %w", err))
+		return errors
+	}
+	s.logger.Info("Database connection test successful for wait events")
+
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Execute the wait metrics query

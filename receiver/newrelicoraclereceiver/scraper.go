@@ -67,19 +67,25 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	}
 
 	// Initialize session scraper with direct DB connection
+	s.logger.Info("Initializing session scraper", zap.String("instance", s.instanceName))
 	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	s.logger.Info("Initializing wait events scraper", zap.String("instance", s.instanceName))
 	s.waitScraper = scrapers.NewWaitEventsScraper(s.db, s.logger, &s.scrapeCfg, s.mb, s.instanceName)
 
 	return nil
 }
 
 func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
-	s.logger.Debug("Begin New Relic Oracle scrape")
+	s.logger.Info("Begin New Relic Oracle scrape", zap.String("instance", s.instanceName))
 
 	var scrapeErrors []error
 
 	// Only scrape session count metric - keeping it simple
+	s.logger.Info("About to scrape session count")
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
+
+	s.logger.Info("About to scrape wait events")
 	scrapeErrors = append(scrapeErrors, s.waitScraper.Scrape(ctx)...)
 
 	// Build the resource with instance and host information
