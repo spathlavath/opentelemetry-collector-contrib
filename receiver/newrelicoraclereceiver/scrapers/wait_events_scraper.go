@@ -39,6 +39,42 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 	var errors []error
 	s.logger.Info("Starting Oracle wait events scraping", zap.String("instance", s.instanceName))
 
+	// Test if ASH views are accessible
+	s.logger.Info("Testing ASH view accessibility")
+
+	// Test 1: Check if v$active_session_history exists and has any data
+	testQuery1 := "SELECT COUNT(*) FROM v$active_session_history WHERE ROWNUM <= 1"
+	var ashCount int
+	if err := s.db.QueryRowContext(ctx, testQuery1).Scan(&ashCount); err != nil {
+		s.logger.Error("Cannot access v$active_session_history", zap.Error(err))
+		errors = append(errors, fmt.Errorf("cannot access ASH view: %w", err))
+		return errors
+	}
+	s.logger.Info("ASH view test", zap.Int("accessible", 1))
+
+	// Test 2: Check if v$sql exists
+	testQuery2 := "SELECT COUNT(*) FROM v$sql WHERE ROWNUM <= 1"
+	var sqlCount int
+	if err := s.db.QueryRowContext(ctx, testQuery2).Scan(&sqlCount); err != nil {
+		s.logger.Error("Cannot access v$sql", zap.Error(err))
+		errors = append(errors, fmt.Errorf("cannot access v$sql view: %w", err))
+		return errors
+	}
+	s.logger.Info("v$sql view test", zap.Int("accessible", 1))
+
+	// Test 3: Check ASH data statistics
+	s.logger.Info("Running comprehensive ASH data test")
+	var totalRows, recentRows, nonIdleRows, rowsWithSQL int
+	if err := s.db.QueryRowContext(ctx, queries.TestASHDataQuery).Scan(&totalRows, &recentRows, &nonIdleRows, &rowsWithSQL); err != nil {
+		s.logger.Error("Cannot query ASH data statistics", zap.Error(err))
+	} else {
+		s.logger.Info("ASH data statistics",
+			zap.Int("total_rows", totalRows),
+			zap.Int("recent_rows", recentRows),
+			zap.Int("non_idle_rows", nonIdleRows),
+			zap.Int("rows_with_sql", rowsWithSQL))
+	}
+
 	// Add early check to see if we can execute any query
 	s.logger.Info("Testing database connection for wait events")
 	testRow := s.db.QueryRowContext(ctx, "SELECT 1 FROM dual")
@@ -53,7 +89,7 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Execute the wait metrics query
-	s.logger.Debug("Executing wait metrics query", zap.String("query", queries.QueryWaitMetricsQuery))
+	s.logger.Info("Executing wait metrics query", zap.String("query", queries.QueryWaitMetricsQuery))
 	rows, err := s.db.QueryContext(ctx, queries.QueryWaitMetricsQuery)
 	if err != nil {
 		s.logger.Error("Failed to execute wait events query", zap.Error(err))
@@ -61,6 +97,8 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 		return errors
 	}
 	defer rows.Close()
+
+	s.logger.Info("Query executed successfully, checking for rows")
 
 	var rowCount int
 	for rows.Next() {
@@ -91,6 +129,14 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 		}
 
 		// Record the wait time metric with all attributes
+		s.logger.Info("About to record wait event data point",
+			zap.String("database", databaseName),
+			zap.String("query_id", queryID),
+			zap.String("wait_category", waitCategory),
+			zap.String("wait_event", waitEventName),
+			zap.Int64("wait_time_ms", totalWaitTimeMs),
+		)
+
 		s.mb.RecordNewrelicoracledbTotalWaitTimeDataPoint(
 			now,
 			totalWaitTimeMs,
@@ -101,6 +147,8 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 			waitCategory,   // wait_category
 			waitEventName,  // wait_event_name
 		)
+
+		s.logger.Info("Successfully recorded wait event data point")
 
 		rowCount++
 		s.logger.Debug("Recorded wait event metric",
@@ -116,6 +164,10 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 		s.logger.Error("Error iterating wait events rows", zap.Error(err))
 		errors = append(errors, fmt.Errorf("error iterating wait events rows: %w", err))
 		return errors
+	}
+
+	if rowCount == 0 {
+		s.logger.Warn("No wait events data found - query returned 0 rows")
 	}
 
 	s.logger.Info("Completed wait events scraping",

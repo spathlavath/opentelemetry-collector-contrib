@@ -72,6 +72,7 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 
 	s.logger.Info("Initializing wait events scraper", zap.String("instance", s.instanceName))
 	s.waitScraper = scrapers.NewWaitEventsScraper(s.db, s.logger, &s.scrapeCfg, s.mb, s.instanceName)
+	s.logger.Info("Wait events scraper created successfully")
 
 	return nil
 }
@@ -86,7 +87,14 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
 
 	s.logger.Info("About to scrape wait events")
-	scrapeErrors = append(scrapeErrors, s.waitScraper.Scrape(ctx)...)
+	if s.waitScraper == nil {
+		s.logger.Error("Wait scraper is nil!")
+	} else {
+		s.logger.Info("Wait scraper is initialized, calling Scrape method")
+		waitErrors := s.waitScraper.Scrape(ctx)
+		s.logger.Info("Wait scraper completed", zap.Int("errors", len(waitErrors)))
+		scrapeErrors = append(scrapeErrors, waitErrors...)
+	}
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()
