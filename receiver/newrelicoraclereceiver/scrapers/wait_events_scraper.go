@@ -51,13 +51,13 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 		s.logger.Info("ASH access test", zap.Int("total_rows_available", ashRowCount))
 	}
 
-	// Test recent ASH data
+	// Test recent ASH data (using same 5-minute window and conditions as main query)
 	var recentAshCount int
-	recentTestQuery := "SELECT COUNT(*) FROM v$active_session_history WHERE sample_time >= SYSDATE - INTERVAL '30' MINUTE"
+	recentTestQuery := "SELECT COUNT(*) FROM v$active_session_history WHERE sample_time >= SYSDATE - INTERVAL '5' MINUTE AND wait_class IS NOT NULL AND wait_class <> 'Idle'"
 	if err := s.db.QueryRowContext(ctx, recentTestQuery).Scan(&recentAshCount); err != nil {
 		s.logger.Error("Cannot query recent ASH data", zap.Error(err))
 	} else {
-		s.logger.Info("Recent ASH data test", zap.Int("rows_last_30_min", recentAshCount))
+		s.logger.Info("Recent ASH data test", zap.Int("rows_last_5_min_non_idle", recentAshCount))
 	}
 
 	// Choose which query to use based on recent data availability
