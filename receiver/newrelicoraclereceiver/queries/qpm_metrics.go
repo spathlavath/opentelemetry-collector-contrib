@@ -32,6 +32,6 @@ GROUP BY
     ash.event
 ORDER BY
     "total_wait_time_ms" DESC
-FETCH FIRST 10 ROWS ONLY;
+FETCH FIRST 10 ROWS ONLY
 	`
 )
