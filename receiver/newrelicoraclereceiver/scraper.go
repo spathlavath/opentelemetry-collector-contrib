@@ -32,7 +32,7 @@ type dbProviderFunc func() (*sql.DB, error)
 type newRelicOracleScraper struct {
 	// Only keep session scraper for simplicity
 	sessionScraper *scrapers.SessionScraper
-	waitScraper    *scrapers.WaitScraper
+	waitScraper    *scrapers.WaitEventsScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -68,7 +68,7 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 
 	// Initialize session scraper with direct DB connection
 	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.waitScraper = scrapers.NewWaitScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.waitScraper = scrapers.NewWaitEventsScraper(s.db, s.logger, &s.scrapeCfg, s.mb, s.instanceName)
 
 	return nil
 }
@@ -80,7 +80,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	// Only scrape session count metric - keeping it simple
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
-	scrapeErrors = append(scrapeErrors, s.waitScraper.ScrapeWaitTime(ctx)...)
+	scrapeErrors = append(scrapeErrors, s.waitScraper.Scrape(ctx))
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()

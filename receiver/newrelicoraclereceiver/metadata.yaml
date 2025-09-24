@@ -22,6 +22,24 @@ attributes:
   newrelic.entity_name:
     description: New Relic entity name for the metric
     type: string
+  database_name:
+    description: Name of the database
+    type: string
+  query_id:
+    description: Unique identifier for the query
+    type: string
+  query_text:
+    description: Text of the SQL query
+    type: string
+  wait_category:
+    description: Category of the wait event
+    type: string
+  wait_event_name:
+    description: Name of the wait event
+    type: string
+  collection_timestamp:
+    description: Timestamp when the data was collected
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -32,6 +50,19 @@ metrics:
     unit: "{sessions}"
     attributes:
       - newrelic.entity_name
+  newrelicoracledb.total_wait_time:
+    description: "The total time waited for a specific event."
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "ms"
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+      - query_text
+      - wait_category
+      - wait_event_name
 
 tests:
   config:
