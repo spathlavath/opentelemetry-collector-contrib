@@ -34,15 +34,4 @@ ORDER BY
     "total_wait_time_ms" DESC
 FETCH FIRST 10 ROWS ONLY
 	`
-
-	// Simple test query to check ASH data availability
-	TestASHDataQuery = `
-SELECT 
-    COUNT(*) AS total_ash_rows,
-    COUNT(CASE WHEN sample_time >= SYSDATE - INTERVAL '10' MINUTE THEN 1 END) AS recent_rows,
-    COUNT(CASE WHEN wait_class <> 'Idle' THEN 1 END) AS non_idle_rows,
-    COUNT(CASE WHEN sql_id IS NOT NULL THEN 1 END) AS rows_with_sql
-FROM v$active_session_history
-WHERE ROWNUM <= 1000
-	`
 )

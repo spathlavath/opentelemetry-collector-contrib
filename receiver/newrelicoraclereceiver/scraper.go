@@ -33,7 +33,6 @@ type newRelicOracleScraper struct {
 	// Only keep session scraper for simplicity
 	sessionScraper    *scrapers.SessionScraper
 	waitEventsScraper *scrapers.WaitEventsScraper
-	waitTimeScraper   *scrapers.WaitScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -73,11 +72,6 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 
 	s.logger.Info("Initializing wait events scraper", zap.String("instance", s.instanceName))
 	s.waitEventsScraper = scrapers.NewWaitEventsScraper(s.db, s.logger, &s.scrapeCfg, s.mb, s.instanceName)
-	s.logger.Info("Wait events scraper created successfully")
-
-	s.logger.Info("Initializing wait time scraper", zap.String("instance", s.instanceName))
-	s.waitTimeScraper = scrapers.NewWaitScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.logger.Info("Wait time scraper created successfully")
 
 	return nil
 }
@@ -99,16 +93,6 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		waitEventsErrors := s.waitEventsScraper.Scrape(ctx)
 		s.logger.Info("Wait events scraper completed", zap.Int("errors", len(waitEventsErrors)))
 		scrapeErrors = append(scrapeErrors, waitEventsErrors...)
-	}
-
-	s.logger.Info("About to scrape wait time metrics")
-	if s.waitTimeScraper == nil {
-		s.logger.Error("Wait time scraper is nil!")
-	} else {
-		s.logger.Info("Wait time scraper is initialized, calling ScrapeWaitTime method")
-		waitTimeErrors := s.waitTimeScraper.ScrapeWaitTime(ctx)
-		s.logger.Info("Wait time scraper completed", zap.Int("errors", len(waitTimeErrors)))
-		scrapeErrors = append(scrapeErrors, waitTimeErrors...)
 	}
 
 	// Build the resource with instance and host information
