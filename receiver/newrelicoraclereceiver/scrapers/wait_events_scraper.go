@@ -53,6 +53,14 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 
 	s.logger.Info("Query executed successfully, checking for rows")
 
+	// Get column names to understand the query structure
+	columns, err := rows.Columns()
+	if err != nil {
+		s.logger.Error("Failed to get column names", zap.Error(err))
+	} else {
+		s.logger.Info("Query columns", zap.Strings("columns", columns))
+	}
+
 	var rowCount int
 	for rows.Next() {
 		var (
@@ -80,6 +88,18 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 			s.logger.Error("Failed to scan wait events row", zap.Error(err))
 			continue
 		}
+
+		// Log the raw scanned data for debugging
+		s.logger.Info("Raw scanned data from query",
+			zap.String("database_name", databaseName),
+			zap.String("query_id", queryID),
+			zap.String("query_text_preview", queryText[:min(100, len(queryText))]),
+			zap.String("wait_category", waitCategory),
+			zap.String("wait_event_name", waitEventName),
+			zap.Time("collection_timestamp", collectionTimestamp),
+			zap.Int64("waiting_tasks_count", waitingTasksCount),
+			zap.Int64("total_wait_time_ms", totalWaitTimeMs),
+		)
 
 		// Record the wait time metric with all attributes
 		s.logger.Info("About to record wait event data point",
@@ -121,6 +141,15 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 
 	if rowCount == 0 {
 		s.logger.Warn("No wait events data found - query returned 0 rows")
+		// Log some additional diagnostic information
+		s.logger.Info("Diagnostic info: Query may return 0 rows if:",
+			zap.String("reason_1", "No active sessions with wait events in the last 5 minutes"),
+			zap.String("reason_2", "ASH (Active Session History) is not enabled or populated"),
+			zap.String("reason_3", "Database is in idle state with no wait events"),
+			zap.String("reason_4", "All wait events are classified as 'Idle' and filtered out"),
+		)
+	} else {
+		s.logger.Info("Successfully processed wait events data", zap.Int("total_rows", rowCount))
 	}
 
 	s.logger.Info("Completed wait events scraping",
