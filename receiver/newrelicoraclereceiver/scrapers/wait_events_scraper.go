@@ -41,6 +41,25 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 
+	// First, let's test basic access to ASH views
+	s.logger.Info("Testing basic ASH access")
+	var ashRowCount int
+	testQuery := "SELECT COUNT(*) FROM v$active_session_history WHERE ROWNUM <= 100"
+	if err := s.db.QueryRowContext(ctx, testQuery).Scan(&ashRowCount); err != nil {
+		s.logger.Error("Cannot access v$active_session_history", zap.Error(err))
+	} else {
+		s.logger.Info("ASH access test", zap.Int("total_rows_available", ashRowCount))
+	}
+
+	// Test recent ASH data
+	var recentAshCount int
+	recentTestQuery := "SELECT COUNT(*) FROM v$active_session_history WHERE sample_time >= SYSDATE - INTERVAL '30' MINUTE"
+	if err := s.db.QueryRowContext(ctx, recentTestQuery).Scan(&recentAshCount); err != nil {
+		s.logger.Error("Cannot query recent ASH data", zap.Error(err))
+	} else {
+		s.logger.Info("Recent ASH data test", zap.Int("rows_last_30_min", recentAshCount))
+	}
+
 	// Execute the wait metrics query
 	s.logger.Info("Executing wait metrics query", zap.String("query", queries.WaitEventsQuery))
 	rows, err := s.db.QueryContext(ctx, queries.WaitEventsQuery)
@@ -61,8 +80,11 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 		s.logger.Info("Query columns", zap.Strings("columns", columns))
 	}
 
+	// Let's check if rows.Next() is even being called
+	s.logger.Info("About to start iterating through rows")
 	var rowCount int
 	for rows.Next() {
+		s.logger.Info("Processing row", zap.Int("row_number", rowCount+1))
 		var (
 			databaseName        string
 			queryID             string
