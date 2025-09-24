@@ -23,17 +23,21 @@ import (
 )
 
 const (
-	// keepalive for connection 
+	// keepalive for connection
 	keepAlive = 30 * time.Second
 )
 
 type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
+	// Scrapers
+	slowQueryScraper *scrapers.SlowQueryScraper
+	config           *Config
+
+	// Database and configuration
+	db *sql.DB
 	// Only keep session scraper for simplicity
 	sessionScraper       *scrapers.SessionScraper
-	
-	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
 	dbProviderFunc       dbProviderFunc
 	logger               *zap.Logger
@@ -44,7 +48,7 @@ type newRelicOracleScraper struct {
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig metadata.MetricsBuilderConfig, scrapeCfg scraperhelper.ControllerConfig, logger *zap.Logger, providerFunc dbProviderFunc, instanceName, hostName string) (scraper.Metrics, error) {
+func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig metadata.MetricsBuilderConfig, scrapeCfg scraperhelper.ControllerConfig, logger *zap.Logger, providerFunc dbProviderFunc, instanceName, hostName string, config *Config) (scraper.Metrics, error) {
 	s := &newRelicOracleScraper{
 		mb:                   metricsBuilder,
 		dbProviderFunc:       providerFunc,
@@ -53,6 +57,7 @@ func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig me
 		metricsBuilderConfig: metricsBuilderConfig,
 		instanceName:         instanceName,
 		hostName:             hostName,
+		config:               config,
 	}
 	return scraper.NewMetrics(s.scrape, scraper.WithShutdown(s.shutdown), scraper.WithStart(s.start))
 }
@@ -64,10 +69,11 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	if err != nil {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
-	
-	// Initialize session scraper with direct DB connection
+
+	// Initialize scrapers
 	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	
+	s.slowQueryScraper = scrapers.NewSlowQueryScraper(s.logger)
+
 	return nil
 }
 
@@ -76,15 +82,47 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	var scrapeErrors []error
 
-	// Only scrape session count metric - keeping it simple
+	// Scrape session count metric
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
+
+	// Collect instance information for slow queries
+	instanceInfo, err := s.getInstanceInfo()
+	if err != nil {
+		s.logger.Warn("Failed to get instance information for slow queries", zap.Error(err))
+		// Continue without instance info
+		instanceInfo = nil
+	}
+
+	// Collect slow query metrics
+	var slowQueryConfig *scrapers.SlowQueryConfig
+	if s.config.SlowQuerySettings != nil {
+		slowQueryConfig = &scrapers.SlowQueryConfig{
+			Enabled:              s.config.SlowQuerySettings.Enabled,
+			ExcludeSchemas:       s.config.SlowQuerySettings.ExcludeSchemas,
+			MinExecutionTimeMs:   s.config.SlowQuerySettings.MinExecutionTimeMs,
+			ExcludeQueryPatterns: s.config.SlowQuerySettings.ExcludeQueryPatterns,
+			MaxQueries:           s.config.SlowQuerySettings.MaxQueries,
+		}
+	}
+	slowQueryMetrics, err := s.slowQueryScraper.CollectSlowQueryMetrics(s.db, s.config.SkipMetricsGroups, instanceInfo, slowQueryConfig)
+	if err != nil {
+		s.logger.Warn("Error collecting slow query metrics", zap.Error(err))
+		scrapeErrors = append(scrapeErrors, err)
+	}
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()
 	rb.SetNewrelicoracledbInstanceName(s.instanceName)
 	rb.SetHostName(s.hostName)
 	out := s.mb.Emit(metadata.WithResource(rb.Emit()))
-	
+
+	// Merge slow query metrics with standard metrics
+	if slowQueryMetrics.ResourceMetrics().Len() > 0 {
+		s.logger.Debug("Merging slow query metrics",
+			zap.Int("slow_query_resource_metrics", slowQueryMetrics.ResourceMetrics().Len()))
+		slowQueryMetrics.ResourceMetrics().MoveAndAppendTo(out.ResourceMetrics())
+	}
+
 	s.logger.Debug("Done New Relic Oracle scraping", zap.Int("total_errors", len(scrapeErrors)))
 	if len(scrapeErrors) > 0 {
 		return out, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
@@ -97,4 +135,29 @@ func (s *newRelicOracleScraper) shutdown(_ context.Context) error {
 		return nil
 	}
 	return s.db.Close()
+}
+
+// getInstanceInfo retrieves basic instance information for slow query resource attributes
+func (s *newRelicOracleScraper) getInstanceInfo() (*scrapers.InstanceInfo, error) {
+	query := `
+		SELECT 
+			i.INST_ID,
+			i.INSTANCE_NAME,
+			g.GLOBAL_NAME,
+			d.DBID
+		FROM 
+			gv$instance i,
+			global_name g,
+			v$database d
+		WHERE i.INST_ID = 1`
+
+	row := s.db.QueryRow(query)
+
+	var info scrapers.InstanceInfo
+	err := row.Scan(&info.InstanceID, &info.InstanceName, &info.GlobalName, &info.DbID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get instance info: %w", err)
+	}
+
+	return &info, nil
 }

@@ -1,0 +1,28 @@
+receivers:
+  newrelicoracledb:
+    endpoint: localhost:1521
+    service: FREEPDB1
+    username: hr
+    password: hr
+    collection_interval: 30s
+    # Strict filtering - only user queries, minimum 50ms execution time
+    slow_query_settings:
+      enabled: true
+      exclude_schemas: ["SYS", "SYSTEM", "DBSNMP", "OUTLN", "DVSYS", "AUDSYS", "LABCSYS", "APEX_PUBLIC_USER", "WMSYS", "XDB", "ANONYMOUS", "CTXSYS", "FLOWS_FILES", "MDSYS", "ORACLE_OCM", "XS$NULL"]
+      min_execution_time_ms: 50  
+      exclude_query_patterns: ["OPT_DYN_SAMP", "SAMPLESUB", "LOCK TABLE", "V$SQLAREA", "V$DATABASE", "SESSION_COUNT", "DBMS_", "SCHEDULER", "JOB_QUEUE", "JOBS", "AQ$_", "LOGMNR"]
+      max_queries: 5
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    metrics:
+      receivers: [newrelicoracledb]
+      processors: [batch]
+      exporters: [debug]
