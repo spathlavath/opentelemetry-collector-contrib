@@ -42,8 +42,8 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Execute the wait metrics query
-	s.logger.Info("Executing wait metrics query", zap.String("query", queries.QueryWaitMetricsQuery))
-	rows, err := s.db.QueryContext(ctx, queries.QueryWaitMetricsQuery)
+	s.logger.Info("Executing wait metrics query", zap.String("query", queries.WaitEventsQuery))
+	rows, err := s.db.QueryContext(ctx, queries.WaitEventsQuery)
 	if err != nil {
 		s.logger.Error("Failed to execute wait events query", zap.Error(err))
 		errors = append(errors, fmt.Errorf("error executing wait events query: %w", err))

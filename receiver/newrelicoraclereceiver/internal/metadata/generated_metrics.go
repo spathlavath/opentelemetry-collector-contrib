@@ -16,14 +16,14 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSessionsCount: metricInfo{
 		Name: "newrelicoracledb.sessions.count",
 	},
-	NewrelicoracledbTotalWaitTime: metricInfo{
-		Name: "newrelicoracledb.total_wait_time",
+	NewrelicoracledbWaitEvents: metricInfo{
+		Name: "newrelicoracledb.wait.events",
 	},
 }
 
 type metricsInfo struct {
 	NewrelicoracledbSessionsCount metricInfo
-	NewrelicoracledbTotalWaitTime metricInfo
+	NewrelicoracledbWaitEvents metricInfo
 }
 
 type metricInfo struct {
@@ -175,7 +175,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricsBuffer:                       pmetric.NewMetrics(),
 		buildInfo:                           settings.BuildInfo,
 		metricNewrelicoracledbSessionsCount: newMetricNewrelicoracledbSessionsCount(mbc.Metrics.NewrelicoracledbSessionsCount),
-		metricNewrelicoracledbTotalWaitTime: newMetricNewrelicoracledbTotalWaitTime(mbc.Metrics.NewrelicoracledbTotalWaitTime),
+		metricNewrelicoracledbTotalWaitTime: newMetricNewrelicoracledbTotalWaitTime(mbc.Metrics.NewrelicoracledbWaitEvents),
 		resourceAttributeIncludeFilter:      make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:      make(map[string]filter.Filter),
 	}

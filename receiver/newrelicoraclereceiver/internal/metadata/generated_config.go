@@ -29,7 +29,7 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
 	NewrelicoracledbSessionsCount MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
-	NewrelicoracledbTotalWaitTime MetricConfig `mapstructure:"newrelicoracledb.total_wait_time"`
+	NewrelicoracledbWaitEvents MetricConfig `mapstructure:"newrelicoracledb.wait.events"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -37,7 +37,7 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbSessionsCount: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbTotalWaitTime: MetricConfig{
+		NewrelicoracledbWaitEvents: MetricConfig{
 			Enabled: true,
 		},
 	}

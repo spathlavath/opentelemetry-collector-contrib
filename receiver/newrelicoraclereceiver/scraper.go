@@ -7,10 +7,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.opentelemetry.io/collector/scraper"
 	"go.opentelemetry.io/collector/scraper/scrapererror"
@@ -22,15 +20,9 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 )
 
-const (
-	// keepalive for connection
-	keepAlive = 30 * time.Second
-)
-
 type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
-	// Only keep session scraper for simplicity
 	sessionScraper    *scrapers.SessionScraper
 	waitEventsScraper *scrapers.WaitEventsScraper
 
@@ -41,7 +33,6 @@ type newRelicOracleScraper struct {
 	instanceName         string
 	hostName             string
 	scrapeCfg            scraperhelper.ControllerConfig
-	startTime            pcommon.Timestamp
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
@@ -59,7 +50,6 @@ func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig me
 }
 
 func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
-	s.startTime = pcommon.NewTimestampFromTime(time.Now())
 	var err error
 	s.db, err = s.dbProviderFunc()
 	if err != nil {
@@ -81,19 +71,12 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	var scrapeErrors []error
 
-	// Only scrape session count metric - keeping it simple
-	s.logger.Info("About to scrape session count")
+	// Scrape session count and wait events metrics
+	s.logger.Info("Scraping session count metrics")
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
 
-	s.logger.Info("About to scrape wait events")
-	if s.waitEventsScraper == nil {
-		s.logger.Error("Wait events scraper is nil!")
-	} else {
-		s.logger.Info("Wait events scraper is initialized, calling Scrape method")
-		waitEventsErrors := s.waitEventsScraper.Scrape(ctx)
-		s.logger.Info("Wait events scraper completed", zap.Int("errors", len(waitEventsErrors)))
-		scrapeErrors = append(scrapeErrors, waitEventsErrors...)
-	}
+	s.logger.Info("Scraping wait events metrics")
+	scrapeErrors = append(scrapeErrors, s.waitEventsScraper.Scrape(ctx)...)
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()

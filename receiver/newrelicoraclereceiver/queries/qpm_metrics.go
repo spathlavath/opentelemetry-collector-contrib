@@ -1,7 +1,7 @@
 package queries
 
 const (
-	QueryWaitMetricsQuery = `
+	WaitEventsQuery = `
 SELECT
     d.name AS "database_name",
     ash.sql_id AS "query_id",
