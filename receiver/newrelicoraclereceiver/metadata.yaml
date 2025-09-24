@@ -22,23 +22,20 @@ attributes:
   newrelic.entity_name:
     description: New Relic entity name for the metric
     type: string
-  database_name:
+  database.name:
     description: Name of the database
     type: string
-  query_id:
+  query.id:
     description: Unique identifier for the query
     type: string
-  query_text:
+  query.text:
     description: Text of the SQL query
     type: string
-  wait_category:
+  wait.category:
     description: Category of the wait event
     type: string
-  wait_event_name:
+  wait.event.name:
     description: Name of the wait event
-    type: string
-  collection_timestamp:
-    description: Timestamp when the data was collected
     type: string
 
 metrics:
@@ -58,11 +55,11 @@ metrics:
     unit: "ms"
     attributes:
       - newrelic.entity_name
-      - database_name
-      - query_id
-      - query_text
-      - wait_category
-      - wait_event_name
+      - database.name
+      - query.id
+      - query.text
+      - wait.category
+      - wait.event.name
 
 tests:
   config:
