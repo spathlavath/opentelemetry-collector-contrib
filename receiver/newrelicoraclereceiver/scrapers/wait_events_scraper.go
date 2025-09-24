@@ -35,7 +35,8 @@ func NewWaitEventsScraper(db *sql.DB, logger *zap.Logger, config *scraperhelper.
 	}
 }
 
-func (s *WaitEventsScraper) Scrape(ctx context.Context) error {
+func (s *WaitEventsScraper) Scrape(ctx context.Context) []error {
+	var errors []error
 	s.logger.Debug("Scraping Oracle wait events")
 
 	now := pcommon.NewTimestampFromTime(time.Now())
@@ -44,7 +45,8 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) error {
 	rows, err := s.db.QueryContext(ctx, queries.QueryWaitMetricsQuery)
 	if err != nil {
 		s.logger.Error("Failed to execute wait events query", zap.Error(err))
-		return fmt.Errorf("error executing wait events query: %w", err)
+		errors = append(errors, fmt.Errorf("error executing wait events query: %w", err))
+		return errors
 	}
 	defer rows.Close()
 
@@ -100,7 +102,8 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) error {
 
 	if err = rows.Err(); err != nil {
 		s.logger.Error("Error iterating wait events rows", zap.Error(err))
-		return fmt.Errorf("error iterating wait events rows: %w", err)
+		errors = append(errors, fmt.Errorf("error iterating wait events rows: %w", err))
+		return errors
 	}
 
 	s.logger.Info("Completed wait events scraping",
@@ -108,5 +111,5 @@ func (s *WaitEventsScraper) Scrape(ctx context.Context) error {
 		zap.String("instance", s.instanceName),
 	)
 
-	return nil
+	return errors
 }

@@ -80,7 +80,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	// Only scrape session count metric - keeping it simple
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
-	scrapeErrors = append(scrapeErrors, s.waitScraper.Scrape(ctx))
+	scrapeErrors = append(scrapeErrors, s.waitScraper.Scrape(ctx)...)
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()
