@@ -39,6 +39,13 @@ func createDefaultConfig() component.Config {
 	return &Config{
 		ControllerConfig:     cfg,
 		MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig(),
+		SlowQuerySettings: &SlowQueryConfig{
+			Enabled:              true,
+			ExcludeSchemas:       []string{},
+			MinExecutionTimeMs:   10,
+			ExcludeQueryPatterns: []string{},
+			MaxQueries:           10,
+		},
 	}
 }
 

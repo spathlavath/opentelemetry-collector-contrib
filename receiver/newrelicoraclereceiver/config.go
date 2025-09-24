@@ -26,13 +26,23 @@ var (
 	errEmptyUsername = errors.New("username must be set")
 )
 
+// SlowQueryConfig represents slow query filtering configuration
+type SlowQueryConfig struct {
+	Enabled              bool     `mapstructure:"enabled"`
+	ExcludeSchemas       []string `mapstructure:"exclude_schemas"`
+	MinExecutionTimeMs   int      `mapstructure:"min_execution_time_ms"`
+	ExcludeQueryPatterns []string `mapstructure:"exclude_query_patterns"`
+	MaxQueries           int      `mapstructure:"max_queries"`
+}
+
 type Config struct {
-	DataSource                     string   `mapstructure:"datasource"`
-	Endpoint                       string   `mapstructure:"endpoint"`
-	Password                       string   `mapstructure:"password"`
-	Service                        string   `mapstructure:"service"`
-	Username                       string   `mapstructure:"username"`
-	SkipMetricsGroups              []string `mapstructure:"skip_metrics_groups"`
+	DataSource                     string           `mapstructure:"datasource"`
+	Endpoint                       string           `mapstructure:"endpoint"`
+	Password                       string           `mapstructure:"password"`
+	Service                        string           `mapstructure:"service"`
+	Username                       string           `mapstructure:"username"`
+	SkipMetricsGroups              []string         `mapstructure:"skip_metrics_groups"`
+	SlowQuerySettings              *SlowQueryConfig `mapstructure:"slow_query_settings"`
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
 }

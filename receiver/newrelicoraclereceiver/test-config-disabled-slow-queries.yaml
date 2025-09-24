@@ -1,0 +1,24 @@
+receivers:
+  newrelicoracledb:
+    endpoint: localhost:1521
+    service: FREEPDB1
+    username: hr
+    password: hr
+    collection_interval: 30s
+    # Disabled slow queries - traditional metrics only
+    slow_query_settings:
+      enabled: false
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    metrics:
+      receivers: [newrelicoracledb]
+      processors: [batch]
+      exporters: [debug]

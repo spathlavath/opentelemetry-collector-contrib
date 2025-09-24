@@ -45,11 +45,14 @@ func (i *InstanceInfo) SetResourceAttributes(res pcommon.Resource) {
 	res.Attributes().PutStr("newrelic.oracle.db.id", i.DbID)
 }
 
+// SlowQueryConfig represents slow query filtering configuration (import from queries package)
+type SlowQueryConfig = queries.SlowQueryConfig
+
 // CollectSlowQueryMetrics collects metrics related to Oracle database slow queries.
 // It returns a pmetric.Metrics object containing a single metric (OracleSlowQuerySample)
 // with all slow query attributes as one data point per query.
-// This implementation matches your original collectSlowQueryMetrics function.
-func (s *SlowQueryScraper) CollectSlowQueryMetrics(db *sql.DB, skipGroups []string, instanceInfo *InstanceInfo) (pmetric.Metrics, error) {
+// This implementation supports configuration-based filtering.
+func (s *SlowQueryScraper) CollectSlowQueryMetrics(db *sql.DB, skipGroups []string, instanceInfo *InstanceInfo, config *SlowQueryConfig) (pmetric.Metrics, error) {
 	// Skip collection if slow query metrics are in the skip list
 	for _, skipGroup := range skipGroups {
 		if skipGroup == "slow_query_metrics" {
@@ -58,9 +61,34 @@ func (s *SlowQueryScraper) CollectSlowQueryMetrics(db *sql.DB, skipGroups []stri
 		}
 	}
 
-	s.logger.Debug("Executing slow query metrics SQL", zap.String("query", queries.SlowQuerySQL))
+	// Skip if slow queries are disabled in configuration
+	if config != nil && !config.Enabled {
+		s.logger.Info("Slow query metrics collection is disabled in configuration")
+		return pmetric.NewMetrics(), nil
+	}
 
-	rows, err := db.Query(queries.SlowQuerySQL)
+	// Use default config if none provided
+	defaultConfig := SlowQueryConfig{
+		Enabled:              true,
+		ExcludeSchemas:       []string{"SYS", "SYSTEM", "DBSNMP", "OUTLN", "DVSYS", "AUDSYS", "LABCSYS"},
+		MinExecutionTimeMs:   10,
+		ExcludeQueryPatterns: []string{"OPT_DYN_SAMP", "LOCK TABLE", "V$SQLAREA", "V$DATABASE"},
+		MaxQueries:           10,
+	}
+	if config == nil {
+		config = &defaultConfig
+	}
+
+	// Build dynamic SQL based on configuration
+	slowQuerySQL := queries.BuildSlowQuerySQL(*config)
+	s.logger.Debug("Executing slow query metrics SQL",
+		zap.String("query", slowQuerySQL),
+		zap.Strings("exclude_schemas", config.ExcludeSchemas),
+		zap.Int("min_execution_time_ms", config.MinExecutionTimeMs),
+		zap.Strings("exclude_patterns", config.ExcludeQueryPatterns),
+		zap.Int("max_queries", config.MaxQueries))
+
+	rows, err := db.Query(slowQuerySQL)
 	if err != nil {
 		s.logger.Error("Failed to execute slow query metrics SQL", zap.Error(err))
 		return pmetric.NewMetrics(), fmt.Errorf("error collecting slow query metrics: %w", err)

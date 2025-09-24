@@ -1,0 +1,28 @@
+receivers:
+  newrelicoracledb:
+    endpoint: localhost:1521
+    service: FREEPDB1
+    username: hr
+    password: hr
+    collection_interval: 30s
+    # Minimal filtering - allow more queries for testing
+    slow_query_settings:
+      enabled: true
+      exclude_schemas: ["SYS", "SYSTEM"]  # Only exclude core system schemas
+      min_execution_time_ms: 1            # Include even fast queries
+      exclude_query_patterns: ["OPT_DYN_SAMP"]  # Only exclude optimizer sampling
+      max_queries: 15
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    metrics:
+      receivers: [newrelicoracledb]
+      processors: [batch]
+      exporters: [debug]

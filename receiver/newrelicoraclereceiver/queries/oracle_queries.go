@@ -3,12 +3,17 @@
 
 package queries
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Oracle SQL query constants
 const (
 	SessionCountSQL = "SELECT COUNT(*) as SESSION_COUNT FROM v$session WHERE type = 'USER'"
 
-	// SlowQuerySQL retrieves top slow queries sorted by average elapsed time
-	SlowQuerySQL = `
+	// Base slow query SQL template
+	slowQuerySQLBase = `
         SELECT
             d.name AS database_name,
             sql_id AS query_id,
@@ -26,10 +31,51 @@ const (
             v$sqlarea,
             v$database d
         WHERE
-            parsing_schema_name NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'OUTLN', 'DVSYS', 'AUDSYS', 'LABCSYS','DVSYS')
-            AND executions > 0
+            executions > 0
+            %s
         ORDER BY
             avg_elapsed_time_ms DESC,
             query_id
-        FETCH FIRST 10 ROWS ONLY`
+        FETCH FIRST %d ROWS ONLY`
 )
+
+// SlowQueryConfig represents slow query filtering configuration
+type SlowQueryConfig struct {
+	Enabled              bool
+	ExcludeSchemas       []string
+	MinExecutionTimeMs   int
+	ExcludeQueryPatterns []string
+	MaxQueries           int
+}
+
+// BuildSlowQuerySQL builds a dynamic slow query SQL based on configuration
+func BuildSlowQuerySQL(config SlowQueryConfig) string {
+	var conditions []string
+
+	// Add schema exclusion
+	if len(config.ExcludeSchemas) > 0 {
+		schemaList := "'" + strings.Join(config.ExcludeSchemas, "', '") + "'"
+		conditions = append(conditions, fmt.Sprintf("AND parsing_schema_name NOT IN (%s)", schemaList))
+	}
+
+	// Add minimum execution time filter
+	if config.MinExecutionTimeMs > 0 {
+		conditions = append(conditions, fmt.Sprintf("AND elapsed_time / DECODE(executions, 0, 1, executions) > %d", config.MinExecutionTimeMs*1000))
+	}
+
+	// Add query pattern exclusions
+	for _, pattern := range config.ExcludeQueryPatterns {
+		conditions = append(conditions, fmt.Sprintf("AND UPPER(sql_fulltext) NOT LIKE '%%%s%%'", strings.ToUpper(pattern)))
+	}
+
+	// Join all conditions
+	whereClause := strings.Join(conditions, " ")
+
+	// Set max queries limit
+	maxQueries := config.MaxQueries
+	if maxQueries <= 0 {
+		maxQueries = 10 // Default
+	}
+
+	return fmt.Sprintf(slowQuerySQLBase, whereClause, maxQueries)
+}

@@ -94,7 +94,17 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	}
 
 	// Collect slow query metrics
-	slowQueryMetrics, err := s.slowQueryScraper.CollectSlowQueryMetrics(s.db, s.config.SkipMetricsGroups, instanceInfo)
+	var slowQueryConfig *scrapers.SlowQueryConfig
+	if s.config.SlowQuerySettings != nil {
+		slowQueryConfig = &scrapers.SlowQueryConfig{
+			Enabled:              s.config.SlowQuerySettings.Enabled,
+			ExcludeSchemas:       s.config.SlowQuerySettings.ExcludeSchemas,
+			MinExecutionTimeMs:   s.config.SlowQuerySettings.MinExecutionTimeMs,
+			ExcludeQueryPatterns: s.config.SlowQuerySettings.ExcludeQueryPatterns,
+			MaxQueries:           s.config.SlowQuerySettings.MaxQueries,
+		}
+	}
+	slowQueryMetrics, err := s.slowQueryScraper.CollectSlowQueryMetrics(s.db, s.config.SkipMetricsGroups, instanceInfo, slowQueryConfig)
 	if err != nil {
 		s.logger.Warn("Error collecting slow query metrics", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
