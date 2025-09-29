@@ -31,11 +31,12 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Keep session scraper and add tablespace scraper and core scraper
-	sessionScraper    *scrapers.SessionScraper
-	tablespaceScraper *scrapers.TablespaceScraper
-	coreScraper       *scrapers.CoreScraper
-	pdbScraper        *scrapers.PdbScraper
-	systemScraper     *scrapers.SystemScraper
+	sessionScraper     *scrapers.SessionScraper
+	tablespaceScraper  *scrapers.TablespaceScraper
+	coreScraper        *scrapers.CoreScraper
+	pdbScraper         *scrapers.PdbScraper
+	systemScraper      *scrapers.SystemScraper
+	slowQueriesScraper *scrapers.SlowQueriesScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -84,6 +85,9 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	// Initialize system scraper with direct DB connection
 	s.systemScraper = scrapers.NewSystemScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
+	// Initialize slow queries scraper with direct DB connection
+	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
 	return nil
 }
 
@@ -92,12 +96,13 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	var scrapeErrors []error
 
-	// Scrape session count, tablespace metrics, core metrics, PDB metrics, and system metrics
+	// Scrape session count, tablespace metrics, core metrics, PDB metrics, system metrics, and slow queries
 	scrapeErrors = append(scrapeErrors, s.sessionScraper.ScrapeSessionCount(ctx)...)
 	scrapeErrors = append(scrapeErrors, s.tablespaceScraper.ScrapeTablespaceMetrics(ctx)...)
 	scrapeErrors = append(scrapeErrors, s.coreScraper.ScrapeCoreMetrics(ctx)...)
 	scrapeErrors = append(scrapeErrors, s.pdbScraper.ScrapePdbMetrics(ctx)...)
 	scrapeErrors = append(scrapeErrors, s.systemScraper.ScrapeSystemMetrics(ctx)...)
+	scrapeErrors = append(scrapeErrors, s.slowQueriesScraper.ScrapeSlowQueries(ctx)...)
 
 	// Build the resource with instance and host information
 	rb := s.mb.NewResourceBuilder()

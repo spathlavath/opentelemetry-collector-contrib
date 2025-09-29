@@ -34,6 +34,15 @@ attributes:
   db.id:
     description: Oracle database ID
     type: string
+  query.id:
+    description: Oracle SQL query ID
+    type: string
+  database.name:
+    description: Oracle database name
+    type: string
+  schema.name:
+    description: Oracle schema name
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -2427,6 +2436,68 @@ metrics:
     attributes:
       - newrelic.entity_name
       - instance.id
+
+  newrelicoracledb.slow_queries.count:
+    description: Number of slow queries found
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+
+  newrelicoracledb.slow_queries.avg_elapsed_time_ms:
+    description: Average elapsed time in milliseconds for slow queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "ms"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+      - query.id
+      - database.name
+      - schema.name
+
+  newrelicoracledb.slow_queries.avg_cpu_time_ms:
+    description: Average CPU time in milliseconds for slow queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "ms"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+      - query.id
+      - database.name
+      - schema.name
+
+  newrelicoracledb.slow_queries.avg_disk_reads:
+    description: Average disk reads for slow queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+      - query.id
+      - database.name
+      - schema.name
+
+  newrelicoracledb.slow_queries.execution_count:
+    description: Execution count for slow queries
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - instance.id
+      - query.id
+      - database.name
+      - schema.name
 
 tests:
   config:

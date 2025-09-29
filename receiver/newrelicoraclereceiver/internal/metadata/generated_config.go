@@ -267,6 +267,11 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceSpaceConsumedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_consumed_bytes"`
 	NewrelicoracledbTablespaceSpaceReservedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_reserved_bytes"`
 	NewrelicoracledbTablespaceSpaceUsedPercentage                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_used_percentage"`
+	NewrelicoracledbSlowQueriesCount                                   MetricConfig `mapstructure:"newrelicoracledb.slow_queries.count"`
+	NewrelicoracledbSlowQueriesAvgElapsedTimeMs                        MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_elapsed_time_ms"`
+	NewrelicoracledbSlowQueriesAvgCpuTimeMs                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_cpu_time_ms"`
+	NewrelicoracledbSlowQueriesAvgDiskReads                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_reads"`
+	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -986,6 +991,21 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbTablespaceSpaceUsedPercentage: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesAvgElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesAvgCpuTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesAvgDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesExecutionCount: MetricConfig{
 			Enabled: true,
 		},
 	}
