@@ -20,8 +20,7 @@ const (
 			v$sqlarea,
 			v$database d
 		WHERE
-			parsing_schema_name NOT IN ('SYS', 'SYSTEM')
-			AND executions > 0
+			executions > 0
 		ORDER BY
 			avg_elapsed_time_ms DESC
 		FETCH FIRST 10 ROWS ONLY`
