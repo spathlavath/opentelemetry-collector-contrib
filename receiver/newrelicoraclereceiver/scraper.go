@@ -35,11 +35,12 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Keep session scraper and add tablespace scraper and core scraper
-	sessionScraper    *scrapers.SessionScraper
-	tablespaceScraper *scrapers.TablespaceScraper
-	coreScraper       *scrapers.CoreScraper
-	pdbScraper        *scrapers.PdbScraper
-	systemScraper     *scrapers.SystemScraper
+	sessionScraper     *scrapers.SessionScraper
+	tablespaceScraper  *scrapers.TablespaceScraper
+	coreScraper        *scrapers.CoreScraper
+	pdbScraper         *scrapers.PdbScraper
+	systemScraper      *scrapers.SystemScraper
+	slowQueriesScraper *scrapers.SlowQueriesScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -88,6 +89,9 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	// Initialize system scraper with direct DB connection
 	s.systemScraper = scrapers.NewSystemScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
+	// Initialize slow queries scraper with direct DB connection
+	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
 	return nil
 }
 
@@ -112,6 +116,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		s.coreScraper.ScrapeCoreMetrics,
 		s.pdbScraper.ScrapePdbMetrics,
 		s.systemScraper.ScrapeSystemMetrics,
+		s.slowQueriesScraper.ScrapeSlowQueries,
 	}
 
 	// Launch concurrent scrapers
