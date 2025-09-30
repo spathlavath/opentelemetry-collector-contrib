@@ -1,6 +1,8 @@
 default:
 all_set:
   metrics:
+    newrelicoracledb.blocking_queries.wait_time:
+      enabled: true
     newrelicoracledb.db_id:
       enabled: true
     newrelicoracledb.disk.blocks_read:
@@ -16,6 +18,12 @@ all_set:
     newrelicoracledb.disk.writes:
       enabled: true
     newrelicoracledb.global_name:
+      enabled: true
+    newrelicoracledb.individual_queries.cpu_time:
+      enabled: true
+    newrelicoracledb.individual_queries.elapsed_time:
+      enabled: true
+    newrelicoracledb.individual_queries.query_details:
       enabled: true
     newrelicoracledb.locked_accounts:
       enabled: true
@@ -174,6 +182,18 @@ all_set:
     newrelicoracledb.sga_shared_pool_library_cache_hit_ratio:
       enabled: true
     newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
+      enabled: true
+    newrelicoracledb.slow_queries.avg_cpu_time:
+      enabled: true
+    newrelicoracledb.slow_queries.avg_disk_reads:
+      enabled: true
+    newrelicoracledb.slow_queries.avg_disk_writes:
+      enabled: true
+    newrelicoracledb.slow_queries.avg_elapsed_time:
+      enabled: true
+    newrelicoracledb.slow_queries.execution_count:
+      enabled: true
+    newrelicoracledb.slow_queries.query_details:
       enabled: true
     newrelicoracledb.sorts_disk:
       enabled: true
@@ -479,13 +499,21 @@ all_set:
       enabled: true
     newrelicoracledb.tablespace.space_used_percentage:
       enabled: true
-  resource_attributes:
-    host.name:
+    newrelicoracledb.wait_events.avg_wait_time_ms:
       enabled: true
-    newrelicoracledb.instance.name:
+    newrelicoracledb.wait_events.total_wait_time_ms:
+      enabled: true
+    newrelicoracledb.wait_events.waiting_tasks_count:
+      enabled: true
+  resource_attributes:
+    db.instance.name:
+      enabled: true
+    host.name:
       enabled: true
 none_set:
   metrics:
+    newrelicoracledb.blocking_queries.wait_time:
+      enabled: false
     newrelicoracledb.db_id:
       enabled: false
     newrelicoracledb.disk.blocks_read:
@@ -501,6 +529,12 @@ none_set:
     newrelicoracledb.disk.writes:
       enabled: false
     newrelicoracledb.global_name:
+      enabled: false
+    newrelicoracledb.individual_queries.cpu_time:
+      enabled: false
+    newrelicoracledb.individual_queries.elapsed_time:
+      enabled: false
+    newrelicoracledb.individual_queries.query_details:
       enabled: false
     newrelicoracledb.locked_accounts:
       enabled: false
@@ -659,6 +693,18 @@ none_set:
     newrelicoracledb.sga_shared_pool_library_cache_hit_ratio:
       enabled: false
     newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_cpu_time:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_disk_reads:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_disk_writes:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_elapsed_time:
+      enabled: false
+    newrelicoracledb.slow_queries.execution_count:
+      enabled: false
+    newrelicoracledb.slow_queries.query_details:
       enabled: false
     newrelicoracledb.sorts_disk:
       enabled: false
@@ -964,28 +1010,34 @@ none_set:
       enabled: false
     newrelicoracledb.tablespace.space_used_percentage:
       enabled: false
-  resource_attributes:
-    host.name:
+    newrelicoracledb.wait_events.avg_wait_time_ms:
       enabled: false
-    newrelicoracledb.instance.name:
+    newrelicoracledb.wait_events.total_wait_time_ms:
+      enabled: false
+    newrelicoracledb.wait_events.waiting_tasks_count:
+      enabled: false
+  resource_attributes:
+    db.instance.name:
+      enabled: false
+    host.name:
       enabled: false
 filter_set_include:
   resource_attributes:
-    host.name:
+    db.instance.name:
       enabled: true
       metrics_include:
         - regexp: ".*"
-    newrelicoracledb.instance.name:
+    host.name:
       enabled: true
       metrics_include:
         - regexp: ".*"
 filter_set_exclude:
   resource_attributes:
+    db.instance.name:
+      enabled: true
+      metrics_exclude:
+        - strict: "db.instance.name-val"
     host.name:
       enabled: true
       metrics_exclude:
         - strict: "host.name-val"
-    newrelicoracledb.instance.name:
-      enabled: true
-      metrics_exclude:
-        - strict: "newrelicoracledb.instance.name-val"

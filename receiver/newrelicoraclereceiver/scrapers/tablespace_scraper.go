@@ -101,10 +101,10 @@ func (s *TablespaceScraper) scrapeTablespaceUsageMetrics(ctx context.Context, no
 		)
 
 		// Record all tablespace metrics using the proper metadata builder methods
-		s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(used), s.instanceName, tablespaceName)
-		s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(size), s.instanceName, tablespaceName)
-		s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(usedPercent), s.instanceName, tablespaceName)
-		s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(offline), s.instanceName, tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(used), tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(size), tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(usedPercent), tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(offline), tablespaceName)
 
 		metricCount++
 	}
@@ -151,7 +151,7 @@ func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Contex
 		)
 
 		// Record the global name metric (using 1 as value since it's an attribute metric)
-		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, s.instanceName, tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, tablespaceName)
 
 		metricCount++
 	}
@@ -199,7 +199,7 @@ func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now
 		)
 
 		// Record the DB ID metric
-		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, dbID, s.instanceName, tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, dbID, tablespaceName)
 
 		metricCount++
 	}
@@ -247,7 +247,7 @@ func (s *TablespaceScraper) scrapeCDBDatafilesOfflineTablespaceMetrics(ctx conte
 		)
 
 		// Record the CDB datafiles offline metric
-		s.mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(now, offlineCount, s.instanceName, tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(now, offlineCount, tablespaceName)
 
 		metricCount++
 	}
@@ -295,7 +295,7 @@ func (s *TablespaceScraper) scrapePDBDatafilesOfflineTablespaceMetrics(ctx conte
 		)
 
 		// Record the PDB datafiles offline metric
-		s.mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(now, offlineCount, s.instanceName, tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(now, offlineCount, tablespaceName)
 
 		metricCount++
 	}
@@ -343,7 +343,7 @@ func (s *TablespaceScraper) scrapePDBNonWriteTablespaceMetrics(ctx context.Conte
 		)
 
 		// Record the PDB non-write mode metric
-		s.mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(now, nonWriteCount, s.instanceName, tablespaceName)
+		s.mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(now, nonWriteCount, tablespaceName)
 
 		metricCount++
 	}

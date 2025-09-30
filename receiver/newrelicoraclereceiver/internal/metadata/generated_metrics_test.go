@@ -70,963 +70,1015 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDbIDDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val", "db.id-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "instance.id-val", "blocked_user-val", "blocking_user-val", "blocked_sql_id-val", "blocked_sid-val", "blocking_sid-val", "blocked_serial-val", "blocking_serial-val", "blocked_query_text-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbDbIDDataPoint(ts, 1, "instance.id-val", "db.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDiskReadsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbDiskReadsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDiskWritesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbGlobalNameDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val", "global.name-val")
+			mb.RecordNewrelicoracledbDiskWritesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbLockedAccountsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbGlobalNameDataPoint(ts, 1, "instance.id-val", "global.name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbLongRunningQueriesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts, 1, "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "query_id-val", "query_text-val", "database_name-val", "user_id-val", "username-val", "hostname-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbLockedAccountsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbLongRunningQueriesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCPUTimeRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCurrentLogonsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCPUTimeRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCurrentLogonsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogonsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogonsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbSessionCountDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbSessionCountDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbWaitTimeRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbWaitTimeRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSessionsCountDataPoint(ts, 1, "newrelic.entity_name-val")
+			mb.RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSessionsCountDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaHitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaHitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSortsDiskDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSortsMemoryDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemActiveParallelSessionsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemActiveSerialSessionsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemAverageActiveSessionsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemBackgroundCheckpointsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemBackgroundCPUUsagePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemBackgroundTimePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemBranchNodeSplitsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemBranchNodeSplitsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "statement_type-val", "has_full_table_scan-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemBufferCacheHitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSortsDiskDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCapturedUserCallsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSortsMemoryDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemConsistentReadChangesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemActiveParallelSessionsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemConsistentReadChangesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemActiveSerialSessionsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemConsistentReadGetsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemAverageActiveSessionsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemConsistentReadGetsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemBackgroundCheckpointsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCPUUsagePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemBackgroundCPUUsagePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCPUUsagePerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemBackgroundTimePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCrBlocksCreatedPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemBranchNodeSplitsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCrBlocksCreatedPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemBranchNodeSplitsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemBufferCacheHitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCapturedUserCallsDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCurrentLogonsCountDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemConsistentReadChangesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCurrentOpenCursorsCountDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemConsistentReadChangesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCurrentOsLoadDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemConsistentReadGetsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemCursorCacheHitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemConsistentReadGetsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDatabaseCPUTimeRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCPUUsagePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDatabaseTimePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCPUUsagePerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDatabaseWaitTimeRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCrBlocksCreatedPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDbBlockChangesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCrBlocksCreatedPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDbBlockChangesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDbBlockChangesPerUserCallDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDbBlockGetsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCurrentLogonsCountDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDbBlockGetsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCurrentOpenCursorsCountDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDbBlockGetsPerUserCallDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCurrentOsLoadDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDbwrCheckpointsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemCursorCacheHitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDiskSortPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDatabaseCPUTimeRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemDiskSortPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDatabaseTimePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueDeadlocksPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDatabaseWaitTimeRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueDeadlocksPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDbBlockChangesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueRequestsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDbBlockChangesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueRequestsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDbBlockChangesPerUserCallDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueTimeoutsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDbBlockGetsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueTimeoutsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDbBlockGetsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueWaitsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDbBlockGetsPerUserCallDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemEnqueueWaitsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDbwrCheckpointsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemExecuteWithoutParseRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDiskSortPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemExecutionsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemDiskSortPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemExecutionsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueDeadlocksPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemExecutionsPerUserCallDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueDeadlocksPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemFullIndexScansPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueRequestsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemFullIndexScansPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueRequestsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGcCrBlockReceivedPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueTimeoutsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGcCrBlockReceivedPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueTimeoutsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueWaitsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemEnqueueWaitsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGlobalCacheAverageCrGetTimeDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemExecuteWithoutParseRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGlobalCacheAverageCurrentGetTimeDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemExecutionsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGlobalCacheBlocksCorruptedDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemExecutionsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemGlobalCacheBlocksLostDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemExecutionsPerUserCallDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemHardParseCountPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemFullIndexScansPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemHardParseCountPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemFullIndexScansPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemHostCPUUsagePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGcCrBlockReceivedPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemHostCPUUtilizationDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGcCrBlockReceivedPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemIoMegabytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemIoRequestsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLeafNodeSplitsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGlobalCacheAverageCrGetTimeDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLeafNodeSplitsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGlobalCacheAverageCurrentGetTimeDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLibraryCacheHitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGlobalCacheBlocksCorruptedDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLibraryCacheMissRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemGlobalCacheBlocksLostDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLogicalReadsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemHardParseCountPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLogicalReadsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemHardParseCountPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLogicalReadsPerUserCallDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemHostCPUUsagePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLogonsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemHostCPUUtilizationDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLogonsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemIoMegabytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLongTableScansPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemIoRequestsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemLongTableScansPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLeafNodeSplitsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemMemorySortsRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLeafNodeSplitsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemNetworkTrafficVolumePerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLibraryCacheHitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemOpenCursorsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLibraryCacheMissRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemOpenCursorsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLogicalReadsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemParseFailureCountPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLogicalReadsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemParseFailureCountPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLogicalReadsPerUserCallDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPgaCacheHitPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLogonsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalLobsReadsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLogonsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalLobsReadsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLongTableScansPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalLobsWritesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemLongTableScansPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalLobsWritesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemMemorySortsRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemNetworkTrafficVolumePerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadIoRequestsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemOpenCursorsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadTotalBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemOpenCursorsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemParseFailureCountPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadsDirectPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemParseFailureCountPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadsDirectPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPgaCacheHitPercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalLobsReadsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalReadsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalLobsReadsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWriteBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalLobsWritesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalLobsWritesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadIoRequestsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWritesDirectPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadTotalBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWritesDirectPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWritesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadsDirectPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemPhysicalWritesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadsDirectPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemProcessLimitPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRecursiveCallsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalReadsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRecursiveCallsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWriteBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRedoAllocationHitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRedoGeneratedBytesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRedoGeneratedBytesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRedoWritesPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWritesDirectPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRedoWritesPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWritesDirectPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemResponseTimePerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWritesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRowCacheHitRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemPhysicalWritesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRowCacheMissRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemProcessLimitPercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemRowsPerSortDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRecursiveCallsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemSessionCountDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRecursiveCallsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemSessionLimitPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRedoAllocationHitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemSharedPoolFreePercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRedoGeneratedBytesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemSoftParseRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRedoGeneratedBytesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemSQLServiceResponseTimeDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRedoWritesPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemStreamsPoolUsagePercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRedoWritesPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTempSpaceUsedDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemResponseTimePerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalIndexScansPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRowCacheHitRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalIndexScansPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRowCacheMissRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalParseCountPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemRowsPerSortDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalParseCountPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemSessionCountDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalSortsPerUserCallDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemSessionLimitPercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalTableScansPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemSharedPoolFreePercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalTableScansPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemSoftParseRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTotalTableScansPerUserCallDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemSQLServiceResponseTimeDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTransactionsPerLogonDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemStreamsPoolUsagePercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemTransactionsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTempSpaceUsedDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserCallsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalIndexScansPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserCallsPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalIndexScansPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserCallsRatioDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalParseCountPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserCommitsPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalParseCountPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserCommitsPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalSortsPerUserCallDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserLimitPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalTableScansPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalTableScansPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransactionDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTotalTableScansPerUserCallDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserRollbacksPerSecondDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTransactionsPerLogonDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSystemUserRollbacksPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbSystemTransactionsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserCallsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserCallsPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserCallsRatioDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserCommitsPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserCommitsPercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserLimitPercentageDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecondDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransactionDataPoint(ts, 1, "instance.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbSystemUserRollbacksPerSecondDataPoint(ts, 1, "instance.id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbSystemUserRollbacksPercentageDataPoint(ts, 1, "instance.id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(ts, 1, "tablespace.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(ts, 1, "database_name-val", "query_id-val", "wait_event_name-val", "wait_category-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(ts, 1, "database_name-val", "query_id-val", "wait_event_name-val", "wait_category-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(ts, 1, "database_name-val", "query_id-val", "wait_event_name-val", "wait_category-val")
 
 			rb := mb.NewResourceBuilder()
+			rb.SetDbInstanceName("db.instance.name-val")
 			rb.SetHostName("host.name-val")
-			rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
 			res := rb.Emit()
 			metrics := mb.Emit(WithResource(res))
 
@@ -1049,6 +1101,48 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "newrelicoracledb.blocking_queries.wait_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.blocking_queries.wait_time"], "Found a duplicate in the metrics slice: newrelicoracledb.blocking_queries.wait_time")
+					validatedMetrics["newrelicoracledb.blocking_queries.wait_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Wait time in seconds for blocked queries", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("instance.id")
+					assert.True(t, ok)
+					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_user")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_user-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_user")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_user-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_sql_id")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_sql_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_sid")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_sid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_sid")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_sid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_serial")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_serial-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_serial")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_serial-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.db_id":
 					assert.False(t, validatedMetrics["newrelicoracledb.db_id"], "Found a duplicate in the metrics slice: newrelicoracledb.db_id")
 					validatedMetrics["newrelicoracledb.db_id"] = true
@@ -1061,10 +1155,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("db.id")
@@ -1082,10 +1173,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.disk.blocks_written":
@@ -1100,10 +1188,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.disk.read_time_milliseconds":
@@ -1118,10 +1203,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.disk.reads":
@@ -1136,10 +1218,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.disk.write_time_milliseconds":
@@ -1154,10 +1233,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.disk.writes":
@@ -1172,10 +1248,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.global_name":
@@ -1190,15 +1263,78 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("global.name")
 					assert.True(t, ok)
 					assert.Equal(t, "global.name-val", attrVal.Str())
+				case "newrelicoracledb.individual_queries.cpu_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.cpu_time"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.cpu_time")
+					validatedMetrics["newrelicoracledb.individual_queries.cpu_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "CPU time for individual queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.individual_queries.elapsed_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.elapsed_time")
+					validatedMetrics["newrelicoracledb.individual_queries.elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Elapsed time for individual queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.individual_queries.query_details":
+					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.query_details"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.query_details")
+					validatedMetrics["newrelicoracledb.individual_queries.query_details"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Individual Query Details", ms.At(i).Description())
+					assert.Equal(t, "{count}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_id")
+					assert.True(t, ok)
+					assert.Equal(t, "user_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("username")
+					assert.True(t, ok)
+					assert.Equal(t, "username-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("hostname")
+					assert.True(t, ok)
+					assert.Equal(t, "hostname-val", attrVal.Str())
 				case "newrelicoracledb.locked_accounts":
 					assert.False(t, validatedMetrics["newrelicoracledb.locked_accounts"], "Found a duplicate in the metrics slice: newrelicoracledb.locked_accounts")
 					validatedMetrics["newrelicoracledb.locked_accounts"] = true
@@ -1211,10 +1347,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.long_running_queries":
@@ -1229,10 +1362,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.memory.pga_allocated_bytes":
@@ -1247,10 +1377,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.memory.pga_freeable_bytes":
@@ -1265,10 +1392,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.memory.pga_in_use_bytes":
@@ -1283,10 +1407,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.memory.pga_max_size_bytes":
@@ -1301,10 +1422,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes":
@@ -1319,10 +1437,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes":
@@ -1337,10 +1452,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.memory.sga_uga_total_bytes":
@@ -1355,10 +1467,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.active_parallel_sessions":
@@ -1373,10 +1482,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.active_serial_sessions":
@@ -1391,10 +1497,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.average_active_sessions":
@@ -1409,10 +1512,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.background_cpu_usage_per_second":
@@ -1427,10 +1527,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.background_time_per_second":
@@ -1445,10 +1542,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.block_changes_per_second":
@@ -1463,10 +1557,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.block_changes_per_transaction":
@@ -1481,10 +1572,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.cpu_time_ratio":
@@ -1499,10 +1587,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.cpu_usage_per_second":
@@ -1517,10 +1602,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.cpu_usage_per_transaction":
@@ -1535,10 +1617,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.current_logons":
@@ -1553,10 +1632,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.current_open_cursors":
@@ -1571,10 +1647,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_read_bytes_per_second":
@@ -1589,10 +1662,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_reads_per_second":
@@ -1607,10 +1677,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_write_bytes_per_second":
@@ -1625,10 +1692,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_writes_per_second":
@@ -1643,10 +1707,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.execute_without_parse_ratio":
@@ -1661,10 +1722,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.executions_per_second":
@@ -1679,10 +1737,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.executions_per_transaction":
@@ -1697,10 +1752,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.hard_parse_count_per_second":
@@ -1715,10 +1767,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.hard_parse_count_per_transaction":
@@ -1733,10 +1782,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logical_reads_per_second":
@@ -1751,10 +1797,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logical_reads_per_transaction":
@@ -1769,10 +1812,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logons_per_second":
@@ -1787,10 +1827,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logons_per_transaction":
@@ -1805,10 +1842,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.network_traffic_byte_per_second":
@@ -1823,10 +1857,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.open_cursors_per_second":
@@ -1841,10 +1872,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.open_cursors_per_transaction":
@@ -1859,10 +1887,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.parse_failure_count_per_second":
@@ -1877,10 +1902,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_read_bytes_per_second":
@@ -1895,10 +1917,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_reads_per_transaction":
@@ -1913,10 +1932,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_write_bytes_per_second":
@@ -1931,10 +1947,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_writes_per_transaction":
@@ -1949,10 +1962,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.redo_generated_bytes_per_second":
@@ -1967,10 +1977,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.redo_generated_bytes_per_transaction":
@@ -1985,10 +1992,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.response_time_per_transaction":
@@ -2003,10 +2007,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.session_count":
@@ -2021,10 +2022,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.soft_parse_ratio":
@@ -2039,10 +2037,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.sql_service_response_time":
@@ -2057,10 +2052,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.total_parse_count_per_second":
@@ -2075,10 +2067,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.total_parse_count_per_transaction":
@@ -2093,10 +2082,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.transactions_per_second":
@@ -2111,10 +2097,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_calls_per_second":
@@ -2129,10 +2112,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_calls_per_transaction":
@@ -2147,10 +2127,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_commits_per_second":
@@ -2165,10 +2142,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_commits_percentage":
@@ -2183,10 +2157,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_rollbacks_per_second":
@@ -2201,10 +2172,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_rollbacks_percentage":
@@ -2219,10 +2187,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.pdb.wait_time_ratio":
@@ -2237,10 +2202,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.redo_log_parallel_write_waits":
@@ -2255,10 +2217,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.redo_log_switch_archiving_needed_waits":
@@ -2273,10 +2232,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits":
@@ -2291,10 +2247,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.redo_log_switch_completion_waits":
@@ -2309,10 +2262,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.rollback_segments_gets":
@@ -2327,10 +2277,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.rollback_segments_wait_ratio":
@@ -2345,10 +2292,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.rollback_segments_waits":
@@ -2363,10 +2307,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sessions.count":
@@ -2381,9 +2322,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
 				case "newrelicoracledb.sga_buffer_busy_waits":
 					assert.False(t, validatedMetrics["newrelicoracledb.sga_buffer_busy_waits"], "Found a duplicate in the metrics slice: newrelicoracledb.sga_buffer_busy_waits")
 					validatedMetrics["newrelicoracledb.sga_buffer_busy_waits"] = true
@@ -2396,10 +2334,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_fixed_size_bytes":
@@ -2414,10 +2349,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_free_buffer_inspected_waits":
@@ -2432,10 +2364,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_free_buffer_waits":
@@ -2450,10 +2379,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_hit_ratio":
@@ -2468,10 +2394,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_log_allocation_retries_ratio":
@@ -2486,10 +2409,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_log_buffer_redo_allocation_retries":
@@ -2504,10 +2424,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_log_buffer_redo_entries":
@@ -2522,10 +2439,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_log_buffer_space_waits":
@@ -2540,10 +2454,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_redo_buffers_bytes":
@@ -2558,10 +2469,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio":
@@ -2576,10 +2484,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_shared_pool_library_cache_hit_ratio":
@@ -2594,10 +2499,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sga_shared_pool_library_cache_reload_ratio":
@@ -2612,12 +2514,129 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_cpu_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_cpu_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_cpu_time")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_cpu_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average CPU time per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_disk_reads":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_disk_reads")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average disk reads per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_disk_writes":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_disk_writes"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_disk_writes")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_disk_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average disk writes per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "{writes}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_elapsed_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_elapsed_time")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average elapsed time per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.execution_count":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.execution_count")
+					validatedMetrics["newrelicoracledb.slow_queries.execution_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of executions for slow queries", ms.At(i).Description())
+					assert.Equal(t, "{executions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.query_details":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.query_details"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.query_details")
+					validatedMetrics["newrelicoracledb.slow_queries.query_details"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Slow Query Details", ms.At(i).Description())
+					assert.Equal(t, "{count}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("statement_type")
+					assert.True(t, ok)
+					assert.Equal(t, "statement_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("has_full_table_scan")
+					assert.True(t, ok)
+					assert.Equal(t, "has_full_table_scan-val", attrVal.Str())
 				case "newrelicoracledb.sorts_disk":
 					assert.False(t, validatedMetrics["newrelicoracledb.sorts_disk"], "Found a duplicate in the metrics slice: newrelicoracledb.sorts_disk")
 					validatedMetrics["newrelicoracledb.sorts_disk"] = true
@@ -2630,10 +2649,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.sorts_memory":
@@ -2648,10 +2664,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.active_parallel_sessions":
@@ -2666,10 +2679,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.active_serial_sessions":
@@ -2684,10 +2694,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.average_active_sessions":
@@ -2702,10 +2709,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.background_checkpoints_per_second":
@@ -2720,10 +2724,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.background_cpu_usage_per_second":
@@ -2738,10 +2739,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.background_time_per_second":
@@ -2756,10 +2754,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.branch_node_splits_per_second":
@@ -2774,10 +2769,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.branch_node_splits_per_transaction":
@@ -2792,10 +2784,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.buffer_cache_hit_ratio":
@@ -2810,10 +2799,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.captured_user_calls":
@@ -2828,10 +2814,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.consistent_read_changes_per_second":
@@ -2846,10 +2829,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.consistent_read_changes_per_transaction":
@@ -2864,10 +2844,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.consistent_read_gets_per_second":
@@ -2882,10 +2859,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.consistent_read_gets_per_transaction":
@@ -2900,10 +2874,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.cpu_usage_per_second":
@@ -2918,10 +2889,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.cpu_usage_per_transaction":
@@ -2936,10 +2904,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.cr_blocks_created_per_second":
@@ -2954,10 +2919,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.cr_blocks_created_per_transaction":
@@ -2972,10 +2934,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.cr_undo_records_applied_per_second":
@@ -2990,10 +2949,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.cr_undo_records_applied_per_transaction":
@@ -3008,10 +2964,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.current_logons_count":
@@ -3026,10 +2979,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.current_open_cursors_count":
@@ -3044,10 +2994,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.current_os_load":
@@ -3062,10 +3009,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.cursor_cache_hit_ratio":
@@ -3080,10 +3024,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.database_cpu_time_ratio":
@@ -3098,10 +3039,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.database_time_per_second":
@@ -3116,10 +3054,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.database_wait_time_ratio":
@@ -3134,10 +3069,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.db_block_changes_per_second":
@@ -3152,10 +3084,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.db_block_changes_per_transaction":
@@ -3170,10 +3099,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.db_block_changes_per_user_call":
@@ -3188,10 +3114,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.db_block_gets_per_second":
@@ -3206,10 +3129,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.db_block_gets_per_transaction":
@@ -3224,10 +3144,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.db_block_gets_per_user_call":
@@ -3242,10 +3159,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.dbwr_checkpoints_per_second":
@@ -3260,10 +3174,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.disk_sort_per_second":
@@ -3278,10 +3189,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.disk_sort_per_transaction":
@@ -3296,10 +3204,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_deadlocks_per_second":
@@ -3314,10 +3219,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_deadlocks_per_transaction":
@@ -3332,10 +3234,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_requests_per_second":
@@ -3350,10 +3249,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_requests_per_transaction":
@@ -3368,10 +3264,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_timeouts_per_second":
@@ -3386,10 +3279,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_timeouts_per_transaction":
@@ -3404,10 +3294,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_waits_per_second":
@@ -3422,10 +3309,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.enqueue_waits_per_transaction":
@@ -3440,10 +3324,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.execute_without_parse_ratio":
@@ -3458,10 +3339,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.executions_per_second":
@@ -3476,10 +3354,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.executions_per_transaction":
@@ -3494,10 +3369,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.executions_per_user_call":
@@ -3512,10 +3384,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.full_index_scans_per_second":
@@ -3530,10 +3399,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.full_index_scans_per_transaction":
@@ -3548,10 +3414,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.gc_cr_block_received_per_second":
@@ -3566,10 +3429,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.gc_cr_block_received_per_transaction":
@@ -3584,10 +3444,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.gc_current_block_received_per_second":
@@ -3602,10 +3459,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.gc_current_block_received_per_transaction":
@@ -3620,10 +3474,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.global_cache_average_cr_get_time":
@@ -3638,10 +3489,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.global_cache_average_current_get_time":
@@ -3656,10 +3504,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.global_cache_blocks_corrupted":
@@ -3674,10 +3519,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.global_cache_blocks_lost":
@@ -3692,10 +3534,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.hard_parse_count_per_second":
@@ -3710,10 +3549,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.hard_parse_count_per_transaction":
@@ -3728,10 +3564,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.host_cpu_usage_per_second":
@@ -3746,10 +3579,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.host_cpu_utilization":
@@ -3764,10 +3594,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.io_megabytes_per_second":
@@ -3782,10 +3609,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.io_requests_per_second":
@@ -3800,10 +3624,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.leaf_node_splits_per_second":
@@ -3818,10 +3639,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.leaf_node_splits_per_transaction":
@@ -3836,10 +3654,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.library_cache_hit_ratio":
@@ -3854,10 +3669,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.library_cache_miss_ratio":
@@ -3872,10 +3684,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.logical_reads_per_second":
@@ -3890,10 +3699,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.logical_reads_per_transaction":
@@ -3908,10 +3714,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.logical_reads_per_user_call":
@@ -3926,10 +3729,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.logons_per_second":
@@ -3944,10 +3744,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.logons_per_transaction":
@@ -3962,10 +3759,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.long_table_scans_per_second":
@@ -3980,10 +3774,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.long_table_scans_per_transaction":
@@ -3998,10 +3789,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.memory_sorts_ratio":
@@ -4016,10 +3804,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.network_traffic_volume_per_second":
@@ -4034,10 +3819,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.open_cursors_per_second":
@@ -4052,10 +3834,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.open_cursors_per_transaction":
@@ -4070,10 +3849,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.parse_failure_count_per_second":
@@ -4088,10 +3864,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.parse_failure_count_per_transaction":
@@ -4106,10 +3879,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.pga_cache_hit_percentage":
@@ -4124,10 +3894,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_lobs_reads_per_second":
@@ -4142,10 +3909,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_lobs_reads_per_transaction":
@@ -4160,10 +3924,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_lobs_writes_per_second":
@@ -4178,10 +3939,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_lobs_writes_per_transaction":
@@ -4196,10 +3954,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_read_bytes_per_second":
@@ -4214,10 +3969,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_read_io_requests_per_second":
@@ -4232,10 +3984,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_read_total_bytes_per_second":
@@ -4250,10 +3999,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_read_total_io_requests_per_second":
@@ -4268,10 +4014,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_reads_direct_per_second":
@@ -4286,10 +4029,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_reads_direct_per_transaction":
@@ -4304,10 +4044,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_reads_per_second":
@@ -4322,10 +4059,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_reads_per_transaction":
@@ -4340,10 +4074,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_write_bytes_per_second":
@@ -4358,10 +4089,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_write_io_requests_per_second":
@@ -4376,10 +4104,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_write_total_bytes_per_second":
@@ -4394,10 +4119,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_write_total_io_requests_per_second":
@@ -4412,10 +4134,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_writes_direct_per_second":
@@ -4430,10 +4149,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_writes_direct_per_transaction":
@@ -4448,10 +4164,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_writes_per_second":
@@ -4466,10 +4179,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.physical_writes_per_transaction":
@@ -4484,10 +4194,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.process_limit_percentage":
@@ -4502,10 +4209,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.recursive_calls_per_second":
@@ -4520,10 +4224,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.recursive_calls_per_transaction":
@@ -4538,10 +4239,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.redo_allocation_hit_ratio":
@@ -4556,10 +4254,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.redo_generated_bytes_per_second":
@@ -4574,10 +4269,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.redo_generated_bytes_per_transaction":
@@ -4592,10 +4284,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.redo_writes_per_second":
@@ -4610,10 +4299,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.redo_writes_per_transaction":
@@ -4628,10 +4314,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.response_time_per_transaction":
@@ -4646,10 +4329,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.row_cache_hit_ratio":
@@ -4664,10 +4344,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.row_cache_miss_ratio":
@@ -4682,10 +4359,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.rows_per_sort":
@@ -4700,10 +4374,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.session_count":
@@ -4718,10 +4389,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.session_limit_percentage":
@@ -4736,10 +4404,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.shared_pool_free_percentage":
@@ -4754,10 +4419,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.soft_parse_ratio":
@@ -4772,10 +4434,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.sql_service_response_time":
@@ -4790,10 +4449,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.streams_pool_usage_percentage":
@@ -4808,10 +4464,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.temp_space_used":
@@ -4826,10 +4479,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_index_scans_per_second":
@@ -4844,10 +4494,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_index_scans_per_transaction":
@@ -4862,10 +4509,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_parse_count_per_second":
@@ -4880,10 +4524,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_parse_count_per_transaction":
@@ -4898,10 +4539,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_sorts_per_user_call":
@@ -4916,10 +4554,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_table_scans_per_second":
@@ -4934,10 +4569,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_table_scans_per_transaction":
@@ -4952,10 +4584,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.total_table_scans_per_user_call":
@@ -4970,10 +4599,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.transactions_per_logon":
@@ -4988,10 +4614,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.transactions_per_second":
@@ -5006,10 +4629,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_calls_per_second":
@@ -5024,10 +4644,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_calls_per_transaction":
@@ -5042,10 +4659,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_calls_ratio":
@@ -5060,10 +4674,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_commits_per_second":
@@ -5078,10 +4689,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_commits_percentage":
@@ -5096,10 +4704,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_limit_percentage":
@@ -5114,10 +4719,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_rollback_undo_records_applied_per_second":
@@ -5132,10 +4734,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction":
@@ -5150,10 +4749,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_rollbacks_per_second":
@@ -5168,10 +4764,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.system.user_rollbacks_percentage":
@@ -5186,10 +4779,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
+					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.db_id":
@@ -5204,10 +4794,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.global_name":
@@ -5222,10 +4809,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.is_offline":
@@ -5240,10 +4824,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.offline_cdb_datafiles":
@@ -5258,10 +4839,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.offline_pdb_datafiles":
@@ -5276,10 +4854,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.pdb_non_write_mode":
@@ -5294,10 +4869,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.space_consumed_bytes":
@@ -5312,10 +4884,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.space_reserved_bytes":
@@ -5330,10 +4899,7 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.space_used_percentage":
@@ -5348,12 +4914,81 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
-					assert.True(t, ok)
-					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("tablespace.name")
+					attrVal, ok := dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
+				case "newrelicoracledb.wait_events.avg_wait_time_ms":
+					assert.False(t, validatedMetrics["newrelicoracledb.wait_events.avg_wait_time_ms"], "Found a duplicate in the metrics slice: newrelicoracledb.wait_events.avg_wait_time_ms")
+					validatedMetrics["newrelicoracledb.wait_events.avg_wait_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average wait time in milliseconds for wait events", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
+				case "newrelicoracledb.wait_events.total_wait_time_ms":
+					assert.False(t, validatedMetrics["newrelicoracledb.wait_events.total_wait_time_ms"], "Found a duplicate in the metrics slice: newrelicoracledb.wait_events.total_wait_time_ms")
+					validatedMetrics["newrelicoracledb.wait_events.total_wait_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total wait time in milliseconds for wait events", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
+				case "newrelicoracledb.wait_events.waiting_tasks_count":
+					assert.False(t, validatedMetrics["newrelicoracledb.wait_events.waiting_tasks_count"], "Found a duplicate in the metrics slice: newrelicoracledb.wait_events.waiting_tasks_count")
+					validatedMetrics["newrelicoracledb.wait_events.waiting_tasks_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of waiting tasks for wait events", ms.At(i).Description())
+					assert.Equal(t, "{tasks}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
 				}
 			}
 		})

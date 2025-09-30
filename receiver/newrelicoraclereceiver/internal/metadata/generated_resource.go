@@ -21,17 +21,17 @@ func NewResourceBuilder(rac ResourceAttributesConfig) *ResourceBuilder {
 	}
 }
 
+// SetDbInstanceName sets provided value as "db.instance.name" attribute.
+func (rb *ResourceBuilder) SetDbInstanceName(val string) {
+	if rb.config.DbInstanceName.Enabled {
+		rb.res.Attributes().PutStr("db.instance.name", val)
+	}
+}
+
 // SetHostName sets provided value as "host.name" attribute.
 func (rb *ResourceBuilder) SetHostName(val string) {
 	if rb.config.HostName.Enabled {
 		rb.res.Attributes().PutStr("host.name", val)
-	}
-}
-
-// SetNewrelicoracledbInstanceName sets provided value as "newrelicoracledb.instance.name" attribute.
-func (rb *ResourceBuilder) SetNewrelicoracledbInstanceName(val string) {
-	if rb.config.NewrelicoracledbInstanceName.Enabled {
-		rb.res.Attributes().PutStr("newrelicoracledb.instance.name", val)
 	}
 }
 

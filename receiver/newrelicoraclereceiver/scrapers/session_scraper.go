@@ -89,7 +89,7 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 	}
 
 	// Record the metric
-	s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, sessionCount, s.instanceName)
+	s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, sessionCount)
 	s.logger.Debug("Collected Oracle session count",
 		zap.Int64("count", sessionCount),
 		zap.String("instance", s.instanceName))

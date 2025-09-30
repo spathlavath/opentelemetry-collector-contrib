@@ -142,7 +142,7 @@ func (s *CoreScraper) scrapeLockedAccountsMetrics(ctx context.Context, now pcomm
 		)
 
 		// Record the locked accounts metric
-		s.mb.RecordNewrelicoracledbLockedAccountsDataPoint(now, lockedAccounts, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbLockedAccountsDataPoint(now, lockedAccounts, instanceID)
 
 		metricCount++
 	}
@@ -198,12 +198,12 @@ func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Ti
 		)
 
 		// Record all disk I/O metrics
-		s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, physicalReads, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, physicalWrites, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, physicalBlockReads, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, physicalBlockWrites, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, readTime, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, writeTime, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, physicalReads, instanceID)
+		s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, physicalWrites, instanceID)
+		s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, physicalBlockReads, instanceID)
+		s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, physicalBlockWrites, instanceID)
+		s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, readTime, instanceID)
+		s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, writeTime, instanceID)
 
 		metricCount++
 	}
@@ -277,16 +277,16 @@ func (s *CoreScraper) scrapePGAMetrics(ctx context.Context, now pcommon.Timestam
 
 		// Record each PGA metric if it exists
 		if val, exists := metrics["total PGA inuse"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(now, val, instanceID)
 		}
 		if val, exists := metrics["total PGA allocated"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(now, val, instanceID)
 		}
 		if val, exists := metrics["total freeable PGA memory"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(now, val, instanceID)
 		}
 		if val, exists := metrics["global memory bound"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(now, val, instanceID)
 		}
 
 		metricCount++
@@ -334,7 +334,7 @@ func (s *CoreScraper) scrapeGlobalNameInstanceMetrics(ctx context.Context, now p
 		)
 
 		// Record the global name metric (using 1 as value since it's an attribute metric)
-		s.mb.RecordNewrelicoracledbGlobalNameDataPoint(now, 1, s.instanceName, instanceID, globalName)
+		s.mb.RecordNewrelicoracledbGlobalNameDataPoint(now, 1, instanceID, globalName)
 
 		metricCount++
 	}
@@ -385,7 +385,7 @@ func (s *CoreScraper) scrapeDBIDInstanceMetrics(ctx context.Context, now pcommon
 		)
 
 		// Record the database ID metric (using 1 as value since it's an attribute metric)
-		s.mb.RecordNewrelicoracledbDbIDDataPoint(now, 1, s.instanceName, instanceID, dbID)
+		s.mb.RecordNewrelicoracledbDbIDDataPoint(now, 1, instanceID, dbID)
 
 		metricCount++
 	}
@@ -436,7 +436,7 @@ func (s *CoreScraper) scrapeLongRunningQueriesMetrics(ctx context.Context, now p
 		)
 
 		// Record the long running queries metric
-		s.mb.RecordNewrelicoracledbLongRunningQueriesDataPoint(now, total, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbLongRunningQueriesDataPoint(now, total, instanceID)
 
 		metricCount++
 	}
@@ -487,7 +487,7 @@ func (s *CoreScraper) scrapeSGAUGATotalMemoryMetrics(ctx context.Context, now pc
 		)
 
 		// Record the SGA UGA total memory metric
-		s.mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(now, sum, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(now, sum, instanceID)
 
 		metricCount++
 	}
@@ -538,7 +538,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheMetrics(ctx context.Context
 		)
 
 		// Record the SGA shared pool library cache metric
-		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(now, sum, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(now, sum, instanceID)
 
 		metricCount++
 	}
@@ -589,7 +589,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheUserMetrics(ctx context.Con
 		)
 
 		// Record the SGA shared pool library cache user metric
-		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(now, sum, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(now, sum, instanceID)
 
 		metricCount++
 	}
@@ -640,7 +640,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(ctx cont
 		)
 
 		// Record the SGA shared pool library cache reload ratio metric
-		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(now, ratio, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(now, ratio, instanceID)
 
 		metricCount++
 	}
@@ -691,7 +691,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheHitRatioMetrics(ctx context
 		)
 
 		// Record the SGA shared pool library cache hit ratio metric
-		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(now, ratio, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(now, ratio, instanceID)
 
 		metricCount++
 	}
@@ -742,7 +742,7 @@ func (s *CoreScraper) scrapeSGASharedPoolDictCacheMissRatioMetrics(ctx context.C
 		)
 
 		// Record the SGA shared pool dictionary cache miss ratio metric
-		s.mb.RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(now, ratio, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(now, ratio, instanceID)
 
 		metricCount++
 	}
@@ -793,7 +793,7 @@ func (s *CoreScraper) scrapeSGALogBufferSpaceWaitsMetrics(ctx context.Context, n
 		)
 
 		// Record the SGA log buffer space waits metric
-		s.mb.RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(now, count, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(now, count, instanceID)
 
 		metricCount++
 	}
@@ -849,7 +849,7 @@ func (s *CoreScraper) scrapeSGALogAllocRetriesMetrics(ctx context.Context, now p
 		)
 
 		// Record the SGA log allocation retries metric
-		s.mb.RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(now, ratioValue, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(now, ratioValue, instanceID)
 
 		metricCount++
 	}
@@ -905,7 +905,7 @@ func (s *CoreScraper) scrapeSGAHitRatioMetrics(ctx context.Context, now pcommon.
 		)
 
 		// Record the SGA hit ratio metric
-		s.mb.RecordNewrelicoracledbSgaHitRatioDataPoint(now, ratioValue, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaHitRatioDataPoint(now, ratioValue, instanceID)
 
 		metricCount++
 	}
@@ -962,7 +962,7 @@ func (s *CoreScraper) scrapeSysstatMetrics(ctx context.Context, now pcommon.Time
 				zap.Int64("sga_log_buffer_redo_allocation_retries", valueInt),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(now, valueInt, instanceID)
 
 		case "redo entries":
 			s.logger.Info("SGA log buffer redo entries metrics collected",
@@ -970,7 +970,7 @@ func (s *CoreScraper) scrapeSysstatMetrics(ctx context.Context, now pcommon.Time
 				zap.Int64("sga_log_buffer_redo_entries", valueInt),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(now, valueInt, instanceID)
 
 		case "sorts (memory)":
 			s.logger.Info("Sorts memory metrics collected",
@@ -978,7 +978,7 @@ func (s *CoreScraper) scrapeSysstatMetrics(ctx context.Context, now pcommon.Time
 				zap.Int64("sorts_memory", valueInt),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSortsMemoryDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSortsMemoryDataPoint(now, valueInt, instanceID)
 
 		case "sorts (disk)":
 			s.logger.Info("Sorts disk metrics collected",
@@ -986,7 +986,7 @@ func (s *CoreScraper) scrapeSysstatMetrics(ctx context.Context, now pcommon.Time
 				zap.Int64("sorts_disk", valueInt),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSortsDiskDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSortsDiskDataPoint(now, valueInt, instanceID)
 
 		default:
 			s.logger.Warn("Unknown sysstat metric name", zap.String("name", name), zap.String("instance_id", instanceID))
@@ -1047,7 +1047,7 @@ func (s *CoreScraper) scrapeSGAMetrics(ctx context.Context, now pcommon.Timestam
 				zap.Int64("sga_fixed_size_bytes", valueInt),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(now, valueInt, instanceID)
 
 		case "Redo Buffers":
 			s.logger.Info("SGA redo buffers metrics collected",
@@ -1055,7 +1055,7 @@ func (s *CoreScraper) scrapeSGAMetrics(ctx context.Context, now pcommon.Timestam
 				zap.Int64("sga_redo_buffers_bytes", valueInt),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(now, valueInt, instanceID)
 
 		default:
 			s.logger.Warn("Unknown SGA metric name", zap.String("name", name), zap.String("instance_id", instanceID))
@@ -1129,9 +1129,9 @@ func (s *CoreScraper) scrapeRollbackSegmentsMetrics(ctx context.Context, now pco
 		)
 
 		// Record all rollback segments metrics
-		s.mb.RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(now, getsValue, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(now, ratioValue, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(now, getsValue, instanceID)
+		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(now, waitsValue, instanceID)
+		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(now, ratioValue, instanceID)
 
 		metricCount++
 	}
@@ -1189,7 +1189,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 				zap.String("event", event),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(now, waitsValue, instanceID)
 
 		case strings.Contains(event, "log file switch completion"):
 			s.logger.Info("Redo log switch completion waits metrics collected",
@@ -1198,7 +1198,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 				zap.String("event", event),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(now, waitsValue, instanceID)
 
 		case strings.Contains(event, "log file switch (check"):
 			s.logger.Info("Redo log switch checkpoint incomplete waits metrics collected",
@@ -1207,7 +1207,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 				zap.String("event", event),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(now, waitsValue, instanceID)
 
 		case strings.Contains(event, "log file switch (arch"):
 			s.logger.Info("Redo log switch archiving needed waits metrics collected",
@@ -1216,7 +1216,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 				zap.String("event", event),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(now, waitsValue, instanceID)
 
 		case strings.Contains(event, "buffer busy waits"):
 			s.logger.Info("SGA buffer busy waits metrics collected",
@@ -1225,7 +1225,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 				zap.String("event", event),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(now, waitsValue, instanceID)
 
 		case strings.Contains(event, "freeBufferWaits"):
 			s.logger.Info("SGA free buffer waits metrics collected",
@@ -1234,7 +1234,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 				zap.String("event", event),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(now, waitsValue, instanceID)
 
 		case strings.Contains(event, "free buffer inspected"):
 			s.logger.Info("SGA free buffer inspected waits metrics collected",
@@ -1243,7 +1243,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 				zap.String("event", event),
 				zap.String("instance", s.instanceName),
 			)
-			s.mb.RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(now, waitsValue, instanceID)
 
 		default:
 			s.logger.Warn("Unknown redo log waits event", zap.String("event", event), zap.String("instance_id", instanceID))
