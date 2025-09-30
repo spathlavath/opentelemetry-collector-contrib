@@ -128,12 +128,12 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Record execution count if available
 		if executionCount.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
-				now, 
-				float64(executionCount.Int64), 
-				s.instanceName, 
-				dbName, 
-				qID, 
-				schName, 
+				now,
+				float64(executionCount.Int64),
+				s.instanceName,
+				dbName,
+				qID,
+				schName,
 				stmtType,
 			)
 		}
@@ -141,12 +141,12 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Record average CPU time if available
 		if avgCPUTimeMs.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
-				now, 
-				avgCPUTimeMs.Float64, 
-				s.instanceName, 
-				dbName, 
-				qID, 
-				schName, 
+				now,
+				avgCPUTimeMs.Float64,
+				s.instanceName,
+				dbName,
+				qID,
+				schName,
 				stmtType,
 			)
 		}
@@ -154,24 +154,24 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Record average disk reads if available
 		if avgDiskReads.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
-				now, 
-				avgDiskReads.Float64, 
-				s.instanceName, 
-				dbName, 
-				qID, 
-				schName, 
+				now,
+				avgDiskReads.Float64,
+				s.instanceName,
+				dbName,
+				qID,
+				schName,
 				stmtType,
 			)
 		}
 
 		// Record average elapsed time
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
-			now, 
-			avgElapsedTimeMs.Float64, 
-			s.instanceName, 
-			dbName, 
-			qID, 
-			schName, 
+			now,
+			avgElapsedTimeMs.Float64,
+			s.instanceName,
+			dbName,
+			qID,
+			schName,
 			stmtType,
 		)
 	}
