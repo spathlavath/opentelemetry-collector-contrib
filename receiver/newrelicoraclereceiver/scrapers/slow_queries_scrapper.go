@@ -47,7 +47,17 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		return errors
 	}
 
-	s.logger.Debug("Scraping Oracle slow queries")
+	// Check if any slow queries metrics are enabled
+	if !s.config.Metrics.NewrelicoracledbSlowQueriesAvgCpuTimeMs.Enabled &&
+		!s.config.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTimeMs.Enabled &&
+		!s.config.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads.Enabled &&
+		!s.config.Metrics.NewrelicoracledbSlowQueriesExecutionCount.Enabled &&
+		!s.config.Metrics.NewrelicoracledbSlowQueriesCount.Enabled {
+		s.logger.Debug("All slow queries metrics are disabled")
+		return errors
+	}
+
+	s.logger.Info("Scraping Oracle slow queries")
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Scrape slow queries metrics
@@ -61,10 +71,11 @@ func (s *SlowQueriesScraper) scrapeSlowQueriesMetrics(ctx context.Context, now p
 	var errors []error
 
 	// Execute slow queries query directly using the shared DB connection
-	s.logger.Debug("Executing slow queries query", zap.String("sql", queries.SlowQueries))
+	s.logger.Info("Executing slow queries query", zap.String("sql", queries.SlowQueries))
 
 	rows, err := s.db.QueryContext(ctx, queries.SlowQueries)
 	if err != nil {
+		s.logger.Error("Error executing slow queries query", zap.Error(err))
 		errors = append(errors, fmt.Errorf("error executing slow queries query: %w", err))
 		return errors
 	}
@@ -89,6 +100,7 @@ func (s *SlowQueriesScraper) scrapeSlowQueriesMetrics(ctx context.Context, now p
 			&avgElapsedTimeMs,
 		)
 		if err != nil {
+			s.logger.Error("Error scanning slow query row", zap.Error(err))
 			errors = append(errors, fmt.Errorf("error scanning slow query row: %w", err))
 			continue
 		}
@@ -109,20 +121,37 @@ func (s *SlowQueriesScraper) scrapeSlowQueriesMetrics(ctx context.Context, now p
 
 		// Record slow queries metrics using the proper metadata builder methods
 		// Following the pattern of scrapeGlobalNameTablespaceMetrics
-		s.mb.RecordNewrelicoracledbSlowQueriesCountDataPoint(now, 1, s.instanceName, s.instanceName)
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeMsDataPoint(now, avgElapsedTimeMs, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgCpuTimeMsDataPoint(now, avgCpuTimeMs, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(now, avgDiskReads, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
-		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(now, executionCount, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
+		s.logger.Debug("Recording slow queries metrics",
+			zap.String("query_id", queryID),
+			zap.Float64("avg_cpu_time_ms", avgCpuTimeMs),
+		)
+
+		// Record metrics only if they are enabled
+		if s.config.Metrics.NewrelicoracledbSlowQueriesCount.Enabled {
+			s.mb.RecordNewrelicoracledbSlowQueriesCountDataPoint(now, 1, s.instanceName, s.instanceName)
+		}
+		if s.config.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTimeMs.Enabled {
+			s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeMsDataPoint(now, avgElapsedTimeMs, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
+		}
+		if s.config.Metrics.NewrelicoracledbSlowQueriesAvgCpuTimeMs.Enabled {
+			s.mb.RecordNewrelicoracledbSlowQueriesAvgCpuTimeMsDataPoint(now, avgCpuTimeMs, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
+		}
+		if s.config.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads.Enabled {
+			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(now, avgDiskReads, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
+		}
+		if s.config.Metrics.NewrelicoracledbSlowQueriesExecutionCount.Enabled {
+			s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(now, executionCount, s.instanceName, s.instanceName, queryID, databaseName, schemaName)
+		}
 
 		metricCount++
 	}
 
 	if err = rows.Err(); err != nil {
+		s.logger.Error("Error iterating slow queries rows", zap.Error(err))
 		errors = append(errors, fmt.Errorf("error iterating slow queries rows: %w", err))
 	}
 
-	s.logger.Debug("Collected Oracle slow queries metrics", zap.Int("metric_count", metricCount), zap.String("instance", s.instanceName))
+	s.logger.Info("Collected Oracle slow queries metrics", zap.Int("metric_count", metricCount), zap.String("instance", s.instanceName))
 
 	return errors
 }
