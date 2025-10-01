@@ -295,7 +295,7 @@ func (s *ConnectionScraper) scrapeSessionResourceConsumption(ctx context.Context
 
 		// Record CPU usage
 		if cpuUsageSeconds.Valid {
-			s.mb.RecordNewrelicoracledbConnectionSessionCpuUsageDataPoint(
+			s.mb.RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint(
 				timestamp,
 				cpuUsageSeconds.Float64,
 				s.instanceName,
