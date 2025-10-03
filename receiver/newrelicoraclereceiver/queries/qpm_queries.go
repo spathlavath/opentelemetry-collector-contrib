@@ -39,8 +39,9 @@ const (
 		LEFT JOIN
 			full_scans fs ON sa.sql_id = fs.sql_id
 		WHERE
-		    sa.parsing_schema_name NOT IN ('SYS', 'SYSTEM')
-			 and sa.executions > 0
+		    sa.parsing_schema_name NOT IN ('SYS', 'SYSTEM', 'MDSYS', 'DVSYS', 'LBACSYS', 'DBSNMP', 'SYSMAN', 'AUDSYS','WMSYS', 'XDB', 'OJVMSYS', 'CTXSYS')
+			AND sa.executions > 0
+			AND sa.sql_text NOT LIKE '%full_scans AS%'
 		ORDER BY
 			avg_elapsed_time_ms DESC
 		FETCH FIRST 10 ROWS ONLY`
