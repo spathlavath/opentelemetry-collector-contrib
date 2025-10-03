@@ -280,6 +280,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSlowQueriesAvgDiskReads: metricInfo{
 		Name: "newrelicoracledb.slow_queries.avg_disk_reads",
 	},
+	NewrelicoracledbSlowQueriesAvgDiskWrites: metricInfo{
+		Name: "newrelicoracledb.slow_queries.avg_disk_writes",
+	},
 	NewrelicoracledbSlowQueriesAvgElapsedTime: metricInfo{
 		Name: "newrelicoracledb.slow_queries.avg_elapsed_time",
 	},
@@ -837,6 +840,7 @@ type metricsInfo struct {
 	NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio               metricInfo
 	NewrelicoracledbSlowQueriesAvgCPUTime                              metricInfo
 	NewrelicoracledbSlowQueriesAvgDiskReads                            metricInfo
+	NewrelicoracledbSlowQueriesAvgDiskWrites                           metricInfo
 	NewrelicoracledbSlowQueriesAvgElapsedTime                          metricInfo
 	NewrelicoracledbSlowQueriesExecutionCount                          metricInfo
 	NewrelicoracledbSlowQueriesQueryDetails                            metricInfo
@@ -5622,6 +5626,59 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) emit(metrics pmetric.Met
 
 func newMetricNewrelicoracledbSlowQueriesAvgDiskReads(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgDiskReads {
 	m := metricNewrelicoracledbSlowQueriesAvgDiskReads{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesAvgDiskWrites struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.avg_disk_writes metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.avg_disk_writes")
+	m.data.SetDescription("Average disk writes per execution for slow queries")
+	m.data.SetUnit("{writes}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesAvgDiskWrites(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgDiskWrites {
+	m := metricNewrelicoracledbSlowQueriesAvgDiskWrites{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -13794,6 +13851,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio               metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio
 	metricNewrelicoracledbSlowQueriesAvgCPUTime                              metricNewrelicoracledbSlowQueriesAvgCPUTime
 	metricNewrelicoracledbSlowQueriesAvgDiskReads                            metricNewrelicoracledbSlowQueriesAvgDiskReads
+	metricNewrelicoracledbSlowQueriesAvgDiskWrites                           metricNewrelicoracledbSlowQueriesAvgDiskWrites
 	metricNewrelicoracledbSlowQueriesAvgElapsedTime                          metricNewrelicoracledbSlowQueriesAvgElapsedTime
 	metricNewrelicoracledbSlowQueriesExecutionCount                          metricNewrelicoracledbSlowQueriesExecutionCount
 	metricNewrelicoracledbSlowQueriesQueryDetails                            metricNewrelicoracledbSlowQueriesQueryDetails
@@ -14063,6 +14121,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio:               newMetricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio(mbc.Metrics.NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio),
 		metricNewrelicoracledbSlowQueriesAvgCPUTime:                              newMetricNewrelicoracledbSlowQueriesAvgCPUTime(mbc.Metrics.NewrelicoracledbSlowQueriesAvgCPUTime),
 		metricNewrelicoracledbSlowQueriesAvgDiskReads:                            newMetricNewrelicoracledbSlowQueriesAvgDiskReads(mbc.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads),
+		metricNewrelicoracledbSlowQueriesAvgDiskWrites:                           newMetricNewrelicoracledbSlowQueriesAvgDiskWrites(mbc.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites),
 		metricNewrelicoracledbSlowQueriesAvgElapsedTime:                          newMetricNewrelicoracledbSlowQueriesAvgElapsedTime(mbc.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime),
 		metricNewrelicoracledbSlowQueriesExecutionCount:                          newMetricNewrelicoracledbSlowQueriesExecutionCount(mbc.Metrics.NewrelicoracledbSlowQueriesExecutionCount),
 		metricNewrelicoracledbSlowQueriesQueryDetails:                            newMetricNewrelicoracledbSlowQueriesQueryDetails(mbc.Metrics.NewrelicoracledbSlowQueriesQueryDetails),
@@ -14391,6 +14450,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesAvgCPUTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesAvgDiskWrites.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesAvgElapsedTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesExecutionCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesQueryDetails.emit(ils.Metrics())
@@ -15020,6 +15080,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(t
 // RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint adds a data point to newrelicoracledb.slow_queries.avg_disk_reads metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint adds a data point to newrelicoracledb.slow_queries.avg_disk_writes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint adds a data point to newrelicoracledb.slow_queries.avg_elapsed_time metric.

@@ -2473,6 +2473,17 @@ metrics:
       - database.name
       - query.id
 
+  newrelicoracledb.slow_queries.avg_disk_writes:
+    description: Average disk writes per execution for slow queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{writes}"
+    attributes:
+      - newrelic.entity_name
+      - database.name
+      - query.id    
+
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
     enabled: true

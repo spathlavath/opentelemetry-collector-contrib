@@ -74,6 +74,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		var queryText sql.NullString
 		var avgCPUTimeMs sql.NullFloat64
 		var avgDiskReads sql.NullFloat64
+		var avgDiskWrites sql.NullFloat64
 		var avgElapsedTimeMs sql.NullFloat64
 
 		if err := rows.Scan(
@@ -85,6 +86,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			&queryText,
 			&avgCPUTimeMs,
 			&avgDiskReads,
+			&avgDiskWrites,
 			&avgElapsedTimeMs,
 		); err != nil {
 			s.logger.Error("Failed to scan slow query row", zap.Error(err))
@@ -156,6 +158,17 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
 				now,
 				avgDiskReads.Float64,
+				s.instanceName,
+				dbName,
+				qID,
+			)
+		}
+
+		// Record average disk writes if available
+		if avgDiskWrites.Valid {
+			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(
+				now,
+				avgDiskWrites.Float64,
 				s.instanceName,
 				dbName,
 				qID,

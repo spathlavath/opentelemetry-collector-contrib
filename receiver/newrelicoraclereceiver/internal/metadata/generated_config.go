@@ -117,6 +117,7 @@ type MetricsConfig struct {
 	NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio               MetricConfig `mapstructure:"newrelicoracledb.sga_shared_pool_library_cache_reload_ratio"`
 	NewrelicoracledbSlowQueriesAvgCPUTime                              MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_cpu_time"`
 	NewrelicoracledbSlowQueriesAvgDiskReads                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_reads"`
+	NewrelicoracledbSlowQueriesAvgDiskWrites                           MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_writes"`
 	NewrelicoracledbSlowQueriesAvgElapsedTime                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_elapsed_time"`
 	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
 	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
@@ -541,6 +542,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesAvgDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesAvgDiskWrites: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesAvgElapsedTime: MetricConfig{
