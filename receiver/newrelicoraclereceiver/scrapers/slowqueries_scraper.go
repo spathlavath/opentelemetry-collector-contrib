@@ -1,20 +1,3 @@
-// Licensed to The New Relic under one or more contributor
-// license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright
-// ownership. The New Relic licenses this file to you under
-// the Apache License, Version 2.0 (the "License"); you may
-// not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-
 package scrapers
 
 import (
@@ -25,6 +8,7 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
@@ -40,6 +24,19 @@ type SlowQueriesScraper struct {
 
 // NewSlowQueriesScraper creates a new Slow Queries Scraper instance
 func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *SlowQueriesScraper {
+	if db == nil {
+		panic("database connection cannot be nil")
+	}
+	if mb == nil {
+		panic("metrics builder cannot be nil")
+	}
+	if logger == nil {
+		panic("logger cannot be nil")
+	}
+	if instanceName == "" {
+		panic("instance name cannot be empty")
+	}
+
 	return &SlowQueriesScraper{
 		db:                   db,
 		mb:                   mb,
@@ -113,7 +110,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		qID := queryID.String
 		qText := ""
 		if queryText.Valid {
-			qText = queryText.String
+			qText = commonutils.AnonymizeAndNormalize(queryText.String)
 		}
 
 		schName := ""
