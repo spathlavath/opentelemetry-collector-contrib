@@ -5589,7 +5589,7 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5600,8 +5600,6 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pc
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
-	dp.Attributes().PutStr("schema.name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement.type", statementTypeAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -14963,8 +14961,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(t
 }
 
 // RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint adds a data point to newrelicoracledb.slow_queries.avg_disk_reads metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint adds a data point to newrelicoracledb.slow_queries.avg_elapsed_time metric.
