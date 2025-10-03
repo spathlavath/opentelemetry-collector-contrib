@@ -286,6 +286,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSlowQueriesExecutionCount: metricInfo{
 		Name: "newrelicoracledb.slow_queries.execution_count",
 	},
+	NewrelicoracledbSlowQueriesQueryText: metricInfo{
+		Name: "newrelicoracledb.slow_queries.query_text",
+	},
 	NewrelicoracledbSortsDisk: metricInfo{
 		Name: "newrelicoracledb.sorts_disk",
 	},
@@ -836,6 +839,7 @@ type metricsInfo struct {
 	NewrelicoracledbSlowQueriesAvgDiskReads                            metricInfo
 	NewrelicoracledbSlowQueriesAvgElapsedTime                          metricInfo
 	NewrelicoracledbSlowQueriesExecutionCount                          metricInfo
+	NewrelicoracledbSlowQueriesQueryText                               metricInfo
 	NewrelicoracledbSortsDisk                                          metricInfo
 	NewrelicoracledbSortsMemory                                        metricInfo
 	NewrelicoracledbSystemActiveParallelSessions                       metricInfo
@@ -5724,6 +5728,60 @@ func (m *metricNewrelicoracledbSlowQueriesExecutionCount) emit(metrics pmetric.M
 
 func newMetricNewrelicoracledbSlowQueriesExecutionCount(cfg MetricConfig) metricNewrelicoracledbSlowQueriesExecutionCount {
 	m := metricNewrelicoracledbSlowQueriesExecutionCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesQueryText struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.query_text metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesQueryText) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.query_text")
+	m.data.SetDescription("Query text for slow queries")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesQueryText) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val string, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(1) // Use 1 to indicate presence of query text
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query.text", val) // Store the actual query text as an attribute
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesQueryText) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesQueryText) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesQueryText(cfg MetricConfig) metricNewrelicoracledbSlowQueriesQueryText {
+	m := metricNewrelicoracledbSlowQueriesQueryText{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -13736,6 +13794,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbSlowQueriesAvgDiskReads                            metricNewrelicoracledbSlowQueriesAvgDiskReads
 	metricNewrelicoracledbSlowQueriesAvgElapsedTime                          metricNewrelicoracledbSlowQueriesAvgElapsedTime
 	metricNewrelicoracledbSlowQueriesExecutionCount                          metricNewrelicoracledbSlowQueriesExecutionCount
+	metricNewrelicoracledbSlowQueriesQueryText                               metricNewrelicoracledbSlowQueriesQueryText
 	metricNewrelicoracledbSortsDisk                                          metricNewrelicoracledbSortsDisk
 	metricNewrelicoracledbSortsMemory                                        metricNewrelicoracledbSortsMemory
 	metricNewrelicoracledbSystemActiveParallelSessions                       metricNewrelicoracledbSystemActiveParallelSessions
@@ -14004,6 +14063,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbSlowQueriesAvgDiskReads:                            newMetricNewrelicoracledbSlowQueriesAvgDiskReads(mbc.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads),
 		metricNewrelicoracledbSlowQueriesAvgElapsedTime:                          newMetricNewrelicoracledbSlowQueriesAvgElapsedTime(mbc.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime),
 		metricNewrelicoracledbSlowQueriesExecutionCount:                          newMetricNewrelicoracledbSlowQueriesExecutionCount(mbc.Metrics.NewrelicoracledbSlowQueriesExecutionCount),
+		metricNewrelicoracledbSlowQueriesQueryText:                               newMetricNewrelicoracledbSlowQueriesQueryText(mbc.Metrics.NewrelicoracledbSlowQueriesQueryText),
 		metricNewrelicoracledbSortsDisk:                                          newMetricNewrelicoracledbSortsDisk(mbc.Metrics.NewrelicoracledbSortsDisk),
 		metricNewrelicoracledbSortsMemory:                                        newMetricNewrelicoracledbSortsMemory(mbc.Metrics.NewrelicoracledbSortsMemory),
 		metricNewrelicoracledbSystemActiveParallelSessions:                       newMetricNewrelicoracledbSystemActiveParallelSessions(mbc.Metrics.NewrelicoracledbSystemActiveParallelSessions),
@@ -14331,6 +14391,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesAvgElapsedTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesExecutionCount.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesQueryText.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSortsDisk.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSortsMemory.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSystemActiveParallelSessions.emit(ils.Metrics())
@@ -14967,6 +15028,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoi
 // RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint adds a data point to newrelicoracledb.slow_queries.execution_count metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	mb.metricNewrelicoracledbSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesQueryTextDataPoint adds a data point to newrelicoracledb.slow_queries.query_text metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryTextDataPoint(ts pcommon.Timestamp, val string, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesQueryText.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSortsDiskDataPoint adds a data point to newrelicoracledb.sorts_disk metric.

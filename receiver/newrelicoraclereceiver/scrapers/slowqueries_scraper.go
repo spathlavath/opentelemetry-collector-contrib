@@ -159,9 +159,18 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		}
 
 		// Record average elapsed time
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
+			s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
+				now,
+				avgElapsedTimeMs.Float64,
+				s.instanceName,
+				dbName,
+				qID,
+			)
+
+		// Record query text
+		s.mb.RecordNewrelicoracledbSlowQueriesQueryTextDataPoint(
 			now,
-			avgElapsedTimeMs.Float64,
+			queryText.String,
 			s.instanceName,
 			dbName,
 			qID,
