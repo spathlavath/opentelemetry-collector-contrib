@@ -2484,12 +2484,12 @@ metrics:
       - database.name
       - query.id
 
-  newrelicoracledb.slow_queries.query_text:
-    description: Query text for slow queries
+  newrelicoracledb.slow_queries.query_details:
+    description: Slow Query Details
     enabled: true
     gauge:
       value_type: string
-    unit: "1"
+    unit: "string"
     attributes:
       - newrelic.entity_name
       - database.name

@@ -119,7 +119,7 @@ type MetricsConfig struct {
 	NewrelicoracledbSlowQueriesAvgDiskReads                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_reads"`
 	NewrelicoracledbSlowQueriesAvgElapsedTime                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_elapsed_time"`
 	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
-	NewrelicoracledbSlowQueriesQueryText                               MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_text"`
+	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
 	NewrelicoracledbSortsDisk                                          MetricConfig `mapstructure:"newrelicoracledb.sorts_disk"`
 	NewrelicoracledbSortsMemory                                        MetricConfig `mapstructure:"newrelicoracledb.sorts_memory"`
 	NewrelicoracledbSystemActiveParallelSessions                       MetricConfig `mapstructure:"newrelicoracledb.system.active_parallel_sessions"`
@@ -549,7 +549,7 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbSlowQueriesExecutionCount: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbSlowQueriesQueryText: MetricConfig{
+		NewrelicoracledbSlowQueriesQueryDetails: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSortsDisk: MetricConfig{
