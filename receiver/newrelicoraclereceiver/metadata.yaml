@@ -2493,7 +2493,9 @@ metrics:
     attributes:
       - newrelic.entity_name
       - database.name
-      - query.id    
+      - query.id
+      - schema.name
+      - statement.type    
 
 tests:
   config:

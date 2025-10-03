@@ -5750,7 +5750,7 @@ func (m *metricNewrelicoracledbSlowQueriesQueryText) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesQueryText) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val string, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesQueryText) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val string, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5761,6 +5761,8 @@ func (m *metricNewrelicoracledbSlowQueriesQueryText) recordDataPoint(start pcomm
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("schema.name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("statement.type", statementTypeAttributeValue)
 	dp.Attributes().PutStr("query.text", val) // Store the actual query text as an attribute
 }
 
@@ -15031,8 +15033,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesExecutionCountDataPoi
 }
 
 // RecordNewrelicoracledbSlowQueriesQueryTextDataPoint adds a data point to newrelicoracledb.slow_queries.query_text metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryTextDataPoint(ts pcommon.Timestamp, val string, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesQueryText.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryTextDataPoint(ts pcommon.Timestamp, val string, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesQueryText.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue)
 }
 
 // RecordNewrelicoracledbSortsDiskDataPoint adds a data point to newrelicoracledb.sorts_disk metric.

@@ -107,6 +107,10 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		}
 
 		qID := queryID.String
+		qText := ""
+		if queryText.Valid {
+			qText = queryText.String
+		}	
 
 		schName := ""
 		if schemaName.Valid {
@@ -170,10 +174,12 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Record query text
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryTextDataPoint(
 			now,
-			queryText.String,
+			qText,
 			s.instanceName,
 			dbName,
 			qID,
+			schName,
+			stmtType,
 		)
 	}
 
