@@ -159,8 +159,8 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 				s.instanceName,
 				dbName,
 				qID,
-				schName,
-				stmtType,
+				"", 
+				"",
 			)
 		}
 

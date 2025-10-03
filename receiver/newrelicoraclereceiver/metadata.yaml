@@ -2476,8 +2476,6 @@ metrics:
       - newrelic.entity_name
       - database.name
       - query.id
-      - schema.name
-      - statement.type
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
@@ -2489,8 +2487,6 @@ metrics:
       - newrelic.entity_name
       - database.name
       - query.id
-      - schema.name
-      - statement.type
 
 tests:
   config:
