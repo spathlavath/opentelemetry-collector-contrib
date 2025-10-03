@@ -175,6 +175,14 @@ all_set:
       enabled: true
     newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
       enabled: true
+    newrelicoracledb.slow_queries.avg_cpu_time:
+      enabled: true
+    newrelicoracledb.slow_queries.avg_disk_reads:
+      enabled: true
+    newrelicoracledb.slow_queries.avg_elapsed_time:
+      enabled: true
+    newrelicoracledb.slow_queries.execution_count:
+      enabled: true
     newrelicoracledb.sorts_disk:
       enabled: true
     newrelicoracledb.sorts_memory:
@@ -659,6 +667,14 @@ none_set:
     newrelicoracledb.sga_shared_pool_library_cache_hit_ratio:
       enabled: false
     newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_cpu_time:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_disk_reads:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_elapsed_time:
+      enabled: false
+    newrelicoracledb.slow_queries.execution_count:
       enabled: false
     newrelicoracledb.sorts_disk:
       enabled: false

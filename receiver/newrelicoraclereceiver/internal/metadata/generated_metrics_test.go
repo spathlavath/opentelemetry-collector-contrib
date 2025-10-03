@@ -418,6 +418,22 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database.name-val", "query.id-val", "schema.name-val", "statement.type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "newrelic.entity_name-val", "database.name-val", "query.id-val", "schema.name-val", "statement.type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database.name-val", "query.id-val", "schema.name-val", "statement.type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "newrelic.entity_name-val", "database.name-val", "query.id-val", "schema.name-val", "statement.type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbSortsDiskDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
 
 			defaultMetricsCount++
@@ -2618,6 +2634,114 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_cpu_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_cpu_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_cpu_time")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_cpu_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average CPU time per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database.name")
+					assert.True(t, ok)
+					assert.Equal(t, "database.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query.id")
+					assert.True(t, ok)
+					assert.Equal(t, "query.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema.name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("statement.type")
+					assert.True(t, ok)
+					assert.Equal(t, "statement.type-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_disk_reads":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_disk_reads")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average disk reads per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database.name")
+					assert.True(t, ok)
+					assert.Equal(t, "database.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query.id")
+					assert.True(t, ok)
+					assert.Equal(t, "query.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema.name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("statement.type")
+					assert.True(t, ok)
+					assert.Equal(t, "statement.type-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_elapsed_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_elapsed_time")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average elapsed time per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database.name")
+					assert.True(t, ok)
+					assert.Equal(t, "database.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query.id")
+					assert.True(t, ok)
+					assert.Equal(t, "query.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema.name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("statement.type")
+					assert.True(t, ok)
+					assert.Equal(t, "statement.type-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.execution_count":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.execution_count")
+					validatedMetrics["newrelicoracledb.slow_queries.execution_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of executions for slow queries", ms.At(i).Description())
+					assert.Equal(t, "{executions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database.name")
+					assert.True(t, ok)
+					assert.Equal(t, "database.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query.id")
+					assert.True(t, ok)
+					assert.Equal(t, "query.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema.name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("statement.type")
+					assert.True(t, ok)
+					assert.Equal(t, "statement.type-val", attrVal.Str())
 				case "newrelicoracledb.sorts_disk":
 					assert.False(t, validatedMetrics["newrelicoracledb.sorts_disk"], "Found a duplicate in the metrics slice: newrelicoracledb.sorts_disk")
 					validatedMetrics["newrelicoracledb.sorts_disk"] = true
