@@ -76,6 +76,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		var avgDiskReads sql.NullFloat64
 		var avgDiskWrites sql.NullFloat64
 		var avgElapsedTimeMs sql.NullFloat64
+		var hasFullTableScan sql.NullString
 
 		if err := rows.Scan(
 			&databaseName,
@@ -88,6 +89,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			&avgDiskReads,
 			&avgDiskWrites,
 			&avgElapsedTimeMs,
+			&hasFullTableScan,
 		); err != nil {
 			s.logger.Error("Failed to scan slow query row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
@@ -112,7 +114,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		qText := ""
 		if queryText.Valid {
 			qText = queryText.String
-		}	
+		}
 
 		schName := ""
 		if schemaName.Valid {
@@ -122,6 +124,11 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		stmtType := ""
 		if statementType.Valid {
 			stmtType = statementType.String
+		}
+
+		fullScan := ""
+		if hasFullTableScan.Valid {
+			fullScan = hasFullTableScan.String
 		}
 
 		s.logger.Debug("Processing slow query",
@@ -176,13 +183,13 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		}
 
 		// Record average elapsed time
-			s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
-				now,
-				avgElapsedTimeMs.Float64,
-				s.instanceName,
-				dbName,
-				qID,
-			)
+		s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
+			now,
+			avgElapsedTimeMs.Float64,
+			s.instanceName,
+			dbName,
+			qID,
+		)
 
 		// Record query text
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
@@ -193,6 +200,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			qID,
 			schName,
 			stmtType,
+			fullScan,
 		)
 	}
 

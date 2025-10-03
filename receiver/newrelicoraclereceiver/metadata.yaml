@@ -46,6 +46,9 @@ attributes:
   statement.type:
     description: Type of SQL statement or application module
     type: string
+  has.full.table.scan:
+    description: Whether the query has a full table scan
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -2506,7 +2509,8 @@ metrics:
       - database.name
       - query.id
       - schema.name
-      - statement.type    
+      - statement.type
+      - has.full.table.scan    
 
 tests:
   config:
