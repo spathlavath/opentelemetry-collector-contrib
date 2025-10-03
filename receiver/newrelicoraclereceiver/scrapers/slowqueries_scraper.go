@@ -172,7 +172,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			)
 
 		// Record query text
-		s.mb.RecordNewrelicoracledbSlowQueriesQueryTextDataPoint(
+		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
 			qText,
 			s.instanceName,
