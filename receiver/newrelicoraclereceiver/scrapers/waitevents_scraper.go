@@ -132,6 +132,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				dbName,
 				qID,
 				waitEvent,
+				waitCat,
 			)
 		}
 
@@ -143,16 +144,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			dbName,
 			qID,
 			waitEvent,
-		)
-
-		// Record wait category - use simple value 1 for presence indicator
-		s.mb.RecordNewrelicoracledbWaitEventsWaitCategoryDataPoint(
-			now,
-			1, // Simple indicator that wait event occurred
-			s.instanceName,
-			dbName,
-			qID,
-			waitEvent,
+			waitCat,
 		)
 
 		// Record average wait time (calculate properly)
@@ -169,6 +161,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			dbName,
 			qID,
 			waitEvent,
+			waitCat,
 		)
 	}
 
