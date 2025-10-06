@@ -10,6 +10,7 @@ import (
 
 	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
@@ -63,30 +64,20 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	for rows.Next() {
-		var databaseName sql.NullString
-		var queryID sql.NullString
-		var schemaName sql.NullString
-		var statementType sql.NullString
-		var executionCount sql.NullInt64
-		var queryText sql.NullString
-		var avgCPUTimeMs sql.NullFloat64
-		var avgDiskReads sql.NullFloat64
-		var avgDiskWrites sql.NullFloat64
-		var avgElapsedTimeMs sql.NullFloat64
-		var hasFullTableScan sql.NullString
+		var slowQuery models.SlowQuery
 
 		if err := rows.Scan(
-			&databaseName,
-			&queryID,
-			&schemaName,
-			&statementType,
-			&executionCount,
-			&queryText,
-			&avgCPUTimeMs,
-			&avgDiskReads,
-			&avgDiskWrites,
-			&avgElapsedTimeMs,
-			&hasFullTableScan,
+			&slowQuery.DatabaseName,
+			&slowQuery.QueryID,
+			&slowQuery.SchemaName,
+			&slowQuery.StatementType,
+			&slowQuery.ExecutionCount,
+			&slowQuery.QueryText,
+			&slowQuery.AvgCPUTimeMs,
+			&slowQuery.AvgDiskReads,
+			&slowQuery.AvgDiskWrites,
+			&slowQuery.AvgElapsedTimeMs,
+			&slowQuery.HasFullTableScan,
 		); err != nil {
 			s.logger.Error("Failed to scan slow query row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
@@ -94,52 +85,37 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		}
 
 		// Ensure we have valid values for key fields
-		if !queryID.Valid || !avgElapsedTimeMs.Valid {
+		if !slowQuery.IsValidForMetrics() {
 			s.logger.Debug("Skipping slow query with null key values",
-				zap.String("query_id", queryID.String),
-				zap.Float64("avg_elapsed_time_ms", avgElapsedTimeMs.Float64))
+				zap.String("query_id", slowQuery.GetQueryID()),
+				zap.Float64("avg_elapsed_time_ms", slowQuery.AvgElapsedTimeMs.Float64))
 			continue
 		}
 
 		// Convert NullString/NullInt64/NullFloat64 to string values for attributes
-		dbName := ""
-		if databaseName.Valid {
-			dbName = databaseName.String
-		}
-
-		qID := queryID.String
+		dbName := slowQuery.GetDatabaseName()
+		qID := slowQuery.GetQueryID()
 		qText := ""
-		if queryText.Valid {
-			qText = commonutils.AnonymizeAndNormalize(queryText.String)
+		if slowQuery.QueryText.Valid {
+			qText = commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
 		}
 
-		schName := ""
-		if schemaName.Valid {
-			schName = schemaName.String
-		}
-
-		stmtType := ""
-		if statementType.Valid {
-			stmtType = statementType.String
-		}
-
-		fullScan := ""
-		if hasFullTableScan.Valid {
-			fullScan = hasFullTableScan.String
-		}
+		schName := slowQuery.GetSchemaName()
+		stmtType := slowQuery.GetStatementType()
+		fullScan := slowQuery.GetHasFullTableScan()
 
 		s.logger.Debug("Processing slow query",
 			zap.String("database_name", dbName),
 			zap.String("query_id", qID),
 			zap.String("schema_name", schName),
 			zap.String("statement_type", stmtType),
-			zap.Float64("avg_elapsed_time_ms", avgElapsedTimeMs.Float64))
+			zap.Float64("avg_elapsed_time_ms", slowQuery.AvgElapsedTimeMs.Float64))
 
 		// Record execution count if available
-		if executionCount.Valid {
+		if slowQuery.ExecutionCount.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 				now,
-				float64(executionCount.Int64),
+				float64(slowQuery.ExecutionCount.Int64),
 				s.instanceName,
 				dbName,
 				qID,
@@ -147,10 +123,10 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		}
 
 		// Record average CPU time if available
-		if avgCPUTimeMs.Valid {
+		if slowQuery.AvgCPUTimeMs.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
 				now,
-				avgCPUTimeMs.Float64,
+				slowQuery.AvgCPUTimeMs.Float64,
 				s.instanceName,
 				dbName,
 				qID,
@@ -158,10 +134,10 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		}
 
 		// Record average disk reads if available
-		if avgDiskReads.Valid {
+		if slowQuery.AvgDiskReads.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
 				now,
-				avgDiskReads.Float64,
+				slowQuery.AvgDiskReads.Float64,
 				s.instanceName,
 				dbName,
 				qID,
@@ -169,10 +145,10 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		}
 
 		// Record average disk writes if available
-		if avgDiskWrites.Valid {
+		if slowQuery.AvgDiskWrites.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(
 				now,
-				avgDiskWrites.Float64,
+				slowQuery.AvgDiskWrites.Float64,
 				s.instanceName,
 				dbName,
 				qID,
@@ -182,7 +158,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Record average elapsed time
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
 			now,
-			avgElapsedTimeMs.Float64,
+			slowQuery.AvgElapsedTimeMs.Float64,
 			s.instanceName,
 			dbName,
 			qID,
