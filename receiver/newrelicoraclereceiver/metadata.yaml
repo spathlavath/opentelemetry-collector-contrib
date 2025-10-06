@@ -2508,8 +2508,8 @@ metrics:
     description: Slow Query Details
     enabled: true
     gauge:
-      value_type: string
-    unit: "string"
+      value_type: int
+    unit: "1"
     attributes:
       - newrelic.entity_name
       - database.name
