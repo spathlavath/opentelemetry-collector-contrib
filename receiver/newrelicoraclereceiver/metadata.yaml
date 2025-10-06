@@ -58,6 +58,9 @@ attributes:
   wait_event_name:
     description: Oracle wait event name for wait events
     type: string
+  wait_category:
+    description: Oracle wait event category for wait events
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -2532,18 +2535,7 @@ metrics:
       - database_name
       - query_id
       - wait_event_name
-
-  newrelicoracledb.wait_events.wait_category:
-    description: Wait event category/class
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - newrelic.entity_name
-      - database_name
-      - query_id
-      - wait_event_name
+      - wait_category
 
   newrelicoracledb.wait_events.waiting_tasks_count:
     description: Number of waiting tasks for wait events
@@ -2556,6 +2548,7 @@ metrics:
       - database_name
       - query_id
       - wait_event_name
+      - wait_category
 
   newrelicoracledb.wait_events.avg_wait_time_ms:
     description: Average wait time in milliseconds for wait events
@@ -2567,7 +2560,8 @@ metrics:
       - newrelic.entity_name
       - database_name
       - query_id
-      - wait_event_name    
+      - wait_event_name
+      - wait_category    
 
 tests:
   config:

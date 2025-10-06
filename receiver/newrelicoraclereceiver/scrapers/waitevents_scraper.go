@@ -145,20 +145,26 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			waitEvent,
 		)
 
-		// Record wait category
+		// Record wait category - use simple value 1 for presence indicator
 		s.mb.RecordNewrelicoracledbWaitEventsWaitCategoryDataPoint(
 			now,
-			1, // Use value 1 for count metric
+			1, // Simple indicator that wait event occurred
 			s.instanceName,
 			dbName,
 			qID,
 			waitEvent,
 		)
 
-		// Record average wait time (using same value as total for now)
+		// Record average wait time (calculate properly)
+		var avgWaitTime float64
+		if waitingTasksCount.Valid && waitingTasksCount.Int64 > 0 {
+			avgWaitTime = totalWaitTimeMs.Float64 / float64(waitingTasksCount.Int64)
+		} else {
+			avgWaitTime = totalWaitTimeMs.Float64
+		}
 		s.mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(
 			now,
-			totalWaitTimeMs.Float64,
+			avgWaitTime,
 			s.instanceName,
 			dbName,
 			qID,
