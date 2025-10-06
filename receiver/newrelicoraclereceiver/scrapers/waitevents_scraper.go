@@ -131,30 +131,37 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				s.instanceName,
 				dbName,
 				qID,
-				waitCat,
 				waitEvent,
 			)
 		}
 
 		// Record total wait time
-		s.mb.RecordNewrelicoracledbWaitEventsTotalWaitTimeDataPoint(
+		s.mb.RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(
 			now,
 			totalWaitTimeMs.Float64,
 			s.instanceName,
 			dbName,
 			qID,
-			waitCat,
 			waitEvent,
 		)
 
-		// Record wait event details
-		s.mb.RecordNewrelicoracledbWaitEventsQueryDetailsDataPoint(
+		// Record wait category
+		s.mb.RecordNewrelicoracledbWaitEventsWaitCategoryDataPoint(
 			now,
-			1.0, // Use value 1 since this is an info metric
+			1, // Use value 1 for count metric
 			s.instanceName,
 			dbName,
 			qID,
-			waitCat,
+			waitEvent,
+		)
+
+		// Record average wait time (using same value as total for now)
+		s.mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(
+			now,
+			totalWaitTimeMs.Float64,
+			s.instanceName,
+			dbName,
+			qID,
 			waitEvent,
 		)
 	}
