@@ -495,8 +495,6 @@ all_set:
       enabled: true
     newrelicoracledb.wait_events.total_wait_time_ms:
       enabled: true
-    newrelicoracledb.wait_events.wait_category:
-      enabled: true
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: true
   resource_attributes:
@@ -999,8 +997,6 @@ none_set:
     newrelicoracledb.wait_events.avg_wait_time_ms:
       enabled: false
     newrelicoracledb.wait_events.total_wait_time_ms:
-      enabled: false
-    newrelicoracledb.wait_events.wait_category:
       enabled: false
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: false
