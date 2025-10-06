@@ -748,11 +748,14 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbTablespaceSpaceUsedPercentage: metricInfo{
 		Name: "newrelicoracledb.tablespace.space_used_percentage",
 	},
-	NewrelicoracledbWaitEventsQueryDetails: metricInfo{
-		Name: "newrelicoracledb.wait_events.query_details",
+	NewrelicoracledbWaitEventsAvgWaitTimeMs: metricInfo{
+		Name: "newrelicoracledb.wait_events.avg_wait_time_ms",
 	},
-	NewrelicoracledbWaitEventsTotalWaitTime: metricInfo{
-		Name: "newrelicoracledb.wait_events.total_wait_time",
+	NewrelicoracledbWaitEventsTotalWaitTimeMs: metricInfo{
+		Name: "newrelicoracledb.wait_events.total_wait_time_ms",
+	},
+	NewrelicoracledbWaitEventsWaitCategory: metricInfo{
+		Name: "newrelicoracledb.wait_events.wait_category",
 	},
 	NewrelicoracledbWaitEventsWaitingTasksCount: metricInfo{
 		Name: "newrelicoracledb.wait_events.waiting_tasks_count",
@@ -1005,8 +1008,9 @@ type metricsInfo struct {
 	NewrelicoracledbTablespaceSpaceConsumedBytes                       metricInfo
 	NewrelicoracledbTablespaceSpaceReservedBytes                       metricInfo
 	NewrelicoracledbTablespaceSpaceUsedPercentage                      metricInfo
-	NewrelicoracledbWaitEventsQueryDetails                             metricInfo
-	NewrelicoracledbWaitEventsTotalWaitTime                            metricInfo
+	NewrelicoracledbWaitEventsAvgWaitTimeMs                            metricInfo
+	NewrelicoracledbWaitEventsTotalWaitTimeMs                          metricInfo
+	NewrelicoracledbWaitEventsWaitCategory                             metricInfo
 	NewrelicoracledbWaitEventsWaitingTasksCount                        metricInfo
 }
 
@@ -13764,22 +13768,22 @@ func newMetricNewrelicoracledbTablespaceSpaceUsedPercentage(cfg MetricConfig) me
 	return m
 }
 
-type metricNewrelicoracledbWaitEventsQueryDetails struct {
+type metricNewrelicoracledbWaitEventsAvgWaitTimeMs struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
 	capacity int            // max observed number of data points added to the metric.
 }
 
-// init fills newrelicoracledb.wait_events.query_details metric with initial data.
-func (m *metricNewrelicoracledbWaitEventsQueryDetails) init() {
-	m.data.SetName("newrelicoracledb.wait_events.query_details")
-	m.data.SetDescription("Wait Event Query Details")
-	m.data.SetUnit("1")
+// init fills newrelicoracledb.wait_events.avg_wait_time_ms metric with initial data.
+func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) init() {
+	m.data.SetName("newrelicoracledb.wait_events.avg_wait_time_ms")
+	m.data.SetDescription("Average wait time in milliseconds for wait events")
+	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13788,21 +13792,20 @@ func (m *metricNewrelicoracledbWaitEventsQueryDetails) recordDataPoint(start pco
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
-	dp.Attributes().PutStr("wait.category", waitCategoryAttributeValue)
-	dp.Attributes().PutStr("wait.event.name", waitEventNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbWaitEventsQueryDetails) updateCapacity() {
+func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) updateCapacity() {
 	if m.data.Gauge().DataPoints().Len() > m.capacity {
 		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbWaitEventsQueryDetails) emit(metrics pmetric.MetricSlice) {
+func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) emit(metrics pmetric.MetricSlice) {
 	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
@@ -13810,8 +13813,8 @@ func (m *metricNewrelicoracledbWaitEventsQueryDetails) emit(metrics pmetric.Metr
 	}
 }
 
-func newMetricNewrelicoracledbWaitEventsQueryDetails(cfg MetricConfig) metricNewrelicoracledbWaitEventsQueryDetails {
-	m := metricNewrelicoracledbWaitEventsQueryDetails{config: cfg}
+func newMetricNewrelicoracledbWaitEventsAvgWaitTimeMs(cfg MetricConfig) metricNewrelicoracledbWaitEventsAvgWaitTimeMs {
+	m := metricNewrelicoracledbWaitEventsAvgWaitTimeMs{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -13819,22 +13822,22 @@ func newMetricNewrelicoracledbWaitEventsQueryDetails(cfg MetricConfig) metricNew
 	return m
 }
 
-type metricNewrelicoracledbWaitEventsTotalWaitTime struct {
+type metricNewrelicoracledbWaitEventsTotalWaitTimeMs struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
 	capacity int            // max observed number of data points added to the metric.
 }
 
-// init fills newrelicoracledb.wait_events.total_wait_time metric with initial data.
-func (m *metricNewrelicoracledbWaitEventsTotalWaitTime) init() {
-	m.data.SetName("newrelicoracledb.wait_events.total_wait_time")
-	m.data.SetDescription("Total wait time for wait events")
+// init fills newrelicoracledb.wait_events.total_wait_time_ms metric with initial data.
+func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) init() {
+	m.data.SetName("newrelicoracledb.wait_events.total_wait_time_ms")
+	m.data.SetDescription("Total wait time in milliseconds for wait events")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsTotalWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13843,21 +13846,20 @@ func (m *metricNewrelicoracledbWaitEventsTotalWaitTime) recordDataPoint(start pc
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
-	dp.Attributes().PutStr("wait.category", waitCategoryAttributeValue)
-	dp.Attributes().PutStr("wait.event.name", waitEventNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbWaitEventsTotalWaitTime) updateCapacity() {
+func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) updateCapacity() {
 	if m.data.Gauge().DataPoints().Len() > m.capacity {
 		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbWaitEventsTotalWaitTime) emit(metrics pmetric.MetricSlice) {
+func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) emit(metrics pmetric.MetricSlice) {
 	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
@@ -13865,8 +13867,62 @@ func (m *metricNewrelicoracledbWaitEventsTotalWaitTime) emit(metrics pmetric.Met
 	}
 }
 
-func newMetricNewrelicoracledbWaitEventsTotalWaitTime(cfg MetricConfig) metricNewrelicoracledbWaitEventsTotalWaitTime {
-	m := metricNewrelicoracledbWaitEventsTotalWaitTime{config: cfg}
+func newMetricNewrelicoracledbWaitEventsTotalWaitTimeMs(cfg MetricConfig) metricNewrelicoracledbWaitEventsTotalWaitTimeMs {
+	m := metricNewrelicoracledbWaitEventsTotalWaitTimeMs{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbWaitEventsWaitCategory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.wait_events.wait_category metric with initial data.
+func (m *metricNewrelicoracledbWaitEventsWaitCategory) init() {
+	m.data.SetName("newrelicoracledb.wait_events.wait_category")
+	m.data.SetDescription("Wait event category/class")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbWaitEventsWaitCategory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbWaitEventsWaitCategory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbWaitEventsWaitCategory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbWaitEventsWaitCategory(cfg MetricConfig) metricNewrelicoracledbWaitEventsWaitCategory {
+	m := metricNewrelicoracledbWaitEventsWaitCategory{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -13889,7 +13945,7 @@ func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13898,10 +13954,9 @@ func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) recordDataPoint(star
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
-	dp.Attributes().PutStr("wait.category", waitCategoryAttributeValue)
-	dp.Attributes().PutStr("wait.event.name", waitEventNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -14184,8 +14239,9 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbTablespaceSpaceConsumedBytes                       metricNewrelicoracledbTablespaceSpaceConsumedBytes
 	metricNewrelicoracledbTablespaceSpaceReservedBytes                       metricNewrelicoracledbTablespaceSpaceReservedBytes
 	metricNewrelicoracledbTablespaceSpaceUsedPercentage                      metricNewrelicoracledbTablespaceSpaceUsedPercentage
-	metricNewrelicoracledbWaitEventsQueryDetails                             metricNewrelicoracledbWaitEventsQueryDetails
-	metricNewrelicoracledbWaitEventsTotalWaitTime                            metricNewrelicoracledbWaitEventsTotalWaitTime
+	metricNewrelicoracledbWaitEventsAvgWaitTimeMs                            metricNewrelicoracledbWaitEventsAvgWaitTimeMs
+	metricNewrelicoracledbWaitEventsTotalWaitTimeMs                          metricNewrelicoracledbWaitEventsTotalWaitTimeMs
+	metricNewrelicoracledbWaitEventsWaitCategory                             metricNewrelicoracledbWaitEventsWaitCategory
 	metricNewrelicoracledbWaitEventsWaitingTasksCount                        metricNewrelicoracledbWaitEventsWaitingTasksCount
 }
 
@@ -14457,8 +14513,9 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbTablespaceSpaceConsumedBytes:                       newMetricNewrelicoracledbTablespaceSpaceConsumedBytes(mbc.Metrics.NewrelicoracledbTablespaceSpaceConsumedBytes),
 		metricNewrelicoracledbTablespaceSpaceReservedBytes:                       newMetricNewrelicoracledbTablespaceSpaceReservedBytes(mbc.Metrics.NewrelicoracledbTablespaceSpaceReservedBytes),
 		metricNewrelicoracledbTablespaceSpaceUsedPercentage:                      newMetricNewrelicoracledbTablespaceSpaceUsedPercentage(mbc.Metrics.NewrelicoracledbTablespaceSpaceUsedPercentage),
-		metricNewrelicoracledbWaitEventsQueryDetails:                             newMetricNewrelicoracledbWaitEventsQueryDetails(mbc.Metrics.NewrelicoracledbWaitEventsQueryDetails),
-		metricNewrelicoracledbWaitEventsTotalWaitTime:                            newMetricNewrelicoracledbWaitEventsTotalWaitTime(mbc.Metrics.NewrelicoracledbWaitEventsTotalWaitTime),
+		metricNewrelicoracledbWaitEventsAvgWaitTimeMs:                            newMetricNewrelicoracledbWaitEventsAvgWaitTimeMs(mbc.Metrics.NewrelicoracledbWaitEventsAvgWaitTimeMs),
+		metricNewrelicoracledbWaitEventsTotalWaitTimeMs:                          newMetricNewrelicoracledbWaitEventsTotalWaitTimeMs(mbc.Metrics.NewrelicoracledbWaitEventsTotalWaitTimeMs),
+		metricNewrelicoracledbWaitEventsWaitCategory:                             newMetricNewrelicoracledbWaitEventsWaitCategory(mbc.Metrics.NewrelicoracledbWaitEventsWaitCategory),
 		metricNewrelicoracledbWaitEventsWaitingTasksCount:                        newMetricNewrelicoracledbWaitEventsWaitingTasksCount(mbc.Metrics.NewrelicoracledbWaitEventsWaitingTasksCount),
 		resourceAttributeIncludeFilter:                                           make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:                                           make(map[string]filter.Filter),
@@ -14789,8 +14846,9 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbTablespaceSpaceConsumedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceSpaceReservedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceSpaceUsedPercentage.emit(ils.Metrics())
-	mb.metricNewrelicoracledbWaitEventsQueryDetails.emit(ils.Metrics())
-	mb.metricNewrelicoracledbWaitEventsTotalWaitTime.emit(ils.Metrics())
+	mb.metricNewrelicoracledbWaitEventsAvgWaitTimeMs.emit(ils.Metrics())
+	mb.metricNewrelicoracledbWaitEventsTotalWaitTimeMs.emit(ils.Metrics())
+	mb.metricNewrelicoracledbWaitEventsWaitCategory.emit(ils.Metrics())
 	mb.metricNewrelicoracledbWaitEventsWaitingTasksCount.emit(ils.Metrics())
 
 	for _, op := range options {
@@ -16048,19 +16106,24 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceSpaceUsedPercentageDat
 	mb.metricNewrelicoracledbTablespaceSpaceUsedPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
 }
 
-// RecordNewrelicoracledbWaitEventsQueryDetailsDataPoint adds a data point to newrelicoracledb.wait_events.query_details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsQueryDetailsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitCategoryAttributeValue, waitEventNameAttributeValue)
+// RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint adds a data point to newrelicoracledb.wait_events.avg_wait_time_ms metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsAvgWaitTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue)
 }
 
-// RecordNewrelicoracledbWaitEventsTotalWaitTimeDataPoint adds a data point to newrelicoracledb.wait_events.total_wait_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsTotalWaitTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsTotalWaitTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitCategoryAttributeValue, waitEventNameAttributeValue)
+// RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint adds a data point to newrelicoracledb.wait_events.total_wait_time_ms metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsTotalWaitTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue)
+}
+
+// RecordNewrelicoracledbWaitEventsWaitCategoryDataPoint adds a data point to newrelicoracledb.wait_events.wait_category metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsWaitCategoryDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsWaitCategory.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint adds a data point to newrelicoracledb.wait_events.waiting_tasks_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitCategoryAttributeValue string, waitEventNameAttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsWaitingTasksCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitCategoryAttributeValue, waitEventNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsWaitingTasksCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue)
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,

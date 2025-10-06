@@ -3697,27 +3697,9 @@ Percentage of tablespace space currently used
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
-### newrelicoracledb.wait_events.query_details
+### newrelicoracledb.wait_events.avg_wait_time_ms
 
-Wait Event Query Details
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| database.name | Oracle database name | Any Str | false |
-| query.id | SQL query identifier | Any Str | false |
-| wait.category | Oracle wait event category/class | Any Str | false |
-| wait.event.name | Oracle wait event name | Any Str | false |
-
-### newrelicoracledb.wait_events.total_wait_time
-
-Total wait time for wait events
+Average wait time in milliseconds for wait events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3728,10 +3710,43 @@ Total wait time for wait events
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| database.name | Oracle database name | Any Str | false |
-| query.id | SQL query identifier | Any Str | false |
-| wait.category | Oracle wait event category/class | Any Str | false |
-| wait.event.name | Oracle wait event name | Any Str | false |
+| database_name | Oracle database name for wait events | Any Str | false |
+| query_id | SQL query identifier for wait events | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+
+### newrelicoracledb.wait_events.total_wait_time_ms
+
+Total wait time in milliseconds for wait events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name for wait events | Any Str | false |
+| query_id | SQL query identifier for wait events | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+
+### newrelicoracledb.wait_events.wait_category
+
+Wait event category/class
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name for wait events | Any Str | false |
+| query_id | SQL query identifier for wait events | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
 
 ### newrelicoracledb.wait_events.waiting_tasks_count
 
@@ -3746,10 +3761,9 @@ Number of waiting tasks for wait events
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| database.name | Oracle database name | Any Str | false |
-| query.id | SQL query identifier | Any Str | false |
-| wait.category | Oracle wait event category/class | Any Str | false |
-| wait.event.name | Oracle wait event name | Any Str | false |
+| database_name | Oracle database name for wait events | Any Str | false |
+| query_id | SQL query identifier for wait events | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
 
 ## Resource Attributes
 

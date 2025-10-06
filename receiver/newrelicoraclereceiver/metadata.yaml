@@ -49,11 +49,14 @@ attributes:
   has.full.table.scan:
     description: Whether the query has a full table scan
     type: string
-  wait.category:
-    description: Oracle wait event category/class
+  database_name:
+    description: Oracle database name for wait events
     type: string
-  wait.event.name:
-    description: Oracle wait event name
+  query_id:
+    description: SQL query identifier for wait events
+    type: string
+  wait_event_name:
+    description: Oracle wait event name for wait events
     type: string
 
 metrics:
@@ -2518,6 +2521,30 @@ metrics:
       - statement.type
       - has.full.table.scan    
 
+  newrelicoracledb.wait_events.total_wait_time_ms:
+    description: Total wait time in milliseconds for wait events
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+      - wait_event_name
+
+  newrelicoracledb.wait_events.wait_category:
+    description: Wait event category/class
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+      - wait_event_name
+
   newrelicoracledb.wait_events.waiting_tasks_count:
     description: Number of waiting tasks for wait events
     enabled: true
@@ -2526,36 +2553,21 @@ metrics:
     unit: "{tasks}"
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id
-      - wait.category
-      - wait.event.name
+      - database_name
+      - query_id
+      - wait_event_name
 
-  newrelicoracledb.wait_events.total_wait_time:
-    description: Total wait time for wait events
+  newrelicoracledb.wait_events.avg_wait_time_ms:
+    description: Average wait time in milliseconds for wait events
     enabled: true
     gauge:
       value_type: double
     unit: ms
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id
-      - wait.category
-      - wait.event.name
-
-  newrelicoracledb.wait_events.query_details:
-    description: Wait Event Query Details
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "1"
-    attributes:
-      - newrelic.entity_name
-      - database.name
-      - query.id
-      - wait.category
-      - wait.event.name    
+      - database_name
+      - query_id
+      - wait_event_name    
 
 tests:
   config:

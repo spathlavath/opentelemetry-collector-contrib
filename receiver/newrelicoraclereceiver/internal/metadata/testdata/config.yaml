@@ -491,9 +491,11 @@ all_set:
       enabled: true
     newrelicoracledb.tablespace.space_used_percentage:
       enabled: true
-    newrelicoracledb.wait_events.query_details:
+    newrelicoracledb.wait_events.avg_wait_time_ms:
       enabled: true
-    newrelicoracledb.wait_events.total_wait_time:
+    newrelicoracledb.wait_events.total_wait_time_ms:
+      enabled: true
+    newrelicoracledb.wait_events.wait_category:
       enabled: true
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: true
@@ -994,9 +996,11 @@ none_set:
       enabled: false
     newrelicoracledb.tablespace.space_used_percentage:
       enabled: false
-    newrelicoracledb.wait_events.query_details:
+    newrelicoracledb.wait_events.avg_wait_time_ms:
       enabled: false
-    newrelicoracledb.wait_events.total_wait_time:
+    newrelicoracledb.wait_events.total_wait_time_ms:
+      enabled: false
+    newrelicoracledb.wait_events.wait_category:
       enabled: false
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: false

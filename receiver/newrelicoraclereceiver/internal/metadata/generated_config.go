@@ -273,8 +273,9 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceSpaceConsumedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_consumed_bytes"`
 	NewrelicoracledbTablespaceSpaceReservedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_reserved_bytes"`
 	NewrelicoracledbTablespaceSpaceUsedPercentage                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_used_percentage"`
-	NewrelicoracledbWaitEventsQueryDetails                             MetricConfig `mapstructure:"newrelicoracledb.wait_events.query_details"`
-	NewrelicoracledbWaitEventsTotalWaitTime                            MetricConfig `mapstructure:"newrelicoracledb.wait_events.total_wait_time"`
+	NewrelicoracledbWaitEventsAvgWaitTimeMs                            MetricConfig `mapstructure:"newrelicoracledb.wait_events.avg_wait_time_ms"`
+	NewrelicoracledbWaitEventsTotalWaitTimeMs                          MetricConfig `mapstructure:"newrelicoracledb.wait_events.total_wait_time_ms"`
+	NewrelicoracledbWaitEventsWaitCategory                             MetricConfig `mapstructure:"newrelicoracledb.wait_events.wait_category"`
 	NewrelicoracledbWaitEventsWaitingTasksCount                        MetricConfig `mapstructure:"newrelicoracledb.wait_events.waiting_tasks_count"`
 }
 
@@ -1015,10 +1016,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbTablespaceSpaceUsedPercentage: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbWaitEventsQueryDetails: MetricConfig{
+		NewrelicoracledbWaitEventsAvgWaitTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbWaitEventsTotalWaitTime: MetricConfig{
+		NewrelicoracledbWaitEventsTotalWaitTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbWaitEventsWaitCategory: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbWaitEventsWaitingTasksCount: MetricConfig{
