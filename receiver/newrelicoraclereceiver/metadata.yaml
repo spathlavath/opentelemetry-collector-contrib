@@ -49,6 +49,12 @@ attributes:
   has.full.table.scan:
     description: Whether the query has a full table scan
     type: string
+  wait.category:
+    description: Oracle wait event category/class
+    type: string
+  wait.event.name:
+    description: Oracle wait event name
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -2511,6 +2517,45 @@ metrics:
       - schema.name
       - statement.type
       - has.full.table.scan    
+
+  newrelicoracledb.wait_events.waiting_tasks_count:
+    description: Number of waiting tasks for wait events
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{tasks}"
+    attributes:
+      - newrelic.entity_name
+      - database.name
+      - query.id
+      - wait.category
+      - wait.event.name
+
+  newrelicoracledb.wait_events.total_wait_time:
+    description: Total wait time for wait events
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - database.name
+      - query.id
+      - wait.category
+      - wait.event.name
+
+  newrelicoracledb.wait_events.query_details:
+    description: Wait Event Query Details
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - database.name
+      - query.id
+      - wait.category
+      - wait.event.name    
 
 tests:
   config:
