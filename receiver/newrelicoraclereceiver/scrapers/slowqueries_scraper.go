@@ -170,13 +170,14 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			stmtType,
 			fullScan,
 		)
+
+		// Add query ID to the list for individual queries processing
 	}
 
 	if err := rows.Err(); err != nil {
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-
 	s.logger.Debug("Completed Oracle slow queries scrape")
 	return scrapeErrors
 }
