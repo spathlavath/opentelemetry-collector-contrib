@@ -3,6 +3,8 @@ package scrapers
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -46,14 +48,31 @@ func NewIndividualQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger
 	}
 }
 
-// ScrapeIndividualQueries collects Oracle individual queries metrics
-func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context) []error {
-	s.logger.Debug("Begin Oracle individual queries scrape")
+// ScrapeIndividualQueries collects Oracle individual queries metrics filtered by query IDs
+func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, queryIDs []string) []error {
+	s.logger.Debug("Begin Oracle individual queries scrape", zap.Int("filter_query_ids", len(queryIDs)))
 
 	var scrapeErrors []error
 
-	// Execute the individual queries SQL
-	rows, err := s.db.QueryContext(ctx, queries.IndividualQueriesSQL)
+	// If no query IDs to filter, return early
+	if len(queryIDs) == 0 {
+		s.logger.Debug("No query IDs to filter individual queries, skipping")
+		return scrapeErrors
+	}
+
+	// Build the parameterized query with placeholders for query IDs
+	placeholders := make([]string, len(queryIDs))
+	args := make([]interface{}, len(queryIDs))
+	for i, qid := range queryIDs {
+		placeholders[i] = "?"
+		args[i] = qid
+	}
+	
+	// Use the filtered SQL query with proper parameterization
+	filteredSQL := fmt.Sprintf(queries.IndividualQueriesFilteredSQL, strings.Join(placeholders, ","))
+
+	// Execute the individual queries SQL with query ID filter
+	rows, err := s.db.QueryContext(ctx, filteredSQL, args...)
 	if err != nil {
 		s.logger.Error("Failed to execute individual queries query", zap.Error(err))
 		return []error{err}
