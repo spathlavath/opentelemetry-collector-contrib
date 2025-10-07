@@ -58,5 +58,6 @@ const (
 		WHERE
 		    sql_id is not null
 		ORDER BY
-		    elapsed_time_ms DESC`
+		    elapsed_time_ms DESC
+		FETCH FIRST 10 ROWS ONLY`
 )
