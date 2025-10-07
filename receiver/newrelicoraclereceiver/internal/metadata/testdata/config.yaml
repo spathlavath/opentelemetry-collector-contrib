@@ -17,6 +17,12 @@ all_set:
       enabled: true
     newrelicoracledb.global_name:
       enabled: true
+    newrelicoracledb.individual_queries.cpu_time:
+      enabled: true
+    newrelicoracledb.individual_queries.elapsed_time:
+      enabled: true
+    newrelicoracledb.individual_queries.query_details:
+      enabled: true
     newrelicoracledb.locked_accounts:
       enabled: true
     newrelicoracledb.long_running_queries:
@@ -179,9 +185,13 @@ all_set:
       enabled: true
     newrelicoracledb.slow_queries.avg_disk_reads:
       enabled: true
+    newrelicoracledb.slow_queries.avg_disk_writes:
+      enabled: true
     newrelicoracledb.slow_queries.avg_elapsed_time:
       enabled: true
     newrelicoracledb.slow_queries.execution_count:
+      enabled: true
+    newrelicoracledb.slow_queries.query_details:
       enabled: true
     newrelicoracledb.sorts_disk:
       enabled: true
@@ -510,6 +520,12 @@ none_set:
       enabled: false
     newrelicoracledb.global_name:
       enabled: false
+    newrelicoracledb.individual_queries.cpu_time:
+      enabled: false
+    newrelicoracledb.individual_queries.elapsed_time:
+      enabled: false
+    newrelicoracledb.individual_queries.query_details:
+      enabled: false
     newrelicoracledb.locked_accounts:
       enabled: false
     newrelicoracledb.long_running_queries:
@@ -672,9 +688,13 @@ none_set:
       enabled: false
     newrelicoracledb.slow_queries.avg_disk_reads:
       enabled: false
+    newrelicoracledb.slow_queries.avg_disk_writes:
+      enabled: false
     newrelicoracledb.slow_queries.avg_elapsed_time:
       enabled: false
     newrelicoracledb.slow_queries.execution_count:
+      enabled: false
+    newrelicoracledb.slow_queries.query_details:
       enabled: false
     newrelicoracledb.sorts_disk:
       enabled: false

@@ -45,4 +45,18 @@ const (
 		ORDER BY
 			avg_elapsed_time_ms DESC
 		FETCH FIRST 10 ROWS ONLY`
+
+	// Oracle SQL query for individual queries metrics
+	IndividualQueriesSQL = `
+		SELECT
+		    sql_id as query_id,
+		    sql_text as query_text,
+		    cpu_time/1000 as cpu_time_ms,
+		    elapsed_time / 1000 AS elapsed_time_ms
+		FROM
+		    v$sql
+		WHERE
+		    sql_id is not null
+		ORDER BY
+		    elapsed_time_ms DESC`
 )
