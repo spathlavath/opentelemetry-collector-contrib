@@ -60,19 +60,19 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		return scrapeErrors
 	}
 
-	// Build the parameterized query with placeholders for query IDs
-	placeholders := make([]string, len(queryIDs))
-	args := make([]interface{}, len(queryIDs))
+	// Build quoted query IDs for the IN clause
+	quotedQueryIDs := make([]string, len(queryIDs))
 	for i, qid := range queryIDs {
-		placeholders[i] = "?"
-		args[i] = qid
+		quotedQueryIDs[i] = fmt.Sprintf("'%s'", qid)
 	}
 
-	// Use the filtered SQL query with proper parameterization
-	filteredSQL := fmt.Sprintf(queries.IndividualQueriesFilteredSQL, strings.Join(placeholders, ","))
+	// Create the filtered SQL query by directly inserting the query IDs
+	filteredSQL := fmt.Sprintf(queries.IndividualQueriesFilteredSQL, strings.Join(quotedQueryIDs, ","))
+
+	s.logger.Debug("Executing individual queries with filter", zap.String("sql", filteredSQL))
 
 	// Execute the individual queries SQL with query ID filter
-	rows, err := s.db.QueryContext(ctx, filteredSQL, args...)
+	rows, err := s.db.QueryContext(ctx, filteredSQL)
 	if err != nil {
 		s.logger.Error("Failed to execute individual queries query", zap.Error(err))
 		return []error{err}
