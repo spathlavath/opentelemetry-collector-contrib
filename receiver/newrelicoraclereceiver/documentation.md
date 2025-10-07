@@ -1404,7 +1404,7 @@ Slow Query Details
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| {count} | Gauge | Int |
 
 #### Attributes
 

@@ -5814,7 +5814,7 @@ type metricNewrelicoracledbSlowQueriesQueryDetails struct {
 func (m *metricNewrelicoracledbSlowQueriesQueryDetails) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.query_details")
 	m.data.SetDescription("Slow Query Details")
-	m.data.SetUnit("1")
+	m.data.SetUnit("{count}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
