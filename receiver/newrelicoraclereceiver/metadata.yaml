@@ -2515,7 +2515,7 @@ metrics:
     enabled: true
     gauge:
       value_type: int
-    unit: "1"
+    unit: "{count}"
     attributes:
       - newrelic.entity_name
       - database.name
