@@ -41,6 +41,7 @@ type newRelicOracleScraper struct {
 	pdbScraper         *scrapers.PdbScraper
 	systemScraper      *scrapers.SystemScraper
 	slowQueriesScraper *scrapers.SlowQueriesScraper
+	blockingScraper    *scrapers.BlockingScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -92,6 +93,9 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	// Initialize slow queries scraper with direct DB connection
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
+	// Initialize blocking scraper with direct DB connection
+	s.blockingScraper = scrapers.NewBlockingScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
 	return nil
 }
 
@@ -117,6 +121,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		s.pdbScraper.ScrapePdbMetrics,
 		s.systemScraper.ScrapeSystemMetrics,
 		s.slowQueriesScraper.ScrapeSlowQueries,
+		s.blockingScraper.ScrapeBlockingQueries,
 	}
 
 	// Launch concurrent scrapers

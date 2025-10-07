@@ -1,6 +1,18 @@
 default:
 all_set:
   metrics:
+    newrelicoracledb.blocking_queries.blocked_serial:
+      enabled: true
+    newrelicoracledb.blocking_queries.blocked_sid:
+      enabled: true
+    newrelicoracledb.blocking_queries.blocking_serial:
+      enabled: true
+    newrelicoracledb.blocking_queries.blocking_sid:
+      enabled: true
+    newrelicoracledb.blocking_queries.count:
+      enabled: true
+    newrelicoracledb.blocking_queries.wait_time:
+      enabled: true
     newrelicoracledb.db_id:
       enabled: true
     newrelicoracledb.disk.blocks_read:
@@ -179,9 +191,13 @@ all_set:
       enabled: true
     newrelicoracledb.slow_queries.avg_disk_reads:
       enabled: true
+    newrelicoracledb.slow_queries.avg_disk_writes:
+      enabled: true
     newrelicoracledb.slow_queries.avg_elapsed_time:
       enabled: true
     newrelicoracledb.slow_queries.execution_count:
+      enabled: true
+    newrelicoracledb.slow_queries.query_details:
       enabled: true
     newrelicoracledb.sorts_disk:
       enabled: true
@@ -494,6 +510,18 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    newrelicoracledb.blocking_queries.blocked_serial:
+      enabled: false
+    newrelicoracledb.blocking_queries.blocked_sid:
+      enabled: false
+    newrelicoracledb.blocking_queries.blocking_serial:
+      enabled: false
+    newrelicoracledb.blocking_queries.blocking_sid:
+      enabled: false
+    newrelicoracledb.blocking_queries.count:
+      enabled: false
+    newrelicoracledb.blocking_queries.wait_time:
+      enabled: false
     newrelicoracledb.db_id:
       enabled: false
     newrelicoracledb.disk.blocks_read:
@@ -672,9 +700,13 @@ none_set:
       enabled: false
     newrelicoracledb.slow_queries.avg_disk_reads:
       enabled: false
+    newrelicoracledb.slow_queries.avg_disk_writes:
+      enabled: false
     newrelicoracledb.slow_queries.avg_elapsed_time:
       enabled: false
     newrelicoracledb.slow_queries.execution_count:
+      enabled: false
+    newrelicoracledb.slow_queries.query_details:
       enabled: false
     newrelicoracledb.sorts_disk:
       enabled: false
