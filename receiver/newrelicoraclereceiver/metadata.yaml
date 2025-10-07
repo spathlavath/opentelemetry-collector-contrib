@@ -40,6 +40,9 @@ attributes:
   query.id:
     description: SQL query identifier
     type: string
+  query.text:
+    description: SQL query text (anonymized)
+    type: string
   schema.name:
     description: Schema name where the query is executed
     type: string
@@ -2541,6 +2544,7 @@ metrics:
     attributes:
       - newrelic.entity_name
       - query.id
+      - query.text
 
 tests:
   config:

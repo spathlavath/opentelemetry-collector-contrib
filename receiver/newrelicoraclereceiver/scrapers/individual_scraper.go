@@ -86,6 +86,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context) 
 
 		// Convert NullString/NullFloat64 to string values for attributes
 		qID := individualQuery.GetQueryID()
+		qText := individualQuery.GetQueryText()
 
 		s.logger.Debug("Processing individual query",
 			zap.String("query_id", qID),
@@ -116,6 +117,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context) 
 			1, // Count of 1 for each query
 			s.instanceName,
 			qID,
+			qText,
 		)
 	}
 
