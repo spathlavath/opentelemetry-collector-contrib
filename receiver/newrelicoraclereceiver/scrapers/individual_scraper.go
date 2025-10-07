@@ -7,7 +7,7 @@ import (
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
-
+    commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
@@ -86,7 +86,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context) 
 
 		// Convert NullString/NullFloat64 to string values for attributes
 		qID := individualQuery.GetQueryID()
-		qText := individualQuery.GetQueryText()
+		qText := commonutils.AnonymizeAndNormalize(individualQuery.GetQueryText())
 
 		s.logger.Debug("Processing individual query",
 			zap.String("query_id", qID),
