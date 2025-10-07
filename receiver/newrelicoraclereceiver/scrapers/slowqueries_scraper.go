@@ -47,17 +47,17 @@ func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.
 	}
 }
 
-// ScrapeSlowQueries collects Oracle slow queries metrics
-func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
+// ScrapeSlowQueries collects Oracle slow queries metrics and returns list of query IDs
+func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []string {
 	s.logger.Debug("Begin Oracle slow queries scrape")
 
-	var scrapeErrors []error
+	var queryIDs []string
 
 	// Execute the slow queries SQL
 	rows, err := s.db.QueryContext(ctx, queries.SlowQueriesSQL)
 	if err != nil {
 		s.logger.Error("Failed to execute slow queries query", zap.Error(err))
-		return []error{err}
+		return queryIDs
 	}
 	defer rows.Close()
 
@@ -80,7 +80,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			&slowQuery.HasFullTableScan,
 		); err != nil {
 			s.logger.Error("Failed to scan slow query row", zap.Error(err))
-			scrapeErrors = append(scrapeErrors, err)
 			continue
 		}
 
@@ -175,13 +174,15 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			stmtType,
 			fullScan,
 		)
+
+		// Add query ID to the list for individual queries processing
+		queryIDs = append(queryIDs, qID)
 	}
 
 	if err := rows.Err(); err != nil {
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
-		scrapeErrors = append(scrapeErrors, err)
 	}
-
-	s.logger.Debug("Completed Oracle slow queries scrape")
-	return scrapeErrors
+	s.logger.Debug("Collected query IDs", zap.Strings("query_ids", queryIDs))
+	s.logger.Debug("Completed Oracle slow queries scrape", zap.Int("query_ids_found", len(queryIDs)))
+	return queryIDs
 }
