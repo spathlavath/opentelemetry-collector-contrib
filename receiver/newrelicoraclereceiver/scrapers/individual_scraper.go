@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.uber.org/zap"
-    commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
+	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
+	"go.opentelemetry.io/collector/pdata/pcommon"
+	"go.uber.org/zap"
 )
 
 // IndividualQueriesScraper contains the scraper for individual queries metrics
@@ -67,7 +67,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		placeholders[i] = "?"
 		args[i] = qid
 	}
-	
+
 	// Use the filtered SQL query with proper parameterization
 	filteredSQL := fmt.Sprintf(queries.IndividualQueriesFilteredSQL, strings.Join(placeholders, ","))
 
