@@ -59,7 +59,10 @@ const (
 			ROUND(
 				(SUM(ash.time_waited) / 1000) +
 				(SUM(CASE WHEN ash.time_waited = 0 THEN 1 ELSE 0 END) * 1000)
-			) AS total_wait_time_ms
+			) AS total_wait_time_ms,
+			ROUND(
+				SUM(ash.time_waited) / NULLIF(COUNT(*), 0) / 1000, 2
+			) AS avg_wait_time_ms
 		FROM
 			v$active_session_history ash
 		JOIN
@@ -69,6 +72,7 @@ const (
 		WHERE
 			ash.sql_id IS NOT NULL
 			AND ash.wait_class <> 'Idle'
+			AND ash.event IS NOT NULL
 			AND ash.sample_time >= SYSDATE - INTERVAL '5' MINUTE
 		GROUP BY
 			d.name,

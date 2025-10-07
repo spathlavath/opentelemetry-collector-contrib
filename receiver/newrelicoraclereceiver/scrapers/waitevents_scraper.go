@@ -8,7 +8,6 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
-	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
@@ -71,6 +70,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		var collectionTimestamp sql.NullTime
 		var waitingTasksCount sql.NullInt64
 		var totalWaitTimeMs sql.NullFloat64
+		var avgWaitTimeMs sql.NullFloat64
 
 		if err := rows.Scan(
 			&databaseName,
@@ -81,6 +81,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			&collectionTimestamp,
 			&waitingTasksCount,
 			&totalWaitTimeMs,
+			&avgWaitTimeMs,
 		); err != nil {
 			s.logger.Error("Failed to scan wait events row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
@@ -103,11 +104,6 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		}
 
 		qID := queryID.String
-		// Store query text for potential future use (currently we store as info metric with attributes)
-		_ = ""
-		if queryText.Valid {
-			_ = commonutils.AnonymizeAndNormalize(queryText.String)
-		}
 
 		waitCat := ""
 		if waitCategory.Valid {
@@ -121,7 +117,13 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			zap.String("query_id", qID),
 			zap.String("wait_category", waitCat),
 			zap.String("wait_event_name", waitEvent),
-			zap.Float64("total_wait_time_ms", totalWaitTimeMs.Float64))
+			zap.Float64("total_wait_time_ms", totalWaitTimeMs.Float64),
+			zap.Float64("avg_wait_time_ms", func() float64 {
+				if avgWaitTimeMs.Valid {
+					return avgWaitTimeMs.Float64
+				}
+				return 0
+			}()))
 
 		// Record waiting tasks count if available
 		if waitingTasksCount.Valid {
@@ -147,16 +149,10 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			waitCat,
 		)
 
-		// Record average wait time (calculate properly)
-		var avgWaitTime float64
-		if waitingTasksCount.Valid && waitingTasksCount.Int64 > 0 {
-			avgWaitTime = totalWaitTimeMs.Float64 / float64(waitingTasksCount.Int64)
-		} else {
-			avgWaitTime = totalWaitTimeMs.Float64
-		}
+		// Record average wait time (now calculated in SQL)
 		s.mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(
 			now,
-			avgWaitTime,
+			avgWaitTimeMs.Float64,
 			s.instanceName,
 			dbName,
 			qID,
