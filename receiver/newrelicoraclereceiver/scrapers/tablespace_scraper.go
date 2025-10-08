@@ -20,20 +20,20 @@ import (
 
 // TablespaceScraper handles Oracle tablespace metrics with environment detection
 type TablespaceScraper struct {
-	db                   *sql.DB
-	mb                   *metadata.MetricsBuilder
-	logger               *zap.Logger
-	instanceName         string
-	config               metadata.MetricsBuilderConfig
-	
+	db           *sql.DB
+	mb           *metadata.MetricsBuilder
+	logger       *zap.Logger
+	instanceName string
+	config       metadata.MetricsBuilderConfig
+
 	// Environment capability caching
-	isCDBCapable         *bool // Cache for CDB capability check
-	isPDBCapable         *bool // Cache for PDB capability check
-	environmentChecked   bool  // Track if environment has been checked
-	currentContainer     string // Current container context (CDB$ROOT, FREEPDB1, etc.)
-	currentContainerID   string // Current container ID (1, 3, etc.)
-	contextChecked       bool   // Track if context has been checked
-	detectionMutex       sync.RWMutex // Protect concurrent access to detection state
+	isCDBCapable       *bool        // Cache for CDB capability check
+	isPDBCapable       *bool        // Cache for PDB capability check
+	environmentChecked bool         // Track if environment has been checked
+	currentContainer   string       // Current container context (CDB$ROOT, FREEPDB1, etc.)
+	currentContainerID string       // Current container ID (1, 3, etc.)
+	contextChecked     bool         // Track if context has been checked
+	detectionMutex     sync.RWMutex // Protect concurrent access to detection state
 }
 
 // NewTablespaceScraper creates a new tablespace scraper
@@ -75,7 +75,7 @@ func (s *TablespaceScraper) ScrapeTablespaceMetrics(ctx context.Context) []error
 	// CDB-specific metrics (requires CDB capability)
 	if s.isCDBSupported() {
 		errors = append(errors, s.scrapeCDBDatafilesOfflineTablespaceMetrics(ctx, now)...)
-		
+
 		// PDB-specific metrics (requires PDB capability and appropriate context)
 		if s.isPDBSupported() {
 			errors = append(errors, s.scrapePDBDatafilesOfflineTablespaceMetrics(ctx, now)...)
@@ -162,8 +162,8 @@ func (s *TablespaceScraper) processTablespaceUsageRows(rows *sql.Rows, now pcomm
 		errors = append(errors, fmt.Errorf("error iterating tablespace rows: %w", err))
 	}
 
-	s.logger.Debug("Collected Oracle tablespace metrics", 
-		zap.Int("metric_count", metricCount), 
+	s.logger.Debug("Collected Oracle tablespace metrics",
+		zap.Int("metric_count", metricCount),
 		zap.String("instance", s.instanceName))
 
 	return errors
@@ -176,7 +176,7 @@ func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Contex
 		return nil
 	}
 
-	return s.executeSimpleTablespaceQuery(ctx, now, queries.GlobalNameTablespaceSQL, 
+	return s.executeSimpleTablespaceQuery(ctx, now, queries.GlobalNameTablespaceSQL,
 		"global name tablespace", s.processGlobalNameRow)
 }
 
@@ -187,7 +187,7 @@ func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now
 		return nil
 	}
 
-	return s.executeSimpleTablespaceQuery(ctx, now, queries.DBIDTablespaceSQL, 
+	return s.executeSimpleTablespaceQuery(ctx, now, queries.DBIDTablespaceSQL,
 		"DB ID tablespace", s.processDBIDRow)
 }
 
@@ -198,16 +198,16 @@ func (s *TablespaceScraper) scrapeCDBDatafilesOfflineTablespaceMetrics(ctx conte
 		return nil
 	}
 
-	return s.executeSimpleTablespaceQuery(ctx, now, queries.CDBDatafilesOfflineTablespaceSQL, 
+	return s.executeSimpleTablespaceQuery(ctx, now, queries.CDBDatafilesOfflineTablespaceSQL,
 		"CDB datafiles offline tablespace", s.processCDBDatafilesOfflineRow)
 }
 
 // executeSimpleTablespaceQuery executes a query and processes results with the provided row processor
-func (s *TablespaceScraper) executeSimpleTablespaceQuery(ctx context.Context, now pcommon.Timestamp, 
+func (s *TablespaceScraper) executeSimpleTablespaceQuery(ctx context.Context, now pcommon.Timestamp,
 	querySQL, description string, rowProcessor func(*sql.Rows, pcommon.Timestamp) error) []error {
-	
-	s.logger.Debug("Executing tablespace query", 
-		zap.String("sql", querySQL), 
+
+	s.logger.Debug("Executing tablespace query",
+		zap.String("sql", querySQL),
 		zap.String("description", description))
 
 	rows, err := s.db.QueryContext(ctx, querySQL)
@@ -231,8 +231,8 @@ func (s *TablespaceScraper) executeSimpleTablespaceQuery(ctx context.Context, no
 		errors = append(errors, fmt.Errorf("error iterating %s rows: %w", description, err))
 	}
 
-	s.logger.Debug("Collected Oracle tablespace metrics", 
-		zap.Int("metric_count", metricCount), 
+	s.logger.Debug("Collected Oracle tablespace metrics",
+		zap.Int("metric_count", metricCount),
 		zap.String("instance", s.instanceName),
 		zap.String("description", description))
 
@@ -306,13 +306,13 @@ func (s *TablespaceScraper) scrapePDBDatafilesOfflineTablespaceMetrics(ctx conte
 		querySQL = queries.PDBDatafilesOfflineCurrentContainerSQL
 		queryDescription = "PDB datafiles offline tablespace (current container)"
 	} else {
-		s.logger.Debug("Not connected to appropriate context for PDB datafiles metrics", 
+		s.logger.Debug("Not connected to appropriate context for PDB datafiles metrics",
 			zap.String("current_container", s.currentContainer))
 		return nil
 	}
 
 	// Execute PDB datafiles offline tablespace query
-	s.logger.Debug("Executing PDB datafiles offline tablespace query", 
+	s.logger.Debug("Executing PDB datafiles offline tablespace query",
 		zap.String("sql", querySQL),
 		zap.String("context", queryDescription))
 
@@ -356,8 +356,8 @@ func (s *TablespaceScraper) processPDBDatafilesOfflineRows(rows *sql.Rows, now p
 		errors = append(errors, fmt.Errorf("error iterating %s rows: %w", context, err))
 	}
 
-	s.logger.Debug("Collected Oracle PDB datafiles offline tablespace metrics", 
-		zap.Int("metric_count", metricCount), 
+	s.logger.Debug("Collected Oracle PDB datafiles offline tablespace metrics",
+		zap.Int("metric_count", metricCount),
 		zap.String("instance", s.instanceName),
 		zap.String("context", context))
 
@@ -383,13 +383,13 @@ func (s *TablespaceScraper) scrapePDBNonWriteTablespaceMetrics(ctx context.Conte
 		querySQL = queries.PDBNonWriteCurrentContainerSQL
 		queryDescription = "PDB non-write mode tablespace (current container)"
 	} else {
-		s.logger.Debug("Not connected to appropriate context for PDB non-write mode metrics", 
+		s.logger.Debug("Not connected to appropriate context for PDB non-write mode metrics",
 			zap.String("current_container", s.currentContainer))
 		return nil
 	}
 
 	// Execute PDB non-write mode tablespace query
-	s.logger.Debug("Executing PDB non-write mode tablespace query", 
+	s.logger.Debug("Executing PDB non-write mode tablespace query",
 		zap.String("sql", querySQL),
 		zap.String("context", queryDescription))
 
@@ -433,8 +433,8 @@ func (s *TablespaceScraper) processPDBNonWriteRows(rows *sql.Rows, now pcommon.T
 		errors = append(errors, fmt.Errorf("error iterating %s rows: %w", context, err))
 	}
 
-	s.logger.Debug("Collected Oracle PDB non-write mode tablespace metrics", 
-		zap.Int("metric_count", metricCount), 
+	s.logger.Debug("Collected Oracle PDB non-write mode tablespace metrics",
+		zap.Int("metric_count", metricCount),
 		zap.String("instance", s.instanceName),
 		zap.String("context", context))
 

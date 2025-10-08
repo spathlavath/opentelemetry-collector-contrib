@@ -20,15 +20,15 @@ import (
 
 // PdbScraper handles Oracle PDB sys metrics with CDB environment detection
 type PdbScraper struct {
-	db                 *sql.DB
-	mb                 *metadata.MetricsBuilder
-	logger             *zap.Logger
-	instanceName       string
-	config             metadata.MetricsBuilderConfig
-	
+	db           *sql.DB
+	mb           *metadata.MetricsBuilder
+	logger       *zap.Logger
+	instanceName string
+	config       metadata.MetricsBuilderConfig
+
 	// Environment capability detection
-	isCDBCapable       *bool // Cache for CDB capability check
-	environmentChecked bool  // Track if environment has been checked
+	isCDBCapable       *bool        // Cache for CDB capability check
+	environmentChecked bool         // Track if environment has been checked
 	detectionMutex     sync.RWMutex // Protect concurrent access to detection state
 }
 
