@@ -42,6 +42,7 @@ type newRelicOracleScraper struct {
 	systemScraper     *scrapers.SystemScraper
 	connectionScraper *scrapers.ConnectionScraper
 	containerScraper  *scrapers.ContainerScraper
+	racScraper        *scrapers.RacScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -96,6 +97,9 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	// Initialize container scraper with direct DB connection
 	s.containerScraper = scrapers.NewContainerScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
+	// Initialize RAC scraper with direct DB connection
+	s.racScraper = scrapers.NewRacScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
 	return nil
 }
 
@@ -127,6 +131,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		s.systemScraper.ScrapeSystemMetrics,
 		s.connectionScraper.ScrapeConnectionMetrics,
 		s.containerScraper.ScrapeContainerMetrics,
+		s.racScraper.ScrapeRacMetrics,
 	}
 
 	// Launch concurrent scrapers with proper cancellation handling

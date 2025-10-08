@@ -66,6 +66,14 @@ func (s *TablespaceScraper) ScrapeTablespaceMetrics(ctx context.Context) []error
 
 // scrapeTablespaceUsageMetrics handles the main tablespace usage metrics
 func (s *TablespaceScraper) scrapeTablespaceUsageMetrics(ctx context.Context, now pcommon.Timestamp) []error {
+	// Check if any tablespace usage metrics are enabled
+	if !s.config.Metrics.NewrelicoracledbTablespaceSpaceConsumedBytes.Enabled &&
+		!s.config.Metrics.NewrelicoracledbTablespaceSpaceReservedBytes.Enabled &&
+		!s.config.Metrics.NewrelicoracledbTablespaceSpaceUsedPercentage.Enabled &&
+		!s.config.Metrics.NewrelicoracledbTablespaceIsOffline.Enabled {
+		return nil
+	}
+
 	var errors []error
 
 	// Execute tablespace metrics query directly using the shared DB connection
@@ -100,11 +108,19 @@ func (s *TablespaceScraper) scrapeTablespaceUsageMetrics(ctx context.Context, no
 			zap.String("instance", s.instanceName),
 		)
 
-		// Record all tablespace metrics using the proper metadata builder methods
-		s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(used), s.instanceName, tablespaceName)
-		s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(size), s.instanceName, tablespaceName)
-		s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(usedPercent), s.instanceName, tablespaceName)
-		s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(offline), s.instanceName, tablespaceName)
+		// Record all tablespace metrics using the proper metadata builder methods only if enabled
+		if s.config.Metrics.NewrelicoracledbTablespaceSpaceConsumedBytes.Enabled {
+			s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(used), s.instanceName, tablespaceName)
+		}
+		if s.config.Metrics.NewrelicoracledbTablespaceSpaceReservedBytes.Enabled {
+			s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(size), s.instanceName, tablespaceName)
+		}
+		if s.config.Metrics.NewrelicoracledbTablespaceSpaceUsedPercentage.Enabled {
+			s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(usedPercent), s.instanceName, tablespaceName)
+		}
+		if s.config.Metrics.NewrelicoracledbTablespaceIsOffline.Enabled {
+			s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(offline), s.instanceName, tablespaceName)
+		}
 
 		metricCount++
 	}
