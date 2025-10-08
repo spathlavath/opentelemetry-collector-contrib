@@ -248,6 +248,51 @@ Oracle database global name information
 | instance.id | Oracle database instance ID | Any Str | false |
 | global.name | Oracle database global name | Any Str | false |
 
+### newrelicoracledb.individual_queries.cpu_time
+
+CPU time for individual queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
+
+### newrelicoracledb.individual_queries.elapsed_time
+
+Elapsed time for individual queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
+
+### newrelicoracledb.individual_queries.query_details
+
+Individual Query Details
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
+
 ### newrelicoracledb.locked_accounts
 
 Count of locked user accounts in the database
@@ -1511,6 +1556,46 @@ Number of executions for slow queries
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {executions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
+
+### newrelicoracledb.slow_queries.query_details
+
+Slow Query Details
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| schema_name | Schema name where the query is executed | Any Str | false |
+| statement_type | Type of SQL statement or application module | Any Str | false |
+| has_full_table_scan | Whether the query has a full table scan | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
+
+### newrelicoracledb.slow_queries.query_details
+
+Slow Query Details
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
 
 #### Attributes
 

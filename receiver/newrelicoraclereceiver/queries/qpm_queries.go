@@ -111,4 +111,19 @@ const (
 			s2.blocking_session IS NOT NULL
 		ORDER BY
 			s2.seconds_in_wait DESC`
+
+	// Oracle SQL query for individual queries metrics
+	IndividualQueriesFilteredSQL = `
+		SELECT
+		    sql_id as query_id,
+		    sql_text as query_text,
+		    cpu_time/1000 as cpu_time_ms,
+		    elapsed_time / 1000 AS elapsed_time_ms
+		FROM
+		    v$sql
+		WHERE
+		    sql_id IN (%s)
+		    AND sql_id is not null
+		ORDER BY
+		    elapsed_time_ms DESC`
 )
