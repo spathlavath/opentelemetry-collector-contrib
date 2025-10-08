@@ -161,7 +161,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			qID,
 		)
 
-		// Record query text
+		// Record query details (count metric with metadata as attributes)
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
 			1,

@@ -12,6 +12,120 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.blocking_queries.blocked_serial
+
+Serial number of the blocked session
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {serial} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| blocked.user | Username of the blocked session | Any Str | false |
+| blocking.user | Username of the blocking session | Any Str | false |
+| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
+| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
+
+### newrelicoracledb.blocking_queries.blocked_sid
+
+Session ID of the blocked session
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {session} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| blocked.user | Username of the blocked session | Any Str | false |
+| blocking.user | Username of the blocking session | Any Str | false |
+| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
+| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
+
+### newrelicoracledb.blocking_queries.blocking_serial
+
+Serial number of the blocking session
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {serial} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| blocked.user | Username of the blocked session | Any Str | false |
+| blocking.user | Username of the blocking session | Any Str | false |
+| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
+| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
+
+### newrelicoracledb.blocking_queries.blocking_sid
+
+Session ID of the blocking session
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {session} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| blocked.user | Username of the blocked session | Any Str | false |
+| blocking.user | Username of the blocking session | Any Str | false |
+| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
+| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
+
+### newrelicoracledb.blocking_queries.count
+
+Count of blocking queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| blocked.user | Username of the blocked session | Any Str | false |
+| blocking.user | Username of the blocking session | Any Str | false |
+| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
+| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
+
+### newrelicoracledb.blocking_queries.wait_time
+
+Wait time in seconds for blocked queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| blocked.user | Username of the blocked session | Any Str | false |
+| blocking.user | Username of the blocking session | Any Str | false |
+| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
+| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
+
 ### newrelicoracledb.db_id
 
 Oracle database ID information
@@ -1333,6 +1447,8 @@ Average CPU time per execution for slow queries
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_reads
 
@@ -1349,6 +1465,8 @@ Average disk reads per execution for slow queries
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_writes
 
@@ -1365,6 +1483,8 @@ Average disk writes per execution for slow queries
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_elapsed_time
 
@@ -1381,6 +1501,8 @@ Average elapsed time per execution for slow queries
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.slow_queries.execution_count
 
@@ -1397,6 +1519,8 @@ Number of executions for slow queries
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.slow_queries.query_details
 
@@ -1417,6 +1541,11 @@ Slow Query Details
 | schema_name | Schema name where the query is executed | Any Str | false |
 | statement_type | Type of SQL statement or application module | Any Str | false |
 | has_full_table_scan | Whether the query has a full table scan | Any Str | false |
+| database.name | Oracle database name | Any Str | false |
+| query.id | SQL query identifier | Any Str | false |
+| schema.name | Schema name where the query is executed | Any Str | false |
+| statement.type | Type of SQL statement or application module | Any Str | false |
+| has.full.table.scan | Whether the query has a full table scan | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
 

@@ -27,6 +27,12 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbBlockingQueriesBlockedSerial:                       MetricConfig{Enabled: true},
+					NewrelicoracledbBlockingQueriesBlockedSid:                          MetricConfig{Enabled: true},
+					NewrelicoracledbBlockingQueriesBlockingSerial:                      MetricConfig{Enabled: true},
+					NewrelicoracledbBlockingQueriesBlockingSid:                         MetricConfig{Enabled: true},
+					NewrelicoracledbBlockingQueriesCount:                               MetricConfig{Enabled: true},
+					NewrelicoracledbBlockingQueriesWaitTime:                            MetricConfig{Enabled: true},
 					NewrelicoracledbDbID:                                               MetricConfig{Enabled: true},
 					NewrelicoracledbDiskBlocksRead:                                     MetricConfig{Enabled: true},
 					NewrelicoracledbDiskBlocksWritten:                                  MetricConfig{Enabled: true},
@@ -286,6 +292,12 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbBlockingQueriesBlockedSerial:                       MetricConfig{Enabled: false},
+					NewrelicoracledbBlockingQueriesBlockedSid:                          MetricConfig{Enabled: false},
+					NewrelicoracledbBlockingQueriesBlockingSerial:                      MetricConfig{Enabled: false},
+					NewrelicoracledbBlockingQueriesBlockingSid:                         MetricConfig{Enabled: false},
+					NewrelicoracledbBlockingQueriesCount:                               MetricConfig{Enabled: false},
+					NewrelicoracledbBlockingQueriesWaitTime:                            MetricConfig{Enabled: false},
 					NewrelicoracledbDbID:                                               MetricConfig{Enabled: false},
 					NewrelicoracledbDiskBlocksRead:                                     MetricConfig{Enabled: false},
 					NewrelicoracledbDiskBlocksWritten:                                  MetricConfig{Enabled: false},

@@ -28,6 +28,12 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
+	NewrelicoracledbBlockingQueriesBlockedSerial                       MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.blocked_serial"`
+	NewrelicoracledbBlockingQueriesBlockedSid                          MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.blocked_sid"`
+	NewrelicoracledbBlockingQueriesBlockingSerial                      MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.blocking_serial"`
+	NewrelicoracledbBlockingQueriesBlockingSid                         MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.blocking_sid"`
+	NewrelicoracledbBlockingQueriesCount                               MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.count"`
+	NewrelicoracledbBlockingQueriesWaitTime                            MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time"`
 	NewrelicoracledbDbID                                               MetricConfig `mapstructure:"newrelicoracledb.db_id"`
 	NewrelicoracledbDiskBlocksRead                                     MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_read"`
 	NewrelicoracledbDiskBlocksWritten                                  MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_written"`
@@ -280,6 +286,24 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		NewrelicoracledbBlockingQueriesBlockedSerial: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbBlockingQueriesBlockedSid: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbBlockingQueriesBlockingSerial: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbBlockingQueriesBlockingSid: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbBlockingQueriesCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbBlockingQueriesWaitTime: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbDbID: MetricConfig{
 			Enabled: true,
 		},
