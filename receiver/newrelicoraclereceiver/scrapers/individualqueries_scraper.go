@@ -62,22 +62,22 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		return scrapeErrors
 	}
 
-	// Build the SQL query with query ID placeholders
-	placeholders := make([]string, len(queryIDs))
-	args := make([]interface{}, len(queryIDs))
+	// Build the SQL query with quoted query IDs for Oracle (escape single quotes for safety)
+	quotedQueryIDs := make([]string, len(queryIDs))
 	for i, queryID := range queryIDs {
-		placeholders[i] = "?"
-		args[i] = queryID
+		// Escape single quotes by doubling them for Oracle
+		escapedQueryID := strings.ReplaceAll(queryID, "'", "''")
+		quotedQueryIDs[i] = fmt.Sprintf("'%s'", escapedQueryID)
 	}
 
-	sqlQuery := fmt.Sprintf(queries.IndividualQueriesSQL, strings.Join(placeholders, ","))
+	sqlQuery := fmt.Sprintf(queries.IndividualQueriesSQL, strings.Join(quotedQueryIDs, ","))
 
 	s.logger.Debug("Executing individual queries SQL",
 		zap.String("query", sqlQuery),
 		zap.Strings("query_ids", queryIDs))
 
 	// Execute the individual queries SQL
-	rows, err := s.db.QueryContext(ctx, sqlQuery, args...)
+	rows, err := s.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		s.logger.Error("Failed to execute individual queries query", zap.Error(err))
 		return []error{err}
