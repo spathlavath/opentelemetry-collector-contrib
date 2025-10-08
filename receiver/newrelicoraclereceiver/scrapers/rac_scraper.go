@@ -98,7 +98,36 @@ func (s *RacScraper) isRacEnabled(ctx context.Context) (bool, error) {
 	}
 
 	return racEnabled, nil
-} // ScrapeRacMetrics collects all Oracle RAC-specific metrics concurrently
+}
+
+// isASMAvailable checks if ASM (Automatic Storage Management) is available
+func (s *RacScraper) isASMAvailable(ctx context.Context) (bool, error) {
+	rows, err := s.db.QueryContext(ctx, queries.ASMDetectionSQL)
+	if err != nil {
+		s.logger.Debug("Failed to execute ASM detection query (expected if ASM not configured)", zap.Error(err))
+		return false, nil // Don't treat as error - ASM might not be configured
+	}
+	defer rows.Close()
+
+	var asmCount int
+	if rows.Next() {
+		if err := rows.Scan(&asmCount); err != nil {
+			s.logger.Error("Failed to scan ASM detection result", zap.Error(err))
+			return false, err
+		}
+	}
+
+	asmAvailable := asmCount > 0
+	if asmAvailable {
+		s.logger.Info("Oracle ASM storage detected", zap.Int("diskgroup_tables_found", asmCount))
+	}
+
+	return asmAvailable, nil
+}
+
+// ScrapeRacMetrics collects Oracle RAC and ASM metrics based on availability
+// It detects both RAC cluster configuration and ASM storage management,
+// running appropriate scrapers for the detected environment
 func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 	// Check if RAC is enabled
 	racEnabled, err := s.isRacEnabled(ctx)
@@ -107,8 +136,16 @@ func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 		return []error{err}
 	}
 
-	if !racEnabled {
-		return nil // Skip RAC metrics for non-RAC installations
+	// Check if ASM is available
+	asmAvailable, err := s.isASMAvailable(ctx)
+	if err != nil {
+		s.logger.Error("Failed to detect ASM availability", zap.Error(err))
+		return []error{err}
+	}
+
+	// Skip if neither RAC nor ASM is available
+	if !racEnabled && !asmAvailable {
+		return nil
 	}
 
 	// Check if context is already cancelled
@@ -116,17 +153,34 @@ func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 		return []error{ctx.Err()}
 	}
 
-	// Launch concurrent scrapers
-	errorChan := make(chan []error, 4)
-	var wg sync.WaitGroup
-	wg.Add(4)
+	// Determine which scrapers to run based on capabilities
+	var scrapers []func(context.Context) []error
+	var scraperCount int
 
-	scrapers := []func(context.Context) []error{
-		s.scrapeASMDiskGroups,
-		s.scrapeClusterWaitEvents,
-		s.scrapeInstanceStatus,
-		s.scrapeActiveServices,
+	// ASM scraper runs for both RAC and standalone ASM
+	if asmAvailable {
+		scrapers = append(scrapers, s.scrapeASMDiskGroups)
+		scraperCount++
 	}
+
+	// RAC-specific scrapers only run in RAC mode
+	if racEnabled {
+		scrapers = append(scrapers, 
+			s.scrapeClusterWaitEvents,
+			s.scrapeInstanceStatus,
+			s.scrapeActiveServices,
+		)
+		scraperCount += 3
+	}
+
+	if scraperCount == 0 {
+		return nil
+	}
+
+	// Launch concurrent scrapers
+	errorChan := make(chan []error, scraperCount)
+	var wg sync.WaitGroup
+	wg.Add(scraperCount)
 
 	for _, scraper := range scrapers {
 		go func(fn func(context.Context) []error) {

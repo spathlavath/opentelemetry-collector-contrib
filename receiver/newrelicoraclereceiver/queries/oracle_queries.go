@@ -421,6 +421,13 @@ const (
 		WHERE TABLE_NAME = 'CDB_PDBS' 
 		AND OWNER = 'SYS'`
 
+	// ASM detection query - checks if ASM instance is available
+	ASMDetectionSQL = `
+		SELECT COUNT(*) as ASM_COUNT
+		FROM ALL_TABLES 
+		WHERE TABLE_NAME = 'GV$ASM_DISKGROUP' 
+		AND OWNER = 'SYS'`
+
 	// Check current container context
 	CheckCurrentContainerSQL = `
 		SELECT 
