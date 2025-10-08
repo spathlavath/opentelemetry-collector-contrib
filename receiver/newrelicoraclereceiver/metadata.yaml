@@ -34,19 +34,22 @@ attributes:
   db.id:
     description: Oracle database ID
     type: string
-  database.name:
+  database_name:
     description: Oracle database name
     type: string
-  query.id:
+  query_id:
     description: SQL query identifier
     type: string
-  schema.name:
+  query_text:
+    description: SQL query text
+    type: string  
+  schema_name:
     description: Schema name where the query is executed
     type: string
-  statement.type:
+  statement_type:
     description: Type of SQL statement or application module
     type: string
-  has.full.table.scan:
+  has_full_table_scan:
     description: Whether the query has a full table scan
     type: string
   database_name:
@@ -2463,8 +2466,8 @@ metrics:
     unit: "{executions}"
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id
+      - database_name
+      - query_id
 
   newrelicoracledb.slow_queries.avg_cpu_time:
     description: Average CPU time per execution for slow queries
@@ -2474,8 +2477,8 @@ metrics:
     unit: ms
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id
+      - database_name
+      - query_id
 
   newrelicoracledb.slow_queries.avg_disk_reads:
     description: Average disk reads per execution for slow queries
@@ -2485,8 +2488,8 @@ metrics:
     unit: "{reads}"
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id
+      - database_name
+      - query_id
 
   newrelicoracledb.slow_queries.avg_disk_writes:
     description: Average disk writes per execution for slow queries
@@ -2496,8 +2499,8 @@ metrics:
     unit: "{writes}"
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id    
+      - database_name
+      - query_id    
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
@@ -2507,8 +2510,8 @@ metrics:
     unit: ms
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id
+      - database_name
+      - query_id
 
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
@@ -2518,11 +2521,12 @@ metrics:
     unit: "{count}"
     attributes:
       - newrelic.entity_name
-      - database.name
-      - query.id
-      - schema.name
-      - statement.type
-      - has.full.table.scan    
+      - database_name
+      - query_id
+      - query_text
+      - schema_name
+      - statement_type
+      - has_full_table_scan    
 
   newrelicoracledb.wait_events.total_wait_time_ms:
     description: Total wait time in milliseconds for wait events
