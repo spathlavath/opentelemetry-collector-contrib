@@ -95,10 +95,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Convert NullString/NullInt64/NullFloat64 to string values for attributes
 		dbName := slowQuery.GetDatabaseName()
 		qID := slowQuery.GetQueryID()
-		qText := ""
-		if slowQuery.QueryText.Valid {
-			qText = commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
-		}
+		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
 
 		schName := slowQuery.GetSchemaName()
 		stmtType := slowQuery.GetStatementType()
@@ -167,10 +164,11 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Record query text
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
-			qText,
+			1,
 			s.instanceName,
 			dbName,
 			qID,
+			qText,
 			schName,
 			stmtType,
 			fullScan,
