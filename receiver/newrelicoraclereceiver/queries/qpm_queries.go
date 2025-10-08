@@ -16,15 +16,13 @@ const (
 			d.name AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
-			COALESCE(sa.module,
-				CASE
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%' THEN 'SELECT'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'INSERT%' THEN 'INSERT'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'UPDATE%' THEN 'UPDATE'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'DELETE%' THEN 'DELETE'
-					ELSE 'OTHER'
-				END
-			) AS statement_type,
+			CASE
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%' THEN 'SELECT'
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'INSERT%' THEN 'INSERT'
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'UPDATE%' THEN 'UPDATE'
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'DELETE%' THEN 'DELETE'
+				ELSE 'OTHER'
+			END AS statement_type,
 			sa.executions AS execution_count,
 			sa.sql_text AS query_text,
 			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
