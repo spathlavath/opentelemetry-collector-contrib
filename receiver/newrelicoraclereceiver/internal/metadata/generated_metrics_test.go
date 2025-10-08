@@ -442,7 +442,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "database.name-val", "query.id-val", "schema.name-val", "statement.type-val", "has.full.table.scan-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "database.name-val", "query.id-val", "query.text-val", "schema.name-val", "statement.type-val", "has.full.table.scan-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2817,6 +2817,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query.id")
 					assert.True(t, ok)
 					assert.Equal(t, "query.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query.text")
+					assert.True(t, ok)
+					assert.Equal(t, "query.text-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema.name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema.name-val", attrVal.Str())

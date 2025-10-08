@@ -40,6 +40,9 @@ attributes:
   query.id:
     description: SQL query identifier
     type: string
+  query.text:
+    description: SQL query text
+    type: string
   schema.name:
     description: Schema name where the query is executed
     type: string
@@ -2535,6 +2538,7 @@ metrics:
       - newrelic.entity_name
       - database.name
       - query.id
+      - query.text
       - schema.name
       - statement.type
       - has.full.table.scan    

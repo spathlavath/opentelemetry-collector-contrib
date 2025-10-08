@@ -1437,6 +1437,7 @@ Slow Query Details
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | database.name | Oracle database name | Any Str | false |
 | query.id | SQL query identifier | Any Str | false |
+| query.text | SQL query text | Any Str | false |
 | schema.name | Schema name where the query is executed | Any Str | false |
 | statement.type | Type of SQL statement or application module | Any Str | false |
 | has.full.table.scan | Whether the query has a full table scan | Any Str | false |
