@@ -53,30 +53,30 @@ attributes:
     description: Whether the query has a full table scan
     type: string
 
-  blocking.user:
+  blocking_user:
     description: Username of the blocking session
     type: string
-  blocked.user:
+  blocked_user:
     description: Username of the blocked session
     type: string
 
-  blocked.sql.id:
+  blocked_sql_id:
     description: SQL ID of the blocked query
     type: string
 
-  blocked.sid:
+  blocked_sid:
     description: Session ID of the blocked session
     type: string
-  blocking.sid:
+  blocking_sid:
     description: Session ID of the blocking session
     type: string
-  blocked.serial:
+  blocked_serial:
     description: Serial number of the blocked session
     type: string
-  blocking.serial:
+  blocking_serial:
     description: Serial number of the blocking session
     type: string
-  blocked.query.text:
+  blocked_query_text:
     description: SQL query text of the blocked query
     type: string
 
@@ -2552,15 +2552,15 @@ metrics:
     attributes:
       - newrelic.entity_name
       - instance.id
-      - blocked.user
-      - blocking.user
-      - blocked.sql.id
-      - blocked.sid
-      - blocking.sid
-      - blocked.serial
-      - blocking.serial
-      - blocked.query.text
-      - database.name
+      - blocked_user
+      - blocking_user
+      - blocked_sql_id
+      - blocked_sid
+      - blocking_sid
+      - blocked_serial
+      - blocking_serial
+      - blocked_query_text
+      - database_name
 
 tests:
   config:

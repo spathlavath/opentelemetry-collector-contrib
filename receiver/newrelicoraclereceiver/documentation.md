@@ -26,15 +26,15 @@ Wait time in seconds for blocked queries
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
-| blocked.user | Username of the blocked session | Any Str | false |
-| blocking.user | Username of the blocking session | Any Str | false |
-| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
-| blocked.sid | Session ID of the blocked session | Any Str | false |
-| blocking.sid | Session ID of the blocking session | Any Str | false |
-| blocked.serial | Serial number of the blocked session | Any Str | false |
-| blocking.serial | Serial number of the blocking session | Any Str | false |
-| blocked.query.text | SQL query text of the blocked query | Any Str | false |
-| database.name | Oracle database name | Any Str | false |
+| blocked_user | Username of the blocked session | Any Str | false |
+| blocking_user | Username of the blocking session | Any Str | false |
+| blocked_sql_id | SQL ID of the blocked query | Any Str | false |
+| blocked_sid | Session ID of the blocked session | Any Str | false |
+| blocking_sid | Session ID of the blocking session | Any Str | false |
+| blocked_serial | Serial number of the blocked session | Any Str | false |
+| blocking_serial | Serial number of the blocking session | Any Str | false |
+| blocked_query_text | SQL query text of the blocked query | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.db_id
 
