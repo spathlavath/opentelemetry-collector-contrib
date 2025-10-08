@@ -158,6 +158,73 @@ Oracle database global name information
 | instance.id | Oracle database instance ID | Any Str | false |
 | global.name | Oracle database global name | Any Str | false |
 
+### newrelicoracledb.individual_queries.cpu_time
+
+CPU time for individual active queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| sid | Oracle session ID | Any Str | false |
+| serial_number | Oracle session serial number | Any Str | false |
+| username | Oracle database username | Any Str | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| plan_hash_value | SQL execution plan hash value | Any Str | false |
+| os_user | Operating system user name | Any Str | false |
+| hostname | Machine/hostname where the session is running | Any Str | false |
+
+### newrelicoracledb.individual_queries.elapsed_time
+
+Elapsed time for individual active queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| sid | Oracle session ID | Any Str | false |
+| serial_number | Oracle session serial number | Any Str | false |
+| username | Oracle database username | Any Str | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| plan_hash_value | SQL execution plan hash value | Any Str | false |
+| os_user | Operating system user name | Any Str | false |
+| hostname | Machine/hostname where the session is running | Any Str | false |
+
+### newrelicoracledb.individual_queries.query_details
+
+Individual Query Details
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| sid | Oracle session ID | Any Str | false |
+| serial_number | Oracle session serial number | Any Str | false |
+| username | Oracle database username | Any Str | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| plan_hash_value | SQL execution plan hash value | Any Str | false |
+| os_user | Operating system user name | Any Str | false |
+| hostname | Machine/hostname where the session is running | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+
 ### newrelicoracledb.locked_accounts
 
 Count of locked user accounts in the database

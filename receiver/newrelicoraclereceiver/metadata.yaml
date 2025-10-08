@@ -79,6 +79,27 @@ attributes:
   blocked_query_text:
     description: SQL query text of the blocked query
     type: string
+  sid:
+    description: Oracle session ID
+    type: string
+  serial_number:
+    description: Oracle session serial number
+    type: string
+  username:
+    description: Oracle database username
+    type: string
+  session_status:
+    description: Oracle session status (ACTIVE, INACTIVE, etc.)
+    type: string
+  plan_hash_value:
+    description: SQL execution plan hash value
+    type: string
+  os_user:
+    description: Operating system user name
+    type: string
+  hostname:
+    description: Machine/hostname where the session is running
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -2561,6 +2582,58 @@ metrics:
       - blocking_serial
       - blocked_query_text
       - database_name
+
+  newrelicoracledb.individual_queries.elapsed_time:
+    description: Elapsed time for individual active queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - query_id
+      - sid
+      - serial_number
+      - username
+      - session_status
+      - plan_hash_value
+      - os_user
+      - hostname
+
+  newrelicoracledb.individual_queries.cpu_time:
+    description: CPU time for individual active queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - query_id
+      - sid
+      - serial_number
+      - username
+      - session_status
+      - plan_hash_value
+      - os_user
+      - hostname
+
+  newrelicoracledb.individual_queries.query_details:
+    description: Individual Query Details
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{count}"
+    attributes:
+      - newrelic.entity_name
+      - query_id
+      - sid
+      - serial_number
+      - username
+      - session_status
+      - plan_hash_value
+      - os_user
+      - hostname
+      - query_text
 
 tests:
   config:

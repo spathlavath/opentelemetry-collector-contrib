@@ -70,4 +70,27 @@ const (
 			s2.blocking_session IS NOT NULL
 		ORDER BY
 			s2.seconds_in_wait DESC`
+
+	IndividualQueriesSQL = `
+		SELECT
+			s.sid,
+			s.serial#,
+			s.username,
+			s.status,
+			a.sql_id as query_id,
+			a.plan_hash_value,
+			a.elapsed_time / 1000 AS elapsed_time_ms,
+			a.cpu_time / 1000 as cpu_time_ms,
+			s.osuser,
+			s.machine as hostname,
+			a.sql_text as query_text
+		FROM
+			v$session s
+		JOIN
+			v$sql a ON s.sql_id = a.sql_id AND s.sql_child_number = a.child_number
+		WHERE
+			s.status = 'ACTIVE'
+			AND s.username IS NOT NULL
+			AND a.sql_id in (%s)
+		FETCH FIRST 10 ROWS ONLY`
 )

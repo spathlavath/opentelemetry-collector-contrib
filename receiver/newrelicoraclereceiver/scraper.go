@@ -35,13 +35,14 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Keep session scraper and add tablespace scraper and core scraper
-	sessionScraper     *scrapers.SessionScraper
-	tablespaceScraper  *scrapers.TablespaceScraper
-	coreScraper        *scrapers.CoreScraper
-	pdbScraper         *scrapers.PdbScraper
-	systemScraper      *scrapers.SystemScraper
-	slowQueriesScraper *scrapers.SlowQueriesScraper
-	blockingScraper    *scrapers.BlockingScraper
+	sessionScraper           *scrapers.SessionScraper
+	tablespaceScraper        *scrapers.TablespaceScraper
+	coreScraper              *scrapers.CoreScraper
+	pdbScraper               *scrapers.PdbScraper
+	systemScraper            *scrapers.SystemScraper
+	slowQueriesScraper       *scrapers.SlowQueriesScraper
+	individualQueriesScraper *scrapers.IndividualQueriesScraper
+	blockingScraper          *scrapers.BlockingScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -93,10 +94,42 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	// Initialize slow queries scraper with direct DB connection
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
+	// Initialize individual queries scraper with direct DB connection
+	s.individualQueriesScraper = scrapers.NewIndividualQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
 	// Initialize blocking scraper with direct DB connection
 	s.blockingScraper = scrapers.NewBlockingScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	return nil
+}
+
+// executeSequentialScrapers runs scrapers that have dependencies and must be executed sequentially
+func (s *newRelicOracleScraper) executeSequentialScrapers(ctx context.Context) []error {
+	s.logger.Debug("Starting sequential scrapers execution")
+	var sequentialErrors []error
+
+	// First, scrape slow queries and get query IDs for individual queries processing
+	s.logger.Debug("Executing slow queries scraper")
+	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueriesWithQueryIDs(ctx)
+	sequentialErrors = append(sequentialErrors, slowQueryErrs...)
+
+	s.logger.Debug("Slow queries scraper completed",
+		zap.Int("query_ids_found", len(queryIDs)),
+		zap.Int("errors", len(slowQueryErrs)))
+
+	// Then, scrape individual queries using the query IDs from slow queries
+	if len(queryIDs) > 0 {
+		s.logger.Debug("Executing individual queries scraper with query IDs", zap.Strings("query_ids", queryIDs))
+		individualQueryErrs := s.individualQueriesScraper.ScrapeIndividualQueries(ctx, queryIDs)
+		sequentialErrors = append(sequentialErrors, individualQueryErrs...)
+
+		s.logger.Debug("Individual queries scraper completed", zap.Int("errors", len(individualQueryErrs)))
+	} else {
+		s.logger.Debug("No query IDs found from slow queries, skipping individual queries scraping")
+	}
+
+	s.logger.Debug("Sequential scrapers execution completed", zap.Int("total_errors", len(sequentialErrors)))
+	return sequentialErrors
 }
 
 func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
@@ -106,6 +139,9 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	scrapeCtx, cancel := context.WithTimeout(ctx, s.scrapeCfg.Timeout)
 	defer cancel()
 
+	// Execute sequential scrapers first (slow queries -> individual queries)
+	sequentialErrors := s.executeSequentialScrapers(scrapeCtx)
+
 	// Channel to collect errors from concurrent scrapers
 	const maxErrors = 100 // Buffer size to prevent blocking
 	errChan := make(chan error, maxErrors)
@@ -113,16 +149,17 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	// WaitGroup to coordinate concurrent scrapers
 	var wg sync.WaitGroup
 
-	// Define all scraper functions
+	// Define concurrent scraper functions (excluding slow queries and individual queries which run sequentially)
 	scraperFuncs := []ScraperFunc{
 		s.sessionScraper.ScrapeSessionCount,
 		s.tablespaceScraper.ScrapeTablespaceMetrics,
 		s.coreScraper.ScrapeCoreMetrics,
 		s.pdbScraper.ScrapePdbMetrics,
 		s.systemScraper.ScrapeSystemMetrics,
-		s.slowQueriesScraper.ScrapeSlowQueries,
 		s.blockingScraper.ScrapeBlockingQueries,
 	}
+
+	s.logger.Debug("Starting concurrent scrapers", zap.Int("scraper_count", len(scraperFuncs)))
 
 	// Launch concurrent scrapers
 	for i, scraperFunc := range scraperFuncs {
@@ -164,10 +201,15 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	}()
 
 	// Collect all errors from the channel
-	var scrapeErrors []error
+	var concurrentErrors []error
 	for err := range errChan {
-		scrapeErrors = append(scrapeErrors, err)
+		concurrentErrors = append(concurrentErrors, err)
 	}
+
+	// Combine sequential and concurrent errors
+	var scrapeErrors []error
+	scrapeErrors = append(scrapeErrors, sequentialErrors...)
+	scrapeErrors = append(scrapeErrors, concurrentErrors...)
 
 	// Check if context was cancelled
 	if scrapeCtx.Err() != nil {
@@ -182,7 +224,9 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	s.logger.Debug("Done New Relic Oracle scraping",
 		zap.Int("total_errors", len(scrapeErrors)),
-		zap.Int("scrapers_count", len(scraperFuncs)))
+		zap.Int("sequential_errors", len(sequentialErrors)),
+		zap.Int("concurrent_errors", len(concurrentErrors)),
+		zap.Int("concurrent_scrapers_count", len(scraperFuncs)))
 
 	if len(scrapeErrors) > 0 {
 		return out, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
