@@ -7,7 +7,7 @@ import (
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
-
+	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/commonutils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
@@ -95,6 +95,8 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		// Convert NullString/NullInt64/NullFloat64 to string values for attributes
 		dbName := slowQuery.GetDatabaseName()
 		qID := slowQuery.GetQueryID()
+		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
+
 		schName := slowQuery.GetSchemaName()
 		stmtType := slowQuery.GetStatementType()
 		fullScan := slowQuery.GetHasFullTableScan()
@@ -162,10 +164,11 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		// Record query details (count = 1 for each query)
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
-			1, // Count of 1 for each query
+			1,
 			s.instanceName,
 			dbName,
 			qID,
+			qText,
 			schName,
 			stmtType,
 			fullScan,
