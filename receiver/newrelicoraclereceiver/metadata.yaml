@@ -60,8 +60,21 @@ attributes:
   blocked.sql.id:
     description: SQL ID of the blocked query
     type: string
-  blocking.sql.id:
-    description: SQL ID of the blocking query
+
+  blocked.sid:
+    description: Session ID of the blocked session
+    type: string
+  blocking.sid:
+    description: Session ID of the blocking session
+    type: string
+  blocked.serial:
+    description: Serial number of the blocked session
+    type: string
+  blocking.serial:
+    description: Serial number of the blocking session
+    type: string
+  blocked.query.text:
+    description: SQL query text of the blocked query
     type: string
 
 metrics:
@@ -2538,77 +2551,12 @@ metrics:
       - blocked.user
       - blocking.user
       - blocked.sql.id
-      - blocking.sql.id
-
-  newrelicoracledb.blocking_queries.count:
-    description: Count of blocking queries
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{count}"
-    attributes:
-      - newrelic.entity_name
-      - instance.id
-      - blocked.user
-      - blocking.user
-      - blocked.sql.id
-      - blocking.sql.id
-
-  newrelicoracledb.blocking_queries.blocked_sid:
-    description: Session ID of the blocked session
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{session}"
-    attributes:
-      - newrelic.entity_name
-      - instance.id
-      - blocked.user
-      - blocking.user
-      - blocked.sql.id
-      - blocking.sql.id
-
-  newrelicoracledb.blocking_queries.blocking_sid:
-    description: Session ID of the blocking session
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{session}"
-    attributes:
-      - newrelic.entity_name
-      - instance.id
-      - blocked.user
-      - blocking.user
-      - blocked.sql.id
-      - blocking.sql.id
-
-  newrelicoracledb.blocking_queries.blocked_serial:
-    description: Serial number of the blocked session
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{serial}"
-    attributes:
-      - newrelic.entity_name
-      - instance.id
-      - blocked.user
-      - blocking.user
-      - blocked.sql.id
-      - blocking.sql.id
-
-  newrelicoracledb.blocking_queries.blocking_serial:
-    description: Serial number of the blocking session
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{serial}"
-    attributes:
-      - newrelic.entity_name
-      - instance.id
-      - blocked.user
-      - blocking.user
-      - blocked.sql.id
-      - blocking.sql.id
+      - blocked.sid
+      - blocking.sid
+      - blocked.serial
+      - blocking.serial
+      - blocked.query.text
+      - database.name
 
 tests:
   config:

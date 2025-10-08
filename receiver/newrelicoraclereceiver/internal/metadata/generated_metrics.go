@@ -13,21 +13,6 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
-	NewrelicoracledbBlockingQueriesBlockedSerial: metricInfo{
-		Name: "newrelicoracledb.blocking_queries.blocked_serial",
-	},
-	NewrelicoracledbBlockingQueriesBlockedSid: metricInfo{
-		Name: "newrelicoracledb.blocking_queries.blocked_sid",
-	},
-	NewrelicoracledbBlockingQueriesBlockingSerial: metricInfo{
-		Name: "newrelicoracledb.blocking_queries.blocking_serial",
-	},
-	NewrelicoracledbBlockingQueriesBlockingSid: metricInfo{
-		Name: "newrelicoracledb.blocking_queries.blocking_sid",
-	},
-	NewrelicoracledbBlockingQueriesCount: metricInfo{
-		Name: "newrelicoracledb.blocking_queries.count",
-	},
 	NewrelicoracledbBlockingQueriesWaitTime: metricInfo{
 		Name: "newrelicoracledb.blocking_queries.wait_time",
 	},
@@ -769,11 +754,6 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
-	NewrelicoracledbBlockingQueriesBlockedSerial                       metricInfo
-	NewrelicoracledbBlockingQueriesBlockedSid                          metricInfo
-	NewrelicoracledbBlockingQueriesBlockingSerial                      metricInfo
-	NewrelicoracledbBlockingQueriesBlockingSid                         metricInfo
-	NewrelicoracledbBlockingQueriesCount                               metricInfo
 	NewrelicoracledbBlockingQueriesWaitTime                            metricInfo
 	NewrelicoracledbDbID                                               metricInfo
 	NewrelicoracledbDiskBlocksRead                                     metricInfo
@@ -1026,286 +1006,6 @@ type metricInfo struct {
 	Name string
 }
 
-type metricNewrelicoracledbBlockingQueriesBlockedSerial struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.blocking_queries.blocked_serial metric with initial data.
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSerial) init() {
-	m.data.SetName("newrelicoracledb.blocking_queries.blocked_serial")
-	m.data.SetDescription("Serial number of the blocked session")
-	m.data.SetUnit("{serial}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSerial) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("blocked.user", blockedUserAttributeValue)
-	dp.Attributes().PutStr("blocking.user", blockingUserAttributeValue)
-	dp.Attributes().PutStr("blocked.sql.id", blockedSQLIDAttributeValue)
-	dp.Attributes().PutStr("blocking.sql.id", blockingSQLIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSerial) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSerial) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbBlockingQueriesBlockedSerial(cfg MetricConfig) metricNewrelicoracledbBlockingQueriesBlockedSerial {
-	m := metricNewrelicoracledbBlockingQueriesBlockedSerial{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbBlockingQueriesBlockedSid struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.blocking_queries.blocked_sid metric with initial data.
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSid) init() {
-	m.data.SetName("newrelicoracledb.blocking_queries.blocked_sid")
-	m.data.SetDescription("Session ID of the blocked session")
-	m.data.SetUnit("{session}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSid) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("blocked.user", blockedUserAttributeValue)
-	dp.Attributes().PutStr("blocking.user", blockingUserAttributeValue)
-	dp.Attributes().PutStr("blocked.sql.id", blockedSQLIDAttributeValue)
-	dp.Attributes().PutStr("blocking.sql.id", blockingSQLIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSid) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbBlockingQueriesBlockedSid) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbBlockingQueriesBlockedSid(cfg MetricConfig) metricNewrelicoracledbBlockingQueriesBlockedSid {
-	m := metricNewrelicoracledbBlockingQueriesBlockedSid{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbBlockingQueriesBlockingSerial struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.blocking_queries.blocking_serial metric with initial data.
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSerial) init() {
-	m.data.SetName("newrelicoracledb.blocking_queries.blocking_serial")
-	m.data.SetDescription("Serial number of the blocking session")
-	m.data.SetUnit("{serial}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSerial) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("blocked.user", blockedUserAttributeValue)
-	dp.Attributes().PutStr("blocking.user", blockingUserAttributeValue)
-	dp.Attributes().PutStr("blocked.sql.id", blockedSQLIDAttributeValue)
-	dp.Attributes().PutStr("blocking.sql.id", blockingSQLIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSerial) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSerial) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbBlockingQueriesBlockingSerial(cfg MetricConfig) metricNewrelicoracledbBlockingQueriesBlockingSerial {
-	m := metricNewrelicoracledbBlockingQueriesBlockingSerial{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbBlockingQueriesBlockingSid struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.blocking_queries.blocking_sid metric with initial data.
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSid) init() {
-	m.data.SetName("newrelicoracledb.blocking_queries.blocking_sid")
-	m.data.SetDescription("Session ID of the blocking session")
-	m.data.SetUnit("{session}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSid) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("blocked.user", blockedUserAttributeValue)
-	dp.Attributes().PutStr("blocking.user", blockingUserAttributeValue)
-	dp.Attributes().PutStr("blocked.sql.id", blockedSQLIDAttributeValue)
-	dp.Attributes().PutStr("blocking.sql.id", blockingSQLIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSid) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbBlockingQueriesBlockingSid) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbBlockingQueriesBlockingSid(cfg MetricConfig) metricNewrelicoracledbBlockingQueriesBlockingSid {
-	m := metricNewrelicoracledbBlockingQueriesBlockingSid{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbBlockingQueriesCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.blocking_queries.count metric with initial data.
-func (m *metricNewrelicoracledbBlockingQueriesCount) init() {
-	m.data.SetName("newrelicoracledb.blocking_queries.count")
-	m.data.SetDescription("Count of blocking queries")
-	m.data.SetUnit("{count}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbBlockingQueriesCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("blocked.user", blockedUserAttributeValue)
-	dp.Attributes().PutStr("blocking.user", blockingUserAttributeValue)
-	dp.Attributes().PutStr("blocked.sql.id", blockedSQLIDAttributeValue)
-	dp.Attributes().PutStr("blocking.sql.id", blockingSQLIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbBlockingQueriesCount) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbBlockingQueriesCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbBlockingQueriesCount(cfg MetricConfig) metricNewrelicoracledbBlockingQueriesCount {
-	m := metricNewrelicoracledbBlockingQueriesCount{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbBlockingQueriesWaitTime struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1321,7 +1021,7 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
+func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1334,7 +1034,12 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pc
 	dp.Attributes().PutStr("blocked.user", blockedUserAttributeValue)
 	dp.Attributes().PutStr("blocking.user", blockingUserAttributeValue)
 	dp.Attributes().PutStr("blocked.sql.id", blockedSQLIDAttributeValue)
-	dp.Attributes().PutStr("blocking.sql.id", blockingSQLIDAttributeValue)
+	dp.Attributes().PutStr("blocked.sid", blockedSidAttributeValue)
+	dp.Attributes().PutStr("blocking.sid", blockingSidAttributeValue)
+	dp.Attributes().PutStr("blocked.serial", blockedSerialAttributeValue)
+	dp.Attributes().PutStr("blocking.serial", blockingSerialAttributeValue)
+	dp.Attributes().PutStr("blocked.query.text", blockedQueryTextAttributeValue)
+	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -14122,11 +13827,6 @@ type MetricsBuilder struct {
 	buildInfo                                                                component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                                           map[string]filter.Filter
 	resourceAttributeExcludeFilter                                           map[string]filter.Filter
-	metricNewrelicoracledbBlockingQueriesBlockedSerial                       metricNewrelicoracledbBlockingQueriesBlockedSerial
-	metricNewrelicoracledbBlockingQueriesBlockedSid                          metricNewrelicoracledbBlockingQueriesBlockedSid
-	metricNewrelicoracledbBlockingQueriesBlockingSerial                      metricNewrelicoracledbBlockingQueriesBlockingSerial
-	metricNewrelicoracledbBlockingQueriesBlockingSid                         metricNewrelicoracledbBlockingQueriesBlockingSid
-	metricNewrelicoracledbBlockingQueriesCount                               metricNewrelicoracledbBlockingQueriesCount
 	metricNewrelicoracledbBlockingQueriesWaitTime                            metricNewrelicoracledbBlockingQueriesWaitTime
 	metricNewrelicoracledbDbID                                               metricNewrelicoracledbDbID
 	metricNewrelicoracledbDiskBlocksRead                                     metricNewrelicoracledbDiskBlocksRead
@@ -14398,11 +14098,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		startTime:     pcommon.NewTimestampFromTime(time.Now()),
 		metricsBuffer: pmetric.NewMetrics(),
 		buildInfo:     settings.BuildInfo,
-		metricNewrelicoracledbBlockingQueriesBlockedSerial:                       newMetricNewrelicoracledbBlockingQueriesBlockedSerial(mbc.Metrics.NewrelicoracledbBlockingQueriesBlockedSerial),
-		metricNewrelicoracledbBlockingQueriesBlockedSid:                          newMetricNewrelicoracledbBlockingQueriesBlockedSid(mbc.Metrics.NewrelicoracledbBlockingQueriesBlockedSid),
-		metricNewrelicoracledbBlockingQueriesBlockingSerial:                      newMetricNewrelicoracledbBlockingQueriesBlockingSerial(mbc.Metrics.NewrelicoracledbBlockingQueriesBlockingSerial),
-		metricNewrelicoracledbBlockingQueriesBlockingSid:                         newMetricNewrelicoracledbBlockingQueriesBlockingSid(mbc.Metrics.NewrelicoracledbBlockingQueriesBlockingSid),
-		metricNewrelicoracledbBlockingQueriesCount:                               newMetricNewrelicoracledbBlockingQueriesCount(mbc.Metrics.NewrelicoracledbBlockingQueriesCount),
 		metricNewrelicoracledbBlockingQueriesWaitTime:                            newMetricNewrelicoracledbBlockingQueriesWaitTime(mbc.Metrics.NewrelicoracledbBlockingQueriesWaitTime),
 		metricNewrelicoracledbDbID:                                               newMetricNewrelicoracledbDbID(mbc.Metrics.NewrelicoracledbDbID),
 		metricNewrelicoracledbDiskBlocksRead:                                     newMetricNewrelicoracledbDiskBlocksRead(mbc.Metrics.NewrelicoracledbDiskBlocksRead),
@@ -14733,11 +14428,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
-	mb.metricNewrelicoracledbBlockingQueriesBlockedSerial.emit(ils.Metrics())
-	mb.metricNewrelicoracledbBlockingQueriesBlockedSid.emit(ils.Metrics())
-	mb.metricNewrelicoracledbBlockingQueriesBlockingSerial.emit(ils.Metrics())
-	mb.metricNewrelicoracledbBlockingQueriesBlockingSid.emit(ils.Metrics())
-	mb.metricNewrelicoracledbBlockingQueriesCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbBlockingQueriesWaitTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDbID.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskBlocksRead.emit(ils.Metrics())
@@ -15015,34 +14705,9 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	return metrics
 }
 
-// RecordNewrelicoracledbBlockingQueriesBlockedSerialDataPoint adds a data point to newrelicoracledb.blocking_queries.blocked_serial metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesBlockedSerialDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesBlockedSerial.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockingSQLIDAttributeValue)
-}
-
-// RecordNewrelicoracledbBlockingQueriesBlockedSidDataPoint adds a data point to newrelicoracledb.blocking_queries.blocked_sid metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesBlockedSidDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesBlockedSid.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockingSQLIDAttributeValue)
-}
-
-// RecordNewrelicoracledbBlockingQueriesBlockingSerialDataPoint adds a data point to newrelicoracledb.blocking_queries.blocking_serial metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesBlockingSerialDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesBlockingSerial.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockingSQLIDAttributeValue)
-}
-
-// RecordNewrelicoracledbBlockingQueriesBlockingSidDataPoint adds a data point to newrelicoracledb.blocking_queries.blocking_sid metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesBlockingSidDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesBlockingSid.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockingSQLIDAttributeValue)
-}
-
-// RecordNewrelicoracledbBlockingQueriesCountDataPoint adds a data point to newrelicoracledb.blocking_queries.count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesCountDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockingSQLIDAttributeValue)
-}
-
 // RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint adds a data point to newrelicoracledb.blocking_queries.wait_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockingSQLIDAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockingSQLIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockedSidAttributeValue, blockingSidAttributeValue, blockedSerialAttributeValue, blockingSerialAttributeValue, blockedQueryTextAttributeValue, databaseNameAttributeValue)
 }
 
 // RecordNewrelicoracledbDbIDDataPoint adds a data point to newrelicoracledb.db_id metric.
