@@ -449,10 +449,10 @@ func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Ti
 		var serviceName sql.NullString
 		var networkName sql.NullString
 		var creationDate sql.NullTime
-		var deletionDate sql.NullTime
-		var containerData sql.NullString
+		var pdb sql.NullString
+		var enabled sql.NullString
 
-		if err := rows.Scan(&conID, &serviceName, &networkName, &creationDate, &deletionDate, &containerData); err != nil {
+		if err := rows.Scan(&conID, &serviceName, &networkName, &creationDate, &pdb, &enabled); err != nil {
 			s.logger.Error("Error scanning CDB services row", zap.Error(err))
 			continue
 		}
@@ -467,16 +467,18 @@ func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Ti
 		// Count services per container
 		serviceCount[conIDStr]++
 
-		// Record service status (1=active if no deletion date, 0=inactive)
-		var serviceStatus int64 = 1
-		if deletionDate.Valid {
-			serviceStatus = 0
+		// Record service status (1=enabled if enabled='YES', 0=disabled)
+		var serviceStatus int64 = 0
+		if enabled.Valid && strings.ToUpper(enabled.String) == "YES" {
+			serviceStatus = 1
 		}
 		s.mb.RecordNewrelicoracledbServiceStatusDataPoint(now, serviceStatus, s.instanceName, conIDStr, serviceNameStr)
 
 		s.logger.Debug("Processed CDB service",
 			zap.String("con_id", conIDStr),
 			zap.String("service_name", serviceNameStr),
+			zap.String("pdb", pdb.String),
+			zap.String("enabled", enabled.String),
 			zap.Int64("status", serviceStatus))
 	}
 

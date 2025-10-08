@@ -98,7 +98,7 @@ func (s *RacScraper) isRacEnabled(ctx context.Context) (bool, error) {
 	}
 
 	return racEnabled, nil
-}// ScrapeRacMetrics collects all Oracle RAC-specific metrics concurrently
+} // ScrapeRacMetrics collects all Oracle RAC-specific metrics concurrently
 func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 	// Check if RAC is enabled
 	racEnabled, err := s.isRacEnabled(ctx)
@@ -426,7 +426,7 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverConfig.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(now, int64(1), s.instanceName, serviceNameStr, instanceIDStr, 
+			s.mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(now, int64(1), s.instanceName, serviceNameStr, instanceIDStr,
 				nullStringToString(failoverMethod), nullStringToString(failoverType), nullStringToString(goal))
 		}
 
