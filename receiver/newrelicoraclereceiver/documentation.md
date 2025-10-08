@@ -469,6 +469,92 @@ Current wait events and wait time
 | wait.state | Oracle wait event state | Any Str | false |
 | wait.class | Oracle wait event class | Any Str | false |
 
+### newrelicoracledb.container.restricted
+
+Oracle container restricted status (1=YES, 0=NO)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| container.name | Oracle container name | Any Str | false |
+| restricted.status | Oracle container restricted status (YES, NO) | Any Str | false |
+
+### newrelicoracledb.container.status
+
+Oracle container status (1=READ WRITE, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| container.name | Oracle container name | Any Str | false |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
+
+### newrelicoracledb.datafile.autoextensible
+
+Data file autoextensible status (1=YES, 0=NO)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| file.name | Oracle data file name | Any Str | false |
+| container.status | Oracle container status (NORMAL, RESTRICTED, etc.) | Any Str | false |
+
+### newrelicoracledb.datafile.size_bytes
+
+Size of data file in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| file.name | Oracle data file name | Any Str | false |
+
+### newrelicoracledb.datafile.used_bytes
+
+Used bytes in data file
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| file.name | Oracle data file name | Any Str | false |
+
 ### newrelicoracledb.db_id
 
 Oracle database ID information
@@ -1146,6 +1232,23 @@ Open cursors per transaction in PDB
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
+### newrelicoracledb.pdb.open_mode
+
+Oracle PDB open mode (1=READ WRITE, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
+
 ### newrelicoracledb.pdb.parse_failure_count_per_second
 
 Parse failure count per second in PDB
@@ -1311,6 +1414,23 @@ SQL service response time in PDB
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
+### newrelicoracledb.pdb.status
+
+Oracle PDB status (1=NORMAL, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
+| container.status | Oracle container status (NORMAL, RESTRICTED, etc.) | Any Str | false |
+
 ### newrelicoracledb.pdb.total_parse_count_per_second
 
 Total parse count per second in PDB
@@ -1340,6 +1460,22 @@ Total parse count per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.total_size_bytes
+
+Total size of PDB in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.transactions_per_second
 
@@ -1565,6 +1701,37 @@ Number of waits on rollback segments
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.service.count
+
+Count of services per container
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {services} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+
+### newrelicoracledb.service.status
+
+Oracle service status (1=active, 0=inactive)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| service.name | Oracle service name | Any Str | false |
 
 ### newrelicoracledb.sessions.count
 
@@ -4053,6 +4220,54 @@ Percentage of tablespace space currently used
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+
+### newrelicoracledb.tablespace.total_bytes
+
+Total bytes in tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+
+### newrelicoracledb.tablespace.used_bytes
+
+Used bytes in tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+
+### newrelicoracledb.tablespace.used_percent
+
+Used percentage of tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ## Resource Attributes

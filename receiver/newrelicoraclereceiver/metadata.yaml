@@ -64,6 +64,30 @@ attributes:
   resource.name:
     description: Oracle resource name
     type: string
+  con.id:
+    description: Oracle container ID (CDB/PDB)
+    type: string
+  container.name:
+    description: Oracle container name
+    type: string
+  pdb.name:
+    description: Oracle Pluggable Database name
+    type: string
+  open.mode:
+    description: Oracle container open mode (READ WRITE, READ ONLY, etc.)
+    type: string
+  container.status:
+    description: Oracle container status (NORMAL, RESTRICTED, etc.)
+    type: string
+  restricted.status:
+    description: Oracle container restricted status (YES, NO)
+    type: string
+  file.name:
+    description: Oracle data file name
+    type: string
+  service.name:
+    description: Oracle service name
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -2783,6 +2807,160 @@ metrics:
     unit: By
     attributes:
       - newrelic.entity_name
+
+  # Container/CDB/PDB Status Metrics
+  newrelicoracledb.container.status:
+    description: Oracle container status (1=READ WRITE, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - container.name
+      - open.mode
+
+  newrelicoracledb.container.restricted:
+    description: Oracle container restricted status (1=YES, 0=NO)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - container.name
+      - restricted.status
+
+  newrelicoracledb.pdb.status:
+    description: Oracle PDB status (1=NORMAL, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - pdb.name
+      - container.status
+
+  newrelicoracledb.pdb.open_mode:
+    description: Oracle PDB open mode (1=READ WRITE, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - pdb.name
+      - open.mode
+
+  newrelicoracledb.pdb.total_size_bytes:
+    description: Total size of PDB in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - pdb.name
+
+  # Tablespace metrics with container awareness
+  newrelicoracledb.tablespace.used_bytes:
+    description: Used bytes in tablespace
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - tablespace.name
+
+  newrelicoracledb.tablespace.total_bytes:
+    description: Total bytes in tablespace
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - tablespace.name
+
+  newrelicoracledb.tablespace.used_percent:
+    description: Used percentage of tablespace
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "%"
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - tablespace.name
+
+  # Data file metrics
+  newrelicoracledb.datafile.size_bytes:
+    description: Size of data file in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - tablespace.name
+      - file.name
+
+  newrelicoracledb.datafile.used_bytes:
+    description: Used bytes in data file
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - tablespace.name
+      - file.name
+
+  newrelicoracledb.datafile.autoextensible:
+    description: Data file autoextensible status (1=YES, 0=NO)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - tablespace.name
+      - file.name
+      - container.status
+
+  # Service metrics
+  newrelicoracledb.service.status:
+    description: Oracle service status (1=active, 0=inactive)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - newrelic.entity_name
+      - con.id
+      - service.name
+
+  newrelicoracledb.service.count:
+    description: Count of services per container
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{services}"
+    attributes:
+      - newrelic.entity_name
+      - con.id
 
   newrelicoracledb.connection.bytes_received:
     description: Bytes received via SQL*Net from client
