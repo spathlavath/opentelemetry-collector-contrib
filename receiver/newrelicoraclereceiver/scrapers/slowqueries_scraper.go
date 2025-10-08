@@ -96,10 +96,8 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Convert NullString/NullInt64/NullFloat64 to string values for attributes
 		dbName := slowQuery.GetDatabaseName()
 		qID := slowQuery.GetQueryID()
-		qText := ""
-		if slowQuery.QueryText.Valid {
-			qText = commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
-		}
+		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
+
 		schName := slowQuery.GetSchemaName()
 		stmtType := slowQuery.GetStatementType()
 		fullScan := slowQuery.GetHasFullTableScan()
@@ -167,7 +165,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		// Record query details (count metric with metadata as attributes)
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
-			1, // Count of slow query entry
+			1,
 			s.instanceName,
 			dbName,
 			qID,
@@ -176,13 +174,14 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			stmtType,
 			fullScan,
 		)
+
+		// Add query ID to the list for individual queries processing
 	}
 
 	if err := rows.Err(); err != nil {
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-
 	s.logger.Debug("Completed Oracle slow queries scrape")
 	return scrapeErrors
 }

@@ -5616,8 +5616,8 @@ func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) recordDataPoint(start pcom
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -5669,8 +5669,8 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pc
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -5722,8 +5722,8 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) recordDataPoint(start p
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -5775,8 +5775,8 @@ func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) recordDataPoint(start 
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -5828,8 +5828,8 @@ func (m *metricNewrelicoracledbSlowQueriesExecutionCount) recordDataPoint(start 
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -5881,12 +5881,12 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pc
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("database.name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query.id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query.text", queryTextAttributeValue)
-	dp.Attributes().PutStr("schema.name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement.type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("has.full.table.scan", hasFullTableScanAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
+	dp.Attributes().PutStr("has_full_table_scan", hasFullTableScanAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
