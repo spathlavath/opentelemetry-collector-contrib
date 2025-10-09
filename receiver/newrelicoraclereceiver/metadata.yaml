@@ -52,6 +52,15 @@ attributes:
   has_full_table_scan:
     description: Whether the query has a full table scan
     type: string
+  user_id:
+    description: Oracle user ID who parsed the SQL
+    type: string
+  username:
+    description: Oracle username who parsed the SQL
+    type: string
+  hostname:
+    description: Hostname or machine name for the query
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -2515,6 +2524,43 @@ metrics:
       - schema_name
       - statement_type
       - has_full_table_scan    
+
+  newrelicoracledb.individual_queries.cpu_time:
+    description: CPU time for individual queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+
+  newrelicoracledb.individual_queries.elapsed_time:
+    description: Elapsed time for individual queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+
+  newrelicoracledb.individual_queries.query_details:
+    description: Individual Query Details
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{count}"
+    attributes:
+      - newrelic.entity_name
+      - query_id
+      - query_text
+      - database_name
+      - user_id
+      - username
+      - hostname
 
 tests:
   config:
