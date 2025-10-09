@@ -61,7 +61,6 @@ const (
 		    dba_users u ON a.parsing_user_id = u.user_id
 		WHERE
 		    a.sql_id IN (%s)
-		    AND a.parsing_schema_name NOT IN ('SYS', 'SYSTEM')
 		ORDER BY
 		    elapsed_time_ms DESC`
 )
