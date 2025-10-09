@@ -27,6 +27,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbBlockingQueriesWaitTime:                            MetricConfig{Enabled: true},
 					NewrelicoracledbDbID:                                               MetricConfig{Enabled: true},
 					NewrelicoracledbDiskBlocksRead:                                     MetricConfig{Enabled: true},
 					NewrelicoracledbDiskBlocksWritten:                                  MetricConfig{Enabled: true},
@@ -35,6 +36,9 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbDiskWriteTimeMilliseconds:                          MetricConfig{Enabled: true},
 					NewrelicoracledbDiskWrites:                                         MetricConfig{Enabled: true},
 					NewrelicoracledbGlobalName:                                         MetricConfig{Enabled: true},
+					NewrelicoracledbIndividualQueriesCPUTime:                           MetricConfig{Enabled: true},
+					NewrelicoracledbIndividualQueriesElapsedTime:                       MetricConfig{Enabled: true},
+					NewrelicoracledbIndividualQueriesQueryDetails:                      MetricConfig{Enabled: true},
 					NewrelicoracledbLockedAccounts:                                     MetricConfig{Enabled: true},
 					NewrelicoracledbLongRunningQueries:                                 MetricConfig{Enabled: true},
 					NewrelicoracledbMemoryPgaAllocatedBytes:                            MetricConfig{Enabled: true},
@@ -272,6 +276,9 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbTablespaceSpaceConsumedBytes:                       MetricConfig{Enabled: true},
 					NewrelicoracledbTablespaceSpaceReservedBytes:                       MetricConfig{Enabled: true},
 					NewrelicoracledbTablespaceSpaceUsedPercentage:                      MetricConfig{Enabled: true},
+					NewrelicoracledbWaitEventsAvgWaitTimeMs:                            MetricConfig{Enabled: true},
+					NewrelicoracledbWaitEventsTotalWaitTimeMs:                          MetricConfig{Enabled: true},
+					NewrelicoracledbWaitEventsWaitingTasksCount:                        MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: true},
@@ -283,6 +290,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbBlockingQueriesWaitTime:                            MetricConfig{Enabled: false},
 					NewrelicoracledbDbID:                                               MetricConfig{Enabled: false},
 					NewrelicoracledbDiskBlocksRead:                                     MetricConfig{Enabled: false},
 					NewrelicoracledbDiskBlocksWritten:                                  MetricConfig{Enabled: false},
@@ -291,6 +299,9 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbDiskWriteTimeMilliseconds:                          MetricConfig{Enabled: false},
 					NewrelicoracledbDiskWrites:                                         MetricConfig{Enabled: false},
 					NewrelicoracledbGlobalName:                                         MetricConfig{Enabled: false},
+					NewrelicoracledbIndividualQueriesCPUTime:                           MetricConfig{Enabled: false},
+					NewrelicoracledbIndividualQueriesElapsedTime:                       MetricConfig{Enabled: false},
+					NewrelicoracledbIndividualQueriesQueryDetails:                      MetricConfig{Enabled: false},
 					NewrelicoracledbLockedAccounts:                                     MetricConfig{Enabled: false},
 					NewrelicoracledbLongRunningQueries:                                 MetricConfig{Enabled: false},
 					NewrelicoracledbMemoryPgaAllocatedBytes:                            MetricConfig{Enabled: false},
@@ -528,6 +539,9 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbTablespaceSpaceConsumedBytes:                       MetricConfig{Enabled: false},
 					NewrelicoracledbTablespaceSpaceReservedBytes:                       MetricConfig{Enabled: false},
 					NewrelicoracledbTablespaceSpaceUsedPercentage:                      MetricConfig{Enabled: false},
+					NewrelicoracledbWaitEventsAvgWaitTimeMs:                            MetricConfig{Enabled: false},
+					NewrelicoracledbWaitEventsTotalWaitTimeMs:                          MetricConfig{Enabled: false},
+					NewrelicoracledbWaitEventsWaitingTasksCount:                        MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: false},

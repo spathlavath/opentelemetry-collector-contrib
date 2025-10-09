@@ -28,6 +28,7 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
+	NewrelicoracledbBlockingQueriesWaitTime                            MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time"`
 	NewrelicoracledbDbID                                               MetricConfig `mapstructure:"newrelicoracledb.db_id"`
 	NewrelicoracledbDiskBlocksRead                                     MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_read"`
 	NewrelicoracledbDiskBlocksWritten                                  MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_written"`
@@ -36,6 +37,9 @@ type MetricsConfig struct {
 	NewrelicoracledbDiskWriteTimeMilliseconds                          MetricConfig `mapstructure:"newrelicoracledb.disk.write_time_milliseconds"`
 	NewrelicoracledbDiskWrites                                         MetricConfig `mapstructure:"newrelicoracledb.disk.writes"`
 	NewrelicoracledbGlobalName                                         MetricConfig `mapstructure:"newrelicoracledb.global_name"`
+	NewrelicoracledbIndividualQueriesCPUTime                           MetricConfig `mapstructure:"newrelicoracledb.individual_queries.cpu_time"`
+	NewrelicoracledbIndividualQueriesElapsedTime                       MetricConfig `mapstructure:"newrelicoracledb.individual_queries.elapsed_time"`
+	NewrelicoracledbIndividualQueriesQueryDetails                      MetricConfig `mapstructure:"newrelicoracledb.individual_queries.query_details"`
 	NewrelicoracledbLockedAccounts                                     MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
 	NewrelicoracledbLongRunningQueries                                 MetricConfig `mapstructure:"newrelicoracledb.long_running_queries"`
 	NewrelicoracledbMemoryPgaAllocatedBytes                            MetricConfig `mapstructure:"newrelicoracledb.memory.pga_allocated_bytes"`
@@ -273,10 +277,16 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceSpaceConsumedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_consumed_bytes"`
 	NewrelicoracledbTablespaceSpaceReservedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_reserved_bytes"`
 	NewrelicoracledbTablespaceSpaceUsedPercentage                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_used_percentage"`
+	NewrelicoracledbWaitEventsAvgWaitTimeMs                            MetricConfig `mapstructure:"newrelicoracledb.wait_events.avg_wait_time_ms"`
+	NewrelicoracledbWaitEventsTotalWaitTimeMs                          MetricConfig `mapstructure:"newrelicoracledb.wait_events.total_wait_time_ms"`
+	NewrelicoracledbWaitEventsWaitingTasksCount                        MetricConfig `mapstructure:"newrelicoracledb.wait_events.waiting_tasks_count"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		NewrelicoracledbBlockingQueriesWaitTime: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbDbID: MetricConfig{
 			Enabled: true,
 		},
@@ -299,6 +309,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbGlobalName: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIndividualQueriesCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIndividualQueriesElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbIndividualQueriesQueryDetails: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbLockedAccounts: MetricConfig{
@@ -1010,6 +1029,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbTablespaceSpaceUsedPercentage: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbWaitEventsAvgWaitTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbWaitEventsTotalWaitTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbWaitEventsWaitingTasksCount: MetricConfig{
 			Enabled: true,
 		},
 	}
