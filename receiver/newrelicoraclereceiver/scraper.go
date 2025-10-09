@@ -116,7 +116,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	// First execute slow queries scraper to get query IDs
 	s.logger.Debug("Starting slow queries scraper to get query IDs")
 	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
-	
+
 	s.logger.Info("Slow queries scraper completed",
 		zap.Int("query_ids_found", len(queryIDs)),
 		zap.Strings("query_ids", queryIDs),

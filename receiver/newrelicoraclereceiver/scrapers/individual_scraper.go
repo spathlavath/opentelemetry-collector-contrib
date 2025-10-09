@@ -53,7 +53,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 	s.logger.Info("=== INDIVIDUAL QUERIES SCRAPER CALLED ===",
 		zap.Int("total_query_ids", len(queryIDs)),
 		zap.Strings("received_query_ids", queryIDs))
-	
+
 	s.logger.Debug("Begin Oracle individual queries scrape", zap.Int("filter_query_ids", len(queryIDs)))
 
 	var scrapeErrors []error
@@ -64,7 +64,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		return scrapeErrors
 	}
 
-	s.logger.Info("Individual queries scraper starting", 
+	s.logger.Info("Individual queries scraper starting",
 		zap.Int("query_ids_count", len(queryIDs)),
 		zap.Strings("query_ids", queryIDs))
 
@@ -178,7 +178,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		s.logger.Error("Error iterating over individual queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-	s.logger.Info("Completed Oracle individual queries scrape", 
+	s.logger.Info("Completed Oracle individual queries scrape",
 		zap.Int("rows_processed", rowCount),
 		zap.Int("error_count", len(scrapeErrors)))
 	return scrapeErrors
