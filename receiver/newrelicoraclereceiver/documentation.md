@@ -12,101 +12,6 @@ metrics:
     enabled: false
 ```
 
-### newrelicoracledb.blocking_queries.blocked_serial
-
-Serial number of the blocked session
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {serial} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| blocked.user | Username of the blocked session | Any Str | false |
-| blocking.user | Username of the blocking session | Any Str | false |
-| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
-| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
-
-### newrelicoracledb.blocking_queries.blocked_sid
-
-Session ID of the blocked session
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {session} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| blocked.user | Username of the blocked session | Any Str | false |
-| blocking.user | Username of the blocking session | Any Str | false |
-| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
-| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
-
-### newrelicoracledb.blocking_queries.blocking_serial
-
-Serial number of the blocking session
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {serial} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| blocked.user | Username of the blocked session | Any Str | false |
-| blocking.user | Username of the blocking session | Any Str | false |
-| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
-| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
-
-### newrelicoracledb.blocking_queries.blocking_sid
-
-Session ID of the blocking session
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {session} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| blocked.user | Username of the blocked session | Any Str | false |
-| blocking.user | Username of the blocking session | Any Str | false |
-| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
-| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
-
-### newrelicoracledb.blocking_queries.count
-
-Count of blocking queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {count} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| blocked.user | Username of the blocked session | Any Str | false |
-| blocking.user | Username of the blocking session | Any Str | false |
-| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
-| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
-
 ### newrelicoracledb.blocking_queries.wait_time
 
 Wait time in seconds for blocked queries
@@ -121,10 +26,15 @@ Wait time in seconds for blocked queries
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
-| blocked.user | Username of the blocked session | Any Str | false |
-| blocking.user | Username of the blocking session | Any Str | false |
-| blocked.sql.id | SQL ID of the blocked query | Any Str | false |
-| blocking.sql.id | SQL ID of the blocking query | Any Str | false |
+| blocked_user | Username of the blocked session | Any Str | false |
+| blocking_user | Username of the blocking session | Any Str | false |
+| blocked_sql_id | SQL ID of the blocked query | Any Str | false |
+| blocked_sid | Session ID of the blocked session | Any Str | false |
+| blocking_sid | Session ID of the blocking session | Any Str | false |
+| blocked_serial | Serial number of the blocked session | Any Str | false |
+| blocking_serial | Serial number of the blocking session | Any Str | false |
+| blocked_query_text | SQL query text of the blocked query | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.db_id
 

@@ -1,16 +1,6 @@
 default:
 all_set:
   metrics:
-    newrelicoracledb.blocking_queries.blocked_serial:
-      enabled: true
-    newrelicoracledb.blocking_queries.blocked_sid:
-      enabled: true
-    newrelicoracledb.blocking_queries.blocking_serial:
-      enabled: true
-    newrelicoracledb.blocking_queries.blocking_sid:
-      enabled: true
-    newrelicoracledb.blocking_queries.count:
-      enabled: true
     newrelicoracledb.blocking_queries.wait_time:
       enabled: true
     newrelicoracledb.db_id:
@@ -522,16 +512,6 @@ all_set:
       enabled: true
 none_set:
   metrics:
-    newrelicoracledb.blocking_queries.blocked_serial:
-      enabled: false
-    newrelicoracledb.blocking_queries.blocked_sid:
-      enabled: false
-    newrelicoracledb.blocking_queries.blocking_serial:
-      enabled: false
-    newrelicoracledb.blocking_queries.blocking_sid:
-      enabled: false
-    newrelicoracledb.blocking_queries.count:
-      enabled: false
     newrelicoracledb.blocking_queries.wait_time:
       enabled: false
     newrelicoracledb.db_id:
