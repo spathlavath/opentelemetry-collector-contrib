@@ -2533,6 +2533,7 @@ metrics:
     unit: ms
     attributes:
       - newrelic.entity_name
+      - database_name
       - query_id
 
   newrelicoracledb.individual_queries.elapsed_time:
@@ -2543,6 +2544,7 @@ metrics:
     unit: ms
     attributes:
       - newrelic.entity_name
+      - database_name
       - query_id
 
   newrelicoracledb.individual_queries.query_details:
@@ -2555,6 +2557,7 @@ metrics:
       - newrelic.entity_name
       - query_id
       - query_text
+      - database_name
       - user_id
       - username
       - hostname

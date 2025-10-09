@@ -102,15 +102,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val")
+			mb.RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val")
+			mb.RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val", "query_text-val", "user_id-val", "username-val", "hostname-val")
+			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val", "query_text-val", "database_name-val", "user_id-val", "username-val", "hostname-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1250,6 +1250,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
@@ -1268,6 +1271,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
@@ -1292,6 +1298,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_text")
 					assert.True(t, ok)
 					assert.Equal(t, "query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("user_id")
 					assert.True(t, ok)
 					assert.Equal(t, "user_id-val", attrVal.Str())

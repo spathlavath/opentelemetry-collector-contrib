@@ -14,6 +14,7 @@ type IndividualQuery struct {
 	CPUTimeMs     sql.NullFloat64
 	ElapsedTimeMs sql.NullFloat64
 	Hostname      sql.NullString
+	DatabaseName  sql.NullString
 }
 
 // GetQueryID returns the query ID as a string, empty if null
@@ -52,6 +53,14 @@ func (iq *IndividualQuery) GetQueryText() string {
 func (iq *IndividualQuery) GetHostname() string {
 	if iq.Hostname.Valid {
 		return iq.Hostname.String
+	}
+	return ""
+}
+
+// GetDatabaseName returns the database name as a string, empty if null
+func (iq *IndividualQuery) GetDatabaseName() string {
+	if iq.DatabaseName.Valid {
+		return iq.DatabaseName.String
 	}
 	return ""
 }

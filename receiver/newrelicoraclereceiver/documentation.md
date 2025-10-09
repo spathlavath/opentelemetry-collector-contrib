@@ -147,6 +147,7 @@ CPU time for individual queries
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.individual_queries.elapsed_time
@@ -162,6 +163,7 @@ Elapsed time for individual queries
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.individual_queries.query_details
@@ -179,6 +181,7 @@ Individual Query Details
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | query_text | SQL query text | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | user_id | Oracle user ID who parsed the SQL | Any Str | false |
 | username | Oracle username who parsed the SQL | Any Str | false |
 | hostname | Hostname or machine name for the query | Any Str | false |

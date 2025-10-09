@@ -102,6 +102,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			&individualQuery.CPUTimeMs,
 			&individualQuery.ElapsedTimeMs,
 			&individualQuery.Hostname,
+			&individualQuery.DatabaseName,
 		); err != nil {
 			s.logger.Error("Failed to scan individual query row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
@@ -122,6 +123,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		userID := individualQuery.GetUserID()
 		username := individualQuery.GetUsername()
 		hostname := individualQuery.GetHostname()
+		dbName := individualQuery.GetDatabaseName()
 
 		s.logger.Debug("Processing individual query",
 			zap.String("query_id", qID),
@@ -137,6 +139,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 				now,
 				individualQuery.CPUTimeMs.Float64,
 				s.instanceName,
+				dbName,
 				qID,
 			)
 		}
@@ -146,6 +149,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			now,
 			individualQuery.ElapsedTimeMs.Float64,
 			s.instanceName,
+			dbName,
 			qID,
 		)
 
@@ -156,6 +160,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			s.instanceName,
 			qID,
 			qText,
+			dbName,
 			userID,
 			username,
 			hostname,
