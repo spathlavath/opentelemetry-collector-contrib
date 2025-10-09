@@ -1447,7 +1447,7 @@ func (m *metricNewrelicoracledbIndividualQueriesCPUTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbIndividualQueriesCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, individualQueryIDAttributeValue string) {
+func (m *metricNewrelicoracledbIndividualQueriesCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1456,7 +1456,7 @@ func (m *metricNewrelicoracledbIndividualQueriesCPUTime) recordDataPoint(start p
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("query.id", individualQueryIDAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -1499,7 +1499,7 @@ func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, individualQueryIDAttributeValue string) {
+func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1508,7 +1508,7 @@ func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) recordDataPoint(sta
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("query.id", individualQueryIDAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -1551,7 +1551,7 @@ func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, individualQueryIDAttributeValue string, individualQueryTextAttributeValues string) {
+func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue string, sessionUsernameAttributeValue string, sessionStatusAttributeValue string, planHashValueAttributeValue string, sessionOsuserAttributeValue string, sessionHostnameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1560,8 +1560,15 @@ func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) recordDataPoint(st
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("query.id", individualQueryIDAttributeValue)
-	dp.Attributes().PutStr("query.text", individualQueryTextAttributeValues)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+	dp.Attributes().PutStr("session_id", sessionIDAttributeValue)
+	dp.Attributes().PutStr("session_serial", sessionSerialAttributeValue)
+	dp.Attributes().PutStr("session_username", sessionUsernameAttributeValue)
+	dp.Attributes().PutStr("session_status", sessionStatusAttributeValue)
+	dp.Attributes().PutStr("plan_hash_value", planHashValueAttributeValue)
+	dp.Attributes().PutStr("session_osuser", sessionOsuserAttributeValue)
+	dp.Attributes().PutStr("session_hostname", sessionHostnameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -1582,59 +1589,6 @@ func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) emit(metrics pmetr
 
 func newMetricNewrelicoracledbIndividualQueriesQueryDetails(cfg MetricConfig) metricNewrelicoracledbIndividualQueriesQueryDetails {
 	m := metricNewrelicoracledbIndividualQueriesQueryDetails{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbIndividualQueriesQueryText struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.individual_queries.query_text metric with initial data.
-func (m *metricNewrelicoracledbIndividualQueriesQueryText) init() {
-	m.data.SetName("newrelicoracledb.individual_queries.query_text")
-	m.data.SetDescription("Individual Query Text (anonymized)")
-	m.data.SetUnit("{count}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbIndividualQueriesQueryText) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, individualQueryIDAttributeValue string, queryTextAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
-	dp.Attributes().PutStr("query.id", individualQueryIDAttributeValue)
-	dp.Attributes().PutStr("query.text", queryTextAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbIndividualQueriesQueryText) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbIndividualQueriesQueryText) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbIndividualQueriesQueryText(cfg MetricConfig) metricNewrelicoracledbIndividualQueriesQueryText {
-	m := metricNewrelicoracledbIndividualQueriesQueryText{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -13996,7 +13950,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbIndividualQueriesCPUTime                           metricNewrelicoracledbIndividualQueriesCPUTime
 	metricNewrelicoracledbIndividualQueriesElapsedTime                       metricNewrelicoracledbIndividualQueriesElapsedTime
 	metricNewrelicoracledbIndividualQueriesQueryDetails                      metricNewrelicoracledbIndividualQueriesQueryDetails
-	metricNewrelicoracledbIndividualQueriesQueryText                         metricNewrelicoracledbIndividualQueriesQueryText
 	metricNewrelicoracledbLockedAccounts                                     metricNewrelicoracledbLockedAccounts
 	metricNewrelicoracledbLongRunningQueries                                 metricNewrelicoracledbLongRunningQueries
 	metricNewrelicoracledbMemoryPgaAllocatedBytes                            metricNewrelicoracledbMemoryPgaAllocatedBytes
@@ -14911,18 +14864,18 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.T
 }
 
 // RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint adds a data point to newrelicoracledb.individual_queries.cpu_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, individualQueryIDAttributeValue string) {
-	mb.metricNewrelicoracledbIndividualQueriesCPUTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, individualQueryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbIndividualQueriesCPUTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint adds a data point to newrelicoracledb.individual_queries.elapsed_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, individualQueryIDAttributeValue string) {
-	mb.metricNewrelicoracledbIndividualQueriesElapsedTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, individualQueryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbIndividualQueriesElapsedTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint adds a data point to newrelicoracledb.individual_queries.query_details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, individualQueryIDAttributeValue string, individualQueryTextAttributeValues string) {
-	mb.metricNewrelicoracledbIndividualQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, individualQueryIDAttributeValue, individualQueryTextAttributeValues)
+func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue string, sessionUsernameAttributeValue string, sessionStatusAttributeValue string, planHashValueAttributeValue string, sessionOsuserAttributeValue string, sessionHostnameAttributeValue string) {
+	mb.metricNewrelicoracledbIndividualQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionUsernameAttributeValue, sessionStatusAttributeValue, planHashValueAttributeValue, sessionOsuserAttributeValue, sessionHostnameAttributeValue)
 }
 
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.

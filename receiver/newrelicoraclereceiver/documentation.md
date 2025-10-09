@@ -147,7 +147,7 @@ CPU time for individual queries
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| query.id | SQL query identifier | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.individual_queries.elapsed_time
 
@@ -162,7 +162,7 @@ Elapsed time for individual queries
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| query.id | SQL query identifier | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.individual_queries.query_details
 
@@ -177,7 +177,15 @@ Individual Query Details
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
-| query.id | SQL query identifier | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| session_id | Oracle session identifier | Any Str | false |
+| session_serial | Oracle session serial number | Any Str | false |
+| session_username | Oracle session username | Any Str | false |
+| session_status | Oracle session status | Any Str | false |
+| plan_hash_value | SQL plan hash value | Any Str | false |
+| session_osuser | Operating system user name | Any Str | false |
+| session_hostname | Client hostname or machine name | Any Str | false |
 
 ### newrelicoracledb.locked_accounts
 

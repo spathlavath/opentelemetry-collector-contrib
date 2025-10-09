@@ -85,10 +85,17 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		var individualQuery models.IndividualQuery
 
 		if err := rows.Scan(
+			&individualQuery.SessionID,
+			&individualQuery.Serial,
+			&individualQuery.Username,
+			&individualQuery.Status,
 			&individualQuery.QueryID,
-			&individualQuery.QueryText,
-			&individualQuery.CPUTimeMs,
+			&individualQuery.PlanHashValue,
 			&individualQuery.ElapsedTimeMs,
+			&individualQuery.CPUTimeMs,
+			&individualQuery.OSUser,
+			&individualQuery.Hostname,
+			&individualQuery.QueryText,
 		); err != nil {
 			s.logger.Error("Failed to scan individual query row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
@@ -103,12 +110,22 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			continue
 		}
 
-		// Convert NullString/NullFloat64 to string values for attributes
+		// Convert NullString/NullFloat64/NullInt64 to string values for attributes
 		qID := individualQuery.GetQueryID()
 		qText := commonutils.AnonymizeAndNormalize(individualQuery.GetQueryText())
+		sessionID := individualQuery.GetSessionID()
+		serial := individualQuery.GetSerial()
+		username := individualQuery.GetUsername()
+		status := individualQuery.GetStatus()
+		planHashValue := individualQuery.GetPlanHashValue()
+		osUser := individualQuery.GetOSUser()
+		hostname := individualQuery.GetHostname()
 
 		s.logger.Debug("Processing individual query",
 			zap.String("query_id", qID),
+			zap.String("session_id", sessionID),
+			zap.String("username", username),
+			zap.String("status", status),
 			zap.Float64("cpu_time_ms", individualQuery.CPUTimeMs.Float64),
 			zap.Float64("elapsed_time_ms", individualQuery.ElapsedTimeMs.Float64))
 
@@ -130,13 +147,20 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			qID,
 		)
 
-		// Record query details (count = 1 for each query)
+		// Record query details (count = 1 for each query) with all session information
 		s.mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(
 			now,
 			1, // Count of 1 for each query
 			s.instanceName,
 			qID,
 			qText,
+			sessionID,
+			serial,
+			username,
+			status,
+			planHashValue,
+			osUser,
+			hostname,
 		)
 	}
 
