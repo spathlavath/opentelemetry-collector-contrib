@@ -45,27 +45,23 @@ const (
 			avg_elapsed_time_ms DESC
 		FETCH FIRST 10 ROWS ONLY`
 
-	// Oracle SQL query for individual queries metrics with session information
+	// Oracle SQL query for individual queries metrics with user information
 	IndividualQueriesFilteredSQL = `
 		SELECT
-		    s.sid as session_id,
-		    s.serial# as serial,
-		    s.username,
-		    s.status,
-		    a.sql_id as query_id,
-		    a.plan_hash_value,
+		    a.sql_id AS query_id,
+		    a.parsing_user_id AS user_id,
+		    u.username AS username,
+		    a.sql_text AS query_text,
+		    a.cpu_time / 1000 AS cpu_time_ms,
 		    a.elapsed_time / 1000 AS elapsed_time_ms,
-		    a.cpu_time /1000 as cpu_time_ms,
-		    s.osuser,
-		    s.machine as hostname,
-		    a.sql_text as query_text
+		    'Multiple' AS hostname
 		FROM
-		    v$session s
+		    v$sql a
 		JOIN
-		    v$sql a ON s.sql_id = a.sql_id AND s.sql_child_number = a.child_number
+		    dba_users u ON a.parsing_user_id = u.user_id
 		WHERE
 		    a.sql_id IN (%s)
-		    AND s.status = 'ACTIVE'
-		    AND s.username IS NOT NULL
-		FETCH FIRST 10 ROWS ONLY`
+		    AND a.parsing_schema_name NOT IN ('SYS', 'SYSTEM')
+		ORDER BY
+		    elapsed_time_ms DESC`
 )

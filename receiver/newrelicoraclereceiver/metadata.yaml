@@ -52,26 +52,14 @@ attributes:
   has_full_table_scan:
     description: Whether the query has a full table scan
     type: string
-  session_id:
-    description: Oracle session identifier
+  user_id:
+    description: Oracle user ID who parsed the SQL
     type: string
-  session_serial:
-    description: Oracle session serial number
+  username:
+    description: Oracle username who parsed the SQL
     type: string
-  session_username:
-    description: Oracle session username
-    type: string
-  session_status:
-    description: Oracle session status
-    type: string
-  plan_hash_value:
-    description: SQL plan hash value
-    type: string
-  session_osuser:
-    description: Operating system user name
-    type: string
-  session_hostname:
-    description: Client hostname or machine name
+  hostname:
+    description: Hostname or machine name for the query
     type: string
 
 metrics:
@@ -2567,13 +2555,9 @@ metrics:
       - newrelic.entity_name
       - query_id
       - query_text
-      - session_id
-      - session_serial
-      - session_username
-      - session_status
-      - plan_hash_value
-      - session_osuser
-      - session_hostname
+      - user_id
+      - username
+      - hostname
 
 tests:
   config:

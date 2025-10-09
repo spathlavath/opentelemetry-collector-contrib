@@ -110,7 +110,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val", "query_text-val", "session_id-val", "session_serial-val", "session_username-val", "session_status-val", "plan_hash_value-val", "session_osuser-val", "session_hostname-val")
+			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val", "query_text-val", "user_id-val", "username-val", "hostname-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1292,27 +1292,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_text")
 					assert.True(t, ok)
 					assert.Equal(t, "query_text-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_id")
+					attrVal, ok = dp.Attributes().Get("user_id")
 					assert.True(t, ok)
-					assert.Equal(t, "session_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_serial")
+					assert.Equal(t, "user_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("username")
 					assert.True(t, ok)
-					assert.Equal(t, "session_serial-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_username")
+					assert.Equal(t, "username-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("hostname")
 					assert.True(t, ok)
-					assert.Equal(t, "session_username-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_status")
-					assert.True(t, ok)
-					assert.Equal(t, "session_status-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_hash_value")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_osuser")
-					assert.True(t, ok)
-					assert.Equal(t, "session_osuser-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_hostname")
-					assert.True(t, ok)
-					assert.Equal(t, "session_hostname-val", attrVal.Str())
+					assert.Equal(t, "hostname-val", attrVal.Str())
 				case "newrelicoracledb.locked_accounts":
 					assert.False(t, validatedMetrics["newrelicoracledb.locked_accounts"], "Found a duplicate in the metrics slice: newrelicoracledb.locked_accounts")
 					validatedMetrics["newrelicoracledb.locked_accounts"] = true
