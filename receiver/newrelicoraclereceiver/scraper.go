@@ -124,6 +124,11 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	s.logger.Debug("Starting slow queries scraper to get query IDs")
 	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
 
+	s.logger.Info("Slow queries scraper completed",
+		zap.Int("query_ids_found", len(queryIDs)),
+		zap.Strings("query_ids", queryIDs),
+		zap.Int("slow_query_errors", len(slowQueryErrs)))
+
 	// Add slow query errors to our error collection
 	for _, err := range slowQueryErrs {
 		select {
@@ -183,6 +188,9 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		defer wg.Done()
 
 		s.logger.Debug("Starting individual queries scraper with filtered IDs", zap.Int("query_ids_count", len(queryIDs)))
+		s.logger.Info("Individual queries scraper about to start",
+			zap.Int("query_ids_available", len(queryIDs)),
+			zap.Strings("available_query_ids", queryIDs))
 		startTime := time.Now()
 
 		// Execute the individual queries scraper with query ID filter

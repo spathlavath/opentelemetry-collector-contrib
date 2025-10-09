@@ -90,6 +90,14 @@ attributes:
     type: string
   blocked_query_text:
     description: SQL query text of the blocked query
+  user_id:
+    description: Oracle user ID who parsed the SQL
+    type: string
+  username:
+    description: Oracle username who parsed the SQL
+    type: string
+  hostname:
+    description: Hostname or machine name for the query
     type: string
 
 metrics:
@@ -2612,6 +2620,12 @@ metrics:
       - blocking_serial
       - blocked_query_text
       - database_name
+      - query_id
+      - query_text
+      - database_name
+      - user_id
+      - username
+      - hostname
 
 tests:
   config:

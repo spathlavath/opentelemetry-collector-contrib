@@ -37,8 +37,7 @@ const (
 		LEFT JOIN
 			full_scans fs ON sa.sql_id = fs.sql_id
 		WHERE
-		    sa.parsing_schema_name NOT IN ('SYS', 'SYSTEM', 'MDSYS', 'DVSYS', 'LBACSYS', 'DBSNMP', 'SYSMAN', 'AUDSYS','WMSYS', 'XDB', 'OJVMSYS', 'CTXSYS')
-			AND sa.executions > 0
+			sa.executions > 0
 			AND sa.sql_text NOT LIKE '%full_scans AS%'
 		ORDER BY
 			avg_elapsed_time_ms DESC
@@ -106,17 +105,25 @@ const (
 			s2.seconds_in_wait DESC`
 
 	// Oracle SQL query for individual queries metrics
+	// Oracle SQL query for individual queries metrics with user information
 	IndividualQueriesFilteredSQL = `
 		SELECT
-		    sql_id as query_id,
-		    sql_text as query_text,
-		    cpu_time/1000 as cpu_time_ms,
-		    elapsed_time / 1000 AS elapsed_time_ms
+		    a.sql_id AS query_id,
+		    a.parsing_user_id AS user_id,
+		    u.username AS username,
+		    a.sql_text AS query_text,
+		    a.cpu_time / 1000 AS cpu_time_ms,
+		    a.elapsed_time / 1000 AS elapsed_time_ms,
+		    'Multiple' AS hostname,
+		    d.name AS database_name
 		FROM
-		    v$sql
+		    v$sql a
+		JOIN
+		    dba_users u ON a.parsing_user_id = u.user_id
+		CROSS JOIN
+		    v$database d
 		WHERE
-		    sql_id IN (%s)
-		    AND sql_id is not null
+		    a.sql_id IN (%s)
 		ORDER BY
 		    elapsed_time_ms DESC`
 )

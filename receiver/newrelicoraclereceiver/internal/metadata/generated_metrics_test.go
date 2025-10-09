@@ -106,15 +106,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts, 1, "newrelic.entity_name-val", "query.id-val")
+			mb.RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts, 1, "newrelic.entity_name-val", "query.id-val")
+			mb.RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "query.id-val", "query.details-val")
+			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val", "query_text-val", "database_name-val", "user_id-val", "username-val", "hostname-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1311,9 +1311,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query.id")
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
-					assert.Equal(t, "query.id-val", attrVal.Str())
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
 				case "newrelicoracledb.individual_queries.elapsed_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.elapsed_time")
 					validatedMetrics["newrelicoracledb.individual_queries.elapsed_time"] = true
@@ -1329,9 +1332,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query.id")
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
-					assert.Equal(t, "query.id-val", attrVal.Str())
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
 				case "newrelicoracledb.individual_queries.query_details":
 					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.query_details"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.query_details")
 					validatedMetrics["newrelicoracledb.individual_queries.query_details"] = true
@@ -1347,9 +1353,24 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query.id")
+					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
-					assert.Equal(t, "query.id-val", attrVal.Str())
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_id")
+					assert.True(t, ok)
+					assert.Equal(t, "user_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("username")
+					assert.True(t, ok)
+					assert.Equal(t, "username-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("hostname")
+					assert.True(t, ok)
+					assert.Equal(t, "hostname-val", attrVal.Str())
 				case "newrelicoracledb.locked_accounts":
 					assert.False(t, validatedMetrics["newrelicoracledb.locked_accounts"], "Found a duplicate in the metrics slice: newrelicoracledb.locked_accounts")
 					validatedMetrics["newrelicoracledb.locked_accounts"] = true

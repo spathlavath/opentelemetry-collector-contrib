@@ -50,15 +50,23 @@ func NewIndividualQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger
 
 // ScrapeIndividualQueries collects Oracle individual queries metrics filtered by query IDs
 func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, queryIDs []string) []error {
+	s.logger.Info("=== INDIVIDUAL QUERIES SCRAPER CALLED ===",
+		zap.Int("total_query_ids", len(queryIDs)),
+		zap.Strings("received_query_ids", queryIDs))
+
 	s.logger.Debug("Begin Oracle individual queries scrape", zap.Int("filter_query_ids", len(queryIDs)))
 
 	var scrapeErrors []error
 
 	// If no query IDs to filter, return early
 	if len(queryIDs) == 0 {
-		s.logger.Debug("No query IDs to filter individual queries, skipping")
+		s.logger.Warn("No query IDs to filter individual queries, skipping - check slow queries scraper")
 		return scrapeErrors
 	}
+
+	s.logger.Info("Individual queries scraper starting",
+		zap.Int("query_ids_count", len(queryIDs)),
+		zap.Strings("query_ids", queryIDs))
 
 	// Build quoted query IDs for the IN clause
 	quotedQueryIDs := make([]string, len(queryIDs))
@@ -81,14 +89,20 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 
+	rowCount := 0
 	for rows.Next() {
+		rowCount++
 		var individualQuery models.IndividualQuery
 
 		if err := rows.Scan(
 			&individualQuery.QueryID,
+			&individualQuery.UserID,
+			&individualQuery.Username,
 			&individualQuery.QueryText,
 			&individualQuery.CPUTimeMs,
 			&individualQuery.ElapsedTimeMs,
+			&individualQuery.Hostname,
+			&individualQuery.DatabaseName,
 		); err != nil {
 			s.logger.Error("Failed to scan individual query row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
@@ -103,12 +117,19 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			continue
 		}
 
-		// Convert NullString/NullFloat64 to string values for attributes
+		// Convert NullString/NullFloat64/NullInt64 to string values for attributes
 		qID := individualQuery.GetQueryID()
 		qText := commonutils.AnonymizeAndNormalize(individualQuery.GetQueryText())
+		userID := individualQuery.GetUserID()
+		username := individualQuery.GetUsername()
+		hostname := individualQuery.GetHostname()
+		dbName := individualQuery.GetDatabaseName()
 
 		s.logger.Debug("Processing individual query",
 			zap.String("query_id", qID),
+			zap.String("user_id", userID),
+			zap.String("username", username),
+			zap.String("hostname", hostname),
 			zap.Float64("cpu_time_ms", individualQuery.CPUTimeMs.Float64),
 			zap.Float64("elapsed_time_ms", individualQuery.ElapsedTimeMs.Float64))
 
@@ -118,6 +139,7 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 				now,
 				individualQuery.CPUTimeMs.Float64,
 				s.instanceName,
+				dbName,
 				qID,
 			)
 		}
@@ -127,16 +149,21 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			now,
 			individualQuery.ElapsedTimeMs.Float64,
 			s.instanceName,
+			dbName,
 			qID,
 		)
 
-		// Record query details (count = 1 for each query)
+		// Record query details (count = 1 for each query) with user information
 		s.mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(
 			now,
 			1, // Count of 1 for each query
 			s.instanceName,
 			qID,
 			qText,
+			dbName,
+			userID,
+			username,
+			hostname,
 		)
 	}
 
@@ -144,6 +171,8 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		s.logger.Error("Error iterating over individual queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-	s.logger.Debug("Completed Oracle individual queries scrape")
+	s.logger.Info("Completed Oracle individual queries scrape",
+		zap.Int("rows_processed", rowCount),
+		zap.Int("error_count", len(scrapeErrors)))
 	return scrapeErrors
 }
