@@ -24,7 +24,7 @@ Available free space in the ASM disk group in MB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | diskgroup.name | ASM disk group name | Any Str | false |
 
 ### newrelicoracledb.asm.diskgroup.offline_disks
@@ -39,7 +39,7 @@ Number of offline disks in the ASM disk group
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | diskgroup.name | ASM disk group name | Any Str | false |
 
 ### newrelicoracledb.asm.diskgroup.total_mb
@@ -54,7 +54,7 @@ Total capacity of the ASM disk group in MB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | diskgroup.name | ASM disk group name | Any Str | false |
 
 ### newrelicoracledb.connection.active_sessions
@@ -69,7 +69,7 @@ Number of active Oracle database sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.blocking_sessions
 
@@ -83,7 +83,7 @@ Sessions blocked by other sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.id | Oracle session identifier (SID) | Any Str | false |
 | blocking.session.id | Oracle blocking session identifier | Any Str | false |
 | username | Oracle database username | Any Str | false |
@@ -102,7 +102,7 @@ Bytes received via SQL*Net from client
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.bytes_sent
 
@@ -116,7 +116,7 @@ Bytes sent via SQL*Net to client
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.circuits
 
@@ -130,7 +130,7 @@ Number of active circuits
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.dispatchers
 
@@ -144,7 +144,7 @@ Number of dispatchers
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.execute_count
 
@@ -158,7 +158,7 @@ Number of SQL executions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.inactive_sessions
 
@@ -172,7 +172,7 @@ Number of inactive Oracle database sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.logons_cumulative
 
@@ -186,7 +186,7 @@ Cumulative number of logons since instance startup
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.logons_current
 
@@ -200,7 +200,7 @@ Current number of active logons
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.parse_count_hard
 
@@ -214,7 +214,7 @@ Number of hard parse calls
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.parse_count_total
 
@@ -228,7 +228,7 @@ Total number of parse calls
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.resource_current_utilization
 
@@ -242,7 +242,7 @@ Current utilization of Oracle resources
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | resource.name | Oracle resource name | Any Str | false |
 
 ### newrelicoracledb.connection.resource_limit
@@ -257,7 +257,7 @@ Limit value for Oracle resources
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | resource.name | Oracle resource name | Any Str | false |
 
 ### newrelicoracledb.connection.resource_max_utilization
@@ -272,7 +272,7 @@ Maximum utilization of Oracle resources since startup
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | resource.name | Oracle resource name | Any Str | false |
 
 ### newrelicoracledb.connection.session_cpu_usage
@@ -287,7 +287,7 @@ CPU usage by session in seconds
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.id | Oracle session identifier (SID) | Any Str | false |
 | username | Oracle database username | Any Str | false |
 | session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
@@ -305,7 +305,7 @@ Session idle time in seconds
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.id | Oracle session identifier (SID) | Any Str | false |
 | username | Oracle database username | Any Str | false |
 | session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
@@ -323,7 +323,7 @@ Logical reads by session
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.id | Oracle session identifier (SID) | Any Str | false |
 | username | Oracle database username | Any Str | false |
 | session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
@@ -341,7 +341,7 @@ PGA memory usage by session
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.id | Oracle session identifier (SID) | Any Str | false |
 | username | Oracle database username | Any Str | false |
 | session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
@@ -359,7 +359,7 @@ Number of sessions grouped by status
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 
 ### newrelicoracledb.connection.sessions_by_type
@@ -374,7 +374,7 @@ Number of sessions grouped by type
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.type | Oracle session type (USER, BACKGROUND, etc.) | Any Str | false |
 
 ### newrelicoracledb.connection.shared_servers
@@ -389,7 +389,7 @@ Number of shared servers
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.sqlnet_roundtrips
 
@@ -403,7 +403,7 @@ Number of SQL*Net roundtrips to/from client
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.total_sessions
 
@@ -417,7 +417,7 @@ Total number of Oracle database sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.user_commits
 
@@ -431,7 +431,7 @@ Number of user commits
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.user_rollbacks
 
@@ -445,7 +445,7 @@ Number of user rollbacks
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.wait_event_avg_wait_time
 
@@ -459,7 +459,7 @@ Average wait time for each wait event
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 | wait.class | Oracle wait event class | Any Str | false |
 
@@ -475,7 +475,7 @@ Total time waited for each wait event
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 | wait.class | Oracle wait event class | Any Str | false |
 
@@ -491,7 +491,7 @@ Total number of waits for each wait event
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 | wait.class | Oracle wait event class | Any Str | false |
 
@@ -507,7 +507,7 @@ Current wait events and wait time
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | session.id | Oracle session identifier (SID) | Any Str | false |
 | username | Oracle database username | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
@@ -526,7 +526,7 @@ Oracle container restricted status (1=YES, 0=NO)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | container.name | Oracle container name | Any Str | false |
 | restricted.status | Oracle container restricted status (YES, NO) | Any Str | false |
@@ -543,7 +543,7 @@ Oracle container status (1=READ WRITE, 0=other)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | container.name | Oracle container name | Any Str | false |
 | open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
@@ -560,7 +560,7 @@ Data file autoextensible status (1=YES, 0=NO)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 | file.name | Oracle data file name | Any Str | false |
@@ -578,7 +578,7 @@ Size of data file in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 | file.name | Oracle data file name | Any Str | false |
@@ -595,7 +595,7 @@ Used bytes in data file
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 | file.name | Oracle data file name | Any Str | false |
@@ -612,7 +612,7 @@ Oracle database ID information
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | db.id | Oracle database ID | Any Str | false |
 
@@ -628,7 +628,7 @@ Number of physical blocks read from disk
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.blocks_written
@@ -643,7 +643,7 @@ Number of physical blocks written to disk
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.read_time_milliseconds
@@ -658,7 +658,7 @@ Time spent reading from disk in milliseconds
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.reads
@@ -673,7 +673,7 @@ Number of physical disk reads
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.write_time_milliseconds
@@ -688,7 +688,7 @@ Time spent writing to disk in milliseconds
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.writes
@@ -703,7 +703,7 @@ Number of physical disk writes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.global_name
@@ -718,7 +718,7 @@ Oracle database global name information
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | global.name | Oracle database global name | Any Str | false |
 
@@ -734,7 +734,7 @@ Count of locked user accounts in the database
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.long_running_queries
@@ -749,7 +749,7 @@ Number of long running queries (active sessions running for more than 60 seconds
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_allocated_bytes
@@ -764,7 +764,7 @@ Total PGA memory allocated in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_freeable_bytes
@@ -779,7 +779,7 @@ Total freeable PGA memory in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_in_use_bytes
@@ -794,7 +794,7 @@ Total PGA memory currently in use in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_max_size_bytes
@@ -809,7 +809,7 @@ Global memory bound for PGA in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes
@@ -824,7 +824,7 @@ SGA shared pool library cache sharable memory in bytes for statements with more 
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes
@@ -839,7 +839,7 @@ SGA shared pool library cache shareable memory per user in bytes (250 * users_op
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.sga_uga_total_bytes
@@ -854,7 +854,7 @@ Total SGA UGA memory in bytes (session uga memory max)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.active_parallel_sessions
@@ -869,7 +869,7 @@ Number of active parallel sessions in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.active_serial_sessions
@@ -884,7 +884,7 @@ Number of active serial sessions in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.average_active_sessions
@@ -899,7 +899,7 @@ Average number of active sessions in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.background_cpu_usage_per_second
@@ -914,7 +914,7 @@ Background CPU usage per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.background_time_per_second
@@ -929,7 +929,7 @@ Background time per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.block_changes_per_second
@@ -944,7 +944,7 @@ DB block changes per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.block_changes_per_transaction
@@ -959,7 +959,7 @@ DB block changes per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_time_ratio
@@ -974,7 +974,7 @@ Database CPU time ratio in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_usage_per_second
@@ -989,7 +989,7 @@ CPU usage per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_usage_per_transaction
@@ -1004,7 +1004,7 @@ CPU usage per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.current_logons
@@ -1019,7 +1019,7 @@ Current number of logons in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.current_open_cursors
@@ -1034,7 +1034,7 @@ Current number of open cursors in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_read_bytes_per_second
@@ -1049,7 +1049,7 @@ Physical read bytes per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_reads_per_second
@@ -1064,7 +1064,7 @@ Physical reads per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_write_bytes_per_second
@@ -1079,7 +1079,7 @@ Physical write bytes per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_writes_per_second
@@ -1094,7 +1094,7 @@ Physical writes per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.execute_without_parse_ratio
@@ -1109,7 +1109,7 @@ Execute without parse ratio in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.executions_per_second
@@ -1124,7 +1124,7 @@ Executions per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.executions_per_transaction
@@ -1139,7 +1139,7 @@ Executions per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_second
@@ -1154,7 +1154,7 @@ Hard parse count per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_transaction
@@ -1169,7 +1169,7 @@ Hard parse count per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.logical_reads_per_second
@@ -1184,7 +1184,7 @@ Logical reads per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.logical_reads_per_transaction
@@ -1199,7 +1199,7 @@ Logical reads per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.logons_per_second
@@ -1214,7 +1214,7 @@ Logons per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.logons_per_transaction
@@ -1229,7 +1229,7 @@ Logons per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.network_traffic_byte_per_second
@@ -1244,7 +1244,7 @@ Network traffic volume per second in bytes in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.open_cursors_per_second
@@ -1259,7 +1259,7 @@ Open cursors per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.open_cursors_per_transaction
@@ -1274,7 +1274,7 @@ Open cursors per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.open_mode
@@ -1289,7 +1289,7 @@ Oracle PDB open mode (1=READ WRITE, 0=other)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | pdb.name | Oracle Pluggable Database name | Any Str | false |
 | open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
@@ -1306,7 +1306,7 @@ Parse failure count per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_read_bytes_per_second
@@ -1321,7 +1321,7 @@ Physical read total bytes per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_reads_per_transaction
@@ -1336,7 +1336,7 @@ Physical reads per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_write_bytes_per_second
@@ -1351,7 +1351,7 @@ Physical write total bytes per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_writes_per_transaction
@@ -1366,7 +1366,7 @@ Physical writes per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_second
@@ -1381,7 +1381,7 @@ Redo generated per second in bytes in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_transaction
@@ -1396,7 +1396,7 @@ Redo generated per transaction in bytes in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.response_time_per_transaction
@@ -1411,7 +1411,7 @@ Response time per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.session_count
@@ -1426,7 +1426,7 @@ Session count in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.soft_parse_ratio
@@ -1441,7 +1441,7 @@ Soft parse ratio in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.sql_service_response_time
@@ -1456,7 +1456,7 @@ SQL service response time in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.status
@@ -1471,7 +1471,7 @@ Oracle PDB status (1=NORMAL, 0=other)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | pdb.name | Oracle Pluggable Database name | Any Str | false |
 | container.status | Oracle container status (NORMAL, RESTRICTED, etc.) | Any Str | false |
@@ -1488,7 +1488,7 @@ Total parse count per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.total_parse_count_per_transaction
@@ -1503,7 +1503,7 @@ Total parse count per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.total_size_bytes
@@ -1518,7 +1518,7 @@ Total size of PDB in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | pdb.name | Oracle Pluggable Database name | Any Str | false |
 
@@ -1534,7 +1534,7 @@ User transactions per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.user_calls_per_second
@@ -1549,7 +1549,7 @@ User calls per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.user_calls_per_transaction
@@ -1564,7 +1564,7 @@ User calls per transaction in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.user_commits_per_second
@@ -1579,7 +1579,7 @@ User commits per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.user_commits_percentage
@@ -1594,7 +1594,7 @@ User commits percentage in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.user_rollbacks_per_second
@@ -1609,7 +1609,7 @@ User rollbacks per second in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.user_rollbacks_percentage
@@ -1624,7 +1624,7 @@ User rollbacks percentage in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.wait_time_ratio
@@ -1639,7 +1639,7 @@ Database wait time ratio in PDB
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rac.instance.active_state
@@ -1654,7 +1654,7 @@ Instance active state indicator (1=NORMAL, 0=other)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
@@ -1672,7 +1672,7 @@ Archiver status indicator (1=STARTED, 0=STOPPED)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
@@ -1690,7 +1690,7 @@ Database status indicator (1=ACTIVE, 0=other)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
@@ -1708,7 +1708,7 @@ Instance login status indicator (1=ALLOWED, 0=RESTRICTED)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
@@ -1726,7 +1726,7 @@ RAC instance status (1=OPEN, 0=other)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
@@ -1744,7 +1744,7 @@ Instance uptime in seconds since startup
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
@@ -1761,7 +1761,7 @@ Oracle database version information (always 1, version in attributes)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
@@ -1779,7 +1779,7 @@ Connection load balancing configuration (always 1, config in attributes)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | clb.goal | Oracle service connection load balancing goal | Any Str | false |
@@ -1796,7 +1796,7 @@ Service age in days since creation
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
@@ -1812,7 +1812,7 @@ Service failover configuration indicator (always 1, config in attributes)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | failover.method | Oracle service failover method | Any Str | false |
@@ -1831,7 +1831,7 @@ Failover delay in seconds configured for the service
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
@@ -1847,7 +1847,7 @@ Number of failover retries configured for the service
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
@@ -1863,7 +1863,7 @@ Instance ID where the service is currently running
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
@@ -1879,7 +1879,7 @@ Service network configuration (always 1, config in attributes)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | network.name | Oracle service network name | Any Str | false |
@@ -1896,7 +1896,7 @@ Total number of cluster wait events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 
@@ -1912,7 +1912,7 @@ Rate of cluster wait time in microseconds per second
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 
@@ -1928,7 +1928,7 @@ Number of waits for log file parallel write events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.redo_log_switch_archiving_needed_waits
@@ -1943,7 +1943,7 @@ Number of waits for log file switch (archiving needed) events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits
@@ -1958,7 +1958,7 @@ Number of waits for log file switch (checkpoint incomplete) events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.redo_log_switch_completion_waits
@@ -1973,7 +1973,7 @@ Number of waits for log file switch completion events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rollback_segments_gets
@@ -1988,7 +1988,7 @@ Number of gets on rollback segments
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rollback_segments_wait_ratio
@@ -2003,7 +2003,7 @@ Rollback segments wait ratio (waits/gets)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rollback_segments_waits
@@ -2018,7 +2018,7 @@ Number of waits on rollback segments
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.service.count
@@ -2033,7 +2033,7 @@ Count of services per container
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 
 ### newrelicoracledb.service.status
@@ -2048,9 +2048,9 @@ Oracle service status (1=active, 0=inactive)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| service.name | Oracle service name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
 
 ### newrelicoracledb.sessions.count
 
@@ -2064,7 +2064,7 @@ Total number of active Oracle database sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.sga_buffer_busy_waits
 
@@ -2078,7 +2078,7 @@ Number of buffer busy waits events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_fixed_size_bytes
@@ -2093,7 +2093,7 @@ SGA fixed size memory in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_free_buffer_inspected_waits
@@ -2108,7 +2108,7 @@ Number of free buffer inspected waits events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_free_buffer_waits
@@ -2123,7 +2123,7 @@ Number of free buffer waits events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_hit_ratio
@@ -2138,7 +2138,7 @@ SGA hit ratio (session logical reads minus physical reads / session logical read
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_allocation_retries_ratio
@@ -2153,7 +2153,7 @@ SGA log allocation retries ratio (redo buffer allocation retries / redo entries)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_buffer_redo_allocation_retries
@@ -2168,7 +2168,7 @@ Number of redo buffer allocation retries from sysstat
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_buffer_redo_entries
@@ -2183,7 +2183,7 @@ Number of redo entries from sysstat
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_buffer_space_waits
@@ -2198,7 +2198,7 @@ Number of sessions waiting for log buffer space
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_redo_buffers_bytes
@@ -2213,7 +2213,7 @@ SGA redo buffers memory in bytes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio
@@ -2228,7 +2228,7 @@ SGA shared pool dictionary cache miss ratio (getmisses/gets)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_shared_pool_library_cache_hit_ratio
@@ -2243,7 +2243,7 @@ SGA shared pool library cache hit ratio for SQL AREA namespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_shared_pool_library_cache_reload_ratio
@@ -2258,7 +2258,7 @@ SGA shared pool library cache reload ratio (reloads/pins)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
@@ -2273,7 +2273,7 @@ Number of sorts performed on disk from sysstat
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sorts_memory
@@ -2288,7 +2288,7 @@ Number of sorts performed in memory from sysstat
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.active_parallel_sessions
@@ -2303,7 +2303,7 @@ Active Parallel Sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.active_serial_sessions
@@ -2318,7 +2318,7 @@ Active Serial Sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.average_active_sessions
@@ -2333,7 +2333,7 @@ Average Active Sessions
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.background_checkpoints_per_second
@@ -2348,7 +2348,7 @@ Background Checkpoints Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.background_cpu_usage_per_second
@@ -2363,7 +2363,7 @@ Background CPU Usage Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.background_time_per_second
@@ -2378,7 +2378,7 @@ Background Time Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.branch_node_splits_per_second
@@ -2393,7 +2393,7 @@ Branch Node Splits Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.branch_node_splits_per_transaction
@@ -2408,7 +2408,7 @@ Branch Node Splits Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.buffer_cache_hit_ratio
@@ -2423,7 +2423,7 @@ Buffer Cache Hit Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.captured_user_calls
@@ -2438,7 +2438,7 @@ Captured user calls
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_changes_per_second
@@ -2453,7 +2453,7 @@ Consistent Read Changes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_changes_per_transaction
@@ -2468,7 +2468,7 @@ Consistent Read Changes Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_gets_per_second
@@ -2483,7 +2483,7 @@ Consistent Read Gets Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_gets_per_transaction
@@ -2498,7 +2498,7 @@ Consistent Read Gets Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cpu_usage_per_second
@@ -2513,7 +2513,7 @@ CPU Usage Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cpu_usage_per_transaction
@@ -2528,7 +2528,7 @@ CPU Usage Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_blocks_created_per_second
@@ -2543,7 +2543,7 @@ CR Blocks Created Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_blocks_created_per_transaction
@@ -2558,7 +2558,7 @@ CR Blocks Created Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_undo_records_applied_per_second
@@ -2573,7 +2573,7 @@ CR Undo Records Applied Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_undo_records_applied_per_transaction
@@ -2588,7 +2588,7 @@ CR Undo Records Applied Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.current_logons_count
@@ -2603,7 +2603,7 @@ Current Logons Count
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.current_open_cursors_count
@@ -2618,7 +2618,7 @@ Current Open Cursors Count
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.current_os_load
@@ -2633,7 +2633,7 @@ Current OS Load
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cursor_cache_hit_ratio
@@ -2648,7 +2648,7 @@ Cursor Cache Hit Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.database_cpu_time_ratio
@@ -2663,7 +2663,7 @@ Database CPU Time Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.database_time_per_second
@@ -2678,7 +2678,7 @@ Database Time Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.database_wait_time_ratio
@@ -2693,7 +2693,7 @@ Database Wait Time Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_changes_per_second
@@ -2708,7 +2708,7 @@ DB Block Changes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_changes_per_transaction
@@ -2723,7 +2723,7 @@ DB Block Changes Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_changes_per_user_call
@@ -2738,7 +2738,7 @@ DB Block Changes Per User Call
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_gets_per_second
@@ -2753,7 +2753,7 @@ DB Block Gets Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_gets_per_transaction
@@ -2768,7 +2768,7 @@ DB Block Gets Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_gets_per_user_call
@@ -2783,7 +2783,7 @@ DB Block Gets Per User Call
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.dbwr_checkpoints_per_second
@@ -2798,7 +2798,7 @@ DBWR Checkpoints Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.disk_sort_per_second
@@ -2813,7 +2813,7 @@ Disk Sort Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.disk_sort_per_transaction
@@ -2828,7 +2828,7 @@ Disk Sort Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_deadlocks_per_second
@@ -2843,7 +2843,7 @@ Enqueue Deadlocks Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_deadlocks_per_transaction
@@ -2858,7 +2858,7 @@ Enqueue Deadlocks Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_requests_per_second
@@ -2873,7 +2873,7 @@ Enqueue Requests Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_requests_per_transaction
@@ -2888,7 +2888,7 @@ Enqueue Requests Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_timeouts_per_second
@@ -2903,7 +2903,7 @@ Enqueue Timeouts Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_timeouts_per_transaction
@@ -2918,7 +2918,7 @@ Enqueue Timeouts Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_waits_per_second
@@ -2933,7 +2933,7 @@ Enqueue Waits Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_waits_per_transaction
@@ -2948,7 +2948,7 @@ Enqueue Waits Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.execute_without_parse_ratio
@@ -2963,7 +2963,7 @@ Execute Without Parse Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.executions_per_second
@@ -2978,7 +2978,7 @@ Executions Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.executions_per_transaction
@@ -2993,7 +2993,7 @@ Executions Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.executions_per_user_call
@@ -3008,7 +3008,7 @@ Executions Per User Call
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.full_index_scans_per_second
@@ -3023,7 +3023,7 @@ Full Index Scans Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.full_index_scans_per_transaction
@@ -3038,7 +3038,7 @@ Full Index Scans Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_cr_block_received_per_second
@@ -3053,7 +3053,7 @@ GC CR Block Received Per Second
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_cr_block_received_per_transaction
@@ -3068,7 +3068,7 @@ GC CR Block Received Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_current_block_received_per_second
@@ -3083,7 +3083,7 @@ GC Current Block Received Per Second
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_current_block_received_per_transaction
@@ -3098,7 +3098,7 @@ GC Current Block Received Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_average_cr_get_time
@@ -3113,7 +3113,7 @@ Global Cache Average CR Get Time
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_average_current_get_time
@@ -3128,7 +3128,7 @@ Global Cache Average Current Get Time
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_blocks_corrupted
@@ -3143,7 +3143,7 @@ Global Cache Blocks Corrupted
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_blocks_lost
@@ -3158,7 +3158,7 @@ Global Cache Blocks Lost
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.hard_parse_count_per_second
@@ -3173,7 +3173,7 @@ Hard Parse Count Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.hard_parse_count_per_transaction
@@ -3188,7 +3188,7 @@ Hard Parse Count Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.host_cpu_usage_per_second
@@ -3203,7 +3203,7 @@ Host CPU Usage Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.host_cpu_utilization
@@ -3218,7 +3218,7 @@ Host CPU Utilization (%)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.io_megabytes_per_second
@@ -3233,7 +3233,7 @@ I/O Megabytes per Second
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.io_requests_per_second
@@ -3248,7 +3248,7 @@ I/O Requests per Second
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.leaf_node_splits_per_second
@@ -3263,7 +3263,7 @@ Leaf Node Splits Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.leaf_node_splits_per_transaction
@@ -3278,7 +3278,7 @@ Leaf Node Splits Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.library_cache_hit_ratio
@@ -3293,7 +3293,7 @@ Library Cache Hit Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.library_cache_miss_ratio
@@ -3308,7 +3308,7 @@ Library Cache Miss Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logical_reads_per_second
@@ -3323,7 +3323,7 @@ Logical Reads Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logical_reads_per_transaction
@@ -3338,7 +3338,7 @@ Logical Reads Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logical_reads_per_user_call
@@ -3353,7 +3353,7 @@ Logical Reads Per User Call
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logons_per_second
@@ -3368,7 +3368,7 @@ Logons Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logons_per_transaction
@@ -3383,7 +3383,7 @@ Logons Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.long_table_scans_per_second
@@ -3398,7 +3398,7 @@ Long Table Scans Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.long_table_scans_per_transaction
@@ -3413,7 +3413,7 @@ Long Table Scans Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.memory_sorts_ratio
@@ -3428,7 +3428,7 @@ Memory Sorts Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.network_traffic_volume_per_second
@@ -3443,7 +3443,7 @@ Network Traffic Volume Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.open_cursors_per_second
@@ -3458,7 +3458,7 @@ Open Cursors Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.open_cursors_per_transaction
@@ -3473,7 +3473,7 @@ Open Cursors Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.parse_failure_count_per_second
@@ -3488,7 +3488,7 @@ Parse Failure Count Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.parse_failure_count_per_transaction
@@ -3503,7 +3503,7 @@ Parse Failure Count Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.pga_cache_hit_percentage
@@ -3518,7 +3518,7 @@ PGA Cache Hit %
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_reads_per_second
@@ -3533,7 +3533,7 @@ Physical Reads Direct Lobs Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_reads_per_transaction
@@ -3548,7 +3548,7 @@ Physical Reads Direct Lobs Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_writes_per_second
@@ -3563,7 +3563,7 @@ Physical Writes Direct Lobs Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_writes_per_transaction
@@ -3578,7 +3578,7 @@ Physical Writes Direct Lobs Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_bytes_per_second
@@ -3593,7 +3593,7 @@ Physical Read Bytes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_io_requests_per_second
@@ -3608,7 +3608,7 @@ Physical Read IO Requests Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_total_bytes_per_second
@@ -3623,7 +3623,7 @@ Physical Read Total Bytes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_total_io_requests_per_second
@@ -3638,7 +3638,7 @@ Physical Read Total IO Requests Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_direct_per_second
@@ -3653,7 +3653,7 @@ Physical Reads Direct Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_direct_per_transaction
@@ -3668,7 +3668,7 @@ Physical Reads Direct Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_per_second
@@ -3683,7 +3683,7 @@ Physical Reads Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_per_transaction
@@ -3698,7 +3698,7 @@ Physical Reads Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_bytes_per_second
@@ -3713,7 +3713,7 @@ Physical Write Bytes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_io_requests_per_second
@@ -3728,7 +3728,7 @@ Physical Write IO Requests Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_total_bytes_per_second
@@ -3743,7 +3743,7 @@ Physical Write Total Bytes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_total_io_requests_per_second
@@ -3758,7 +3758,7 @@ Physical Write Total IO Requests Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_direct_per_second
@@ -3773,7 +3773,7 @@ Physical Writes Direct Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_direct_per_transaction
@@ -3788,7 +3788,7 @@ Physical Writes Direct Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_per_second
@@ -3803,7 +3803,7 @@ Physical Writes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_per_transaction
@@ -3818,7 +3818,7 @@ Physical Writes Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.process_limit_percentage
@@ -3833,7 +3833,7 @@ Process Limit %
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.recursive_calls_per_second
@@ -3848,7 +3848,7 @@ Recursive Calls Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.recursive_calls_per_transaction
@@ -3863,7 +3863,7 @@ Recursive Calls Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_allocation_hit_ratio
@@ -3878,7 +3878,7 @@ Redo Allocation Hit Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_generated_bytes_per_second
@@ -3893,7 +3893,7 @@ Redo Generated Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_generated_bytes_per_transaction
@@ -3908,7 +3908,7 @@ Redo Generated Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_writes_per_second
@@ -3923,7 +3923,7 @@ Redo Writes Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_writes_per_transaction
@@ -3938,7 +3938,7 @@ Redo Writes Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.response_time_per_transaction
@@ -3953,7 +3953,7 @@ Response Time Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.row_cache_hit_ratio
@@ -3968,7 +3968,7 @@ Row Cache Hit Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.row_cache_miss_ratio
@@ -3983,7 +3983,7 @@ Row Cache Miss Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.rows_per_sort
@@ -3998,7 +3998,7 @@ Rows Per Sort
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.session_count
@@ -4013,7 +4013,7 @@ Session Count
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.session_limit_percentage
@@ -4028,7 +4028,7 @@ Session Limit %
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.shared_pool_free_percentage
@@ -4043,7 +4043,7 @@ Shared Pool Free %
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.soft_parse_ratio
@@ -4058,7 +4058,7 @@ Soft Parse Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.sql_service_response_time
@@ -4073,7 +4073,7 @@ SQL Service Response Time
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.streams_pool_usage_percentage
@@ -4088,7 +4088,7 @@ Streams Pool Usage Percentage
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.temp_space_used
@@ -4103,7 +4103,7 @@ Temp Space Used
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_index_scans_per_second
@@ -4118,7 +4118,7 @@ Total Index Scans Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_index_scans_per_transaction
@@ -4133,7 +4133,7 @@ Total Index Scans Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_parse_count_per_second
@@ -4148,7 +4148,7 @@ Total Parse Count Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_parse_count_per_transaction
@@ -4163,7 +4163,7 @@ Total Parse Count Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_sorts_per_user_call
@@ -4178,7 +4178,7 @@ Total Sorts Per User Call
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_table_scans_per_second
@@ -4193,7 +4193,7 @@ Total Table Scans Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_table_scans_per_transaction
@@ -4208,7 +4208,7 @@ Total Table Scans Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_table_scans_per_user_call
@@ -4223,7 +4223,7 @@ Total Table Scans Per User Call
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.transactions_per_logon
@@ -4238,7 +4238,7 @@ Txns Per Logon
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.transactions_per_second
@@ -4253,7 +4253,7 @@ User Transaction Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_calls_per_second
@@ -4268,7 +4268,7 @@ User Calls Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_calls_per_transaction
@@ -4283,7 +4283,7 @@ User Calls Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_calls_ratio
@@ -4298,7 +4298,7 @@ User Calls Ratio
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_commits_per_second
@@ -4313,7 +4313,7 @@ User Commits Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_commits_percentage
@@ -4328,7 +4328,7 @@ User Commits Percentage
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_limit_percentage
@@ -4343,7 +4343,7 @@ User Limit %
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollback_undo_records_applied_per_second
@@ -4358,7 +4358,7 @@ User Rollback UndoRec Applied Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction
@@ -4373,7 +4373,7 @@ User Rollback Undo Records Applied Per Txn
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollbacks_per_second
@@ -4388,7 +4388,7 @@ User Rollbacks Per Sec
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollbacks_percentage
@@ -4403,7 +4403,7 @@ User Rollbacks Percentage
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.tablespace.db_id
@@ -4418,7 +4418,7 @@ Database ID information for tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.global_name
@@ -4433,7 +4433,7 @@ Global name information for tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.is_offline
@@ -4448,7 +4448,7 @@ Whether the tablespace is offline (1) or online (0)
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.offline_cdb_datafiles
@@ -4463,7 +4463,7 @@ Count of offline CDB datafiles by tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.offline_pdb_datafiles
@@ -4478,7 +4478,7 @@ Count of offline PDB datafiles by tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.pdb_non_write_mode
@@ -4493,7 +4493,7 @@ Count of PDB datafiles in non-write mode by tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.space_consumed_bytes
@@ -4508,7 +4508,7 @@ Total bytes consumed by the tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.space_reserved_bytes
@@ -4523,7 +4523,7 @@ Total bytes reserved by the tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.space_used_percentage
@@ -4538,7 +4538,7 @@ Percentage of tablespace space currently used
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.total_bytes
@@ -4553,7 +4553,7 @@ Total bytes in tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
@@ -4569,7 +4569,7 @@ Used bytes in tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
@@ -4585,7 +4585,7 @@ Used percentage of tablespace
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
