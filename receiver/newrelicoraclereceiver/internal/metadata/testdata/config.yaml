@@ -491,6 +491,12 @@ all_set:
       enabled: true
     newrelicoracledb.tablespace.space_used_percentage:
       enabled: true
+    newrelicoracledb.wait_events.avg_wait_time_ms:
+      enabled: true
+    newrelicoracledb.wait_events.total_wait_time_ms:
+      enabled: true
+    newrelicoracledb.wait_events.waiting_tasks_count:
+      enabled: true
   resource_attributes:
     host.name:
       enabled: true
@@ -987,6 +993,12 @@ none_set:
     newrelicoracledb.tablespace.space_reserved_bytes:
       enabled: false
     newrelicoracledb.tablespace.space_used_percentage:
+      enabled: false
+    newrelicoracledb.wait_events.avg_wait_time_ms:
+      enabled: false
+    newrelicoracledb.wait_events.total_wait_time_ms:
+      enabled: false
+    newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: false
   resource_attributes:
     host.name:

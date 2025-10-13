@@ -1048,6 +1048,18 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(ts, 1, "newrelic.entity_name-val", "tablespace.name-val")
 
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val", "wait_event_name-val", "wait_category-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val", "wait_event_name-val", "wait_category-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val", "wait_event_name-val", "wait_category-val")
+
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
 			rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
@@ -5516,6 +5528,87 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
+				case "newrelicoracledb.wait_events.avg_wait_time_ms":
+					assert.False(t, validatedMetrics["newrelicoracledb.wait_events.avg_wait_time_ms"], "Found a duplicate in the metrics slice: newrelicoracledb.wait_events.avg_wait_time_ms")
+					validatedMetrics["newrelicoracledb.wait_events.avg_wait_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average wait time in milliseconds for wait events", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
+				case "newrelicoracledb.wait_events.total_wait_time_ms":
+					assert.False(t, validatedMetrics["newrelicoracledb.wait_events.total_wait_time_ms"], "Found a duplicate in the metrics slice: newrelicoracledb.wait_events.total_wait_time_ms")
+					validatedMetrics["newrelicoracledb.wait_events.total_wait_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total wait time in milliseconds for wait events", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
+				case "newrelicoracledb.wait_events.waiting_tasks_count":
+					assert.False(t, validatedMetrics["newrelicoracledb.wait_events.waiting_tasks_count"], "Found a duplicate in the metrics slice: newrelicoracledb.wait_events.waiting_tasks_count")
+					validatedMetrics["newrelicoracledb.wait_events.waiting_tasks_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of waiting tasks for wait events", ms.At(i).Description())
+					assert.Equal(t, "{tasks}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
 				}
 			}
 		})
