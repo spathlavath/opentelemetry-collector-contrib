@@ -27,6 +27,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbBlockingQueriesWaitTime:                            MetricConfig{Enabled: true},
 					NewrelicoracledbDbID:                                               MetricConfig{Enabled: true},
 					NewrelicoracledbDiskBlocksRead:                                     MetricConfig{Enabled: true},
 					NewrelicoracledbDiskBlocksWritten:                                  MetricConfig{Enabled: true},
@@ -286,6 +287,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbBlockingQueriesWaitTime:                            MetricConfig{Enabled: false},
 					NewrelicoracledbDbID:                                               MetricConfig{Enabled: false},
 					NewrelicoracledbDiskBlocksRead:                                     MetricConfig{Enabled: false},
 					NewrelicoracledbDiskBlocksWritten:                                  MetricConfig{Enabled: false},

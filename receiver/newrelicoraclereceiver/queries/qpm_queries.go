@@ -3,7 +3,7 @@
 
 package queries
 
-// Oracle SQL query for slow queries metrics
+// Oracle SQL queries for performance metrics
 const (
 	SlowQueriesSQL = `
 		WITH full_scans AS (
@@ -45,6 +45,30 @@ const (
 			avg_elapsed_time_ms DESC
 		FETCH FIRST 10 ROWS ONLY`
 
+	BlockingQueriesSQL = `
+		SELECT
+			s2.sid AS blocked_sid,
+			s2.serial# AS blocked_serial,
+			s2.username AS blocked_user,
+			s2.seconds_in_wait AS blocked_wait_sec,
+			s2.sql_id AS blocked_sql_id,
+			blocked_sql.sql_text AS blocked_query_text,
+			s1.sid AS blocking_sid,
+			s1.serial# AS blocking_serial,
+			s1.username AS blocking_user,
+			d.name AS database_name
+		FROM
+			v$session s2
+		JOIN
+			v$session s1 ON s2.blocking_session = s1.sid
+		LEFT JOIN
+			v$sql blocked_sql ON s2.sql_id = blocked_sql.sql_id
+		CROSS JOIN
+			v$database d
+		WHERE
+			s2.blocking_session IS NOT NULL
+		ORDER BY
+			s2.seconds_in_wait DESC`
 	// Oracle SQL query for wait event queries metrics
 	WaitEventQueriesSQL = `
 		SELECT

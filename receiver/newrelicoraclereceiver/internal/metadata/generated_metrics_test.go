@@ -70,6 +70,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val", "blocked_user-val", "blocking_user-val", "blocked_sql_id-val", "blocked_sid-val", "blocking_sid-val", "blocked_serial-val", "blocking_serial-val", "blocked_query_text-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbDbIDDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val", "db.id-val")
 
 			defaultMetricsCount++
@@ -1085,6 +1089,51 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "newrelicoracledb.blocking_queries.wait_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.blocking_queries.wait_time"], "Found a duplicate in the metrics slice: newrelicoracledb.blocking_queries.wait_time")
+					validatedMetrics["newrelicoracledb.blocking_queries.wait_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Wait time in seconds for blocked queries", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("instance.id")
+					assert.True(t, ok)
+					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_user")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_user-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_user")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_user-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_sql_id")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_sql_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_sid")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_sid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_sid")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_sid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_serial")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_serial-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_serial")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_serial-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.db_id":
 					assert.False(t, validatedMetrics["newrelicoracledb.db_id"], "Found a duplicate in the metrics slice: newrelicoracledb.db_id")
 					validatedMetrics["newrelicoracledb.db_id"] = true

@@ -1,6 +1,8 @@
 default:
 all_set:
   metrics:
+    newrelicoracledb.blocking_queries.wait_time:
+      enabled: true
     newrelicoracledb.db_id:
       enabled: true
     newrelicoracledb.disk.blocks_read:
@@ -504,6 +506,8 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    newrelicoracledb.blocking_queries.wait_time:
+      enabled: false
     newrelicoracledb.db_id:
       enabled: false
     newrelicoracledb.disk.blocks_read:
