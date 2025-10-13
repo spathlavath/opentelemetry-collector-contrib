@@ -7,7 +7,6 @@ import (
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
-
 	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
@@ -48,17 +47,18 @@ func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.
 	}
 }
 
-// ScrapeSlowQueries collects Oracle slow queries metrics
-func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
+// ScrapeSlowQueries collects Oracle slow queries metrics and returns a list of query IDs
+func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, []error) {
 	s.logger.Debug("Begin Oracle slow queries scrape")
 
 	var scrapeErrors []error
+	var queryIDs []string
 
 	// Execute the slow queries SQL
 	rows, err := s.db.QueryContext(ctx, queries.SlowQueriesSQL)
 	if err != nil {
 		s.logger.Error("Failed to execute slow queries query", zap.Error(err))
-		return []error{err}
+		return nil, []error{err}
 	}
 	defer rows.Close()
 
@@ -162,7 +162,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 			qID,
 		)
 
-		// Record query details (count metric with metadata as attributes)
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
 			1,
@@ -176,12 +175,15 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) []error {
 		)
 
 		// Add query ID to the list for individual queries processing
+		if slowQuery.QueryID.Valid {
+			queryIDs = append(queryIDs, slowQuery.QueryID.String)
+		}
 	}
 
 	if err := rows.Err(); err != nil {
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-	s.logger.Debug("Completed Oracle slow queries scrape")
-	return scrapeErrors
+	s.logger.Debug("Completed Oracle slow queries scrape", zap.Int("query_ids_collected", len(queryIDs)))
+	return queryIDs, scrapeErrors
 }

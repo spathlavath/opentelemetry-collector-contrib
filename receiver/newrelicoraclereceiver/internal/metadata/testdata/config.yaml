@@ -19,6 +19,12 @@ all_set:
       enabled: true
     newrelicoracledb.global_name:
       enabled: true
+    newrelicoracledb.individual_queries.cpu_time:
+      enabled: true
+    newrelicoracledb.individual_queries.elapsed_time:
+      enabled: true
+    newrelicoracledb.individual_queries.query_details:
+      enabled: true
     newrelicoracledb.locked_accounts:
       enabled: true
     newrelicoracledb.long_running_queries:
@@ -523,6 +529,12 @@ none_set:
     newrelicoracledb.disk.writes:
       enabled: false
     newrelicoracledb.global_name:
+      enabled: false
+    newrelicoracledb.individual_queries.cpu_time:
+      enabled: false
+    newrelicoracledb.individual_queries.elapsed_time:
+      enabled: false
+    newrelicoracledb.individual_queries.query_details:
       enabled: false
     newrelicoracledb.locked_accounts:
       enabled: false

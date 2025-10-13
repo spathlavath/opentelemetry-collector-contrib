@@ -106,6 +106,18 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts, 1, "newrelic.entity_name-val", "database_name-val", "query_id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts, 1, "newrelic.entity_name-val", "query_id-val", "query_text-val", "database_name-val", "user_id-val", "username-val", "hostname-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbLockedAccountsDataPoint(ts, 1, "newrelic.entity_name-val", "instance.id-val")
 
 			defaultMetricsCount++
@@ -1284,6 +1296,81 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("global.name")
 					assert.True(t, ok)
 					assert.Equal(t, "global.name-val", attrVal.Str())
+				case "newrelicoracledb.individual_queries.cpu_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.cpu_time"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.cpu_time")
+					validatedMetrics["newrelicoracledb.individual_queries.cpu_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "CPU time for individual queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.individual_queries.elapsed_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.elapsed_time")
+					validatedMetrics["newrelicoracledb.individual_queries.elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Elapsed time for individual queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.individual_queries.query_details":
+					assert.False(t, validatedMetrics["newrelicoracledb.individual_queries.query_details"], "Found a duplicate in the metrics slice: newrelicoracledb.individual_queries.query_details")
+					validatedMetrics["newrelicoracledb.individual_queries.query_details"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Individual Query Details", ms.At(i).Description())
+					assert.Equal(t, "{count}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelic.entity_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.entity_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_id")
+					assert.True(t, ok)
+					assert.Equal(t, "user_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("username")
+					assert.True(t, ok)
+					assert.Equal(t, "username-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("hostname")
+					assert.True(t, ok)
+					assert.Equal(t, "hostname-val", attrVal.Str())
 				case "newrelicoracledb.locked_accounts":
 					assert.False(t, validatedMetrics["newrelicoracledb.locked_accounts"], "Found a duplicate in the metrics slice: newrelicoracledb.locked_accounts")
 					validatedMetrics["newrelicoracledb.locked_accounts"] = true
