@@ -12,6 +12,30 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.blocking_queries.wait_time
+
+Wait time in seconds for blocked queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| blocked_user | Username of the blocked session | Any Str | false |
+| blocking_user | Username of the blocking session | Any Str | false |
+| blocked_sql_id | SQL ID of the blocked query | Any Str | false |
+| blocked_sid | Session ID of the blocked session | Any Str | false |
+| blocking_sid | Session ID of the blocking session | Any Str | false |
+| blocked_serial | Serial number of the blocked session | Any Str | false |
+| blocking_serial | Serial number of the blocking session | Any Str | false |
+| blocked_query_text | SQL query text of the blocked query | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+
 ### newrelicoracledb.db_id
 
 Oracle database ID information
@@ -3749,6 +3773,60 @@ Percentage of tablespace space currently used
 | ---- | ----------- | ------ | -------- |
 | newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
+
+### newrelicoracledb.wait_events.avg_wait_time_ms
+
+Average wait time in milliseconds for wait events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name for wait events | Any Str | false |
+| query_id | SQL query identifier for wait events | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+| wait_category | Oracle wait event category for wait events | Any Str | false |
+
+### newrelicoracledb.wait_events.total_wait_time_ms
+
+Total wait time in milliseconds for wait events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name for wait events | Any Str | false |
+| query_id | SQL query identifier for wait events | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+| wait_category | Oracle wait event category for wait events | Any Str | false |
+
+### newrelicoracledb.wait_events.waiting_tasks_count
+
+Number of waiting tasks for wait events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {tasks} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.entity_name | New Relic entity name for the metric | Any Str | false |
+| database_name | Oracle database name for wait events | Any Str | false |
+| query_id | SQL query identifier for wait events | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+| wait_category | Oracle wait event category for wait events | Any Str | false |
 
 ## Resource Attributes
 

@@ -35,12 +35,14 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Keep session scraper and add tablespace scraper and core scraper
-	sessionScraper           *scrapers.SessionScraper
-	tablespaceScraper        *scrapers.TablespaceScraper
-	coreScraper              *scrapers.CoreScraper
-	pdbScraper               *scrapers.PdbScraper
-	systemScraper            *scrapers.SystemScraper
-	slowQueriesScraper       *scrapers.SlowQueriesScraper
+	sessionScraper     *scrapers.SessionScraper
+	tablespaceScraper  *scrapers.TablespaceScraper
+	coreScraper        *scrapers.CoreScraper
+	pdbScraper         *scrapers.PdbScraper
+	systemScraper      *scrapers.SystemScraper
+	slowQueriesScraper *scrapers.SlowQueriesScraper
+	blockingScraper    *scrapers.BlockingScraper
+	waitEventsScraper  *scrapers.WaitEventsScraper
 	individualQueriesScraper *scrapers.IndividualQueriesScraper
 
 	db                   *sql.DB
@@ -95,6 +97,10 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 
 	// Initialize individual queries scraper with direct DB connection
 	s.individualQueriesScraper = scrapers.NewIndividualQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	// Initialize blocking scraper with direct DB connection
+	s.blockingScraper = scrapers.NewBlockingScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	// Initialize wait events scraper with direct DB connection
+	s.waitEventsScraper = scrapers.NewWaitEventsScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	return nil
 }
@@ -138,6 +144,8 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		s.coreScraper.ScrapeCoreMetrics,
 		s.pdbScraper.ScrapePdbMetrics,
 		s.systemScraper.ScrapeSystemMetrics,
+		s.blockingScraper.ScrapeBlockingQueries,
+		s.waitEventsScraper.ScrapeWaitEvents,
 	}
 
 	// Launch concurrent scrapers for independent scrapers
