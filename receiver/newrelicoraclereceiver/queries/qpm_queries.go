@@ -39,8 +39,7 @@ const (
 		LEFT JOIN
 			full_scans fs ON sa.sql_id = fs.sql_id
 		WHERE
-		    sa.parsing_schema_name NOT IN ('SYS', 'SYSTEM', 'MDSYS', 'DVSYS', 'LBACSYS', 'DBSNMP', 'SYSMAN', 'AUDSYS','WMSYS', 'XDB', 'OJVMSYS', 'CTXSYS')
-			AND sa.executions > 0
+			sa.executions > 0
 			AND sa.sql_text NOT LIKE '%full_scans AS%'
 		ORDER BY
 			avg_elapsed_time_ms DESC
@@ -70,4 +69,40 @@ const (
 			s2.blocking_session IS NOT NULL
 		ORDER BY
 			s2.seconds_in_wait DESC`
+	// Oracle SQL query for wait event queries metrics
+	WaitEventQueriesSQL = `
+		SELECT
+			d.name AS database_name,
+			ash.sql_id AS query_id,
+			MAX(s.sql_text) AS query_text,
+			ash.wait_class AS wait_category,
+			ash.event AS wait_event_name,
+			SYSTIMESTAMP AS collection_timestamp,
+			COUNT(DISTINCT ash.session_id || ',' || ash.session_serial#) AS waiting_tasks_count,
+			ROUND(
+				(SUM(ash.time_waited) / 1000) +
+				(SUM(CASE WHEN ash.time_waited = 0 THEN 1 ELSE 0 END) * 1000)
+			) AS total_wait_time_ms,
+			ROUND(
+				SUM(ash.time_waited) / NULLIF(COUNT(*), 0) / 1000, 2
+			) AS avg_wait_time_ms
+		FROM
+			v$active_session_history ash
+		JOIN
+			v$sql s ON ash.sql_id = s.sql_id
+		CROSS JOIN
+			v$database d
+		WHERE
+			ash.sql_id IS NOT NULL
+			AND ash.wait_class <> 'Idle'
+			AND ash.event IS NOT NULL
+			AND ash.sample_time >= SYSDATE - INTERVAL '5' MINUTE
+		GROUP BY
+			d.name,
+			ash.sql_id,
+			ash.wait_class,
+			ash.event
+		ORDER BY
+			total_wait_time_ms DESC
+		FETCH FIRST 10 ROWS ONLY`
 )

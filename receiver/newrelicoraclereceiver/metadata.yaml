@@ -52,6 +52,18 @@ attributes:
   has_full_table_scan:
     description: Whether the query has a full table scan
     type: string
+  database_name:
+    description: Oracle database name for wait events
+    type: string
+  query_id:
+    description: SQL query identifier for wait events
+    type: string
+  wait_event_name:
+    description: Oracle wait event name for wait events
+    type: string
+  wait_category:
+    description: Oracle wait event category for wait events
+    type: string
 
   blocking_user:
     description: Username of the blocking session
@@ -2561,6 +2573,45 @@ metrics:
       - blocking_serial
       - blocked_query_text
       - database_name
+      
+  newrelicoracledb.wait_events.total_wait_time_ms:
+    description: Total wait time in milliseconds for wait events
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+      - wait_event_name
+      - wait_category
+
+  newrelicoracledb.wait_events.waiting_tasks_count:
+    description: Number of waiting tasks for wait events
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{tasks}"
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+      - wait_event_name
+      - wait_category
+
+  newrelicoracledb.wait_events.avg_wait_time_ms:
+    description: Average wait time in milliseconds for wait events
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - newrelic.entity_name
+      - database_name
+      - query_id
+      - wait_event_name
+      - wait_category    
 
 tests:
   config:
