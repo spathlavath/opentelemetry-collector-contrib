@@ -19,21 +19,6 @@ resource_attributes:
     type: string
 
 attributes:
-  newrelic.entity_name:
-    description: New Relic entity name for the metric
-    type: string
-  tablespace.name:
-    description: Name of the Oracle tablespace
-    type: string
-  instance.id:
-    description: Oracle database instance ID
-    type: string
-  global.name:
-    description: Oracle database global name
-    type: string
-  db.id:
-    description: Oracle database ID
-    type: string
   database_name:
     description: Oracle database name
     type: string
@@ -60,11 +45,6 @@ attributes:
     type: string
   hostname:
     description: Hostname or machine name for the query
-  database_name:
-    description: Oracle database name for wait events
-    type: string
-  query_id:
-    description: SQL query identifier for wait events
     type: string
   wait_event_name:
     description: Oracle wait event name for wait events
@@ -99,6 +79,114 @@ attributes:
   blocked_query_text:
     description: SQL query text of the blocked query
     type: string
+  db.instance.name:
+    description: Oracle database instance name
+    type: string
+  tablespace.name:
+    description: Name of the Oracle tablespace
+    type: string
+  instance.id:
+    description: Oracle database instance ID
+    type: string
+  global.name:
+    description: Oracle database global name
+    type: string
+  db.id:
+    description: Oracle database ID
+    type: string
+  session.status:
+    description: Oracle session status (ACTIVE, INACTIVE, etc.)
+    type: string
+  session.type:
+    description: Oracle session type (USER, BACKGROUND, etc.)
+    type: string
+  session.id:
+    description: Oracle session identifier (SID)
+    type: string
+  program:
+    description: Program or application name
+    type: string
+  wait.event:
+    description: Oracle wait event name
+    type: string
+  wait.state:
+    description: Oracle wait event state
+    type: string
+  wait.class:
+    description: Oracle wait event class
+    type: string
+  blocking.session.id:
+    description: Oracle blocking session identifier
+    type: string
+  resource.name:
+    description: Oracle resource name
+    type: string
+  con.id:
+    description: Oracle container ID (CDB/PDB)
+    type: string
+  container.name:
+    description: Oracle container name
+    type: string
+  pdb.name:
+    description: Oracle Pluggable Database name
+    type: string
+  open.mode:
+    description: Oracle container open mode (READ WRITE, READ ONLY, etc.)
+    type: string
+  container.status:
+    description: Oracle container status (NORMAL, RESTRICTED, etc.)
+    type: string
+  restricted.status:
+    description: Oracle container restricted status (YES, NO)
+    type: string
+  file.name:
+    description: Oracle data file name
+    type: string
+  service.name:
+    description: Oracle database service name
+    type: string
+  diskgroup.name:
+    description: ASM disk group name
+    type: string
+  rac.instance.name:
+    description: Oracle RAC instance name
+    type: string
+  host.name.rac:
+    description: Oracle RAC host name
+    type: string
+  instance.status:
+    description: Oracle RAC instance status
+    type: string
+  database.status:
+    description: Oracle database status (ACTIVE, SUSPENDED, etc.)
+    type: string
+  active.state:
+    description: Oracle instance active state (NORMAL, QUIESCING, etc.)
+    type: string
+  logins.status:
+    description: Oracle instance login status (ALLOWED, RESTRICTED)
+    type: string
+  archiver.status:
+    description: Oracle archiver status (STARTED, STOPPED)
+    type: string
+  failover.method:
+    description: Oracle service failover method
+    type: string
+  failover.type:
+    description: Oracle service failover type
+    type: string
+  service.goal:
+    description: Oracle service goal (THROUGHPUT, SERVICE_TIME, etc.)
+    type: string
+  oracle.version:
+    description: Oracle database version
+    type: string
+  network.name:
+    description: Oracle service network name
+    type: string
+  clb.goal:
+    description: Oracle service connection load balancing goal
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -108,7 +196,7 @@ metrics:
       value_type: int
     unit: "{sessions}"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace
@@ -117,7 +205,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.space_reserved_bytes:
@@ -127,7 +215,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.space_used_percentage:
@@ -137,7 +225,7 @@ metrics:
       value_type: int
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.is_offline:
@@ -147,7 +235,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.global_name:
@@ -157,7 +245,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.db_id:
@@ -167,7 +255,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.offline_cdb_datafiles:
@@ -177,7 +265,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.offline_pdb_datafiles:
@@ -187,7 +275,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.tablespace.pdb_non_write_mode:
@@ -197,7 +285,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - tablespace.name
 
   newrelicoracledb.locked_accounts:
@@ -207,7 +295,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.disk.reads:
@@ -217,7 +305,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.disk.writes:
@@ -227,7 +315,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.disk.blocks_read:
@@ -237,7 +325,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.disk.blocks_written:
@@ -247,7 +335,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.disk.read_time_milliseconds:
@@ -257,7 +345,7 @@ metrics:
       value_type: int
     unit: "ms"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.disk.write_time_milliseconds:
@@ -267,7 +355,7 @@ metrics:
       value_type: int
     unit: "ms"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.memory.pga_in_use_bytes:
@@ -277,7 +365,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.memory.pga_allocated_bytes:
@@ -287,7 +375,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.memory.pga_freeable_bytes:
@@ -297,7 +385,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.memory.pga_max_size_bytes:
@@ -307,7 +395,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.global_name:
@@ -317,7 +405,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
       - global.name
 
@@ -328,7 +416,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
       - db.id
 
@@ -339,7 +427,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.memory.sga_uga_total_bytes:
@@ -349,7 +437,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes:
@@ -359,7 +447,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes:
@@ -369,7 +457,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
@@ -379,7 +467,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_shared_pool_library_cache_hit_ratio:
@@ -389,7 +477,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio:
@@ -399,7 +487,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_log_buffer_space_waits:
@@ -409,7 +497,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_log_allocation_retries_ratio:
@@ -419,7 +507,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_hit_ratio:
@@ -429,7 +517,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_log_buffer_redo_allocation_retries:
@@ -439,7 +527,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_log_buffer_redo_entries:
@@ -449,7 +537,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sorts_memory:
@@ -459,7 +547,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sorts_disk:
@@ -469,7 +557,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_fixed_size_bytes:
@@ -479,7 +567,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_redo_buffers_bytes:
@@ -489,7 +577,7 @@ metrics:
       value_type: int
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.rollback_segments_gets:
@@ -499,7 +587,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.rollback_segments_waits:
@@ -509,7 +597,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.rollback_segments_wait_ratio:
@@ -519,7 +607,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.redo_log_parallel_write_waits:
@@ -529,7 +617,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.redo_log_switch_completion_waits:
@@ -539,7 +627,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits:
@@ -549,7 +637,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.redo_log_switch_archiving_needed_waits:
@@ -559,7 +647,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_buffer_busy_waits:
@@ -569,7 +657,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_free_buffer_waits:
@@ -579,7 +667,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.sga_free_buffer_inspected_waits:
@@ -589,7 +677,7 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.active_parallel_sessions:
@@ -599,7 +687,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.active_serial_sessions:
@@ -609,7 +697,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.average_active_sessions:
@@ -619,7 +707,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.background_cpu_usage_per_second:
@@ -629,7 +717,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.background_time_per_second:
@@ -639,7 +727,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.cpu_usage_per_second:
@@ -649,7 +737,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.cpu_usage_per_transaction:
@@ -659,7 +747,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.current_logons:
@@ -669,7 +757,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.current_open_cursors:
@@ -679,7 +767,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.cpu_time_ratio:
@@ -689,7 +777,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.wait_time_ratio:
@@ -699,7 +787,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.block_changes_per_second:
@@ -709,7 +797,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.block_changes_per_transaction:
@@ -719,7 +807,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.executions_per_second:
@@ -729,7 +817,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.executions_per_transaction:
@@ -739,7 +827,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.hard_parse_count_per_second:
@@ -749,7 +837,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.hard_parse_count_per_transaction:
@@ -759,7 +847,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.logical_reads_per_second:
@@ -769,7 +857,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.logical_reads_per_transaction:
@@ -779,7 +867,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.logons_per_transaction:
@@ -789,7 +877,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.network_traffic_byte_per_second:
@@ -799,7 +887,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.open_cursors_per_second:
@@ -809,7 +897,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.open_cursors_per_transaction:
@@ -819,7 +907,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.parse_failure_count_per_second:
@@ -829,7 +917,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.physical_read_bytes_per_second:
@@ -839,7 +927,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.physical_reads_per_transaction:
@@ -849,7 +937,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.physical_write_bytes_per_second:
@@ -859,7 +947,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.physical_writes_per_transaction:
@@ -869,7 +957,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.redo_generated_bytes_per_second:
@@ -879,7 +967,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.redo_generated_bytes_per_transaction:
@@ -889,7 +977,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.response_time_per_transaction:
@@ -899,7 +987,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.session_count:
@@ -909,7 +997,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.soft_parse_ratio:
@@ -919,7 +1007,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.sql_service_response_time:
@@ -929,7 +1017,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.total_parse_count_per_second:
@@ -939,7 +1027,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.total_parse_count_per_transaction:
@@ -949,7 +1037,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.user_calls_per_second:
@@ -959,7 +1047,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.user_calls_per_transaction:
@@ -969,7 +1057,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.user_commits_per_second:
@@ -979,7 +1067,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.user_commits_percentage:
@@ -989,7 +1077,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.user_rollbacks_per_second:
@@ -999,7 +1087,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.user_rollbacks_percentage:
@@ -1009,7 +1097,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.transactions_per_second:
@@ -1019,7 +1107,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.execute_without_parse_ratio:
@@ -1029,7 +1117,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.logons_per_second:
@@ -1039,7 +1127,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.db_physical_read_bytes_per_second:
@@ -1049,7 +1137,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.db_physical_reads_per_second:
@@ -1059,7 +1147,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.db_physical_write_bytes_per_second:
@@ -1069,7 +1157,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.pdb.db_physical_writes_per_second:
@@ -1079,7 +1167,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   # System metrics from gv$sysmetric
@@ -1090,7 +1178,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.memory_sorts_ratio:
@@ -1100,7 +1188,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.redo_allocation_hit_ratio:
@@ -1110,7 +1198,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.transactions_per_second:
@@ -1120,7 +1208,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_reads_per_transaction:
@@ -1130,7 +1218,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_writes_per_transaction:
@@ -1140,7 +1228,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_reads_direct_per_second:
@@ -1150,7 +1238,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_reads_direct_per_transaction:
@@ -1160,7 +1248,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_writes_direct_per_second:
@@ -1170,7 +1258,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_writes_direct_per_transaction:
@@ -1180,7 +1268,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_lobs_reads_per_second:
@@ -1190,7 +1278,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_lobs_reads_per_transaction:
@@ -1200,7 +1288,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_lobs_writes_per_second:
@@ -1210,7 +1298,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_lobs_writes_per_transaction:
@@ -1220,7 +1308,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.redo_generated_bytes_per_second:
@@ -1230,7 +1318,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.redo_generated_bytes_per_transaction:
@@ -1240,7 +1328,7 @@ metrics:
       value_type: double
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.logons_per_transaction:
@@ -1250,7 +1338,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.open_cursors_per_second:
@@ -1260,7 +1348,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.open_cursors_per_transaction:
@@ -1270,7 +1358,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_commits_per_second:
@@ -1280,7 +1368,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_commits_percentage:
@@ -1290,7 +1378,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_rollbacks_per_second:
@@ -1300,7 +1388,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_rollbacks_percentage:
@@ -1310,7 +1398,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_calls_per_second:
@@ -1320,7 +1408,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_calls_per_transaction:
@@ -1330,7 +1418,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.recursive_calls_per_second:
@@ -1340,7 +1428,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.recursive_calls_per_transaction:
@@ -1350,7 +1438,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.logical_reads_per_second:
@@ -1360,7 +1448,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.logical_reads_per_transaction:
@@ -1370,7 +1458,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.dbwr_checkpoints_per_second:
@@ -1380,7 +1468,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.background_checkpoints_per_second:
@@ -1390,7 +1478,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.redo_writes_per_second:
@@ -1400,7 +1488,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.redo_writes_per_transaction:
@@ -1410,7 +1498,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.long_table_scans_per_second:
@@ -1420,7 +1508,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.long_table_scans_per_transaction:
@@ -1430,7 +1518,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_table_scans_per_second:
@@ -1440,7 +1528,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_table_scans_per_transaction:
@@ -1450,7 +1538,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.full_index_scans_per_second:
@@ -1460,7 +1548,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.full_index_scans_per_transaction:
@@ -1470,7 +1558,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_index_scans_per_second:
@@ -1480,7 +1568,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_index_scans_per_transaction:
@@ -1490,7 +1578,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_parse_count_per_second:
@@ -1500,7 +1588,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_parse_count_per_transaction:
@@ -1510,7 +1598,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.hard_parse_count_per_second:
@@ -1520,7 +1608,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.hard_parse_count_per_transaction:
@@ -1530,7 +1618,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.parse_failure_count_per_second:
@@ -1540,7 +1628,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.parse_failure_count_per_transaction:
@@ -1550,7 +1638,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.cursor_cache_hit_ratio:
@@ -1560,7 +1648,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.disk_sort_per_second:
@@ -1570,7 +1658,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.disk_sort_per_transaction:
@@ -1580,7 +1668,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.rows_per_sort:
@@ -1590,7 +1678,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.soft_parse_ratio:
@@ -1600,7 +1688,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_calls_ratio:
@@ -1610,7 +1698,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.host_cpu_utilization:
@@ -1620,7 +1708,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.network_traffic_volume_per_second:
@@ -1630,7 +1718,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_timeouts_per_second:
@@ -1640,7 +1728,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_timeouts_per_transaction:
@@ -1650,7 +1738,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_waits_per_second:
@@ -1660,7 +1748,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_waits_per_transaction:
@@ -1670,7 +1758,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_deadlocks_per_second:
@@ -1680,7 +1768,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_deadlocks_per_transaction:
@@ -1690,7 +1778,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_requests_per_second:
@@ -1700,7 +1788,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.enqueue_requests_per_transaction:
@@ -1710,7 +1798,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.db_block_gets_per_second:
@@ -1720,7 +1808,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.db_block_gets_per_transaction:
@@ -1730,7 +1818,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.consistent_read_gets_per_second:
@@ -1740,7 +1828,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.db_block_changes_per_second:
@@ -1750,7 +1838,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.consistent_read_gets_per_transaction:
@@ -1760,7 +1848,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.db_block_changes_per_transaction:
@@ -1770,7 +1858,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.consistent_read_changes_per_second:
@@ -1780,7 +1868,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.consistent_read_changes_per_transaction:
@@ -1790,7 +1878,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.cpu_usage_per_second:
@@ -1800,7 +1888,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.cpu_usage_per_transaction:
@@ -1810,7 +1898,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.cr_blocks_created_per_second:
@@ -1820,7 +1908,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.cr_blocks_created_per_transaction:
@@ -1830,7 +1918,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.cr_undo_records_applied_per_second:
@@ -1840,7 +1928,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.cr_undo_records_applied_per_transaction:
@@ -1850,7 +1938,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_rollback_undo_records_applied_per_second:
@@ -1860,7 +1948,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction:
@@ -1870,7 +1958,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.leaf_node_splits_per_second:
@@ -1880,7 +1968,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.leaf_node_splits_per_transaction:
@@ -1890,7 +1978,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.branch_node_splits_per_second:
@@ -1900,7 +1988,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.branch_node_splits_per_transaction:
@@ -1910,7 +1998,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_read_total_io_requests_per_second:
@@ -1920,7 +2008,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_read_total_bytes_per_second:
@@ -1930,7 +2018,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.gc_cr_block_received_per_second:
@@ -1940,7 +2028,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.gc_cr_block_received_per_transaction:
@@ -1950,7 +2038,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.gc_current_block_received_per_second:
@@ -1960,7 +2048,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.gc_current_block_received_per_transaction:
@@ -1970,7 +2058,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.global_cache_average_cr_get_time:
@@ -1980,7 +2068,7 @@ metrics:
       value_type: double
     unit: "ms"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.global_cache_average_current_get_time:
@@ -1990,7 +2078,7 @@ metrics:
       value_type: double
     unit: "ms"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_write_total_io_requests_per_second:
@@ -2000,7 +2088,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.global_cache_blocks_corrupted:
@@ -2010,7 +2098,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.global_cache_blocks_lost:
@@ -2020,7 +2108,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.current_logons_count:
@@ -2030,7 +2118,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.current_open_cursors_count:
@@ -2040,7 +2128,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.user_limit_percentage:
@@ -2050,7 +2138,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.sql_service_response_time:
@@ -2060,7 +2148,7 @@ metrics:
       value_type: double
     unit: "ms"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.database_wait_time_ratio:
@@ -2070,7 +2158,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.database_cpu_time_ratio:
@@ -2080,7 +2168,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.response_time_per_transaction:
@@ -2090,7 +2178,7 @@ metrics:
       value_type: double
     unit: "ms"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.row_cache_hit_ratio:
@@ -2100,7 +2188,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.row_cache_miss_ratio:
@@ -2110,7 +2198,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.library_cache_hit_ratio:
@@ -2120,7 +2208,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.library_cache_miss_ratio:
@@ -2130,7 +2218,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.shared_pool_free_percentage:
@@ -2140,7 +2228,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.pga_cache_hit_percentage:
@@ -2150,7 +2238,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.process_limit_percentage:
@@ -2160,7 +2248,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.session_limit_percentage:
@@ -2170,7 +2258,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.executions_per_transaction:
@@ -2180,7 +2268,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.executions_per_second:
@@ -2190,7 +2278,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.transactions_per_logon:
@@ -2200,7 +2288,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.database_time_per_second:
@@ -2210,7 +2298,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_write_total_bytes_per_second:
@@ -2220,7 +2308,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_write_io_requests_per_second:
@@ -2230,7 +2318,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.db_block_changes_per_user_call:
@@ -2240,7 +2328,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.db_block_gets_per_user_call:
@@ -2250,7 +2338,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.executions_per_user_call:
@@ -2260,7 +2348,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.logical_reads_per_user_call:
@@ -2270,7 +2358,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_sorts_per_user_call:
@@ -2280,7 +2368,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.total_table_scans_per_user_call:
@@ -2290,7 +2378,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.current_os_load:
@@ -2300,7 +2388,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.streams_pool_usage_percentage:
@@ -2310,7 +2398,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.io_megabytes_per_second:
@@ -2320,7 +2408,7 @@ metrics:
       value_type: double
     unit: "MBy/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.io_requests_per_second:
@@ -2330,7 +2418,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.average_active_sessions:
@@ -2340,7 +2428,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.active_serial_sessions:
@@ -2350,7 +2438,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.active_parallel_sessions:
@@ -2360,7 +2448,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.background_cpu_usage_per_second:
@@ -2370,7 +2458,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.background_time_per_second:
@@ -2380,7 +2468,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.host_cpu_usage_per_second:
@@ -2390,7 +2478,7 @@ metrics:
       value_type: double
     unit: "s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.temp_space_used:
@@ -2400,7 +2488,7 @@ metrics:
       value_type: double
     unit: "By"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.session_count:
@@ -2410,7 +2498,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.captured_user_calls:
@@ -2420,7 +2508,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.execute_without_parse_ratio:
@@ -2430,7 +2518,7 @@ metrics:
       value_type: double
     unit: "%"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.logons_per_second:
@@ -2440,7 +2528,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_read_bytes_per_second:
@@ -2450,7 +2538,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_read_io_requests_per_second:
@@ -2460,7 +2548,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_reads_per_second:
@@ -2470,7 +2558,7 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_write_bytes_per_second:
@@ -2480,7 +2568,7 @@ metrics:
       value_type: double
     unit: "By/s"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
   newrelicoracledb.system.physical_writes_per_second:
@@ -2490,9 +2578,732 @@ metrics:
       value_type: double
     unit: "1"
     attributes:
-      - newrelic.entity_name
+      - db.instance.name
       - instance.id
 
+  # Core Connection Metrics
+  newrelicoracledb.connection.total_sessions:
+    description: Total number of Oracle database sessions
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.active_sessions:
+    description: Number of active Oracle database sessions
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.inactive_sessions:
+    description: Number of inactive Oracle database sessions
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.sessions_by_status:
+    description: Number of sessions grouped by status
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - db.instance.name
+      - session.status
+
+  newrelicoracledb.connection.sessions_by_type:
+    description: Number of sessions grouped by type
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{sessions}"
+    attributes:
+      - db.instance.name
+      - session.type
+
+  # Logon Statistics
+  newrelicoracledb.connection.logons_cumulative:
+    description: Cumulative number of logons since instance startup
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{logons}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.logons_current:
+    description: Current number of active logons
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{logons}"
+    attributes:
+      - db.instance.name
+
+  # Session Resource Consumption
+  newrelicoracledb.connection.session_cpu_usage:
+    description: CPU usage by session in seconds
+    enabled: true
+    gauge:
+      value_type: double
+    unit: s
+    attributes:
+      - db.instance.name
+      - session.id
+      - username
+      - session.status
+      - program
+
+  newrelicoracledb.connection.session_pga_memory:
+    description: PGA memory usage by session
+    enabled: true
+    gauge:
+      value_type: double
+    unit: By
+    attributes:
+      - db.instance.name
+      - session.id
+      - username
+      - session.status
+      - program
+
+  newrelicoracledb.connection.session_logical_reads:
+    description: Logical reads by session
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{reads}"
+    attributes:
+      - db.instance.name
+      - session.id
+      - username
+      - session.status
+      - program
+
+  newrelicoracledb.connection.session_idle_time:
+    description: Session idle time in seconds
+    enabled: true
+    gauge:
+      value_type: double
+    unit: s
+    attributes:
+      - db.instance.name
+      - session.id
+      - username
+      - session.status
+      - program
+
+  # Wait Events
+  newrelicoracledb.connection.wait_events:
+    description: Current wait events and wait time
+    enabled: true
+    gauge:
+      value_type: double
+    unit: s
+    attributes:
+      - db.instance.name
+      - session.id
+      - username
+      - wait.event
+      - wait.state
+      - wait.class
+
+  newrelicoracledb.connection.blocking_sessions:
+    description: Sessions blocked by other sessions
+    enabled: true
+    gauge:
+      value_type: double
+    unit: s
+    attributes:
+      - db.instance.name
+      - session.id
+      - blocking.session.id
+      - username
+      - wait.event
+      - program
+
+  # Wait Event Summary
+  newrelicoracledb.connection.wait_event_total_waits:
+    description: Total number of waits for each wait event
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{waits}"
+    attributes:
+      - db.instance.name
+      - wait.event
+      - wait.class
+
+  newrelicoracledb.connection.wait_event_time_waited:
+    description: Total time waited for each wait event
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: ms
+    attributes:
+      - db.instance.name
+      - wait.event
+      - wait.class
+
+  newrelicoracledb.connection.wait_event_avg_wait_time:
+    description: Average wait time for each wait event
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - db.instance.name
+      - wait.event
+      - wait.class
+
+  # Connection Pool Metrics
+  newrelicoracledb.connection.shared_servers:
+    description: Number of shared servers
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{servers}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.dispatchers:
+    description: Number of dispatchers
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{dispatchers}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.circuits:
+    description: Number of active circuits
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{circuits}"
+    attributes:
+      - db.instance.name
+
+  # Resource Limits
+  newrelicoracledb.connection.resource_current_utilization:
+    description: Current utilization of Oracle resources
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{resources}"
+    attributes:
+      - db.instance.name
+      - resource.name
+
+  newrelicoracledb.connection.resource_max_utilization:
+    description: Maximum utilization of Oracle resources since startup
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{resources}"
+    attributes:
+      - db.instance.name
+      - resource.name
+
+  newrelicoracledb.connection.resource_limit:
+    description: Limit value for Oracle resources
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{resources}"
+    attributes:
+      - db.instance.name
+      - resource.name
+
+  # Connection Quality Metrics
+  newrelicoracledb.connection.user_commits:
+    description: Number of user commits
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{commits}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.user_rollbacks:
+    description: Number of user rollbacks
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{rollbacks}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.parse_count_total:
+    description: Total number of parse calls
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{parses}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.parse_count_hard:
+    description: Number of hard parse calls
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{parses}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.execute_count:
+    description: Number of SQL executions
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{executions}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.sqlnet_roundtrips:
+    description: Number of SQL*Net roundtrips to/from client
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: "{roundtrips}"
+    attributes:
+      - db.instance.name
+
+  newrelicoracledb.connection.bytes_sent:
+    description: Bytes sent via SQL*Net to client
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: By
+    attributes:
+      - db.instance.name
+
+  # Container/CDB/PDB Status Metrics
+  newrelicoracledb.container.status:
+    description: Oracle container status (1=READ WRITE, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - con.id
+      - container.name
+      - open.mode
+
+  newrelicoracledb.container.restricted:
+    description: Oracle container restricted status (1=YES, 0=NO)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - con.id
+      - container.name
+      - restricted.status
+
+  newrelicoracledb.pdb.status:
+    description: Oracle PDB status (1=NORMAL, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - con.id
+      - pdb.name
+      - container.status
+
+  newrelicoracledb.pdb.open_mode:
+    description: Oracle PDB open mode (1=READ WRITE, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - con.id
+      - pdb.name
+      - open.mode
+
+  newrelicoracledb.pdb.total_size_bytes:
+    description: Total size of PDB in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - db.instance.name
+      - con.id
+      - pdb.name
+
+  # Tablespace metrics with container awareness
+  newrelicoracledb.tablespace.used_bytes:
+    description: Used bytes in tablespace
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - db.instance.name
+      - con.id
+      - tablespace.name
+
+  newrelicoracledb.tablespace.total_bytes:
+    description: Total bytes in tablespace
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - db.instance.name
+      - con.id
+      - tablespace.name
+
+  newrelicoracledb.tablespace.used_percent:
+    description: Used percentage of tablespace
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "%"
+    attributes:
+      - db.instance.name
+      - con.id
+      - tablespace.name
+
+  # Data file metrics
+  newrelicoracledb.datafile.size_bytes:
+    description: Size of data file in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - db.instance.name
+      - con.id
+      - tablespace.name
+      - file.name
+
+  newrelicoracledb.datafile.used_bytes:
+    description: Used bytes in data file
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - db.instance.name
+      - con.id
+      - tablespace.name
+      - file.name
+
+  newrelicoracledb.datafile.autoextensible:
+    description: Data file autoextensible status (1=YES, 0=NO)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - con.id
+      - tablespace.name
+      - file.name
+      - container.status
+
+  # Service metrics
+  newrelicoracledb.service.status:
+    description: Oracle service status (1=active, 0=inactive)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - con.id
+      - service.name
+
+  newrelicoracledb.service.count:
+    description: Count of services per container
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{services}"
+    attributes:
+      - db.instance.name
+      - con.id
+
+  newrelicoracledb.connection.bytes_received:
+    description: Bytes received via SQL*Net from client
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    unit: By
+    attributes:
+      - db.instance.name
+
+  # RAC-specific metrics for Feature 1: ASM Monitoring
+  newrelicoracledb.asm.diskgroup.total_mb:
+    description: Total capacity of the ASM disk group in MB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "MB"
+    attributes:
+      - db.instance.name
+      - diskgroup.name
+
+  newrelicoracledb.asm.diskgroup.free_mb:
+    description: Available free space in the ASM disk group in MB
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "MB"
+    attributes:
+      - db.instance.name
+      - diskgroup.name
+
+  newrelicoracledb.asm.diskgroup.offline_disks:
+    description: Number of offline disks in the ASM disk group
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{disks}"
+    attributes:
+      - db.instance.name
+      - diskgroup.name
+
+  # RAC-specific metrics for Feature 2: Cluster Wait Events
+  newrelicoracledb.rac.wait_time:
+    description: Rate of cluster wait time in microseconds per second
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "us/s"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - wait.event
+
+  newrelicoracledb.rac.total_waits:
+    description: Total number of cluster wait events
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{waits}"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - wait.event
+
+  # RAC-specific metrics for Feature 3A: Instance Status
+  newrelicoracledb.rac.instance.status:
+    description: RAC instance status (1=OPEN, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - rac.instance.name
+      - host.name.rac
+      - instance.status
+
+  # RAC-specific metrics for Feature 3B: Service Failover
+  newrelicoracledb.rac.service.instance_id:
+    description: Instance ID where the service is currently running
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - service.name
+      - instance.id
+
+  # Additional RAC Instance Health Metrics
+  newrelicoracledb.rac.instance.uptime_seconds:
+    description: Instance uptime in seconds since startup
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "s"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - rac.instance.name
+      - host.name.rac
+
+  newrelicoracledb.rac.instance.database_status:
+    description: Database status indicator (1=ACTIVE, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - rac.instance.name
+      - host.name.rac
+      - database.status
+
+  newrelicoracledb.rac.instance.active_state:
+    description: Instance active state indicator (1=NORMAL, 0=other)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - rac.instance.name
+      - host.name.rac
+      - active.state
+
+  newrelicoracledb.rac.instance.logins_allowed:
+    description: Instance login status indicator (1=ALLOWED, 0=RESTRICTED)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - rac.instance.name
+      - host.name.rac
+      - logins.status
+
+  newrelicoracledb.rac.instance.archiver_started:
+    description: Archiver status indicator (1=STARTED, 0=STOPPED)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - rac.instance.name
+      - host.name.rac
+      - archiver.status
+
+  # Additional RAC Service Configuration Metrics
+  newrelicoracledb.rac.service.failover_config:
+    description: Service failover configuration indicator (always 1, config in attributes)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - service.name
+      - instance.id
+      - failover.method
+      - failover.type
+      - service.goal
+
+  # Oracle Database Version Metric
+  newrelicoracledb.rac.instance.version_info:
+    description: Oracle database version information (always 1, version in attributes)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - instance.id
+      - rac.instance.name
+      - host.name.rac
+      - oracle.version
+
+  # Enhanced Service Configuration Metrics
+  newrelicoracledb.rac.service.network_config:
+    description: Service network configuration (always 1, config in attributes)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - service.name
+      - instance.id
+      - network.name
+
+  newrelicoracledb.rac.service.creation_age_days:
+    description: Service age in days since creation
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "d"
+    attributes:
+      - db.instance.name
+      - service.name
+      - instance.id
+
+  newrelicoracledb.rac.service.failover_retries:
+    description: Number of failover retries configured for the service
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{retries}"
+    attributes:
+      - db.instance.name
+      - service.name
+      - instance.id
+
+  newrelicoracledb.rac.service.failover_delay_seconds:
+    description: Failover delay in seconds configured for the service
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "s"
+    attributes:
+      - db.instance.name
+      - service.name
+      - instance.id
+
+  newrelicoracledb.rac.service.clb_config:
+    description: Connection load balancing configuration (always 1, config in attributes)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - service.name
+      - instance.id
+      - clb.goal
+  
   newrelicoracledb.slow_queries.execution_count:
     description: Number of executions for slow queries
     enabled: true
@@ -2500,7 +3311,6 @@ metrics:
       value_type: double
     unit: "{executions}"
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
 
@@ -2511,7 +3321,6 @@ metrics:
       value_type: double
     unit: ms
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
 
@@ -2522,7 +3331,6 @@ metrics:
       value_type: double
     unit: "{reads}"
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
 
@@ -2533,7 +3341,6 @@ metrics:
       value_type: double
     unit: "{writes}"
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id    
 
@@ -2544,7 +3351,6 @@ metrics:
       value_type: double
     unit: ms
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
 
@@ -2555,7 +3361,6 @@ metrics:
       value_type: int
     unit: "{count}"
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
       - query_text
@@ -2570,7 +3375,6 @@ metrics:
       value_type: double
     unit: s
     attributes:
-      - newrelic.entity_name
       - instance.id
       - blocked_user
       - blocking_user
@@ -2581,7 +3385,7 @@ metrics:
       - blocking_serial
       - blocked_query_text
       - database_name
-      
+
   newrelicoracledb.wait_events.total_wait_time_ms:
     description: Total wait time in milliseconds for wait events
     enabled: true
@@ -2589,7 +3393,6 @@ metrics:
       value_type: double
     unit: ms
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
       - wait_event_name
@@ -2602,62 +3405,57 @@ metrics:
       value_type: double
     unit: "{tasks}"
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
       - wait_event_name
       - wait_category
 
-newrelicoracledb.wait_events.avg_wait_time_ms:
+  newrelicoracledb.wait_events.avg_wait_time_ms:
     description: Average wait time in milliseconds for wait events
     enabled: true
     gauge:
       value_type: double
     unit: ms
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
       - wait_event_name
       - wait_category    
 
-newrelicoracledb.individual_queries.cpu_time:
+  newrelicoracledb.individual_queries.cpu_time:
     description: CPU time for individual queries
     enabled: true
     gauge:
       value_type: double
     unit: ms
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
 
-newrelicoracledb.individual_queries.elapsed_time:
+  newrelicoracledb.individual_queries.elapsed_time:
     description: Elapsed time for individual queries
     enabled: true
     gauge:
       value_type: double
     unit: ms
     attributes:
-      - newrelic.entity_name
       - database_name
       - query_id
 
-newrelicoracledb.individual_queries.query_details:
+  newrelicoracledb.individual_queries.query_details:
     description: Individual Query Details
     enabled: true
     gauge:
       value_type: int
     unit: "{count}"
     attributes:
-      - newrelic.entity_name
       - query_id
       - query_text
       - database_name
       - user_id
       - username
       - hostname
-      
+
 tests:
   config:
   goleak:

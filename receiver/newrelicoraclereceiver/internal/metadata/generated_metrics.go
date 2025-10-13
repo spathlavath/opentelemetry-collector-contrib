@@ -13,8 +13,122 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	NewrelicoracledbAsmDiskgroupFreeMb: metricInfo{
+		Name: "newrelicoracledb.asm.diskgroup.free_mb",
+	},
+	NewrelicoracledbAsmDiskgroupOfflineDisks: metricInfo{
+		Name: "newrelicoracledb.asm.diskgroup.offline_disks",
+	},
+	NewrelicoracledbAsmDiskgroupTotalMb: metricInfo{
+		Name: "newrelicoracledb.asm.diskgroup.total_mb",
+	},
 	NewrelicoracledbBlockingQueriesWaitTime: metricInfo{
 		Name: "newrelicoracledb.blocking_queries.wait_time",
+	},
+	NewrelicoracledbConnectionActiveSessions: metricInfo{
+		Name: "newrelicoracledb.connection.active_sessions",
+	},
+	NewrelicoracledbConnectionBlockingSessions: metricInfo{
+		Name: "newrelicoracledb.connection.blocking_sessions",
+	},
+	NewrelicoracledbConnectionBytesReceived: metricInfo{
+		Name: "newrelicoracledb.connection.bytes_received",
+	},
+	NewrelicoracledbConnectionBytesSent: metricInfo{
+		Name: "newrelicoracledb.connection.bytes_sent",
+	},
+	NewrelicoracledbConnectionCircuits: metricInfo{
+		Name: "newrelicoracledb.connection.circuits",
+	},
+	NewrelicoracledbConnectionDispatchers: metricInfo{
+		Name: "newrelicoracledb.connection.dispatchers",
+	},
+	NewrelicoracledbConnectionExecuteCount: metricInfo{
+		Name: "newrelicoracledb.connection.execute_count",
+	},
+	NewrelicoracledbConnectionInactiveSessions: metricInfo{
+		Name: "newrelicoracledb.connection.inactive_sessions",
+	},
+	NewrelicoracledbConnectionLogonsCumulative: metricInfo{
+		Name: "newrelicoracledb.connection.logons_cumulative",
+	},
+	NewrelicoracledbConnectionLogonsCurrent: metricInfo{
+		Name: "newrelicoracledb.connection.logons_current",
+	},
+	NewrelicoracledbConnectionParseCountHard: metricInfo{
+		Name: "newrelicoracledb.connection.parse_count_hard",
+	},
+	NewrelicoracledbConnectionParseCountTotal: metricInfo{
+		Name: "newrelicoracledb.connection.parse_count_total",
+	},
+	NewrelicoracledbConnectionResourceCurrentUtilization: metricInfo{
+		Name: "newrelicoracledb.connection.resource_current_utilization",
+	},
+	NewrelicoracledbConnectionResourceLimit: metricInfo{
+		Name: "newrelicoracledb.connection.resource_limit",
+	},
+	NewrelicoracledbConnectionResourceMaxUtilization: metricInfo{
+		Name: "newrelicoracledb.connection.resource_max_utilization",
+	},
+	NewrelicoracledbConnectionSessionCPUUsage: metricInfo{
+		Name: "newrelicoracledb.connection.session_cpu_usage",
+	},
+	NewrelicoracledbConnectionSessionIdleTime: metricInfo{
+		Name: "newrelicoracledb.connection.session_idle_time",
+	},
+	NewrelicoracledbConnectionSessionLogicalReads: metricInfo{
+		Name: "newrelicoracledb.connection.session_logical_reads",
+	},
+	NewrelicoracledbConnectionSessionPgaMemory: metricInfo{
+		Name: "newrelicoracledb.connection.session_pga_memory",
+	},
+	NewrelicoracledbConnectionSessionsByStatus: metricInfo{
+		Name: "newrelicoracledb.connection.sessions_by_status",
+	},
+	NewrelicoracledbConnectionSessionsByType: metricInfo{
+		Name: "newrelicoracledb.connection.sessions_by_type",
+	},
+	NewrelicoracledbConnectionSharedServers: metricInfo{
+		Name: "newrelicoracledb.connection.shared_servers",
+	},
+	NewrelicoracledbConnectionSqlnetRoundtrips: metricInfo{
+		Name: "newrelicoracledb.connection.sqlnet_roundtrips",
+	},
+	NewrelicoracledbConnectionTotalSessions: metricInfo{
+		Name: "newrelicoracledb.connection.total_sessions",
+	},
+	NewrelicoracledbConnectionUserCommits: metricInfo{
+		Name: "newrelicoracledb.connection.user_commits",
+	},
+	NewrelicoracledbConnectionUserRollbacks: metricInfo{
+		Name: "newrelicoracledb.connection.user_rollbacks",
+	},
+	NewrelicoracledbConnectionWaitEventAvgWaitTime: metricInfo{
+		Name: "newrelicoracledb.connection.wait_event_avg_wait_time",
+	},
+	NewrelicoracledbConnectionWaitEventTimeWaited: metricInfo{
+		Name: "newrelicoracledb.connection.wait_event_time_waited",
+	},
+	NewrelicoracledbConnectionWaitEventTotalWaits: metricInfo{
+		Name: "newrelicoracledb.connection.wait_event_total_waits",
+	},
+	NewrelicoracledbConnectionWaitEvents: metricInfo{
+		Name: "newrelicoracledb.connection.wait_events",
+	},
+	NewrelicoracledbContainerRestricted: metricInfo{
+		Name: "newrelicoracledb.container.restricted",
+	},
+	NewrelicoracledbContainerStatus: metricInfo{
+		Name: "newrelicoracledb.container.status",
+	},
+	NewrelicoracledbDatafileAutoextensible: metricInfo{
+		Name: "newrelicoracledb.datafile.autoextensible",
+	},
+	NewrelicoracledbDatafileSizeBytes: metricInfo{
+		Name: "newrelicoracledb.datafile.size_bytes",
+	},
+	NewrelicoracledbDatafileUsedBytes: metricInfo{
+		Name: "newrelicoracledb.datafile.used_bytes",
 	},
 	NewrelicoracledbDbID: metricInfo{
 		Name: "newrelicoracledb.db_id",
@@ -160,6 +274,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbPdbOpenCursorsPerTransaction: metricInfo{
 		Name: "newrelicoracledb.pdb.open_cursors_per_transaction",
 	},
+	NewrelicoracledbPdbOpenMode: metricInfo{
+		Name: "newrelicoracledb.pdb.open_mode",
+	},
 	NewrelicoracledbPdbParseFailureCountPerSecond: metricInfo{
 		Name: "newrelicoracledb.pdb.parse_failure_count_per_second",
 	},
@@ -193,11 +310,17 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbPdbSQLServiceResponseTime: metricInfo{
 		Name: "newrelicoracledb.pdb.sql_service_response_time",
 	},
+	NewrelicoracledbPdbStatus: metricInfo{
+		Name: "newrelicoracledb.pdb.status",
+	},
 	NewrelicoracledbPdbTotalParseCountPerSecond: metricInfo{
 		Name: "newrelicoracledb.pdb.total_parse_count_per_second",
 	},
 	NewrelicoracledbPdbTotalParseCountPerTransaction: metricInfo{
 		Name: "newrelicoracledb.pdb.total_parse_count_per_transaction",
+	},
+	NewrelicoracledbPdbTotalSizeBytes: metricInfo{
+		Name: "newrelicoracledb.pdb.total_size_bytes",
 	},
 	NewrelicoracledbPdbTransactionsPerSecond: metricInfo{
 		Name: "newrelicoracledb.pdb.transactions_per_second",
@@ -223,6 +346,54 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbPdbWaitTimeRatio: metricInfo{
 		Name: "newrelicoracledb.pdb.wait_time_ratio",
 	},
+	NewrelicoracledbRacInstanceActiveState: metricInfo{
+		Name: "newrelicoracledb.rac.instance.active_state",
+	},
+	NewrelicoracledbRacInstanceArchiverStarted: metricInfo{
+		Name: "newrelicoracledb.rac.instance.archiver_started",
+	},
+	NewrelicoracledbRacInstanceDatabaseStatus: metricInfo{
+		Name: "newrelicoracledb.rac.instance.database_status",
+	},
+	NewrelicoracledbRacInstanceLoginsAllowed: metricInfo{
+		Name: "newrelicoracledb.rac.instance.logins_allowed",
+	},
+	NewrelicoracledbRacInstanceStatus: metricInfo{
+		Name: "newrelicoracledb.rac.instance.status",
+	},
+	NewrelicoracledbRacInstanceUptimeSeconds: metricInfo{
+		Name: "newrelicoracledb.rac.instance.uptime_seconds",
+	},
+	NewrelicoracledbRacInstanceVersionInfo: metricInfo{
+		Name: "newrelicoracledb.rac.instance.version_info",
+	},
+	NewrelicoracledbRacServiceClbConfig: metricInfo{
+		Name: "newrelicoracledb.rac.service.clb_config",
+	},
+	NewrelicoracledbRacServiceCreationAgeDays: metricInfo{
+		Name: "newrelicoracledb.rac.service.creation_age_days",
+	},
+	NewrelicoracledbRacServiceFailoverConfig: metricInfo{
+		Name: "newrelicoracledb.rac.service.failover_config",
+	},
+	NewrelicoracledbRacServiceFailoverDelaySeconds: metricInfo{
+		Name: "newrelicoracledb.rac.service.failover_delay_seconds",
+	},
+	NewrelicoracledbRacServiceFailoverRetries: metricInfo{
+		Name: "newrelicoracledb.rac.service.failover_retries",
+	},
+	NewrelicoracledbRacServiceInstanceID: metricInfo{
+		Name: "newrelicoracledb.rac.service.instance_id",
+	},
+	NewrelicoracledbRacServiceNetworkConfig: metricInfo{
+		Name: "newrelicoracledb.rac.service.network_config",
+	},
+	NewrelicoracledbRacTotalWaits: metricInfo{
+		Name: "newrelicoracledb.rac.total_waits",
+	},
+	NewrelicoracledbRacWaitTime: metricInfo{
+		Name: "newrelicoracledb.rac.wait_time",
+	},
 	NewrelicoracledbRedoLogParallelWriteWaits: metricInfo{
 		Name: "newrelicoracledb.redo_log_parallel_write_waits",
 	},
@@ -243,6 +414,12 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicoracledbRollbackSegmentsWaits: metricInfo{
 		Name: "newrelicoracledb.rollback_segments_waits",
+	},
+	NewrelicoracledbServiceCount: metricInfo{
+		Name: "newrelicoracledb.service.count",
+	},
+	NewrelicoracledbServiceStatus: metricInfo{
+		Name: "newrelicoracledb.service.status",
 	},
 	NewrelicoracledbSessionsCount: metricInfo{
 		Name: "newrelicoracledb.sessions.count",
@@ -760,6 +937,15 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbTablespaceSpaceUsedPercentage: metricInfo{
 		Name: "newrelicoracledb.tablespace.space_used_percentage",
 	},
+	NewrelicoracledbTablespaceTotalBytes: metricInfo{
+		Name: "newrelicoracledb.tablespace.total_bytes",
+	},
+	NewrelicoracledbTablespaceUsedBytes: metricInfo{
+		Name: "newrelicoracledb.tablespace.used_bytes",
+	},
+	NewrelicoracledbTablespaceUsedPercent: metricInfo{
+		Name: "newrelicoracledb.tablespace.used_percent",
+	},
 	NewrelicoracledbWaitEventsAvgWaitTimeMs: metricInfo{
 		Name: "newrelicoracledb.wait_events.avg_wait_time_ms",
 	},
@@ -772,7 +958,45 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	NewrelicoracledbAsmDiskgroupFreeMb                                 metricInfo
+	NewrelicoracledbAsmDiskgroupOfflineDisks                           metricInfo
+	NewrelicoracledbAsmDiskgroupTotalMb                                metricInfo
 	NewrelicoracledbBlockingQueriesWaitTime                            metricInfo
+	NewrelicoracledbConnectionActiveSessions                           metricInfo
+	NewrelicoracledbConnectionBlockingSessions                         metricInfo
+	NewrelicoracledbConnectionBytesReceived                            metricInfo
+	NewrelicoracledbConnectionBytesSent                                metricInfo
+	NewrelicoracledbConnectionCircuits                                 metricInfo
+	NewrelicoracledbConnectionDispatchers                              metricInfo
+	NewrelicoracledbConnectionExecuteCount                             metricInfo
+	NewrelicoracledbConnectionInactiveSessions                         metricInfo
+	NewrelicoracledbConnectionLogonsCumulative                         metricInfo
+	NewrelicoracledbConnectionLogonsCurrent                            metricInfo
+	NewrelicoracledbConnectionParseCountHard                           metricInfo
+	NewrelicoracledbConnectionParseCountTotal                          metricInfo
+	NewrelicoracledbConnectionResourceCurrentUtilization               metricInfo
+	NewrelicoracledbConnectionResourceLimit                            metricInfo
+	NewrelicoracledbConnectionResourceMaxUtilization                   metricInfo
+	NewrelicoracledbConnectionSessionCPUUsage                          metricInfo
+	NewrelicoracledbConnectionSessionIdleTime                          metricInfo
+	NewrelicoracledbConnectionSessionLogicalReads                      metricInfo
+	NewrelicoracledbConnectionSessionPgaMemory                         metricInfo
+	NewrelicoracledbConnectionSessionsByStatus                         metricInfo
+	NewrelicoracledbConnectionSessionsByType                           metricInfo
+	NewrelicoracledbConnectionSharedServers                            metricInfo
+	NewrelicoracledbConnectionSqlnetRoundtrips                         metricInfo
+	NewrelicoracledbConnectionTotalSessions                            metricInfo
+	NewrelicoracledbConnectionUserCommits                              metricInfo
+	NewrelicoracledbConnectionUserRollbacks                            metricInfo
+	NewrelicoracledbConnectionWaitEventAvgWaitTime                     metricInfo
+	NewrelicoracledbConnectionWaitEventTimeWaited                      metricInfo
+	NewrelicoracledbConnectionWaitEventTotalWaits                      metricInfo
+	NewrelicoracledbConnectionWaitEvents                               metricInfo
+	NewrelicoracledbContainerRestricted                                metricInfo
+	NewrelicoracledbContainerStatus                                    metricInfo
+	NewrelicoracledbDatafileAutoextensible                             metricInfo
+	NewrelicoracledbDatafileSizeBytes                                  metricInfo
+	NewrelicoracledbDatafileUsedBytes                                  metricInfo
 	NewrelicoracledbDbID                                               metricInfo
 	NewrelicoracledbDiskBlocksRead                                     metricInfo
 	NewrelicoracledbDiskBlocksWritten                                  metricInfo
@@ -821,6 +1045,7 @@ type metricsInfo struct {
 	NewrelicoracledbPdbNetworkTrafficBytePerSecond                     metricInfo
 	NewrelicoracledbPdbOpenCursorsPerSecond                            metricInfo
 	NewrelicoracledbPdbOpenCursorsPerTransaction                       metricInfo
+	NewrelicoracledbPdbOpenMode                                        metricInfo
 	NewrelicoracledbPdbParseFailureCountPerSecond                      metricInfo
 	NewrelicoracledbPdbPhysicalReadBytesPerSecond                      metricInfo
 	NewrelicoracledbPdbPhysicalReadsPerTransaction                     metricInfo
@@ -832,8 +1057,10 @@ type metricsInfo struct {
 	NewrelicoracledbPdbSessionCount                                    metricInfo
 	NewrelicoracledbPdbSoftParseRatio                                  metricInfo
 	NewrelicoracledbPdbSQLServiceResponseTime                          metricInfo
+	NewrelicoracledbPdbStatus                                          metricInfo
 	NewrelicoracledbPdbTotalParseCountPerSecond                        metricInfo
 	NewrelicoracledbPdbTotalParseCountPerTransaction                   metricInfo
+	NewrelicoracledbPdbTotalSizeBytes                                  metricInfo
 	NewrelicoracledbPdbTransactionsPerSecond                           metricInfo
 	NewrelicoracledbPdbUserCallsPerSecond                              metricInfo
 	NewrelicoracledbPdbUserCallsPerTransaction                         metricInfo
@@ -842,6 +1069,22 @@ type metricsInfo struct {
 	NewrelicoracledbPdbUserRollbacksPerSecond                          metricInfo
 	NewrelicoracledbPdbUserRollbacksPercentage                         metricInfo
 	NewrelicoracledbPdbWaitTimeRatio                                   metricInfo
+	NewrelicoracledbRacInstanceActiveState                             metricInfo
+	NewrelicoracledbRacInstanceArchiverStarted                         metricInfo
+	NewrelicoracledbRacInstanceDatabaseStatus                          metricInfo
+	NewrelicoracledbRacInstanceLoginsAllowed                           metricInfo
+	NewrelicoracledbRacInstanceStatus                                  metricInfo
+	NewrelicoracledbRacInstanceUptimeSeconds                           metricInfo
+	NewrelicoracledbRacInstanceVersionInfo                             metricInfo
+	NewrelicoracledbRacServiceClbConfig                                metricInfo
+	NewrelicoracledbRacServiceCreationAgeDays                          metricInfo
+	NewrelicoracledbRacServiceFailoverConfig                           metricInfo
+	NewrelicoracledbRacServiceFailoverDelaySeconds                     metricInfo
+	NewrelicoracledbRacServiceFailoverRetries                          metricInfo
+	NewrelicoracledbRacServiceInstanceID                               metricInfo
+	NewrelicoracledbRacServiceNetworkConfig                            metricInfo
+	NewrelicoracledbRacTotalWaits                                      metricInfo
+	NewrelicoracledbRacWaitTime                                        metricInfo
 	NewrelicoracledbRedoLogParallelWriteWaits                          metricInfo
 	NewrelicoracledbRedoLogSwitchArchivingNeededWaits                  metricInfo
 	NewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits             metricInfo
@@ -849,6 +1092,8 @@ type metricsInfo struct {
 	NewrelicoracledbRollbackSegmentsGets                               metricInfo
 	NewrelicoracledbRollbackSegmentsWaitRatio                          metricInfo
 	NewrelicoracledbRollbackSegmentsWaits                              metricInfo
+	NewrelicoracledbServiceCount                                       metricInfo
+	NewrelicoracledbServiceStatus                                      metricInfo
 	NewrelicoracledbSessionsCount                                      metricInfo
 	NewrelicoracledbSgaBufferBusyWaits                                 metricInfo
 	NewrelicoracledbSgaFixedSizeBytes                                  metricInfo
@@ -1021,6 +1266,9 @@ type metricsInfo struct {
 	NewrelicoracledbTablespaceSpaceConsumedBytes                       metricInfo
 	NewrelicoracledbTablespaceSpaceReservedBytes                       metricInfo
 	NewrelicoracledbTablespaceSpaceUsedPercentage                      metricInfo
+	NewrelicoracledbTablespaceTotalBytes                               metricInfo
+	NewrelicoracledbTablespaceUsedBytes                                metricInfo
+	NewrelicoracledbTablespaceUsedPercent                              metricInfo
 	NewrelicoracledbWaitEventsAvgWaitTimeMs                            metricInfo
 	NewrelicoracledbWaitEventsTotalWaitTimeMs                          metricInfo
 	NewrelicoracledbWaitEventsWaitingTasksCount                        metricInfo
@@ -1028,6 +1276,162 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricNewrelicoracledbAsmDiskgroupFreeMb struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.asm.diskgroup.free_mb metric with initial data.
+func (m *metricNewrelicoracledbAsmDiskgroupFreeMb) init() {
+	m.data.SetName("newrelicoracledb.asm.diskgroup.free_mb")
+	m.data.SetDescription("Available free space in the ASM disk group in MB")
+	m.data.SetUnit("MB")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbAsmDiskgroupFreeMb) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, diskgroupNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("diskgroup.name", diskgroupNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbAsmDiskgroupFreeMb) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbAsmDiskgroupFreeMb) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbAsmDiskgroupFreeMb(cfg MetricConfig) metricNewrelicoracledbAsmDiskgroupFreeMb {
+	m := metricNewrelicoracledbAsmDiskgroupFreeMb{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbAsmDiskgroupOfflineDisks struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.asm.diskgroup.offline_disks metric with initial data.
+func (m *metricNewrelicoracledbAsmDiskgroupOfflineDisks) init() {
+	m.data.SetName("newrelicoracledb.asm.diskgroup.offline_disks")
+	m.data.SetDescription("Number of offline disks in the ASM disk group")
+	m.data.SetUnit("{disks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbAsmDiskgroupOfflineDisks) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, diskgroupNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("diskgroup.name", diskgroupNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbAsmDiskgroupOfflineDisks) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbAsmDiskgroupOfflineDisks) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbAsmDiskgroupOfflineDisks(cfg MetricConfig) metricNewrelicoracledbAsmDiskgroupOfflineDisks {
+	m := metricNewrelicoracledbAsmDiskgroupOfflineDisks{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbAsmDiskgroupTotalMb struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.asm.diskgroup.total_mb metric with initial data.
+func (m *metricNewrelicoracledbAsmDiskgroupTotalMb) init() {
+	m.data.SetName("newrelicoracledb.asm.diskgroup.total_mb")
+	m.data.SetDescription("Total capacity of the ASM disk group in MB")
+	m.data.SetUnit("MB")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbAsmDiskgroupTotalMb) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, diskgroupNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("diskgroup.name", diskgroupNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbAsmDiskgroupTotalMb) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbAsmDiskgroupTotalMb) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbAsmDiskgroupTotalMb(cfg MetricConfig) metricNewrelicoracledbAsmDiskgroupTotalMb {
+	m := metricNewrelicoracledbAsmDiskgroupTotalMb{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricNewrelicoracledbBlockingQueriesWaitTime struct {
@@ -1045,7 +1449,7 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
+func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1053,7 +1457,6 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("blocked_user", blockedUserAttributeValue)
 	dp.Attributes().PutStr("blocking_user", blockingUserAttributeValue)
@@ -1091,6 +1494,1866 @@ func newMetricNewrelicoracledbBlockingQueriesWaitTime(cfg MetricConfig) metricNe
 	return m
 }
 
+type metricNewrelicoracledbConnectionActiveSessions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.active_sessions metric with initial data.
+func (m *metricNewrelicoracledbConnectionActiveSessions) init() {
+	m.data.SetName("newrelicoracledb.connection.active_sessions")
+	m.data.SetDescription("Number of active Oracle database sessions")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionActiveSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionActiveSessions) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionActiveSessions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionActiveSessions(cfg MetricConfig) metricNewrelicoracledbConnectionActiveSessions {
+	m := metricNewrelicoracledbConnectionActiveSessions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionBlockingSessions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.blocking_sessions metric with initial data.
+func (m *metricNewrelicoracledbConnectionBlockingSessions) init() {
+	m.data.SetName("newrelicoracledb.connection.blocking_sessions")
+	m.data.SetDescription("Sessions blocked by other sessions")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionBlockingSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, blockingSessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, programAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking.session.id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
+	dp.Attributes().PutStr("program", programAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionBlockingSessions) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionBlockingSessions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionBlockingSessions(cfg MetricConfig) metricNewrelicoracledbConnectionBlockingSessions {
+	m := metricNewrelicoracledbConnectionBlockingSessions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionBytesReceived struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.bytes_received metric with initial data.
+func (m *metricNewrelicoracledbConnectionBytesReceived) init() {
+	m.data.SetName("newrelicoracledb.connection.bytes_received")
+	m.data.SetDescription("Bytes received via SQL*Net from client")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionBytesReceived) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionBytesReceived) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionBytesReceived) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionBytesReceived(cfg MetricConfig) metricNewrelicoracledbConnectionBytesReceived {
+	m := metricNewrelicoracledbConnectionBytesReceived{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionBytesSent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.bytes_sent metric with initial data.
+func (m *metricNewrelicoracledbConnectionBytesSent) init() {
+	m.data.SetName("newrelicoracledb.connection.bytes_sent")
+	m.data.SetDescription("Bytes sent via SQL*Net to client")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionBytesSent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionBytesSent) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionBytesSent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionBytesSent(cfg MetricConfig) metricNewrelicoracledbConnectionBytesSent {
+	m := metricNewrelicoracledbConnectionBytesSent{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionCircuits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.circuits metric with initial data.
+func (m *metricNewrelicoracledbConnectionCircuits) init() {
+	m.data.SetName("newrelicoracledb.connection.circuits")
+	m.data.SetDescription("Number of active circuits")
+	m.data.SetUnit("{circuits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionCircuits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionCircuits) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionCircuits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionCircuits(cfg MetricConfig) metricNewrelicoracledbConnectionCircuits {
+	m := metricNewrelicoracledbConnectionCircuits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionDispatchers struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.dispatchers metric with initial data.
+func (m *metricNewrelicoracledbConnectionDispatchers) init() {
+	m.data.SetName("newrelicoracledb.connection.dispatchers")
+	m.data.SetDescription("Number of dispatchers")
+	m.data.SetUnit("{dispatchers}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionDispatchers) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionDispatchers) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionDispatchers) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionDispatchers(cfg MetricConfig) metricNewrelicoracledbConnectionDispatchers {
+	m := metricNewrelicoracledbConnectionDispatchers{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionExecuteCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.execute_count metric with initial data.
+func (m *metricNewrelicoracledbConnectionExecuteCount) init() {
+	m.data.SetName("newrelicoracledb.connection.execute_count")
+	m.data.SetDescription("Number of SQL executions")
+	m.data.SetUnit("{executions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionExecuteCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionExecuteCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionExecuteCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionExecuteCount(cfg MetricConfig) metricNewrelicoracledbConnectionExecuteCount {
+	m := metricNewrelicoracledbConnectionExecuteCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionInactiveSessions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.inactive_sessions metric with initial data.
+func (m *metricNewrelicoracledbConnectionInactiveSessions) init() {
+	m.data.SetName("newrelicoracledb.connection.inactive_sessions")
+	m.data.SetDescription("Number of inactive Oracle database sessions")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionInactiveSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionInactiveSessions) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionInactiveSessions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionInactiveSessions(cfg MetricConfig) metricNewrelicoracledbConnectionInactiveSessions {
+	m := metricNewrelicoracledbConnectionInactiveSessions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionLogonsCumulative struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.logons_cumulative metric with initial data.
+func (m *metricNewrelicoracledbConnectionLogonsCumulative) init() {
+	m.data.SetName("newrelicoracledb.connection.logons_cumulative")
+	m.data.SetDescription("Cumulative number of logons since instance startup")
+	m.data.SetUnit("{logons}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionLogonsCumulative) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionLogonsCumulative) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionLogonsCumulative) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionLogonsCumulative(cfg MetricConfig) metricNewrelicoracledbConnectionLogonsCumulative {
+	m := metricNewrelicoracledbConnectionLogonsCumulative{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionLogonsCurrent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.logons_current metric with initial data.
+func (m *metricNewrelicoracledbConnectionLogonsCurrent) init() {
+	m.data.SetName("newrelicoracledb.connection.logons_current")
+	m.data.SetDescription("Current number of active logons")
+	m.data.SetUnit("{logons}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionLogonsCurrent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionLogonsCurrent) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionLogonsCurrent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionLogonsCurrent(cfg MetricConfig) metricNewrelicoracledbConnectionLogonsCurrent {
+	m := metricNewrelicoracledbConnectionLogonsCurrent{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionParseCountHard struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.parse_count_hard metric with initial data.
+func (m *metricNewrelicoracledbConnectionParseCountHard) init() {
+	m.data.SetName("newrelicoracledb.connection.parse_count_hard")
+	m.data.SetDescription("Number of hard parse calls")
+	m.data.SetUnit("{parses}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionParseCountHard) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionParseCountHard) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionParseCountHard) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionParseCountHard(cfg MetricConfig) metricNewrelicoracledbConnectionParseCountHard {
+	m := metricNewrelicoracledbConnectionParseCountHard{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionParseCountTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.parse_count_total metric with initial data.
+func (m *metricNewrelicoracledbConnectionParseCountTotal) init() {
+	m.data.SetName("newrelicoracledb.connection.parse_count_total")
+	m.data.SetDescription("Total number of parse calls")
+	m.data.SetUnit("{parses}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionParseCountTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionParseCountTotal) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionParseCountTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionParseCountTotal(cfg MetricConfig) metricNewrelicoracledbConnectionParseCountTotal {
+	m := metricNewrelicoracledbConnectionParseCountTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionResourceCurrentUtilization struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.resource_current_utilization metric with initial data.
+func (m *metricNewrelicoracledbConnectionResourceCurrentUtilization) init() {
+	m.data.SetName("newrelicoracledb.connection.resource_current_utilization")
+	m.data.SetDescription("Current utilization of Oracle resources")
+	m.data.SetUnit("{resources}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionResourceCurrentUtilization) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, resourceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("resource.name", resourceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionResourceCurrentUtilization) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionResourceCurrentUtilization) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionResourceCurrentUtilization(cfg MetricConfig) metricNewrelicoracledbConnectionResourceCurrentUtilization {
+	m := metricNewrelicoracledbConnectionResourceCurrentUtilization{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionResourceLimit struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.resource_limit metric with initial data.
+func (m *metricNewrelicoracledbConnectionResourceLimit) init() {
+	m.data.SetName("newrelicoracledb.connection.resource_limit")
+	m.data.SetDescription("Limit value for Oracle resources")
+	m.data.SetUnit("{resources}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionResourceLimit) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, resourceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("resource.name", resourceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionResourceLimit) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionResourceLimit) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionResourceLimit(cfg MetricConfig) metricNewrelicoracledbConnectionResourceLimit {
+	m := metricNewrelicoracledbConnectionResourceLimit{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionResourceMaxUtilization struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.resource_max_utilization metric with initial data.
+func (m *metricNewrelicoracledbConnectionResourceMaxUtilization) init() {
+	m.data.SetName("newrelicoracledb.connection.resource_max_utilization")
+	m.data.SetDescription("Maximum utilization of Oracle resources since startup")
+	m.data.SetUnit("{resources}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionResourceMaxUtilization) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, resourceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("resource.name", resourceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionResourceMaxUtilization) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionResourceMaxUtilization) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionResourceMaxUtilization(cfg MetricConfig) metricNewrelicoracledbConnectionResourceMaxUtilization {
+	m := metricNewrelicoracledbConnectionResourceMaxUtilization{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSessionCPUUsage struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.session_cpu_usage metric with initial data.
+func (m *metricNewrelicoracledbConnectionSessionCPUUsage) init() {
+	m.data.SetName("newrelicoracledb.connection.session_cpu_usage")
+	m.data.SetDescription("CPU usage by session in seconds")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSessionCPUUsage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
+	dp.Attributes().PutStr("program", programAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSessionCPUUsage) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSessionCPUUsage) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSessionCPUUsage(cfg MetricConfig) metricNewrelicoracledbConnectionSessionCPUUsage {
+	m := metricNewrelicoracledbConnectionSessionCPUUsage{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSessionIdleTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.session_idle_time metric with initial data.
+func (m *metricNewrelicoracledbConnectionSessionIdleTime) init() {
+	m.data.SetName("newrelicoracledb.connection.session_idle_time")
+	m.data.SetDescription("Session idle time in seconds")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSessionIdleTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
+	dp.Attributes().PutStr("program", programAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSessionIdleTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSessionIdleTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSessionIdleTime(cfg MetricConfig) metricNewrelicoracledbConnectionSessionIdleTime {
+	m := metricNewrelicoracledbConnectionSessionIdleTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSessionLogicalReads struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.session_logical_reads metric with initial data.
+func (m *metricNewrelicoracledbConnectionSessionLogicalReads) init() {
+	m.data.SetName("newrelicoracledb.connection.session_logical_reads")
+	m.data.SetDescription("Logical reads by session")
+	m.data.SetUnit("{reads}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSessionLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
+	dp.Attributes().PutStr("program", programAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSessionLogicalReads) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSessionLogicalReads) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSessionLogicalReads(cfg MetricConfig) metricNewrelicoracledbConnectionSessionLogicalReads {
+	m := metricNewrelicoracledbConnectionSessionLogicalReads{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSessionPgaMemory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.session_pga_memory metric with initial data.
+func (m *metricNewrelicoracledbConnectionSessionPgaMemory) init() {
+	m.data.SetName("newrelicoracledb.connection.session_pga_memory")
+	m.data.SetDescription("PGA memory usage by session")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSessionPgaMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
+	dp.Attributes().PutStr("program", programAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSessionPgaMemory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSessionPgaMemory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSessionPgaMemory(cfg MetricConfig) metricNewrelicoracledbConnectionSessionPgaMemory {
+	m := metricNewrelicoracledbConnectionSessionPgaMemory{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSessionsByStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.sessions_by_status metric with initial data.
+func (m *metricNewrelicoracledbConnectionSessionsByStatus) init() {
+	m.data.SetName("newrelicoracledb.connection.sessions_by_status")
+	m.data.SetDescription("Number of sessions grouped by status")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSessionsByStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSessionsByStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSessionsByStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSessionsByStatus(cfg MetricConfig) metricNewrelicoracledbConnectionSessionsByStatus {
+	m := metricNewrelicoracledbConnectionSessionsByStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSessionsByType struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.sessions_by_type metric with initial data.
+func (m *metricNewrelicoracledbConnectionSessionsByType) init() {
+	m.data.SetName("newrelicoracledb.connection.sessions_by_type")
+	m.data.SetDescription("Number of sessions grouped by type")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSessionsByType) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionTypeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.type", sessionTypeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSessionsByType) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSessionsByType) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSessionsByType(cfg MetricConfig) metricNewrelicoracledbConnectionSessionsByType {
+	m := metricNewrelicoracledbConnectionSessionsByType{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSharedServers struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.shared_servers metric with initial data.
+func (m *metricNewrelicoracledbConnectionSharedServers) init() {
+	m.data.SetName("newrelicoracledb.connection.shared_servers")
+	m.data.SetDescription("Number of shared servers")
+	m.data.SetUnit("{servers}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSharedServers) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSharedServers) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSharedServers) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSharedServers(cfg MetricConfig) metricNewrelicoracledbConnectionSharedServers {
+	m := metricNewrelicoracledbConnectionSharedServers{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionSqlnetRoundtrips struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.sqlnet_roundtrips metric with initial data.
+func (m *metricNewrelicoracledbConnectionSqlnetRoundtrips) init() {
+	m.data.SetName("newrelicoracledb.connection.sqlnet_roundtrips")
+	m.data.SetDescription("Number of SQL*Net roundtrips to/from client")
+	m.data.SetUnit("{roundtrips}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionSqlnetRoundtrips) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionSqlnetRoundtrips) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionSqlnetRoundtrips) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionSqlnetRoundtrips(cfg MetricConfig) metricNewrelicoracledbConnectionSqlnetRoundtrips {
+	m := metricNewrelicoracledbConnectionSqlnetRoundtrips{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionTotalSessions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.total_sessions metric with initial data.
+func (m *metricNewrelicoracledbConnectionTotalSessions) init() {
+	m.data.SetName("newrelicoracledb.connection.total_sessions")
+	m.data.SetDescription("Total number of Oracle database sessions")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionTotalSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionTotalSessions) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionTotalSessions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionTotalSessions(cfg MetricConfig) metricNewrelicoracledbConnectionTotalSessions {
+	m := metricNewrelicoracledbConnectionTotalSessions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionUserCommits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.user_commits metric with initial data.
+func (m *metricNewrelicoracledbConnectionUserCommits) init() {
+	m.data.SetName("newrelicoracledb.connection.user_commits")
+	m.data.SetDescription("Number of user commits")
+	m.data.SetUnit("{commits}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionUserCommits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionUserCommits) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionUserCommits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionUserCommits(cfg MetricConfig) metricNewrelicoracledbConnectionUserCommits {
+	m := metricNewrelicoracledbConnectionUserCommits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionUserRollbacks struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.user_rollbacks metric with initial data.
+func (m *metricNewrelicoracledbConnectionUserRollbacks) init() {
+	m.data.SetName("newrelicoracledb.connection.user_rollbacks")
+	m.data.SetDescription("Number of user rollbacks")
+	m.data.SetUnit("{rollbacks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionUserRollbacks) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionUserRollbacks) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionUserRollbacks) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionUserRollbacks(cfg MetricConfig) metricNewrelicoracledbConnectionUserRollbacks {
+	m := metricNewrelicoracledbConnectionUserRollbacks{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionWaitEventAvgWaitTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.wait_event_avg_wait_time metric with initial data.
+func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) init() {
+	m.data.SetName("newrelicoracledb.connection.wait_event_avg_wait_time")
+	m.data.SetDescription("Average wait time for each wait event")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, waitEventAttributeValue string, waitClassAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
+	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionWaitEventAvgWaitTime(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEventAvgWaitTime {
+	m := metricNewrelicoracledbConnectionWaitEventAvgWaitTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionWaitEventTimeWaited struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.wait_event_time_waited metric with initial data.
+func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) init() {
+	m.data.SetName("newrelicoracledb.connection.wait_event_time_waited")
+	m.data.SetDescription("Total time waited for each wait event")
+	m.data.SetUnit("ms")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, waitEventAttributeValue string, waitClassAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
+	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionWaitEventTimeWaited(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEventTimeWaited {
+	m := metricNewrelicoracledbConnectionWaitEventTimeWaited{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionWaitEventTotalWaits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.wait_event_total_waits metric with initial data.
+func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) init() {
+	m.data.SetName("newrelicoracledb.connection.wait_event_total_waits")
+	m.data.SetDescription("Total number of waits for each wait event")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, waitEventAttributeValue string, waitClassAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
+	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionWaitEventTotalWaits(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEventTotalWaits {
+	m := metricNewrelicoracledbConnectionWaitEventTotalWaits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbConnectionWaitEvents struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.connection.wait_events metric with initial data.
+func (m *metricNewrelicoracledbConnectionWaitEvents) init() {
+	m.data.SetName("newrelicoracledb.connection.wait_events")
+	m.data.SetDescription("Current wait events and wait time")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbConnectionWaitEvents) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, waitStateAttributeValue string, waitClassAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
+	dp.Attributes().PutStr("wait.state", waitStateAttributeValue)
+	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbConnectionWaitEvents) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbConnectionWaitEvents) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbConnectionWaitEvents(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEvents {
+	m := metricNewrelicoracledbConnectionWaitEvents{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbContainerRestricted struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.container.restricted metric with initial data.
+func (m *metricNewrelicoracledbContainerRestricted) init() {
+	m.data.SetName("newrelicoracledb.container.restricted")
+	m.data.SetDescription("Oracle container restricted status (1=YES, 0=NO)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbContainerRestricted) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, containerNameAttributeValue string, restrictedStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("container.name", containerNameAttributeValue)
+	dp.Attributes().PutStr("restricted.status", restrictedStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbContainerRestricted) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbContainerRestricted) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbContainerRestricted(cfg MetricConfig) metricNewrelicoracledbContainerRestricted {
+	m := metricNewrelicoracledbContainerRestricted{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbContainerStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.container.status metric with initial data.
+func (m *metricNewrelicoracledbContainerStatus) init() {
+	m.data.SetName("newrelicoracledb.container.status")
+	m.data.SetDescription("Oracle container status (1=READ WRITE, 0=other)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbContainerStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, containerNameAttributeValue string, openModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("container.name", containerNameAttributeValue)
+	dp.Attributes().PutStr("open.mode", openModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbContainerStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbContainerStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbContainerStatus(cfg MetricConfig) metricNewrelicoracledbContainerStatus {
+	m := metricNewrelicoracledbContainerStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbDatafileAutoextensible struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.datafile.autoextensible metric with initial data.
+func (m *metricNewrelicoracledbDatafileAutoextensible) init() {
+	m.data.SetName("newrelicoracledb.datafile.autoextensible")
+	m.data.SetDescription("Data file autoextensible status (1=YES, 0=NO)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbDatafileAutoextensible) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string, fileNameAttributeValue string, containerStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
+	dp.Attributes().PutStr("file.name", fileNameAttributeValue)
+	dp.Attributes().PutStr("container.status", containerStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbDatafileAutoextensible) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbDatafileAutoextensible) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbDatafileAutoextensible(cfg MetricConfig) metricNewrelicoracledbDatafileAutoextensible {
+	m := metricNewrelicoracledbDatafileAutoextensible{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbDatafileSizeBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.datafile.size_bytes metric with initial data.
+func (m *metricNewrelicoracledbDatafileSizeBytes) init() {
+	m.data.SetName("newrelicoracledb.datafile.size_bytes")
+	m.data.SetDescription("Size of data file in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbDatafileSizeBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string, fileNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
+	dp.Attributes().PutStr("file.name", fileNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbDatafileSizeBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbDatafileSizeBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbDatafileSizeBytes(cfg MetricConfig) metricNewrelicoracledbDatafileSizeBytes {
+	m := metricNewrelicoracledbDatafileSizeBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbDatafileUsedBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.datafile.used_bytes metric with initial data.
+func (m *metricNewrelicoracledbDatafileUsedBytes) init() {
+	m.data.SetName("newrelicoracledb.datafile.used_bytes")
+	m.data.SetDescription("Used bytes in data file")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbDatafileUsedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string, fileNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
+	dp.Attributes().PutStr("file.name", fileNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbDatafileUsedBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbDatafileUsedBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbDatafileUsedBytes(cfg MetricConfig) metricNewrelicoracledbDatafileUsedBytes {
+	m := metricNewrelicoracledbDatafileUsedBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbDbID struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -1106,7 +3369,7 @@ func (m *metricNewrelicoracledbDbID) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, dbIDAttributeValue string) {
+func (m *metricNewrelicoracledbDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, dbIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1114,7 +3377,7 @@ func (m *metricNewrelicoracledbDbID) recordDataPoint(start pcommon.Timestamp, ts
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("db.id", dbIDAttributeValue)
 }
@@ -1159,7 +3422,7 @@ func (m *metricNewrelicoracledbDiskBlocksRead) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDiskBlocksRead) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbDiskBlocksRead) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1167,7 +3430,7 @@ func (m *metricNewrelicoracledbDiskBlocksRead) recordDataPoint(start pcommon.Tim
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1211,7 +3474,7 @@ func (m *metricNewrelicoracledbDiskBlocksWritten) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDiskBlocksWritten) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbDiskBlocksWritten) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1219,7 +3482,7 @@ func (m *metricNewrelicoracledbDiskBlocksWritten) recordDataPoint(start pcommon.
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1263,7 +3526,7 @@ func (m *metricNewrelicoracledbDiskReadTimeMilliseconds) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDiskReadTimeMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbDiskReadTimeMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1271,7 +3534,7 @@ func (m *metricNewrelicoracledbDiskReadTimeMilliseconds) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1315,7 +3578,7 @@ func (m *metricNewrelicoracledbDiskReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1323,7 +3586,7 @@ func (m *metricNewrelicoracledbDiskReads) recordDataPoint(start pcommon.Timestam
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1367,7 +3630,7 @@ func (m *metricNewrelicoracledbDiskWriteTimeMilliseconds) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDiskWriteTimeMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbDiskWriteTimeMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1375,7 +3638,7 @@ func (m *metricNewrelicoracledbDiskWriteTimeMilliseconds) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1419,7 +3682,7 @@ func (m *metricNewrelicoracledbDiskWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1427,7 +3690,7 @@ func (m *metricNewrelicoracledbDiskWrites) recordDataPoint(start pcommon.Timesta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1471,7 +3734,7 @@ func (m *metricNewrelicoracledbGlobalName) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, globalNameAttributeValue string) {
+func (m *metricNewrelicoracledbGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, globalNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1479,7 +3742,7 @@ func (m *metricNewrelicoracledbGlobalName) recordDataPoint(start pcommon.Timesta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("global.name", globalNameAttributeValue)
 }
@@ -1524,7 +3787,7 @@ func (m *metricNewrelicoracledbIndividualQueriesCPUTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbIndividualQueriesCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbIndividualQueriesCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1532,7 +3795,6 @@ func (m *metricNewrelicoracledbIndividualQueriesCPUTime) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
@@ -1577,7 +3839,7 @@ func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1585,7 +3847,6 @@ func (m *metricNewrelicoracledbIndividualQueriesElapsedTime) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
@@ -1630,7 +3891,7 @@ func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, databaseNameAttributeValue string, userIDAttributeValue string, usernameAttributeValue string, hostnameAttributeValue string) {
+func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, queryTextAttributeValue string, databaseNameAttributeValue string, userIDAttributeValue string, usernameAttributeValue string, hostnameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1638,7 +3899,6 @@ func (m *metricNewrelicoracledbIndividualQueriesQueryDetails) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
@@ -1687,7 +3947,7 @@ func (m *metricNewrelicoracledbLockedAccounts) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbLockedAccounts) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbLockedAccounts) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1695,7 +3955,7 @@ func (m *metricNewrelicoracledbLockedAccounts) recordDataPoint(start pcommon.Tim
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1739,7 +3999,7 @@ func (m *metricNewrelicoracledbLongRunningQueries) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbLongRunningQueries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbLongRunningQueries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1747,7 +4007,7 @@ func (m *metricNewrelicoracledbLongRunningQueries) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1791,7 +4051,7 @@ func (m *metricNewrelicoracledbMemoryPgaAllocatedBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbMemoryPgaAllocatedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbMemoryPgaAllocatedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1799,7 +4059,7 @@ func (m *metricNewrelicoracledbMemoryPgaAllocatedBytes) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1843,7 +4103,7 @@ func (m *metricNewrelicoracledbMemoryPgaFreeableBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbMemoryPgaFreeableBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbMemoryPgaFreeableBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1851,7 +4111,7 @@ func (m *metricNewrelicoracledbMemoryPgaFreeableBytes) recordDataPoint(start pco
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1895,7 +4155,7 @@ func (m *metricNewrelicoracledbMemoryPgaInUseBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbMemoryPgaInUseBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbMemoryPgaInUseBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1903,7 +4163,7 @@ func (m *metricNewrelicoracledbMemoryPgaInUseBytes) recordDataPoint(start pcommo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1947,7 +4207,7 @@ func (m *metricNewrelicoracledbMemoryPgaMaxSizeBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbMemoryPgaMaxSizeBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbMemoryPgaMaxSizeBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1955,7 +4215,7 @@ func (m *metricNewrelicoracledbMemoryPgaMaxSizeBytes) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -1999,7 +4259,7 @@ func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes) ini
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2007,7 +4267,7 @@ func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes) rec
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2051,7 +4311,7 @@ func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes) init() 
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2059,7 +4319,7 @@ func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes) recordD
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2103,7 +4363,7 @@ func (m *metricNewrelicoracledbMemorySgaUgaTotalBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbMemorySgaUgaTotalBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbMemorySgaUgaTotalBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2111,7 +4371,7 @@ func (m *metricNewrelicoracledbMemorySgaUgaTotalBytes) recordDataPoint(start pco
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2155,7 +4415,7 @@ func (m *metricNewrelicoracledbPdbActiveParallelSessions) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbActiveParallelSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbActiveParallelSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2163,7 +4423,7 @@ func (m *metricNewrelicoracledbPdbActiveParallelSessions) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2207,7 +4467,7 @@ func (m *metricNewrelicoracledbPdbActiveSerialSessions) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbActiveSerialSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbActiveSerialSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2215,7 +4475,7 @@ func (m *metricNewrelicoracledbPdbActiveSerialSessions) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2259,7 +4519,7 @@ func (m *metricNewrelicoracledbPdbAverageActiveSessions) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbAverageActiveSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbAverageActiveSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2267,7 +4527,7 @@ func (m *metricNewrelicoracledbPdbAverageActiveSessions) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2311,7 +4571,7 @@ func (m *metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2319,7 +4579,7 @@ func (m *metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2363,7 +4623,7 @@ func (m *metricNewrelicoracledbPdbBackgroundTimePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbBackgroundTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbBackgroundTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2371,7 +4631,7 @@ func (m *metricNewrelicoracledbPdbBackgroundTimePerSecond) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2415,7 +4675,7 @@ func (m *metricNewrelicoracledbPdbBlockChangesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbBlockChangesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbBlockChangesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2423,7 +4683,7 @@ func (m *metricNewrelicoracledbPdbBlockChangesPerSecond) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2467,7 +4727,7 @@ func (m *metricNewrelicoracledbPdbBlockChangesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbBlockChangesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbBlockChangesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2475,7 +4735,7 @@ func (m *metricNewrelicoracledbPdbBlockChangesPerTransaction) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2519,7 +4779,7 @@ func (m *metricNewrelicoracledbPdbCPUTimeRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbCPUTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbCPUTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2527,7 +4787,7 @@ func (m *metricNewrelicoracledbPdbCPUTimeRatio) recordDataPoint(start pcommon.Ti
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2571,7 +4831,7 @@ func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2579,7 +4839,7 @@ func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2623,7 +4883,7 @@ func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2631,7 +4891,7 @@ func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2675,7 +4935,7 @@ func (m *metricNewrelicoracledbPdbCurrentLogons) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbCurrentLogons) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbCurrentLogons) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2683,7 +4943,7 @@ func (m *metricNewrelicoracledbPdbCurrentLogons) recordDataPoint(start pcommon.T
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2727,7 +4987,7 @@ func (m *metricNewrelicoracledbPdbCurrentOpenCursors) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbCurrentOpenCursors) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbCurrentOpenCursors) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2735,7 +4995,7 @@ func (m *metricNewrelicoracledbPdbCurrentOpenCursors) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2779,7 +5039,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2787,7 +5047,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2831,7 +5091,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalReadsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbDbPhysicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbDbPhysicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2839,7 +5099,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalReadsPerSecond) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2883,7 +5143,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2891,7 +5151,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2935,7 +5195,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalWritesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbDbPhysicalWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbDbPhysicalWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2943,7 +5203,7 @@ func (m *metricNewrelicoracledbPdbDbPhysicalWritesPerSecond) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -2987,7 +5247,7 @@ func (m *metricNewrelicoracledbPdbExecuteWithoutParseRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbExecuteWithoutParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbExecuteWithoutParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -2995,7 +5255,7 @@ func (m *metricNewrelicoracledbPdbExecuteWithoutParseRatio) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3039,7 +5299,7 @@ func (m *metricNewrelicoracledbPdbExecutionsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbExecutionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbExecutionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3047,7 +5307,7 @@ func (m *metricNewrelicoracledbPdbExecutionsPerSecond) recordDataPoint(start pco
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3091,7 +5351,7 @@ func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3099,7 +5359,7 @@ func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3143,7 +5403,7 @@ func (m *metricNewrelicoracledbPdbHardParseCountPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbHardParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbHardParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3151,7 +5411,7 @@ func (m *metricNewrelicoracledbPdbHardParseCountPerSecond) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3195,7 +5455,7 @@ func (m *metricNewrelicoracledbPdbHardParseCountPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbHardParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbHardParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3203,7 +5463,7 @@ func (m *metricNewrelicoracledbPdbHardParseCountPerTransaction) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3247,7 +5507,7 @@ func (m *metricNewrelicoracledbPdbLogicalReadsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbLogicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbLogicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3255,7 +5515,7 @@ func (m *metricNewrelicoracledbPdbLogicalReadsPerSecond) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3299,7 +5559,7 @@ func (m *metricNewrelicoracledbPdbLogicalReadsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbLogicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbLogicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3307,7 +5567,7 @@ func (m *metricNewrelicoracledbPdbLogicalReadsPerTransaction) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3351,7 +5611,7 @@ func (m *metricNewrelicoracledbPdbLogonsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbLogonsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbLogonsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3359,7 +5619,7 @@ func (m *metricNewrelicoracledbPdbLogonsPerSecond) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3403,7 +5663,7 @@ func (m *metricNewrelicoracledbPdbLogonsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbLogonsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbLogonsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3411,7 +5671,7 @@ func (m *metricNewrelicoracledbPdbLogonsPerTransaction) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3455,7 +5715,7 @@ func (m *metricNewrelicoracledbPdbNetworkTrafficBytePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbNetworkTrafficBytePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbNetworkTrafficBytePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3463,7 +5723,7 @@ func (m *metricNewrelicoracledbPdbNetworkTrafficBytePerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3507,7 +5767,7 @@ func (m *metricNewrelicoracledbPdbOpenCursorsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbOpenCursorsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbOpenCursorsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3515,7 +5775,7 @@ func (m *metricNewrelicoracledbPdbOpenCursorsPerSecond) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3559,7 +5819,7 @@ func (m *metricNewrelicoracledbPdbOpenCursorsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbOpenCursorsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbOpenCursorsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3567,7 +5827,7 @@ func (m *metricNewrelicoracledbPdbOpenCursorsPerTransaction) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3596,6 +5856,60 @@ func newMetricNewrelicoracledbPdbOpenCursorsPerTransaction(cfg MetricConfig) met
 	return m
 }
 
+type metricNewrelicoracledbPdbOpenMode struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.open_mode metric with initial data.
+func (m *metricNewrelicoracledbPdbOpenMode) init() {
+	m.data.SetName("newrelicoracledb.pdb.open_mode")
+	m.data.SetDescription("Oracle PDB open mode (1=READ WRITE, 0=other)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbOpenMode) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string, openModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("pdb.name", pdbNameAttributeValue)
+	dp.Attributes().PutStr("open.mode", openModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbOpenMode) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbOpenMode) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbOpenMode(cfg MetricConfig) metricNewrelicoracledbPdbOpenMode {
+	m := metricNewrelicoracledbPdbOpenMode{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbPdbParseFailureCountPerSecond struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3611,7 +5925,7 @@ func (m *metricNewrelicoracledbPdbParseFailureCountPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbParseFailureCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbParseFailureCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3619,7 +5933,7 @@ func (m *metricNewrelicoracledbPdbParseFailureCountPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3663,7 +5977,7 @@ func (m *metricNewrelicoracledbPdbPhysicalReadBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbPhysicalReadBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbPhysicalReadBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3671,7 +5985,7 @@ func (m *metricNewrelicoracledbPdbPhysicalReadBytesPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3715,7 +6029,7 @@ func (m *metricNewrelicoracledbPdbPhysicalReadsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbPhysicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbPhysicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3723,7 +6037,7 @@ func (m *metricNewrelicoracledbPdbPhysicalReadsPerTransaction) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3767,7 +6081,7 @@ func (m *metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3775,7 +6089,7 @@ func (m *metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3819,7 +6133,7 @@ func (m *metricNewrelicoracledbPdbPhysicalWritesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbPhysicalWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbPhysicalWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3827,7 +6141,7 @@ func (m *metricNewrelicoracledbPdbPhysicalWritesPerTransaction) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3871,7 +6185,7 @@ func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3879,7 +6193,7 @@ func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3923,7 +6237,7 @@ func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3931,7 +6245,7 @@ func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -3975,7 +6289,7 @@ func (m *metricNewrelicoracledbPdbResponseTimePerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbResponseTimePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbResponseTimePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3983,7 +6297,7 @@ func (m *metricNewrelicoracledbPdbResponseTimePerTransaction) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4027,7 +6341,7 @@ func (m *metricNewrelicoracledbPdbSessionCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbSessionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbSessionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4035,7 +6349,7 @@ func (m *metricNewrelicoracledbPdbSessionCount) recordDataPoint(start pcommon.Ti
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4079,7 +6393,7 @@ func (m *metricNewrelicoracledbPdbSoftParseRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbSoftParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbSoftParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4087,7 +6401,7 @@ func (m *metricNewrelicoracledbPdbSoftParseRatio) recordDataPoint(start pcommon.
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4131,7 +6445,7 @@ func (m *metricNewrelicoracledbPdbSQLServiceResponseTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbSQLServiceResponseTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbSQLServiceResponseTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4139,7 +6453,7 @@ func (m *metricNewrelicoracledbPdbSQLServiceResponseTime) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4168,6 +6482,60 @@ func newMetricNewrelicoracledbPdbSQLServiceResponseTime(cfg MetricConfig) metric
 	return m
 }
 
+type metricNewrelicoracledbPdbStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.status metric with initial data.
+func (m *metricNewrelicoracledbPdbStatus) init() {
+	m.data.SetName("newrelicoracledb.pdb.status")
+	m.data.SetDescription("Oracle PDB status (1=NORMAL, 0=other)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string, containerStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("pdb.name", pdbNameAttributeValue)
+	dp.Attributes().PutStr("container.status", containerStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbStatus(cfg MetricConfig) metricNewrelicoracledbPdbStatus {
+	m := metricNewrelicoracledbPdbStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbPdbTotalParseCountPerSecond struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -4183,7 +6551,7 @@ func (m *metricNewrelicoracledbPdbTotalParseCountPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbTotalParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbTotalParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4191,7 +6559,7 @@ func (m *metricNewrelicoracledbPdbTotalParseCountPerSecond) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4235,7 +6603,7 @@ func (m *metricNewrelicoracledbPdbTotalParseCountPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbTotalParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbTotalParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4243,7 +6611,7 @@ func (m *metricNewrelicoracledbPdbTotalParseCountPerTransaction) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4272,6 +6640,59 @@ func newMetricNewrelicoracledbPdbTotalParseCountPerTransaction(cfg MetricConfig)
 	return m
 }
 
+type metricNewrelicoracledbPdbTotalSizeBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.pdb.total_size_bytes metric with initial data.
+func (m *metricNewrelicoracledbPdbTotalSizeBytes) init() {
+	m.data.SetName("newrelicoracledb.pdb.total_size_bytes")
+	m.data.SetDescription("Total size of PDB in bytes")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPdbTotalSizeBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("pdb.name", pdbNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPdbTotalSizeBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPdbTotalSizeBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPdbTotalSizeBytes(cfg MetricConfig) metricNewrelicoracledbPdbTotalSizeBytes {
+	m := metricNewrelicoracledbPdbTotalSizeBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbPdbTransactionsPerSecond struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -4287,7 +6708,7 @@ func (m *metricNewrelicoracledbPdbTransactionsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbTransactionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbTransactionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4295,7 +6716,7 @@ func (m *metricNewrelicoracledbPdbTransactionsPerSecond) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4339,7 +6760,7 @@ func (m *metricNewrelicoracledbPdbUserCallsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbUserCallsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbUserCallsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4347,7 +6768,7 @@ func (m *metricNewrelicoracledbPdbUserCallsPerSecond) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4391,7 +6812,7 @@ func (m *metricNewrelicoracledbPdbUserCallsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbUserCallsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbUserCallsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4399,7 +6820,7 @@ func (m *metricNewrelicoracledbPdbUserCallsPerTransaction) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4443,7 +6864,7 @@ func (m *metricNewrelicoracledbPdbUserCommitsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbUserCommitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbUserCommitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4451,7 +6872,7 @@ func (m *metricNewrelicoracledbPdbUserCommitsPerSecond) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4495,7 +6916,7 @@ func (m *metricNewrelicoracledbPdbUserCommitsPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbUserCommitsPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbUserCommitsPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4503,7 +6924,7 @@ func (m *metricNewrelicoracledbPdbUserCommitsPercentage) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4547,7 +6968,7 @@ func (m *metricNewrelicoracledbPdbUserRollbacksPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbUserRollbacksPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbUserRollbacksPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4555,7 +6976,7 @@ func (m *metricNewrelicoracledbPdbUserRollbacksPerSecond) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4599,7 +7020,7 @@ func (m *metricNewrelicoracledbPdbUserRollbacksPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbUserRollbacksPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbUserRollbacksPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4607,7 +7028,7 @@ func (m *metricNewrelicoracledbPdbUserRollbacksPercentage) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4651,7 +7072,7 @@ func (m *metricNewrelicoracledbPdbWaitTimeRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbPdbWaitTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbPdbWaitTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4659,7 +7080,7 @@ func (m *metricNewrelicoracledbPdbWaitTimeRatio) recordDataPoint(start pcommon.T
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4688,6 +7109,872 @@ func newMetricNewrelicoracledbPdbWaitTimeRatio(cfg MetricConfig) metricNewrelico
 	return m
 }
 
+type metricNewrelicoracledbRacInstanceActiveState struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.instance.active_state metric with initial data.
+func (m *metricNewrelicoracledbRacInstanceActiveState) init() {
+	m.data.SetName("newrelicoracledb.rac.instance.active_state")
+	m.data.SetDescription("Instance active state indicator (1=NORMAL, 0=other)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacInstanceActiveState) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, activeStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
+	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
+	dp.Attributes().PutStr("active.state", activeStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacInstanceActiveState) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacInstanceActiveState) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacInstanceActiveState(cfg MetricConfig) metricNewrelicoracledbRacInstanceActiveState {
+	m := metricNewrelicoracledbRacInstanceActiveState{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacInstanceArchiverStarted struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.instance.archiver_started metric with initial data.
+func (m *metricNewrelicoracledbRacInstanceArchiverStarted) init() {
+	m.data.SetName("newrelicoracledb.rac.instance.archiver_started")
+	m.data.SetDescription("Archiver status indicator (1=STARTED, 0=STOPPED)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacInstanceArchiverStarted) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, archiverStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
+	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
+	dp.Attributes().PutStr("archiver.status", archiverStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacInstanceArchiverStarted) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacInstanceArchiverStarted) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacInstanceArchiverStarted(cfg MetricConfig) metricNewrelicoracledbRacInstanceArchiverStarted {
+	m := metricNewrelicoracledbRacInstanceArchiverStarted{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacInstanceDatabaseStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.instance.database_status metric with initial data.
+func (m *metricNewrelicoracledbRacInstanceDatabaseStatus) init() {
+	m.data.SetName("newrelicoracledb.rac.instance.database_status")
+	m.data.SetDescription("Database status indicator (1=ACTIVE, 0=other)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacInstanceDatabaseStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, databaseStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
+	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
+	dp.Attributes().PutStr("database.status", databaseStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacInstanceDatabaseStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacInstanceDatabaseStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacInstanceDatabaseStatus(cfg MetricConfig) metricNewrelicoracledbRacInstanceDatabaseStatus {
+	m := metricNewrelicoracledbRacInstanceDatabaseStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacInstanceLoginsAllowed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.instance.logins_allowed metric with initial data.
+func (m *metricNewrelicoracledbRacInstanceLoginsAllowed) init() {
+	m.data.SetName("newrelicoracledb.rac.instance.logins_allowed")
+	m.data.SetDescription("Instance login status indicator (1=ALLOWED, 0=RESTRICTED)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacInstanceLoginsAllowed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, loginsStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
+	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
+	dp.Attributes().PutStr("logins.status", loginsStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacInstanceLoginsAllowed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacInstanceLoginsAllowed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacInstanceLoginsAllowed(cfg MetricConfig) metricNewrelicoracledbRacInstanceLoginsAllowed {
+	m := metricNewrelicoracledbRacInstanceLoginsAllowed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacInstanceStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.instance.status metric with initial data.
+func (m *metricNewrelicoracledbRacInstanceStatus) init() {
+	m.data.SetName("newrelicoracledb.rac.instance.status")
+	m.data.SetDescription("RAC instance status (1=OPEN, 0=other)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacInstanceStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, instanceStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
+	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
+	dp.Attributes().PutStr("instance.status", instanceStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacInstanceStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacInstanceStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacInstanceStatus(cfg MetricConfig) metricNewrelicoracledbRacInstanceStatus {
+	m := metricNewrelicoracledbRacInstanceStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacInstanceUptimeSeconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.instance.uptime_seconds metric with initial data.
+func (m *metricNewrelicoracledbRacInstanceUptimeSeconds) init() {
+	m.data.SetName("newrelicoracledb.rac.instance.uptime_seconds")
+	m.data.SetDescription("Instance uptime in seconds since startup")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacInstanceUptimeSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
+	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacInstanceUptimeSeconds) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacInstanceUptimeSeconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacInstanceUptimeSeconds(cfg MetricConfig) metricNewrelicoracledbRacInstanceUptimeSeconds {
+	m := metricNewrelicoracledbRacInstanceUptimeSeconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacInstanceVersionInfo struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.instance.version_info metric with initial data.
+func (m *metricNewrelicoracledbRacInstanceVersionInfo) init() {
+	m.data.SetName("newrelicoracledb.rac.instance.version_info")
+	m.data.SetDescription("Oracle database version information (always 1, version in attributes)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacInstanceVersionInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, oracleVersionAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
+	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
+	dp.Attributes().PutStr("oracle.version", oracleVersionAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacInstanceVersionInfo) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacInstanceVersionInfo) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacInstanceVersionInfo(cfg MetricConfig) metricNewrelicoracledbRacInstanceVersionInfo {
+	m := metricNewrelicoracledbRacInstanceVersionInfo{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceClbConfig struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.clb_config metric with initial data.
+func (m *metricNewrelicoracledbRacServiceClbConfig) init() {
+	m.data.SetName("newrelicoracledb.rac.service.clb_config")
+	m.data.SetDescription("Connection load balancing configuration (always 1, config in attributes)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceClbConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, clbGoalAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("clb.goal", clbGoalAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceClbConfig) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceClbConfig) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceClbConfig(cfg MetricConfig) metricNewrelicoracledbRacServiceClbConfig {
+	m := metricNewrelicoracledbRacServiceClbConfig{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceCreationAgeDays struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.creation_age_days metric with initial data.
+func (m *metricNewrelicoracledbRacServiceCreationAgeDays) init() {
+	m.data.SetName("newrelicoracledb.rac.service.creation_age_days")
+	m.data.SetDescription("Service age in days since creation")
+	m.data.SetUnit("d")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceCreationAgeDays) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceCreationAgeDays) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceCreationAgeDays) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceCreationAgeDays(cfg MetricConfig) metricNewrelicoracledbRacServiceCreationAgeDays {
+	m := metricNewrelicoracledbRacServiceCreationAgeDays{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceFailoverConfig struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.failover_config metric with initial data.
+func (m *metricNewrelicoracledbRacServiceFailoverConfig) init() {
+	m.data.SetName("newrelicoracledb.rac.service.failover_config")
+	m.data.SetDescription("Service failover configuration indicator (always 1, config in attributes)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceFailoverConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("failover.method", failoverMethodAttributeValue)
+	dp.Attributes().PutStr("failover.type", failoverTypeAttributeValue)
+	dp.Attributes().PutStr("service.goal", serviceGoalAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceFailoverConfig) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceFailoverConfig) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceFailoverConfig(cfg MetricConfig) metricNewrelicoracledbRacServiceFailoverConfig {
+	m := metricNewrelicoracledbRacServiceFailoverConfig{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceFailoverDelaySeconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.failover_delay_seconds metric with initial data.
+func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) init() {
+	m.data.SetName("newrelicoracledb.rac.service.failover_delay_seconds")
+	m.data.SetDescription("Failover delay in seconds configured for the service")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceFailoverDelaySeconds(cfg MetricConfig) metricNewrelicoracledbRacServiceFailoverDelaySeconds {
+	m := metricNewrelicoracledbRacServiceFailoverDelaySeconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceFailoverRetries struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.failover_retries metric with initial data.
+func (m *metricNewrelicoracledbRacServiceFailoverRetries) init() {
+	m.data.SetName("newrelicoracledb.rac.service.failover_retries")
+	m.data.SetDescription("Number of failover retries configured for the service")
+	m.data.SetUnit("{retries}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceFailoverRetries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceFailoverRetries) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceFailoverRetries) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceFailoverRetries(cfg MetricConfig) metricNewrelicoracledbRacServiceFailoverRetries {
+	m := metricNewrelicoracledbRacServiceFailoverRetries{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceInstanceID struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.instance_id metric with initial data.
+func (m *metricNewrelicoracledbRacServiceInstanceID) init() {
+	m.data.SetName("newrelicoracledb.rac.service.instance_id")
+	m.data.SetDescription("Instance ID where the service is currently running")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceInstanceID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceInstanceID) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceInstanceID) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceInstanceID(cfg MetricConfig) metricNewrelicoracledbRacServiceInstanceID {
+	m := metricNewrelicoracledbRacServiceInstanceID{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceNetworkConfig struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.network_config metric with initial data.
+func (m *metricNewrelicoracledbRacServiceNetworkConfig) init() {
+	m.data.SetName("newrelicoracledb.rac.service.network_config")
+	m.data.SetDescription("Service network configuration (always 1, config in attributes)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceNetworkConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, networkNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("network.name", networkNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceNetworkConfig) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceNetworkConfig) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceNetworkConfig(cfg MetricConfig) metricNewrelicoracledbRacServiceNetworkConfig {
+	m := metricNewrelicoracledbRacServiceNetworkConfig{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacTotalWaits struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.total_waits metric with initial data.
+func (m *metricNewrelicoracledbRacTotalWaits) init() {
+	m.data.SetName("newrelicoracledb.rac.total_waits")
+	m.data.SetDescription("Total number of cluster wait events")
+	m.data.SetUnit("{waits}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacTotalWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, waitEventAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacTotalWaits) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacTotalWaits) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacTotalWaits(cfg MetricConfig) metricNewrelicoracledbRacTotalWaits {
+	m := metricNewrelicoracledbRacTotalWaits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacWaitTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.wait_time metric with initial data.
+func (m *metricNewrelicoracledbRacWaitTime) init() {
+	m.data.SetName("newrelicoracledb.rac.wait_time")
+	m.data.SetDescription("Rate of cluster wait time in microseconds per second")
+	m.data.SetUnit("us/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, waitEventAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
+	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacWaitTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacWaitTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacWaitTime(cfg MetricConfig) metricNewrelicoracledbRacWaitTime {
+	m := metricNewrelicoracledbRacWaitTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbRedoLogParallelWriteWaits struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -4703,7 +7990,7 @@ func (m *metricNewrelicoracledbRedoLogParallelWriteWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRedoLogParallelWriteWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRedoLogParallelWriteWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4711,7 +7998,7 @@ func (m *metricNewrelicoracledbRedoLogParallelWriteWaits) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4755,7 +8042,7 @@ func (m *metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4763,7 +8050,7 @@ func (m *metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4807,7 +8094,7 @@ func (m *metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4815,7 +8102,7 @@ func (m *metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits) recordDat
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4859,7 +8146,7 @@ func (m *metricNewrelicoracledbRedoLogSwitchCompletionWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRedoLogSwitchCompletionWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRedoLogSwitchCompletionWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4867,7 +8154,7 @@ func (m *metricNewrelicoracledbRedoLogSwitchCompletionWaits) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4911,7 +8198,7 @@ func (m *metricNewrelicoracledbRollbackSegmentsGets) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRollbackSegmentsGets) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRollbackSegmentsGets) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4919,7 +8206,7 @@ func (m *metricNewrelicoracledbRollbackSegmentsGets) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -4963,7 +8250,7 @@ func (m *metricNewrelicoracledbRollbackSegmentsWaitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRollbackSegmentsWaitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRollbackSegmentsWaitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4971,7 +8258,7 @@ func (m *metricNewrelicoracledbRollbackSegmentsWaitRatio) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5015,7 +8302,7 @@ func (m *metricNewrelicoracledbRollbackSegmentsWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRollbackSegmentsWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRollbackSegmentsWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5023,7 +8310,7 @@ func (m *metricNewrelicoracledbRollbackSegmentsWaits) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5052,6 +8339,111 @@ func newMetricNewrelicoracledbRollbackSegmentsWaits(cfg MetricConfig) metricNewr
 	return m
 }
 
+type metricNewrelicoracledbServiceCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.service.count metric with initial data.
+func (m *metricNewrelicoracledbServiceCount) init() {
+	m.data.SetName("newrelicoracledb.service.count")
+	m.data.SetDescription("Count of services per container")
+	m.data.SetUnit("{services}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbServiceCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbServiceCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbServiceCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbServiceCount(cfg MetricConfig) metricNewrelicoracledbServiceCount {
+	m := metricNewrelicoracledbServiceCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbServiceStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.service.status metric with initial data.
+func (m *metricNewrelicoracledbServiceStatus) init() {
+	m.data.SetName("newrelicoracledb.service.status")
+	m.data.SetDescription("Oracle service status (1=active, 0=inactive)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbServiceStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, serviceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbServiceStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbServiceStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbServiceStatus(cfg MetricConfig) metricNewrelicoracledbServiceStatus {
+	m := metricNewrelicoracledbServiceStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbSessionsCount struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -5067,7 +8459,7 @@ func (m *metricNewrelicoracledbSessionsCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSessionsCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string) {
+func (m *metricNewrelicoracledbSessionsCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5075,7 +8467,7 @@ func (m *metricNewrelicoracledbSessionsCount) recordDataPoint(start pcommon.Time
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -5118,7 +8510,7 @@ func (m *metricNewrelicoracledbSgaBufferBusyWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaBufferBusyWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaBufferBusyWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5126,7 +8518,7 @@ func (m *metricNewrelicoracledbSgaBufferBusyWaits) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5170,7 +8562,7 @@ func (m *metricNewrelicoracledbSgaFixedSizeBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaFixedSizeBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaFixedSizeBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5178,7 +8570,7 @@ func (m *metricNewrelicoracledbSgaFixedSizeBytes) recordDataPoint(start pcommon.
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5222,7 +8614,7 @@ func (m *metricNewrelicoracledbSgaFreeBufferInspectedWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaFreeBufferInspectedWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaFreeBufferInspectedWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5230,7 +8622,7 @@ func (m *metricNewrelicoracledbSgaFreeBufferInspectedWaits) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5274,7 +8666,7 @@ func (m *metricNewrelicoracledbSgaFreeBufferWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaFreeBufferWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaFreeBufferWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5282,7 +8674,7 @@ func (m *metricNewrelicoracledbSgaFreeBufferWaits) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5326,7 +8718,7 @@ func (m *metricNewrelicoracledbSgaHitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5334,7 +8726,7 @@ func (m *metricNewrelicoracledbSgaHitRatio) recordDataPoint(start pcommon.Timest
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5378,7 +8770,7 @@ func (m *metricNewrelicoracledbSgaLogAllocationRetriesRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaLogAllocationRetriesRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaLogAllocationRetriesRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5386,7 +8778,7 @@ func (m *metricNewrelicoracledbSgaLogAllocationRetriesRatio) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5430,7 +8822,7 @@ func (m *metricNewrelicoracledbSgaLogBufferRedoAllocationRetries) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaLogBufferRedoAllocationRetries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaLogBufferRedoAllocationRetries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5438,7 +8830,7 @@ func (m *metricNewrelicoracledbSgaLogBufferRedoAllocationRetries) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5482,7 +8874,7 @@ func (m *metricNewrelicoracledbSgaLogBufferRedoEntries) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaLogBufferRedoEntries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaLogBufferRedoEntries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5490,7 +8882,7 @@ func (m *metricNewrelicoracledbSgaLogBufferRedoEntries) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5534,7 +8926,7 @@ func (m *metricNewrelicoracledbSgaLogBufferSpaceWaits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaLogBufferSpaceWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaLogBufferSpaceWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5542,7 +8934,7 @@ func (m *metricNewrelicoracledbSgaLogBufferSpaceWaits) recordDataPoint(start pco
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5586,7 +8978,7 @@ func (m *metricNewrelicoracledbSgaRedoBuffersBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaRedoBuffersBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaRedoBuffersBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5594,7 +8986,7 @@ func (m *metricNewrelicoracledbSgaRedoBuffersBytes) recordDataPoint(start pcommo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5638,7 +9030,7 @@ func (m *metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5646,7 +9038,7 @@ func (m *metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5690,7 +9082,7 @@ func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5698,7 +9090,7 @@ func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5742,7 +9134,7 @@ func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5750,7 +9142,7 @@ func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio) recordDataP
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -5794,7 +9186,7 @@ func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5802,7 +9194,6 @@ func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
@@ -5847,7 +9238,7 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5855,7 +9246,6 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
@@ -5900,7 +9290,7 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5908,7 +9298,6 @@ func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
@@ -5953,7 +9342,7 @@ func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -5961,7 +9350,6 @@ func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
@@ -6006,7 +9394,7 @@ func (m *metricNewrelicoracledbSlowQueriesExecutionCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6014,7 +9402,6 @@ func (m *metricNewrelicoracledbSlowQueriesExecutionCount) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 }
@@ -6059,7 +9446,7 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, hasFullTableScanAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, hasFullTableScanAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6067,7 +9454,6 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
@@ -6116,7 +9502,7 @@ func (m *metricNewrelicoracledbSortsDisk) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSortsDisk) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSortsDisk) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6124,7 +9510,7 @@ func (m *metricNewrelicoracledbSortsDisk) recordDataPoint(start pcommon.Timestam
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6168,7 +9554,7 @@ func (m *metricNewrelicoracledbSortsMemory) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSortsMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSortsMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6176,7 +9562,7 @@ func (m *metricNewrelicoracledbSortsMemory) recordDataPoint(start pcommon.Timest
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6220,7 +9606,7 @@ func (m *metricNewrelicoracledbSystemActiveParallelSessions) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemActiveParallelSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemActiveParallelSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6228,7 +9614,7 @@ func (m *metricNewrelicoracledbSystemActiveParallelSessions) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6272,7 +9658,7 @@ func (m *metricNewrelicoracledbSystemActiveSerialSessions) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemActiveSerialSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemActiveSerialSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6280,7 +9666,7 @@ func (m *metricNewrelicoracledbSystemActiveSerialSessions) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6324,7 +9710,7 @@ func (m *metricNewrelicoracledbSystemAverageActiveSessions) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemAverageActiveSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemAverageActiveSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6332,7 +9718,7 @@ func (m *metricNewrelicoracledbSystemAverageActiveSessions) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6376,7 +9762,7 @@ func (m *metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6384,7 +9770,7 @@ func (m *metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond) recordDataP
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6428,7 +9814,7 @@ func (m *metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6436,7 +9822,7 @@ func (m *metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6480,7 +9866,7 @@ func (m *metricNewrelicoracledbSystemBackgroundTimePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemBackgroundTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemBackgroundTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6488,7 +9874,7 @@ func (m *metricNewrelicoracledbSystemBackgroundTimePerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6532,7 +9918,7 @@ func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6540,7 +9926,7 @@ func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerSecond) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6584,7 +9970,7 @@ func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6592,7 +9978,7 @@ func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction) recordDataP
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6636,7 +10022,7 @@ func (m *metricNewrelicoracledbSystemBufferCacheHitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemBufferCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemBufferCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6644,7 +10030,7 @@ func (m *metricNewrelicoracledbSystemBufferCacheHitRatio) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6688,7 +10074,7 @@ func (m *metricNewrelicoracledbSystemCapturedUserCalls) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCapturedUserCalls) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCapturedUserCalls) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6696,7 +10082,7 @@ func (m *metricNewrelicoracledbSystemCapturedUserCalls) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6740,7 +10126,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadChangesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemConsistentReadChangesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemConsistentReadChangesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6748,7 +10134,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadChangesPerSecond) recordDataP
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6792,7 +10178,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadChangesPerTransaction) init()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemConsistentReadChangesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemConsistentReadChangesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6800,7 +10186,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadChangesPerTransaction) record
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6844,7 +10230,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadGetsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemConsistentReadGetsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemConsistentReadGetsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6852,7 +10238,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadGetsPerSecond) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6896,7 +10282,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadGetsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemConsistentReadGetsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemConsistentReadGetsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6904,7 +10290,7 @@ func (m *metricNewrelicoracledbSystemConsistentReadGetsPerTransaction) recordDat
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -6948,7 +10334,7 @@ func (m *metricNewrelicoracledbSystemCPUUsagePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6956,7 +10342,7 @@ func (m *metricNewrelicoracledbSystemCPUUsagePerSecond) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7000,7 +10386,7 @@ func (m *metricNewrelicoracledbSystemCPUUsagePerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCPUUsagePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCPUUsagePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7008,7 +10394,7 @@ func (m *metricNewrelicoracledbSystemCPUUsagePerTransaction) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7052,7 +10438,7 @@ func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7060,7 +10446,7 @@ func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7104,7 +10490,7 @@ func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7112,7 +10498,7 @@ func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7156,7 +10542,7 @@ func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7164,7 +10550,7 @@ func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7208,7 +10594,7 @@ func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction) init() 
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7216,7 +10602,7 @@ func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction) recordD
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7260,7 +10646,7 @@ func (m *metricNewrelicoracledbSystemCurrentLogonsCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCurrentLogonsCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCurrentLogonsCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7268,7 +10654,7 @@ func (m *metricNewrelicoracledbSystemCurrentLogonsCount) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7312,7 +10698,7 @@ func (m *metricNewrelicoracledbSystemCurrentOpenCursorsCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCurrentOpenCursorsCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCurrentOpenCursorsCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7320,7 +10706,7 @@ func (m *metricNewrelicoracledbSystemCurrentOpenCursorsCount) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7364,7 +10750,7 @@ func (m *metricNewrelicoracledbSystemCurrentOsLoad) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCurrentOsLoad) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCurrentOsLoad) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7372,7 +10758,7 @@ func (m *metricNewrelicoracledbSystemCurrentOsLoad) recordDataPoint(start pcommo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7416,7 +10802,7 @@ func (m *metricNewrelicoracledbSystemCursorCacheHitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemCursorCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemCursorCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7424,7 +10810,7 @@ func (m *metricNewrelicoracledbSystemCursorCacheHitRatio) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7468,7 +10854,7 @@ func (m *metricNewrelicoracledbSystemDatabaseCPUTimeRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDatabaseCPUTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDatabaseCPUTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7476,7 +10862,7 @@ func (m *metricNewrelicoracledbSystemDatabaseCPUTimeRatio) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7520,7 +10906,7 @@ func (m *metricNewrelicoracledbSystemDatabaseTimePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDatabaseTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDatabaseTimePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7528,7 +10914,7 @@ func (m *metricNewrelicoracledbSystemDatabaseTimePerSecond) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7572,7 +10958,7 @@ func (m *metricNewrelicoracledbSystemDatabaseWaitTimeRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDatabaseWaitTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDatabaseWaitTimeRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7580,7 +10966,7 @@ func (m *metricNewrelicoracledbSystemDatabaseWaitTimeRatio) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7624,7 +11010,7 @@ func (m *metricNewrelicoracledbSystemDbBlockChangesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDbBlockChangesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDbBlockChangesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7632,7 +11018,7 @@ func (m *metricNewrelicoracledbSystemDbBlockChangesPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7676,7 +11062,7 @@ func (m *metricNewrelicoracledbSystemDbBlockChangesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDbBlockChangesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDbBlockChangesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7684,7 +11070,7 @@ func (m *metricNewrelicoracledbSystemDbBlockChangesPerTransaction) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7728,7 +11114,7 @@ func (m *metricNewrelicoracledbSystemDbBlockChangesPerUserCall) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDbBlockChangesPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDbBlockChangesPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7736,7 +11122,7 @@ func (m *metricNewrelicoracledbSystemDbBlockChangesPerUserCall) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7780,7 +11166,7 @@ func (m *metricNewrelicoracledbSystemDbBlockGetsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDbBlockGetsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDbBlockGetsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7788,7 +11174,7 @@ func (m *metricNewrelicoracledbSystemDbBlockGetsPerSecond) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7832,7 +11218,7 @@ func (m *metricNewrelicoracledbSystemDbBlockGetsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDbBlockGetsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDbBlockGetsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7840,7 +11226,7 @@ func (m *metricNewrelicoracledbSystemDbBlockGetsPerTransaction) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7884,7 +11270,7 @@ func (m *metricNewrelicoracledbSystemDbBlockGetsPerUserCall) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDbBlockGetsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDbBlockGetsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7892,7 +11278,7 @@ func (m *metricNewrelicoracledbSystemDbBlockGetsPerUserCall) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7936,7 +11322,7 @@ func (m *metricNewrelicoracledbSystemDbwrCheckpointsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDbwrCheckpointsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDbwrCheckpointsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7944,7 +11330,7 @@ func (m *metricNewrelicoracledbSystemDbwrCheckpointsPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -7988,7 +11374,7 @@ func (m *metricNewrelicoracledbSystemDiskSortPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDiskSortPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDiskSortPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7996,7 +11382,7 @@ func (m *metricNewrelicoracledbSystemDiskSortPerSecond) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8040,7 +11426,7 @@ func (m *metricNewrelicoracledbSystemDiskSortPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemDiskSortPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemDiskSortPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8048,7 +11434,7 @@ func (m *metricNewrelicoracledbSystemDiskSortPerTransaction) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8092,7 +11478,7 @@ func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8100,7 +11486,7 @@ func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8144,7 +11530,7 @@ func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8152,7 +11538,7 @@ func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction) recordDataP
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8196,7 +11582,7 @@ func (m *metricNewrelicoracledbSystemEnqueueRequestsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8204,7 +11590,7 @@ func (m *metricNewrelicoracledbSystemEnqueueRequestsPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8248,7 +11634,7 @@ func (m *metricNewrelicoracledbSystemEnqueueRequestsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueRequestsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueRequestsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8256,7 +11642,7 @@ func (m *metricNewrelicoracledbSystemEnqueueRequestsPerTransaction) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8300,7 +11686,7 @@ func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8308,7 +11694,7 @@ func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8352,7 +11738,7 @@ func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8360,7 +11746,7 @@ func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8404,7 +11790,7 @@ func (m *metricNewrelicoracledbSystemEnqueueWaitsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueWaitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueWaitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8412,7 +11798,7 @@ func (m *metricNewrelicoracledbSystemEnqueueWaitsPerSecond) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8456,7 +11842,7 @@ func (m *metricNewrelicoracledbSystemEnqueueWaitsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemEnqueueWaitsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemEnqueueWaitsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8464,7 +11850,7 @@ func (m *metricNewrelicoracledbSystemEnqueueWaitsPerTransaction) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8508,7 +11894,7 @@ func (m *metricNewrelicoracledbSystemExecuteWithoutParseRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemExecuteWithoutParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemExecuteWithoutParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8516,7 +11902,7 @@ func (m *metricNewrelicoracledbSystemExecuteWithoutParseRatio) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8560,7 +11946,7 @@ func (m *metricNewrelicoracledbSystemExecutionsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemExecutionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemExecutionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8568,7 +11954,7 @@ func (m *metricNewrelicoracledbSystemExecutionsPerSecond) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8612,7 +11998,7 @@ func (m *metricNewrelicoracledbSystemExecutionsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemExecutionsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemExecutionsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8620,7 +12006,7 @@ func (m *metricNewrelicoracledbSystemExecutionsPerTransaction) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8664,7 +12050,7 @@ func (m *metricNewrelicoracledbSystemExecutionsPerUserCall) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemExecutionsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemExecutionsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8672,7 +12058,7 @@ func (m *metricNewrelicoracledbSystemExecutionsPerUserCall) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8716,7 +12102,7 @@ func (m *metricNewrelicoracledbSystemFullIndexScansPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemFullIndexScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemFullIndexScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8724,7 +12110,7 @@ func (m *metricNewrelicoracledbSystemFullIndexScansPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8768,7 +12154,7 @@ func (m *metricNewrelicoracledbSystemFullIndexScansPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemFullIndexScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemFullIndexScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8776,7 +12162,7 @@ func (m *metricNewrelicoracledbSystemFullIndexScansPerTransaction) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8820,7 +12206,7 @@ func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8828,7 +12214,7 @@ func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8872,7 +12258,7 @@ func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8880,7 +12266,7 @@ func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction) recordData
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8924,7 +12310,7 @@ func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8932,7 +12318,7 @@ func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond) recordData
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -8976,7 +12362,7 @@ func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction) init(
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8984,7 +12370,7 @@ func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction) recor
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9028,7 +12414,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9036,7 +12422,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9080,7 +12466,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9088,7 +12474,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime) recordDat
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9132,7 +12518,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9140,7 +12526,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9184,7 +12570,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheBlocksLost) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemGlobalCacheBlocksLost) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemGlobalCacheBlocksLost) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9192,7 +12578,7 @@ func (m *metricNewrelicoracledbSystemGlobalCacheBlocksLost) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9236,7 +12622,7 @@ func (m *metricNewrelicoracledbSystemHardParseCountPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemHardParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemHardParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9244,7 +12630,7 @@ func (m *metricNewrelicoracledbSystemHardParseCountPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9288,7 +12674,7 @@ func (m *metricNewrelicoracledbSystemHardParseCountPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemHardParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemHardParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9296,7 +12682,7 @@ func (m *metricNewrelicoracledbSystemHardParseCountPerTransaction) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9340,7 +12726,7 @@ func (m *metricNewrelicoracledbSystemHostCPUUsagePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemHostCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemHostCPUUsagePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9348,7 +12734,7 @@ func (m *metricNewrelicoracledbSystemHostCPUUsagePerSecond) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9392,7 +12778,7 @@ func (m *metricNewrelicoracledbSystemHostCPUUtilization) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemHostCPUUtilization) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemHostCPUUtilization) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9400,7 +12786,7 @@ func (m *metricNewrelicoracledbSystemHostCPUUtilization) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9444,7 +12830,7 @@ func (m *metricNewrelicoracledbSystemIoMegabytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemIoMegabytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemIoMegabytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9452,7 +12838,7 @@ func (m *metricNewrelicoracledbSystemIoMegabytesPerSecond) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9496,7 +12882,7 @@ func (m *metricNewrelicoracledbSystemIoRequestsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9504,7 +12890,7 @@ func (m *metricNewrelicoracledbSystemIoRequestsPerSecond) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9548,7 +12934,7 @@ func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9556,7 +12942,7 @@ func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9600,7 +12986,7 @@ func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9608,7 +12994,7 @@ func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9652,7 +13038,7 @@ func (m *metricNewrelicoracledbSystemLibraryCacheHitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLibraryCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLibraryCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9660,7 +13046,7 @@ func (m *metricNewrelicoracledbSystemLibraryCacheHitRatio) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9704,7 +13090,7 @@ func (m *metricNewrelicoracledbSystemLibraryCacheMissRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLibraryCacheMissRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLibraryCacheMissRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9712,7 +13098,7 @@ func (m *metricNewrelicoracledbSystemLibraryCacheMissRatio) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9756,7 +13142,7 @@ func (m *metricNewrelicoracledbSystemLogicalReadsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLogicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLogicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9764,7 +13150,7 @@ func (m *metricNewrelicoracledbSystemLogicalReadsPerSecond) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9808,7 +13194,7 @@ func (m *metricNewrelicoracledbSystemLogicalReadsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLogicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLogicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9816,7 +13202,7 @@ func (m *metricNewrelicoracledbSystemLogicalReadsPerTransaction) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9860,7 +13246,7 @@ func (m *metricNewrelicoracledbSystemLogicalReadsPerUserCall) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLogicalReadsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLogicalReadsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9868,7 +13254,7 @@ func (m *metricNewrelicoracledbSystemLogicalReadsPerUserCall) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9912,7 +13298,7 @@ func (m *metricNewrelicoracledbSystemLogonsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLogonsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLogonsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9920,7 +13306,7 @@ func (m *metricNewrelicoracledbSystemLogonsPerSecond) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -9964,7 +13350,7 @@ func (m *metricNewrelicoracledbSystemLogonsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLogonsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLogonsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9972,7 +13358,7 @@ func (m *metricNewrelicoracledbSystemLogonsPerTransaction) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10016,7 +13402,7 @@ func (m *metricNewrelicoracledbSystemLongTableScansPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLongTableScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLongTableScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10024,7 +13410,7 @@ func (m *metricNewrelicoracledbSystemLongTableScansPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10068,7 +13454,7 @@ func (m *metricNewrelicoracledbSystemLongTableScansPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemLongTableScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemLongTableScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10076,7 +13462,7 @@ func (m *metricNewrelicoracledbSystemLongTableScansPerTransaction) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10120,7 +13506,7 @@ func (m *metricNewrelicoracledbSystemMemorySortsRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemMemorySortsRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemMemorySortsRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10128,7 +13514,7 @@ func (m *metricNewrelicoracledbSystemMemorySortsRatio) recordDataPoint(start pco
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10172,7 +13558,7 @@ func (m *metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10180,7 +13566,7 @@ func (m *metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10224,7 +13610,7 @@ func (m *metricNewrelicoracledbSystemOpenCursorsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemOpenCursorsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemOpenCursorsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10232,7 +13618,7 @@ func (m *metricNewrelicoracledbSystemOpenCursorsPerSecond) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10276,7 +13662,7 @@ func (m *metricNewrelicoracledbSystemOpenCursorsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemOpenCursorsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemOpenCursorsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10284,7 +13670,7 @@ func (m *metricNewrelicoracledbSystemOpenCursorsPerTransaction) recordDataPoint(
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10328,7 +13714,7 @@ func (m *metricNewrelicoracledbSystemParseFailureCountPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemParseFailureCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemParseFailureCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10336,7 +13722,7 @@ func (m *metricNewrelicoracledbSystemParseFailureCountPerSecond) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10380,7 +13766,7 @@ func (m *metricNewrelicoracledbSystemParseFailureCountPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemParseFailureCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemParseFailureCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10388,7 +13774,7 @@ func (m *metricNewrelicoracledbSystemParseFailureCountPerTransaction) recordData
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10432,7 +13818,7 @@ func (m *metricNewrelicoracledbSystemPgaCacheHitPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPgaCacheHitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPgaCacheHitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10440,7 +13826,7 @@ func (m *metricNewrelicoracledbSystemPgaCacheHitPercentage) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10484,7 +13870,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10492,7 +13878,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10536,7 +13922,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10544,7 +13930,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction) recordData
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10588,7 +13974,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10596,7 +13982,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10640,7 +14026,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10648,7 +14034,7 @@ func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction) recordDat
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10692,7 +14078,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10700,7 +14086,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadBytesPerSecond) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10744,7 +14130,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10752,7 +14138,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond) recordData
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10796,7 +14182,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10804,7 +14190,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond) recordData
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10848,7 +14234,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond) init(
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10856,7 +14242,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond) recor
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10900,7 +14286,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10908,7 +14294,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -10952,7 +14338,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10960,7 +14346,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction) recordDa
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11004,7 +14390,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11012,7 +14398,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsPerSecond) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11056,7 +14442,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalReadsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11064,7 +14450,7 @@ func (m *metricNewrelicoracledbSystemPhysicalReadsPerTransaction) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11108,7 +14494,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11116,7 +14502,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11160,7 +14546,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11168,7 +14554,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond) recordDat
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11212,7 +14598,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11220,7 +14606,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond) recordDat
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11264,7 +14650,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond) init
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11272,7 +14658,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond) reco
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11316,7 +14702,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11324,7 +14710,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11368,7 +14754,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction) init() 
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11376,7 +14762,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction) recordD
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11420,7 +14806,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11428,7 +14814,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11472,7 +14858,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemPhysicalWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemPhysicalWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11480,7 +14866,7 @@ func (m *metricNewrelicoracledbSystemPhysicalWritesPerTransaction) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11524,7 +14910,7 @@ func (m *metricNewrelicoracledbSystemProcessLimitPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemProcessLimitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemProcessLimitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11532,7 +14918,7 @@ func (m *metricNewrelicoracledbSystemProcessLimitPercentage) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11576,7 +14962,7 @@ func (m *metricNewrelicoracledbSystemRecursiveCallsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRecursiveCallsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRecursiveCallsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11584,7 +14970,7 @@ func (m *metricNewrelicoracledbSystemRecursiveCallsPerSecond) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11628,7 +15014,7 @@ func (m *metricNewrelicoracledbSystemRecursiveCallsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRecursiveCallsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRecursiveCallsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11636,7 +15022,7 @@ func (m *metricNewrelicoracledbSystemRecursiveCallsPerTransaction) recordDataPoi
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11680,7 +15066,7 @@ func (m *metricNewrelicoracledbSystemRedoAllocationHitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRedoAllocationHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRedoAllocationHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11688,7 +15074,7 @@ func (m *metricNewrelicoracledbSystemRedoAllocationHitRatio) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11732,7 +15118,7 @@ func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11740,7 +15126,7 @@ func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond) recordDataPoin
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11784,7 +15170,7 @@ func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11792,7 +15178,7 @@ func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction) recordDat
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11836,7 +15222,7 @@ func (m *metricNewrelicoracledbSystemRedoWritesPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRedoWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRedoWritesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11844,7 +15230,7 @@ func (m *metricNewrelicoracledbSystemRedoWritesPerSecond) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11888,7 +15274,7 @@ func (m *metricNewrelicoracledbSystemRedoWritesPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRedoWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRedoWritesPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11896,7 +15282,7 @@ func (m *metricNewrelicoracledbSystemRedoWritesPerTransaction) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11940,7 +15326,7 @@ func (m *metricNewrelicoracledbSystemResponseTimePerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemResponseTimePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemResponseTimePerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -11948,7 +15334,7 @@ func (m *metricNewrelicoracledbSystemResponseTimePerTransaction) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -11992,7 +15378,7 @@ func (m *metricNewrelicoracledbSystemRowCacheHitRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRowCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRowCacheHitRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12000,7 +15386,7 @@ func (m *metricNewrelicoracledbSystemRowCacheHitRatio) recordDataPoint(start pco
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12044,7 +15430,7 @@ func (m *metricNewrelicoracledbSystemRowCacheMissRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRowCacheMissRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRowCacheMissRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12052,7 +15438,7 @@ func (m *metricNewrelicoracledbSystemRowCacheMissRatio) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12096,7 +15482,7 @@ func (m *metricNewrelicoracledbSystemRowsPerSort) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemRowsPerSort) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemRowsPerSort) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12104,7 +15490,7 @@ func (m *metricNewrelicoracledbSystemRowsPerSort) recordDataPoint(start pcommon.
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12148,7 +15534,7 @@ func (m *metricNewrelicoracledbSystemSessionCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemSessionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemSessionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12156,7 +15542,7 @@ func (m *metricNewrelicoracledbSystemSessionCount) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12200,7 +15586,7 @@ func (m *metricNewrelicoracledbSystemSessionLimitPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemSessionLimitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemSessionLimitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12208,7 +15594,7 @@ func (m *metricNewrelicoracledbSystemSessionLimitPercentage) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12252,7 +15638,7 @@ func (m *metricNewrelicoracledbSystemSharedPoolFreePercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemSharedPoolFreePercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemSharedPoolFreePercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12260,7 +15646,7 @@ func (m *metricNewrelicoracledbSystemSharedPoolFreePercentage) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12304,7 +15690,7 @@ func (m *metricNewrelicoracledbSystemSoftParseRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemSoftParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemSoftParseRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12312,7 +15698,7 @@ func (m *metricNewrelicoracledbSystemSoftParseRatio) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12356,7 +15742,7 @@ func (m *metricNewrelicoracledbSystemSQLServiceResponseTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemSQLServiceResponseTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemSQLServiceResponseTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12364,7 +15750,7 @@ func (m *metricNewrelicoracledbSystemSQLServiceResponseTime) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12408,7 +15794,7 @@ func (m *metricNewrelicoracledbSystemStreamsPoolUsagePercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemStreamsPoolUsagePercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemStreamsPoolUsagePercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12416,7 +15802,7 @@ func (m *metricNewrelicoracledbSystemStreamsPoolUsagePercentage) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12460,7 +15846,7 @@ func (m *metricNewrelicoracledbSystemTempSpaceUsed) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTempSpaceUsed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTempSpaceUsed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12468,7 +15854,7 @@ func (m *metricNewrelicoracledbSystemTempSpaceUsed) recordDataPoint(start pcommo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12512,7 +15898,7 @@ func (m *metricNewrelicoracledbSystemTotalIndexScansPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalIndexScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalIndexScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12520,7 +15906,7 @@ func (m *metricNewrelicoracledbSystemTotalIndexScansPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12564,7 +15950,7 @@ func (m *metricNewrelicoracledbSystemTotalIndexScansPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalIndexScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalIndexScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12572,7 +15958,7 @@ func (m *metricNewrelicoracledbSystemTotalIndexScansPerTransaction) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12616,7 +16002,7 @@ func (m *metricNewrelicoracledbSystemTotalParseCountPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalParseCountPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12624,7 +16010,7 @@ func (m *metricNewrelicoracledbSystemTotalParseCountPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12668,7 +16054,7 @@ func (m *metricNewrelicoracledbSystemTotalParseCountPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalParseCountPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12676,7 +16062,7 @@ func (m *metricNewrelicoracledbSystemTotalParseCountPerTransaction) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12720,7 +16106,7 @@ func (m *metricNewrelicoracledbSystemTotalSortsPerUserCall) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalSortsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalSortsPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12728,7 +16114,7 @@ func (m *metricNewrelicoracledbSystemTotalSortsPerUserCall) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12772,7 +16158,7 @@ func (m *metricNewrelicoracledbSystemTotalTableScansPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalTableScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalTableScansPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12780,7 +16166,7 @@ func (m *metricNewrelicoracledbSystemTotalTableScansPerSecond) recordDataPoint(s
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12824,7 +16210,7 @@ func (m *metricNewrelicoracledbSystemTotalTableScansPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalTableScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalTableScansPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12832,7 +16218,7 @@ func (m *metricNewrelicoracledbSystemTotalTableScansPerTransaction) recordDataPo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12876,7 +16262,7 @@ func (m *metricNewrelicoracledbSystemTotalTableScansPerUserCall) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTotalTableScansPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTotalTableScansPerUserCall) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12884,7 +16270,7 @@ func (m *metricNewrelicoracledbSystemTotalTableScansPerUserCall) recordDataPoint
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12928,7 +16314,7 @@ func (m *metricNewrelicoracledbSystemTransactionsPerLogon) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTransactionsPerLogon) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTransactionsPerLogon) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12936,7 +16322,7 @@ func (m *metricNewrelicoracledbSystemTransactionsPerLogon) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -12980,7 +16366,7 @@ func (m *metricNewrelicoracledbSystemTransactionsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemTransactionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemTransactionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -12988,7 +16374,7 @@ func (m *metricNewrelicoracledbSystemTransactionsPerSecond) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13032,7 +16418,7 @@ func (m *metricNewrelicoracledbSystemUserCallsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserCallsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserCallsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13040,7 +16426,7 @@ func (m *metricNewrelicoracledbSystemUserCallsPerSecond) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13084,7 +16470,7 @@ func (m *metricNewrelicoracledbSystemUserCallsPerTransaction) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserCallsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserCallsPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13092,7 +16478,7 @@ func (m *metricNewrelicoracledbSystemUserCallsPerTransaction) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13136,7 +16522,7 @@ func (m *metricNewrelicoracledbSystemUserCallsRatio) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserCallsRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserCallsRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13144,7 +16530,7 @@ func (m *metricNewrelicoracledbSystemUserCallsRatio) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13188,7 +16574,7 @@ func (m *metricNewrelicoracledbSystemUserCommitsPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserCommitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserCommitsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13196,7 +16582,7 @@ func (m *metricNewrelicoracledbSystemUserCommitsPerSecond) recordDataPoint(start
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13240,7 +16626,7 @@ func (m *metricNewrelicoracledbSystemUserCommitsPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserCommitsPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserCommitsPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13248,7 +16634,7 @@ func (m *metricNewrelicoracledbSystemUserCommitsPercentage) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13292,7 +16678,7 @@ func (m *metricNewrelicoracledbSystemUserLimitPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserLimitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserLimitPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13300,7 +16686,7 @@ func (m *metricNewrelicoracledbSystemUserLimitPercentage) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13344,7 +16730,7 @@ func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond) in
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13352,7 +16738,7 @@ func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond) re
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13396,7 +16782,7 @@ func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransactio
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13404,7 +16790,7 @@ func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransactio
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13448,7 +16834,7 @@ func (m *metricNewrelicoracledbSystemUserRollbacksPerSecond) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserRollbacksPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserRollbacksPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13456,7 +16842,7 @@ func (m *metricNewrelicoracledbSystemUserRollbacksPerSecond) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13500,7 +16886,7 @@ func (m *metricNewrelicoracledbSystemUserRollbacksPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSystemUserRollbacksPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbSystemUserRollbacksPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13508,7 +16894,7 @@ func (m *metricNewrelicoracledbSystemUserRollbacksPercentage) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
@@ -13552,7 +16938,7 @@ func (m *metricNewrelicoracledbTablespaceDbID) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13560,7 +16946,7 @@ func (m *metricNewrelicoracledbTablespaceDbID) recordDataPoint(start pcommon.Tim
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13604,7 +16990,7 @@ func (m *metricNewrelicoracledbTablespaceGlobalName) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13612,7 +16998,7 @@ func (m *metricNewrelicoracledbTablespaceGlobalName) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13656,7 +17042,7 @@ func (m *metricNewrelicoracledbTablespaceIsOffline) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceIsOffline) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceIsOffline) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13664,7 +17050,7 @@ func (m *metricNewrelicoracledbTablespaceIsOffline) recordDataPoint(start pcommo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13708,7 +17094,7 @@ func (m *metricNewrelicoracledbTablespaceOfflineCdbDatafiles) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceOfflineCdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceOfflineCdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13716,7 +17102,7 @@ func (m *metricNewrelicoracledbTablespaceOfflineCdbDatafiles) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13760,7 +17146,7 @@ func (m *metricNewrelicoracledbTablespaceOfflinePdbDatafiles) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceOfflinePdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceOfflinePdbDatafiles) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13768,7 +17154,7 @@ func (m *metricNewrelicoracledbTablespaceOfflinePdbDatafiles) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13812,7 +17198,7 @@ func (m *metricNewrelicoracledbTablespacePdbNonWriteMode) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespacePdbNonWriteMode) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespacePdbNonWriteMode) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13820,7 +17206,7 @@ func (m *metricNewrelicoracledbTablespacePdbNonWriteMode) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13864,7 +17250,7 @@ func (m *metricNewrelicoracledbTablespaceSpaceConsumedBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceSpaceConsumedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceSpaceConsumedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13872,7 +17258,7 @@ func (m *metricNewrelicoracledbTablespaceSpaceConsumedBytes) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13916,7 +17302,7 @@ func (m *metricNewrelicoracledbTablespaceSpaceReservedBytes) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceSpaceReservedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceSpaceReservedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13924,7 +17310,7 @@ func (m *metricNewrelicoracledbTablespaceSpaceReservedBytes) recordDataPoint(sta
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -13968,7 +17354,7 @@ func (m *metricNewrelicoracledbTablespaceSpaceUsedPercentage) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceSpaceUsedPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceSpaceUsedPercentage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -13976,7 +17362,7 @@ func (m *metricNewrelicoracledbTablespaceSpaceUsedPercentage) recordDataPoint(st
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
 }
 
@@ -14005,6 +17391,165 @@ func newMetricNewrelicoracledbTablespaceSpaceUsedPercentage(cfg MetricConfig) me
 	return m
 }
 
+type metricNewrelicoracledbTablespaceTotalBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.tablespace.total_bytes metric with initial data.
+func (m *metricNewrelicoracledbTablespaceTotalBytes) init() {
+	m.data.SetName("newrelicoracledb.tablespace.total_bytes")
+	m.data.SetDescription("Total bytes in tablespace")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbTablespaceTotalBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbTablespaceTotalBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbTablespaceTotalBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbTablespaceTotalBytes(cfg MetricConfig) metricNewrelicoracledbTablespaceTotalBytes {
+	m := metricNewrelicoracledbTablespaceTotalBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbTablespaceUsedBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.tablespace.used_bytes metric with initial data.
+func (m *metricNewrelicoracledbTablespaceUsedBytes) init() {
+	m.data.SetName("newrelicoracledb.tablespace.used_bytes")
+	m.data.SetDescription("Used bytes in tablespace")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbTablespaceUsedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbTablespaceUsedBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbTablespaceUsedBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbTablespaceUsedBytes(cfg MetricConfig) metricNewrelicoracledbTablespaceUsedBytes {
+	m := metricNewrelicoracledbTablespaceUsedBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbTablespaceUsedPercent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.tablespace.used_percent metric with initial data.
+func (m *metricNewrelicoracledbTablespaceUsedPercent) init() {
+	m.data.SetName("newrelicoracledb.tablespace.used_percent")
+	m.data.SetDescription("Used percentage of tablespace")
+	m.data.SetUnit("%")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbTablespaceUsedPercent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("con.id", conIDAttributeValue)
+	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbTablespaceUsedPercent) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbTablespaceUsedPercent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbTablespaceUsedPercent(cfg MetricConfig) metricNewrelicoracledbTablespaceUsedPercent {
+	m := metricNewrelicoracledbTablespaceUsedPercent{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbWaitEventsAvgWaitTimeMs struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -14020,7 +17565,7 @@ func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -14028,7 +17573,6 @@ func (m *metricNewrelicoracledbWaitEventsAvgWaitTimeMs) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
@@ -14075,7 +17619,7 @@ func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -14083,7 +17627,6 @@ func (m *metricNewrelicoracledbWaitEventsTotalWaitTimeMs) recordDataPoint(start 
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
@@ -14130,7 +17673,7 @@ func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -14138,7 +17681,6 @@ func (m *metricNewrelicoracledbWaitEventsWaitingTasksCount) recordDataPoint(star
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelic.entity_name", newrelicEntityNameAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
@@ -14180,7 +17722,45 @@ type MetricsBuilder struct {
 	buildInfo                                                                component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                                           map[string]filter.Filter
 	resourceAttributeExcludeFilter                                           map[string]filter.Filter
+	metricNewrelicoracledbAsmDiskgroupFreeMb                                 metricNewrelicoracledbAsmDiskgroupFreeMb
+	metricNewrelicoracledbAsmDiskgroupOfflineDisks                           metricNewrelicoracledbAsmDiskgroupOfflineDisks
+	metricNewrelicoracledbAsmDiskgroupTotalMb                                metricNewrelicoracledbAsmDiskgroupTotalMb
 	metricNewrelicoracledbBlockingQueriesWaitTime                            metricNewrelicoracledbBlockingQueriesWaitTime
+	metricNewrelicoracledbConnectionActiveSessions                           metricNewrelicoracledbConnectionActiveSessions
+	metricNewrelicoracledbConnectionBlockingSessions                         metricNewrelicoracledbConnectionBlockingSessions
+	metricNewrelicoracledbConnectionBytesReceived                            metricNewrelicoracledbConnectionBytesReceived
+	metricNewrelicoracledbConnectionBytesSent                                metricNewrelicoracledbConnectionBytesSent
+	metricNewrelicoracledbConnectionCircuits                                 metricNewrelicoracledbConnectionCircuits
+	metricNewrelicoracledbConnectionDispatchers                              metricNewrelicoracledbConnectionDispatchers
+	metricNewrelicoracledbConnectionExecuteCount                             metricNewrelicoracledbConnectionExecuteCount
+	metricNewrelicoracledbConnectionInactiveSessions                         metricNewrelicoracledbConnectionInactiveSessions
+	metricNewrelicoracledbConnectionLogonsCumulative                         metricNewrelicoracledbConnectionLogonsCumulative
+	metricNewrelicoracledbConnectionLogonsCurrent                            metricNewrelicoracledbConnectionLogonsCurrent
+	metricNewrelicoracledbConnectionParseCountHard                           metricNewrelicoracledbConnectionParseCountHard
+	metricNewrelicoracledbConnectionParseCountTotal                          metricNewrelicoracledbConnectionParseCountTotal
+	metricNewrelicoracledbConnectionResourceCurrentUtilization               metricNewrelicoracledbConnectionResourceCurrentUtilization
+	metricNewrelicoracledbConnectionResourceLimit                            metricNewrelicoracledbConnectionResourceLimit
+	metricNewrelicoracledbConnectionResourceMaxUtilization                   metricNewrelicoracledbConnectionResourceMaxUtilization
+	metricNewrelicoracledbConnectionSessionCPUUsage                          metricNewrelicoracledbConnectionSessionCPUUsage
+	metricNewrelicoracledbConnectionSessionIdleTime                          metricNewrelicoracledbConnectionSessionIdleTime
+	metricNewrelicoracledbConnectionSessionLogicalReads                      metricNewrelicoracledbConnectionSessionLogicalReads
+	metricNewrelicoracledbConnectionSessionPgaMemory                         metricNewrelicoracledbConnectionSessionPgaMemory
+	metricNewrelicoracledbConnectionSessionsByStatus                         metricNewrelicoracledbConnectionSessionsByStatus
+	metricNewrelicoracledbConnectionSessionsByType                           metricNewrelicoracledbConnectionSessionsByType
+	metricNewrelicoracledbConnectionSharedServers                            metricNewrelicoracledbConnectionSharedServers
+	metricNewrelicoracledbConnectionSqlnetRoundtrips                         metricNewrelicoracledbConnectionSqlnetRoundtrips
+	metricNewrelicoracledbConnectionTotalSessions                            metricNewrelicoracledbConnectionTotalSessions
+	metricNewrelicoracledbConnectionUserCommits                              metricNewrelicoracledbConnectionUserCommits
+	metricNewrelicoracledbConnectionUserRollbacks                            metricNewrelicoracledbConnectionUserRollbacks
+	metricNewrelicoracledbConnectionWaitEventAvgWaitTime                     metricNewrelicoracledbConnectionWaitEventAvgWaitTime
+	metricNewrelicoracledbConnectionWaitEventTimeWaited                      metricNewrelicoracledbConnectionWaitEventTimeWaited
+	metricNewrelicoracledbConnectionWaitEventTotalWaits                      metricNewrelicoracledbConnectionWaitEventTotalWaits
+	metricNewrelicoracledbConnectionWaitEvents                               metricNewrelicoracledbConnectionWaitEvents
+	metricNewrelicoracledbContainerRestricted                                metricNewrelicoracledbContainerRestricted
+	metricNewrelicoracledbContainerStatus                                    metricNewrelicoracledbContainerStatus
+	metricNewrelicoracledbDatafileAutoextensible                             metricNewrelicoracledbDatafileAutoextensible
+	metricNewrelicoracledbDatafileSizeBytes                                  metricNewrelicoracledbDatafileSizeBytes
+	metricNewrelicoracledbDatafileUsedBytes                                  metricNewrelicoracledbDatafileUsedBytes
 	metricNewrelicoracledbDbID                                               metricNewrelicoracledbDbID
 	metricNewrelicoracledbDiskBlocksRead                                     metricNewrelicoracledbDiskBlocksRead
 	metricNewrelicoracledbDiskBlocksWritten                                  metricNewrelicoracledbDiskBlocksWritten
@@ -14229,6 +17809,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbPdbNetworkTrafficBytePerSecond                     metricNewrelicoracledbPdbNetworkTrafficBytePerSecond
 	metricNewrelicoracledbPdbOpenCursorsPerSecond                            metricNewrelicoracledbPdbOpenCursorsPerSecond
 	metricNewrelicoracledbPdbOpenCursorsPerTransaction                       metricNewrelicoracledbPdbOpenCursorsPerTransaction
+	metricNewrelicoracledbPdbOpenMode                                        metricNewrelicoracledbPdbOpenMode
 	metricNewrelicoracledbPdbParseFailureCountPerSecond                      metricNewrelicoracledbPdbParseFailureCountPerSecond
 	metricNewrelicoracledbPdbPhysicalReadBytesPerSecond                      metricNewrelicoracledbPdbPhysicalReadBytesPerSecond
 	metricNewrelicoracledbPdbPhysicalReadsPerTransaction                     metricNewrelicoracledbPdbPhysicalReadsPerTransaction
@@ -14240,8 +17821,10 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbPdbSessionCount                                    metricNewrelicoracledbPdbSessionCount
 	metricNewrelicoracledbPdbSoftParseRatio                                  metricNewrelicoracledbPdbSoftParseRatio
 	metricNewrelicoracledbPdbSQLServiceResponseTime                          metricNewrelicoracledbPdbSQLServiceResponseTime
+	metricNewrelicoracledbPdbStatus                                          metricNewrelicoracledbPdbStatus
 	metricNewrelicoracledbPdbTotalParseCountPerSecond                        metricNewrelicoracledbPdbTotalParseCountPerSecond
 	metricNewrelicoracledbPdbTotalParseCountPerTransaction                   metricNewrelicoracledbPdbTotalParseCountPerTransaction
+	metricNewrelicoracledbPdbTotalSizeBytes                                  metricNewrelicoracledbPdbTotalSizeBytes
 	metricNewrelicoracledbPdbTransactionsPerSecond                           metricNewrelicoracledbPdbTransactionsPerSecond
 	metricNewrelicoracledbPdbUserCallsPerSecond                              metricNewrelicoracledbPdbUserCallsPerSecond
 	metricNewrelicoracledbPdbUserCallsPerTransaction                         metricNewrelicoracledbPdbUserCallsPerTransaction
@@ -14250,6 +17833,22 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbPdbUserRollbacksPerSecond                          metricNewrelicoracledbPdbUserRollbacksPerSecond
 	metricNewrelicoracledbPdbUserRollbacksPercentage                         metricNewrelicoracledbPdbUserRollbacksPercentage
 	metricNewrelicoracledbPdbWaitTimeRatio                                   metricNewrelicoracledbPdbWaitTimeRatio
+	metricNewrelicoracledbRacInstanceActiveState                             metricNewrelicoracledbRacInstanceActiveState
+	metricNewrelicoracledbRacInstanceArchiverStarted                         metricNewrelicoracledbRacInstanceArchiverStarted
+	metricNewrelicoracledbRacInstanceDatabaseStatus                          metricNewrelicoracledbRacInstanceDatabaseStatus
+	metricNewrelicoracledbRacInstanceLoginsAllowed                           metricNewrelicoracledbRacInstanceLoginsAllowed
+	metricNewrelicoracledbRacInstanceStatus                                  metricNewrelicoracledbRacInstanceStatus
+	metricNewrelicoracledbRacInstanceUptimeSeconds                           metricNewrelicoracledbRacInstanceUptimeSeconds
+	metricNewrelicoracledbRacInstanceVersionInfo                             metricNewrelicoracledbRacInstanceVersionInfo
+	metricNewrelicoracledbRacServiceClbConfig                                metricNewrelicoracledbRacServiceClbConfig
+	metricNewrelicoracledbRacServiceCreationAgeDays                          metricNewrelicoracledbRacServiceCreationAgeDays
+	metricNewrelicoracledbRacServiceFailoverConfig                           metricNewrelicoracledbRacServiceFailoverConfig
+	metricNewrelicoracledbRacServiceFailoverDelaySeconds                     metricNewrelicoracledbRacServiceFailoverDelaySeconds
+	metricNewrelicoracledbRacServiceFailoverRetries                          metricNewrelicoracledbRacServiceFailoverRetries
+	metricNewrelicoracledbRacServiceInstanceID                               metricNewrelicoracledbRacServiceInstanceID
+	metricNewrelicoracledbRacServiceNetworkConfig                            metricNewrelicoracledbRacServiceNetworkConfig
+	metricNewrelicoracledbRacTotalWaits                                      metricNewrelicoracledbRacTotalWaits
+	metricNewrelicoracledbRacWaitTime                                        metricNewrelicoracledbRacWaitTime
 	metricNewrelicoracledbRedoLogParallelWriteWaits                          metricNewrelicoracledbRedoLogParallelWriteWaits
 	metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits                  metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits
 	metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits             metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits
@@ -14257,6 +17856,8 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbRollbackSegmentsGets                               metricNewrelicoracledbRollbackSegmentsGets
 	metricNewrelicoracledbRollbackSegmentsWaitRatio                          metricNewrelicoracledbRollbackSegmentsWaitRatio
 	metricNewrelicoracledbRollbackSegmentsWaits                              metricNewrelicoracledbRollbackSegmentsWaits
+	metricNewrelicoracledbServiceCount                                       metricNewrelicoracledbServiceCount
+	metricNewrelicoracledbServiceStatus                                      metricNewrelicoracledbServiceStatus
 	metricNewrelicoracledbSessionsCount                                      metricNewrelicoracledbSessionsCount
 	metricNewrelicoracledbSgaBufferBusyWaits                                 metricNewrelicoracledbSgaBufferBusyWaits
 	metricNewrelicoracledbSgaFixedSizeBytes                                  metricNewrelicoracledbSgaFixedSizeBytes
@@ -14429,6 +18030,9 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbTablespaceSpaceConsumedBytes                       metricNewrelicoracledbTablespaceSpaceConsumedBytes
 	metricNewrelicoracledbTablespaceSpaceReservedBytes                       metricNewrelicoracledbTablespaceSpaceReservedBytes
 	metricNewrelicoracledbTablespaceSpaceUsedPercentage                      metricNewrelicoracledbTablespaceSpaceUsedPercentage
+	metricNewrelicoracledbTablespaceTotalBytes                               metricNewrelicoracledbTablespaceTotalBytes
+	metricNewrelicoracledbTablespaceUsedBytes                                metricNewrelicoracledbTablespaceUsedBytes
+	metricNewrelicoracledbTablespaceUsedPercent                              metricNewrelicoracledbTablespaceUsedPercent
 	metricNewrelicoracledbWaitEventsAvgWaitTimeMs                            metricNewrelicoracledbWaitEventsAvgWaitTimeMs
 	metricNewrelicoracledbWaitEventsTotalWaitTimeMs                          metricNewrelicoracledbWaitEventsTotalWaitTimeMs
 	metricNewrelicoracledbWaitEventsWaitingTasksCount                        metricNewrelicoracledbWaitEventsWaitingTasksCount
@@ -14453,11 +18057,49 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:        mbc,
-		startTime:     pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer: pmetric.NewMetrics(),
-		buildInfo:     settings.BuildInfo,
+		config:                                   mbc,
+		startTime:                                pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                            pmetric.NewMetrics(),
+		buildInfo:                                settings.BuildInfo,
+		metricNewrelicoracledbAsmDiskgroupFreeMb: newMetricNewrelicoracledbAsmDiskgroupFreeMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupFreeMb),
+		metricNewrelicoracledbAsmDiskgroupOfflineDisks:                           newMetricNewrelicoracledbAsmDiskgroupOfflineDisks(mbc.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks),
+		metricNewrelicoracledbAsmDiskgroupTotalMb:                                newMetricNewrelicoracledbAsmDiskgroupTotalMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupTotalMb),
 		metricNewrelicoracledbBlockingQueriesWaitTime:                            newMetricNewrelicoracledbBlockingQueriesWaitTime(mbc.Metrics.NewrelicoracledbBlockingQueriesWaitTime),
+		metricNewrelicoracledbConnectionActiveSessions:                           newMetricNewrelicoracledbConnectionActiveSessions(mbc.Metrics.NewrelicoracledbConnectionActiveSessions),
+		metricNewrelicoracledbConnectionBlockingSessions:                         newMetricNewrelicoracledbConnectionBlockingSessions(mbc.Metrics.NewrelicoracledbConnectionBlockingSessions),
+		metricNewrelicoracledbConnectionBytesReceived:                            newMetricNewrelicoracledbConnectionBytesReceived(mbc.Metrics.NewrelicoracledbConnectionBytesReceived),
+		metricNewrelicoracledbConnectionBytesSent:                                newMetricNewrelicoracledbConnectionBytesSent(mbc.Metrics.NewrelicoracledbConnectionBytesSent),
+		metricNewrelicoracledbConnectionCircuits:                                 newMetricNewrelicoracledbConnectionCircuits(mbc.Metrics.NewrelicoracledbConnectionCircuits),
+		metricNewrelicoracledbConnectionDispatchers:                              newMetricNewrelicoracledbConnectionDispatchers(mbc.Metrics.NewrelicoracledbConnectionDispatchers),
+		metricNewrelicoracledbConnectionExecuteCount:                             newMetricNewrelicoracledbConnectionExecuteCount(mbc.Metrics.NewrelicoracledbConnectionExecuteCount),
+		metricNewrelicoracledbConnectionInactiveSessions:                         newMetricNewrelicoracledbConnectionInactiveSessions(mbc.Metrics.NewrelicoracledbConnectionInactiveSessions),
+		metricNewrelicoracledbConnectionLogonsCumulative:                         newMetricNewrelicoracledbConnectionLogonsCumulative(mbc.Metrics.NewrelicoracledbConnectionLogonsCumulative),
+		metricNewrelicoracledbConnectionLogonsCurrent:                            newMetricNewrelicoracledbConnectionLogonsCurrent(mbc.Metrics.NewrelicoracledbConnectionLogonsCurrent),
+		metricNewrelicoracledbConnectionParseCountHard:                           newMetricNewrelicoracledbConnectionParseCountHard(mbc.Metrics.NewrelicoracledbConnectionParseCountHard),
+		metricNewrelicoracledbConnectionParseCountTotal:                          newMetricNewrelicoracledbConnectionParseCountTotal(mbc.Metrics.NewrelicoracledbConnectionParseCountTotal),
+		metricNewrelicoracledbConnectionResourceCurrentUtilization:               newMetricNewrelicoracledbConnectionResourceCurrentUtilization(mbc.Metrics.NewrelicoracledbConnectionResourceCurrentUtilization),
+		metricNewrelicoracledbConnectionResourceLimit:                            newMetricNewrelicoracledbConnectionResourceLimit(mbc.Metrics.NewrelicoracledbConnectionResourceLimit),
+		metricNewrelicoracledbConnectionResourceMaxUtilization:                   newMetricNewrelicoracledbConnectionResourceMaxUtilization(mbc.Metrics.NewrelicoracledbConnectionResourceMaxUtilization),
+		metricNewrelicoracledbConnectionSessionCPUUsage:                          newMetricNewrelicoracledbConnectionSessionCPUUsage(mbc.Metrics.NewrelicoracledbConnectionSessionCPUUsage),
+		metricNewrelicoracledbConnectionSessionIdleTime:                          newMetricNewrelicoracledbConnectionSessionIdleTime(mbc.Metrics.NewrelicoracledbConnectionSessionIdleTime),
+		metricNewrelicoracledbConnectionSessionLogicalReads:                      newMetricNewrelicoracledbConnectionSessionLogicalReads(mbc.Metrics.NewrelicoracledbConnectionSessionLogicalReads),
+		metricNewrelicoracledbConnectionSessionPgaMemory:                         newMetricNewrelicoracledbConnectionSessionPgaMemory(mbc.Metrics.NewrelicoracledbConnectionSessionPgaMemory),
+		metricNewrelicoracledbConnectionSessionsByStatus:                         newMetricNewrelicoracledbConnectionSessionsByStatus(mbc.Metrics.NewrelicoracledbConnectionSessionsByStatus),
+		metricNewrelicoracledbConnectionSessionsByType:                           newMetricNewrelicoracledbConnectionSessionsByType(mbc.Metrics.NewrelicoracledbConnectionSessionsByType),
+		metricNewrelicoracledbConnectionSharedServers:                            newMetricNewrelicoracledbConnectionSharedServers(mbc.Metrics.NewrelicoracledbConnectionSharedServers),
+		metricNewrelicoracledbConnectionSqlnetRoundtrips:                         newMetricNewrelicoracledbConnectionSqlnetRoundtrips(mbc.Metrics.NewrelicoracledbConnectionSqlnetRoundtrips),
+		metricNewrelicoracledbConnectionTotalSessions:                            newMetricNewrelicoracledbConnectionTotalSessions(mbc.Metrics.NewrelicoracledbConnectionTotalSessions),
+		metricNewrelicoracledbConnectionUserCommits:                              newMetricNewrelicoracledbConnectionUserCommits(mbc.Metrics.NewrelicoracledbConnectionUserCommits),
+		metricNewrelicoracledbConnectionUserRollbacks:                            newMetricNewrelicoracledbConnectionUserRollbacks(mbc.Metrics.NewrelicoracledbConnectionUserRollbacks),
+		metricNewrelicoracledbConnectionWaitEventAvgWaitTime:                     newMetricNewrelicoracledbConnectionWaitEventAvgWaitTime(mbc.Metrics.NewrelicoracledbConnectionWaitEventAvgWaitTime),
+		metricNewrelicoracledbConnectionWaitEventTimeWaited:                      newMetricNewrelicoracledbConnectionWaitEventTimeWaited(mbc.Metrics.NewrelicoracledbConnectionWaitEventTimeWaited),
+		metricNewrelicoracledbConnectionWaitEventTotalWaits:                      newMetricNewrelicoracledbConnectionWaitEventTotalWaits(mbc.Metrics.NewrelicoracledbConnectionWaitEventTotalWaits),
+		metricNewrelicoracledbConnectionWaitEvents:                               newMetricNewrelicoracledbConnectionWaitEvents(mbc.Metrics.NewrelicoracledbConnectionWaitEvents),
+		metricNewrelicoracledbContainerRestricted:                                newMetricNewrelicoracledbContainerRestricted(mbc.Metrics.NewrelicoracledbContainerRestricted),
+		metricNewrelicoracledbContainerStatus:                                    newMetricNewrelicoracledbContainerStatus(mbc.Metrics.NewrelicoracledbContainerStatus),
+		metricNewrelicoracledbDatafileAutoextensible:                             newMetricNewrelicoracledbDatafileAutoextensible(mbc.Metrics.NewrelicoracledbDatafileAutoextensible),
+		metricNewrelicoracledbDatafileSizeBytes:                                  newMetricNewrelicoracledbDatafileSizeBytes(mbc.Metrics.NewrelicoracledbDatafileSizeBytes),
+		metricNewrelicoracledbDatafileUsedBytes:                                  newMetricNewrelicoracledbDatafileUsedBytes(mbc.Metrics.NewrelicoracledbDatafileUsedBytes),
 		metricNewrelicoracledbDbID:                                               newMetricNewrelicoracledbDbID(mbc.Metrics.NewrelicoracledbDbID),
 		metricNewrelicoracledbDiskBlocksRead:                                     newMetricNewrelicoracledbDiskBlocksRead(mbc.Metrics.NewrelicoracledbDiskBlocksRead),
 		metricNewrelicoracledbDiskBlocksWritten:                                  newMetricNewrelicoracledbDiskBlocksWritten(mbc.Metrics.NewrelicoracledbDiskBlocksWritten),
@@ -14506,6 +18148,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbPdbNetworkTrafficBytePerSecond:                     newMetricNewrelicoracledbPdbNetworkTrafficBytePerSecond(mbc.Metrics.NewrelicoracledbPdbNetworkTrafficBytePerSecond),
 		metricNewrelicoracledbPdbOpenCursorsPerSecond:                            newMetricNewrelicoracledbPdbOpenCursorsPerSecond(mbc.Metrics.NewrelicoracledbPdbOpenCursorsPerSecond),
 		metricNewrelicoracledbPdbOpenCursorsPerTransaction:                       newMetricNewrelicoracledbPdbOpenCursorsPerTransaction(mbc.Metrics.NewrelicoracledbPdbOpenCursorsPerTransaction),
+		metricNewrelicoracledbPdbOpenMode:                                        newMetricNewrelicoracledbPdbOpenMode(mbc.Metrics.NewrelicoracledbPdbOpenMode),
 		metricNewrelicoracledbPdbParseFailureCountPerSecond:                      newMetricNewrelicoracledbPdbParseFailureCountPerSecond(mbc.Metrics.NewrelicoracledbPdbParseFailureCountPerSecond),
 		metricNewrelicoracledbPdbPhysicalReadBytesPerSecond:                      newMetricNewrelicoracledbPdbPhysicalReadBytesPerSecond(mbc.Metrics.NewrelicoracledbPdbPhysicalReadBytesPerSecond),
 		metricNewrelicoracledbPdbPhysicalReadsPerTransaction:                     newMetricNewrelicoracledbPdbPhysicalReadsPerTransaction(mbc.Metrics.NewrelicoracledbPdbPhysicalReadsPerTransaction),
@@ -14517,8 +18160,10 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbPdbSessionCount:                                    newMetricNewrelicoracledbPdbSessionCount(mbc.Metrics.NewrelicoracledbPdbSessionCount),
 		metricNewrelicoracledbPdbSoftParseRatio:                                  newMetricNewrelicoracledbPdbSoftParseRatio(mbc.Metrics.NewrelicoracledbPdbSoftParseRatio),
 		metricNewrelicoracledbPdbSQLServiceResponseTime:                          newMetricNewrelicoracledbPdbSQLServiceResponseTime(mbc.Metrics.NewrelicoracledbPdbSQLServiceResponseTime),
+		metricNewrelicoracledbPdbStatus:                                          newMetricNewrelicoracledbPdbStatus(mbc.Metrics.NewrelicoracledbPdbStatus),
 		metricNewrelicoracledbPdbTotalParseCountPerSecond:                        newMetricNewrelicoracledbPdbTotalParseCountPerSecond(mbc.Metrics.NewrelicoracledbPdbTotalParseCountPerSecond),
 		metricNewrelicoracledbPdbTotalParseCountPerTransaction:                   newMetricNewrelicoracledbPdbTotalParseCountPerTransaction(mbc.Metrics.NewrelicoracledbPdbTotalParseCountPerTransaction),
+		metricNewrelicoracledbPdbTotalSizeBytes:                                  newMetricNewrelicoracledbPdbTotalSizeBytes(mbc.Metrics.NewrelicoracledbPdbTotalSizeBytes),
 		metricNewrelicoracledbPdbTransactionsPerSecond:                           newMetricNewrelicoracledbPdbTransactionsPerSecond(mbc.Metrics.NewrelicoracledbPdbTransactionsPerSecond),
 		metricNewrelicoracledbPdbUserCallsPerSecond:                              newMetricNewrelicoracledbPdbUserCallsPerSecond(mbc.Metrics.NewrelicoracledbPdbUserCallsPerSecond),
 		metricNewrelicoracledbPdbUserCallsPerTransaction:                         newMetricNewrelicoracledbPdbUserCallsPerTransaction(mbc.Metrics.NewrelicoracledbPdbUserCallsPerTransaction),
@@ -14527,6 +18172,22 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbPdbUserRollbacksPerSecond:                          newMetricNewrelicoracledbPdbUserRollbacksPerSecond(mbc.Metrics.NewrelicoracledbPdbUserRollbacksPerSecond),
 		metricNewrelicoracledbPdbUserRollbacksPercentage:                         newMetricNewrelicoracledbPdbUserRollbacksPercentage(mbc.Metrics.NewrelicoracledbPdbUserRollbacksPercentage),
 		metricNewrelicoracledbPdbWaitTimeRatio:                                   newMetricNewrelicoracledbPdbWaitTimeRatio(mbc.Metrics.NewrelicoracledbPdbWaitTimeRatio),
+		metricNewrelicoracledbRacInstanceActiveState:                             newMetricNewrelicoracledbRacInstanceActiveState(mbc.Metrics.NewrelicoracledbRacInstanceActiveState),
+		metricNewrelicoracledbRacInstanceArchiverStarted:                         newMetricNewrelicoracledbRacInstanceArchiverStarted(mbc.Metrics.NewrelicoracledbRacInstanceArchiverStarted),
+		metricNewrelicoracledbRacInstanceDatabaseStatus:                          newMetricNewrelicoracledbRacInstanceDatabaseStatus(mbc.Metrics.NewrelicoracledbRacInstanceDatabaseStatus),
+		metricNewrelicoracledbRacInstanceLoginsAllowed:                           newMetricNewrelicoracledbRacInstanceLoginsAllowed(mbc.Metrics.NewrelicoracledbRacInstanceLoginsAllowed),
+		metricNewrelicoracledbRacInstanceStatus:                                  newMetricNewrelicoracledbRacInstanceStatus(mbc.Metrics.NewrelicoracledbRacInstanceStatus),
+		metricNewrelicoracledbRacInstanceUptimeSeconds:                           newMetricNewrelicoracledbRacInstanceUptimeSeconds(mbc.Metrics.NewrelicoracledbRacInstanceUptimeSeconds),
+		metricNewrelicoracledbRacInstanceVersionInfo:                             newMetricNewrelicoracledbRacInstanceVersionInfo(mbc.Metrics.NewrelicoracledbRacInstanceVersionInfo),
+		metricNewrelicoracledbRacServiceClbConfig:                                newMetricNewrelicoracledbRacServiceClbConfig(mbc.Metrics.NewrelicoracledbRacServiceClbConfig),
+		metricNewrelicoracledbRacServiceCreationAgeDays:                          newMetricNewrelicoracledbRacServiceCreationAgeDays(mbc.Metrics.NewrelicoracledbRacServiceCreationAgeDays),
+		metricNewrelicoracledbRacServiceFailoverConfig:                           newMetricNewrelicoracledbRacServiceFailoverConfig(mbc.Metrics.NewrelicoracledbRacServiceFailoverConfig),
+		metricNewrelicoracledbRacServiceFailoverDelaySeconds:                     newMetricNewrelicoracledbRacServiceFailoverDelaySeconds(mbc.Metrics.NewrelicoracledbRacServiceFailoverDelaySeconds),
+		metricNewrelicoracledbRacServiceFailoverRetries:                          newMetricNewrelicoracledbRacServiceFailoverRetries(mbc.Metrics.NewrelicoracledbRacServiceFailoverRetries),
+		metricNewrelicoracledbRacServiceInstanceID:                               newMetricNewrelicoracledbRacServiceInstanceID(mbc.Metrics.NewrelicoracledbRacServiceInstanceID),
+		metricNewrelicoracledbRacServiceNetworkConfig:                            newMetricNewrelicoracledbRacServiceNetworkConfig(mbc.Metrics.NewrelicoracledbRacServiceNetworkConfig),
+		metricNewrelicoracledbRacTotalWaits:                                      newMetricNewrelicoracledbRacTotalWaits(mbc.Metrics.NewrelicoracledbRacTotalWaits),
+		metricNewrelicoracledbRacWaitTime:                                        newMetricNewrelicoracledbRacWaitTime(mbc.Metrics.NewrelicoracledbRacWaitTime),
 		metricNewrelicoracledbRedoLogParallelWriteWaits:                          newMetricNewrelicoracledbRedoLogParallelWriteWaits(mbc.Metrics.NewrelicoracledbRedoLogParallelWriteWaits),
 		metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits:                  newMetricNewrelicoracledbRedoLogSwitchArchivingNeededWaits(mbc.Metrics.NewrelicoracledbRedoLogSwitchArchivingNeededWaits),
 		metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits:             newMetricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits(mbc.Metrics.NewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits),
@@ -14534,6 +18195,8 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbRollbackSegmentsGets:                               newMetricNewrelicoracledbRollbackSegmentsGets(mbc.Metrics.NewrelicoracledbRollbackSegmentsGets),
 		metricNewrelicoracledbRollbackSegmentsWaitRatio:                          newMetricNewrelicoracledbRollbackSegmentsWaitRatio(mbc.Metrics.NewrelicoracledbRollbackSegmentsWaitRatio),
 		metricNewrelicoracledbRollbackSegmentsWaits:                              newMetricNewrelicoracledbRollbackSegmentsWaits(mbc.Metrics.NewrelicoracledbRollbackSegmentsWaits),
+		metricNewrelicoracledbServiceCount:                                       newMetricNewrelicoracledbServiceCount(mbc.Metrics.NewrelicoracledbServiceCount),
+		metricNewrelicoracledbServiceStatus:                                      newMetricNewrelicoracledbServiceStatus(mbc.Metrics.NewrelicoracledbServiceStatus),
 		metricNewrelicoracledbSessionsCount:                                      newMetricNewrelicoracledbSessionsCount(mbc.Metrics.NewrelicoracledbSessionsCount),
 		metricNewrelicoracledbSgaBufferBusyWaits:                                 newMetricNewrelicoracledbSgaBufferBusyWaits(mbc.Metrics.NewrelicoracledbSgaBufferBusyWaits),
 		metricNewrelicoracledbSgaFixedSizeBytes:                                  newMetricNewrelicoracledbSgaFixedSizeBytes(mbc.Metrics.NewrelicoracledbSgaFixedSizeBytes),
@@ -14706,6 +18369,9 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbTablespaceSpaceConsumedBytes:                       newMetricNewrelicoracledbTablespaceSpaceConsumedBytes(mbc.Metrics.NewrelicoracledbTablespaceSpaceConsumedBytes),
 		metricNewrelicoracledbTablespaceSpaceReservedBytes:                       newMetricNewrelicoracledbTablespaceSpaceReservedBytes(mbc.Metrics.NewrelicoracledbTablespaceSpaceReservedBytes),
 		metricNewrelicoracledbTablespaceSpaceUsedPercentage:                      newMetricNewrelicoracledbTablespaceSpaceUsedPercentage(mbc.Metrics.NewrelicoracledbTablespaceSpaceUsedPercentage),
+		metricNewrelicoracledbTablespaceTotalBytes:                               newMetricNewrelicoracledbTablespaceTotalBytes(mbc.Metrics.NewrelicoracledbTablespaceTotalBytes),
+		metricNewrelicoracledbTablespaceUsedBytes:                                newMetricNewrelicoracledbTablespaceUsedBytes(mbc.Metrics.NewrelicoracledbTablespaceUsedBytes),
+		metricNewrelicoracledbTablespaceUsedPercent:                              newMetricNewrelicoracledbTablespaceUsedPercent(mbc.Metrics.NewrelicoracledbTablespaceUsedPercent),
 		metricNewrelicoracledbWaitEventsAvgWaitTimeMs:                            newMetricNewrelicoracledbWaitEventsAvgWaitTimeMs(mbc.Metrics.NewrelicoracledbWaitEventsAvgWaitTimeMs),
 		metricNewrelicoracledbWaitEventsTotalWaitTimeMs:                          newMetricNewrelicoracledbWaitEventsTotalWaitTimeMs(mbc.Metrics.NewrelicoracledbWaitEventsTotalWaitTimeMs),
 		metricNewrelicoracledbWaitEventsWaitingTasksCount:                        newMetricNewrelicoracledbWaitEventsWaitingTasksCount(mbc.Metrics.NewrelicoracledbWaitEventsWaitingTasksCount),
@@ -14793,7 +18459,45 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricNewrelicoracledbAsmDiskgroupFreeMb.emit(ils.Metrics())
+	mb.metricNewrelicoracledbAsmDiskgroupOfflineDisks.emit(ils.Metrics())
+	mb.metricNewrelicoracledbAsmDiskgroupTotalMb.emit(ils.Metrics())
 	mb.metricNewrelicoracledbBlockingQueriesWaitTime.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionActiveSessions.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionBlockingSessions.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionBytesReceived.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionBytesSent.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionCircuits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionDispatchers.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionExecuteCount.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionInactiveSessions.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionLogonsCumulative.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionLogonsCurrent.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionParseCountHard.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionParseCountTotal.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionResourceCurrentUtilization.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionResourceLimit.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionResourceMaxUtilization.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSessionCPUUsage.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSessionIdleTime.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSessionLogicalReads.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSessionPgaMemory.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSessionsByStatus.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSessionsByType.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSharedServers.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionSqlnetRoundtrips.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionTotalSessions.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionUserCommits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionUserRollbacks.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionWaitEventAvgWaitTime.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionWaitEventTimeWaited.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionWaitEventTotalWaits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbConnectionWaitEvents.emit(ils.Metrics())
+	mb.metricNewrelicoracledbContainerRestricted.emit(ils.Metrics())
+	mb.metricNewrelicoracledbContainerStatus.emit(ils.Metrics())
+	mb.metricNewrelicoracledbDatafileAutoextensible.emit(ils.Metrics())
+	mb.metricNewrelicoracledbDatafileSizeBytes.emit(ils.Metrics())
+	mb.metricNewrelicoracledbDatafileUsedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDbID.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskBlocksRead.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskBlocksWritten.emit(ils.Metrics())
@@ -14842,6 +18546,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbPdbNetworkTrafficBytePerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbOpenCursorsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbOpenCursorsPerTransaction.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbOpenMode.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbParseFailureCountPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbPhysicalReadBytesPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbPhysicalReadsPerTransaction.emit(ils.Metrics())
@@ -14853,8 +18558,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbPdbSessionCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbSoftParseRatio.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbSQLServiceResponseTime.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbStatus.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbTotalParseCountPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbTotalParseCountPerTransaction.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPdbTotalSizeBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbTransactionsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbUserCallsPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbUserCallsPerTransaction.emit(ils.Metrics())
@@ -14863,6 +18570,22 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbPdbUserRollbacksPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbUserRollbacksPercentage.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbWaitTimeRatio.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacInstanceActiveState.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacInstanceArchiverStarted.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacInstanceDatabaseStatus.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacInstanceLoginsAllowed.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacInstanceStatus.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacInstanceUptimeSeconds.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacInstanceVersionInfo.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceClbConfig.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceCreationAgeDays.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceFailoverConfig.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceFailoverDelaySeconds.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceFailoverRetries.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceInstanceID.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceNetworkConfig.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacTotalWaits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacWaitTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogParallelWriteWaits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits.emit(ils.Metrics())
@@ -14870,6 +18593,8 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbRollbackSegmentsGets.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRollbackSegmentsWaitRatio.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRollbackSegmentsWaits.emit(ils.Metrics())
+	mb.metricNewrelicoracledbServiceCount.emit(ils.Metrics())
+	mb.metricNewrelicoracledbServiceStatus.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSessionsCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaBufferBusyWaits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaFixedSizeBytes.emit(ils.Metrics())
@@ -15042,6 +18767,9 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbTablespaceSpaceConsumedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceSpaceReservedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceSpaceUsedPercentage.emit(ils.Metrics())
+	mb.metricNewrelicoracledbTablespaceTotalBytes.emit(ils.Metrics())
+	mb.metricNewrelicoracledbTablespaceUsedBytes.emit(ils.Metrics())
+	mb.metricNewrelicoracledbTablespaceUsedPercent.emit(ils.Metrics())
 	mb.metricNewrelicoracledbWaitEventsAvgWaitTimeMs.emit(ils.Metrics())
 	mb.metricNewrelicoracledbWaitEventsTotalWaitTimeMs.emit(ils.Metrics())
 	mb.metricNewrelicoracledbWaitEventsWaitingTasksCount.emit(ils.Metrics())
@@ -15076,1264 +18804,1574 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	return metrics
 }
 
+// RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint adds a data point to newrelicoracledb.asm.diskgroup.free_mb metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, diskgroupNameAttributeValue string) {
+	mb.metricNewrelicoracledbAsmDiskgroupFreeMb.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, diskgroupNameAttributeValue)
+}
+
+// RecordNewrelicoracledbAsmDiskgroupOfflineDisksDataPoint adds a data point to newrelicoracledb.asm.diskgroup.offline_disks metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbAsmDiskgroupOfflineDisksDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, diskgroupNameAttributeValue string) {
+	mb.metricNewrelicoracledbAsmDiskgroupOfflineDisks.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, diskgroupNameAttributeValue)
+}
+
+// RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint adds a data point to newrelicoracledb.asm.diskgroup.total_mb metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, diskgroupNameAttributeValue string) {
+	mb.metricNewrelicoracledbAsmDiskgroupTotalMb.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, diskgroupNameAttributeValue)
+}
+
 // RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint adds a data point to newrelicoracledb.blocking_queries.wait_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockedSidAttributeValue, blockingSidAttributeValue, blockedSerialAttributeValue, blockingSerialAttributeValue, blockedQueryTextAttributeValue, databaseNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, blockedSQLIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, blockedSQLIDAttributeValue, blockedSidAttributeValue, blockingSidAttributeValue, blockedSerialAttributeValue, blockingSerialAttributeValue, blockedQueryTextAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionActiveSessionsDataPoint adds a data point to newrelicoracledb.connection.active_sessions metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionActiveSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionActiveSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionBlockingSessionsDataPoint adds a data point to newrelicoracledb.connection.blocking_sessions metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionBlockingSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, blockingSessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, programAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionBlockingSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionIDAttributeValue, blockingSessionIDAttributeValue, usernameAttributeValue, waitEventAttributeValue, programAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionBytesReceivedDataPoint adds a data point to newrelicoracledb.connection.bytes_received metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionBytesReceivedDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionBytesReceived.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionBytesSentDataPoint adds a data point to newrelicoracledb.connection.bytes_sent metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionBytesSentDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionBytesSent.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionCircuitsDataPoint adds a data point to newrelicoracledb.connection.circuits metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionCircuitsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionCircuits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionDispatchersDataPoint adds a data point to newrelicoracledb.connection.dispatchers metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionDispatchersDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionDispatchers.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionExecuteCountDataPoint adds a data point to newrelicoracledb.connection.execute_count metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionExecuteCountDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionExecuteCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionInactiveSessionsDataPoint adds a data point to newrelicoracledb.connection.inactive_sessions metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionInactiveSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionInactiveSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionLogonsCumulativeDataPoint adds a data point to newrelicoracledb.connection.logons_cumulative metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionLogonsCumulativeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionLogonsCumulative.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionLogonsCurrentDataPoint adds a data point to newrelicoracledb.connection.logons_current metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionLogonsCurrentDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionLogonsCurrent.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionParseCountHardDataPoint adds a data point to newrelicoracledb.connection.parse_count_hard metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionParseCountHardDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionParseCountHard.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionParseCountTotalDataPoint adds a data point to newrelicoracledb.connection.parse_count_total metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionParseCountTotalDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionParseCountTotal.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionResourceCurrentUtilizationDataPoint adds a data point to newrelicoracledb.connection.resource_current_utilization metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionResourceCurrentUtilizationDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, resourceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionResourceCurrentUtilization.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, resourceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionResourceLimitDataPoint adds a data point to newrelicoracledb.connection.resource_limit metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionResourceLimitDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, resourceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionResourceLimit.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, resourceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionResourceMaxUtilizationDataPoint adds a data point to newrelicoracledb.connection.resource_max_utilization metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionResourceMaxUtilizationDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, resourceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionResourceMaxUtilization.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, resourceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint adds a data point to newrelicoracledb.connection.session_cpu_usage metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSessionCPUUsage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSessionIdleTimeDataPoint adds a data point to newrelicoracledb.connection.session_idle_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionIdleTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSessionIdleTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSessionLogicalReadsDataPoint adds a data point to newrelicoracledb.connection.session_logical_reads metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionLogicalReadsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSessionLogicalReads.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSessionPgaMemoryDataPoint adds a data point to newrelicoracledb.connection.session_pga_memory metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionPgaMemoryDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSessionPgaMemory.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSessionsByStatusDataPoint adds a data point to newrelicoracledb.connection.sessions_by_status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionsByStatusDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionStatusAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSessionsByStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionStatusAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSessionsByTypeDataPoint adds a data point to newrelicoracledb.connection.sessions_by_type metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionsByTypeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionTypeAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSessionsByType.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionTypeAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSharedServersDataPoint adds a data point to newrelicoracledb.connection.shared_servers metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSharedServersDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSharedServers.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionSqlnetRoundtripsDataPoint adds a data point to newrelicoracledb.connection.sqlnet_roundtrips metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSqlnetRoundtripsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionSqlnetRoundtrips.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionTotalSessionsDataPoint adds a data point to newrelicoracledb.connection.total_sessions metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionTotalSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionTotalSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionUserCommitsDataPoint adds a data point to newrelicoracledb.connection.user_commits metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionUserCommitsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionUserCommits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionUserRollbacksDataPoint adds a data point to newrelicoracledb.connection.user_rollbacks metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionUserRollbacksDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionUserRollbacks.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionWaitEventAvgWaitTimeDataPoint adds a data point to newrelicoracledb.connection.wait_event_avg_wait_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventAvgWaitTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, waitEventAttributeValue string, waitClassAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionWaitEventAvgWaitTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, waitEventAttributeValue, waitClassAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionWaitEventTimeWaitedDataPoint adds a data point to newrelicoracledb.connection.wait_event_time_waited metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventTimeWaitedDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, waitEventAttributeValue string, waitClassAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionWaitEventTimeWaited.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, waitEventAttributeValue, waitClassAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionWaitEventTotalWaitsDataPoint adds a data point to newrelicoracledb.connection.wait_event_total_waits metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventTotalWaitsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, waitEventAttributeValue string, waitClassAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionWaitEventTotalWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, waitEventAttributeValue, waitClassAttributeValue)
+}
+
+// RecordNewrelicoracledbConnectionWaitEventsDataPoint adds a data point to newrelicoracledb.connection.wait_events metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, sessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, waitStateAttributeValue string, waitClassAttributeValue string) {
+	mb.metricNewrelicoracledbConnectionWaitEvents.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, sessionIDAttributeValue, usernameAttributeValue, waitEventAttributeValue, waitStateAttributeValue, waitClassAttributeValue)
+}
+
+// RecordNewrelicoracledbContainerRestrictedDataPoint adds a data point to newrelicoracledb.container.restricted metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbContainerRestrictedDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, containerNameAttributeValue string, restrictedStatusAttributeValue string) {
+	mb.metricNewrelicoracledbContainerRestricted.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, containerNameAttributeValue, restrictedStatusAttributeValue)
+}
+
+// RecordNewrelicoracledbContainerStatusDataPoint adds a data point to newrelicoracledb.container.status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbContainerStatusDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, containerNameAttributeValue string, openModeAttributeValue string) {
+	mb.metricNewrelicoracledbContainerStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, containerNameAttributeValue, openModeAttributeValue)
+}
+
+// RecordNewrelicoracledbDatafileAutoextensibleDataPoint adds a data point to newrelicoracledb.datafile.autoextensible metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbDatafileAutoextensibleDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string, fileNameAttributeValue string, containerStatusAttributeValue string) {
+	mb.metricNewrelicoracledbDatafileAutoextensible.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, tablespaceNameAttributeValue, fileNameAttributeValue, containerStatusAttributeValue)
+}
+
+// RecordNewrelicoracledbDatafileSizeBytesDataPoint adds a data point to newrelicoracledb.datafile.size_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbDatafileSizeBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string, fileNameAttributeValue string) {
+	mb.metricNewrelicoracledbDatafileSizeBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, tablespaceNameAttributeValue, fileNameAttributeValue)
+}
+
+// RecordNewrelicoracledbDatafileUsedBytesDataPoint adds a data point to newrelicoracledb.datafile.used_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbDatafileUsedBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string, fileNameAttributeValue string) {
+	mb.metricNewrelicoracledbDatafileUsedBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, tablespaceNameAttributeValue, fileNameAttributeValue)
 }
 
 // RecordNewrelicoracledbDbIDDataPoint adds a data point to newrelicoracledb.db_id metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDbIDDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, dbIDAttributeValue string) {
-	mb.metricNewrelicoracledbDbID.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, dbIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDbIDDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, dbIDAttributeValue string) {
+	mb.metricNewrelicoracledbDbID.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, dbIDAttributeValue)
 }
 
 // RecordNewrelicoracledbDiskBlocksReadDataPoint adds a data point to newrelicoracledb.disk.blocks_read metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDiskBlocksReadDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbDiskBlocksRead.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDiskBlocksReadDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbDiskBlocksRead.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbDiskBlocksWrittenDataPoint adds a data point to newrelicoracledb.disk.blocks_written metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDiskBlocksWrittenDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbDiskBlocksWritten.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDiskBlocksWrittenDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbDiskBlocksWritten.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint adds a data point to newrelicoracledb.disk.read_time_milliseconds metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbDiskReadTimeMilliseconds.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbDiskReadTimeMilliseconds.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbDiskReadsDataPoint adds a data point to newrelicoracledb.disk.reads metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDiskReadsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbDiskReads.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDiskReadsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbDiskReads.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint adds a data point to newrelicoracledb.disk.write_time_milliseconds metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbDiskWriteTimeMilliseconds.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbDiskWriteTimeMilliseconds.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbDiskWritesDataPoint adds a data point to newrelicoracledb.disk.writes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDiskWritesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbDiskWrites.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDiskWritesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbDiskWrites.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbGlobalNameDataPoint adds a data point to newrelicoracledb.global_name metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string, globalNameAttributeValue string) {
-	mb.metricNewrelicoracledbGlobalName.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue, globalNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, globalNameAttributeValue string) {
+	mb.metricNewrelicoracledbGlobalName.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, globalNameAttributeValue)
 }
 
 // RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint adds a data point to newrelicoracledb.individual_queries.cpu_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbIndividualQueriesCPUTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbIndividualQueriesCPUTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint adds a data point to newrelicoracledb.individual_queries.elapsed_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbIndividualQueriesElapsedTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbIndividualQueriesElapsedTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint adds a data point to newrelicoracledb.individual_queries.query_details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, databaseNameAttributeValue string, userIDAttributeValue string, usernameAttributeValue string, hostnameAttributeValue string) {
-	mb.metricNewrelicoracledbIndividualQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, databaseNameAttributeValue, userIDAttributeValue, usernameAttributeValue, hostnameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, queryTextAttributeValue string, databaseNameAttributeValue string, userIDAttributeValue string, usernameAttributeValue string, hostnameAttributeValue string) {
+	mb.metricNewrelicoracledbIndividualQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, queryTextAttributeValue, databaseNameAttributeValue, userIDAttributeValue, usernameAttributeValue, hostnameAttributeValue)
 }
 
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLockedAccountsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbLockedAccounts.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbLockedAccountsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbLockedAccounts.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbLongRunningQueriesDataPoint adds a data point to newrelicoracledb.long_running_queries metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLongRunningQueriesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbLongRunningQueries.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbLongRunningQueriesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbLongRunningQueries.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint adds a data point to newrelicoracledb.memory.pga_allocated_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbMemoryPgaAllocatedBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbMemoryPgaAllocatedBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint adds a data point to newrelicoracledb.memory.pga_freeable_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbMemoryPgaFreeableBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbMemoryPgaFreeableBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint adds a data point to newrelicoracledb.memory.pga_in_use_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbMemoryPgaInUseBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbMemoryPgaInUseBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint adds a data point to newrelicoracledb.memory.pga_max_size_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbMemoryPgaMaxSizeBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbMemoryPgaMaxSizeBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint adds a data point to newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint adds a data point to newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint adds a data point to newrelicoracledb.memory.sga_uga_total_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbMemorySgaUgaTotalBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbMemorySgaUgaTotalBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint adds a data point to newrelicoracledb.pdb.active_parallel_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbActiveParallelSessions.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbActiveParallelSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint adds a data point to newrelicoracledb.pdb.active_serial_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbActiveSerialSessions.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbActiveSerialSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint adds a data point to newrelicoracledb.pdb.average_active_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbAverageActiveSessions.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbAverageActiveSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint adds a data point to newrelicoracledb.pdb.background_cpu_usage_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint adds a data point to newrelicoracledb.pdb.background_time_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbBackgroundTimePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbBackgroundTimePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.block_changes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbBlockChangesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbBlockChangesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.block_changes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbBlockChangesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbBlockChangesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbCPUTimeRatioDataPoint adds a data point to newrelicoracledb.pdb.cpu_time_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUTimeRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbCPUTimeRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUTimeRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbCPUTimeRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint adds a data point to newrelicoracledb.pdb.cpu_usage_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint adds a data point to newrelicoracledb.pdb.cpu_usage_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbCPUUsagePerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbCPUUsagePerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbCurrentLogonsDataPoint adds a data point to newrelicoracledb.pdb.current_logons metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCurrentLogonsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbCurrentLogons.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCurrentLogonsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbCurrentLogons.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint adds a data point to newrelicoracledb.pdb.current_open_cursors metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbCurrentOpenCursors.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbCurrentOpenCursors.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.db_physical_read_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.db_physical_reads_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbDbPhysicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbDbPhysicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.db_physical_write_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.db_physical_writes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbDbPhysicalWritesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbDbPhysicalWritesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint adds a data point to newrelicoracledb.pdb.execute_without_parse_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbExecuteWithoutParseRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbExecuteWithoutParseRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.executions_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbExecutionsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbExecutionsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.executions_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbExecutionsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbExecutionsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint adds a data point to newrelicoracledb.pdb.hard_parse_count_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbHardParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbHardParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.hard_parse_count_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbHardParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbHardParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.logical_reads_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbLogicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbLogicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.logical_reads_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbLogicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbLogicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbLogonsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.logons_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogonsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbLogonsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogonsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbLogonsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.logons_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbLogonsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbLogonsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint adds a data point to newrelicoracledb.pdb.network_traffic_byte_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbNetworkTrafficBytePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbNetworkTrafficBytePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.open_cursors_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbOpenCursorsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbOpenCursorsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.open_cursors_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbOpenCursorsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbOpenCursorsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbOpenModeDataPoint adds a data point to newrelicoracledb.pdb.open_mode metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbOpenModeDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string, openModeAttributeValue string) {
+	mb.metricNewrelicoracledbPdbOpenMode.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, pdbNameAttributeValue, openModeAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint adds a data point to newrelicoracledb.pdb.parse_failure_count_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbParseFailureCountPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbParseFailureCountPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.physical_read_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbPhysicalReadBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbPhysicalReadBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.physical_reads_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbPhysicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbPhysicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.physical_write_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.physical_writes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbPhysicalWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbPhysicalWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint adds a data point to newrelicoracledb.pdb.redo_generated_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.redo_generated_bytes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint adds a data point to newrelicoracledb.pdb.response_time_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbResponseTimePerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbResponseTimePerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbSessionCountDataPoint adds a data point to newrelicoracledb.pdb.session_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbSessionCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSessionCountDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSessionCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbSoftParseRatioDataPoint adds a data point to newrelicoracledb.pdb.soft_parse_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbSoftParseRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSoftParseRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint adds a data point to newrelicoracledb.pdb.sql_service_response_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbSQLServiceResponseTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbSQLServiceResponseTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbStatusDataPoint adds a data point to newrelicoracledb.pdb.status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbStatusDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string, containerStatusAttributeValue string) {
+	mb.metricNewrelicoracledbPdbStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, pdbNameAttributeValue, containerStatusAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint adds a data point to newrelicoracledb.pdb.total_parse_count_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbTotalParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbTotalParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.total_parse_count_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbTotalParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbTotalParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbPdbTotalSizeBytesDataPoint adds a data point to newrelicoracledb.pdb.total_size_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string) {
+	mb.metricNewrelicoracledbPdbTotalSizeBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, pdbNameAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.transactions_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbTransactionsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbTransactionsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.user_calls_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbUserCallsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbUserCallsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint adds a data point to newrelicoracledb.pdb.user_calls_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbUserCallsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbUserCallsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint adds a data point to newrelicoracledb.pdb.user_commits_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbUserCommitsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbUserCommitsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint adds a data point to newrelicoracledb.pdb.user_commits_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbUserCommitsPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbUserCommitsPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint adds a data point to newrelicoracledb.pdb.user_rollbacks_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbUserRollbacksPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbUserRollbacksPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint adds a data point to newrelicoracledb.pdb.user_rollbacks_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbUserRollbacksPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbUserRollbacksPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbWaitTimeRatioDataPoint adds a data point to newrelicoracledb.pdb.wait_time_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbWaitTimeRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbPdbWaitTimeRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbPdbWaitTimeRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbPdbWaitTimeRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbRacInstanceActiveStateDataPoint adds a data point to newrelicoracledb.rac.instance.active_state metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceActiveStateDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, activeStateAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceActiveState.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, activeStateAttributeValue)
+}
+
+// RecordNewrelicoracledbRacInstanceArchiverStartedDataPoint adds a data point to newrelicoracledb.rac.instance.archiver_started metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceArchiverStartedDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, archiverStatusAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceArchiverStarted.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, archiverStatusAttributeValue)
+}
+
+// RecordNewrelicoracledbRacInstanceDatabaseStatusDataPoint adds a data point to newrelicoracledb.rac.instance.database_status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceDatabaseStatusDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, databaseStatusAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceDatabaseStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, databaseStatusAttributeValue)
+}
+
+// RecordNewrelicoracledbRacInstanceLoginsAllowedDataPoint adds a data point to newrelicoracledb.rac.instance.logins_allowed metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceLoginsAllowedDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, loginsStatusAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceLoginsAllowed.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, loginsStatusAttributeValue)
+}
+
+// RecordNewrelicoracledbRacInstanceStatusDataPoint adds a data point to newrelicoracledb.rac.instance.status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceStatusDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, instanceStatusAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, instanceStatusAttributeValue)
+}
+
+// RecordNewrelicoracledbRacInstanceUptimeSecondsDataPoint adds a data point to newrelicoracledb.rac.instance.uptime_seconds metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceUptimeSecondsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceUptimeSeconds.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue)
+}
+
+// RecordNewrelicoracledbRacInstanceVersionInfoDataPoint adds a data point to newrelicoracledb.rac.instance.version_info metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, oracleVersionAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceVersionInfo.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, oracleVersionAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceClbConfigDataPoint adds a data point to newrelicoracledb.rac.service.clb_config metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, clbGoalAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceClbConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue, clbGoalAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint adds a data point to newrelicoracledb.rac.service.creation_age_days metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceCreationAgeDays.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceFailoverConfigDataPoint adds a data point to newrelicoracledb.rac.service.failover_config metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceFailoverConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue, failoverMethodAttributeValue, failoverTypeAttributeValue, serviceGoalAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint adds a data point to newrelicoracledb.rac.service.failover_delay_seconds metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceFailoverDelaySeconds.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceFailoverRetriesDataPoint adds a data point to newrelicoracledb.rac.service.failover_retries metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverRetriesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceFailoverRetries.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceInstanceIDDataPoint adds a data point to newrelicoracledb.rac.service.instance_id metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceInstanceIDDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceInstanceID.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceNetworkConfigDataPoint adds a data point to newrelicoracledb.rac.service.network_config metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, networkNameAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceNetworkConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue, networkNameAttributeValue)
+}
+
+// RecordNewrelicoracledbRacTotalWaitsDataPoint adds a data point to newrelicoracledb.rac.total_waits metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacTotalWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, waitEventAttributeValue string) {
+	mb.metricNewrelicoracledbRacTotalWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, waitEventAttributeValue)
+}
+
+// RecordNewrelicoracledbRacWaitTimeDataPoint adds a data point to newrelicoracledb.rac.wait_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacWaitTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, waitEventAttributeValue string) {
+	mb.metricNewrelicoracledbRacWaitTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, waitEventAttributeValue)
 }
 
 // RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint adds a data point to newrelicoracledb.redo_log_parallel_write_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRedoLogParallelWriteWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRedoLogParallelWriteWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint adds a data point to newrelicoracledb.redo_log_switch_archiving_needed_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint adds a data point to newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint adds a data point to newrelicoracledb.redo_log_switch_completion_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRedoLogSwitchCompletionWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRedoLogSwitchCompletionWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRollbackSegmentsGetsDataPoint adds a data point to newrelicoracledb.rollback_segments_gets metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRollbackSegmentsGets.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRollbackSegmentsGets.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint adds a data point to newrelicoracledb.rollback_segments_wait_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRollbackSegmentsWaitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRollbackSegmentsWaitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint adds a data point to newrelicoracledb.rollback_segments_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRollbackSegmentsWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbRollbackSegmentsWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbServiceCountDataPoint adds a data point to newrelicoracledb.service.count metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbServiceCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string) {
+	mb.metricNewrelicoracledbServiceCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue)
+}
+
+// RecordNewrelicoracledbServiceStatusDataPoint adds a data point to newrelicoracledb.service.status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbServiceStatusDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, serviceNameAttributeValue string) {
+	mb.metricNewrelicoracledbServiceStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, serviceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbSessionsCountDataPoint adds a data point to newrelicoracledb.sessions.count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSessionsCountDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string) {
-	mb.metricNewrelicoracledbSessionsCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSessionsCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string) {
+	mb.metricNewrelicoracledbSessionsCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint adds a data point to newrelicoracledb.sga_buffer_busy_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaBufferBusyWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaBufferBusyWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaFixedSizeBytesDataPoint adds a data point to newrelicoracledb.sga_fixed_size_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaFixedSizeBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaFixedSizeBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint adds a data point to newrelicoracledb.sga_free_buffer_inspected_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaFreeBufferInspectedWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaFreeBufferInspectedWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint adds a data point to newrelicoracledb.sga_free_buffer_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaFreeBufferWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaFreeBufferWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaHitRatioDataPoint adds a data point to newrelicoracledb.sga_hit_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaHitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaHitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaHitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaHitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint adds a data point to newrelicoracledb.sga_log_allocation_retries_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaLogAllocationRetriesRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaLogAllocationRetriesRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint adds a data point to newrelicoracledb.sga_log_buffer_redo_allocation_retries metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaLogBufferRedoAllocationRetries.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaLogBufferRedoAllocationRetries.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint adds a data point to newrelicoracledb.sga_log_buffer_redo_entries metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaLogBufferRedoEntries.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaLogBufferRedoEntries.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint adds a data point to newrelicoracledb.sga_log_buffer_space_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaLogBufferSpaceWaits.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaLogBufferSpaceWaits.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint adds a data point to newrelicoracledb.sga_redo_buffers_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaRedoBuffersBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaRedoBuffersBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint adds a data point to newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint adds a data point to newrelicoracledb.sga_shared_pool_library_cache_hit_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint adds a data point to newrelicoracledb.sga_shared_pool_library_cache_reload_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint adds a data point to newrelicoracledb.slow_queries.avg_cpu_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgCPUTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesAvgCPUTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint adds a data point to newrelicoracledb.slow_queries.avg_disk_reads metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint adds a data point to newrelicoracledb.slow_queries.avg_disk_writes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint adds a data point to newrelicoracledb.slow_queries.avg_elapsed_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgElapsedTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesAvgElapsedTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint adds a data point to newrelicoracledb.slow_queries.execution_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint adds a data point to newrelicoracledb.slow_queries.query_details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, hasFullTableScanAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, hasFullTableScanAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, hasFullTableScanAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, hasFullTableScanAttributeValue)
 }
 
 // RecordNewrelicoracledbSortsDiskDataPoint adds a data point to newrelicoracledb.sorts_disk metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSortsDiskDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSortsDisk.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSortsDiskDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSortsDisk.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSortsMemoryDataPoint adds a data point to newrelicoracledb.sorts_memory metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSortsMemoryDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSortsMemory.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSortsMemoryDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSortsMemory.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemActiveParallelSessionsDataPoint adds a data point to newrelicoracledb.system.active_parallel_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemActiveParallelSessionsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemActiveParallelSessions.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemActiveParallelSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemActiveParallelSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemActiveSerialSessionsDataPoint adds a data point to newrelicoracledb.system.active_serial_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemActiveSerialSessionsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemActiveSerialSessions.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemActiveSerialSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemActiveSerialSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemAverageActiveSessionsDataPoint adds a data point to newrelicoracledb.system.average_active_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemAverageActiveSessionsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemAverageActiveSessions.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemAverageActiveSessionsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemAverageActiveSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemBackgroundCheckpointsPerSecondDataPoint adds a data point to newrelicoracledb.system.background_checkpoints_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBackgroundCheckpointsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBackgroundCheckpointsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemBackgroundCPUUsagePerSecondDataPoint adds a data point to newrelicoracledb.system.background_cpu_usage_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBackgroundCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBackgroundCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemBackgroundTimePerSecondDataPoint adds a data point to newrelicoracledb.system.background_time_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBackgroundTimePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemBackgroundTimePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBackgroundTimePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemBackgroundTimePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemBranchNodeSplitsPerSecondDataPoint adds a data point to newrelicoracledb.system.branch_node_splits_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBranchNodeSplitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemBranchNodeSplitsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBranchNodeSplitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemBranchNodeSplitsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemBranchNodeSplitsPerTransactionDataPoint adds a data point to newrelicoracledb.system.branch_node_splits_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBranchNodeSplitsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBranchNodeSplitsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemBufferCacheHitRatioDataPoint adds a data point to newrelicoracledb.system.buffer_cache_hit_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBufferCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemBufferCacheHitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemBufferCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemBufferCacheHitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCapturedUserCallsDataPoint adds a data point to newrelicoracledb.system.captured_user_calls metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCapturedUserCallsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCapturedUserCalls.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCapturedUserCallsDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCapturedUserCalls.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemConsistentReadChangesPerSecondDataPoint adds a data point to newrelicoracledb.system.consistent_read_changes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadChangesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemConsistentReadChangesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadChangesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemConsistentReadChangesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemConsistentReadChangesPerTransactionDataPoint adds a data point to newrelicoracledb.system.consistent_read_changes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadChangesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemConsistentReadChangesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadChangesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemConsistentReadChangesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemConsistentReadGetsPerSecondDataPoint adds a data point to newrelicoracledb.system.consistent_read_gets_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadGetsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemConsistentReadGetsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadGetsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemConsistentReadGetsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemConsistentReadGetsPerTransactionDataPoint adds a data point to newrelicoracledb.system.consistent_read_gets_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadGetsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemConsistentReadGetsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemConsistentReadGetsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemConsistentReadGetsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCPUUsagePerSecondDataPoint adds a data point to newrelicoracledb.system.cpu_usage_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCPUUsagePerTransactionDataPoint adds a data point to newrelicoracledb.system.cpu_usage_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCPUUsagePerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCPUUsagePerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCPUUsagePerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCPUUsagePerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCrBlocksCreatedPerSecondDataPoint adds a data point to newrelicoracledb.system.cr_blocks_created_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrBlocksCreatedPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCrBlocksCreatedPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrBlocksCreatedPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCrBlocksCreatedPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCrBlocksCreatedPerTransactionDataPoint adds a data point to newrelicoracledb.system.cr_blocks_created_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrBlocksCreatedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrBlocksCreatedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerSecondDataPoint adds a data point to newrelicoracledb.system.cr_undo_records_applied_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerTransactionDataPoint adds a data point to newrelicoracledb.system.cr_undo_records_applied_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCrUndoRecordsAppliedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCurrentLogonsCountDataPoint adds a data point to newrelicoracledb.system.current_logons_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCurrentLogonsCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCurrentLogonsCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCurrentLogonsCountDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCurrentLogonsCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCurrentOpenCursorsCountDataPoint adds a data point to newrelicoracledb.system.current_open_cursors_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCurrentOpenCursorsCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCurrentOpenCursorsCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCurrentOpenCursorsCountDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCurrentOpenCursorsCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCurrentOsLoadDataPoint adds a data point to newrelicoracledb.system.current_os_load metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCurrentOsLoadDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCurrentOsLoad.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCurrentOsLoadDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCurrentOsLoad.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemCursorCacheHitRatioDataPoint adds a data point to newrelicoracledb.system.cursor_cache_hit_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCursorCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemCursorCacheHitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemCursorCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemCursorCacheHitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDatabaseCPUTimeRatioDataPoint adds a data point to newrelicoracledb.system.database_cpu_time_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDatabaseCPUTimeRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDatabaseCPUTimeRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDatabaseCPUTimeRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDatabaseCPUTimeRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDatabaseTimePerSecondDataPoint adds a data point to newrelicoracledb.system.database_time_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDatabaseTimePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDatabaseTimePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDatabaseTimePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDatabaseTimePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDatabaseWaitTimeRatioDataPoint adds a data point to newrelicoracledb.system.database_wait_time_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDatabaseWaitTimeRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDatabaseWaitTimeRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDatabaseWaitTimeRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDatabaseWaitTimeRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDbBlockChangesPerSecondDataPoint adds a data point to newrelicoracledb.system.db_block_changes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockChangesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDbBlockChangesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockChangesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDbBlockChangesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDbBlockChangesPerTransactionDataPoint adds a data point to newrelicoracledb.system.db_block_changes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockChangesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDbBlockChangesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockChangesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDbBlockChangesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDbBlockChangesPerUserCallDataPoint adds a data point to newrelicoracledb.system.db_block_changes_per_user_call metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockChangesPerUserCallDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDbBlockChangesPerUserCall.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockChangesPerUserCallDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDbBlockChangesPerUserCall.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDbBlockGetsPerSecondDataPoint adds a data point to newrelicoracledb.system.db_block_gets_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockGetsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDbBlockGetsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockGetsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDbBlockGetsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDbBlockGetsPerTransactionDataPoint adds a data point to newrelicoracledb.system.db_block_gets_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockGetsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDbBlockGetsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockGetsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDbBlockGetsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDbBlockGetsPerUserCallDataPoint adds a data point to newrelicoracledb.system.db_block_gets_per_user_call metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockGetsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDbBlockGetsPerUserCall.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbBlockGetsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDbBlockGetsPerUserCall.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDbwrCheckpointsPerSecondDataPoint adds a data point to newrelicoracledb.system.dbwr_checkpoints_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbwrCheckpointsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDbwrCheckpointsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDbwrCheckpointsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDbwrCheckpointsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDiskSortPerSecondDataPoint adds a data point to newrelicoracledb.system.disk_sort_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDiskSortPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDiskSortPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDiskSortPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDiskSortPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemDiskSortPerTransactionDataPoint adds a data point to newrelicoracledb.system.disk_sort_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDiskSortPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemDiskSortPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemDiskSortPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemDiskSortPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueDeadlocksPerSecondDataPoint adds a data point to newrelicoracledb.system.enqueue_deadlocks_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueDeadlocksPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueDeadlocksPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueDeadlocksPerTransactionDataPoint adds a data point to newrelicoracledb.system.enqueue_deadlocks_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueDeadlocksPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueDeadlocksPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueRequestsPerSecondDataPoint adds a data point to newrelicoracledb.system.enqueue_requests_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueRequestsPerTransactionDataPoint adds a data point to newrelicoracledb.system.enqueue_requests_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueRequestsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueRequestsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueRequestsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueRequestsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueTimeoutsPerSecondDataPoint adds a data point to newrelicoracledb.system.enqueue_timeouts_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueTimeoutsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueTimeoutsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueTimeoutsPerTransactionDataPoint adds a data point to newrelicoracledb.system.enqueue_timeouts_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueTimeoutsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueTimeoutsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueWaitsPerSecondDataPoint adds a data point to newrelicoracledb.system.enqueue_waits_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueWaitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueWaitsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueWaitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueWaitsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemEnqueueWaitsPerTransactionDataPoint adds a data point to newrelicoracledb.system.enqueue_waits_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueWaitsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemEnqueueWaitsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemEnqueueWaitsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemEnqueueWaitsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemExecuteWithoutParseRatioDataPoint adds a data point to newrelicoracledb.system.execute_without_parse_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecuteWithoutParseRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemExecuteWithoutParseRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecuteWithoutParseRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemExecuteWithoutParseRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemExecutionsPerSecondDataPoint adds a data point to newrelicoracledb.system.executions_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecutionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemExecutionsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecutionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemExecutionsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemExecutionsPerTransactionDataPoint adds a data point to newrelicoracledb.system.executions_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecutionsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemExecutionsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecutionsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemExecutionsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemExecutionsPerUserCallDataPoint adds a data point to newrelicoracledb.system.executions_per_user_call metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecutionsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemExecutionsPerUserCall.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemExecutionsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemExecutionsPerUserCall.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemFullIndexScansPerSecondDataPoint adds a data point to newrelicoracledb.system.full_index_scans_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemFullIndexScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemFullIndexScansPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemFullIndexScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemFullIndexScansPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemFullIndexScansPerTransactionDataPoint adds a data point to newrelicoracledb.system.full_index_scans_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemFullIndexScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemFullIndexScansPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemFullIndexScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemFullIndexScansPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGcCrBlockReceivedPerSecondDataPoint adds a data point to newrelicoracledb.system.gc_cr_block_received_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCrBlockReceivedPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCrBlockReceivedPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGcCrBlockReceivedPerTransactionDataPoint adds a data point to newrelicoracledb.system.gc_cr_block_received_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCrBlockReceivedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCrBlockReceivedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerSecondDataPoint adds a data point to newrelicoracledb.system.gc_current_block_received_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerTransactionDataPoint adds a data point to newrelicoracledb.system.gc_current_block_received_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGcCurrentBlockReceivedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGlobalCacheAverageCrGetTimeDataPoint adds a data point to newrelicoracledb.system.global_cache_average_cr_get_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheAverageCrGetTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheAverageCrGetTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGlobalCacheAverageCurrentGetTimeDataPoint adds a data point to newrelicoracledb.system.global_cache_average_current_get_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheAverageCurrentGetTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheAverageCurrentGetTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGlobalCacheBlocksCorruptedDataPoint adds a data point to newrelicoracledb.system.global_cache_blocks_corrupted metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheBlocksCorruptedDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheBlocksCorruptedDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemGlobalCacheBlocksLostDataPoint adds a data point to newrelicoracledb.system.global_cache_blocks_lost metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheBlocksLostDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemGlobalCacheBlocksLost.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemGlobalCacheBlocksLostDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemGlobalCacheBlocksLost.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemHardParseCountPerSecondDataPoint adds a data point to newrelicoracledb.system.hard_parse_count_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHardParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemHardParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHardParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemHardParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemHardParseCountPerTransactionDataPoint adds a data point to newrelicoracledb.system.hard_parse_count_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHardParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemHardParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHardParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemHardParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemHostCPUUsagePerSecondDataPoint adds a data point to newrelicoracledb.system.host_cpu_usage_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHostCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemHostCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHostCPUUsagePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemHostCPUUsagePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemHostCPUUtilizationDataPoint adds a data point to newrelicoracledb.system.host_cpu_utilization metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHostCPUUtilizationDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemHostCPUUtilization.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemHostCPUUtilizationDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemHostCPUUtilization.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemIoMegabytesPerSecondDataPoint adds a data point to newrelicoracledb.system.io_megabytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemIoMegabytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemIoMegabytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemIoMegabytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemIoMegabytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemIoRequestsPerSecondDataPoint adds a data point to newrelicoracledb.system.io_requests_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLeafNodeSplitsPerSecondDataPoint adds a data point to newrelicoracledb.system.leaf_node_splits_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLeafNodeSplitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLeafNodeSplitsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLeafNodeSplitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLeafNodeSplitsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLeafNodeSplitsPerTransactionDataPoint adds a data point to newrelicoracledb.system.leaf_node_splits_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLeafNodeSplitsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLeafNodeSplitsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLibraryCacheHitRatioDataPoint adds a data point to newrelicoracledb.system.library_cache_hit_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLibraryCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLibraryCacheHitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLibraryCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLibraryCacheHitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLibraryCacheMissRatioDataPoint adds a data point to newrelicoracledb.system.library_cache_miss_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLibraryCacheMissRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLibraryCacheMissRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLibraryCacheMissRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLibraryCacheMissRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLogicalReadsPerSecondDataPoint adds a data point to newrelicoracledb.system.logical_reads_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLogicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLogicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLogicalReadsPerTransactionDataPoint adds a data point to newrelicoracledb.system.logical_reads_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLogicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLogicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLogicalReadsPerUserCallDataPoint adds a data point to newrelicoracledb.system.logical_reads_per_user_call metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogicalReadsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLogicalReadsPerUserCall.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogicalReadsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLogicalReadsPerUserCall.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLogonsPerSecondDataPoint adds a data point to newrelicoracledb.system.logons_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogonsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLogonsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogonsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLogonsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLogonsPerTransactionDataPoint adds a data point to newrelicoracledb.system.logons_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogonsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLogonsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLogonsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLogonsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLongTableScansPerSecondDataPoint adds a data point to newrelicoracledb.system.long_table_scans_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLongTableScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLongTableScansPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLongTableScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLongTableScansPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemLongTableScansPerTransactionDataPoint adds a data point to newrelicoracledb.system.long_table_scans_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLongTableScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemLongTableScansPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemLongTableScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemLongTableScansPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemMemorySortsRatioDataPoint adds a data point to newrelicoracledb.system.memory_sorts_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemMemorySortsRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemMemorySortsRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemMemorySortsRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemMemorySortsRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemNetworkTrafficVolumePerSecondDataPoint adds a data point to newrelicoracledb.system.network_traffic_volume_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemNetworkTrafficVolumePerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemNetworkTrafficVolumePerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemOpenCursorsPerSecondDataPoint adds a data point to newrelicoracledb.system.open_cursors_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemOpenCursorsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemOpenCursorsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemOpenCursorsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemOpenCursorsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemOpenCursorsPerTransactionDataPoint adds a data point to newrelicoracledb.system.open_cursors_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemOpenCursorsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemOpenCursorsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemOpenCursorsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemOpenCursorsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemParseFailureCountPerSecondDataPoint adds a data point to newrelicoracledb.system.parse_failure_count_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemParseFailureCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemParseFailureCountPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemParseFailureCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemParseFailureCountPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemParseFailureCountPerTransactionDataPoint adds a data point to newrelicoracledb.system.parse_failure_count_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemParseFailureCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemParseFailureCountPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemParseFailureCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemParseFailureCountPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPgaCacheHitPercentageDataPoint adds a data point to newrelicoracledb.system.pga_cache_hit_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPgaCacheHitPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPgaCacheHitPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPgaCacheHitPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPgaCacheHitPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalLobsReadsPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_lobs_reads_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalLobsReadsPerTransactionDataPoint adds a data point to newrelicoracledb.system.physical_lobs_reads_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalLobsWritesPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_lobs_writes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalLobsWritesPerTransactionDataPoint adds a data point to newrelicoracledb.system.physical_lobs_writes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalLobsWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadBytesPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_read_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadIoRequestsPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_read_io_requests_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadTotalBytesPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_read_total_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadTotalBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadTotalBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_read_total_io_requests_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadsDirectPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_reads_direct_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsDirectPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsDirectPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadsDirectPerTransactionDataPoint adds a data point to newrelicoracledb.system.physical_reads_direct_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsDirectPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsDirectPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadsPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_reads_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalReadsPerTransactionDataPoint adds a data point to newrelicoracledb.system.physical_reads_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalReadsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalReadsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWriteBytesPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_write_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_write_io_requests_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_write_total_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_write_total_io_requests_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWritesDirectPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_writes_direct_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesDirectPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesDirectPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWritesDirectPerTransactionDataPoint adds a data point to newrelicoracledb.system.physical_writes_direct_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesDirectPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesDirectPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWritesPerSecondDataPoint adds a data point to newrelicoracledb.system.physical_writes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWritesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWritesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemPhysicalWritesPerTransactionDataPoint adds a data point to newrelicoracledb.system.physical_writes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemPhysicalWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemPhysicalWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemPhysicalWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemProcessLimitPercentageDataPoint adds a data point to newrelicoracledb.system.process_limit_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemProcessLimitPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemProcessLimitPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemProcessLimitPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemProcessLimitPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRecursiveCallsPerSecondDataPoint adds a data point to newrelicoracledb.system.recursive_calls_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRecursiveCallsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRecursiveCallsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRecursiveCallsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRecursiveCallsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRecursiveCallsPerTransactionDataPoint adds a data point to newrelicoracledb.system.recursive_calls_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRecursiveCallsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRecursiveCallsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRecursiveCallsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRecursiveCallsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRedoAllocationHitRatioDataPoint adds a data point to newrelicoracledb.system.redo_allocation_hit_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoAllocationHitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRedoAllocationHitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoAllocationHitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRedoAllocationHitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRedoGeneratedBytesPerSecondDataPoint adds a data point to newrelicoracledb.system.redo_generated_bytes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoGeneratedBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoGeneratedBytesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRedoGeneratedBytesPerTransactionDataPoint adds a data point to newrelicoracledb.system.redo_generated_bytes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoGeneratedBytesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoGeneratedBytesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRedoWritesPerSecondDataPoint adds a data point to newrelicoracledb.system.redo_writes_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRedoWritesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoWritesPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRedoWritesPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRedoWritesPerTransactionDataPoint adds a data point to newrelicoracledb.system.redo_writes_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRedoWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRedoWritesPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRedoWritesPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemResponseTimePerTransactionDataPoint adds a data point to newrelicoracledb.system.response_time_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemResponseTimePerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemResponseTimePerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemResponseTimePerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemResponseTimePerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRowCacheHitRatioDataPoint adds a data point to newrelicoracledb.system.row_cache_hit_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRowCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRowCacheHitRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRowCacheHitRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRowCacheHitRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRowCacheMissRatioDataPoint adds a data point to newrelicoracledb.system.row_cache_miss_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRowCacheMissRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRowCacheMissRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRowCacheMissRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRowCacheMissRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemRowsPerSortDataPoint adds a data point to newrelicoracledb.system.rows_per_sort metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRowsPerSortDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemRowsPerSort.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemRowsPerSortDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemRowsPerSort.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemSessionCountDataPoint adds a data point to newrelicoracledb.system.session_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSessionCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemSessionCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSessionCountDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemSessionCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemSessionLimitPercentageDataPoint adds a data point to newrelicoracledb.system.session_limit_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSessionLimitPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemSessionLimitPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSessionLimitPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemSessionLimitPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemSharedPoolFreePercentageDataPoint adds a data point to newrelicoracledb.system.shared_pool_free_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSharedPoolFreePercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemSharedPoolFreePercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSharedPoolFreePercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemSharedPoolFreePercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemSoftParseRatioDataPoint adds a data point to newrelicoracledb.system.soft_parse_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSoftParseRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemSoftParseRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSoftParseRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemSoftParseRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemSQLServiceResponseTimeDataPoint adds a data point to newrelicoracledb.system.sql_service_response_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSQLServiceResponseTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemSQLServiceResponseTime.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemSQLServiceResponseTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemSQLServiceResponseTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemStreamsPoolUsagePercentageDataPoint adds a data point to newrelicoracledb.system.streams_pool_usage_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemStreamsPoolUsagePercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemStreamsPoolUsagePercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemStreamsPoolUsagePercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemStreamsPoolUsagePercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTempSpaceUsedDataPoint adds a data point to newrelicoracledb.system.temp_space_used metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTempSpaceUsedDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTempSpaceUsed.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTempSpaceUsedDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTempSpaceUsed.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalIndexScansPerSecondDataPoint adds a data point to newrelicoracledb.system.total_index_scans_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalIndexScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalIndexScansPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalIndexScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalIndexScansPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalIndexScansPerTransactionDataPoint adds a data point to newrelicoracledb.system.total_index_scans_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalIndexScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalIndexScansPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalIndexScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalIndexScansPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalParseCountPerSecondDataPoint adds a data point to newrelicoracledb.system.total_parse_count_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalParseCountPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalParseCountPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalParseCountPerTransactionDataPoint adds a data point to newrelicoracledb.system.total_parse_count_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalParseCountPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalParseCountPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalSortsPerUserCallDataPoint adds a data point to newrelicoracledb.system.total_sorts_per_user_call metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalSortsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalSortsPerUserCall.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalSortsPerUserCallDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalSortsPerUserCall.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalTableScansPerSecondDataPoint adds a data point to newrelicoracledb.system.total_table_scans_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalTableScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalTableScansPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalTableScansPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalTableScansPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalTableScansPerTransactionDataPoint adds a data point to newrelicoracledb.system.total_table_scans_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalTableScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalTableScansPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalTableScansPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalTableScansPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTotalTableScansPerUserCallDataPoint adds a data point to newrelicoracledb.system.total_table_scans_per_user_call metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalTableScansPerUserCallDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTotalTableScansPerUserCall.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTotalTableScansPerUserCallDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTotalTableScansPerUserCall.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTransactionsPerLogonDataPoint adds a data point to newrelicoracledb.system.transactions_per_logon metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTransactionsPerLogonDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTransactionsPerLogon.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTransactionsPerLogonDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTransactionsPerLogon.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemTransactionsPerSecondDataPoint adds a data point to newrelicoracledb.system.transactions_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTransactionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemTransactionsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemTransactionsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemTransactionsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserCallsPerSecondDataPoint adds a data point to newrelicoracledb.system.user_calls_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCallsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserCallsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCallsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserCallsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserCallsPerTransactionDataPoint adds a data point to newrelicoracledb.system.user_calls_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCallsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserCallsPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCallsPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserCallsPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserCallsRatioDataPoint adds a data point to newrelicoracledb.system.user_calls_ratio metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCallsRatioDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserCallsRatio.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCallsRatioDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserCallsRatio.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserCommitsPerSecondDataPoint adds a data point to newrelicoracledb.system.user_commits_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCommitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserCommitsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCommitsPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserCommitsPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserCommitsPercentageDataPoint adds a data point to newrelicoracledb.system.user_commits_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCommitsPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserCommitsPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserCommitsPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserCommitsPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserLimitPercentageDataPoint adds a data point to newrelicoracledb.system.user_limit_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserLimitPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserLimitPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserLimitPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserLimitPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecondDataPoint adds a data point to newrelicoracledb.system.user_rollback_undo_records_applied_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransactionDataPoint adds a data point to newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransactionDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserRollbacksPerSecondDataPoint adds a data point to newrelicoracledb.system.user_rollbacks_per_second metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbacksPerSecondDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserRollbacksPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbacksPerSecondDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserRollbacksPerSecond.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSystemUserRollbacksPercentageDataPoint adds a data point to newrelicoracledb.system.user_rollbacks_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbacksPercentageDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbSystemUserRollbacksPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbacksPercentageDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
+	mb.metricNewrelicoracledbSystemUserRollbacksPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceDbIDDataPoint adds a data point to newrelicoracledb.tablespace.db_id metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceDbIDDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceDbID.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceDbIDDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceDbID.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceGlobalNameDataPoint adds a data point to newrelicoracledb.tablespace.global_name metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceGlobalName.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceGlobalName.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceIsOfflineDataPoint adds a data point to newrelicoracledb.tablespace.is_offline metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceIsOfflineDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceIsOffline.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceIsOfflineDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceIsOffline.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint adds a data point to newrelicoracledb.tablespace.offline_cdb_datafiles metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceOfflineCdbDatafiles.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceOfflineCdbDatafiles.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint adds a data point to newrelicoracledb.tablespace.offline_pdb_datafiles metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceOfflinePdbDatafiles.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceOfflinePdbDatafiles.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint adds a data point to newrelicoracledb.tablespace.pdb_non_write_mode metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespacePdbNonWriteMode.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespacePdbNonWriteMode.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint adds a data point to newrelicoracledb.tablespace.space_consumed_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceSpaceConsumedBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceSpaceConsumedBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint adds a data point to newrelicoracledb.tablespace.space_reserved_bytes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceSpaceReservedBytes.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceSpaceReservedBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint adds a data point to newrelicoracledb.tablespace.space_used_percentage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(ts pcommon.Timestamp, val int64, newrelicEntityNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceSpaceUsedPercentage.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceSpaceUsedPercentage.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbTablespaceTotalBytesDataPoint adds a data point to newrelicoracledb.tablespace.total_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceTotalBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceTotalBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, tablespaceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbTablespaceUsedBytesDataPoint adds a data point to newrelicoracledb.tablespace.used_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceUsedBytesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceUsedBytes.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, tablespaceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbTablespaceUsedPercentDataPoint adds a data point to newrelicoracledb.tablespace.used_percent metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceUsedPercentDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, conIDAttributeValue string, tablespaceNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceUsedPercent.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, tablespaceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint adds a data point to newrelicoracledb.wait_events.avg_wait_time_ms metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsAvgWaitTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsAvgWaitTimeMs.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint adds a data point to newrelicoracledb.wait_events.total_wait_time_ms metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsTotalWaitTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsTotalWaitTimeMs.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint adds a data point to newrelicoracledb.wait_events.waiting_tasks_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(ts pcommon.Timestamp, val float64, newrelicEntityNameAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsWaitingTasksCount.recordDataPoint(mb.startTime, ts, val, newrelicEntityNameAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsWaitingTasksCount.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue)
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,

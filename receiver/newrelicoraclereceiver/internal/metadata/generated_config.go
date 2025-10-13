@@ -28,7 +28,45 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
+	NewrelicoracledbAsmDiskgroupFreeMb                                 MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.free_mb"`
+	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
+	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
 	NewrelicoracledbBlockingQueriesWaitTime                            MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time"`
+	NewrelicoracledbConnectionActiveSessions                           MetricConfig `mapstructure:"newrelicoracledb.connection.active_sessions"`
+	NewrelicoracledbConnectionBlockingSessions                         MetricConfig `mapstructure:"newrelicoracledb.connection.blocking_sessions"`
+	NewrelicoracledbConnectionBytesReceived                            MetricConfig `mapstructure:"newrelicoracledb.connection.bytes_received"`
+	NewrelicoracledbConnectionBytesSent                                MetricConfig `mapstructure:"newrelicoracledb.connection.bytes_sent"`
+	NewrelicoracledbConnectionCircuits                                 MetricConfig `mapstructure:"newrelicoracledb.connection.circuits"`
+	NewrelicoracledbConnectionDispatchers                              MetricConfig `mapstructure:"newrelicoracledb.connection.dispatchers"`
+	NewrelicoracledbConnectionExecuteCount                             MetricConfig `mapstructure:"newrelicoracledb.connection.execute_count"`
+	NewrelicoracledbConnectionInactiveSessions                         MetricConfig `mapstructure:"newrelicoracledb.connection.inactive_sessions"`
+	NewrelicoracledbConnectionLogonsCumulative                         MetricConfig `mapstructure:"newrelicoracledb.connection.logons_cumulative"`
+	NewrelicoracledbConnectionLogonsCurrent                            MetricConfig `mapstructure:"newrelicoracledb.connection.logons_current"`
+	NewrelicoracledbConnectionParseCountHard                           MetricConfig `mapstructure:"newrelicoracledb.connection.parse_count_hard"`
+	NewrelicoracledbConnectionParseCountTotal                          MetricConfig `mapstructure:"newrelicoracledb.connection.parse_count_total"`
+	NewrelicoracledbConnectionResourceCurrentUtilization               MetricConfig `mapstructure:"newrelicoracledb.connection.resource_current_utilization"`
+	NewrelicoracledbConnectionResourceLimit                            MetricConfig `mapstructure:"newrelicoracledb.connection.resource_limit"`
+	NewrelicoracledbConnectionResourceMaxUtilization                   MetricConfig `mapstructure:"newrelicoracledb.connection.resource_max_utilization"`
+	NewrelicoracledbConnectionSessionCPUUsage                          MetricConfig `mapstructure:"newrelicoracledb.connection.session_cpu_usage"`
+	NewrelicoracledbConnectionSessionIdleTime                          MetricConfig `mapstructure:"newrelicoracledb.connection.session_idle_time"`
+	NewrelicoracledbConnectionSessionLogicalReads                      MetricConfig `mapstructure:"newrelicoracledb.connection.session_logical_reads"`
+	NewrelicoracledbConnectionSessionPgaMemory                         MetricConfig `mapstructure:"newrelicoracledb.connection.session_pga_memory"`
+	NewrelicoracledbConnectionSessionsByStatus                         MetricConfig `mapstructure:"newrelicoracledb.connection.sessions_by_status"`
+	NewrelicoracledbConnectionSessionsByType                           MetricConfig `mapstructure:"newrelicoracledb.connection.sessions_by_type"`
+	NewrelicoracledbConnectionSharedServers                            MetricConfig `mapstructure:"newrelicoracledb.connection.shared_servers"`
+	NewrelicoracledbConnectionSqlnetRoundtrips                         MetricConfig `mapstructure:"newrelicoracledb.connection.sqlnet_roundtrips"`
+	NewrelicoracledbConnectionTotalSessions                            MetricConfig `mapstructure:"newrelicoracledb.connection.total_sessions"`
+	NewrelicoracledbConnectionUserCommits                              MetricConfig `mapstructure:"newrelicoracledb.connection.user_commits"`
+	NewrelicoracledbConnectionUserRollbacks                            MetricConfig `mapstructure:"newrelicoracledb.connection.user_rollbacks"`
+	NewrelicoracledbConnectionWaitEventAvgWaitTime                     MetricConfig `mapstructure:"newrelicoracledb.connection.wait_event_avg_wait_time"`
+	NewrelicoracledbConnectionWaitEventTimeWaited                      MetricConfig `mapstructure:"newrelicoracledb.connection.wait_event_time_waited"`
+	NewrelicoracledbConnectionWaitEventTotalWaits                      MetricConfig `mapstructure:"newrelicoracledb.connection.wait_event_total_waits"`
+	NewrelicoracledbConnectionWaitEvents                               MetricConfig `mapstructure:"newrelicoracledb.connection.wait_events"`
+	NewrelicoracledbContainerRestricted                                MetricConfig `mapstructure:"newrelicoracledb.container.restricted"`
+	NewrelicoracledbContainerStatus                                    MetricConfig `mapstructure:"newrelicoracledb.container.status"`
+	NewrelicoracledbDatafileAutoextensible                             MetricConfig `mapstructure:"newrelicoracledb.datafile.autoextensible"`
+	NewrelicoracledbDatafileSizeBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.size_bytes"`
+	NewrelicoracledbDatafileUsedBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.used_bytes"`
 	NewrelicoracledbDbID                                               MetricConfig `mapstructure:"newrelicoracledb.db_id"`
 	NewrelicoracledbDiskBlocksRead                                     MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_read"`
 	NewrelicoracledbDiskBlocksWritten                                  MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_written"`
@@ -77,6 +115,7 @@ type MetricsConfig struct {
 	NewrelicoracledbPdbNetworkTrafficBytePerSecond                     MetricConfig `mapstructure:"newrelicoracledb.pdb.network_traffic_byte_per_second"`
 	NewrelicoracledbPdbOpenCursorsPerSecond                            MetricConfig `mapstructure:"newrelicoracledb.pdb.open_cursors_per_second"`
 	NewrelicoracledbPdbOpenCursorsPerTransaction                       MetricConfig `mapstructure:"newrelicoracledb.pdb.open_cursors_per_transaction"`
+	NewrelicoracledbPdbOpenMode                                        MetricConfig `mapstructure:"newrelicoracledb.pdb.open_mode"`
 	NewrelicoracledbPdbParseFailureCountPerSecond                      MetricConfig `mapstructure:"newrelicoracledb.pdb.parse_failure_count_per_second"`
 	NewrelicoracledbPdbPhysicalReadBytesPerSecond                      MetricConfig `mapstructure:"newrelicoracledb.pdb.physical_read_bytes_per_second"`
 	NewrelicoracledbPdbPhysicalReadsPerTransaction                     MetricConfig `mapstructure:"newrelicoracledb.pdb.physical_reads_per_transaction"`
@@ -88,8 +127,10 @@ type MetricsConfig struct {
 	NewrelicoracledbPdbSessionCount                                    MetricConfig `mapstructure:"newrelicoracledb.pdb.session_count"`
 	NewrelicoracledbPdbSoftParseRatio                                  MetricConfig `mapstructure:"newrelicoracledb.pdb.soft_parse_ratio"`
 	NewrelicoracledbPdbSQLServiceResponseTime                          MetricConfig `mapstructure:"newrelicoracledb.pdb.sql_service_response_time"`
+	NewrelicoracledbPdbStatus                                          MetricConfig `mapstructure:"newrelicoracledb.pdb.status"`
 	NewrelicoracledbPdbTotalParseCountPerSecond                        MetricConfig `mapstructure:"newrelicoracledb.pdb.total_parse_count_per_second"`
 	NewrelicoracledbPdbTotalParseCountPerTransaction                   MetricConfig `mapstructure:"newrelicoracledb.pdb.total_parse_count_per_transaction"`
+	NewrelicoracledbPdbTotalSizeBytes                                  MetricConfig `mapstructure:"newrelicoracledb.pdb.total_size_bytes"`
 	NewrelicoracledbPdbTransactionsPerSecond                           MetricConfig `mapstructure:"newrelicoracledb.pdb.transactions_per_second"`
 	NewrelicoracledbPdbUserCallsPerSecond                              MetricConfig `mapstructure:"newrelicoracledb.pdb.user_calls_per_second"`
 	NewrelicoracledbPdbUserCallsPerTransaction                         MetricConfig `mapstructure:"newrelicoracledb.pdb.user_calls_per_transaction"`
@@ -98,6 +139,22 @@ type MetricsConfig struct {
 	NewrelicoracledbPdbUserRollbacksPerSecond                          MetricConfig `mapstructure:"newrelicoracledb.pdb.user_rollbacks_per_second"`
 	NewrelicoracledbPdbUserRollbacksPercentage                         MetricConfig `mapstructure:"newrelicoracledb.pdb.user_rollbacks_percentage"`
 	NewrelicoracledbPdbWaitTimeRatio                                   MetricConfig `mapstructure:"newrelicoracledb.pdb.wait_time_ratio"`
+	NewrelicoracledbRacInstanceActiveState                             MetricConfig `mapstructure:"newrelicoracledb.rac.instance.active_state"`
+	NewrelicoracledbRacInstanceArchiverStarted                         MetricConfig `mapstructure:"newrelicoracledb.rac.instance.archiver_started"`
+	NewrelicoracledbRacInstanceDatabaseStatus                          MetricConfig `mapstructure:"newrelicoracledb.rac.instance.database_status"`
+	NewrelicoracledbRacInstanceLoginsAllowed                           MetricConfig `mapstructure:"newrelicoracledb.rac.instance.logins_allowed"`
+	NewrelicoracledbRacInstanceStatus                                  MetricConfig `mapstructure:"newrelicoracledb.rac.instance.status"`
+	NewrelicoracledbRacInstanceUptimeSeconds                           MetricConfig `mapstructure:"newrelicoracledb.rac.instance.uptime_seconds"`
+	NewrelicoracledbRacInstanceVersionInfo                             MetricConfig `mapstructure:"newrelicoracledb.rac.instance.version_info"`
+	NewrelicoracledbRacServiceClbConfig                                MetricConfig `mapstructure:"newrelicoracledb.rac.service.clb_config"`
+	NewrelicoracledbRacServiceCreationAgeDays                          MetricConfig `mapstructure:"newrelicoracledb.rac.service.creation_age_days"`
+	NewrelicoracledbRacServiceFailoverConfig                           MetricConfig `mapstructure:"newrelicoracledb.rac.service.failover_config"`
+	NewrelicoracledbRacServiceFailoverDelaySeconds                     MetricConfig `mapstructure:"newrelicoracledb.rac.service.failover_delay_seconds"`
+	NewrelicoracledbRacServiceFailoverRetries                          MetricConfig `mapstructure:"newrelicoracledb.rac.service.failover_retries"`
+	NewrelicoracledbRacServiceInstanceID                               MetricConfig `mapstructure:"newrelicoracledb.rac.service.instance_id"`
+	NewrelicoracledbRacServiceNetworkConfig                            MetricConfig `mapstructure:"newrelicoracledb.rac.service.network_config"`
+	NewrelicoracledbRacTotalWaits                                      MetricConfig `mapstructure:"newrelicoracledb.rac.total_waits"`
+	NewrelicoracledbRacWaitTime                                        MetricConfig `mapstructure:"newrelicoracledb.rac.wait_time"`
 	NewrelicoracledbRedoLogParallelWriteWaits                          MetricConfig `mapstructure:"newrelicoracledb.redo_log_parallel_write_waits"`
 	NewrelicoracledbRedoLogSwitchArchivingNeededWaits                  MetricConfig `mapstructure:"newrelicoracledb.redo_log_switch_archiving_needed_waits"`
 	NewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits             MetricConfig `mapstructure:"newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits"`
@@ -105,6 +162,8 @@ type MetricsConfig struct {
 	NewrelicoracledbRollbackSegmentsGets                               MetricConfig `mapstructure:"newrelicoracledb.rollback_segments_gets"`
 	NewrelicoracledbRollbackSegmentsWaitRatio                          MetricConfig `mapstructure:"newrelicoracledb.rollback_segments_wait_ratio"`
 	NewrelicoracledbRollbackSegmentsWaits                              MetricConfig `mapstructure:"newrelicoracledb.rollback_segments_waits"`
+	NewrelicoracledbServiceCount                                       MetricConfig `mapstructure:"newrelicoracledb.service.count"`
+	NewrelicoracledbServiceStatus                                      MetricConfig `mapstructure:"newrelicoracledb.service.status"`
 	NewrelicoracledbSessionsCount                                      MetricConfig `mapstructure:"newrelicoracledb.sessions.count"`
 	NewrelicoracledbSgaBufferBusyWaits                                 MetricConfig `mapstructure:"newrelicoracledb.sga_buffer_busy_waits"`
 	NewrelicoracledbSgaFixedSizeBytes                                  MetricConfig `mapstructure:"newrelicoracledb.sga_fixed_size_bytes"`
@@ -277,6 +336,9 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceSpaceConsumedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_consumed_bytes"`
 	NewrelicoracledbTablespaceSpaceReservedBytes                       MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_reserved_bytes"`
 	NewrelicoracledbTablespaceSpaceUsedPercentage                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.space_used_percentage"`
+	NewrelicoracledbTablespaceTotalBytes                               MetricConfig `mapstructure:"newrelicoracledb.tablespace.total_bytes"`
+	NewrelicoracledbTablespaceUsedBytes                                MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_bytes"`
+	NewrelicoracledbTablespaceUsedPercent                              MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_percent"`
 	NewrelicoracledbWaitEventsAvgWaitTimeMs                            MetricConfig `mapstructure:"newrelicoracledb.wait_events.avg_wait_time_ms"`
 	NewrelicoracledbWaitEventsTotalWaitTimeMs                          MetricConfig `mapstructure:"newrelicoracledb.wait_events.total_wait_time_ms"`
 	NewrelicoracledbWaitEventsWaitingTasksCount                        MetricConfig `mapstructure:"newrelicoracledb.wait_events.waiting_tasks_count"`
@@ -284,7 +346,121 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		NewrelicoracledbAsmDiskgroupFreeMb: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbAsmDiskgroupOfflineDisks: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbAsmDiskgroupTotalMb: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbBlockingQueriesWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionActiveSessions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionBlockingSessions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionBytesReceived: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionBytesSent: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionCircuits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionDispatchers: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionExecuteCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionInactiveSessions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionLogonsCumulative: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionLogonsCurrent: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionParseCountHard: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionParseCountTotal: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionResourceCurrentUtilization: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionResourceLimit: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionResourceMaxUtilization: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSessionCPUUsage: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSessionIdleTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSessionLogicalReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSessionPgaMemory: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSessionsByStatus: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSessionsByType: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSharedServers: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionSqlnetRoundtrips: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionTotalSessions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionUserCommits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionUserRollbacks: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionWaitEventAvgWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionWaitEventTimeWaited: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionWaitEventTotalWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbConnectionWaitEvents: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbContainerRestricted: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbContainerStatus: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbDatafileAutoextensible: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbDatafileSizeBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbDatafileUsedBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbDbID: MetricConfig{
@@ -431,6 +607,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbPdbOpenCursorsPerTransaction: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbPdbOpenMode: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbPdbParseFailureCountPerSecond: MetricConfig{
 			Enabled: true,
 		},
@@ -464,10 +643,16 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbPdbSQLServiceResponseTime: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbPdbStatus: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbPdbTotalParseCountPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbPdbTotalParseCountPerTransaction: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPdbTotalSizeBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbPdbTransactionsPerSecond: MetricConfig{
@@ -494,6 +679,54 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbPdbWaitTimeRatio: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbRacInstanceActiveState: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacInstanceArchiverStarted: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacInstanceDatabaseStatus: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacInstanceLoginsAllowed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacInstanceStatus: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacInstanceUptimeSeconds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacInstanceVersionInfo: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacServiceClbConfig: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacServiceCreationAgeDays: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacServiceFailoverConfig: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacServiceFailoverDelaySeconds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacServiceFailoverRetries: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacServiceInstanceID: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacServiceNetworkConfig: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacTotalWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbRacWaitTime: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbRedoLogParallelWriteWaits: MetricConfig{
 			Enabled: true,
 		},
@@ -513,6 +746,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbRollbackSegmentsWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbServiceCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbServiceStatus: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSessionsCount: MetricConfig{
@@ -1029,6 +1268,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbTablespaceSpaceUsedPercentage: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbTablespaceTotalBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbTablespaceUsedBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbTablespaceUsedPercent: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbWaitEventsAvgWaitTimeMs: MetricConfig{
