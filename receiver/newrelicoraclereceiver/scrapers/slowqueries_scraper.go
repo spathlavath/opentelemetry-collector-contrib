@@ -61,11 +61,17 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.logger.Error("Failed to execute slow queries query", zap.Error(err))
 		return nil, []error{err}
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			s.logger.Warn("Failed to close slow queries result set", zap.Error(closeErr))
+		}
+	}()
 
 	now := pcommon.NewTimestampFromTime(time.Now())
+	rowCount := 0
 
 	for rows.Next() {
+		rowCount++
 		var slowQuery models.SlowQuery
 
 		if err := rows.Scan(
@@ -179,6 +185,9 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-	s.logger.Debug("Completed Oracle slow queries scrape", zap.Int("query_ids_collected", len(queryIDs)))
+	s.logger.Debug("Completed Oracle slow queries scrape", 
+		zap.Int("rows_processed", rowCount),
+		zap.Int("query_ids_collected", len(queryIDs)),
+		zap.Int("errors_encountered", len(scrapeErrors)))
 	return queryIDs, scrapeErrors
 }

@@ -60,11 +60,17 @@ func (s *BlockingScraper) ScrapeBlockingQueries(ctx context.Context) []error {
 		s.logger.Error("Failed to execute blocking queries query", zap.Error(err))
 		return []error{err}
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			s.logger.Warn("Failed to close blocking queries result set", zap.Error(closeErr))
+		}
+	}()
 
 	now := pcommon.NewTimestampFromTime(time.Now())
+	rowCount := 0
 
 	for rows.Next() {
+		rowCount++
 		var blockingQuery models.BlockingQuery
 
 		if err := rows.Scan(
@@ -153,6 +159,8 @@ func (s *BlockingScraper) ScrapeBlockingQueries(ctx context.Context) []error {
 		scrapeErrors = append(scrapeErrors, err)
 	}
 
-	s.logger.Debug("Completed blocking queries scrape")
+	s.logger.Debug("Completed blocking queries scrape", 
+		zap.Int("rows_processed", rowCount),
+		zap.Int("errors_encountered", len(scrapeErrors)))
 	return scrapeErrors
 }

@@ -85,7 +85,11 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		s.logger.Error("Failed to execute individual queries query", zap.Error(err))
 		return []error{err}
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			s.logger.Warn("Failed to close individual queries result set", zap.Error(closeErr))
+		}
+	}()
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 

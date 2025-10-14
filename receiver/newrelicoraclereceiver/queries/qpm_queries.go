@@ -89,7 +89,8 @@ const (
 		WHERE
 			s2.blocking_session IS NOT NULL
 		ORDER BY
-			s2.seconds_in_wait DESC`
+			s2.seconds_in_wait DESC
+		FETCH FIRST 100 ROWS ONLY`
 	// Oracle SQL query for wait event queries metrics
 	WaitEventQueriesSQL = `
 		SELECT
