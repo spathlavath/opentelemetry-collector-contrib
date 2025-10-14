@@ -3,6 +3,7 @@ package scrapers
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -24,18 +25,18 @@ type SlowQueriesScraper struct {
 }
 
 // NewSlowQueriesScraper creates a new Slow Queries Scraper instance
-func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *SlowQueriesScraper {
+func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) (*SlowQueriesScraper, error) {
 	if db == nil {
-		panic("database connection cannot be nil")
+		return nil, fmt.Errorf("database connection cannot be nil")
 	}
 	if mb == nil {
-		panic("metrics builder cannot be nil")
+		return nil, fmt.Errorf("metrics builder cannot be nil")
 	}
 	if logger == nil {
-		panic("logger cannot be nil")
+		return nil, fmt.Errorf("logger cannot be nil")
 	}
 	if instanceName == "" {
-		panic("instance name cannot be empty")
+		return nil, fmt.Errorf("instance name cannot be empty")
 	}
 
 	return &SlowQueriesScraper{
@@ -44,7 +45,7 @@ func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.
 		logger:               logger,
 		instanceName:         instanceName,
 		metricsBuilderConfig: metricsBuilderConfig,
-	}
+	}, nil
 }
 
 // ScrapeSlowQueries collects Oracle slow queries metrics and returns a list of query IDs

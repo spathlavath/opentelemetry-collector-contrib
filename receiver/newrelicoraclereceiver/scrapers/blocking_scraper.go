@@ -25,10 +25,18 @@ type BlockingScraper struct {
 }
 
 // NewBlockingScraper creates a new Blocking Queries Scraper instance
-func NewBlockingScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *BlockingScraper {
+func NewBlockingScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) (*BlockingScraper, error) {
 	if db == nil {
-		logger.Error("Database connection is nil in NewBlockingScraper")
-		return nil
+		return nil, fmt.Errorf("database connection cannot be nil")
+	}
+	if mb == nil {
+		return nil, fmt.Errorf("metrics builder cannot be nil")
+	}
+	if logger == nil {
+		return nil, fmt.Errorf("logger cannot be nil")
+	}
+	if instanceName == "" {
+		return nil, fmt.Errorf("instance name cannot be empty")
 	}
 
 	return &BlockingScraper{
@@ -37,7 +45,7 @@ func NewBlockingScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Log
 		logger:               logger,
 		instanceName:         instanceName,
 		metricsBuilderConfig: metricsBuilderConfig,
-	}
+	}, nil
 }
 
 // ScrapeBlockingQueries collects Oracle blocking queries metrics

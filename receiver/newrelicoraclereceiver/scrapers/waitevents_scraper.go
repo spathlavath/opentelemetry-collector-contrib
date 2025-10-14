@@ -3,6 +3,7 @@ package scrapers
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -23,18 +24,18 @@ type WaitEventsScraper struct {
 }
 
 // NewWaitEventsScraper creates a new Wait Events Scraper instance
-func NewWaitEventsScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *WaitEventsScraper {
+func NewWaitEventsScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) (*WaitEventsScraper, error) {
 	if db == nil {
-		panic("database connection cannot be nil")
+		return nil, fmt.Errorf("database connection cannot be nil")
 	}
 	if mb == nil {
-		panic("metrics builder cannot be nil")
+		return nil, fmt.Errorf("metrics builder cannot be nil")
 	}
 	if logger == nil {
-		panic("logger cannot be nil")
+		return nil, fmt.Errorf("logger cannot be nil")
 	}
 	if instanceName == "" {
-		panic("instance name cannot be empty")
+		return nil, fmt.Errorf("instance name cannot be empty")
 	}
 
 	return &WaitEventsScraper{
@@ -43,7 +44,7 @@ func NewWaitEventsScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.L
 		logger:               logger,
 		instanceName:         instanceName,
 		metricsBuilderConfig: metricsBuilderConfig,
-	}
+	}, nil
 }
 
 // ScrapeWaitEvents collects Oracle wait events metrics
