@@ -130,7 +130,6 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			s.mb.RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(
 				now,
 				float64(waitingTasksCount.Int64),
-				s.instanceName,
 				dbName,
 				qID,
 				waitEvent,
@@ -142,7 +141,6 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		s.mb.RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(
 			now,
 			totalWaitTimeMs.Float64,
-			s.instanceName,
 			dbName,
 			qID,
 			waitEvent,
@@ -153,7 +151,6 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		s.mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(
 			now,
 			avgWaitTimeMs.Float64,
-			s.instanceName,
 			dbName,
 			qID,
 			waitEvent,

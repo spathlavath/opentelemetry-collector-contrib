@@ -138,7 +138,6 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 			s.mb.RecordNewrelicoracledbIndividualQueriesCPUTimeDataPoint(
 				now,
 				individualQuery.CPUTimeMs.Float64,
-				s.instanceName,
 				dbName,
 				qID,
 			)
@@ -148,7 +147,6 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		s.mb.RecordNewrelicoracledbIndividualQueriesElapsedTimeDataPoint(
 			now,
 			individualQuery.ElapsedTimeMs.Float64,
-			s.instanceName,
 			dbName,
 			qID,
 		)
@@ -157,7 +155,6 @@ func (s *IndividualQueriesScraper) ScrapeIndividualQueries(ctx context.Context, 
 		s.mb.RecordNewrelicoracledbIndividualQueriesQueryDetailsDataPoint(
 			now,
 			1, // Count of 1 for each query
-			s.instanceName,
 			qID,
 			qText,
 			dbName,

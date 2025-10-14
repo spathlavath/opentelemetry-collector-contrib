@@ -6,6 +6,64 @@ package queries
 // Oracle SQL query for session count metric
 const (
 	SessionCountSQL = "SELECT COUNT(*) as SESSION_COUNT FROM v$session WHERE type = 'USER'"
+
+	// RAC-specific queries for cluster monitoring
+
+	// ASM Disk Group monitoring query
+	ASMDiskGroupSQL = `
+		SELECT
+			NAME,
+			TOTAL_MB,
+			FREE_MB,
+			OFFLINE_DISKS
+		FROM GV$ASM_DISKGROUP`
+
+	// Cluster wait events query
+	ClusterWaitEventsSQL = `
+		SELECT
+			INST_ID,
+			EVENT,
+			TOTAL_WAITS,
+			TIME_WAITED_MICRO
+		FROM GV$SYSTEM_EVENT
+		WHERE WAIT_CLASS = 'Cluster'`
+
+	// RAC instance status query
+	RACInstanceStatusSQL = `
+		SELECT
+			INST_ID,
+			INSTANCE_NAME,
+			HOST_NAME,
+			STATUS,
+			STARTUP_TIME,
+			DATABASE_STATUS,
+			ACTIVE_STATE,
+			LOGINS,
+			ARCHIVER,
+			VERSION
+		FROM GV$INSTANCE`
+
+	// Active services query for failover tracking
+	RACActiveServicesSQL = `
+		SELECT
+			NAME AS SERVICE_NAME,
+			INST_ID,
+			FAILOVER_METHOD,
+			FAILOVER_TYPE,
+			GOAL,
+			NETWORK_NAME,
+			CREATION_DATE,
+			FAILOVER_RETRIES,
+			FAILOVER_DELAY,
+			CLB_GOAL
+		FROM GV$ACTIVE_SERVICES`
+
+	// RAC detection query - checks if Oracle is running in RAC mode
+	RACDetectionSQL = `
+		SELECT 
+			VALUE 
+		FROM V$PARAMETER 
+		WHERE NAME = 'cluster_database'`
 )
 
 // Oracle SQL query for system metrics from gv$sysmetric
@@ -61,12 +119,28 @@ const (
 		WHERE a.con_id = b.con_id
 		GROUP BY a.TABLESPACE_NAME`
 
+	// Alternative for PDB context - uses current container's data files
+	PDBDatafilesOfflineCurrentContainerSQL = `
+		SELECT
+			sum(CASE WHEN ONLINE_STATUS IN ('ONLINE','SYSTEM','RECOVER') THEN 0 ELSE 1 END) AS PDB_DATAFILES_OFFLINE,
+			TABLESPACE_NAME
+		FROM dba_data_files
+		GROUP BY TABLESPACE_NAME`
+
 	PDBNonWriteTablespaceSQL = `
 		SELECT 
 			TABLESPACE_NAME, 
 			sum(CASE WHEN ONLINE_STATUS IN ('ONLINE','SYSTEM','RECOVER') THEN 0 ELSE 1 END) AS PDB_NON_WRITE_MODE
 		FROM cdb_data_files a, cdb_pdbs b
 		WHERE a.con_id = b.con_id
+		GROUP BY TABLESPACE_NAME`
+
+	// Alternative for PDB context - uses current container's data files
+	PDBNonWriteCurrentContainerSQL = `
+		SELECT 
+			TABLESPACE_NAME, 
+			sum(CASE WHEN ONLINE_STATUS IN ('ONLINE','SYSTEM','RECOVER') THEN 0 ELSE 1 END) AS PDB_NON_WRITE_MODE
+		FROM dba_data_files
 		GROUP BY TABLESPACE_NAME`
 
 	// Core database metrics queries
@@ -80,6 +154,18 @@ const (
 				cdb_pdbs b
 			WHERE a.con_id = b.con_id
 				AND a.account_status != 'OPEN'
+		) l,
+		gv$instance i`
+
+	// Alternative for PDB context - uses current container's users
+	LockedAccountsCurrentContainerSQL = `
+		SELECT
+			INST_ID, LOCKED_ACCOUNTS
+		FROM
+		(	SELECT count(1) AS LOCKED_ACCOUNTS
+			FROM
+				dba_users
+			WHERE account_status != 'OPEN'
 		) l,
 		gv$instance i`
 
@@ -242,4 +328,110 @@ const (
 			METRIC_NAME,
 			VALUE
 		FROM gv$con_sysmetric`
+
+	// Container Database (CDB) Level Metrics
+	ContainerStatusSQL = `
+		SELECT 
+			CON_ID,
+			NAME as CONTAINER_NAME,
+			OPEN_MODE,
+			RESTRICTED,
+			OPEN_TIME
+		FROM GV$CONTAINERS
+		WHERE ROWNUM <= 1000` // Limit for performance
+
+	PDBStatusSQL = `
+		SELECT 
+			CON_ID,
+			NAME as PDB_NAME,
+			CREATE_SCN,
+			OPEN_MODE,
+			RESTRICTED,
+			OPEN_TIME,
+			TOTAL_SIZE
+		FROM GV$PDBS
+		WHERE ROWNUM <= 1000` // Limit for performance
+
+	CDBTablespaceUsageSQL = `
+		SELECT 
+			con_id,
+			tablespace_name,
+			used_space * block_size as used_bytes,
+			tablespace_size * block_size as total_bytes,
+			used_percent
+		FROM CDB_TABLESPACE_USAGE_METRICS
+		WHERE ROWNUM <= 5000` // Reasonable limit for tablespaces
+
+	CDBDataFilesSQL = `
+		SELECT 
+			con_id,
+			file_name,
+			tablespace_name,
+			bytes,
+			status,
+			autoextensible,
+			maxbytes,
+			user_bytes
+		FROM CDB_DATA_FILES
+		WHERE ROWNUM <= 10000` // Limit for performance
+
+	CDBServicesSQL = `
+		SELECT 
+			con_id,
+			name as service_name,
+			network_name,
+			creation_date,
+			pdb,
+			enabled
+		FROM CDB_SERVICES
+		WHERE ROWNUM <= 1000` // Reasonable service limit
+
+	ContainerSysMetricsSQL = `
+		SELECT 
+			con_id,
+			metric_name,
+			value,
+			metric_unit,
+			group_id
+		FROM GV$CON_SYSMETRIC 
+		WHERE group_id = 2
+		AND ROWNUM <= 5000` // Limit for performance
+
+	// Alternative query for when connected to CDB$ROOT
+	CDBSysMetricsSQL = `
+		SELECT 
+			con_id,
+			metric_name,
+			value,
+			metric_unit,
+			group_id
+		FROM GV$SYSMETRIC 
+		WHERE group_id = 2
+		AND ROWNUM <= 5000` // Limit for performance
+
+	// Environment detection queries
+	CheckCDBFeatureSQL = `
+		SELECT 
+			CASE WHEN CDB = 'YES' THEN 1 ELSE 0 END as IS_CDB
+		FROM V$DATABASE`
+
+	CheckPDBCapabilitySQL = `
+		SELECT COUNT(*) as PDB_COUNT
+		FROM ALL_TABLES 
+		WHERE TABLE_NAME = 'CDB_PDBS' 
+		AND OWNER = 'SYS'`
+
+	// ASM detection query - checks if ASM instance is available
+	ASMDetectionSQL = `
+		SELECT COUNT(*) as ASM_COUNT
+		FROM ALL_TABLES 
+		WHERE TABLE_NAME = 'GV$ASM_DISKGROUP' 
+		AND OWNER = 'SYS'`
+
+	// Check current container context
+	CheckCurrentContainerSQL = `
+		SELECT 
+			SYS_CONTEXT('USERENV', 'CON_NAME') as CONTAINER_NAME,
+			SYS_CONTEXT('USERENV', 'CON_ID') as CONTAINER_ID
+		FROM DUAL`
 )
