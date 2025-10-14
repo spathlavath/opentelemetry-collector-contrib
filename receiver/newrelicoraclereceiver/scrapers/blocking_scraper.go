@@ -126,7 +126,6 @@ func (s *BlockingScraper) ScrapeBlockingQueries(ctx context.Context) []error {
 			s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(
 				now,
 				blockingQuery.BlockedWaitSec.Float64,
-				s.instanceName, // newrelicEntityNameAttributeValue
 				s.instanceName, // instanceIDAttributeValue
 				blockedUser,
 				blockingUser,

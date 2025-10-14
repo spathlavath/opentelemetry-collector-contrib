@@ -114,7 +114,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 				now,
 				float64(slowQuery.ExecutionCount.Int64),
-				s.instanceName,
+				
 				dbName,
 				qID,
 			)
@@ -125,7 +125,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
 				now,
 				slowQuery.AvgCPUTimeMs.Float64,
-				s.instanceName,
+				
 				dbName,
 				qID,
 			)
@@ -136,7 +136,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
 				now,
 				slowQuery.AvgDiskReads.Float64,
-				s.instanceName,
+				
 				dbName,
 				qID,
 			)
@@ -147,7 +147,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(
 				now,
 				slowQuery.AvgDiskWrites.Float64,
-				s.instanceName,
+				
 				dbName,
 				qID,
 			)
@@ -157,7 +157,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
 			now,
 			slowQuery.AvgElapsedTimeMs.Float64,
-			s.instanceName,
+			
 			dbName,
 			qID,
 		)
@@ -165,7 +165,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
 			1,
-			s.instanceName,
+			
 			dbName,
 			qID,
 			qText,
