@@ -159,7 +159,8 @@ func (c Config) validateUsername() error {
 	}
 
 	// Check for potentially dangerous characters that could indicate SQL injection attempts
-	dangerousChars := regexp.MustCompile(`[';\"\\--/\*]`)
+	// Note: In character classes, - should be escaped or placed at start/end to avoid range interpretation
+	dangerousChars := regexp.MustCompile(`[';"\\/\*-]`)
 	if dangerousChars.MatchString(c.Username) {
 		return errInvalidUsername
 	}
