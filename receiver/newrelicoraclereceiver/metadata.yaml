@@ -40,6 +40,9 @@ attributes:
   username:
     description: Oracle username who parsed the SQL
     type: string
+  user_name:
+    description: Oracle username for slow queries
+    type: string
   wait_event_name:
     description: Oracle wait event name for wait events
     type: string
@@ -3348,6 +3351,36 @@ metrics:
       - database_name
       - query_id
 
+  newrelicoracledb.slow_queries.sharable_memory:
+    description: Total memory used in the Shared Pool by slow queries
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - database_name
+      - query_id
+
+  newrelicoracledb.slow_queries.persistent_memory:
+    description: Persistent memory used by slow query cursors
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - database_name
+      - query_id
+
+  newrelicoracledb.slow_queries.runtime_memory:
+    description: Runtime memory used by slow query cursors
+    enabled: true
+    gauge:
+      value_type: int
+    unit: By
+    attributes:
+      - database_name
+      - query_id
+
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
     enabled: true
@@ -3360,7 +3393,8 @@ metrics:
       - query_text
       - schema_name
       - statement_type
-      - has_full_table_scan    
+      - has_full_table_scan
+      - user_name    
 
   newrelicoracledb.blocking_queries.wait_time:
     description: Wait time in seconds for blocked queries

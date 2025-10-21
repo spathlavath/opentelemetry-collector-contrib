@@ -2359,6 +2359,21 @@ Number of executions for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 
+### newrelicoracledb.slow_queries.persistent_memory
+
+Persistent memory used by slow query cursors
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+
 ### newrelicoracledb.slow_queries.query_details
 
 Slow Query Details
@@ -2377,6 +2392,37 @@ Slow Query Details
 | schema_name | Schema name where the query is executed | Any Str | false |
 | statement_type | Type of SQL statement or application module | Any Str | false |
 | has_full_table_scan | Whether the query has a full table scan | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.runtime_memory
+
+Runtime memory used by slow query cursors
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+
+### newrelicoracledb.slow_queries.sharable_memory
+
+Total memory used in the Shared Pool by slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
 

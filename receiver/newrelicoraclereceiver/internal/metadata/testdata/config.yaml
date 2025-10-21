@@ -305,7 +305,13 @@ all_set:
       enabled: true
     newrelicoracledb.slow_queries.execution_count:
       enabled: true
+    newrelicoracledb.slow_queries.persistent_memory:
+      enabled: true
     newrelicoracledb.slow_queries.query_details:
+      enabled: true
+    newrelicoracledb.slow_queries.runtime_memory:
+      enabled: true
+    newrelicoracledb.slow_queries.sharable_memory:
       enabled: true
     newrelicoracledb.sorts_disk:
       enabled: true
@@ -934,7 +940,13 @@ none_set:
       enabled: false
     newrelicoracledb.slow_queries.execution_count:
       enabled: false
+    newrelicoracledb.slow_queries.persistent_memory:
+      enabled: false
     newrelicoracledb.slow_queries.query_details:
+      enabled: false
+    newrelicoracledb.slow_queries.runtime_memory:
+      enabled: false
+    newrelicoracledb.slow_queries.sharable_memory:
       enabled: false
     newrelicoracledb.sorts_disk:
       enabled: false
