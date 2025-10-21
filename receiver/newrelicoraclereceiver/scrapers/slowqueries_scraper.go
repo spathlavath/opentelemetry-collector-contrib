@@ -234,6 +234,20 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
+
+	// Console logging for collected query IDs
+	if len(queryIDs) > 0 {
+		fmt.Printf("=== Slow Queries Report ===\n")
+		fmt.Printf("Total Query IDs collected: %d\n", len(queryIDs))
+		fmt.Printf("Query IDs:\n")
+		for i, queryID := range queryIDs {
+			fmt.Printf("  %d. %s\n", i+1, queryID)
+		}
+		fmt.Printf("==========================\n")
+	} else {
+		fmt.Printf("No slow query IDs collected\n")
+	}
+
 	s.logger.Debug("Completed Oracle slow queries scrape",
 		zap.Int("rows_processed", rowCount),
 		zap.Int("query_ids_collected", len(queryIDs)),

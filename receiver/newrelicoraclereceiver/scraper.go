@@ -35,17 +35,18 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Keep session scraper and add tablespace scraper and core scraper
-	sessionScraper     *scrapers.SessionScraper
-	tablespaceScraper  *scrapers.TablespaceScraper
-	coreScraper        *scrapers.CoreScraper
-	pdbScraper         *scrapers.PdbScraper
-	systemScraper      *scrapers.SystemScraper
-	slowQueriesScraper *scrapers.SlowQueriesScraper
-	blockingScraper    *scrapers.BlockingScraper
-	waitEventsScraper  *scrapers.WaitEventsScraper
-	connectionScraper  *scrapers.ConnectionScraper
-	containerScraper   *scrapers.ContainerScraper
-	racScraper         *scrapers.RacScraper
+	sessionScraper       *scrapers.SessionScraper
+	tablespaceScraper    *scrapers.TablespaceScraper
+	coreScraper          *scrapers.CoreScraper
+	pdbScraper           *scrapers.PdbScraper
+	systemScraper        *scrapers.SystemScraper
+	slowQueriesScraper   *scrapers.SlowQueriesScraper
+	executionPlanScraper *scrapers.ExecutionPlanScraper
+	blockingScraper      *scrapers.BlockingScraper
+	waitEventsScraper    *scrapers.WaitEventsScraper
+	connectionScraper    *scrapers.ConnectionScraper
+	containerScraper     *scrapers.ContainerScraper
+	racScraper           *scrapers.RacScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -98,6 +99,12 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	s.slowQueriesScraper, err = scrapers.NewSlowQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 	if err != nil {
 		return fmt.Errorf("failed to create slow queries scraper: %w", err)
+	}
+
+	// Initialize execution plan scraper with direct DB connection
+	s.executionPlanScraper, err = scrapers.NewExecutionPlanScraper(s.db, s.logger)
+	if err != nil {
+		return fmt.Errorf("failed to create execution plan scraper: %w", err)
 	}
 
 	// Initialize blocking scraper with direct DB connection
@@ -158,6 +165,30 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		default:
 			s.logger.Warn("Error channel full, dropping slow query error", zap.Error(err))
 		}
+	}
+
+	// Execute execution plan scraper with the collected query IDs
+	if len(queryIDs) > 0 {
+		s.logger.Debug("Starting execution plan scraper for collected query IDs")
+		executionPlanResult := s.executionPlanScraper.GetExecutionPlansXML(scrapeCtx, queryIDs)
+
+		s.logger.Info("Execution plan scraper completed",
+			zap.Int("total_queries", executionPlanResult.TotalCount),
+			zap.Int("successful_plans", executionPlanResult.SuccessCount),
+			zap.Int("failed_plans", executionPlanResult.ErrorCount))
+
+		// Log any execution plan errors
+		for _, plan := range executionPlanResult.Plans {
+			if plan.Error != nil {
+				select {
+				case errChan <- plan.Error:
+				default:
+					s.logger.Warn("Error channel full, dropping execution plan error", zap.Error(plan.Error))
+				}
+			}
+		}
+	} else {
+		s.logger.Debug("No query IDs available for execution plan retrieval")
 	}
 
 	// Define scraper functions that don't depend on slow queries
