@@ -2298,6 +2298,7 @@ Average CPU time per execution for slow queries
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_reads
 
@@ -2313,6 +2314,7 @@ Average disk reads per execution for slow queries
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_writes
 
@@ -2328,6 +2330,7 @@ Average disk writes per execution for slow queries
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_elapsed_time
 
@@ -2343,6 +2346,7 @@ Average elapsed time per execution for slow queries
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.execution_count
 
@@ -2358,6 +2362,7 @@ Number of executions for slow queries
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.persistent_memory
 
@@ -2373,6 +2378,7 @@ Persistent memory used by slow query cursors
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.query_details
 
@@ -2408,6 +2414,7 @@ Runtime memory used by slow query cursors
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.sharable_memory
 
@@ -2423,6 +2430,7 @@ Total memory used in the Shared Pool by slow queries
 | ---- | ----------- | ------ | -------- |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
 

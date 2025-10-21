@@ -185,7 +185,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		if slowQuery.SharableMemoryBytes.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesSharableMemoryDataPoint(
 				now,
-				float64(slowQuery.SharableMemoryBytes.Int64),
+				slowQuery.SharableMemoryBytes.Int64,
 				dbName,
 				qID,
 				userName,
@@ -195,7 +195,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		if slowQuery.PersistentMemoryBytes.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesPersistentMemoryDataPoint(
 				now,
-				float64(slowQuery.PersistentMemoryBytes.Int64),
+				slowQuery.PersistentMemoryBytes.Int64,
 				dbName,
 				qID,
 				userName,
@@ -205,7 +205,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		if slowQuery.RuntimeMemoryBytes.Valid {
 			s.mb.RecordNewrelicoracledbSlowQueriesRuntimeMemoryDataPoint(
 				now,
-				float64(slowQuery.RuntimeMemoryBytes.Int64),
+				slowQuery.RuntimeMemoryBytes.Int64,
 				dbName,
 				qID,
 				userName,
@@ -221,6 +221,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			schName,
 			stmtType,
 			fullScan,
+			userName,
 		)
 
 		// Add query ID to the list for individual queries processing
