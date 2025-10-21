@@ -69,11 +69,7 @@ func (eps *ExecutionPlanScraper) GetExecutionPlansXML(ctx context.Context, query
 			sql_id,
 			child_number,
 			plan_hash_value,
-			DBMS_XPLAN.DISPLAY_CURSOR(
-				sql_id => ?,
-				cursor_child_no => NULL,
-				format => 'ADVANCED +OUTLINE +PROJECTION +ALIAS +PREDICATE +NOTE +IOSTATS +MEMSTATS +ALLSTATS LAST'
-			) AS plan_xml
+			DBMS_XPLAN.DISPLAY_CURSOR(sql_id, NULL, 'ADVANCED +OUTLINE +PROJECTION +ALIAS +PREDICATE +NOTE +IOSTATS +MEMSTATS +ALLSTATS LAST') AS plan_xml
 		FROM v$sql 
 		WHERE sql_id = ? 
 		AND rownum = 1`
@@ -100,7 +96,7 @@ func (eps *ExecutionPlanScraper) GetExecutionPlansXML(ctx context.Context, query
 		eps.logger.Debug("Executing SQL query", zap.String("sql", executionPlanXMLSQL))
 		fmt.Printf("   🔄 Executing DBMS_XPLAN.DISPLAY_CURSOR for query ID: %s\n", queryID)
 
-		err := eps.db.QueryRowContext(ctx, executionPlanXMLSQL, queryID, queryID).Scan(
+		err := eps.db.QueryRowContext(ctx, executionPlanXMLSQL, queryID).Scan(
 			&returnedQueryID,
 			&childNumber,
 			&planHashValue,
