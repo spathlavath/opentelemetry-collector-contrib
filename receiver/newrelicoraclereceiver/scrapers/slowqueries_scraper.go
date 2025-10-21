@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
+	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
-	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
@@ -185,7 +185,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-	s.logger.Debug("Completed Oracle slow queries scrape", 
+	s.logger.Debug("Completed Oracle slow queries scrape",
 		zap.Int("rows_processed", rowCount),
 		zap.Int("query_ids_collected", len(queryIDs)),
 		zap.Int("errors_encountered", len(scrapeErrors)))

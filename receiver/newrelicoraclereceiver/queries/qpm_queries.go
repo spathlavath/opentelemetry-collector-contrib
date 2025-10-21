@@ -45,27 +45,6 @@ const (
 			avg_elapsed_time_ms DESC
 		FETCH FIRST 10 ROWS ONLY`
 
-	// Oracle SQL query for individual queries metrics with user information
-	IndividualQueriesFilteredSQL = `
-		SELECT
-		    a.sql_id AS query_id,
-		    a.parsing_user_id AS user_id,
-		    u.username AS username,
-		    a.sql_text AS query_text,
-		    a.cpu_time / 1000 AS cpu_time_ms,
-		    a.elapsed_time / 1000 AS elapsed_time_ms,
-		    'Multiple' AS hostname,
-		    d.name AS database_name
-		FROM
-		    v$sql a
-		JOIN
-		    dba_users u ON a.parsing_user_id = u.user_id
-		CROSS JOIN
-		    v$database d
-		WHERE
-		    a.sql_id IN (%s)
-		ORDER BY
-		    elapsed_time_ms DESC`
 	BlockingQueriesSQL = `
 		SELECT
 			s2.sid AS blocked_sid,
