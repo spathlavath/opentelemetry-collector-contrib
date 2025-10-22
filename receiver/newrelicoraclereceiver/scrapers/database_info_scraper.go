@@ -198,9 +198,9 @@ func (s *DatabaseInfoScraper) refreshCacheUnsafe(ctx context.Context) error {
 // processDatabaseInfoRows processes the query results and updates the cache
 func (s *DatabaseInfoScraper) processDatabaseInfoRows(rows *sql.Rows) error {
 	for rows.Next() {
-		var instID, versionFull sql.NullString
+		var instID, versionFull, hostName, databaseName, platformName sql.NullString
 
-		if err := rows.Scan(&instID, &versionFull); err != nil {
+		if err := rows.Scan(&instID, &versionFull, &hostName, &databaseName, &platformName); err != nil {
 			s.logger.Error("Failed to scan database info row", zap.Error(err))
 			return err
 		}
@@ -209,8 +209,12 @@ func (s *DatabaseInfoScraper) processDatabaseInfoRows(rows *sql.Rows) error {
 		cleanVersion := extractVersionFromFull(versionFull.String)
 		detectedEdition := detectEditionFromVersion(versionFull.String)
 
-		// Detect hosting and deployment environment from system (not database)
-		hostingProvider, deploymentPlatform, combinedEnv := detectSystemEnvironment()
+		// Combine environment detection with database-level hints for better accuracy
+		hostingProvider, deploymentPlatform, combinedEnv := detectSystemEnvironmentWithDBHints(
+			hostName.String,
+			databaseName.String,
+			platformName.String,
+		)
 
 		// Cache the information
 		s.cachedInfo = &DatabaseInfo{
@@ -235,6 +239,8 @@ func (s *DatabaseInfoScraper) processDatabaseInfoRows(rows *sql.Rows) error {
 			zap.String("hosting_provider", hostingProvider),
 			zap.String("deployment_platform", deploymentPlatform),
 			zap.String("combined_environment", combinedEnv),
+			zap.String("db_hostname", hostName.String),
+			zap.String("db_platform", platformName.String),
 			zap.Time("cache_valid_until", s.cacheValidUntil))
 
 		break // Only process first row
@@ -392,9 +398,86 @@ func normalizePlatformName(platform string) string {
 	}
 }
 
+// detectSystemEnvironmentWithDBHints combines environment variables with database-level hints
+// for more accurate cloud provider detection. Uses cached database query results.
+func detectSystemEnvironmentWithDBHints(hostName, databaseName, platformName string) (hostingProvider, deploymentPlatform, combinedEnvironment string) {
+	// First, try environment variable detection (highest priority)
+	envProvider, envPlatform, envCombined := detectSystemEnvironment()
+	if envProvider != "on-premises" {
+		// Environment variables provided clear cloud provider info
+		return envProvider, envPlatform, envCombined
+	}
+
+	// If environment variables don't reveal cloud provider, use database hints
+	dbProvider, dbPlatform := detectCloudFromDatabaseHints(hostName, databaseName, platformName)
+	if dbProvider != "" {
+		// Database hints indicate cloud provider
+		return dbProvider, dbPlatform, dbProvider + "." + dbPlatform
+	}
+
+	// Fallback to original environment detection (includes DMI)
+	return envProvider, envPlatform, envCombined
+}
+
+// detectCloudFromDatabaseHints analyzes database-level information for cloud provider hints
+func detectCloudFromDatabaseHints(hostName, databaseName, platformName string) (provider, platform string) {
+	hostName = strings.ToLower(hostName)
+	databaseName = strings.ToLower(databaseName)
+	platformName = strings.ToLower(platformName)
+
+	// AWS RDS detection
+	if strings.Contains(hostName, "rds.amazonaws.com") ||
+		strings.Contains(hostName, "rds-") ||
+		strings.Contains(databaseName, "rds") {
+		return "aws", "rds"
+	}
+
+	// AWS EC2 detection
+	if strings.Contains(hostName, "ec2") ||
+		strings.Contains(hostName, ".amazonaws.com") ||
+		strings.Contains(hostName, "ip-") { // EC2 internal hostnames often start with ip-
+		return "aws", "ec2"
+	}
+
+	// Azure SQL Database detection
+	if strings.Contains(hostName, "database.windows.net") ||
+		strings.Contains(hostName, "database.azure.com") {
+		return "azure", "azure_sql_db"
+	}
+
+	// Azure VM detection
+	if strings.Contains(hostName, ".cloudapp.azure.com") ||
+		strings.Contains(hostName, "azure") ||
+		strings.Contains(platformName, "microsoft") {
+		return "azure", "azure_vm"
+	}
+
+	// Google Cloud SQL detection
+	if strings.Contains(hostName, "googleusercontent.com") ||
+		strings.Contains(hostName, "gcp-") {
+		return "gcp", "cloud_sql"
+	}
+
+	// Google Compute Engine detection
+	if strings.Contains(hostName, "c.googlecompute.com") ||
+		strings.Contains(hostName, "gce-") ||
+		strings.Contains(platformName, "google") {
+		return "gcp", "compute_engine"
+	}
+
+	// Oracle Cloud Infrastructure detection
+	if strings.Contains(hostName, "oraclecloud.com") ||
+		strings.Contains(hostName, "oci-") ||
+		(strings.Contains(platformName, "oracle") && !strings.Contains(platformName, "database")) {
+		return "oci", "compute"
+	}
+
+	return "", ""
+}
+
 // detectSystemEnvironment finds hosting environment using system info
 func detectSystemEnvironment() (hostingProvider, deploymentPlatform, combinedEnvironment string) {
-	// Check for cloud provider environment variables
+	// Check for AWS environment variables
 	if checkEnvVar("AWS_REGION") || checkEnvVar("AWS_EXECUTION_ENV") || checkEnvVar("EC2_INSTANCE_ID") {
 		if checkEnvVar("AWS_LAMBDA_FUNCTION_NAME") {
 			return "aws", "lambda", "aws.lambda"
@@ -405,6 +488,7 @@ func detectSystemEnvironment() (hostingProvider, deploymentPlatform, combinedEnv
 		return "aws", "ec2", "aws.ec2"
 	}
 
+	// Check for Azure environment variables (App Service, Functions, etc.)
 	if checkEnvVar("AZURE_CLIENT_ID") || checkEnvVar("WEBSITE_INSTANCE_ID") || checkEnvVar("AZURE_SUBSCRIPTION_ID") {
 		if checkEnvVar("WEBSITE_INSTANCE_ID") {
 			return "azure", "app-service", "azure.app-service"
@@ -415,6 +499,12 @@ func detectSystemEnvironment() (hostingProvider, deploymentPlatform, combinedEnv
 		return "azure", "vm", "azure.vm"
 	}
 
+	// Check for additional Azure environment variables commonly set on Azure VMs
+	if checkEnvVar("AZURE_TENANT_ID") || checkEnvVar("MSI_ENDPOINT") || checkEnvVar("AZURE_RESOURCE_GROUP") {
+		return "azure", "azure_vm", "azure.vm"
+	}
+
+	// Check for Google Cloud environment variables
 	if checkEnvVar("GOOGLE_CLOUD_PROJECT") || checkEnvVar("GCP_PROJECT") || checkEnvVar("FUNCTION_NAME") {
 		if checkEnvVar("FUNCTION_NAME") {
 			return "gcp", "cloud-functions", "gcp.cloud-functions"
@@ -425,6 +515,7 @@ func detectSystemEnvironment() (hostingProvider, deploymentPlatform, combinedEnv
 		return "gcp", "compute-engine", "gcp.compute-engine"
 	}
 
+	// Check for Oracle Cloud Infrastructure
 	if checkEnvVar("OCI_RESOURCE_PRINCIPAL_VERSION") || checkEnvVar("OCI_REGION") {
 		return "oci", "compute", "oci.compute"
 	}
@@ -437,6 +528,22 @@ func detectSystemEnvironment() (hostingProvider, deploymentPlatform, combinedEnv
 	// Check for container environment
 	if fileExists("/.dockerenv") || containsAny(readFile("/proc/1/cgroup"), []string{"/docker/", "/kubepods/", "/containerd/"}) {
 		return "container", "docker", "container.docker"
+	}
+
+	// Check for cloud provider hints in DMI/BIOS information (Linux-specific, read-only)
+	if runtime.GOOS == "linux" {
+		if provider := detectCloudFromDMI(); provider != "" {
+			switch provider {
+			case "amazon":
+				return "aws", "ec2", "aws.ec2"
+			case "microsoft":
+				return "azure", "azure_vm", "azure.vm"
+			case "google":
+				return "gcp", "compute-engine", "gcp.compute-engine"
+			case "oracle":
+				return "oci", "compute", "oci.compute"
+			}
+		}
 	}
 
 	// Default to on-premises
@@ -468,6 +575,39 @@ func containsAny(text string, substrings []string) bool {
 		}
 	}
 	return false
+}
+
+// detectCloudFromDMI reads DMI/BIOS information to detect cloud providers (Linux only)
+// This is safe as it only reads system information files
+func detectCloudFromDMI() string {
+	// Read system vendor information
+	vendor := strings.ToLower(readFile("/sys/class/dmi/id/sys_vendor"))
+	product := strings.ToLower(readFile("/sys/class/dmi/id/product_name"))
+	bios := strings.ToLower(readFile("/sys/class/dmi/id/bios_vendor"))
+
+	// Amazon/AWS detection
+	if strings.Contains(vendor, "amazon") || strings.Contains(product, "amazon") ||
+		strings.Contains(bios, "amazon") || strings.Contains(product, "ec2") {
+		return "amazon"
+	}
+
+	// Microsoft Azure detection
+	if strings.Contains(vendor, "microsoft") || strings.Contains(product, "virtual machine") {
+		return "microsoft"
+	}
+
+	// Google Cloud detection
+	if strings.Contains(vendor, "google") || strings.Contains(product, "google") ||
+		strings.Contains(product, "google compute engine") {
+		return "google"
+	}
+
+	// Oracle Cloud detection
+	if strings.Contains(vendor, "oracle") && strings.Contains(product, "oracle") {
+		return "oracle"
+	}
+
+	return ""
 }
 
 // extractVersionFromFull extracts clean version number from GV$INSTANCE.VERSION
