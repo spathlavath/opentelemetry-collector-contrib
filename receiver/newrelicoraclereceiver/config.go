@@ -24,27 +24,38 @@ const (
 	defaultMaxOpenConnections = 5 // Standard default for Oracle connections
 	defaultCollectionInterval = 10 * time.Second
 
+	// Query Performance Monitoring defaults
+	defaultEnableQueryMonitoring                = false
+	defaultQueryMonitoringResponseTimeThreshold = 500 // milliseconds
+	defaultQueryMonitoringCountThreshold        = 20  // query count limit
+
 	// Validation ranges
-	minCollectionInterval = 10 * time.Second
-	maxCollectionInterval = 3600 * time.Second
-	minMaxOpenConnections = 1
-	maxMaxOpenConnections = 1000
-	maxUsernameLength     = 128
-	maxServiceLength      = 128
+	minCollectionInterval                   = 10 * time.Second
+	maxCollectionInterval                   = 3600 * time.Second
+	minMaxOpenConnections                   = 1
+	maxMaxOpenConnections                   = 1000
+	maxUsernameLength                       = 128
+	maxServiceLength                        = 128
+	minQueryMonitoringResponseTimeThreshold = 1    // minimum 1ms - realistic minimum for Oracle
+	maxQueryMonitoringResponseTimeThreshold = 5000 // maximum 5 seconds - practical limit for OLTP queries
+	minQueryMonitoringCountThreshold        = 10   // minimum 10 queries - prevents too little data ingestion
+	maxQueryMonitoringCountThreshold        = 50   // maximum 50 queries for performance
 )
 
 var (
-	errBadDataSource      = errors.New("datasource is invalid")
-	errBadEndpoint        = errors.New("endpoint must be specified as host:port")
-	errBadPort            = errors.New("invalid port in endpoint")
-	errEmptyEndpoint      = errors.New("endpoint must be specified")
-	errEmptyPassword      = errors.New("password must be set")
-	errEmptyService       = errors.New("service must be specified")
-	errEmptyUsername      = errors.New("username must be set")
-	errInvalidConnections = errors.New("max_open_connections must be between 1 and 1000")
-	errInvalidTimeout     = errors.New("collection_interval must be between 10s and 3600s")
-	errInvalidUsername    = errors.New("username cannot contain special characters that could cause SQL injection")
-	errInvalidService     = errors.New("service name cannot contain special characters")
+	errBadDataSource                           = errors.New("datasource is invalid")
+	errBadEndpoint                             = errors.New("endpoint must be specified as host:port")
+	errBadPort                                 = errors.New("invalid port in endpoint")
+	errEmptyEndpoint                           = errors.New("endpoint must be specified")
+	errEmptyPassword                           = errors.New("password must be set")
+	errEmptyService                            = errors.New("service must be specified")
+	errEmptyUsername                           = errors.New("username must be set")
+	errInvalidConnections                      = errors.New("max_open_connections must be between 1 and 1000")
+	errInvalidTimeout                          = errors.New("collection_interval must be between 10s and 3600s")
+	errInvalidUsername                         = errors.New("username cannot contain special characters that could cause SQL injection")
+	errInvalidService                          = errors.New("service name cannot contain special characters")
+	errInvalidQueryMonitoringResponseThreshold = errors.New("query_monitoring_response_time_threshold must be between 1ms and 5000ms")
+	errInvalidQueryMonitoringCountThreshold    = errors.New("query_monitoring_count_threshold must be between 10 and 50")
 )
 
 type Config struct {
@@ -57,6 +68,11 @@ type Config struct {
 	// Connection Pool Configuration
 	MaxOpenConnections    int  `mapstructure:"max_open_connections"`
 	DisableConnectionPool bool `mapstructure:"disable_connection_pool"`
+
+	// Query Performance Monitoring Configuration
+	EnableQueryMonitoring                bool `mapstructure:"enable_query_monitoring"`
+	QueryMonitoringResponseTimeThreshold int  `mapstructure:"query_monitoring_response_time_threshold"`
+	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
 
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
@@ -71,6 +87,14 @@ func (c *Config) SetDefaults() {
 	// Set scraper controller defaults if not set
 	if c.ControllerConfig.CollectionInterval == 0 {
 		c.ControllerConfig.CollectionInterval = defaultCollectionInterval
+	}
+
+	// Set Query Performance Monitoring defaults if not set
+	if c.QueryMonitoringResponseTimeThreshold == 0 {
+		c.QueryMonitoringResponseTimeThreshold = defaultQueryMonitoringResponseTimeThreshold
+	}
+	if c.QueryMonitoringCountThreshold == 0 {
+		c.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
 	}
 }
 
@@ -123,6 +147,11 @@ func (c Config) Validate() error {
 
 	// Validate scraper controller configuration
 	if err := c.validateScraperConfig(); err != nil {
+		allErrs = multierr.Append(allErrs, err)
+	}
+
+	// Validate Query Performance Monitoring configuration
+	if err := c.validateQueryPerformanceMonitoring(); err != nil {
 		allErrs = multierr.Append(allErrs, err)
 	}
 
@@ -218,4 +247,23 @@ func (c Config) validateScraperConfig() error {
 	}
 
 	return nil
+}
+
+// validateQueryPerformanceMonitoring validates Query Performance Monitoring configuration
+func (c Config) validateQueryPerformanceMonitoring() error {
+	var allErrs error
+
+	// Validate response time threshold
+	if c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
+		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("%w: got %d", errInvalidQueryMonitoringResponseThreshold, c.QueryMonitoringResponseTimeThreshold))
+	}
+
+	// Validate count threshold
+	if c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
+		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("%w: got %d", errInvalidQueryMonitoringCountThreshold, c.QueryMonitoringCountThreshold))
+	}
+
+	return allErrs
 }
