@@ -91,10 +91,12 @@ func (c *Config) SetDefaults() {
 	}
 
 	// Set Query Performance Monitoring defaults if not set
-	if c.QueryMonitoringResponseTimeThreshold == 0 {
+	if c.QueryMonitoringResponseTimeThreshold == 0 || c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
+		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold{
 		c.QueryMonitoringResponseTimeThreshold = defaultQueryMonitoringResponseTimeThreshold
 	}
-	if c.QueryMonitoringCountThreshold == 0 {
+	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
+		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 		c.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
 	}
 }
@@ -251,23 +253,17 @@ func (c Config) validateScraperConfig() error {
 }
 
 // validateQueryPerformanceMonitoring validates Query Performance Monitoring configuration
+// Note: Range validation is handled in SetDefaults() with auto-correction
 func (c Config) validateQueryPerformanceMonitoring() error {
 	var allErrs error
 
-	// Validate response time threshold - additional type safety checks
+	// Only validate for negative values since SetDefaults() handles range correction
 	if c.QueryMonitoringResponseTimeThreshold < 0 {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_response_time_threshold cannot be negative: got %d", c.QueryMonitoringResponseTimeThreshold))
-	} else if c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
-		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold {
-		allErrs = multierr.Append(allErrs, fmt.Errorf("%w: got %d", errInvalidQueryMonitoringResponseThreshold, c.QueryMonitoringResponseTimeThreshold))
 	}
 
-	// Validate count threshold - additional type safety checks
 	if c.QueryMonitoringCountThreshold < 0 {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_count_threshold cannot be negative: got %d", c.QueryMonitoringCountThreshold))
-	} else if c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
-		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
-		allErrs = multierr.Append(allErrs, fmt.Errorf("%w: got %d", errInvalidQueryMonitoringCountThreshold, c.QueryMonitoringCountThreshold))
 	}
 
 	return allErrs
