@@ -5,11 +5,21 @@ package queries
 
 import "fmt"
 
+// validateAndCorrectThresholds validates QPM thresholds and returns corrected values
+func validateAndCorrectThresholds(responseTimeMs, count int) (int, int) {
+	if responseTimeMs < MinQueryMonitoringResponseTimeThreshold || responseTimeMs > MaxQueryMonitoringResponseTimeThreshold {
+		responseTimeMs = DefaultQueryMonitoringResponseTimeThreshold
+	}
+	if count < MinQueryMonitoringCountThreshold || count > MaxQueryMonitoringCountThreshold {
+		count = DefaultQueryMonitoringCountThreshold
+	}
+	return responseTimeMs, count
+}
+
 // Oracle SQL queries for performance metrics
 const (
 	slowQueriesBaseSQL = `
 		WITH full_scans AS (
-			-- Get a distinct list of SQL_IDs that have a full table scan in their plan
 			SELECT DISTINCT sql_id
 			FROM   v$sql_plan
 			WHERE  operation = 'TABLE ACCESS' AND options = 'FULL'
@@ -18,11 +28,11 @@ const (
 			d.name AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
-			au.username AS user_name, -- NEW: The user who parsed the statement
-			TO_CHAR(sa.last_load_time, 'YYYY-MM-DD HH24:MI:SS') AS last_load_time, -- NEW: Time the cursor was last loaded (proxy for last active)
-			sa.sharable_mem AS sharable_memory_bytes, -- NEW: Total memory used in the Shared Pool
-			sa.persistent_mem AS persistent_memory_bytes, -- NEW: Persistent memory used by the cursor
-			sa.runtime_mem AS runtime_memory_bytes, -- NEW: Runtime memory used by the cursor
+			au.username AS user_name,
+			TO_CHAR(sa.last_load_time, 'YYYY-MM-DD HH24:MI:SS') AS last_load_time,
+			sa.sharable_mem AS sharable_memory_bytes,
+			sa.persistent_mem AS persistent_memory_bytes,
+			sa.runtime_mem AS runtime_memory_bytes,
 			COALESCE(sa.module,
 				CASE
 					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%' THEN 'SELECT'
@@ -42,7 +52,7 @@ const (
 		FROM
 			v$sqlarea sa
 		INNER JOIN
-			ALL_USERS au ON sa.parsing_user_id = au.user_id -- Join to get the user name
+			ALL_USERS au ON sa.parsing_user_id = au.user_id
 		CROSS JOIN
 			v$database d
 		LEFT JOIN
@@ -50,7 +60,7 @@ const (
 		WHERE
 			sa.executions > 0
 			AND sa.sql_text NOT LIKE '%full_scans AS%'
-			AND sa.sql_text NOT LIKE '%ALL_USERS%' -- Exclude this query itself
+			AND sa.sql_text NOT LIKE '%ALL_USERS%'
 		ORDER BY
 			avg_elapsed_time_ms DESC
 		FETCH FIRST %d ROWS ONLY`
@@ -115,23 +125,13 @@ const (
 		FETCH FIRST %d ROWS ONLY`
 )
 
-// GetSlowQueriesSQL returns the slow queries SQL with response time and count thresholds
-// Uses user-configured parameters with validation fallbacks only when values are invalid
+// GetSlowQueriesSQL returns parameterized SQL for slow queries with configurable thresholds
 func GetSlowQueriesSQL(responseTimeThresholdMs, countThreshold int) (string, []interface{}) {
-	// Validate parameters to prevent injection - only use fallbacks if user values are invalid
-	if responseTimeThresholdMs < 0 || responseTimeThresholdMs > 30000 {
-		responseTimeThresholdMs = 500 // Use default when user value is invalid
-	}
-	if countThreshold < 1 || countThreshold > 1000 {
-		countThreshold = 20 // Use default when user value is invalid
-	}
+	responseTimeThresholdMs, countThreshold = validateAndCorrectThresholds(responseTimeThresholdMs, countThreshold)
 
 	var params []interface{}
-
-	// Base query without response time filtering
 	baseQuery := `
 		WITH full_scans AS (
-			-- Get a distinct list of SQL_IDs that have a full table scan in their plan
 			SELECT DISTINCT sql_id
 			FROM   v$sql_plan
 			WHERE  operation = 'TABLE ACCESS' AND options = 'FULL'
@@ -174,14 +174,12 @@ func GetSlowQueriesSQL(responseTimeThresholdMs, countThreshold int) (string, []i
 			AND sa.sql_text NOT LIKE '%full_scans AS%'
 			AND sa.sql_text NOT LIKE '%ALL_USERS%'`
 
-	// Add response time filtering using parameterized query if threshold > 0
 	if responseTimeThresholdMs > 0 {
 		baseQuery += `
 			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= ?`
 		params = append(params, responseTimeThresholdMs)
 	}
 
-	// Add ordering and limit (FETCH FIRST requires literal number, but we validated it)
 	baseQuery += fmt.Sprintf(`
 		ORDER BY
 			avg_elapsed_time_ms DESC
@@ -190,13 +188,9 @@ func GetSlowQueriesSQL(responseTimeThresholdMs, countThreshold int) (string, []i
 	return baseQuery, params
 }
 
-// GetBlockingQueriesSQL returns the blocking queries SQL with count threshold
-// Uses user-configured parameter with validation fallback only when value is invalid
+// GetBlockingQueriesSQL returns parameterized SQL for blocking queries
 func GetBlockingQueriesSQL(countThreshold int) (string, []interface{}) {
-	// Validate parameter to prevent injection - only use fallback if user value is invalid
-	if countThreshold < 1 || countThreshold > 1000 {
-		countThreshold = 20 // Use default when user value is invalid
-	}
+	_, countThreshold = validateAndCorrectThresholds(0, countThreshold)
 
 	query := `
 		SELECT
@@ -227,13 +221,9 @@ func GetBlockingQueriesSQL(countThreshold int) (string, []interface{}) {
 	return fmt.Sprintf(query, countThreshold), []interface{}{}
 }
 
-// GetWaitEventQueriesSQL returns the wait event queries SQL with count threshold
-// Uses user-configured parameter with validation fallback only when value is invalid
+// GetWaitEventQueriesSQL returns parameterized SQL for wait events
 func GetWaitEventQueriesSQL(countThreshold int) (string, []interface{}) {
-	// Validate parameter to prevent injection - only use fallback if user value is invalid
-	if countThreshold < 1 || countThreshold > 1000 {
-		countThreshold = 20 // Use default when user value is invalid
-	}
+	_, countThreshold = validateAndCorrectThresholds(0, countThreshold)
 
 	query := `
 		SELECT

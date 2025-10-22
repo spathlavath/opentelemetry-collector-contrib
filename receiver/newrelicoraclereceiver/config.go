@@ -17,6 +17,7 @@ import (
 	"go.uber.org/multierr"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 const (
@@ -26,8 +27,8 @@ const (
 
 	// Query Performance Monitoring defaults
 	defaultEnableQueryMonitoring                = false
-	defaultQueryMonitoringResponseTimeThreshold = 500 // milliseconds
-	defaultQueryMonitoringCountThreshold        = 20  // query count limit
+	defaultQueryMonitoringResponseTimeThreshold = queries.DefaultQueryMonitoringResponseTimeThreshold
+	defaultQueryMonitoringCountThreshold        = queries.DefaultQueryMonitoringCountThreshold
 
 	// Validation ranges
 	minCollectionInterval                   = 10 * time.Second
@@ -36,10 +37,10 @@ const (
 	maxMaxOpenConnections                   = 1000
 	maxUsernameLength                       = 128
 	maxServiceLength                        = 128
-	minQueryMonitoringResponseTimeThreshold = 1    // minimum 1ms - realistic minimum for Oracle
-	maxQueryMonitoringResponseTimeThreshold = 5000 // maximum 5 seconds - practical limit for OLTP queries
-	minQueryMonitoringCountThreshold        = 10   // minimum 10 queries - prevents too little data ingestion
-	maxQueryMonitoringCountThreshold        = 50   // maximum 50 queries for performance
+	minQueryMonitoringResponseTimeThreshold = queries.MinQueryMonitoringResponseTimeThreshold
+	maxQueryMonitoringResponseTimeThreshold = queries.MaxQueryMonitoringResponseTimeThreshold
+	minQueryMonitoringCountThreshold        = queries.MinQueryMonitoringCountThreshold
+	maxQueryMonitoringCountThreshold        = queries.MaxQueryMonitoringCountThreshold
 )
 
 var (
@@ -253,14 +254,18 @@ func (c Config) validateScraperConfig() error {
 func (c Config) validateQueryPerformanceMonitoring() error {
 	var allErrs error
 
-	// Validate response time threshold
-	if c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
+	// Validate response time threshold - additional type safety checks
+	if c.QueryMonitoringResponseTimeThreshold < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_response_time_threshold cannot be negative: got %d", c.QueryMonitoringResponseTimeThreshold))
+	} else if c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
 		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("%w: got %d", errInvalidQueryMonitoringResponseThreshold, c.QueryMonitoringResponseTimeThreshold))
 	}
 
-	// Validate count threshold
-	if c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
+	// Validate count threshold - additional type safety checks
+	if c.QueryMonitoringCountThreshold < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_count_threshold cannot be negative: got %d", c.QueryMonitoringCountThreshold))
+	} else if c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
 		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("%w: got %d", errInvalidQueryMonitoringCountThreshold, c.QueryMonitoringCountThreshold))
 	}
