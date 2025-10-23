@@ -174,11 +174,10 @@ func GetSlowQueriesSQL(responseTimeThresholdMs, countThreshold int) (string, []i
 			AND sa.sql_text NOT LIKE '%full_scans AS%'
 			AND sa.sql_text NOT LIKE '%ALL_USERS%'`
 
-	if responseTimeThresholdMs > 0 {
-		baseQuery += `
-			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= ?`
-		params = append(params, responseTimeThresholdMs)
-	}
+	// Always add the response time threshold filter with parameter
+	baseQuery += `
+		AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= ?`
+	params = append(params, responseTimeThresholdMs)
 
 	baseQuery += fmt.Sprintf(`
 		ORDER BY
