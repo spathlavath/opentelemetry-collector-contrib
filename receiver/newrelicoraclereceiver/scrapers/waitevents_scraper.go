@@ -56,8 +56,8 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 	var scrapeErrors []error
 
 	// Execute the wait events SQL with configured threshold using parameterized query
-	waitEventQueriesSQL, params := queries.GetWaitEventQueriesSQL(s.queryMonitoringCountThreshold)
-	rows, err := s.db.QueryContext(ctx, waitEventQueriesSQL, params...)
+	waitEventQueriesSQL := queries.GetWaitEventQueriesSQL(s.queryMonitoringCountThreshold)
+	rows, err := s.db.QueryContext(ctx, waitEventQueriesSQL)
 	if err != nil {
 		s.logger.Error("Failed to execute wait events query", zap.Error(err))
 		return []error{err}
