@@ -57,8 +57,7 @@ func (s *BlockingScraper) ScrapeBlockingQueries(ctx context.Context) []error {
 	var scrapeErrors []error
 
 	// Execute the blocking queries SQL with configured threshold using parameterized query
-	blockingQueriesSQL, params := queries.GetBlockingQueriesSQL(s.queryMonitoringCountThreshold)
-	rows, err := s.db.QueryContext(ctx, blockingQueriesSQL, params...)
+	rows, err := s.db.QueryContext(ctx, queries.BlockingQueriesSQL)
 	if err != nil {
 		s.logger.Error("Failed to execute blocking queries query", zap.Error(err))
 		return []error{err}
