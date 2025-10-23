@@ -6,8 +6,6 @@ package queries
 import (
 	"fmt"
 	"strings"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 )
 
 // GetSlowQueriesSQL returns SQL for slow queries with configurable response time threshold and row limit
