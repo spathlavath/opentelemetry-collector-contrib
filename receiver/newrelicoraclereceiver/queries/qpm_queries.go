@@ -3,7 +3,10 @@
 
 package queries
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // GetSlowQueriesSQL returns SQL for slow queries with configurable response time threshold and row limit
 func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
@@ -119,4 +122,157 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 		ORDER BY
 			total_wait_time_ms DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
+}
+
+// GetExecutionPlanQuery returns optimized SQL query to fetch execution plans for given SQL IDs
+// Performance optimizations: limits plan steps, adds execution filters, batch processing support
+func GetExecutionPlanQuery(sqlIDs []string) string {
+	if len(sqlIDs) == 0 {
+		return ""
+	}
+
+	// Performance optimization: Limit to reasonable batch size
+	const maxBatchSize = 5
+	if len(sqlIDs) > maxBatchSize {
+		sqlIDs = sqlIDs[:maxBatchSize]
+	}
+
+	// Build IN clause with literal values for Oracle compatibility
+	inClause := make([]string, len(sqlIDs))
+	for i, sqlID := range sqlIDs {
+		inClause[i] = "'" + sqlID + "'"
+	}
+
+	query := fmt.Sprintf(`
+		SELECT
+			d.name AS database_name,
+			sa.sql_id AS query_id,
+			sa.plan_hash_value AS plan_hash_value,
+			XMLSERIALIZE(CONTENT 
+				XMLELEMENT("execution_plan",
+					XMLATTRIBUTES(
+						sa.sql_id AS "sql_id",
+						sa.plan_hash_value AS "plan_hash_value",
+						sa.parsing_schema_name AS "parsing_schema",
+						sa.parsing_user_id AS "parsing_user_id",
+						TO_CHAR(sa.first_load_time, 'YYYY-MM-DD HH24:MI:SS') AS "first_load_time",
+						TO_CHAR(sa.last_load_time, 'YYYY-MM-DD HH24:MI:SS') AS "last_load_time",
+						sa.executions AS "total_executions",
+						ROUND(sa.elapsed_time / 1000000, 3) AS "total_elapsed_seconds",
+						ROUND(sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000, 2) AS "avg_elapsed_ms",
+						sa.optimizer_mode AS "optimizer_mode",
+						sa.optimizer_cost AS "optimizer_cost"
+					),
+					XMLELEMENT("sql_text", sa.sql_text),
+					XMLELEMENT("sql_fulltext", sa.sql_fulltext),
+					XMLELEMENT("plan_statistics",
+						XMLELEMENT("buffer_gets", sa.buffer_gets),
+						XMLELEMENT("disk_reads", sa.disk_reads),
+						XMLELEMENT("direct_writes", sa.direct_writes),
+						XMLELEMENT("executions", sa.executions),
+						XMLELEMENT("parse_calls", sa.parse_calls),
+						XMLELEMENT("rows_processed", sa.rows_processed)
+					),
+					XMLELEMENT("memory_usage",
+						XMLELEMENT("sharable_mem", sa.sharable_mem),
+						XMLELEMENT("persistent_mem", sa.persistent_mem),
+						XMLELEMENT("runtime_mem", sa.runtime_mem)
+					),
+
+					XMLELEMENT("plan_steps",
+						XMLAGG(
+							XMLELEMENT("step",
+								XMLATTRIBUTES(
+									sp.id AS "step_id",
+									NVL(sp.parent_id, '') AS "parent_step_id",
+									sp.depth AS "depth_level",
+									sp.position AS "position"
+								),
+								XMLELEMENT("operation", sp.operation),
+								XMLELEMENT("options", NVL(sp.options, '')),
+								XMLELEMENT("object_node", NVL(sp.object_node, '')),
+								XMLELEMENT("object",
+									XMLATTRIBUTES(
+										NVL(sp.object_owner, '') AS "owner",
+										NVL(sp.object_name, '') AS "name",
+										NVL(sp.object_alias, '') AS "alias",
+										NVL(sp.object_instance, '') AS "instance",
+										NVL(sp.object_type, '') AS "type"
+									)
+								),
+								XMLELEMENT("optimizer", NVL(sp.optimizer, '')),
+								XMLELEMENT("search_columns", NVL(sp.search_columns, 0)),
+								XMLELEMENT("cost_info",
+									XMLELEMENT("cost", NVL(sp.cost, 0)),
+									XMLELEMENT("cardinality", NVL(sp.cardinality, 0)),
+									XMLELEMENT("bytes", NVL(sp.bytes, 0)),
+									XMLELEMENT("other_tag", NVL(sp.other_tag, '')),
+									XMLELEMENT("partition_start", NVL(sp.partition_start, '')),
+									XMLELEMENT("partition_stop", NVL(sp.partition_stop, '')),
+									XMLELEMENT("partition_id", NVL(sp.partition_id, 0)),
+									XMLELEMENT("other", NVL(sp.other, '')),
+									XMLELEMENT("distribution", NVL(sp.distribution, '')),
+									XMLELEMENT("cpu_cost", NVL(sp.cpu_cost, 0)),
+									XMLELEMENT("io_cost", NVL(sp.io_cost, 0)),
+									XMLELEMENT("temp_space", NVL(sp.temp_space, 0))
+								),
+								XMLELEMENT("predicates",
+									XMLELEMENT("access_predicates", NVL(sp.access_predicates, '')),
+									XMLELEMENT("filter_predicates", NVL(sp.filter_predicates, ''))
+								),
+								XMLELEMENT("projection", NVL(sp.projection, '')),
+								XMLELEMENT("time", NVL(sp.time, 0)),
+								XMLELEMENT("qblock_name", NVL(sp.qblock_name, '')),
+								XMLELEMENT("remarks", NVL(sp.remarks, '')),
+								XMLELEMENT("formatted_operation", 
+									CASE 
+										WHEN sp.depth = 0 THEN sp.operation || COALESCE(' (' || sp.options || ')', '')
+										ELSE LPAD(' ', sp.depth * 2, ' ') || sp.operation || COALESCE(' (' || sp.options || ')', '') || 
+											CASE WHEN sp.object_name IS NOT NULL THEN ' ON ' || NVL(sp.object_owner || '.', '') || sp.object_name END
+									END
+								)
+							) ORDER BY sp.id
+						)
+					)
+				)
+			) AS execution_plan_xml
+		FROM
+			v$sqlarea sa
+		CROSS JOIN
+			v$database d
+		LEFT JOIN
+			v$sql_plan sp ON sa.sql_id = sp.sql_id AND sa.plan_hash_value = sp.plan_hash_value
+		WHERE
+			sa.sql_id IN (%s)
+			AND sa.executions > 1          -- Only executed queries
+			AND (sp.id IS NULL OR sp.id <= 15)  -- Limit plan steps for performance
+			AND sa.last_load_time >= SYSDATE - INTERVAL '7' DAY  -- Recent queries only
+		GROUP BY
+			d.name,
+			sa.sql_id,
+			sa.plan_hash_value,
+			sa.parsing_schema_name,
+			sa.parsing_user_id,
+			sa.first_load_time,
+			sa.last_load_time,
+			sa.executions,
+			sa.elapsed_time,
+			sa.optimizer_mode,
+			sa.optimizer_cost,
+			sa.sql_text,
+			sa.sql_fulltext,
+			sa.buffer_gets,
+			sa.disk_reads,
+			sa.direct_writes,
+			sa.executions,
+			sa.parse_calls,
+			sa.rows_processed,
+			sa.sharable_mem,
+			sa.persistent_mem,
+			sa.runtime_mem
+		ORDER BY
+			sa.sql_id,
+			sa.plan_hash_value`, strings.Join(inClause, ","))
+
+	return query
 }
