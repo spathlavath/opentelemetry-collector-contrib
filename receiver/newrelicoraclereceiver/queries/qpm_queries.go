@@ -176,7 +176,7 @@ func GetSlowQueriesSQL(responseTimeThresholdMs, countThreshold int) (string, []i
 
 	if responseTimeThresholdMs > 0 {
 		baseQuery += `
-			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= ?`
+			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= :1`
 		params = append(params, responseTimeThresholdMs)
 	}
 

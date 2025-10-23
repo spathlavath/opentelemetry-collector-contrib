@@ -151,13 +151,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	// Execute QPM scrapers only if Query Performance Monitoring is enabled
 	if s.config.EnableQueryMonitoring {
 		// First execute slow queries scraper to get query IDs
-		s.logger.Debug("Starting slow queries scraper to get query IDs (QPM enabled)")
-		queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
-
-		s.logger.Info("Slow queries scraper completed",
-			zap.Int("query_ids_found", len(queryIDs)),
-			zap.Strings("query_ids", queryIDs),
-			zap.Int("slow_query_errors", len(slowQueryErrs)))
+		_, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
 
 		// Add slow query errors to our error collection
 		for _, err := range slowQueryErrs {

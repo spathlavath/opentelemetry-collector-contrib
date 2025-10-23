@@ -54,14 +54,22 @@ func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.
 
 // ScrapeSlowQueries collects Oracle slow queries metrics and returns a list of query IDs
 func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, []error) {
-	s.logger.Debug("Begin Oracle slow queries scrape")
-
 	var scrapeErrors []error
 	var queryIDs []string
 
 	// Execute the slow queries SQL with configured thresholds using parameterized query
 	slowQueriesSQL, params := queries.GetSlowQueriesSQL(s.queryMonitoringResponseTimeThreshold, s.queryMonitoringCountThreshold)
-	rows, err := s.db.QueryContext(ctx, slowQueriesSQL, params...)
+
+	var rows *sql.Rows
+	var err error
+
+	// Execute query with or without parameters based on what the query expects
+	if len(params) > 0 {
+		rows, err = s.db.QueryContext(ctx, slowQueriesSQL, params...)
+	} else {
+		rows, err = s.db.QueryContext(ctx, slowQueriesSQL)
+	}
+
 	if err != nil {
 		s.logger.Error("Failed to execute slow queries query", zap.Error(err))
 		return nil, []error{err}
@@ -104,9 +112,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 
 		// Ensure we have valid values for key fields
 		if !slowQuery.IsValidForMetrics() {
-			s.logger.Debug("Skipping slow query with null key values",
-				zap.String("query_id", slowQuery.GetQueryID()),
-				zap.Float64("avg_elapsed_time_ms", slowQuery.AvgElapsedTimeMs.Float64))
+			s.logger.Warn("Skipping slow query with null key values", zap.String("query_id", slowQuery.GetQueryID()))
 			continue
 		}
 
@@ -114,24 +120,10 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		dbName := slowQuery.GetDatabaseName()
 		qID := slowQuery.GetQueryID()
 		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
-
 		schName := slowQuery.GetSchemaName()
 		userName := slowQuery.GetUserName()
-		lastLoadTime := slowQuery.GetLastLoadTime()
 		stmtType := slowQuery.GetStatementType()
 		fullScan := slowQuery.GetHasFullTableScan()
-
-		s.logger.Debug("Processing slow query",
-			zap.String("database_name", dbName),
-			zap.String("query_id", qID),
-			zap.String("schema_name", schName),
-			zap.String("user_name", userName),
-			zap.String("last_load_time", lastLoadTime),
-			zap.String("statement_type", stmtType),
-			zap.Int64("sharable_memory_bytes", slowQuery.GetSharableMemoryBytes()),
-			zap.Int64("persistent_memory_bytes", slowQuery.GetPersistentMemoryBytes()),
-			zap.Int64("runtime_memory_bytes", slowQuery.GetRuntimeMemoryBytes()),
-			zap.Float64("avg_elapsed_time_ms", slowQuery.AvgElapsedTimeMs.Float64))
 
 		// Record execution count if available
 		if slowQuery.ExecutionCount.Valid {
@@ -239,9 +231,12 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-	s.logger.Debug("Completed Oracle slow queries scrape",
-		zap.Int("rows_processed", rowCount),
-		zap.Int("query_ids_collected", len(queryIDs)),
-		zap.Int("errors_encountered", len(scrapeErrors)))
+
+	if rowCount > 0 {
+		s.logger.Info("Collected slow queries metrics",
+			zap.Int("queries_collected", rowCount),
+			zap.Int("query_ids", len(queryIDs)))
+	}
+
 	return queryIDs, scrapeErrors
 }
