@@ -3,9 +3,11 @@
 
 package queries
 
-// SQL query constants with embedded default thresholds
-const (
-	SlowQueriesSQL = `
+import "fmt"
+
+// GetSlowQueriesSQL returns SQL for slow queries with configurable response time threshold and row limit
+func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
+	return fmt.Sprintf(`
 		WITH full_scans AS (
 			SELECT DISTINCT sql_id
 			FROM   v$sql_plan
@@ -22,10 +24,10 @@ const (
 			sa.runtime_mem AS runtime_memory_bytes,
 			COALESCE(sa.module,
 				CASE
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%' THEN 'SELECT'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'INSERT%' THEN 'INSERT'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'UPDATE%' THEN 'UPDATE'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'DELETE%' THEN 'DELETE'
+					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%%' THEN 'SELECT'
+					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'INSERT%%' THEN 'INSERT'
+					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'UPDATE%%' THEN 'UPDATE'
+					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'DELETE%%' THEN 'DELETE'
 					ELSE 'OTHER'
 				END
 			) AS statement_type,
@@ -33,7 +35,7 @@ const (
 			sa.sql_text AS query_text,
 			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
 			sa.disk_reads / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_reads,
-			sa.direct_writes / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_writes,
+			sa.direct_writes / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_disk_writes,
 			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms,
 			CASE WHEN fs.sql_id IS NOT NULL THEN 'Yes' ELSE 'No' END AS has_full_table_scan
 		FROM
@@ -46,14 +48,17 @@ const (
 			full_scans fs ON sa.sql_id = fs.sql_id
 		WHERE
 			sa.executions > 0
-			AND sa.sql_text NOT LIKE '%full_scans AS%'
-			AND sa.sql_text NOT LIKE '%ALL_USERS%'
-			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= 100
+			AND sa.sql_text NOT LIKE '%%full_scans AS%%'
+			AND sa.sql_text NOT LIKE '%%ALL_USERS%%'
+			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
 		ORDER BY
 			avg_elapsed_time_ms DESC
-		FETCH FIRST 20 ROWS ONLY`
+		FETCH FIRST %d ROWS ONLY`, responseTimeThreshold, rowLimit)
+}
 
-	BlockingQueriesSQL = `
+// GetBlockingQueriesSQL returns SQL for blocking queries with configurable row limit
+func GetBlockingQueriesSQL(rowLimit int) string {
+	return fmt.Sprintf(`
 		SELECT
 			s2.sid AS blocked_sid,
 			s2.serial# AS blocked_serial,
@@ -77,9 +82,12 @@ const (
 			s2.blocking_session IS NOT NULL
 		ORDER BY
 			s2.seconds_in_wait DESC
-		FETCH FIRST 20 ROWS ONLY`
+		FETCH FIRST %d ROWS ONLY`, rowLimit)
+}
 
-	WaitEventQueriesSQL = `
+// GetWaitEventQueriesSQL returns SQL for wait event queries with configurable row limit
+func GetWaitEventQueriesSQL(rowLimit int) string {
+	return fmt.Sprintf(`
 		SELECT
 			d.name AS database_name,
 			ash.sql_id AS query_id,
@@ -110,7 +118,5 @@ const (
 			ash.event
 		ORDER BY
 			total_wait_time_ms DESC
-		FETCH FIRST 20 ROWS ONLY`
-)
-
-// These are now simple constants, no functions needed
+		FETCH FIRST %d ROWS ONLY`, rowLimit)
+}
