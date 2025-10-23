@@ -26,7 +26,7 @@ const (
 	defaultCollectionInterval = 10 * time.Second
 
 	// Query Performance Monitoring defaults
-	defaultEnableQueryMonitoring                = false
+	defaultEnableQueryMonitoring                = true
 	defaultQueryMonitoringResponseTimeThreshold = commonutils.DefaultQueryMonitoringResponseTimeThreshold
 	defaultQueryMonitoringCountThreshold        = commonutils.DefaultQueryMonitoringCountThreshold
 
