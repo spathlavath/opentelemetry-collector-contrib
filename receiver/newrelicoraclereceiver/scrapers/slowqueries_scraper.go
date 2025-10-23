@@ -61,7 +61,22 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 
 	// Execute the slow queries SQL with configured thresholds using parameterized query
 	slowQueriesSQL, params := queries.GetSlowQueriesSQL(s.queryMonitoringResponseTimeThreshold, s.queryMonitoringCountThreshold)
-	rows, err := s.db.QueryContext(ctx, slowQueriesSQL, params...)
+
+	s.logger.Debug("Executing slow queries query",
+		zap.Int("responseTimeThreshold", s.queryMonitoringResponseTimeThreshold),
+		zap.Int("countThreshold", s.queryMonitoringCountThreshold),
+		zap.Int("paramCount", len(params)))
+
+	var rows *sql.Rows
+	var err error
+
+	// Execute query with or without parameters based on what the query expects
+	if len(params) > 0 {
+		rows, err = s.db.QueryContext(ctx, slowQueriesSQL, params...)
+	} else {
+		rows, err = s.db.QueryContext(ctx, slowQueriesSQL)
+	}
+
 	if err != nil {
 		s.logger.Error("Failed to execute slow queries query", zap.Error(err))
 		return nil, []error{err}
