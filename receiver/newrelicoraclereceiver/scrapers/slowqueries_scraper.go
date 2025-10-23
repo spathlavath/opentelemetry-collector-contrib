@@ -54,7 +54,9 @@ func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.
 
 // ScrapeSlowQueries collects Oracle slow queries metrics and returns a list of query IDs
 func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, []error) {
-	s.logger.Debug("Begin Oracle slow queries scrape")
+	s.logger.Info("=== SLOW QUERIES SCRAPER STARTED ===",
+		zap.Int("responseTimeThreshold", s.queryMonitoringResponseTimeThreshold),
+		zap.Int("countThreshold", s.queryMonitoringCountThreshold))
 
 	var scrapeErrors []error
 	var queryIDs []string
@@ -62,23 +64,29 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	// Execute the slow queries SQL with configured thresholds using parameterized query
 	slowQueriesSQL, params := queries.GetSlowQueriesSQL(s.queryMonitoringResponseTimeThreshold, s.queryMonitoringCountThreshold)
 
-	s.logger.Debug("Executing slow queries query",
+	s.logger.Info("Executing slow queries query",
 		zap.Int("responseTimeThreshold", s.queryMonitoringResponseTimeThreshold),
 		zap.Int("countThreshold", s.queryMonitoringCountThreshold),
-		zap.Int("paramCount", len(params)))
+		zap.Int("paramCount", len(params)),
+		zap.String("sql", slowQueriesSQL))
 
 	var rows *sql.Rows
 	var err error
 
 	// Execute query with or without parameters based on what the query expects
 	if len(params) > 0 {
+		s.logger.Debug("Executing with parameters", zap.Any("params", params))
 		rows, err = s.db.QueryContext(ctx, slowQueriesSQL, params...)
 	} else {
+		s.logger.Debug("Executing without parameters")
 		rows, err = s.db.QueryContext(ctx, slowQueriesSQL)
 	}
 
 	if err != nil {
-		s.logger.Error("Failed to execute slow queries query", zap.Error(err))
+		s.logger.Error("Failed to execute slow queries query",
+			zap.Error(err),
+			zap.String("sql", slowQueriesSQL),
+			zap.Any("params", params))
 		return nil, []error{err}
 	}
 	defer func() {
@@ -90,8 +98,11 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	now := pcommon.NewTimestampFromTime(time.Now())
 	rowCount := 0
 
+	s.logger.Info("Starting to process query rows...")
+
 	for rows.Next() {
 		rowCount++
+		s.logger.Debug("Processing row", zap.Int("rowNumber", rowCount))
 		var slowQuery models.SlowQuery
 
 		if err := rows.Scan(
@@ -254,7 +265,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		s.logger.Error("Error iterating over slow queries rows", zap.Error(err))
 		scrapeErrors = append(scrapeErrors, err)
 	}
-	s.logger.Debug("Completed Oracle slow queries scrape",
+	s.logger.Info("=== SLOW QUERIES SCRAPER COMPLETED ===",
 		zap.Int("rows_processed", rowCount),
 		zap.Int("query_ids_collected", len(queryIDs)),
 		zap.Int("errors_encountered", len(scrapeErrors)))
