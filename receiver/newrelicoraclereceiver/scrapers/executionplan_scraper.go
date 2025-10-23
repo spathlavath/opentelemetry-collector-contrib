@@ -47,18 +47,18 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		return errs
 	}
 
-	s.logger.Debug("Starting execution plan scraping", 
+	s.logger.Debug("Starting execution plan scraping",
 		zap.Int("sql_ids_count", len(sqlIDs)),
 		zap.Strings("sql_ids", sqlIDs))
 
 	// Performance optimization: Process in batches to avoid overwhelming the database
-	const batchSize = 3  // Conservative batch size for performance
+	const batchSize = 3 // Conservative batch size for performance
 	totalProcessed := 0
-	
+
 	for i := 0; i < len(sqlIDs); i += batchSize {
 		end := min(i+batchSize, len(sqlIDs))
 		batch := sqlIDs[i:end]
-		
+
 		s.logger.Debug("Processing execution plan batch",
 			zap.Int("batch_number", i/batchSize+1),
 			zap.Int("batch_size", len(batch)),
@@ -67,7 +67,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		batchErrs := s.processBatch(ctx, batch)
 		errs = append(errs, batchErrs...)
 		totalProcessed += len(batch)
-		
+
 		// Check for context cancellation between batches
 		select {
 		case <-ctx.Done():
@@ -87,7 +87,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 // processBatch processes a single batch of SQL IDs with timeout and performance monitoring
 func (s *ExecutionPlanScraper) processBatch(ctx context.Context, sqlIDs []string) []error {
 	var errs []error
-	
+
 	// Add timeout to prevent hanging queries
 	queryCtx, cancel := context.WithTimeout(ctx, 45*time.Second)
 	defer cancel()
@@ -101,7 +101,7 @@ func (s *ExecutionPlanScraper) processBatch(ctx context.Context, sqlIDs []string
 		return errs
 	}
 
-	s.logger.Debug("Executing execution plan query", 
+	s.logger.Debug("Executing execution plan query",
 		zap.String("query_preview", query[:min(200, len(query))]),
 		zap.Int("args_count", len(args)))
 
@@ -130,7 +130,7 @@ func (s *ExecutionPlanScraper) processBatch(ctx context.Context, sqlIDs []string
 		}
 
 		var plan models.ExecutionPlan
-		
+
 		// Scan the row into execution plan model
 		err := rows.Scan(
 			&plan.DatabaseName,
@@ -172,10 +172,11 @@ func (s *ExecutionPlanScraper) processBatch(ctx context.Context, sqlIDs []string
 		errs = append(errs, errMsg)
 	}
 
-	s.logger.Info("Execution plan scraping completed",
+	s.logger.Info("Batch processed successfully",
 		zap.Int("total_plans_processed", planCount),
 		zap.Int("input_sql_ids", len(sqlIDs)),
-		zap.Int("errors_count", len(errs)))
+		zap.Int("errors_count", len(errs)),
+		zap.Duration("execution_time", time.Since(startTime)))
 
 	return errs
 }
@@ -194,7 +195,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionP
 	// Record execution plan info metric with comprehensive XML data
 	s.mb.RecordNewrelicoracledbExecutionPlanInfoDataPoint(
 		pcommon.NewTimestampFromTime(time.Now()), // Current timestamp
-		1, // Set to 1 to indicate presence of execution plan
+		1,                                        // Set to 1 to indicate presence of execution plan
 		plan.GetDatabaseName(),
 		plan.GetQueryID(),
 		fmt.Sprintf("%d", plan.GetPlanHashValue()),
