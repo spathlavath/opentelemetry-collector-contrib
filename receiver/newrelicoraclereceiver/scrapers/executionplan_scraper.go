@@ -95,18 +95,17 @@ func (s *ExecutionPlanScraper) processBatch(ctx context.Context, sqlIDs []string
 	startTime := time.Now()
 
 	// Get the execution plan query with SQL IDs
-	query, args := queries.GetExecutionPlanQuery(sqlIDs)
+	query := queries.GetExecutionPlanQuery(sqlIDs)
 	if query == "" {
 		s.logger.Warn("Empty execution plan query generated for batch")
 		return errs
 	}
 
 	s.logger.Debug("Executing execution plan query",
-		zap.String("query_preview", query[:min(200, len(query))]),
-		zap.Int("args_count", len(args)))
+		zap.String("query_preview", query[:min(200, len(query))]))
 
-	// Execute the query with timeout
-	rows, err := s.db.QueryContext(queryCtx, query, args...)
+	// Execute the query with timeout (no parameters needed as SQL IDs are embedded)
+	rows, err := s.db.QueryContext(queryCtx, query)
 	if err != nil {
 		errMsg := fmt.Errorf("failed to execute execution plan query: %w", err)
 		s.logger.Error("Execution plan query failed", zap.Error(errMsg))

@@ -126,9 +126,9 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 
 // GetExecutionPlanQuery returns optimized SQL query to fetch execution plans for given SQL IDs
 // Performance optimizations: limits plan steps, adds execution filters, batch processing support
-func GetExecutionPlanQuery(sqlIDs []string) (string, []interface{}) {
+func GetExecutionPlanQuery(sqlIDs []string) string {
 	if len(sqlIDs) == 0 {
-		return "", []interface{}{}
+		return ""
 	}
 
 	// Performance optimization: Limit to reasonable batch size
@@ -137,12 +137,10 @@ func GetExecutionPlanQuery(sqlIDs []string) (string, []interface{}) {
 		sqlIDs = sqlIDs[:maxBatchSize]
 	}
 
-	// Create placeholders for the IN clause
-	placeholders := make([]string, len(sqlIDs))
-	args := make([]interface{}, len(sqlIDs))
+	// Build IN clause with literal values for Oracle compatibility
+	inClause := make([]string, len(sqlIDs))
 	for i, sqlID := range sqlIDs {
-		placeholders[i] = "?"
-		args[i] = sqlID
+		inClause[i] = "'" + sqlID + "'"
 	}
 
 	query := fmt.Sprintf(`
@@ -317,7 +315,7 @@ func GetExecutionPlanQuery(sqlIDs []string) (string, []interface{}) {
 			sa.bind_equivalent
 		ORDER BY
 			sa.sql_id,
-			sa.plan_hash_value`, strings.Join(placeholders, ","))
+			sa.plan_hash_value`, strings.Join(inClause, ","))
 
-	return query, args
+	return query
 }
