@@ -148,23 +148,10 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	// WaitGroup to coordinate concurrent scrapers
 	var wg sync.WaitGroup
 
-	// Log QPM configuration for debugging
-	s.logger.Info("=== ORACLE SCRAPER STARTING ===")
-	s.logger.Info("Query Performance Monitoring configuration",
-		zap.Bool("enableQueryMonitoring", s.config.EnableQueryMonitoring),
-		zap.Int("responseTimeThreshold", s.config.QueryMonitoringResponseTimeThreshold),
-		zap.Int("countThreshold", s.config.QueryMonitoringCountThreshold))
-
 	// Execute QPM scrapers only if Query Performance Monitoring is enabled
 	if s.config.EnableQueryMonitoring {
 		// First execute slow queries scraper to get query IDs
-		s.logger.Info("Starting slow queries scraper to get query IDs (QPM enabled)")
-		queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
-
-		s.logger.Info("Slow queries scraper completed",
-			zap.Int("query_ids_found", len(queryIDs)),
-			zap.Strings("query_ids", queryIDs),
-			zap.Int("slow_query_errors", len(slowQueryErrs)))
+		_, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
 
 		// Add slow query errors to our error collection
 		for _, err := range slowQueryErrs {
@@ -175,8 +162,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 			}
 		}
 	} else {
-		s.logger.Info("Query Performance Monitoring disabled, skipping QPM scrapers",
-			zap.Bool("enableQueryMonitoring", s.config.EnableQueryMonitoring))
+		s.logger.Debug("Query Performance Monitoring disabled, skipping QPM scrapers")
 	}
 
 	// Define non-QPM scraper functions that don't depend on slow queries
