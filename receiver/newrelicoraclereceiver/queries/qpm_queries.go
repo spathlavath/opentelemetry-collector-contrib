@@ -111,3 +111,23 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 			total_wait_time_ms DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
+
+// GetExecutionPlanQuery returns SQL to get execution plan using DBMS_XPLAN.DISPLAY_CURSOR
+func GetExecutionPlanQuery(sqlID string) string {
+	return fmt.Sprintf(`
+		SELECT
+			d.name AS database_name,
+			'%s' AS sql_id,
+			sa.plan_hash_value,
+			LISTAGG(p.plan_table_output, CHR(10)) WITHIN GROUP (ORDER BY ROWNUM) AS execution_plan_text
+		FROM
+			v$database d,
+			v$sqlarea sa,
+			TABLE(DBMS_XPLAN.DISPLAY_CURSOR('%s', NULL, 'BASIC +COST +BYTES +PREDICATE')) p
+		WHERE
+			sa.sql_id = '%s'
+			AND ROWNUM <= 100  -- Limit output lines for performance
+		GROUP BY
+			d.name,
+			sa.plan_hash_value`, sqlID, sqlID, sqlID)
+}
