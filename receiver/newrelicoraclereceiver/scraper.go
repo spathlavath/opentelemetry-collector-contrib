@@ -185,12 +185,19 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 				zap.Int("plans_collected", len(execPlans)),
 				zap.Int("exec_plan_errors", len(execPlanErrs)))
 
-			// Print execution plans to console
+			// Print execution plans to console in JSON format
 			for _, execPlan := range execPlans {
 				if execPlan.IsValid() {
-					s.logger.Info("Execution Plan Retrieved",
+					jsonStr, err := execPlan.ToJSONString()
+					if err != nil {
+						s.logger.Error("Failed to convert execution plan to JSON",
+							zap.String("query_id", execPlan.GetQueryID()),
+							zap.Error(err))
+						continue
+					}
+					s.logger.Info("Execution Plan Retrieved (JSON Format)",
 						zap.String("query_id", execPlan.GetQueryID()),
-						zap.String("execution_plan", "\n"+execPlan.GetPlanTableOutput()))
+						zap.String("execution_plan_json", jsonStr))
 				}
 			}
 
