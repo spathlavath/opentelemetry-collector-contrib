@@ -95,7 +95,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			&slowQuery.AvgDiskReads,
 			&slowQuery.AvgDiskWrites,
 			&slowQuery.AvgElapsedTimeMs,
-			&slowQuery.HasFullTableScan,
 		); err != nil {
 			s.logger.Error("Failed to scan slow query row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
@@ -114,12 +113,10 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		dbName := slowQuery.GetDatabaseName()
 		qID := slowQuery.GetQueryID()
 		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
-
-		schName := slowQuery.GetSchemaName()
 		userName := slowQuery.GetUserName()
+		schName := slowQuery.GetSchemaName()
 		lastLoadTime := slowQuery.GetLastLoadTime()
 		stmtType := slowQuery.GetStatementType()
-		fullScan := slowQuery.GetHasFullTableScan()
 
 		s.logger.Debug("Processing slow query",
 			zap.String("database_name", dbName),
@@ -225,7 +222,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			qText,
 			schName,
 			stmtType,
-			fullScan,
 			userName,
 		)
 
