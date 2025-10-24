@@ -159,8 +159,12 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 	if len(planLines) > 0 {
 		// Join all plan lines with newlines to form complete execution plan
 		completePlanText := strings.Join(planLines, "\n")
+
+		// Trim execution plan to start from "Plan hash value:" to remove SQL text and extra info
+		trimmedPlanText := s.trimExecutionPlanText(completePlanText)
+
 		executionPlan.ExecutionPlanText = sql.NullString{
-			String: completePlanText,
+			String: trimmedPlanText,
 			Valid:  true,
 		}
 
@@ -221,4 +225,31 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionP
 		fmt.Sprintf("%d", plan.GetPlanHashValue()),
 		plan.GetExecutionPlanText(), // This contains the DBMS_XPLAN.DISPLAY_CURSOR output
 	)
+}
+
+// trimExecutionPlanText trims the execution plan text to start from "Plan hash value:"
+// This removes the SQL text and other metadata, keeping only the actual execution plan
+func (s *ExecutionPlanScraper) trimExecutionPlanText(planText string) string {
+	// Look for "Plan hash value:" marker
+	planHashIndex := strings.Index(planText, "Plan hash value:")
+	if planHashIndex == -1 {
+		// If marker not found, return original text (fallback)
+		s.logger.Debug("Plan hash value marker not found in execution plan, returning full text")
+		return planText
+	}
+
+	// Return text starting from "Plan hash value:"
+	trimmedText := planText[planHashIndex:]
+
+	// Also try to stop at the next SQL_ID to avoid multiple plans in one output
+	nextSQLIndex := strings.Index(trimmedText, "\nSQL_ID")
+	if nextSQLIndex > 0 {
+		trimmedText = trimmedText[:nextSQLIndex]
+	}
+
+	s.logger.Debug("Trimmed execution plan text",
+		zap.Int("original_length", len(planText)),
+		zap.Int("trimmed_length", len(trimmedText)))
+
+	return strings.TrimSpace(trimmedText)
 }
