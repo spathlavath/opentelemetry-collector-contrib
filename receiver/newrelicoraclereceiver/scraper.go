@@ -47,6 +47,7 @@ type newRelicOracleScraper struct {
 	containerScraper    *scrapers.ContainerScraper
 	racScraper          *scrapers.RacScraper
 	databaseInfoScraper *scrapers.DatabaseInfoScraper
+	execPlanScraper     *scrapers.ExecPlanScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -126,6 +127,12 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	// Initialize database info scraper with direct DB connection
 	s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
+	// Initialize execution plan scraper with direct DB connection
+	s.execPlanScraper, err = scrapers.NewExecPlanScraper(s.db, s.logger, s.instanceName, s.metricsBuilderConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create execution plan scraper: %w", err)
+	}
+
 	return nil
 }
 
@@ -165,6 +172,35 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 			case errChan <- err:
 			default:
 				s.logger.Warn("Error channel full, dropping slow query error", zap.Error(err))
+			}
+		}
+
+		// Now fetch execution plans for the query IDs
+		if len(queryIDs) > 0 {
+			s.logger.Debug("Starting execution plan scraper", zap.Int("query_ids_count", len(queryIDs)))
+			execPlans, execPlanErrs := s.execPlanScraper.ScrapeExecPlans(scrapeCtx, queryIDs)
+
+			s.logger.Info("Execution plan scraper completed",
+				zap.Int("query_ids_requested", len(queryIDs)),
+				zap.Int("plans_collected", len(execPlans)),
+				zap.Int("exec_plan_errors", len(execPlanErrs)))
+
+			// Print execution plans to console
+			for _, execPlan := range execPlans {
+				if execPlan.IsValid() {
+					s.logger.Info("Execution Plan Retrieved",
+						zap.String("query_id", execPlan.GetQueryID()),
+						zap.String("execution_plan", "\n"+execPlan.GetPlanTableOutput()))
+				}
+			}
+
+			// Add execution plan errors to our error collection
+			for _, err := range execPlanErrs {
+				select {
+				case errChan <- err:
+				default:
+					s.logger.Warn("Error channel full, dropping exec plan error", zap.Error(err))
+				}
 			}
 		}
 	} else {

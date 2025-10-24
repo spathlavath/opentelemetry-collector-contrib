@@ -120,3 +120,12 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 			total_wait_time_ms DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
+
+// GetExecPlanSQL returns SQL for fetching execution plan for a specific SQL_ID
+func GetExecPlanSQL(sqlID string) string {
+	return fmt.Sprintf(`
+		SELECT
+			'%s' AS query_id,
+			plan_table_output
+		FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR('%s', NULL, 'TYPICAL'))`, sqlID, sqlID)
+}
