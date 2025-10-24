@@ -117,17 +117,13 @@ func GetExecutionPlanQuery(sqlID string) string {
 	return fmt.Sprintf(`
 		SELECT
 			d.name AS database_name,
-			'%s' AS sql_id,
+			'%s' AS query_id,
 			sa.plan_hash_value,
-			LISTAGG(p.plan_table_output, CHR(10)) WITHIN GROUP (ORDER BY ROWNUM) AS execution_plan_text
+			p.plan_table_output AS execution_plan_text
 		FROM
 			v$database d,
 			v$sqlarea sa,
-			TABLE(DBMS_XPLAN.DISPLAY_CURSOR('%s', NULL, 'BASIC +COST +BYTES +PREDICATE')) p
+			TABLE(DBMS_XPLAN.DISPLAY_CURSOR('%s', NULL, 'TYPICAL')) p
 		WHERE
-			sa.sql_id = '%s'
-			AND ROWNUM <= 100  -- Limit output lines for performance
-		GROUP BY
-			d.name,
-			sa.plan_hash_value`, sqlID, sqlID, sqlID)
+			sa.sql_id = '%s'`, sqlID, sqlID, sqlID)
 }

@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -112,8 +113,11 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 		}
 	}()
 
-	// Process results
-	planCount := 0
+	// Process results - collect all execution plan lines for this SQL ID
+	var executionPlan models.ExecutionPlan
+	var planLines []string
+	rowCount := 0
+
 	for rows.Next() {
 		// Check context cancellation
 		select {
@@ -122,38 +126,61 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 		default:
 		}
 
-		var plan models.ExecutionPlan
+		var databaseName, queryID, planLine sql.NullString
+		var planHashValue sql.NullInt64
 
-		// Scan the row into execution plan model
+		// Scan the row - each row is one line of the execution plan
 		err := rows.Scan(
-			&plan.DatabaseName,
-			&plan.QueryID,
-			&plan.PlanHashValue,
-			&plan.ExecutionPlanText, // Using text instead of XML for DBMS_XPLAN output
+			&databaseName,
+			&queryID,
+			&planHashValue,
+			&planLine,
 		)
 		if err != nil {
 			return fmt.Errorf("failed to scan execution plan row for SQL ID %s: %w", sqlID, err)
 		}
 
-		// Validate the execution plan
-		if !plan.IsValidForMetrics() {
-			s.logger.Debug("Skipping invalid execution plan",
-				zap.String("sql_id", sqlID),
-				zap.String("query_id", plan.GetQueryID()),
-				zap.Int64("plan_hash_value", plan.GetPlanHashValue()))
-			continue
+		rowCount++
+
+		// Store the first row's metadata (all rows should have the same metadata)
+		if rowCount == 1 {
+			executionPlan.DatabaseName = databaseName
+			executionPlan.QueryID = queryID
+			executionPlan.PlanHashValue = planHashValue
 		}
 
-		planCount++
-		s.logger.Debug("Processed execution plan",
-			zap.Int("plan_number", planCount),
-			zap.String("database_name", plan.GetDatabaseName()),
-			zap.String("query_id", plan.GetQueryID()),
-			zap.Int64("plan_hash_value", plan.GetPlanHashValue()),
-			zap.Int("plan_text_length", len(plan.GetExecutionPlanText())))
+		// Collect execution plan lines
+		if planLine.Valid && planLine.String != "" {
+			planLines = append(planLines, planLine.String)
+		}
+	}
 
-		// Build and emit metrics for the execution plan
-		s.buildExecutionPlanMetrics(&plan)
+	// If we collected any execution plan lines, create the complete execution plan
+	if len(planLines) > 0 {
+		// Join all plan lines with newlines to form complete execution plan
+		completePlanText := strings.Join(planLines, "\n")
+		executionPlan.ExecutionPlanText = sql.NullString{
+			String: completePlanText,
+			Valid:  true,
+		}
+
+		// Validate the execution plan
+		if !executionPlan.IsValidForMetrics() {
+			s.logger.Debug("Skipping invalid execution plan",
+				zap.String("sql_id", sqlID),
+				zap.String("query_id", executionPlan.GetQueryID()),
+				zap.Int64("plan_hash_value", executionPlan.GetPlanHashValue()))
+		} else {
+			s.logger.Debug("Processed complete execution plan",
+				zap.String("database_name", executionPlan.GetDatabaseName()),
+				zap.String("query_id", executionPlan.GetQueryID()),
+				zap.Int64("plan_hash_value", executionPlan.GetPlanHashValue()),
+				zap.Int("plan_lines_count", len(planLines)),
+				zap.Int("plan_text_length", len(executionPlan.GetExecutionPlanText())))
+
+			// Build and emit metrics for the complete execution plan
+			s.buildExecutionPlanMetrics(&executionPlan)
+		}
 	}
 
 	// Check for iteration errors
@@ -163,11 +190,11 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 
 	s.logger.Debug("Successfully processed execution plan for SQL ID",
 		zap.String("sql_id", sqlID),
-		zap.Int("plans_found", planCount),
+		zap.Int("plan_lines_found", len(planLines)),
 		zap.Duration("processing_time", time.Since(startTime)))
 
-	if planCount == 0 {
-		s.logger.Debug("No execution plans found for SQL ID", zap.String("sql_id", sqlID))
+	if len(planLines) == 0 {
+		s.logger.Debug("No execution plan lines found for SQL ID", zap.String("sql_id", sqlID))
 	}
 
 	return nil
