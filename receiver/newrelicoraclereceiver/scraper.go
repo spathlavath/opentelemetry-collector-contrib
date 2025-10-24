@@ -35,18 +35,19 @@ type dbProviderFunc func() (*sql.DB, error)
 
 type newRelicOracleScraper struct {
 	// Keep session scraper and add tablespace scraper and core scraper
-	sessionScraper      *scrapers.SessionScraper
-	tablespaceScraper   *scrapers.TablespaceScraper
-	coreScraper         *scrapers.CoreScraper
-	pdbScraper          *scrapers.PdbScraper
-	systemScraper       *scrapers.SystemScraper
-	slowQueriesScraper  *scrapers.SlowQueriesScraper
-	blockingScraper     *scrapers.BlockingScraper
-	waitEventsScraper   *scrapers.WaitEventsScraper
-	connectionScraper   *scrapers.ConnectionScraper
-	containerScraper    *scrapers.ContainerScraper
-	racScraper          *scrapers.RacScraper
-	databaseInfoScraper *scrapers.DatabaseInfoScraper
+	sessionScraper       *scrapers.SessionScraper
+	tablespaceScraper    *scrapers.TablespaceScraper
+	coreScraper          *scrapers.CoreScraper
+	pdbScraper           *scrapers.PdbScraper
+	systemScraper        *scrapers.SystemScraper
+	slowQueriesScraper   *scrapers.SlowQueriesScraper
+	executionPlanScraper *scrapers.ExecutionPlanScraper
+	blockingScraper      *scrapers.BlockingScraper
+	waitEventsScraper    *scrapers.WaitEventsScraper
+	connectionScraper    *scrapers.ConnectionScraper
+	containerScraper     *scrapers.ContainerScraper
+	racScraper           *scrapers.RacScraper
+	databaseInfoScraper  *scrapers.DatabaseInfoScraper
 
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -102,6 +103,9 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	if err != nil {
 		return fmt.Errorf("failed to create slow queries scraper: %w", err)
 	}
+
+	// Initialize execution plan scraper with direct DB connection
+	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	// Initialize blocking scraper with direct DB connection and QPM config
 	s.blockingScraper, err = scrapers.NewBlockingScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.QueryMonitoringCountThreshold)
@@ -166,6 +170,27 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 			default:
 				s.logger.Warn("Error channel full, dropping slow query error", zap.Error(err))
 			}
+		}
+
+		// Execute execution plan scraper with the query IDs from slow queries
+		if len(queryIDs) > 0 {
+			s.logger.Debug("Starting execution plan scraper with query IDs", zap.Strings("query_ids", queryIDs))
+			executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, queryIDs)
+
+			s.logger.Info("Execution plan scraper completed",
+				zap.Int("query_ids_processed", len(queryIDs)),
+				zap.Int("execution_plan_errors", len(executionPlanErrs)))
+
+			// Add execution plan errors to our error collection
+			for _, err := range executionPlanErrs {
+				select {
+				case errChan <- err:
+				default:
+					s.logger.Warn("Error channel full, dropping execution plan error", zap.Error(err))
+				}
+			}
+		} else {
+			s.logger.Debug("No query IDs available for execution plan scraping")
 		}
 	} else {
 		s.logger.Debug("Query Performance Monitoring disabled, skipping QPM scrapers")

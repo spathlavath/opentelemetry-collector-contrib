@@ -40,6 +40,12 @@ attributes:
   user_name:
     description: Oracle username for slow queries
     type: string
+  plan_hash_value:
+    description: Oracle execution plan hash value
+    type: string
+  execution_plan_text:
+    description: Oracle execution plan text from DBMS_XPLAN.DISPLAY_CURSOR
+    type: string
   wait_event_name:
     description: Oracle wait event name for wait events
     type: string
@@ -3505,6 +3511,18 @@ metrics:
       - query_id
       - wait_event_name
       - wait_category
+
+  newrelicoracledb.execution_plan.info:
+    description: Execution plan information for SQL queries using DBMS_XPLAN.DISPLAY_CURSOR
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - database_name
+      - query_id
+      - plan_hash_value
+      - execution_plan_text
 
   newrelicoracledb.wait_events.avg_wait_time_ms:
       description: Average wait time in milliseconds for wait events
