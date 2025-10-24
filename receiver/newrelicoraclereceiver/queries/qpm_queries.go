@@ -8,11 +8,6 @@ import "fmt"
 // GetSlowQueriesSQL returns SQL for slow queries with configurable response time threshold and row limit
 func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 	return fmt.Sprintf(`
-		WITH full_scans AS (
-			SELECT DISTINCT sql_id
-			FROM   v$sql_plan
-			WHERE  operation = 'TABLE ACCESS' AND options = 'FULL'
-		)
 		SELECT
 			d.name AS database_name,
 			sa.sql_id AS query_id,
@@ -36,19 +31,15 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
 			sa.disk_reads / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_reads,
 			sa.direct_writes / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_writes,
-			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms,
-			CASE WHEN fs.sql_id IS NOT NULL THEN 'Yes' ELSE 'No' END AS has_full_table_scan
+			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms
 		FROM
 			v$sqlarea sa
 		INNER JOIN
 			ALL_USERS au ON sa.parsing_user_id = au.user_id
 		CROSS JOIN
 			v$database d
-		LEFT JOIN
-			full_scans fs ON sa.sql_id = fs.sql_id
 		WHERE
 			sa.executions > 0
-			AND sa.sql_text NOT LIKE '%%full_scans AS%%'
 			AND sa.sql_text NOT LIKE '%%ALL_USERS%%'
 			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
 		ORDER BY

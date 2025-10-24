@@ -690,7 +690,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "statement_type-val", "has_full_table_scan-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "statement_type-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4436,9 +4436,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("statement_type")
 					assert.True(t, ok)
 					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("has_full_table_scan")
-					assert.True(t, ok)
-					assert.Equal(t, "has_full_table_scan-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())

@@ -34,9 +34,6 @@ attributes:
   statement_type:
     description: Type of SQL statement or application module
     type: string
-  has_full_table_scan:
-    description: Whether the query has a full table scan
-    type: string
   username:
     description: Oracle username who parsed the SQL
     type: string
@@ -3434,7 +3431,6 @@ metrics:
       - query_text
       - schema_name
       - statement_type
-      - has_full_table_scan
       - user_name    
 
   newrelicoracledb.blocking_queries.wait_time:

@@ -2438,7 +2438,6 @@ Slow Query Details
 | query_text | SQL query text | Any Str | false |
 | schema_name | Schema name where the query is executed | Any Str | false |
 | statement_type | Type of SQL statement or application module | Any Str | false |
-| has_full_table_scan | Whether the query has a full table scan | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.runtime_memory
