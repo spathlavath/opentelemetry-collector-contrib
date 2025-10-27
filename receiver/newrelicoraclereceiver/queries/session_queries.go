@@ -1,12 +1,12 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package queries
 
 // Oracle SQL queries for connection statistics and session monitoring
 
 // Session Count Queries
 const (
+	// SessionCountSQL returns the count of user sessions
+	SessionCountSQL = "SELECT COUNT(*) AS SESSION_COUNT FROM v$session WHERE type = 'USER'"
+
 	// TotalSessionsSQL returns the total number of sessions
 	TotalSessionsSQL = "SELECT COUNT(*) as TOTAL_SESSIONS FROM V$SESSION"
 
