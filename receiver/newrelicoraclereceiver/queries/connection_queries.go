@@ -3,42 +3,47 @@
 
 package queries
 
-// Oracle SQL queries for connection statistics
+// Oracle SQL queries for connection statistics and session monitoring
 
-// Core Connection Counts & Status
+// Session Count Queries
 const (
-	// Total Sessions
+	// SessionCountSQL returns the count of user sessions
+	SessionCountSQL = "SELECT COUNT(*) AS SESSION_COUNT FROM v$session WHERE type = 'USER'"
+
+	// TotalSessionsSQL returns the total number of sessions
 	TotalSessionsSQL = "SELECT COUNT(*) as TOTAL_SESSIONS FROM V$SESSION"
 
-	// Active Sessions
+	// ActiveSessionsSQL returns the count of active sessions
 	ActiveSessionsSQL = "SELECT COUNT(*) as ACTIVE_SESSIONS FROM V$SESSION WHERE STATUS = 'ACTIVE'"
 
-	// Inactive Sessions
+	// InactiveSessionsSQL returns the count of inactive sessions
 	InactiveSessionsSQL = "SELECT COUNT(*) as INACTIVE_SESSIONS FROM V$SESSION WHERE STATUS = 'INACTIVE'"
 
-	// Session Status Breakdown
+	// SessionStatusSQL returns session count breakdown by status
 	SessionStatusSQL = `
 		SELECT 
 			STATUS,
-			COUNT(*) as SESSION_COUNT
+			COUNT(*) AS SESSION_COUNT
 		FROM V$SESSION 
 		GROUP BY STATUS`
 
-	// Session Type Breakdown
+	// SessionTypeSQL returns session count breakdown by type
 	SessionTypeSQL = `
 		SELECT 
 			TYPE,
-			COUNT(*) as SESSION_COUNT
+			COUNT(*) AS SESSION_COUNT
 		FROM V$SESSION 
 		GROUP BY TYPE`
 
-	// Logons Statistics
+	// LogonsStatsSQL returns logon statistics
 	LogonsStatsSQL = `
-		SELECT NAME, VALUE 
+		SELECT 
+			NAME, 
+			VALUE 
 		FROM V$SYSSTAT 
 		WHERE NAME IN ('logons cumulative', 'logons current')`
 
-	// Session Resource Consumption
+	// SessionResourceConsumptionSQL returns detailed session resource usage
 	SessionResourceConsumptionSQL = `
 		SELECT 
 			s.SID,
@@ -49,9 +54,9 @@ const (
 			s.OSUSER,
 			s.LOGON_TIME,
 			s.LAST_CALL_ET,
-			ROUND(ss_cpu.VALUE/100, 2) as CPU_USAGE_SECONDS,
-			ss_pga.VALUE as PGA_MEMORY_BYTES,
-			ss_logical.VALUE as LOGICAL_READS
+			ROUND(ss_cpu.VALUE/100, 2) AS CPU_USAGE_SECONDS,
+			ss_pga.VALUE AS PGA_MEMORY_BYTES,
+			ss_logical.VALUE AS LOGICAL_READS
 		FROM V$SESSION s
 		LEFT JOIN V$SESSTAT ss_cpu ON s.SID = ss_cpu.SID 
 			AND ss_cpu.STATISTIC# = (SELECT STATISTIC# FROM V$STATNAME WHERE NAME = 'CPU used by this session')
@@ -62,8 +67,12 @@ const (
 		WHERE s.TYPE = 'USER'
 		ORDER BY ss_cpu.VALUE DESC NULLS LAST
 		FETCH FIRST 500 ROWS ONLY`
+)
 
-	// Wait Events & Locks - Current Wait Events
+// Wait Events and Blocking Queries
+const (
+
+	// CurrentWaitEventsSQL returns currently waiting events (non-idle)
 	CurrentWaitEventsSQL = `
 		SELECT 
 			SID,
@@ -75,12 +84,12 @@ const (
 			WAIT_CLASS
 		FROM V$SESSION 
 		WHERE STATUS = 'ACTIVE' 
-		AND WAIT_CLASS != 'Idle'
-		AND EVENT IS NOT NULL
+			AND WAIT_CLASS != 'Idle'
+			AND EVENT IS NOT NULL
 		ORDER BY SECONDS_IN_WAIT DESC
 		FETCH FIRST 200 ROWS ONLY`
 
-	// Blocking Sessions
+	// BlockingSessionsSQL returns sessions that are blocking other sessions
 	BlockingSessionsSQL = `
 		SELECT 
 			SID,
@@ -95,7 +104,7 @@ const (
 		ORDER BY SECONDS_IN_WAIT DESC
 		FETCH FIRST 100 ROWS ONLY`
 
-	// Wait Event Summary (Top 20 by time waited)
+	// WaitEventSummarySQL returns top wait events by time waited
 	WaitEventSummarySQL = `
 		SELECT 
 			EVENT,
@@ -110,26 +119,30 @@ const (
 		WHERE WAIT_CLASS != 'Idle'
 		ORDER BY TIME_WAITED_MICRO DESC 
 		FETCH FIRST 20 ROWS ONLY`
+)
 
-	// Connection Pool Metrics
+// Connection Pool and Resource Queries
+const (
+
+	// ConnectionPoolMetricsSQL returns connection pool related metrics
 	ConnectionPoolMetricsSQL = `
 		SELECT 
-			'shared_servers' as METRIC_NAME,
-			COUNT(*) as VALUE
+			'shared_servers' AS METRIC_NAME,
+			COUNT(*) AS VALUE
 		FROM V$SHARED_SERVER
 		UNION ALL
 		SELECT 
-			'dispatchers' as METRIC_NAME,
-			COUNT(*) as VALUE
+			'dispatchers' AS METRIC_NAME,
+			COUNT(*) AS VALUE
 		FROM V$DISPATCHER
 		UNION ALL
 		SELECT 
-			'circuits' as METRIC_NAME,
-			COUNT(*) as VALUE
+			'circuits' AS METRIC_NAME,
+			COUNT(*) AS VALUE
 		FROM V$CIRCUIT
 		WHERE STATUS = 'NORMAL'`
 
-	// Session Limits
+	// SessionLimitsSQL returns session and resource limits
 	SessionLimitsSQL = `
 		SELECT 
 			RESOURCE_NAME,
@@ -140,7 +153,7 @@ const (
 		FROM V$RESOURCE_LIMIT 
 		WHERE RESOURCE_NAME IN ('sessions', 'processes', 'enqueue_locks', 'enqueue_resources')`
 
-	// Connection Quality Metrics
+	// ConnectionQualitySQL returns connection quality and performance metrics
 	ConnectionQualitySQL = `
 		SELECT 
 			NAME,

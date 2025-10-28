@@ -1,3 +1,6 @@
+// Copyright The OpenTelemetry Authors
+// SPDX-License-Identifier: Apache-2.0
+
 package scrapers
 
 import (
@@ -15,7 +18,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
-// BlockingScraper contains the scraper for blocking queries metrics
+// BlockingScraper collects Oracle blocking queries metrics
 type BlockingScraper struct {
 	db                            *sql.DB
 	mb                            *metadata.MetricsBuilder
@@ -52,11 +55,8 @@ func NewBlockingScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Log
 
 // ScrapeBlockingQueries collects Oracle blocking queries metrics
 func (s *BlockingScraper) ScrapeBlockingQueries(ctx context.Context) []error {
-	s.logger.Debug("Begin Oracle blocking queries scrape")
-
 	var scrapeErrors []error
 
-	// Execute the blocking queries SQL with configured threshold using parameterized query
 	blockingQueriesSQL := queries.GetBlockingQueriesSQL(s.queryMonitoringCountThreshold)
 	rows, err := s.db.QueryContext(ctx, blockingQueriesSQL)
 	if err != nil {
@@ -76,85 +76,13 @@ func (s *BlockingScraper) ScrapeBlockingQueries(ctx context.Context) []error {
 		rowCount++
 		var blockingQuery models.BlockingQuery
 
-		if err := rows.Scan(
-			&blockingQuery.BlockedSID,
-			&blockingQuery.BlockedSerial,
-			&blockingQuery.BlockedUser,
-			&blockingQuery.BlockedWaitSec,
-			&blockingQuery.BlockedSQLID,
-			&blockingQuery.BlockedQueryText,
-			&blockingQuery.BlockingSID,
-			&blockingQuery.BlockingSerial,
-			&blockingQuery.BlockingUser,
-			&blockingQuery.DatabaseName,
-		); err != nil {
+		if err := s.scanBlockingQueryRow(rows, &blockingQuery); err != nil {
 			s.logger.Error("Failed to scan blocking query row", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, err)
 			continue
 		}
 
-		s.logger.Debug("Scraping blocking query",
-			zap.String("blocked_user", blockingQuery.GetBlockedUser()),
-			zap.String("blocking_user", blockingQuery.GetBlockingUser()),
-			zap.String("blocked_sql_id", blockingQuery.GetBlockedSQLID()),
-			zap.Float64("blocked_wait_seconds", blockingQuery.BlockedWaitSec.Float64))
-
-		// Extract attribute values with null handling
-		blockedUser := blockingQuery.GetBlockedUser()
-		blockingUser := blockingQuery.GetBlockingUser()
-		blockedSQLID := blockingQuery.GetBlockedSQLID()
-		databaseName := blockingQuery.GetDatabaseName()
-		blockedQueryText := commonutils.AnonymizeAndNormalize(blockingQuery.GetBlockedQueryText())
-
-		// Convert numeric values to strings for attributes
-		blockedSID := ""
-		if blockingQuery.BlockedSID.Valid {
-			blockedSID = fmt.Sprintf("%d", blockingQuery.BlockedSID.Int64)
-		}
-
-		blockingSID := ""
-		if blockingQuery.BlockingSID.Valid {
-			blockingSID = fmt.Sprintf("%d", blockingQuery.BlockingSID.Int64)
-		}
-
-		blockedSerial := ""
-		if blockingQuery.BlockedSerial.Valid {
-			blockedSerial = fmt.Sprintf("%d", blockingQuery.BlockedSerial.Int64)
-		}
-
-		blockingSerial := ""
-		if blockingQuery.BlockingSerial.Valid {
-			blockingSerial = fmt.Sprintf("%d", blockingQuery.BlockingSerial.Int64)
-		}
-
-		s.logger.Debug("Collected blocking query metrics",
-			zap.String("blocked_user", blockedUser),
-			zap.String("blocking_user", blockingUser),
-			zap.String("blocked_sql_id", blockedSQLID),
-			zap.String("database_name", databaseName),
-			zap.String("blocked_sid", blockedSID),
-			zap.String("blocking_sid", blockingSID),
-			zap.String("blocked_serial", blockedSerial),
-			zap.String("blocking_serial", blockingSerial),
-			zap.Float64("blocked_wait_seconds", blockingQuery.BlockedWaitSec.Float64))
-
-		// Record only wait time metric with all other values as attributes
-		if blockingQuery.BlockedWaitSec.Valid {
-			s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(
-				now,
-				blockingQuery.BlockedWaitSec.Float64,
-				s.instanceName, // instanceIDAttributeValue
-				blockedUser,
-				blockingUser,
-				blockedSQLID,
-				blockedSID,
-				blockingSID,
-				blockedSerial,
-				blockingSerial,
-				blockedQueryText,
-				databaseName,
-			)
-		}
+		s.recordBlockingQueryMetric(now, &blockingQuery)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -162,8 +90,52 @@ func (s *BlockingScraper) ScrapeBlockingQueries(ctx context.Context) []error {
 		scrapeErrors = append(scrapeErrors, err)
 	}
 
-	s.logger.Debug("Completed blocking queries scrape",
-		zap.Int("rows_processed", rowCount),
-		zap.Int("errors_encountered", len(scrapeErrors)))
+	if rowCount > 0 {
+		s.logger.Debug("Completed blocking queries scrape", zap.Int("rows_processed", rowCount))
+	}
+
 	return scrapeErrors
+}
+
+func (s *BlockingScraper) scanBlockingQueryRow(rows *sql.Rows, blockingQuery *models.BlockingQuery) error {
+	return rows.Scan(
+		&blockingQuery.BlockedSID,
+		&blockingQuery.BlockedSerial,
+		&blockingQuery.BlockedUser,
+		&blockingQuery.BlockedWaitSec,
+		&blockingQuery.BlockedSQLID,
+		&blockingQuery.BlockedQueryText,
+		&blockingQuery.BlockingSID,
+		&blockingQuery.BlockingSerial,
+		&blockingQuery.BlockingUser,
+		&blockingQuery.DatabaseName,
+	)
+}
+
+func (s *BlockingScraper) recordBlockingQueryMetric(now pcommon.Timestamp, blockingQuery *models.BlockingQuery) {
+	if !blockingQuery.BlockedWaitSec.Valid {
+		return
+	}
+
+	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(
+		now,
+		blockingQuery.BlockedWaitSec.Float64,
+		s.instanceName,
+		blockingQuery.GetBlockedUser(),
+		blockingQuery.GetBlockingUser(),
+		blockingQuery.GetBlockedSQLID(),
+		formatInt64(blockingQuery.BlockedSID),
+		formatInt64(blockingQuery.BlockingSID),
+		formatInt64(blockingQuery.BlockedSerial),
+		formatInt64(blockingQuery.BlockingSerial),
+		commonutils.AnonymizeAndNormalize(blockingQuery.GetBlockedQueryText()),
+		blockingQuery.GetDatabaseName(),
+	)
+}
+
+func formatInt64(value sql.NullInt64) string {
+	if value.Valid {
+		return fmt.Sprintf("%d", value.Int64)
+	}
+	return ""
 }
