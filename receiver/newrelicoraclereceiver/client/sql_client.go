@@ -1339,3 +1339,241 @@ func (c *SQLClient) QueryRACActiveServices(ctx context.Context) ([]models.RACAct
 
 	return results, nil
 }
+
+// QuerySessionCount retrieves the count of user sessions
+func (c *SQLClient) QuerySessionCount(ctx context.Context) (*models.SessionCount, error) {
+	var count models.SessionCount
+	err := c.db.QueryRowContext(ctx, queries.SessionCountSQL).Scan(&count.Count)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			count.Count = 0
+			return &count, nil
+		}
+		return nil, err
+	}
+	return &count, nil
+}
+
+func (c *SQLClient) QuerySystemMetrics(ctx context.Context) ([]models.SystemMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SystemSysMetricsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var metrics []models.SystemMetric
+	for rows.Next() {
+		var instID sql.NullString
+		var metricName sql.NullString
+		var value sql.NullFloat64
+
+		if err := rows.Scan(&instID, &metricName, &value); err != nil {
+			return nil, err
+		}
+
+		if !metricName.Valid || !value.Valid {
+			continue
+		}
+
+		metric := models.SystemMetric{
+			MetricName: metricName.String,
+			Value:      value.Float64,
+		}
+
+		if instID.Valid {
+			metric.InstanceID = instID.String
+		}
+
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryTablespaceUsage(ctx context.Context) ([]models.TablespaceUsage, error) {
+	rows, err := c.db.QueryContext(ctx, queries.TablespaceMetricsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespaceUsage
+	for rows.Next() {
+		var ts models.TablespaceUsage
+		if err := rows.Scan(&ts.TablespaceName, &ts.UsedPercent, &ts.Used, &ts.Size, &ts.Offline); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}
+
+func (c *SQLClient) QueryTablespaceGlobalName(ctx context.Context) ([]models.TablespaceGlobalName, error) {
+	rows, err := c.db.QueryContext(ctx, queries.GlobalNameTablespaceSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespaceGlobalName
+	for rows.Next() {
+		var ts models.TablespaceGlobalName
+		if err := rows.Scan(&ts.TablespaceName, &ts.GlobalName); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}
+
+func (c *SQLClient) QueryTablespaceDBID(ctx context.Context) ([]models.TablespaceDBID, error) {
+	rows, err := c.db.QueryContext(ctx, queries.DBIDTablespaceSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespaceDBID
+	for rows.Next() {
+		var ts models.TablespaceDBID
+		if err := rows.Scan(&ts.TablespaceName, &ts.DBID); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}
+
+func (c *SQLClient) QueryTablespaceCDBDatafilesOffline(ctx context.Context) ([]models.TablespaceCDBDatafilesOffline, error) {
+	rows, err := c.db.QueryContext(ctx, queries.CDBDatafilesOfflineTablespaceSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespaceCDBDatafilesOffline
+	for rows.Next() {
+		var ts models.TablespaceCDBDatafilesOffline
+		if err := rows.Scan(&ts.OfflineCount, &ts.TablespaceName); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}
+
+func (c *SQLClient) QueryTablespacePDBDatafilesOffline(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PDBDatafilesOfflineTablespaceSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespacePDBDatafilesOffline
+	for rows.Next() {
+		var ts models.TablespacePDBDatafilesOffline
+		if err := rows.Scan(&ts.OfflineCount, &ts.TablespaceName); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}
+
+func (c *SQLClient) QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PDBDatafilesOfflineCurrentContainerSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespacePDBDatafilesOffline
+	for rows.Next() {
+		var ts models.TablespacePDBDatafilesOffline
+		if err := rows.Scan(&ts.OfflineCount, &ts.TablespaceName); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}
+
+func (c *SQLClient) QueryTablespacePDBNonWrite(ctx context.Context) ([]models.TablespacePDBNonWrite, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PDBNonWriteTablespaceSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespacePDBNonWrite
+	for rows.Next() {
+		var ts models.TablespacePDBNonWrite
+		if err := rows.Scan(&ts.TablespaceName, &ts.NonWriteCount); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}
+
+func (c *SQLClient) QueryTablespacePDBNonWriteCurrentContainer(ctx context.Context) ([]models.TablespacePDBNonWrite, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PDBNonWriteCurrentContainerSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tablespaces []models.TablespacePDBNonWrite
+	for rows.Next() {
+		var ts models.TablespacePDBNonWrite
+		if err := rows.Scan(&ts.TablespaceName, &ts.NonWriteCount); err != nil {
+			return nil, err
+		}
+		tablespaces = append(tablespaces, ts)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tablespaces, nil
+}

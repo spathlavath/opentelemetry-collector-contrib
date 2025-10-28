@@ -19,6 +19,7 @@ import (
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 )
@@ -61,6 +62,7 @@ type newRelicOracleScraper struct {
 
 	// Database and configuration
 	db             *sql.DB
+	client         client.OracleClient
 	dbProviderFunc dbProviderFunc
 	config         *Config
 
@@ -133,6 +135,7 @@ func (s *newRelicOracleScraper) initializeDatabase() error {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
 	s.db = db
+	s.client = client.NewSQLClient(db)
 	return nil
 }
 
@@ -153,15 +156,30 @@ func (s *newRelicOracleScraper) initializeScrapers() error {
 
 // initializeCoreScrapers initializes basic database metric scrapers
 func (s *newRelicOracleScraper) initializeCoreScrapers() error {
-	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.coreScraper = scrapers.NewCoreScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.pdbScraper = scrapers.NewPdbScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.systemScraper = scrapers.NewSystemScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.connectionScraper = scrapers.NewConnectionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.containerScraper = scrapers.NewContainerScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.racScraper = scrapers.NewRacScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.sessionScraper = scrapers.NewSessionScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	var err error
+	s.coreScraper, err = scrapers.NewCoreScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create core scraper: %w", err)
+	}
+
+	s.pdbScraper = scrapers.NewPdbScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.systemScraper = scrapers.NewSystemScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	s.connectionScraper, err = scrapers.NewConnectionScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create connection scraper: %w", err)
+	}
+
+	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create container scraper: %w", err)
+	}
+
+	s.racScraper = scrapers.NewRacScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	return nil
 }
@@ -170,18 +188,18 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	// Initialize slow queries scraper
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
-		s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
 	)
 
 	// Initialize execution plan scraper
-	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	// Initialize blocking scraper
 	var err error
 	s.blockingScraper, err = scrapers.NewBlockingScraper(
-		s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
 	)
 	if err != nil {
@@ -190,7 +208,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 
 	// Initialize wait events scraper
 	s.waitEventsScraper = scrapers.NewWaitEventsScraper(
-		s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
 	)
 

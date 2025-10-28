@@ -11,22 +11,22 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/errors"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 type SessionScraper struct {
-	db           *sql.DB
+	client       client.OracleClient
 	mb           *metadata.MetricsBuilder
 	logger       *zap.Logger
 	instanceName string
 	config       metadata.MetricsBuilderConfig
 }
 
-func NewSessionScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *SessionScraper {
+func NewSessionScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *SessionScraper {
 	return &SessionScraper{
-		db:           db,
+		client:       c,
 		mb:           mb,
 		logger:       logger,
 		instanceName: instanceName,
@@ -43,8 +43,7 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 
-	var sessionCount int64
-	err := s.db.QueryRowContext(ctx, queries.SessionCountSQL).Scan(&sessionCount)
+	count, err := s.client.QuerySessionCount(ctx)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return errs
@@ -52,7 +51,7 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 
 		scraperErr := errors.NewQueryError(
 			"session_count_query",
-			queries.SessionCountSQL,
+			"SessionCountSQL",
 			err,
 			map[string]interface{}{
 				"instance":  s.instanceName,
@@ -65,10 +64,12 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 		return errs
 	}
 
-	s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, sessionCount, s.instanceName)
+	if count != nil {
+		s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, count.Count, s.instanceName)
 
-	s.logger.Debug("Session count scrape completed",
-		zap.Int64("count", sessionCount))
+		s.logger.Debug("Session count scrape completed",
+			zap.Int64("count", count.Count))
+	}
 
 	return errs
 }

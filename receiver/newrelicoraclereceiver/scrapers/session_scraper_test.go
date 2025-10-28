@@ -4,28 +4,28 @@
 package scrapers
 
 import (
-	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 func TestNewSessionScraper(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 	instanceName := "test-instance"
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper := NewSessionScraper(db, mb, logger, instanceName, config)
+	scraper := NewSessionScraper(mockClient, mb, logger, instanceName, config)
 
 	assert.NotNil(t, scraper)
-	assert.Equal(t, db, scraper.db)
+	assert.Equal(t, mockClient, scraper.client)
 	assert.Equal(t, mb, scraper.mb)
 	assert.Equal(t, logger, scraper.logger)
 	assert.Equal(t, instanceName, scraper.instanceName)
@@ -40,63 +40,63 @@ func TestSessionScraper_NilDatabase(t *testing.T) {
 	scraper := NewSessionScraper(nil, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
-	assert.Nil(t, scraper.db)
+	assert.Nil(t, scraper.client)
 }
 
 func TestSessionScraper_NilMetricsBuilder(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	logger := zap.NewNop()
 
-	scraper := NewSessionScraper(db, nil, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewSessionScraper(mockClient, nil, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
 	assert.Nil(t, scraper.mb)
 }
 
 func TestSessionScraper_NilLogger(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 
-	scraper := NewSessionScraper(db, mb, nil, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewSessionScraper(mockClient, mb, nil, "test-instance", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
 	assert.Nil(t, scraper.logger)
 }
 
 func TestSessionScraper_EmptyInstanceName(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
-	scraper := NewSessionScraper(db, mb, logger, "", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewSessionScraper(mockClient, mb, logger, "", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
 	assert.Equal(t, "", scraper.instanceName)
 }
 
 func TestSessionScraper_Config(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper := NewSessionScraper(db, mb, logger, "test-instance", config)
+	scraper := NewSessionScraper(mockClient, mb, logger, "test-instance", config)
 
 	assert.NotNil(t, scraper)
 	assert.Equal(t, config, scraper.config)
 }
 
 func TestSessionScraper_MultipleInstances(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
-	scraper1 := NewSessionScraper(db, mb, logger, "instance-1", metadata.DefaultMetricsBuilderConfig())
-	scraper2 := NewSessionScraper(db, mb, logger, "instance-2", metadata.DefaultMetricsBuilderConfig())
+	scraper1 := NewSessionScraper(mockClient, mb, logger, "instance-1", metadata.DefaultMetricsBuilderConfig())
+	scraper2 := NewSessionScraper(mockClient, mb, logger, "instance-2", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotEqual(t, scraper1, scraper2)
 	assert.Equal(t, "instance-1", scraper1.instanceName)
@@ -104,47 +104,47 @@ func TestSessionScraper_MultipleInstances(t *testing.T) {
 }
 
 func TestSessionScraper_MetricEnabled(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbSessionsCount.Enabled = true
 	mb := metadata.NewMetricsBuilder(config, settings)
 	logger := zap.NewNop()
 
-	scraper := NewSessionScraper(db, mb, logger, "test-instance", config)
+	scraper := NewSessionScraper(mockClient, mb, logger, "test-instance", config)
 
 	assert.NotNil(t, scraper)
 	assert.True(t, scraper.config.Metrics.NewrelicoracledbSessionsCount.Enabled)
 }
 
 func TestSessionScraper_MetricDisabled(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbSessionsCount.Enabled = false
 	mb := metadata.NewMetricsBuilder(config, settings)
 	logger := zap.NewNop()
 
-	scraper := NewSessionScraper(db, mb, logger, "test-instance", config)
+	scraper := NewSessionScraper(mockClient, mb, logger, "test-instance", config)
 
 	assert.NotNil(t, scraper)
 	assert.False(t, scraper.config.Metrics.NewrelicoracledbSessionsCount.Enabled)
 }
 
 func TestSessionScraper_DifferentConfigs(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	logger := zap.NewNop()
 
 	config1 := metadata.DefaultMetricsBuilderConfig()
 	config1.Metrics.NewrelicoracledbSessionsCount.Enabled = true
 	mb1 := metadata.NewMetricsBuilder(config1, settings)
-	scraper1 := NewSessionScraper(db, mb1, logger, "test-instance", config1)
+	scraper1 := NewSessionScraper(mockClient, mb1, logger, "test-instance", config1)
 
 	config2 := metadata.DefaultMetricsBuilderConfig()
 	config2.Metrics.NewrelicoracledbSessionsCount.Enabled = false
 	mb2 := metadata.NewMetricsBuilder(config2, settings)
-	scraper2 := NewSessionScraper(db, mb2, logger, "test-instance", config2)
+	scraper2 := NewSessionScraper(mockClient, mb2, logger, "test-instance", config2)
 
 	assert.True(t, scraper1.config.Metrics.NewrelicoracledbSessionsCount.Enabled)
 	assert.False(t, scraper2.config.Metrics.NewrelicoracledbSessionsCount.Enabled)

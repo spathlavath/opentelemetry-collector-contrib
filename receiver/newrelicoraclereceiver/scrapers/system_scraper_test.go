@@ -4,28 +4,28 @@
 package scrapers
 
 import (
-	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 func TestNewSystemScraper(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 	instanceName := "test-instance"
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper := NewSystemScraper(db, mb, logger, instanceName, config)
+	scraper := NewSystemScraper(mockClient, mb, logger, instanceName, config)
 
 	assert.NotNil(t, scraper)
-	assert.Equal(t, db, scraper.db)
+	assert.Equal(t, mockClient, scraper.client)
 	assert.Equal(t, mb, scraper.mb)
 	assert.Equal(t, logger, scraper.logger)
 	assert.Equal(t, instanceName, scraper.instanceName)
@@ -40,63 +40,63 @@ func TestSystemScraper_NilDatabase(t *testing.T) {
 	scraper := NewSystemScraper(nil, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
-	assert.Nil(t, scraper.db)
+	assert.Nil(t, scraper.client)
 }
 
 func TestSystemScraper_NilMetricsBuilder(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	logger := zap.NewNop()
 
-	scraper := NewSystemScraper(db, nil, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewSystemScraper(mockClient, nil, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
 	assert.Nil(t, scraper.mb)
 }
 
 func TestSystemScraper_NilLogger(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 
-	scraper := NewSystemScraper(db, mb, nil, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewSystemScraper(mockClient, mb, nil, "test-instance", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
 	assert.Nil(t, scraper.logger)
 }
 
 func TestSystemScraper_EmptyInstanceName(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
-	scraper := NewSystemScraper(db, mb, logger, "", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewSystemScraper(mockClient, mb, logger, "", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotNil(t, scraper)
 	assert.Equal(t, "", scraper.instanceName)
 }
 
 func TestSystemScraper_MetricsBuilderConfig(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper := NewSystemScraper(db, mb, logger, "test-instance", config)
+	scraper := NewSystemScraper(mockClient, mb, logger, "test-instance", config)
 
 	assert.NotNil(t, scraper)
 	assert.Equal(t, config, scraper.metricsBuilderConfig)
 }
 
 func TestSystemScraper_MultipleInstances(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
-	scraper1 := NewSystemScraper(db, mb, logger, "instance-1", metadata.DefaultMetricsBuilderConfig())
-	scraper2 := NewSystemScraper(db, mb, logger, "instance-2", metadata.DefaultMetricsBuilderConfig())
+	scraper1 := NewSystemScraper(mockClient, mb, logger, "instance-1", metadata.DefaultMetricsBuilderConfig())
+	scraper2 := NewSystemScraper(mockClient, mb, logger, "instance-2", metadata.DefaultMetricsBuilderConfig())
 
 	assert.NotEqual(t, scraper1, scraper2)
 	assert.Equal(t, "instance-1", scraper1.instanceName)

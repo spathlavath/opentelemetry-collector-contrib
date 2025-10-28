@@ -5,27 +5,26 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 type SystemScraper struct {
-	db                   *sql.DB
+	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
 	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-func NewSystemScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *SystemScraper {
+func NewSystemScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *SystemScraper {
 	return &SystemScraper{
-		db:                   db,
+		client:               c,
 		mb:                   mb,
 		logger:               logger,
 		instanceName:         instanceName,
@@ -36,40 +35,17 @@ func NewSystemScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logge
 func (s *SystemScraper) ScrapeSystemMetrics(ctx context.Context) []error {
 	var scrapeErrors []error
 
-	rows, err := s.db.QueryContext(ctx, queries.SystemSysMetricsSQL)
+	metrics, err := s.client.QuerySystemMetrics(ctx)
 	if err != nil {
 		return []error{err}
 	}
-	defer rows.Close()
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
-	for rows.Next() {
-		var instID sql.NullString
-		var metricName sql.NullString
-		var value sql.NullFloat64
-
-		if err := rows.Scan(&instID, &metricName, &value); err != nil {
-			scrapeErrors = append(scrapeErrors, err)
-			continue
-		}
-
-		if !metricName.Valid || !value.Valid {
-			continue
-		}
-
-		instanceIDStr := ""
-		if instID.Valid {
-			instanceIDStr = instID.String
-		}
-
-		s.recordMetric(now, metricName.String, value.Float64, instanceIDStr)
+	for _, metric := range metrics {
+		s.recordMetric(now, metric.MetricName, metric.Value, metric.InstanceID)
 		metricCount++
-	}
-
-	if err := rows.Err(); err != nil {
-		scrapeErrors = append(scrapeErrors, err)
 	}
 
 	s.logger.Debug("System metrics scrape completed",

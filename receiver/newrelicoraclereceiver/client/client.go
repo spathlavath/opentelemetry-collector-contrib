@@ -105,4 +105,20 @@ type OracleClient interface {
 	QueryClusterWaitEvents(ctx context.Context) ([]models.ClusterWaitEvent, error)
 	QueryRACInstanceStatus(ctx context.Context) ([]models.RACInstanceStatus, error)
 	QueryRACActiveServices(ctx context.Context) ([]models.RACActiveService, error)
+
+	// Session metrics
+	QuerySessionCount(ctx context.Context) (*models.SessionCount, error)
+
+	// System metrics
+	QuerySystemMetrics(ctx context.Context) ([]models.SystemMetric, error)
+
+	// Tablespace metrics
+	QueryTablespaceUsage(ctx context.Context) ([]models.TablespaceUsage, error)
+	QueryTablespaceGlobalName(ctx context.Context) ([]models.TablespaceGlobalName, error)
+	QueryTablespaceDBID(ctx context.Context) ([]models.TablespaceDBID, error)
+	QueryTablespaceCDBDatafilesOffline(ctx context.Context) ([]models.TablespaceCDBDatafilesOffline, error)
+	QueryTablespacePDBDatafilesOffline(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error)
+	QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error)
+	QueryTablespacePDBNonWrite(ctx context.Context) ([]models.TablespacePDBNonWrite, error)
+	QueryTablespacePDBNonWriteCurrentContainer(ctx context.Context) ([]models.TablespacePDBNonWrite, error)
 }

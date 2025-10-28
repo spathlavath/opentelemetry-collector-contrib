@@ -5,7 +5,6 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"sync"
 	"time"
@@ -13,13 +12,14 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/errors"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 type TablespaceScraper struct {
-	db           *sql.DB
+	client       client.OracleClient
 	mb           *metadata.MetricsBuilder
 	logger       *zap.Logger
 	instanceName string
@@ -34,9 +34,9 @@ type TablespaceScraper struct {
 	detectionMutex     sync.RWMutex
 }
 
-func NewTablespaceScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *TablespaceScraper {
+func NewTablespaceScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *TablespaceScraper {
 	return &TablespaceScraper{
-		db:           db,
+		client:       c,
 		mb:           mb,
 		logger:       logger,
 		instanceName: instanceName,
@@ -83,13 +83,12 @@ func (s *TablespaceScraper) scrapeTablespaceUsageMetrics(ctx context.Context, no
 		return nil
 	}
 
-	rows, err := s.db.QueryContext(ctx, queries.TablespaceMetricsSQL)
+	tablespaces, err := s.client.QueryTablespaceUsage(ctx)
 	if err != nil {
 		return []error{fmt.Errorf("error executing tablespace metrics query: %w", err)}
 	}
-	defer rows.Close()
 
-	return s.processTablespaceUsageRows(rows, now, metricCount)
+	return s.processTablespaceUsage(tablespaces, now, metricCount)
 }
 
 // isAnyTablespaceMetricEnabled checks if any tablespace usage metric is enabled
@@ -100,40 +99,25 @@ func (s *TablespaceScraper) isAnyTablespaceMetricEnabled() bool {
 		s.config.Metrics.NewrelicoracledbTablespaceIsOffline.Enabled
 }
 
-func (s *TablespaceScraper) processTablespaceUsageRows(rows *sql.Rows, now pcommon.Timestamp, metricCount *int) []error {
-	var errors []error
-
-	for rows.Next() {
-		var tablespaceName string
-		var usedPercent, used, size, offline float64
-
-		err := rows.Scan(&tablespaceName, &usedPercent, &used, &size, &offline)
-		if err != nil {
-			errors = append(errors, fmt.Errorf("error scanning tablespace row: %w", err))
-			continue
-		}
-
+func (s *TablespaceScraper) processTablespaceUsage(tablespaces []models.TablespaceUsage, now pcommon.Timestamp, metricCount *int) []error {
+	for _, ts := range tablespaces {
 		if s.config.Metrics.NewrelicoracledbTablespaceSpaceConsumedBytes.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(used), s.instanceName, tablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(ts.Used), s.instanceName, ts.TablespaceName)
 		}
 		if s.config.Metrics.NewrelicoracledbTablespaceSpaceReservedBytes.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(size), s.instanceName, tablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(ts.Size), s.instanceName, ts.TablespaceName)
 		}
 		if s.config.Metrics.NewrelicoracledbTablespaceSpaceUsedPercentage.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(usedPercent), s.instanceName, tablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(ts.UsedPercent), s.instanceName, ts.TablespaceName)
 		}
 		if s.config.Metrics.NewrelicoracledbTablespaceIsOffline.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(offline), s.instanceName, tablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(ts.Offline), s.instanceName, ts.TablespaceName)
 		}
 
 		*metricCount++
 	}
 
-	if err := rows.Err(); err != nil {
-		errors = append(errors, fmt.Errorf("error iterating tablespace rows: %w", err))
-	}
-
-	return errors
+	return nil
 }
 
 func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Context, now pcommon.Timestamp, metricCount *int) []error {
@@ -141,8 +125,17 @@ func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Contex
 		return nil
 	}
 
-	return s.executeSimpleTablespaceQuery(ctx, now, queries.GlobalNameTablespaceSQL,
-		"global name tablespace", s.processGlobalNameRow, metricCount)
+	tablespaces, err := s.client.QueryTablespaceGlobalName(ctx)
+	if err != nil {
+		return []error{fmt.Errorf("error executing global name tablespace query: %w", err)}
+	}
+
+	for _, ts := range tablespaces {
+		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, s.instanceName, ts.TablespaceName)
+		*metricCount++
+	}
+
+	return nil
 }
 
 func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now pcommon.Timestamp, metricCount *int) []error {
@@ -150,8 +143,17 @@ func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now
 		return nil
 	}
 
-	return s.executeSimpleTablespaceQuery(ctx, now, queries.DBIDTablespaceSQL,
-		"DB ID tablespace", s.processDBIDRow, metricCount)
+	tablespaces, err := s.client.QueryTablespaceDBID(ctx)
+	if err != nil {
+		return []error{fmt.Errorf("error executing DB ID tablespace query: %w", err)}
+	}
+
+	for _, ts := range tablespaces {
+		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, ts.DBID, s.instanceName, ts.TablespaceName)
+		*metricCount++
+	}
+
+	return nil
 }
 
 func (s *TablespaceScraper) scrapeCDBDatafilesOfflineTablespaceMetrics(ctx context.Context, now pcommon.Timestamp, metricCount *int) []error {
@@ -159,65 +161,16 @@ func (s *TablespaceScraper) scrapeCDBDatafilesOfflineTablespaceMetrics(ctx conte
 		return nil
 	}
 
-	return s.executeSimpleTablespaceQuery(ctx, now, queries.CDBDatafilesOfflineTablespaceSQL,
-		"CDB datafiles offline tablespace", s.processCDBDatafilesOfflineRow, metricCount)
-}
-
-func (s *TablespaceScraper) executeSimpleTablespaceQuery(ctx context.Context, now pcommon.Timestamp,
-	querySQL, description string, rowProcessor func(*sql.Rows, pcommon.Timestamp) error, metricCount *int) []error {
-
-	rows, err := s.db.QueryContext(ctx, querySQL)
+	tablespaces, err := s.client.QueryTablespaceCDBDatafilesOffline(ctx)
 	if err != nil {
-		return []error{fmt.Errorf("error executing %s query: %w", description, err)}
+		return []error{fmt.Errorf("error executing CDB datafiles offline tablespace query: %w", err)}
 	}
-	defer rows.Close()
 
-	var errors []error
-
-	for rows.Next() {
-		if err := rowProcessor(rows, now); err != nil {
-			errors = append(errors, fmt.Errorf("error processing %s row: %w", description, err))
-			continue
-		}
+	for _, ts := range tablespaces {
+		s.mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(now, ts.OfflineCount, s.instanceName, ts.TablespaceName)
 		*metricCount++
 	}
 
-	if err := rows.Err(); err != nil {
-		errors = append(errors, fmt.Errorf("error iterating %s rows: %w", description, err))
-	}
-
-	return errors
-}
-
-func (s *TablespaceScraper) processGlobalNameRow(rows *sql.Rows, now pcommon.Timestamp) error {
-	var tablespaceName, globalName string
-	if err := rows.Scan(&tablespaceName, &globalName); err != nil {
-		return err
-	}
-
-	s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, s.instanceName, tablespaceName)
-	return nil
-}
-
-func (s *TablespaceScraper) processDBIDRow(rows *sql.Rows, now pcommon.Timestamp) error {
-	var tablespaceName string
-	var dbID int64
-	if err := rows.Scan(&tablespaceName, &dbID); err != nil {
-		return err
-	}
-
-	s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, dbID, s.instanceName, tablespaceName)
-	return nil
-}
-
-func (s *TablespaceScraper) processCDBDatafilesOfflineRow(rows *sql.Rows, now pcommon.Timestamp) error {
-	var offlineCount int64
-	var tablespaceName string
-	if err := rows.Scan(&offlineCount, &tablespaceName); err != nil {
-		return err
-	}
-
-	s.mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(now, offlineCount, s.instanceName, tablespaceName)
 	return nil
 }
 
@@ -226,47 +179,27 @@ func (s *TablespaceScraper) scrapePDBDatafilesOfflineTablespaceMetrics(ctx conte
 		return nil
 	}
 
-	var querySQL string
+	var tablespaces []models.TablespacePDBDatafilesOffline
+	var err error
 
 	if s.isConnectedToCDBRoot() {
-		querySQL = queries.PDBDatafilesOfflineTablespaceSQL
+		tablespaces, err = s.client.QueryTablespacePDBDatafilesOffline(ctx)
 	} else if s.isConnectedToPDB() {
-		querySQL = queries.PDBDatafilesOfflineCurrentContainerSQL
+		tablespaces, err = s.client.QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx)
 	} else {
 		return nil
 	}
 
-	rows, err := s.db.QueryContext(ctx, querySQL)
 	if err != nil {
 		return []error{fmt.Errorf("error executing PDB datafiles offline query: %w", err)}
 	}
-	defer rows.Close()
 
-	return s.processPDBDatafilesOfflineRows(rows, now, metricCount)
-}
-
-func (s *TablespaceScraper) processPDBDatafilesOfflineRows(rows *sql.Rows, now pcommon.Timestamp, metricCount *int) []error {
-	var errors []error
-
-	for rows.Next() {
-		var offlineCount int64
-		var tablespaceName string
-
-		err := rows.Scan(&offlineCount, &tablespaceName)
-		if err != nil {
-			errors = append(errors, fmt.Errorf("error scanning PDB datafiles offline row: %w", err))
-			continue
-		}
-
-		s.mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(now, offlineCount, s.instanceName, tablespaceName)
+	for _, ts := range tablespaces {
+		s.mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(now, ts.OfflineCount, s.instanceName, ts.TablespaceName)
 		*metricCount++
 	}
 
-	if err := rows.Err(); err != nil {
-		errors = append(errors, fmt.Errorf("error iterating PDB datafiles offline rows: %w", err))
-	}
-
-	return errors
+	return nil
 }
 
 func (s *TablespaceScraper) scrapePDBNonWriteTablespaceMetrics(ctx context.Context, now pcommon.Timestamp, metricCount *int) []error {
@@ -274,47 +207,27 @@ func (s *TablespaceScraper) scrapePDBNonWriteTablespaceMetrics(ctx context.Conte
 		return nil
 	}
 
-	var querySQL string
+	var tablespaces []models.TablespacePDBNonWrite
+	var err error
 
 	if s.isConnectedToCDBRoot() {
-		querySQL = queries.PDBNonWriteTablespaceSQL
+		tablespaces, err = s.client.QueryTablespacePDBNonWrite(ctx)
 	} else if s.isConnectedToPDB() {
-		querySQL = queries.PDBNonWriteCurrentContainerSQL
+		tablespaces, err = s.client.QueryTablespacePDBNonWriteCurrentContainer(ctx)
 	} else {
 		return nil
 	}
 
-	rows, err := s.db.QueryContext(ctx, querySQL)
 	if err != nil {
 		return []error{fmt.Errorf("error executing PDB non-write mode query: %w", err)}
 	}
-	defer rows.Close()
 
-	return s.processPDBNonWriteRows(rows, now, metricCount)
-}
-
-func (s *TablespaceScraper) processPDBNonWriteRows(rows *sql.Rows, now pcommon.Timestamp, metricCount *int) []error {
-	var errors []error
-
-	for rows.Next() {
-		var tablespaceName string
-		var nonWriteCount int64
-
-		err := rows.Scan(&tablespaceName, &nonWriteCount)
-		if err != nil {
-			errors = append(errors, fmt.Errorf("error scanning PDB non-write mode row: %w", err))
-			continue
-		}
-
-		s.mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(now, nonWriteCount, s.instanceName, tablespaceName)
+	for _, ts := range tablespaces {
+		s.mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(now, ts.NonWriteCount, s.instanceName, ts.TablespaceName)
 		*metricCount++
 	}
 
-	if err := rows.Err(); err != nil {
-		errors = append(errors, fmt.Errorf("error iterating PDB non-write mode rows: %w", err))
-	}
-
-	return errors
+	return nil
 }
 
 func (s *TablespaceScraper) checkEnvironmentCapability(ctx context.Context) error {
@@ -325,8 +238,7 @@ func (s *TablespaceScraper) checkEnvironmentCapability(ctx context.Context) erro
 		return nil
 	}
 
-	var isCDB int64
-	err := s.db.QueryRowContext(ctx, queries.CheckCDBFeatureSQL).Scan(&isCDB)
+	isCDB, err := s.client.CheckCDBFeature(ctx)
 	if err != nil {
 		if errors.IsPermanentError(err) {
 			cdbCapable := false
@@ -336,7 +248,7 @@ func (s *TablespaceScraper) checkEnvironmentCapability(ctx context.Context) erro
 			s.environmentChecked = true
 			return nil
 		}
-		return errors.NewQueryError("cdb_capability_check", queries.CheckCDBFeatureSQL, err,
+		return errors.NewQueryError("cdb_capability_check", "CheckCDBFeatureSQL", err,
 			map[string]interface{}{"instance": s.instanceName})
 	}
 
@@ -344,8 +256,7 @@ func (s *TablespaceScraper) checkEnvironmentCapability(ctx context.Context) erro
 	s.isCDBCapable = &cdbCapable
 
 	if cdbCapable {
-		var pdbCount int
-		err = s.db.QueryRowContext(ctx, queries.CheckPDBCapabilitySQL).Scan(&pdbCount)
+		pdbCount, err := s.client.CheckPDBCapability(ctx)
 		if err != nil {
 			pdbCapable := false
 			s.isPDBCapable = &pdbCapable
@@ -385,15 +296,18 @@ func (s *TablespaceScraper) checkCurrentContext(ctx context.Context) error {
 		return nil
 	}
 
-	var containerName, containerID string
-	err := s.db.QueryRowContext(ctx, queries.CheckCurrentContainerSQL).Scan(&containerName, &containerID)
+	container, err := s.client.CheckCurrentContainer(ctx)
 	if err != nil {
-		return errors.NewQueryError("container_context_check", queries.CheckCurrentContainerSQL, err,
+		return errors.NewQueryError("container_context_check", "CheckCurrentContainerSQL", err,
 			map[string]interface{}{"instance": s.instanceName})
 	}
 
-	s.currentContainer = containerName
-	s.currentContainerID = containerID
+	if container.ContainerName.Valid {
+		s.currentContainer = container.ContainerName.String
+	}
+	if container.ContainerID.Valid {
+		s.currentContainerID = container.ContainerID.String
+	}
 	s.contextChecked = true
 
 	return nil

@@ -14,3 +14,8 @@ type PDBSysMetric struct {
 type CDBCapability struct {
 	IsCDB int64
 }
+
+// PDBCapability represents PDB capability detection result
+type PDBCapability struct {
+	PDBCount int64
+}

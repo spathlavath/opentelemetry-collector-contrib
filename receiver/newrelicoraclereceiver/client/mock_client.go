@@ -86,6 +86,22 @@ type MockClient struct {
 	RACInstanceStatusList []models.RACInstanceStatus
 	RACActiveServicesList []models.RACActiveService
 
+	// Session metrics
+	SessionCount *models.SessionCount
+
+	// System metrics
+	SystemMetricsList []models.SystemMetric
+
+	// Tablespace metrics
+	TablespaceUsageList                               []models.TablespaceUsage
+	TablespaceGlobalNameList                          []models.TablespaceGlobalName
+	TablespaceDBIDList                                []models.TablespaceDBID
+	TablespaceCDBDatafilesOfflineList                 []models.TablespaceCDBDatafilesOffline
+	TablespacePDBDatafilesOfflineList                 []models.TablespacePDBDatafilesOffline
+	TablespacePDBDatafilesOfflineCurrentContainerList []models.TablespacePDBDatafilesOffline
+	TablespacePDBNonWriteList                         []models.TablespacePDBNonWrite
+	TablespacePDBNonWriteCurrentContainerList         []models.TablespacePDBNonWrite
+
 	ConnectErr error
 	CloseErr   error
 	PingErr    error
@@ -501,4 +517,74 @@ func (m *MockClient) QueryRACActiveServices(_ context.Context) ([]models.RACActi
 		return nil, m.QueryErr
 	}
 	return m.RACActiveServicesList, nil
+}
+
+func (m *MockClient) QuerySessionCount(_ context.Context) (*models.SessionCount, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SessionCount, nil
+}
+
+func (m *MockClient) QuerySystemMetrics(_ context.Context) ([]models.SystemMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SystemMetricsList, nil
+}
+
+func (m *MockClient) QueryTablespaceUsage(_ context.Context) ([]models.TablespaceUsage, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespaceUsageList, nil
+}
+
+func (m *MockClient) QueryTablespaceGlobalName(_ context.Context) ([]models.TablespaceGlobalName, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespaceGlobalNameList, nil
+}
+
+func (m *MockClient) QueryTablespaceDBID(_ context.Context) ([]models.TablespaceDBID, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespaceDBIDList, nil
+}
+
+func (m *MockClient) QueryTablespaceCDBDatafilesOffline(_ context.Context) ([]models.TablespaceCDBDatafilesOffline, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespaceCDBDatafilesOfflineList, nil
+}
+
+func (m *MockClient) QueryTablespacePDBDatafilesOffline(_ context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespacePDBDatafilesOfflineList, nil
+}
+
+func (m *MockClient) QueryTablespacePDBDatafilesOfflineCurrentContainer(_ context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespacePDBDatafilesOfflineCurrentContainerList, nil
+}
+
+func (m *MockClient) QueryTablespacePDBNonWrite(_ context.Context) ([]models.TablespacePDBNonWrite, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespacePDBNonWriteList, nil
+}
+
+func (m *MockClient) QueryTablespacePDBNonWriteCurrentContainer(_ context.Context) ([]models.TablespacePDBNonWrite, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.TablespacePDBNonWriteCurrentContainerList, nil
 }
