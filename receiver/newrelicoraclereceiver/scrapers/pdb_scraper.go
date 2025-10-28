@@ -5,7 +5,6 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"strconv"
 	"strings"
 	"sync"
@@ -14,12 +13,12 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 type PdbScraper struct {
-	db                 *sql.DB
+	client             client.OracleClient
 	mb                 *metadata.MetricsBuilder
 	logger             *zap.Logger
 	instanceName       string
@@ -30,9 +29,9 @@ type PdbScraper struct {
 }
 
 // NewPdbScraper creates a new PDB scraper
-func NewPdbScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *PdbScraper {
+func NewPdbScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *PdbScraper {
 	return &PdbScraper{
-		db:           db,
+		client:       c,
 		mb:           mb,
 		logger:       logger,
 		instanceName: instanceName,
@@ -54,32 +53,19 @@ func (s *PdbScraper) ScrapePdbMetrics(ctx context.Context) []error {
 }
 
 func (s *PdbScraper) scrapePDBSysMetrics(ctx context.Context, now pcommon.Timestamp) []error {
-	rows, err := s.db.QueryContext(ctx, queries.PDBSysMetricsSQL)
+	metrics, err := s.client.QueryPDBSysMetrics(ctx)
 	if err != nil {
 		return []error{err}
 	}
-	defer rows.Close()
 
 	metricCount := 0
-	for rows.Next() {
-		var instID int
-		var metricName string
-		var value float64
-
-		if err := rows.Scan(&instID, &metricName, &value); err != nil {
-			continue
-		}
-
-		instanceIDStr := strconv.Itoa(instID)
-		s.recordMetric(now, metricName, value, instanceIDStr)
+	for _, metric := range metrics {
+		instanceIDStr := strconv.Itoa(metric.InstID)
+		s.recordMetric(now, metric.MetricName, metric.Value, instanceIDStr)
 		metricCount++
 	}
 
 	s.logger.Debug("Collected PDB sys metrics", zap.Int("count", metricCount))
-
-	if err := rows.Err(); err != nil {
-		return []error{err}
-	}
 
 	return nil
 }
@@ -200,19 +186,12 @@ func (s *PdbScraper) checkCDBCapability(ctx context.Context) error {
 		return nil
 	}
 
-	var isCDB int64
-	err := s.db.QueryRowContext(ctx, queries.CheckCDBFeatureSQL).Scan(&isCDB)
+	capability, err := s.client.QueryCDBCapability(ctx)
 	if err != nil {
-		if containsORACode(err, "ORA-00942", "ORA-01722") {
-			cdbCapable := false
-			s.isCDBCapable = &cdbCapable
-			s.environmentChecked = true
-			return nil
-		}
 		return err
 	}
 
-	cdbCapable := isCDB == 1
+	cdbCapable := capability.IsCDB == 1
 	s.isCDBCapable = &cdbCapable
 	s.environmentChecked = true
 

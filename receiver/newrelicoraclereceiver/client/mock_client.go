@@ -71,6 +71,21 @@ type MockClient struct {
 	SGALogAllocRetriesList                   []models.SGALogAllocRetriesMetric
 	SGAHitRatioList                          []models.SGAHitRatioMetric
 
+	// Database Info metrics
+	DatabaseInfoList []models.DatabaseInfoMetric
+
+	// PDB metrics
+	PDBSysMetricsList []models.PDBSysMetric
+	CDBCapability     *models.CDBCapability
+
+	// RAC metrics
+	RACDetection          *models.RACDetection
+	ASMDetection          *models.ASMDetection
+	ASMDiskGroupsList     []models.ASMDiskGroup
+	ClusterWaitEventsList []models.ClusterWaitEvent
+	RACInstanceStatusList []models.RACInstanceStatus
+	RACActiveServicesList []models.RACActiveService
+
 	ConnectErr error
 	CloseErr   error
 	PingErr    error
@@ -423,4 +438,67 @@ func (m *MockClient) QuerySGAHitRatio(_ context.Context) ([]models.SGAHitRatioMe
 		return nil, m.QueryErr
 	}
 	return m.SGAHitRatioList, nil
+}
+
+func (m *MockClient) QueryDatabaseInfo(_ context.Context) ([]models.DatabaseInfoMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.DatabaseInfoList, nil
+}
+
+func (m *MockClient) QueryPDBSysMetrics(_ context.Context) ([]models.PDBSysMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.PDBSysMetricsList, nil
+}
+
+func (m *MockClient) QueryCDBCapability(_ context.Context) (*models.CDBCapability, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.CDBCapability, nil
+}
+
+func (m *MockClient) QueryRACDetection(_ context.Context) (*models.RACDetection, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.RACDetection, nil
+}
+
+func (m *MockClient) QueryASMDetection(_ context.Context) (*models.ASMDetection, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.ASMDetection, nil
+}
+
+func (m *MockClient) QueryASMDiskGroups(_ context.Context) ([]models.ASMDiskGroup, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.ASMDiskGroupsList, nil
+}
+
+func (m *MockClient) QueryClusterWaitEvents(_ context.Context) ([]models.ClusterWaitEvent, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.ClusterWaitEventsList, nil
+}
+
+func (m *MockClient) QueryRACInstanceStatus(_ context.Context) ([]models.RACInstanceStatus, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.RACInstanceStatusList, nil
+}
+
+func (m *MockClient) QueryRACActiveServices(_ context.Context) ([]models.RACActiveService, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.RACActiveServicesList, nil
 }

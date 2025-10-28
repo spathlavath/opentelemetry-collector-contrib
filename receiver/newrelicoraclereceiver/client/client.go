@@ -90,4 +90,19 @@ type OracleClient interface {
 	QuerySGALogBufferSpaceWaits(ctx context.Context) ([]models.SGALogBufferSpaceWaitsMetric, error)
 	QuerySGALogAllocRetries(ctx context.Context) ([]models.SGALogAllocRetriesMetric, error)
 	QuerySGAHitRatio(ctx context.Context) ([]models.SGAHitRatioMetric, error)
+
+	// Database Info metrics
+	QueryDatabaseInfo(ctx context.Context) ([]models.DatabaseInfoMetric, error)
+
+	// PDB metrics
+	QueryPDBSysMetrics(ctx context.Context) ([]models.PDBSysMetric, error)
+	QueryCDBCapability(ctx context.Context) (*models.CDBCapability, error)
+
+	// RAC metrics
+	QueryRACDetection(ctx context.Context) (*models.RACDetection, error)
+	QueryASMDetection(ctx context.Context) (*models.ASMDetection, error)
+	QueryASMDiskGroups(ctx context.Context) ([]models.ASMDiskGroup, error)
+	QueryClusterWaitEvents(ctx context.Context) ([]models.ClusterWaitEvent, error)
+	QueryRACInstanceStatus(ctx context.Context) ([]models.RACInstanceStatus, error)
+	QueryRACActiveServices(ctx context.Context) ([]models.RACActiveService, error)
 }

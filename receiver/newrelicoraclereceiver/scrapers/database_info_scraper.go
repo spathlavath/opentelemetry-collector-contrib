@@ -5,7 +5,6 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"os"
 	"runtime"
 	"strings"
@@ -15,13 +14,14 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 // DatabaseInfoScraper collects Oracle database version and hosting environment info
 type DatabaseInfoScraper struct {
-	db           *sql.DB
+	client       client.OracleClient
 	mb           *metadata.MetricsBuilder
 	logger       *zap.Logger
 	instanceName string
@@ -51,9 +51,9 @@ type DatabaseInfo struct {
 }
 
 // NewDatabaseInfoScraper creates a new database info scraper
-func NewDatabaseInfoScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *DatabaseInfoScraper {
+func NewDatabaseInfoScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *DatabaseInfoScraper {
 	return &DatabaseInfoScraper{
-		db:            db,
+		client:        c,
 		mb:            mb,
 		logger:        logger,
 		instanceName:  instanceName,
@@ -172,35 +172,28 @@ func (s *DatabaseInfoScraper) ensureCacheValid(ctx context.Context) error {
 func (s *DatabaseInfoScraper) refreshCacheUnsafe(ctx context.Context) error {
 	s.logger.Debug("Executing database info query")
 
-	rows, err := s.db.QueryContext(ctx, queries.OptimizedDatabaseInfoSQL)
+	metrics, err := s.client.QueryDatabaseInfo(ctx)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
 
-	return s.processDatabaseInfoRows(rows)
+	return s.processDatabaseInfoMetrics(metrics)
 }
 
-func (s *DatabaseInfoScraper) processDatabaseInfoRows(rows *sql.Rows) error {
-	for rows.Next() {
-		var instID, versionFull, hostName, databaseName, platformName sql.NullString
-
-		if err := rows.Scan(&instID, &versionFull, &hostName, &databaseName, &platformName); err != nil {
-			return err
-		}
-
-		cleanVersion := extractVersionFromFull(versionFull.String)
-		detectedEdition := detectEditionFromVersion(versionFull.String)
+func (s *DatabaseInfoScraper) processDatabaseInfoMetrics(metrics []models.DatabaseInfoMetric) error {
+	for _, metric := range metrics {
+		cleanVersion := extractVersionFromFull(metric.VersionFull.String)
+		detectedEdition := detectEditionFromVersion(metric.VersionFull.String)
 
 		hostingProvider, deploymentPlatform, combinedEnv := detectSystemEnvironmentWithDBHints(
-			hostName.String,
-			databaseName.String,
-			platformName.String,
+			metric.HostName.String,
+			metric.DatabaseName.String,
+			metric.PlatformName.String,
 		)
 
 		s.cachedInfo = &DatabaseInfo{
 			Version:             cleanVersion,
-			VersionFull:         versionFull.String,
+			VersionFull:         metric.VersionFull.String,
 			Edition:             detectedEdition,
 			Compatible:          cleanVersion,
 			HostingProvider:     hostingProvider,
@@ -220,7 +213,7 @@ func (s *DatabaseInfoScraper) processDatabaseInfoRows(rows *sql.Rows) error {
 		break
 	}
 
-	return rows.Err()
+	return nil
 }
 
 func detectCloudProvider(hostname string) (provider, platform string) {

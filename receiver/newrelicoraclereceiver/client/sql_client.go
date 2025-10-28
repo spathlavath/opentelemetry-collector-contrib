@@ -1140,3 +1140,202 @@ func (c *SQLClient) QuerySGAHitRatio(ctx context.Context) ([]models.SGAHitRatioM
 
 	return results, nil
 }
+
+// QueryDatabaseInfo retrieves database version and platform information
+func (c *SQLClient) QueryDatabaseInfo(ctx context.Context) ([]models.DatabaseInfoMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.OptimizedDatabaseInfoSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.DatabaseInfoMetric
+	for rows.Next() {
+		var metric models.DatabaseInfoMetric
+		if err := rows.Scan(&metric.InstID, &metric.VersionFull, &metric.HostName, &metric.DatabaseName, &metric.PlatformName); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryPDBSysMetrics executes the PDB system metrics query
+func (c *SQLClient) QueryPDBSysMetrics(ctx context.Context) ([]models.PDBSysMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PDBSysMetricsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.PDBSysMetric
+	for rows.Next() {
+		var metric models.PDBSysMetric
+		if err := rows.Scan(&metric.InstID, &metric.MetricName, &metric.Value); err != nil {
+			continue
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryCDBCapability checks if the database is a Container Database
+func (c *SQLClient) QueryCDBCapability(ctx context.Context) (*models.CDBCapability, error) {
+	var capability models.CDBCapability
+	err := c.db.QueryRowContext(ctx, queries.CheckCDBFeatureSQL).Scan(&capability.IsCDB)
+	if err != nil {
+		if strings.Contains(err.Error(), "ORA-00942") || strings.Contains(err.Error(), "ORA-01722") {
+			// Table doesn't exist or invalid number - not a CDB
+			capability.IsCDB = 0
+			return &capability, nil
+		}
+		return nil, err
+	}
+	return &capability, nil
+}
+
+// QueryRACDetection checks if Oracle is running in RAC mode
+func (c *SQLClient) QueryRACDetection(ctx context.Context) (*models.RACDetection, error) {
+	var detection models.RACDetection
+	rows, err := c.db.QueryContext(ctx, queries.RACDetectionSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		if err := rows.Scan(&detection.ClusterDB); err != nil {
+			return nil, err
+		}
+	}
+
+	return &detection, nil
+}
+
+// QueryASMDetection checks if ASM instance is available
+func (c *SQLClient) QueryASMDetection(ctx context.Context) (*models.ASMDetection, error) {
+	var detection models.ASMDetection
+	rows, err := c.db.QueryContext(ctx, queries.ASMDetectionSQL)
+	if err != nil {
+		return &detection, nil // ASM not configured, return zero count
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		if err := rows.Scan(&detection.ASMCount); err != nil {
+			return nil, err
+		}
+	}
+
+	return &detection, nil
+}
+
+// QueryASMDiskGroups retrieves ASM disk group information
+func (c *SQLClient) QueryASMDiskGroups(ctx context.Context) ([]models.ASMDiskGroup, error) {
+	rows, err := c.db.QueryContext(ctx, queries.ASMDiskGroupSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.ASMDiskGroup
+	for rows.Next() {
+		var diskGroup models.ASMDiskGroup
+		if err := rows.Scan(&diskGroup.Name, &diskGroup.TotalMB, &diskGroup.FreeMB, &diskGroup.OfflineDisks); err != nil {
+			continue
+		}
+		results = append(results, diskGroup)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryClusterWaitEvents retrieves cluster wait event metrics
+func (c *SQLClient) QueryClusterWaitEvents(ctx context.Context) ([]models.ClusterWaitEvent, error) {
+	rows, err := c.db.QueryContext(ctx, queries.ClusterWaitEventsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.ClusterWaitEvent
+	for rows.Next() {
+		var event models.ClusterWaitEvent
+		if err := rows.Scan(&event.InstID, &event.Event, &event.TotalWaits, &event.TimeWaitedMicro); err != nil {
+			continue
+		}
+		results = append(results, event)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryRACInstanceStatus retrieves RAC instance status information
+func (c *SQLClient) QueryRACInstanceStatus(ctx context.Context) ([]models.RACInstanceStatus, error) {
+	rows, err := c.db.QueryContext(ctx, queries.RACInstanceStatusSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.RACInstanceStatus
+	for rows.Next() {
+		var status models.RACInstanceStatus
+		if err := rows.Scan(&status.InstID, &status.InstanceName, &status.HostName, &status.Status,
+			&status.StartupTime, &status.DatabaseStatus, &status.ActiveState, &status.Logins,
+			&status.Archiver, &status.Version); err != nil {
+			continue
+		}
+		results = append(results, status)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryRACActiveServices retrieves RAC active service information
+func (c *SQLClient) QueryRACActiveServices(ctx context.Context) ([]models.RACActiveService, error) {
+	rows, err := c.db.QueryContext(ctx, queries.RACActiveServicesSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.RACActiveService
+	for rows.Next() {
+		var service models.RACActiveService
+		if err := rows.Scan(&service.ServiceName, &service.InstID, &service.FailoverMethod,
+			&service.FailoverType, &service.Goal, &service.NetworkName, &service.CreationDate,
+			&service.FailoverRetries, &service.FailoverDelay, &service.ClbGoal); err != nil {
+			continue
+		}
+		results = append(results, service)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}

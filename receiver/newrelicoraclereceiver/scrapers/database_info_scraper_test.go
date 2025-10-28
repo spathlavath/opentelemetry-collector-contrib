@@ -5,7 +5,6 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
@@ -13,20 +12,21 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 func TestNewDatabaseInfoScraper(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(db, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
 
 	assert.NotNil(t, scraper)
-	assert.Equal(t, db, scraper.db)
+	assert.Equal(t, mockClient, scraper.client)
 	assert.Equal(t, mb, scraper.mb)
 	assert.Equal(t, logger, scraper.logger)
 	assert.Equal(t, "test-instance", scraper.instanceName)
@@ -345,14 +345,14 @@ func TestContainsAny(t *testing.T) {
 }
 
 func TestScrapeDatabaseInfo_MetricDisabled(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbDatabaseInfo.Enabled = false
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(db, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
 	ctx := context.Background()
 
 	errs := scraper.ScrapeDatabaseInfo(ctx)
@@ -360,14 +360,14 @@ func TestScrapeDatabaseInfo_MetricDisabled(t *testing.T) {
 }
 
 func TestScrapeHostingInfo_MetricDisabled(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbHostingInfo.Enabled = false
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(db, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
 	ctx := context.Background()
 
 	errs := scraper.ScrapeHostingInfo(ctx)
@@ -375,13 +375,13 @@ func TestScrapeHostingInfo_MetricDisabled(t *testing.T) {
 }
 
 func TestEnsureCacheValid_UsesCacheWhenValid(t *testing.T) {
-	db := &sql.DB{}
+	mockClient := &client.MockClient{}
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(db, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
 
 	scraper.cachedInfo = &DatabaseInfo{
 		Version:     "19.3",
