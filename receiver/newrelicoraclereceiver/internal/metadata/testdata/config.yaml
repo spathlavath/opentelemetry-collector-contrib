@@ -75,6 +75,8 @@ all_set:
       enabled: true
     newrelicoracledb.database.info:
       enabled: true
+    newrelicoracledb.database.role:
+      enabled: true
     newrelicoracledb.datafile.autoextensible:
       enabled: true
     newrelicoracledb.datafile.size_bytes:
@@ -715,6 +717,8 @@ none_set:
     newrelicoracledb.container.status:
       enabled: false
     newrelicoracledb.database.info:
+      enabled: false
+    newrelicoracledb.database.role:
       enabled: false
     newrelicoracledb.datafile.autoextensible:
       enabled: false

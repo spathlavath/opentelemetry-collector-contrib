@@ -319,6 +319,7 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 		s.racScraper.ScrapeRacMetrics,
 		s.databaseInfoScraper.ScrapeDatabaseInfo,
 		s.databaseInfoScraper.ScrapeHostingInfo,
+		s.databaseInfoScraper.ScrapeDatabaseRole,
 	}
 
 	// Add QPM scrapers if enabled

@@ -139,6 +139,56 @@ func (s *DatabaseInfoScraper) ScrapeHostingInfo(ctx context.Context) []error {
 	return errs
 }
 
+// ScrapeDatabaseRole scrapes the database role information (PRIMARY, STANDBY, etc.)
+func (s *DatabaseInfoScraper) ScrapeDatabaseRole(ctx context.Context) []error {
+	var errs []error
+
+	if !s.config.Metrics.NewrelicoracledbDatabaseRole.Enabled {
+		return errs
+	}
+
+	role, err := s.client.QueryDatabaseRole(ctx)
+	if err != nil {
+		errs = append(errs, err)
+		return errs
+	}
+
+	if role != nil {
+		roleStr := "UNKNOWN"
+		if role.DatabaseRole.Valid {
+			roleStr = role.DatabaseRole.String
+		}
+
+		openMode := "UNKNOWN"
+		if role.OpenMode.Valid {
+			openMode = role.OpenMode.String
+		}
+
+		protectionMode := "UNKNOWN"
+		if role.ProtectionMode.Valid {
+			protectionMode = role.ProtectionMode.String
+		}
+
+		protectionLevel := "UNKNOWN"
+		if role.ProtectionLevel.Valid {
+			protectionLevel = role.ProtectionLevel.String
+		}
+
+		now := pcommon.NewTimestampFromTime(time.Now())
+		s.mb.RecordNewrelicoracledbDatabaseRoleDataPoint(
+			now,
+			int64(1),
+			s.instanceName,
+			roleStr,
+			openMode,
+			protectionMode,
+			protectionLevel,
+		)
+	}
+
+	return errs
+}
+
 func extractCloudProviderForOTEL(hostingProvider string) string {
 	switch hostingProvider {
 	case "aws", "azure", "gcp", "oci":

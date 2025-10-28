@@ -93,6 +93,7 @@ type OracleClient interface {
 
 	// Database Info metrics
 	QueryDatabaseInfo(ctx context.Context) ([]models.DatabaseInfoMetric, error)
+	QueryDatabaseRole(ctx context.Context) (*models.DatabaseRole, error)
 
 	// PDB metrics
 	QueryPDBSysMetrics(ctx context.Context) ([]models.PDBSysMetric, error)

@@ -73,6 +73,7 @@ type MockClient struct {
 
 	// Database Info metrics
 	DatabaseInfoList []models.DatabaseInfoMetric
+	DatabaseRole     *models.DatabaseRole
 
 	// PDB metrics
 	PDBSysMetricsList []models.PDBSysMetric
@@ -461,6 +462,13 @@ func (m *MockClient) QueryDatabaseInfo(_ context.Context) ([]models.DatabaseInfo
 		return nil, m.QueryErr
 	}
 	return m.DatabaseInfoList, nil
+}
+
+func (m *MockClient) QueryDatabaseRole(_ context.Context) (*models.DatabaseRole, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.DatabaseRole, nil
 }
 
 func (m *MockClient) QueryPDBSysMetrics(_ context.Context) ([]models.PDBSysMetric, error) {

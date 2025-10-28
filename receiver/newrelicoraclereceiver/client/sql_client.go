@@ -1165,6 +1165,21 @@ func (c *SQLClient) QueryDatabaseInfo(ctx context.Context) ([]models.DatabaseInf
 	return results, nil
 }
 
+// QueryDatabaseRole retrieves the database role and protection mode
+func (c *SQLClient) QueryDatabaseRole(ctx context.Context) (*models.DatabaseRole, error) {
+	var role models.DatabaseRole
+	err := c.db.QueryRowContext(ctx, queries.DatabaseRoleSQL).Scan(
+		&role.DatabaseRole,
+		&role.OpenMode,
+		&role.ProtectionMode,
+		&role.ProtectionLevel,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &role, nil
+}
+
 // QueryPDBSysMetrics executes the PDB system metrics query
 func (c *SQLClient) QueryPDBSysMetrics(ctx context.Context) ([]models.PDBSysMetric, error) {
 	rows, err := c.db.QueryContext(ctx, queries.PDBSysMetricsSQL)

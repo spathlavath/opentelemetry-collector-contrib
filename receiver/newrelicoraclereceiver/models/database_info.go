@@ -13,3 +13,11 @@ type DatabaseInfoMetric struct {
 	DatabaseName sql.NullString
 	PlatformName sql.NullString
 }
+
+// DatabaseRole represents the database role and configuration
+type DatabaseRole struct {
+	DatabaseRole    sql.NullString
+	OpenMode        sql.NullString
+	ProtectionMode  sql.NullString
+	ProtectionLevel sql.NullString
+}
