@@ -5,7 +5,7 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -13,14 +13,14 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/errors"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 // ContainerScraper handles Oracle CDB/PDB container metrics
 type ContainerScraper struct {
-	db                 *sql.DB
+	client             client.OracleClient
 	mb                 *metadata.MetricsBuilder
 	logger             *zap.Logger
 	instanceName       string
@@ -34,14 +34,33 @@ type ContainerScraper struct {
 }
 
 // NewContainerScraper creates a new Container scraper
-func NewContainerScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *ContainerScraper {
+func NewContainerScraper(
+	oracleClient client.OracleClient,
+	mb *metadata.MetricsBuilder,
+	logger *zap.Logger,
+	instanceName string,
+	config metadata.MetricsBuilderConfig,
+) (*ContainerScraper, error) {
+	if oracleClient == nil {
+		return nil, fmt.Errorf("client cannot be nil")
+	}
+	if mb == nil {
+		return nil, fmt.Errorf("metrics builder cannot be nil")
+	}
+	if logger == nil {
+		return nil, fmt.Errorf("logger cannot be nil")
+	}
+	if instanceName == "" {
+		return nil, fmt.Errorf("instance name cannot be empty")
+	}
+
 	return &ContainerScraper{
-		db:           db,
+		client:       oracleClient,
 		mb:           mb,
 		logger:       logger,
 		instanceName: instanceName,
 		config:       config,
-	}
+	}, nil
 }
 
 // ScrapeContainerMetrics collects Oracle CDB/PDB container metrics
@@ -124,85 +143,28 @@ func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommo
 		return errs
 	}
 
-	s.logger.Debug("Scraping Oracle container status",
-		zap.String("sql", errors.FormatQueryForLogging(queries.ContainerStatusSQL)))
-
-	rows, err := s.db.QueryContext(ctx, queries.ContainerStatusSQL)
+	containers, err := s.client.QueryContainerStatus(ctx)
 	if err != nil {
-		scraperErr := errors.NewQueryError(
-			"container_status_query",
-			queries.ContainerStatusSQL,
-			err,
-			map[string]interface{}{
-				"instance":  s.instanceName,
-				"retryable": errors.IsRetryableError(err),
-				"permanent": errors.IsPermanentError(err),
-			},
-		)
-
-		if errors.IsPermanentError(err) {
-			s.logger.Error("Permanent error executing container status query", zap.Error(scraperErr))
-		} else {
-			s.logger.Warn("Error executing container status query", zap.Error(scraperErr))
-		}
-		return []error{scraperErr}
+		s.logger.Error("Failed to query container status", zap.Error(err))
+		return []error{err}
 	}
-	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			s.logger.Warn("Failed to close container status query rows", zap.Error(closeErr))
-		}
-	}()
 
-	rowCount := 0
-	for rows.Next() {
-		// Check for context cancellation during iteration
-		select {
-		case <-ctx.Done():
-			return []error{errors.NewScraperError("container_status_iteration", ctx.Err(),
-				map[string]interface{}{"rows_processed": rowCount})}
-		default:
-		}
-
-		var conID sql.NullInt64
-		var containerName sql.NullString
-		var openMode sql.NullString
-		var restricted sql.NullString
-		var openTime sql.NullTime
-
-		if err := rows.Scan(&conID, &containerName, &openMode, &restricted, &openTime); err != nil {
-			scanErr := errors.NewScraperError("container_status_scan", err,
-				map[string]interface{}{
-					"row_number": rowCount,
-					"instance":   s.instanceName,
-				})
-			s.logger.Error("Error scanning container status row", zap.Error(scanErr))
-			errs = append(errs, scanErr)
-			continue
-		}
-
-		rowCount++
-
+	for _, container := range containers {
 		// Validate required fields
-		if !conID.Valid {
-			s.logger.Debug("Skipping container status row with invalid CON_ID", zap.Int("row_number", rowCount))
-			continue
-		}
-		if !containerName.Valid {
-			s.logger.Debug("Skipping container status row with invalid container name",
-				zap.Int64("con_id", conID.Int64), zap.Int("row_number", rowCount))
+		if !container.ConID.Valid || !container.ContainerName.Valid {
 			continue
 		}
 
-		conIDStr := strconv.FormatInt(conID.Int64, 10)
-		containerNameStr := containerName.String
+		conIDStr := strconv.FormatInt(container.ConID.Int64, 10)
+		containerNameStr := container.ContainerName.String
 		openModeStr := ""
 		restrictedStr := ""
 
-		if openMode.Valid {
-			openModeStr = openMode.String
+		if container.OpenMode.Valid {
+			openModeStr = container.OpenMode.String
 		}
-		if restricted.Valid {
-			restrictedStr = restricted.String
+		if container.Restricted.Valid {
+			restrictedStr = container.Restricted.String
 		}
 
 		// Record metrics only if enabled
@@ -231,62 +193,32 @@ func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommo
 			zap.String("restricted", restrictedStr))
 	}
 
-	// Check for iteration errors
-	if err := rows.Err(); err != nil {
-		iterErr := errors.NewScraperError("container_status_iteration", err,
-			map[string]interface{}{
-				"rows_processed": rowCount,
-				"instance":       s.instanceName,
-			})
-		s.logger.Error("Error during container status rows iteration", zap.Error(iterErr))
-		errs = append(errs, iterErr)
-	}
-
-	s.logger.Debug("Completed container status scraping",
-		zap.Int("rows_processed", rowCount),
-		zap.Int("errors", len(errs)))
-
 	return errs
 }
 
 // scrapePDBStatus scrapes PDB status from GV$PDBS
 func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Timestamp) []error {
-	rows, err := s.db.QueryContext(ctx, queries.PDBStatusSQL)
+	pdbs, err := s.client.QueryPDBStatus(ctx)
 	if err != nil {
 		s.logger.Error("Failed to execute PDB status query", zap.Error(err))
 		return []error{err}
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var conID sql.NullInt64
-		var pdbName sql.NullString
-		var status sql.NullString
-		var creationSCN sql.NullInt64
-		var openMode sql.NullString
-		var restricted sql.NullString
-		var openTime sql.NullTime
-		var totalSize sql.NullInt64
-
-		if err := rows.Scan(&conID, &pdbName, &status, &creationSCN, &openMode, &restricted, &openTime, &totalSize); err != nil {
-			s.logger.Error("Error scanning PDB status row", zap.Error(err))
+	for _, pdb := range pdbs {
+		if !pdb.ConID.Valid || !pdb.PDBName.Valid {
 			continue
 		}
 
-		if !conID.Valid || !pdbName.Valid {
-			continue
-		}
-
-		conIDStr := strconv.FormatInt(conID.Int64, 10)
-		pdbNameStr := pdbName.String
+		conIDStr := strconv.FormatInt(pdb.ConID.Int64, 10)
+		pdbNameStr := pdb.PDBName.String
 		statusStr := ""
 		openModeStr := ""
 
-		if status.Valid {
-			statusStr = status.String
+		if pdb.Status.Valid {
+			statusStr = pdb.Status.String
 		}
-		if openMode.Valid {
-			openModeStr = openMode.String
+		if pdb.OpenMode.Valid {
+			openModeStr = pdb.OpenMode.String
 		}
 
 		// PDB status metric (1=NORMAL, 0=other)
@@ -304,8 +236,8 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 		s.mb.RecordNewrelicoracledbPdbOpenModeDataPoint(now, openModeValue, s.instanceName, conIDStr, pdbNameStr, openModeStr)
 
 		// PDB total size metric
-		if totalSize.Valid {
-			s.mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(now, totalSize.Int64, s.instanceName, conIDStr, pdbNameStr)
+		if pdb.TotalSize.Valid {
+			s.mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(now, pdb.TotalSize.Int64, s.instanceName, conIDStr, pdbNameStr)
 		}
 
 		s.logger.Debug("Processed PDB status",
@@ -320,50 +252,38 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 
 // scrapeCDBTablespaceUsage scrapes CDB tablespace usage from CDB_TABLESPACE_USAGE_METRICS
 func (s *ContainerScraper) scrapeCDBTablespaceUsage(ctx context.Context, now pcommon.Timestamp) []error {
-	rows, err := s.db.QueryContext(ctx, queries.CDBTablespaceUsageSQL)
+	tablespaces, err := s.client.QueryCDBTablespaceUsage(ctx)
 	if err != nil {
 		s.logger.Error("Failed to execute CDB tablespace usage query", zap.Error(err))
 		return []error{err}
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var conID sql.NullInt64
-		var tablespaceName sql.NullString
-		var usedBytes sql.NullInt64
-		var totalBytes sql.NullInt64
-		var usedPercent sql.NullFloat64
-
-		if err := rows.Scan(&conID, &tablespaceName, &usedBytes, &totalBytes, &usedPercent); err != nil {
-			s.logger.Error("Error scanning CDB tablespace usage row", zap.Error(err))
+	for _, ts := range tablespaces {
+		if !ts.ConID.Valid || !ts.TablespaceName.Valid {
 			continue
 		}
 
-		if !conID.Valid || !tablespaceName.Valid {
-			continue
-		}
-
-		conIDStr := strconv.FormatInt(conID.Int64, 10)
-		tablespaceNameStr := tablespaceName.String
+		conIDStr := strconv.FormatInt(ts.ConID.Int64, 10)
+		tablespaceName := ts.TablespaceName.String
 
 		// Record tablespace usage metrics with container tagging
-		if usedBytes.Valid {
-			s.mb.RecordNewrelicoracledbTablespaceUsedBytesDataPoint(now, usedBytes.Int64, s.instanceName, conIDStr, tablespaceNameStr)
+		if ts.UsedBytes.Valid {
+			s.mb.RecordNewrelicoracledbTablespaceUsedBytesDataPoint(now, ts.UsedBytes.Int64, s.instanceName, conIDStr, tablespaceName)
 		}
 
-		if totalBytes.Valid {
-			s.mb.RecordNewrelicoracledbTablespaceTotalBytesDataPoint(now, totalBytes.Int64, s.instanceName, conIDStr, tablespaceNameStr)
+		if ts.TotalBytes.Valid {
+			s.mb.RecordNewrelicoracledbTablespaceTotalBytesDataPoint(now, ts.TotalBytes.Int64, s.instanceName, conIDStr, tablespaceName)
 		}
 
-		if usedPercent.Valid {
-			s.mb.RecordNewrelicoracledbTablespaceUsedPercentDataPoint(now, usedPercent.Float64, s.instanceName, conIDStr, tablespaceNameStr)
+		if ts.UsedPercent.Valid {
+			s.mb.RecordNewrelicoracledbTablespaceUsedPercentDataPoint(now, ts.UsedPercent.Float64, s.instanceName, conIDStr, tablespaceName)
 		}
 
 		s.logger.Debug("Processed CDB tablespace usage",
 			zap.String("con_id", conIDStr),
-			zap.String("tablespace_name", tablespaceNameStr),
-			zap.Int64("used_bytes", usedBytes.Int64),
-			zap.Int64("total_bytes", totalBytes.Int64))
+			zap.String("tablespace_name", tablespaceName),
+			zap.Int64("used_bytes", ts.UsedBytes.Int64),
+			zap.Int64("total_bytes", ts.TotalBytes.Int64))
 	}
 
 	return nil
@@ -371,49 +291,34 @@ func (s *ContainerScraper) scrapeCDBTablespaceUsage(ctx context.Context, now pco
 
 // scrapeCDBDataFiles scrapes CDB data files from CDB_DATA_FILES
 func (s *ContainerScraper) scrapeCDBDataFiles(ctx context.Context, now pcommon.Timestamp) []error {
-	rows, err := s.db.QueryContext(ctx, queries.CDBDataFilesSQL)
+	datafiles, err := s.client.QueryCDBDataFiles(ctx)
 	if err != nil {
 		s.logger.Error("Failed to execute CDB data files query", zap.Error(err))
 		return []error{err}
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var conID sql.NullInt64
-		var fileName sql.NullString
-		var tablespaceName sql.NullString
-		var bytes sql.NullInt64
-		var status sql.NullString
-		var autoextensible sql.NullString
-		var maxBytes sql.NullInt64
-		var userBytes sql.NullInt64
-
-		if err := rows.Scan(&conID, &fileName, &tablespaceName, &bytes, &status, &autoextensible, &maxBytes, &userBytes); err != nil {
-			s.logger.Error("Error scanning CDB data files row", zap.Error(err))
+	for _, df := range datafiles {
+		if !df.ConID.Valid || !df.FileName.Valid || !df.TablespaceName.Valid {
 			continue
 		}
 
-		if !conID.Valid || !fileName.Valid || !tablespaceName.Valid {
-			continue
-		}
-
-		conIDStr := strconv.FormatInt(conID.Int64, 10)
-		fileNameStr := fileName.String
-		tablespaceNameStr := tablespaceName.String
+		conIDStr := strconv.FormatInt(df.ConID.Int64, 10)
+		fileName := df.FileName.String
+		tablespaceName := df.TablespaceName.String
 		autoextensibleStr := ""
 
-		if autoextensible.Valid {
-			autoextensibleStr = autoextensible.String
+		if df.Autoextensible.Valid {
+			autoextensibleStr = df.Autoextensible.String
 		}
 
 		// Record data file size
-		if bytes.Valid {
-			s.mb.RecordNewrelicoracledbDatafileSizeBytesDataPoint(now, bytes.Int64, s.instanceName, conIDStr, tablespaceNameStr, fileNameStr)
+		if df.Bytes.Valid {
+			s.mb.RecordNewrelicoracledbDatafileSizeBytesDataPoint(now, df.Bytes.Int64, s.instanceName, conIDStr, tablespaceName, fileName)
 		}
 
 		// Record user bytes
-		if userBytes.Valid {
-			s.mb.RecordNewrelicoracledbDatafileUsedBytesDataPoint(now, userBytes.Int64, s.instanceName, conIDStr, tablespaceNameStr, fileNameStr)
+		if df.UserBytes.Valid {
+			s.mb.RecordNewrelicoracledbDatafileUsedBytesDataPoint(now, df.UserBytes.Int64, s.instanceName, conIDStr, tablespaceName, fileName)
 		}
 
 		// Record autoextensible status (1=YES, 0=NO)
@@ -421,13 +326,13 @@ func (s *ContainerScraper) scrapeCDBDataFiles(ctx context.Context, now pcommon.T
 		if strings.ToUpper(autoextensibleStr) == "YES" {
 			autoextensibleValue = 1
 		}
-		s.mb.RecordNewrelicoracledbDatafileAutoextensibleDataPoint(now, autoextensibleValue, s.instanceName, conIDStr, tablespaceNameStr, fileNameStr, autoextensibleStr)
+		s.mb.RecordNewrelicoracledbDatafileAutoextensibleDataPoint(now, autoextensibleValue, s.instanceName, conIDStr, tablespaceName, fileName, autoextensibleStr)
 
 		s.logger.Debug("Processed CDB data file",
 			zap.String("con_id", conIDStr),
-			zap.String("tablespace_name", tablespaceNameStr),
-			zap.String("file_name", fileNameStr),
-			zap.Int64("bytes", bytes.Int64))
+			zap.String("tablespace_name", tablespaceName),
+			zap.String("file_name", fileName),
+			zap.Int64("bytes", df.Bytes.Int64))
 	}
 
 	return nil
@@ -435,50 +340,37 @@ func (s *ContainerScraper) scrapeCDBDataFiles(ctx context.Context, now pcommon.T
 
 // scrapeCDBServices scrapes CDB services from CDB_SERVICES
 func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Timestamp) []error {
-	rows, err := s.db.QueryContext(ctx, queries.CDBServicesSQL)
+	services, err := s.client.QueryCDBServices(ctx)
 	if err != nil {
 		s.logger.Error("Failed to execute CDB services query", zap.Error(err))
 		return []error{err}
 	}
-	defer rows.Close()
 
 	serviceCount := make(map[string]int64)
 
-	for rows.Next() {
-		var conID sql.NullInt64
-		var serviceName sql.NullString
-		var networkName sql.NullString
-		var creationDate sql.NullTime
-		var pdb sql.NullString
-		var enabled sql.NullString
-
-		if err := rows.Scan(&conID, &serviceName, &networkName, &creationDate, &pdb, &enabled); err != nil {
-			s.logger.Error("Error scanning CDB services row", zap.Error(err))
+	for _, svc := range services {
+		if !svc.ConID.Valid || !svc.ServiceName.Valid {
 			continue
 		}
 
-		if !conID.Valid || !serviceName.Valid {
-			continue
-		}
-
-		conIDStr := strconv.FormatInt(conID.Int64, 10)
-		serviceNameStr := serviceName.String
+		conIDStr := strconv.FormatInt(svc.ConID.Int64, 10)
+		serviceName := svc.ServiceName.String
 
 		// Count services per container
 		serviceCount[conIDStr]++
 
 		// Record service status (1=enabled if enabled='YES', 0=disabled)
 		var serviceStatus int64 = 0
-		if enabled.Valid && strings.ToUpper(enabled.String) == "YES" {
+		if svc.Enabled.Valid && strings.ToUpper(svc.Enabled.String) == "YES" {
 			serviceStatus = 1
 		}
-		s.mb.RecordNewrelicoracledbServiceStatusDataPoint(now, serviceStatus, s.instanceName, conIDStr, serviceNameStr)
+		s.mb.RecordNewrelicoracledbServiceStatusDataPoint(now, serviceStatus, s.instanceName, conIDStr, serviceName)
 
 		s.logger.Debug("Processed CDB service",
 			zap.String("con_id", conIDStr),
-			zap.String("service_name", serviceNameStr),
-			zap.String("pdb", pdb.String),
-			zap.String("enabled", enabled.String),
+			zap.String("service_name", serviceName),
+			zap.String("pdb", svc.PDB.String),
+			zap.String("enabled", svc.Enabled.String),
 			zap.Int64("status", serviceStatus))
 	}
 
@@ -497,8 +389,7 @@ func (s *ContainerScraper) checkEnvironmentCapability(ctx context.Context) error
 	}
 
 	// Check if this is a CDB-capable database
-	var isCDB int64
-	err := s.db.QueryRowContext(ctx, queries.CheckCDBFeatureSQL).Scan(&isCDB)
+	isCDB, err := s.client.CheckCDBFeature(ctx)
 	if err != nil {
 		if errors.IsPermanentError(err) {
 			// Likely an older Oracle version that doesn't support CDB
@@ -512,8 +403,7 @@ func (s *ContainerScraper) checkEnvironmentCapability(ctx context.Context) error
 			s.environmentChecked = true
 			return nil
 		}
-		return errors.NewQueryError("cdb_capability_check", queries.CheckCDBFeatureSQL, err,
-			map[string]interface{}{"instance": s.instanceName})
+		return err
 	}
 
 	cdbCapable := isCDB == 1
@@ -521,11 +411,9 @@ func (s *ContainerScraper) checkEnvironmentCapability(ctx context.Context) error
 
 	// Check if PDB views are available
 	if cdbCapable {
-		var pdbCount int64
-		err = s.db.QueryRowContext(ctx, queries.CheckPDBCapabilitySQL).Scan(&pdbCount)
+		pdbCount, err := s.client.CheckPDBCapability(ctx)
 		if err != nil {
-			return errors.NewQueryError("pdb_capability_check", queries.CheckPDBCapabilitySQL, err,
-				map[string]interface{}{"instance": s.instanceName})
+			return err
 		}
 		pdbCapable := pdbCount > 0
 		s.isPDBCapable = &pdbCapable
@@ -563,15 +451,17 @@ func (s *ContainerScraper) checkCurrentContext(ctx context.Context) error {
 		zap.String("instance", s.instanceName))
 
 	// Query current container context
-	var containerName, containerID string
-	err := s.db.QueryRowContext(ctx, queries.CheckCurrentContainerSQL).Scan(&containerName, &containerID)
+	containerContext, err := s.client.CheckCurrentContainer(ctx)
 	if err != nil {
-		return errors.NewQueryError("container_context_check", queries.CheckCurrentContainerSQL, err,
-			map[string]interface{}{"instance": s.instanceName})
+		return err
 	}
 
-	s.currentContainer = containerName
-	s.currentContainerID = containerID
+	if containerContext.ContainerName.Valid {
+		s.currentContainer = containerContext.ContainerName.String
+	}
+	if containerContext.ContainerID.Valid {
+		s.currentContainerID = containerContext.ContainerID.String
+	}
 	s.contextChecked = true
 
 	s.logger.Info("Detected Oracle container context",

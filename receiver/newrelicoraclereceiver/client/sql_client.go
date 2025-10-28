@@ -532,3 +532,153 @@ func (c *SQLClient) QueryConnectionQuality(ctx context.Context) ([]models.Connec
 	}
 	return results, nil
 }
+
+// CheckCDBFeature checks if database is a Container Database
+func (c *SQLClient) CheckCDBFeature(ctx context.Context) (int64, error) {
+	var isCDB int64
+	err := c.db.QueryRowContext(ctx, queries.CheckCDBFeatureSQL).Scan(&isCDB)
+	if err != nil {
+		return 0, err
+	}
+	return isCDB, nil
+}
+
+// CheckPDBCapability checks if PDB functionality is available
+func (c *SQLClient) CheckPDBCapability(ctx context.Context) (int64, error) {
+	var pdbCount int64
+	err := c.db.QueryRowContext(ctx, queries.CheckPDBCapabilitySQL).Scan(&pdbCount)
+	if err != nil {
+		return 0, err
+	}
+	return pdbCount, nil
+}
+
+// CheckCurrentContainer returns current container context information
+func (c *SQLClient) CheckCurrentContainer(ctx context.Context) (models.ContainerContext, error) {
+	var result models.ContainerContext
+	err := c.db.QueryRowContext(ctx, queries.CheckCurrentContainerSQL).Scan(&result.ContainerName, &result.ContainerID)
+	if err != nil {
+		return models.ContainerContext{}, err
+	}
+	return result, nil
+}
+
+// QueryContainerStatus queries container status from GV$CONTAINERS
+func (c *SQLClient) QueryContainerStatus(ctx context.Context) ([]models.ContainerStatus, error) {
+	rows, err := c.db.QueryContext(ctx, queries.ContainerStatusSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.ContainerStatus
+	for rows.Next() {
+		var cs models.ContainerStatus
+		if err := rows.Scan(&cs.ConID, &cs.ContainerName, &cs.OpenMode, &cs.Restricted, &cs.OpenTime); err != nil {
+			return nil, err
+		}
+		results = append(results, cs)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryPDBStatus queries PDB status from GV$PDBS
+func (c *SQLClient) QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PDBStatusSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.PDBStatus
+	for rows.Next() {
+		var ps models.PDBStatus
+		if err := rows.Scan(&ps.ConID, &ps.PDBName, &ps.Status, &ps.CreationSCN, &ps.OpenMode, &ps.Restricted, &ps.OpenTime, &ps.TotalSize); err != nil {
+			return nil, err
+		}
+		results = append(results, ps)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryCDBTablespaceUsage queries tablespace usage across containers
+func (c *SQLClient) QueryCDBTablespaceUsage(ctx context.Context) ([]models.CDBTablespaceUsage, error) {
+	rows, err := c.db.QueryContext(ctx, queries.CDBTablespaceUsageSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.CDBTablespaceUsage
+	for rows.Next() {
+		var tu models.CDBTablespaceUsage
+		if err := rows.Scan(&tu.ConID, &tu.TablespaceName, &tu.UsedBytes, &tu.TotalBytes, &tu.UsedPercent); err != nil {
+			return nil, err
+		}
+		results = append(results, tu)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryCDBDataFiles queries data file information across containers
+func (c *SQLClient) QueryCDBDataFiles(ctx context.Context) ([]models.CDBDataFile, error) {
+	rows, err := c.db.QueryContext(ctx, queries.CDBDataFilesSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.CDBDataFile
+	for rows.Next() {
+		var df models.CDBDataFile
+		if err := rows.Scan(&df.ConID, &df.FileName, &df.TablespaceName, &df.Bytes, &df.Status, &df.Autoextensible, &df.MaxBytes, &df.UserBytes); err != nil {
+			return nil, err
+		}
+		results = append(results, df)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryCDBServices queries service information across containers
+func (c *SQLClient) QueryCDBServices(ctx context.Context) ([]models.CDBService, error) {
+	rows, err := c.db.QueryContext(ctx, queries.CDBServicesSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.CDBService
+	for rows.Next() {
+		var svc models.CDBService
+		if err := rows.Scan(&svc.ConID, &svc.ServiceName, &svc.NetworkName, &svc.CreationDate, &svc.PDB, &svc.Enabled); err != nil {
+			return nil, err
+		}
+		results = append(results, svc)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}

@@ -49,4 +49,16 @@ type OracleClient interface {
 	QueryConnectionPoolMetrics(ctx context.Context) ([]models.ConnectionPoolMetric, error)
 	QuerySessionLimits(ctx context.Context) ([]models.SessionLimit, error)
 	QueryConnectionQuality(ctx context.Context) ([]models.ConnectionQualityMetric, error)
+
+	// Container metrics - capability checks
+	CheckCDBFeature(ctx context.Context) (int64, error)
+	CheckPDBCapability(ctx context.Context) (int64, error)
+	CheckCurrentContainer(ctx context.Context) (models.ContainerContext, error)
+
+	// Container metrics - data queries
+	QueryContainerStatus(ctx context.Context) ([]models.ContainerStatus, error)
+	QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, error)
+	QueryCDBTablespaceUsage(ctx context.Context) ([]models.CDBTablespaceUsage, error)
+	QueryCDBDataFiles(ctx context.Context) ([]models.CDBDataFile, error)
+	QueryCDBServices(ctx context.Context) ([]models.CDBService, error)
 }

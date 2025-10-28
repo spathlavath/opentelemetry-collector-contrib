@@ -32,6 +32,16 @@ type MockClient struct {
 	SessionLimitsList            []models.SessionLimit
 	ConnectionQualityMetricsList []models.ConnectionQualityMetric
 
+	// Container metrics
+	CheckCDBFeatureResult       int64
+	CheckPDBCapabilityResult    int64
+	CheckCurrentContainerResult models.ContainerContext
+	ContainerStatusList         []models.ContainerStatus
+	PDBStatusList               []models.PDBStatus
+	CDBTablespaceUsageList      []models.CDBTablespaceUsage
+	CDBDataFilesList            []models.CDBDataFile
+	CDBServicesList             []models.CDBService
+
 	ConnectErr error
 	CloseErr   error
 	PingErr    error
@@ -182,4 +192,68 @@ func (m *MockClient) QueryConnectionQuality(ctx context.Context) ([]models.Conne
 		return nil, m.QueryErr
 	}
 	return m.ConnectionQualityMetricsList, nil
+}
+
+// CheckCDBFeature mock
+func (m *MockClient) CheckCDBFeature(ctx context.Context) (int64, error) {
+	if m.QueryErr != nil {
+		return 0, m.QueryErr
+	}
+	return m.CheckCDBFeatureResult, nil
+}
+
+// CheckPDBCapability mock
+func (m *MockClient) CheckPDBCapability(ctx context.Context) (int64, error) {
+	if m.QueryErr != nil {
+		return 0, m.QueryErr
+	}
+	return m.CheckPDBCapabilityResult, nil
+}
+
+// CheckCurrentContainer mock
+func (m *MockClient) CheckCurrentContainer(ctx context.Context) (models.ContainerContext, error) {
+	if m.QueryErr != nil {
+		return models.ContainerContext{}, m.QueryErr
+	}
+	return m.CheckCurrentContainerResult, nil
+}
+
+// QueryContainerStatus mock
+func (m *MockClient) QueryContainerStatus(ctx context.Context) ([]models.ContainerStatus, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.ContainerStatusList, nil
+}
+
+// QueryPDBStatus mock
+func (m *MockClient) QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.PDBStatusList, nil
+}
+
+// QueryCDBTablespaceUsage mock
+func (m *MockClient) QueryCDBTablespaceUsage(ctx context.Context) ([]models.CDBTablespaceUsage, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.CDBTablespaceUsageList, nil
+}
+
+// QueryCDBDataFiles mock
+func (m *MockClient) QueryCDBDataFiles(ctx context.Context) ([]models.CDBDataFile, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.CDBDataFilesList, nil
+}
+
+// QueryCDBServices mock
+func (m *MockClient) QueryCDBServices(ctx context.Context) ([]models.CDBService, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.CDBServicesList, nil
 }
