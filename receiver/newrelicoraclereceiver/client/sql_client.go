@@ -682,3 +682,461 @@ func (c *SQLClient) QueryCDBServices(ctx context.Context) ([]models.CDBService, 
 
 	return results, nil
 }
+
+// QueryDiskIOMetrics executes the disk I/O metrics query.
+func (c *SQLClient) QueryDiskIOMetrics(ctx context.Context) ([]models.DiskIOMetrics, error) {
+	rows, err := c.db.QueryContext(ctx, queries.ReadWriteMetricsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.DiskIOMetrics
+	for rows.Next() {
+		var metric models.DiskIOMetrics
+		if err := rows.Scan(&metric.InstID, &metric.PhysicalReads, &metric.PhysicalWrites,
+			&metric.PhysicalBlockReads, &metric.PhysicalBlockWrites,
+			&metric.ReadTime, &metric.WriteTime); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryLockedAccounts executes the locked accounts query.
+func (c *SQLClient) QueryLockedAccounts(ctx context.Context) ([]models.LockedAccountsMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.LockedAccountsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.LockedAccountsMetric
+	for rows.Next() {
+		var metric models.LockedAccountsMetric
+		if err := rows.Scan(&metric.InstID, &metric.LockedAccounts); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryGlobalName executes the global name query.
+func (c *SQLClient) QueryGlobalName(ctx context.Context) ([]models.GlobalNameMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.GlobalNameInstanceSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.GlobalNameMetric
+	for rows.Next() {
+		var metric models.GlobalNameMetric
+		if err := rows.Scan(&metric.InstID, &metric.GlobalName); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryDBID executes the database ID query.
+func (c *SQLClient) QueryDBID(ctx context.Context) ([]models.DBIDMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.DBIDInstanceSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.DBIDMetric
+	for rows.Next() {
+		var metric models.DBIDMetric
+		if err := rows.Scan(&metric.InstID, &metric.DBID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryLongRunningQueries executes the long-running queries query.
+func (c *SQLClient) QueryLongRunningQueries(ctx context.Context) ([]models.LongRunningQueriesMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.LongRunningQueriesSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.LongRunningQueriesMetric
+	for rows.Next() {
+		var metric models.LongRunningQueriesMetric
+		if err := rows.Scan(&metric.InstID, &metric.Total); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryPGAMetrics executes the PGA metrics query.
+func (c *SQLClient) QueryPGAMetrics(ctx context.Context) ([]models.PGAMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PGAMetricsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.PGAMetric
+	for rows.Next() {
+		var metric models.PGAMetric
+		if err := rows.Scan(&metric.InstID, &metric.Name, &metric.Value); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGAUGATotalMemory executes the SGA UGA total memory query.
+func (c *SQLClient) QuerySGAUGATotalMemory(ctx context.Context) ([]models.SGAUGATotalMemoryMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGAUGATotalMemorySQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGAUGATotalMemoryMetric
+	for rows.Next() {
+		var metric models.SGAUGATotalMemoryMetric
+		if err := rows.Scan(&metric.Sum, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGASharedPoolLibraryCache executes the SGA shared pool library cache query.
+func (c *SQLClient) QuerySGASharedPoolLibraryCache(ctx context.Context) ([]models.SGASharedPoolLibraryCacheMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGASharedPoolLibraryCacheShareableStatementSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGASharedPoolLibraryCacheMetric
+	for rows.Next() {
+		var metric models.SGASharedPoolLibraryCacheMetric
+		if err := rows.Scan(&metric.Sum, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGASharedPoolLibraryCacheUser executes the SGA shared pool library cache user query.
+func (c *SQLClient) QuerySGASharedPoolLibraryCacheUser(ctx context.Context) ([]models.SGASharedPoolLibraryCacheUserMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGASharedPoolLibraryCacheShareableUserSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGASharedPoolLibraryCacheUserMetric
+	for rows.Next() {
+		var metric models.SGASharedPoolLibraryCacheUserMetric
+		if err := rows.Scan(&metric.Sum, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGAMetrics executes the SGA metrics query.
+func (c *SQLClient) QuerySGAMetrics(ctx context.Context) ([]models.SGAMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGASQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGAMetric
+	for rows.Next() {
+		var metric models.SGAMetric
+		if err := rows.Scan(&metric.InstID, &metric.Name, &metric.Value); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySysstatMetrics executes the sysstat metrics query.
+func (c *SQLClient) QuerySysstatMetrics(ctx context.Context) ([]models.SysstatMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SysstatSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SysstatMetric
+	for rows.Next() {
+		var metric models.SysstatMetric
+		if err := rows.Scan(&metric.InstID, &metric.Name, &metric.Value); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryRollbackSegmentsMetrics executes the rollback segments metrics query.
+func (c *SQLClient) QueryRollbackSegmentsMetrics(ctx context.Context) ([]models.RollbackSegmentsMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.RollbackSegmentsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.RollbackSegmentsMetric
+	for rows.Next() {
+		var metric models.RollbackSegmentsMetric
+		if err := rows.Scan(&metric.Gets, &metric.Waits, &metric.Ratio, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QueryRedoLogWaitsMetrics executes the redo log waits metrics query.
+func (c *SQLClient) QueryRedoLogWaitsMetrics(ctx context.Context) ([]models.RedoLogWaitsMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.RedoLogWaitsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.RedoLogWaitsMetric
+	for rows.Next() {
+		var metric models.RedoLogWaitsMetric
+		if err := rows.Scan(&metric.TotalWaits, &metric.InstID, &metric.Event); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGASharedPoolLibraryCacheReloadRatio executes the SGA shared pool library cache reload ratio query.
+func (c *SQLClient) QuerySGASharedPoolLibraryCacheReloadRatio(ctx context.Context) ([]models.SGASharedPoolLibraryCacheReloadRatioMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGASharedPoolLibraryCacheReloadRatioSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGASharedPoolLibraryCacheReloadRatioMetric
+	for rows.Next() {
+		var metric models.SGASharedPoolLibraryCacheReloadRatioMetric
+		if err := rows.Scan(&metric.Ratio, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGASharedPoolLibraryCacheHitRatio executes the SGA shared pool library cache hit ratio query.
+func (c *SQLClient) QuerySGASharedPoolLibraryCacheHitRatio(ctx context.Context) ([]models.SGASharedPoolLibraryCacheHitRatioMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGASharedPoolLibraryCacheHitRatioSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGASharedPoolLibraryCacheHitRatioMetric
+	for rows.Next() {
+		var metric models.SGASharedPoolLibraryCacheHitRatioMetric
+		if err := rows.Scan(&metric.Ratio, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGASharedPoolDictCacheMissRatio executes the SGA shared pool dictionary cache miss ratio query.
+func (c *SQLClient) QuerySGASharedPoolDictCacheMissRatio(ctx context.Context) ([]models.SGASharedPoolDictCacheMissRatioMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGASharedPoolDictCacheMissRatioSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGASharedPoolDictCacheMissRatioMetric
+	for rows.Next() {
+		var metric models.SGASharedPoolDictCacheMissRatioMetric
+		if err := rows.Scan(&metric.Ratio, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGALogBufferSpaceWaits executes the SGA log buffer space waits query.
+func (c *SQLClient) QuerySGALogBufferSpaceWaits(ctx context.Context) ([]models.SGALogBufferSpaceWaitsMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGALogBufferSpaceWaitsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGALogBufferSpaceWaitsMetric
+	for rows.Next() {
+		var metric models.SGALogBufferSpaceWaitsMetric
+		if err := rows.Scan(&metric.Count, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGALogAllocRetries executes the SGA log allocation retries query.
+func (c *SQLClient) QuerySGALogAllocRetries(ctx context.Context) ([]models.SGALogAllocRetriesMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGALogAllocRetriesSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGALogAllocRetriesMetric
+	for rows.Next() {
+		var metric models.SGALogAllocRetriesMetric
+		if err := rows.Scan(&metric.Ratio, &metric.InstID); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// QuerySGAHitRatio executes the SGA hit ratio query.
+func (c *SQLClient) QuerySGAHitRatio(ctx context.Context) ([]models.SGAHitRatioMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SGAHitRatioSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SGAHitRatioMetric
+	for rows.Next() {
+		var metric models.SGAHitRatioMetric
+		if err := rows.Scan(&metric.InstID, &metric.Ratio); err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}

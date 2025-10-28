@@ -6,408 +6,272 @@ package scrapers
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"testing"
+	"time"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
-func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+func testSGATimestamp() pcommon.Timestamp {
+	return pcommon.NewTimestampFromTime(time.Now())
 }
 
-func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio.Enabled = true
+// Test scrapeSGASharedPoolLibraryCacheReloadRatioMetrics
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGASharedPoolLibraryCacheReloadRatioList: []models.SGASharedPoolLibraryCacheReloadRatioMetric{
+			{Ratio: 0.05, InstID: "1"},
+			{Ratio: 0.03, InstID: "2"},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_Disabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio.Enabled = false
+func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(context.Background(), testSGATimestamp())
+	require.Len(t, errs, 1)
 }
 
-func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
+// Test scrapeSGASharedPoolLibraryCacheHitRatioMetrics
+
+func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGASharedPoolLibraryCacheHitRatioList: []models.SGASharedPoolLibraryCacheHitRatioMetric{
+			{Ratio: 0.95, InstID: "1"},
+			{Ratio: 0.97, InstID: "2"},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaSharedPoolLibraryCacheHitRatio.Enabled = true
+func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(context.Background(), testSGATimestamp())
+	require.Len(t, errs, 1)
 }
 
-func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_Disabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaSharedPoolLibraryCacheHitRatio.Enabled = false
+// Test scrapeSGASharedPoolDictCacheMissRatioMetrics
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGASharedPoolDictCacheMissRatioList: []models.SGASharedPoolDictCacheMissRatioMetric{
+			{Ratio: 0.02, InstID: "1"},
+			{Ratio: 0.01, InstID: "2"},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
+func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
+
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(context.Background(), testSGATimestamp())
+	require.Len(t, errs, 1)
 }
 
-func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaSharedPoolDictCacheMissRatio.Enabled = true
+// Test scrapeSGALogBufferSpaceWaitsMetrics
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+func TestScrapeSGALogBufferSpaceWaitsMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGALogBufferSpaceWaitsList: []models.SGALogBufferSpaceWaitsMetric{
+			{Count: 5, InstID: "1"},
+			{Count: 3, InstID: "2"},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_Disabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaSharedPoolDictCacheMissRatio.Enabled = false
+func TestScrapeSGALogBufferSpaceWaitsMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(context.Background(), testSGATimestamp())
+	require.Len(t, errs, 1)
 }
 
-func TestScrapeSGALogBufferSpaceWaitsMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
+// Test scrapeSGALogAllocRetriesMetrics
+
+func TestScrapeSGALogAllocRetriesMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGALogAllocRetriesList: []models.SGALogAllocRetriesMetric{
+			{Ratio: sql.NullFloat64{Float64: 0.04, Valid: true}, InstID: "1"},
+			{Ratio: sql.NullFloat64{Float64: 0.02, Valid: true}, InstID: "2"},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGALogBufferSpaceWaitsMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaLogBufferSpaceWaits.Enabled = true
-
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+func TestScrapeSGALogAllocRetriesMetrics_NullRatio(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGALogAllocRetriesList: []models.SGALogAllocRetriesMetric{
+			{Ratio: sql.NullFloat64{Valid: false}, InstID: "1"},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGALogBufferSpaceWaitsMetrics_Disabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaLogBufferSpaceWaits.Enabled = false
+func TestScrapeSGALogAllocRetriesMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
+	require.Len(t, errs, 1)
 }
 
-func TestScrapeSGALogAllocRetriesMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
+// Test scrapeSGAHitRatioMetrics
+
+func TestScrapeSGAHitRatioMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGAHitRatioList: []models.SGAHitRatioMetric{
+			{InstID: "1", Ratio: sql.NullFloat64{Float64: 0.92, Valid: true}},
+			{InstID: "2", Ratio: sql.NullFloat64{Float64: 0.94, Valid: true}},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGALogAllocRetriesMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGALogAllocRetriesMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaLogAllocationRetriesRatio.Enabled = true
-
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+func TestScrapeSGAHitRatioMetrics_NullRatio(t *testing.T) {
+	mockClient := &client.MockClient{
+		SGAHitRatioList: []models.SGAHitRatioMetric{
+			{InstID: "1", Ratio: sql.NullFloat64{Valid: false}},
+		},
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
+	scraper := &CoreScraper{
+		client:       mockClient,
+		instanceName: "test-db",
+		logger:       zap.NewNop(),
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+	}
 
-	errs := scraper.scrapeSGALogAllocRetriesMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSGALogAllocRetriesMetrics_Disabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaLogAllocationRetriesRatio.Enabled = false
+func TestScrapeSGAHitRatioMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGALogAllocRetriesMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeSGALogAllocRetriesMetrics_NullValues(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGALogAllocRetriesMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
-}
-
-func TestScrapeSGAHitRatioMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGAHitRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
-}
-
-func TestScrapeSGAHitRatioMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaHitRatio.Enabled = true
-
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGAHitRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeSGAHitRatioMetrics_Disabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaHitRatio.Enabled = false
-
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGAHitRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeSGAHitRatioMetrics_NullValues(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSGAHitRatioMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
+	require.Len(t, errs, 1)
 }

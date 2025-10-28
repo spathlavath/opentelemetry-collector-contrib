@@ -5,18 +5,19 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
+	"errors"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 // CoreScraper handles Oracle core database metrics
 type CoreScraper struct {
-	db           *sql.DB
+	client       client.OracleClient
 	mb           *metadata.MetricsBuilder
 	logger       *zap.Logger
 	instanceName string
@@ -24,14 +25,27 @@ type CoreScraper struct {
 }
 
 // NewCoreScraper creates a new core scraper
-func NewCoreScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *CoreScraper {
+func NewCoreScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) (*CoreScraper, error) {
+	if c == nil {
+		return nil, errors.New("client cannot be nil")
+	}
+	if mb == nil {
+		return nil, errors.New("metrics builder cannot be nil")
+	}
+	if logger == nil {
+		return nil, errors.New("logger cannot be nil")
+	}
+	if instanceName == "" {
+		return nil, errors.New("instance name cannot be empty")
+	}
+
 	return &CoreScraper{
-		db:           db,
+		client:       c,
 		mb:           mb,
 		logger:       logger,
 		instanceName: instanceName,
 		config:       config,
-	}
+	}, nil
 }
 
 // ScrapeCoreMetrics collects Oracle core database metrics

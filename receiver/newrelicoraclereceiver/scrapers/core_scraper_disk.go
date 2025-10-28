@@ -5,12 +5,9 @@ package scrapers
 
 import (
 	"context"
-	"fmt"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Timestamp) []error {
@@ -23,53 +20,39 @@ func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Ti
 		return nil
 	}
 
-	var errors []error
-
-	rows, err := s.db.QueryContext(ctx, queries.ReadWriteMetricsSQL)
+	metrics, err := s.client.QueryDiskIOMetrics(ctx)
 	if err != nil {
-		return []error{fmt.Errorf("error executing read/write metrics query: %w", err)}
+		s.logger.Error("Failed to query disk I/O metrics", zap.Error(err))
+		return []error{err}
 	}
-	defer rows.Close()
 
 	metricCount := 0
-	for rows.Next() {
-		var instID interface{}
-		var physicalReads, physicalWrites, physicalBlockReads, physicalBlockWrites, readTime, writeTime int64
-
-		if err := rows.Scan(&instID, &physicalReads, &physicalWrites, &physicalBlockReads, &physicalBlockWrites, &readTime, &writeTime); err != nil {
-			errors = append(errors, fmt.Errorf("error scanning read/write metrics row: %w", err))
-			continue
-		}
-
-		instanceID := getInstanceIDString(instID)
+	for _, metric := range metrics {
+		instanceID := getInstanceIDString(metric.InstID)
 
 		if s.config.Metrics.NewrelicoracledbDiskReads.Enabled {
-			s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, physicalReads, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, metric.PhysicalReads, s.instanceName, instanceID)
 		}
 		if s.config.Metrics.NewrelicoracledbDiskWrites.Enabled {
-			s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, physicalWrites, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, metric.PhysicalWrites, s.instanceName, instanceID)
 		}
 		if s.config.Metrics.NewrelicoracledbDiskBlocksRead.Enabled {
-			s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, physicalBlockReads, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, metric.PhysicalBlockReads, s.instanceName, instanceID)
 		}
 		if s.config.Metrics.NewrelicoracledbDiskBlocksWritten.Enabled {
-			s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, physicalBlockWrites, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, metric.PhysicalBlockWrites, s.instanceName, instanceID)
 		}
 		if s.config.Metrics.NewrelicoracledbDiskReadTimeMilliseconds.Enabled {
-			s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, readTime, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, metric.ReadTime, s.instanceName, instanceID)
 		}
 		if s.config.Metrics.NewrelicoracledbDiskWriteTimeMilliseconds.Enabled {
-			s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, writeTime, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, metric.WriteTime, s.instanceName, instanceID)
 		}
 
 		metricCount++
 	}
 
-	if err = rows.Err(); err != nil {
-		errors = append(errors, fmt.Errorf("error iterating read/write metrics rows: %w", err))
-	}
-
 	s.logger.Debug("Disk I/O metrics scrape completed", zap.Int("metrics", metricCount))
 
-	return errors
+	return nil
 }

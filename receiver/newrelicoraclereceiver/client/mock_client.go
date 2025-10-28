@@ -42,6 +42,35 @@ type MockClient struct {
 	CDBDataFilesList            []models.CDBDataFile
 	CDBServicesList             []models.CDBService
 
+	// Disk I/O metrics
+	DiskIOMetricsList []models.DiskIOMetrics
+
+	// Instance metrics
+	LockedAccountsList     []models.LockedAccountsMetric
+	GlobalNameList         []models.GlobalNameMetric
+	DBIDList               []models.DBIDMetric
+	LongRunningQueriesList []models.LongRunningQueriesMetric
+
+	// Memory metrics
+	PGAMetricsList                    []models.PGAMetric
+	SGAUGATotalMemoryList             []models.SGAUGATotalMemoryMetric
+	SGASharedPoolLibraryCacheList     []models.SGASharedPoolLibraryCacheMetric
+	SGASharedPoolLibraryCacheUserList []models.SGASharedPoolLibraryCacheUserMetric
+	SGAMetricsList                    []models.SGAMetric
+
+	// Performance metrics
+	SysstatMetricsList          []models.SysstatMetric
+	RollbackSegmentsMetricsList []models.RollbackSegmentsMetric
+	RedoLogWaitsMetricsList     []models.RedoLogWaitsMetric
+
+	// SGA Performance metrics
+	SGASharedPoolLibraryCacheReloadRatioList []models.SGASharedPoolLibraryCacheReloadRatioMetric
+	SGASharedPoolLibraryCacheHitRatioList    []models.SGASharedPoolLibraryCacheHitRatioMetric
+	SGASharedPoolDictCacheMissRatioList      []models.SGASharedPoolDictCacheMissRatioMetric
+	SGALogBufferSpaceWaitsList               []models.SGALogBufferSpaceWaitsMetric
+	SGALogAllocRetriesList                   []models.SGALogAllocRetriesMetric
+	SGAHitRatioList                          []models.SGAHitRatioMetric
+
 	ConnectErr error
 	CloseErr   error
 	PingErr    error
@@ -256,4 +285,142 @@ func (m *MockClient) QueryCDBServices(ctx context.Context) ([]models.CDBService,
 		return nil, m.QueryErr
 	}
 	return m.CDBServicesList, nil
+}
+
+// QueryDiskIOMetrics mock
+func (m *MockClient) QueryDiskIOMetrics(ctx context.Context) ([]models.DiskIOMetrics, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.DiskIOMetricsList, nil
+}
+
+// QueryLockedAccounts mock
+func (m *MockClient) QueryLockedAccounts(ctx context.Context) ([]models.LockedAccountsMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.LockedAccountsList, nil
+}
+
+// QueryGlobalName mock
+func (m *MockClient) QueryGlobalName(ctx context.Context) ([]models.GlobalNameMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.GlobalNameList, nil
+}
+
+// QueryDBID mock
+func (m *MockClient) QueryDBID(ctx context.Context) ([]models.DBIDMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.DBIDList, nil
+}
+
+// QueryLongRunningQueries mock
+func (m *MockClient) QueryLongRunningQueries(_ context.Context) ([]models.LongRunningQueriesMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.LongRunningQueriesList, nil
+}
+
+func (m *MockClient) QueryPGAMetrics(_ context.Context) ([]models.PGAMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.PGAMetricsList, nil
+}
+
+func (m *MockClient) QuerySGAUGATotalMemory(_ context.Context) ([]models.SGAUGATotalMemoryMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGAUGATotalMemoryList, nil
+}
+
+func (m *MockClient) QuerySGASharedPoolLibraryCache(_ context.Context) ([]models.SGASharedPoolLibraryCacheMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGASharedPoolLibraryCacheList, nil
+}
+
+func (m *MockClient) QuerySGASharedPoolLibraryCacheUser(_ context.Context) ([]models.SGASharedPoolLibraryCacheUserMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGASharedPoolLibraryCacheUserList, nil
+}
+
+func (m *MockClient) QuerySGAMetrics(_ context.Context) ([]models.SGAMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGAMetricsList, nil
+}
+
+func (m *MockClient) QuerySysstatMetrics(_ context.Context) ([]models.SysstatMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SysstatMetricsList, nil
+}
+
+func (m *MockClient) QueryRollbackSegmentsMetrics(_ context.Context) ([]models.RollbackSegmentsMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.RollbackSegmentsMetricsList, nil
+}
+
+func (m *MockClient) QueryRedoLogWaitsMetrics(_ context.Context) ([]models.RedoLogWaitsMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.RedoLogWaitsMetricsList, nil
+}
+
+func (m *MockClient) QuerySGASharedPoolLibraryCacheReloadRatio(_ context.Context) ([]models.SGASharedPoolLibraryCacheReloadRatioMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGASharedPoolLibraryCacheReloadRatioList, nil
+}
+
+func (m *MockClient) QuerySGASharedPoolLibraryCacheHitRatio(_ context.Context) ([]models.SGASharedPoolLibraryCacheHitRatioMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGASharedPoolLibraryCacheHitRatioList, nil
+}
+
+func (m *MockClient) QuerySGASharedPoolDictCacheMissRatio(_ context.Context) ([]models.SGASharedPoolDictCacheMissRatioMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGASharedPoolDictCacheMissRatioList, nil
+}
+
+func (m *MockClient) QuerySGALogBufferSpaceWaits(_ context.Context) ([]models.SGALogBufferSpaceWaitsMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGALogBufferSpaceWaitsList, nil
+}
+
+func (m *MockClient) QuerySGALogAllocRetries(_ context.Context) ([]models.SGALogAllocRetriesMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGALogAllocRetriesList, nil
+}
+
+func (m *MockClient) QuerySGAHitRatio(_ context.Context) ([]models.SGAHitRatioMetric, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.SGAHitRatioList, nil
 }

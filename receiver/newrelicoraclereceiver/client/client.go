@@ -61,4 +61,33 @@ type OracleClient interface {
 	QueryCDBTablespaceUsage(ctx context.Context) ([]models.CDBTablespaceUsage, error)
 	QueryCDBDataFiles(ctx context.Context) ([]models.CDBDataFile, error)
 	QueryCDBServices(ctx context.Context) ([]models.CDBService, error)
+
+	// Disk I/O metrics
+	QueryDiskIOMetrics(ctx context.Context) ([]models.DiskIOMetrics, error)
+
+	// Instance metrics
+	QueryLockedAccounts(ctx context.Context) ([]models.LockedAccountsMetric, error)
+	QueryGlobalName(ctx context.Context) ([]models.GlobalNameMetric, error)
+	QueryDBID(ctx context.Context) ([]models.DBIDMetric, error)
+	QueryLongRunningQueries(ctx context.Context) ([]models.LongRunningQueriesMetric, error)
+
+	// Memory metrics
+	QueryPGAMetrics(ctx context.Context) ([]models.PGAMetric, error)
+	QuerySGAUGATotalMemory(ctx context.Context) ([]models.SGAUGATotalMemoryMetric, error)
+	QuerySGASharedPoolLibraryCache(ctx context.Context) ([]models.SGASharedPoolLibraryCacheMetric, error)
+	QuerySGASharedPoolLibraryCacheUser(ctx context.Context) ([]models.SGASharedPoolLibraryCacheUserMetric, error)
+	QuerySGAMetrics(ctx context.Context) ([]models.SGAMetric, error)
+
+	// Performance metrics
+	QuerySysstatMetrics(ctx context.Context) ([]models.SysstatMetric, error)
+	QueryRollbackSegmentsMetrics(ctx context.Context) ([]models.RollbackSegmentsMetric, error)
+	QueryRedoLogWaitsMetrics(ctx context.Context) ([]models.RedoLogWaitsMetric, error)
+
+	// SGA Performance metrics
+	QuerySGASharedPoolLibraryCacheReloadRatio(ctx context.Context) ([]models.SGASharedPoolLibraryCacheReloadRatioMetric, error)
+	QuerySGASharedPoolLibraryCacheHitRatio(ctx context.Context) ([]models.SGASharedPoolLibraryCacheHitRatioMetric, error)
+	QuerySGASharedPoolDictCacheMissRatio(ctx context.Context) ([]models.SGASharedPoolDictCacheMissRatioMetric, error)
+	QuerySGALogBufferSpaceWaits(ctx context.Context) ([]models.SGALogBufferSpaceWaitsMetric, error)
+	QuerySGALogAllocRetries(ctx context.Context) ([]models.SGALogAllocRetriesMetric, error)
+	QuerySGAHitRatio(ctx context.Context) ([]models.SGAHitRatioMetric, error)
 }

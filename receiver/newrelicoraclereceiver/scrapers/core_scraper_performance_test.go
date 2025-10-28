@@ -6,421 +6,159 @@ package scrapers
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"testing"
+	"time"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
-func TestScrapeSysstatMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSysstatMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+func testTS() pcommon.Timestamp {
+	return pcommon.NewTimestampFromTime(time.Now())
 }
 
-func TestScrapeSysstatMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaLogBufferRedoAllocationRetries.Enabled = true
-	config.Metrics.NewrelicoracledbSgaLogBufferRedoEntries.Enabled = true
-	config.Metrics.NewrelicoracledbSortsMemory.Enabled = true
-	config.Metrics.NewrelicoracledbSortsDisk.Enabled = true
+// Test scrapeSysstatMetrics
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
+func TestScrapeSysstatMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SysstatMetricsList: []models.SysstatMetric{
+			{InstID: "1", Name: "redo buffer allocation retries", Value: sql.NullInt64{Int64: 100, Valid: true}},
+			{InstID: "1", Name: "redo entries", Value: sql.NullInt64{Int64: 5000, Valid: true}},
+			{InstID: "1", Name: "sorts (memory)", Value: sql.NullInt64{Int64: 1000, Valid: true}},
+			{InstID: "1", Name: "sorts (disk)", Value: sql.NullInt64{Int64: 50, Valid: true}},
+		},
+	}
+
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSysstatMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSysstatMetrics_AllMetricsDisabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbSgaLogBufferRedoAllocationRetries.Enabled = false
-	config.Metrics.NewrelicoracledbSgaLogBufferRedoEntries.Enabled = false
-	config.Metrics.NewrelicoracledbSortsMemory.Enabled = false
-	config.Metrics.NewrelicoracledbSortsDisk.Enabled = false
+func TestScrapeSysstatMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSysstatMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
+	require.Len(t, errs, 1)
 }
 
 func TestScrapeSysstatMetrics_NullValues(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
+	mockClient := &client.MockClient{
+		SysstatMetricsList: []models.SysstatMetric{
+			{InstID: "1", Name: "redo entries", Value: sql.NullInt64{Valid: false}},
+		},
+	}
+
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSysstatMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
+	require.Empty(t, errs)
 }
 
-func TestScrapeSysstatMetrics_UnknownMetricName(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
+// Test scrapeRollbackSegmentsMetrics
+
+func TestScrapeRollbackSegmentsMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		RollbackSegmentsMetricsList: []models.RollbackSegmentsMetric{
+			{
+				Gets:   sql.NullInt64{Int64: 1000, Valid: true},
+				Waits:  sql.NullInt64{Int64: 10, Valid: true},
+				Ratio:  sql.NullFloat64{Float64: 0.01, Valid: true},
+				InstID: "1",
+			},
+		},
+	}
+
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeSysstatMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
+	require.Empty(t, errs)
 }
 
-func TestScrapeRollbackSegmentsMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
+func TestScrapeRollbackSegmentsMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
+
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
+	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
+	require.Len(t, errs, 1)
 }
 
-func TestScrapeRollbackSegmentsMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbRollbackSegmentsGets.Enabled = true
-	config.Metrics.NewrelicoracledbRollbackSegmentsWaits.Enabled = true
-	config.Metrics.NewrelicoracledbRollbackSegmentsWaitRatio.Enabled = true
+// Test scrapeRedoLogWaitsMetrics
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
+func TestScrapeRedoLogWaitsMetrics_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		RedoLogWaitsMetricsList: []models.RedoLogWaitsMetric{
+			{TotalWaits: sql.NullInt64{Int64: 100, Valid: true}, InstID: "1", Event: "log file parallel write"},
+			{TotalWaits: sql.NullInt64{Int64: 50, Valid: true}, InstID: "1", Event: "log file switch completion"},
+		},
+	}
+
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
+	require.Empty(t, errs)
 }
 
-func TestScrapeRollbackSegmentsMetrics_AllMetricsDisabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbRollbackSegmentsGets.Enabled = false
-	config.Metrics.NewrelicoracledbRollbackSegmentsWaits.Enabled = false
-	config.Metrics.NewrelicoracledbRollbackSegmentsWaitRatio.Enabled = false
+func TestScrapeRedoLogWaitsMetrics_QueryError(t *testing.T) {
+	expectedErr := errors.New("query failed")
+	mockClient := &client.MockClient{QueryErr: expectedErr}
 
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
 	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
+		client:       mockClient,
+		instanceName: "test-db",
 		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
+		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRollbackSegmentsMetrics_NullValues(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
-}
-
-func TestScrapeRedoLogWaitsMetrics_NilDB(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
-}
-
-func TestScrapeRedoLogWaitsMetrics_WithConfig(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbRedoLogParallelWriteWaits.Enabled = true
-	config.Metrics.NewrelicoracledbRedoLogSwitchCompletionWaits.Enabled = true
-	config.Metrics.NewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits.Enabled = true
-	config.Metrics.NewrelicoracledbRedoLogSwitchArchivingNeededWaits.Enabled = true
-	config.Metrics.NewrelicoracledbSgaBufferBusyWaits.Enabled = true
-	config.Metrics.NewrelicoracledbSgaFreeBufferWaits.Enabled = true
-	config.Metrics.NewrelicoracledbSgaFreeBufferInspectedWaits.Enabled = true
-
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_AllMetricsDisabled(t *testing.T) {
-	config := metadata.DefaultMetricsBuilderConfig()
-	config.Metrics.NewrelicoracledbRedoLogParallelWriteWaits.Enabled = false
-	config.Metrics.NewrelicoracledbRedoLogSwitchCompletionWaits.Enabled = false
-	config.Metrics.NewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits.Enabled = false
-	config.Metrics.NewrelicoracledbRedoLogSwitchArchivingNeededWaits.Enabled = false
-	config.Metrics.NewrelicoracledbSgaBufferBusyWaits.Enabled = false
-	config.Metrics.NewrelicoracledbSgaFreeBufferWaits.Enabled = false
-	config.Metrics.NewrelicoracledbSgaFreeBufferInspectedWaits.Enabled = false
-
-	mb := metadata.NewMetricsBuilder(config, receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-		config:       config,
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_NullValues(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-	assert.Len(t, errs, 1)
-}
-
-func TestScrapeRedoLogWaitsMetrics_UnknownEvent(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_LogFileParallelWrite(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_LogFileSwitchCompletion(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_LogFileSwitchCheckpoint(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_LogFileSwitchArchiving(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_BufferBusyWaits(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_FreeBufferWaits(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
-}
-
-func TestScrapeRedoLogWaitsMetrics_FreeBufferInspected(t *testing.T) {
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type))
-	scraper := &CoreScraper{
-		db:           &sql.DB{},
-		mb:           mb,
-		logger:       zap.NewNop(),
-		instanceName: "test_instance",
-	}
-
-	ctx := context.Background()
-	now := pcommon.NewTimestampFromTime(testTime)
-
-	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, now)
-
-	assert.NotNil(t, errs)
+	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
+	require.Len(t, errs, 1)
 }
