@@ -8,7 +8,6 @@ import (
 	"strconv"
 )
 
-// getInstanceIDString converts instance ID interface to string
 func getInstanceIDString(instID interface{}) string {
 	if instID == nil {
 		return "unknown"

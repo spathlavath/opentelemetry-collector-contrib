@@ -18,7 +18,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
-// ExecutionPlanScraper handles scraping execution plans for SQL IDs obtained from slow queries
 type ExecutionPlanScraper struct {
 	db                   *sql.DB
 	mb                   *metadata.MetricsBuilder
@@ -27,7 +26,6 @@ type ExecutionPlanScraper struct {
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-// NewExecutionPlanScraper creates a new ExecutionPlanScraper instance
 func NewExecutionPlanScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
 		db:                   db,
@@ -38,24 +36,15 @@ func NewExecutionPlanScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *za
 	}
 }
 
-// ScrapeExecutionPlans fetches execution plans for the provided SQL IDs using DBMS_XPLAN.DISPLAY_CURSOR
 func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs []string) []error {
 	var errs []error
 
-	// Skip if no SQL IDs provided
 	if len(sqlIDs) == 0 {
-		s.logger.Debug("No SQL IDs provided for execution plan scraping")
 		return errs
 	}
 
-	s.logger.Debug("Starting execution plan scraping using DBMS_XPLAN.DISPLAY_CURSOR",
-		zap.Int("sql_ids_count", len(sqlIDs)),
-		zap.Strings("sql_ids", sqlIDs))
-
-	// Process each SQL ID individually for better error handling and timeout management
 	successCount := 0
 	for i, sqlID := range sqlIDs {
-		// Add timeout for each individual query to prevent hanging
 		queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 
 		err := s.processSingleSQLID(queryCtx, sqlID, i+1)
@@ -71,36 +60,25 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 			successCount++
 		}
 
-		// Check for context cancellation between SQL IDs
 		select {
 		case <-ctx.Done():
-			s.logger.Debug("Context cancelled during execution plan processing")
 			errs = append(errs, fmt.Errorf("execution plan processing cancelled: %w", ctx.Err()))
 			break
 		default:
 		}
 	}
 
-	s.logger.Info("Execution plan scraping completed",
-		zap.Int("total_sql_ids", len(sqlIDs)),
-		zap.Int("successful_plans", successCount),
-		zap.Int("failed_plans", len(errs)))
+	s.logger.Debug("Scraped execution plans",
+		zap.Int("total", len(sqlIDs)),
+		zap.Int("success", successCount),
+		zap.Int("failed", len(errs)))
 
 	return errs
 }
 
-// processSingleSQLID processes execution plan for a single SQL ID
 func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID string, index int) error {
-	startTime := time.Now()
-
-	// Get the execution plan query for this SQL ID
 	query := queries.GetExecutionPlanQuery(sqlID)
 
-	s.logger.Debug("Executing execution plan query for SQL ID",
-		zap.String("sql_id", sqlID),
-		zap.Int("sql_id_index", index))
-
-	// Execute the query
 	rows, err := s.db.QueryContext(ctx, query)
 	if err != nil {
 		return fmt.Errorf("failed to execute execution plan query for SQL ID %s: %w", sqlID, err)
@@ -113,13 +91,11 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 		}
 	}()
 
-	// Process results - collect all execution plan lines for this SQL ID
 	var executionPlan models.ExecutionPlan
 	var planLines []string
 	rowCount := 0
 
 	for rows.Next() {
-		// Check context cancellation
 		select {
 		case <-ctx.Done():
 			return fmt.Errorf("execution plan processing cancelled for SQL ID %s: %w", sqlID, ctx.Err())
@@ -129,7 +105,6 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 		var databaseName, queryID, planLine sql.NullString
 		var planHashValue sql.NullInt64
 
-		// Scan the row - each row is one line of the execution plan
 		err := rows.Scan(
 			&databaseName,
 			&queryID,
@@ -142,25 +117,20 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 
 		rowCount++
 
-		// Store the first row's metadata (all rows should have the same metadata)
 		if rowCount == 1 {
 			executionPlan.DatabaseName = databaseName
 			executionPlan.QueryID = queryID
 			executionPlan.PlanHashValue = planHashValue
 		}
 
-		// Collect execution plan lines
 		if planLine.Valid && planLine.String != "" {
 			planLines = append(planLines, planLine.String)
 		}
 	}
 
-	// If we collected any execution plan lines, create the complete execution plan
 	if len(planLines) > 0 {
-		// Join all plan lines with newlines to form complete execution plan
 		completePlanText := strings.Join(planLines, "\n")
 
-		// Trim execution plan to start from "Plan hash value:" to remove SQL text and extra info
 		trimmedPlanText := s.trimExecutionPlanText(completePlanText)
 
 		executionPlan.ExecutionPlanText = sql.NullString{
@@ -168,88 +138,52 @@ func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID str
 			Valid:  true,
 		}
 
-		// Validate the execution plan
 		if !executionPlan.IsValidForMetrics() {
 			s.logger.Debug("Skipping invalid execution plan",
 				zap.String("sql_id", sqlID),
 				zap.String("query_id", executionPlan.GetQueryID()),
 				zap.Int64("plan_hash_value", executionPlan.GetPlanHashValue()))
 		} else {
-			s.logger.Debug("Processed complete execution plan",
-				zap.String("database_name", executionPlan.GetDatabaseName()),
-				zap.String("query_id", executionPlan.GetQueryID()),
-				zap.Int64("plan_hash_value", executionPlan.GetPlanHashValue()),
-				zap.Int("plan_lines_count", len(planLines)),
-				zap.Int("plan_text_length", len(executionPlan.GetExecutionPlanText())))
-
-			// Build and emit metrics for the complete execution plan
 			s.buildExecutionPlanMetrics(&executionPlan)
 		}
 	}
 
-	// Check for iteration errors
 	if err := rows.Err(); err != nil {
 		return fmt.Errorf("error during execution plan rows iteration for SQL ID %s: %w", sqlID, err)
 	}
 
-	s.logger.Debug("Successfully processed execution plan for SQL ID",
-		zap.String("sql_id", sqlID),
-		zap.Int("plan_lines_found", len(planLines)),
-		zap.Duration("processing_time", time.Since(startTime)))
-
-	if len(planLines) == 0 {
-		s.logger.Debug("No execution plan lines found for SQL ID", zap.String("sql_id", sqlID))
-	}
+	s.logger.Debug("Processed execution plan", zap.String("sql_id", sqlID), zap.Int("lines", len(planLines)))
 
 	return nil
 }
 
-// buildExecutionPlanMetrics creates metrics from execution plan data
 func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionPlan) {
-	// Only build metrics if execution plan metrics are enabled
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlanInfo.Enabled {
-		s.logger.Debug("Execution plan metrics disabled, skipping metric recording")
 		return
 	}
 
-	s.logger.Debug("Building execution plan metrics",
-		zap.String("query_id", plan.GetQueryID()),
-		zap.Int64("plan_hash_value", plan.GetPlanHashValue()))
-
-	// Record execution plan info metric with DBMS_XPLAN text output
 	s.mb.RecordNewrelicoracledbExecutionPlanInfoDataPoint(
-		pcommon.NewTimestampFromTime(time.Now()), // Current timestamp
-		1,                                        // Set to 1 to indicate presence of execution plan
+		pcommon.NewTimestampFromTime(time.Now()),
+		1,
 		plan.GetDatabaseName(),
 		plan.GetQueryID(),
 		fmt.Sprintf("%d", plan.GetPlanHashValue()),
-		plan.GetExecutionPlanText(), // This contains the DBMS_XPLAN.DISPLAY_CURSOR output
+		plan.GetExecutionPlanText(),
 	)
 }
 
-// trimExecutionPlanText trims the execution plan text to start from "Plan hash value:"
-// This removes the SQL text and other metadata, keeping only the actual execution plan
 func (s *ExecutionPlanScraper) trimExecutionPlanText(planText string) string {
-	// Look for "Plan hash value:" marker
 	planHashIndex := strings.Index(planText, "Plan hash value:")
 	if planHashIndex == -1 {
-		// If marker not found, return original text (fallback)
-		s.logger.Debug("Plan hash value marker not found in execution plan, returning full text")
 		return planText
 	}
 
-	// Return text starting from "Plan hash value:"
 	trimmedText := planText[planHashIndex:]
 
-	// Also try to stop at the next SQL_ID to avoid multiple plans in one output
 	nextSQLIndex := strings.Index(trimmedText, "\nSQL_ID")
 	if nextSQLIndex > 0 {
 		trimmedText = trimmedText[:nextSQLIndex]
 	}
-
-	s.logger.Debug("Trimmed execution plan text",
-		zap.Int("original_length", len(planText)),
-		zap.Int("trimmed_length", len(trimmedText)))
 
 	return strings.TrimSpace(trimmedText)
 }

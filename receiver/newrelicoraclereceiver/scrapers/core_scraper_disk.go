@@ -13,9 +13,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
-// scrapeReadWriteMetrics handles the disk read/write I/O metrics
 func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Timestamp) []error {
-	// Check if any disk I/O metrics are enabled
 	if !s.config.Metrics.NewrelicoracledbDiskReads.Enabled &&
 		!s.config.Metrics.NewrelicoracledbDiskWrites.Enabled &&
 		!s.config.Metrics.NewrelicoracledbDiskBlocksRead.Enabled &&
@@ -27,44 +25,24 @@ func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Ti
 
 	var errors []error
 
-	// Execute read/write metrics query
-	s.logger.Debug("Executing read/write metrics query", zap.String("sql", queries.ReadWriteMetricsSQL))
-
 	rows, err := s.db.QueryContext(ctx, queries.ReadWriteMetricsSQL)
 	if err != nil {
-		errors = append(errors, fmt.Errorf("error executing read/write metrics query: %w", err))
-		return errors
+		return []error{fmt.Errorf("error executing read/write metrics query: %w", err)}
 	}
 	defer rows.Close()
 
-	// Process each row and record metrics
 	metricCount := 0
 	for rows.Next() {
 		var instID interface{}
 		var physicalReads, physicalWrites, physicalBlockReads, physicalBlockWrites, readTime, writeTime int64
 
-		err := rows.Scan(&instID, &physicalReads, &physicalWrites, &physicalBlockReads, &physicalBlockWrites, &readTime, &writeTime)
-		if err != nil {
+		if err := rows.Scan(&instID, &physicalReads, &physicalWrites, &physicalBlockReads, &physicalBlockWrites, &readTime, &writeTime); err != nil {
 			errors = append(errors, fmt.Errorf("error scanning read/write metrics row: %w", err))
 			continue
 		}
 
-		// Convert instance ID to string
 		instanceID := getInstanceIDString(instID)
 
-		// Record disk I/O metrics
-		s.logger.Info("Disk I/O metrics collected",
-			zap.String("instance_id", instanceID),
-			zap.Int64("physical_reads", physicalReads),
-			zap.Int64("physical_writes", physicalWrites),
-			zap.Int64("physical_block_reads", physicalBlockReads),
-			zap.Int64("physical_block_writes", physicalBlockWrites),
-			zap.Int64("read_time_ms", readTime),
-			zap.Int64("write_time_ms", writeTime),
-			zap.String("instance", s.instanceName),
-		)
-
-		// Record disk I/O metrics only if enabled
 		if s.config.Metrics.NewrelicoracledbDiskReads.Enabled {
 			s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, physicalReads, s.instanceName, instanceID)
 		}
@@ -91,7 +69,7 @@ func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Ti
 		errors = append(errors, fmt.Errorf("error iterating read/write metrics rows: %w", err))
 	}
 
-	s.logger.Debug("Collected Oracle disk I/O metrics", zap.Int("metric_count", metricCount), zap.String("instance", s.instanceName))
+	s.logger.Debug("Disk I/O metrics scrape completed", zap.Int("metrics", metricCount))
 
 	return errors
 }
