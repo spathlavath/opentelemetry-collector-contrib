@@ -4,6 +4,7 @@
 package scrapers
 
 import (
+	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,8 +15,8 @@ import (
 )
 
 func TestNewSystemScraper(t *testing.T) {
-	db := &mockDB{}
-	settings := receivertest.NewNopSettings()
+	db := &sql.DB{}
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 	instanceName := "test-instance"
@@ -32,7 +33,7 @@ func TestNewSystemScraper(t *testing.T) {
 }
 
 func TestSystemScraper_NilDatabase(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -43,7 +44,7 @@ func TestSystemScraper_NilDatabase(t *testing.T) {
 }
 
 func TestSystemScraper_NilMetricsBuilder(t *testing.T) {
-	db := &mockDB{}
+	db := &sql.DB{}
 	logger := zap.NewNop()
 
 	scraper := NewSystemScraper(db, nil, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
@@ -53,8 +54,8 @@ func TestSystemScraper_NilMetricsBuilder(t *testing.T) {
 }
 
 func TestSystemScraper_NilLogger(t *testing.T) {
-	db := &mockDB{}
-	settings := receivertest.NewNopSettings()
+	db := &sql.DB{}
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 
 	scraper := NewSystemScraper(db, mb, nil, "test-instance", metadata.DefaultMetricsBuilderConfig())
@@ -64,8 +65,8 @@ func TestSystemScraper_NilLogger(t *testing.T) {
 }
 
 func TestSystemScraper_EmptyInstanceName(t *testing.T) {
-	db := &mockDB{}
-	settings := receivertest.NewNopSettings()
+	db := &sql.DB{}
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -76,8 +77,8 @@ func TestSystemScraper_EmptyInstanceName(t *testing.T) {
 }
 
 func TestSystemScraper_MetricsBuilderConfig(t *testing.T) {
-	db := &mockDB{}
-	settings := receivertest.NewNopSettings()
+	db := &sql.DB{}
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
@@ -89,8 +90,8 @@ func TestSystemScraper_MetricsBuilderConfig(t *testing.T) {
 }
 
 func TestSystemScraper_MultipleInstances(t *testing.T) {
-	db := &mockDB{}
-	settings := receivertest.NewNopSettings()
+	db := &sql.DB{}
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -103,7 +104,7 @@ func TestSystemScraper_MultipleInstances(t *testing.T) {
 }
 
 func TestSystemScraper_RecordMetric_BufferCacheMetrics(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -115,7 +116,7 @@ func TestSystemScraper_RecordMetric_BufferCacheMetrics(t *testing.T) {
 }
 
 func TestSystemScraper_RecordMetric_TransactionMetrics(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -129,7 +130,7 @@ func TestSystemScraper_RecordMetric_TransactionMetrics(t *testing.T) {
 }
 
 func TestSystemScraper_RecordMetric_IOMetrics(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -143,7 +144,7 @@ func TestSystemScraper_RecordMetric_IOMetrics(t *testing.T) {
 }
 
 func TestSystemScraper_RecordMetric_ParseMetrics(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -157,7 +158,7 @@ func TestSystemScraper_RecordMetric_ParseMetrics(t *testing.T) {
 }
 
 func TestSystemScraper_RecordMetric_CPUMetrics(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -171,7 +172,7 @@ func TestSystemScraper_RecordMetric_CPUMetrics(t *testing.T) {
 }
 
 func TestSystemScraper_RecordMetric_SessionMetrics(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
@@ -185,7 +186,7 @@ func TestSystemScraper_RecordMetric_SessionMetrics(t *testing.T) {
 }
 
 func TestSystemScraper_RecordMetric_UnknownMetric(t *testing.T) {
-	settings := receivertest.NewNopSettings()
+	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
 
