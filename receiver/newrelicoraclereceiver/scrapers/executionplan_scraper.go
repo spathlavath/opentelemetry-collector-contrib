@@ -5,7 +5,6 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"strings"
 	"time"
@@ -13,22 +12,22 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 type ExecutionPlanScraper struct {
-	db                   *sql.DB
+	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
 	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-func NewExecutionPlanScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
+func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
-		db:                   db,
+		client:               oracleClient,
 		mb:                   mb,
 		logger:               logger,
 		instanceName:         instanceName,
@@ -77,82 +76,30 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 }
 
 func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID string, index int) error {
-	query := queries.GetExecutionPlanQuery(sqlID)
-
-	rows, err := s.db.QueryContext(ctx, query)
+	executionPlans, err := s.client.QueryExecutionPlans(ctx, sqlID)
 	if err != nil {
-		return fmt.Errorf("failed to execute execution plan query for SQL ID %s: %w", sqlID, err)
-	}
-	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			s.logger.Warn("Failed to close execution plan query rows",
-				zap.String("sql_id", sqlID),
-				zap.Error(closeErr))
-		}
-	}()
-
-	var executionPlan models.ExecutionPlan
-	var planLines []string
-	rowCount := 0
-
-	for rows.Next() {
-		select {
-		case <-ctx.Done():
-			return fmt.Errorf("execution plan processing cancelled for SQL ID %s: %w", sqlID, ctx.Err())
-		default:
-		}
-
-		var databaseName, queryID, planLine sql.NullString
-		var planHashValue sql.NullInt64
-
-		err := rows.Scan(
-			&databaseName,
-			&queryID,
-			&planHashValue,
-			&planLine,
-		)
-		if err != nil {
-			return fmt.Errorf("failed to scan execution plan row for SQL ID %s: %w", sqlID, err)
-		}
-
-		rowCount++
-
-		if rowCount == 1 {
-			executionPlan.DatabaseName = databaseName
-			executionPlan.QueryID = queryID
-			executionPlan.PlanHashValue = planHashValue
-		}
-
-		if planLine.Valid && planLine.String != "" {
-			planLines = append(planLines, planLine.String)
-		}
+		return fmt.Errorf("failed to query execution plan for SQL ID %s: %w", sqlID, err)
 	}
 
-	if len(planLines) > 0 {
-		completePlanText := strings.Join(planLines, "\n")
+	s.logger.Debug("Retrieved execution plans",
+		zap.String("sql_id", sqlID),
+		zap.Int("count", len(executionPlans)))
 
-		trimmedPlanText := s.trimExecutionPlanText(completePlanText)
+	for _, executionPlan := range executionPlans {
+		trimmedPlanText := s.trimExecutionPlanText(executionPlan.ExecutionPlanText.String)
 
-		executionPlan.ExecutionPlanText = sql.NullString{
-			String: trimmedPlanText,
-			Valid:  true,
-		}
+		plan := executionPlan
+		plan.ExecutionPlanText.String = trimmedPlanText
 
-		if !executionPlan.IsValidForMetrics() {
+		if !plan.IsValidForMetrics() {
 			s.logger.Debug("Skipping invalid execution plan",
 				zap.String("sql_id", sqlID),
-				zap.String("query_id", executionPlan.GetQueryID()),
-				zap.Int64("plan_hash_value", executionPlan.GetPlanHashValue()))
+				zap.String("query_id", plan.GetQueryID()),
+				zap.Int64("plan_hash_value", plan.GetPlanHashValue()))
 		} else {
-			s.buildExecutionPlanMetrics(&executionPlan)
+			s.buildExecutionPlanMetrics(&plan)
 		}
 	}
-
-	if err := rows.Err(); err != nil {
-		return fmt.Errorf("error during execution plan rows iteration for SQL ID %s: %w", sqlID, err)
-	}
-
-	s.logger.Debug("Processed execution plan", zap.String("sql_id", sqlID), zap.Int("lines", len(planLines)))
 
 	return nil
 }

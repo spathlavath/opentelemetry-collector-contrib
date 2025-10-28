@@ -2,19 +2,17 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 type WaitEventsScraper struct {
-	db                            *sql.DB
+	client                        client.OracleClient
 	mb                            *metadata.MetricsBuilder
 	logger                        *zap.Logger
 	instanceName                  string
@@ -22,9 +20,9 @@ type WaitEventsScraper struct {
 	queryMonitoringCountThreshold int
 }
 
-func NewWaitEventsScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig, countThreshold int) *WaitEventsScraper {
+func NewWaitEventsScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig, countThreshold int) *WaitEventsScraper {
 	return &WaitEventsScraper{
-		db:                            db,
+		client:                        oracleClient,
 		mb:                            mb,
 		logger:                        logger,
 		instanceName:                  instanceName,
@@ -36,33 +34,15 @@ func NewWaitEventsScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.L
 func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 	var scrapeErrors []error
 
-	waitEventQueriesSQL := queries.GetWaitEventQueriesSQL(s.queryMonitoringCountThreshold)
-	rows, err := s.db.QueryContext(ctx, waitEventQueriesSQL)
+	waitEvents, err := s.client.QueryWaitEvents(ctx, s.queryMonitoringCountThreshold)
 	if err != nil {
 		return []error{err}
 	}
-	defer rows.Close()
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
-	for rows.Next() {
-		var waitEvent models.WaitEvent
-
-		if err := rows.Scan(
-			&waitEvent.DatabaseName,
-			&waitEvent.QueryID,
-			&waitEvent.WaitCategory,
-			&waitEvent.WaitEventName,
-			&waitEvent.CollectionTimestamp,
-			&waitEvent.WaitingTasksCount,
-			&waitEvent.TotalWaitTimeMs,
-			&waitEvent.AvgWaitTimeMs,
-		); err != nil {
-			scrapeErrors = append(scrapeErrors, err)
-			continue
-		}
-
+	for _, waitEvent := range waitEvents {
 		if !waitEvent.IsValidForMetrics() {
 			continue
 		}
@@ -107,11 +87,8 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		}
 	}
 
-	if err := rows.Err(); err != nil {
-		scrapeErrors = append(scrapeErrors, err)
-	}
-
 	s.logger.Debug("Wait events scrape completed",
+		zap.Int("events", len(waitEvents)),
 		zap.Int("metrics", metricCount),
 		zap.Int("errors", len(scrapeErrors)))
 

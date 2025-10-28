@@ -2,21 +2,20 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 // SlowQueriesScraper contains the scraper for slow queries metrics
 type SlowQueriesScraper struct {
-	db                                   *sql.DB
+	client                               client.OracleClient
 	mb                                   *metadata.MetricsBuilder
 	logger                               *zap.Logger
 	instanceName                         string
@@ -25,9 +24,9 @@ type SlowQueriesScraper struct {
 	queryMonitoringCountThreshold        int
 }
 
-func NewSlowQueriesScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig, responseTimeThreshold, countThreshold int) *SlowQueriesScraper {
+func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig, responseTimeThreshold, countThreshold int) *SlowQueriesScraper {
 	return &SlowQueriesScraper{
-		db:                                   db,
+		client:                               oracleClient,
 		mb:                                   mb,
 		logger:                               logger,
 		instanceName:                         instanceName,
@@ -41,41 +40,14 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	var scrapeErrors []error
 	var queryIDs []string
 
-	slowQueriesSQL := queries.GetSlowQueriesSQL(s.queryMonitoringResponseTimeThreshold, s.queryMonitoringCountThreshold)
-	rows, err := s.db.QueryContext(ctx, slowQueriesSQL)
+	slowQueries, err := s.client.QuerySlowQueries(ctx, s.queryMonitoringResponseTimeThreshold, s.queryMonitoringCountThreshold)
 	if err != nil {
 		return nil, []error{err}
 	}
-	defer rows.Close()
 
 	now := pcommon.NewTimestampFromTime(time.Now())
-	rowCount := 0
 
-	for rows.Next() {
-		rowCount++
-		var slowQuery models.SlowQuery
-
-		if err := rows.Scan(
-			&slowQuery.DatabaseName,
-			&slowQuery.QueryID,
-			&slowQuery.SchemaName,
-			&slowQuery.UserName,
-			&slowQuery.LastLoadTime,
-			&slowQuery.SharableMemoryBytes,
-			&slowQuery.PersistentMemoryBytes,
-			&slowQuery.RuntimeMemoryBytes,
-			&slowQuery.StatementType,
-			&slowQuery.ExecutionCount,
-			&slowQuery.QueryText,
-			&slowQuery.AvgCPUTimeMs,
-			&slowQuery.AvgDiskReads,
-			&slowQuery.AvgDiskWrites,
-			&slowQuery.AvgElapsedTimeMs,
-		); err != nil {
-			scrapeErrors = append(scrapeErrors, err)
-			continue
-		}
-
+	for _, slowQuery := range slowQueries {
 		if !slowQuery.IsValidForMetrics() {
 			continue
 		}
@@ -94,12 +66,8 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		}
 	}
 
-	if err := rows.Err(); err != nil {
-		scrapeErrors = append(scrapeErrors, err)
-	}
-
 	s.logger.Debug("Slow queries scrape completed",
-		zap.Int("rows", rowCount),
+		zap.Int("rows", len(slowQueries)),
 		zap.Int("query_ids", len(queryIDs)),
 		zap.Int("errors", len(scrapeErrors)))
 
