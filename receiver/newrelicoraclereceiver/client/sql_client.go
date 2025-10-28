@@ -213,3 +213,322 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 
 	return results, nil
 }
+
+// QueryTotalSessions returns the total session count
+func (c *SQLClient) QueryTotalSessions(ctx context.Context) (int64, error) {
+	var count sql.NullInt64
+	err := c.db.QueryRowContext(ctx, queries.TotalSessionsSQL).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	if !count.Valid {
+		return 0, nil
+	}
+	return count.Int64, nil
+}
+
+// QueryActiveSessions returns the active session count
+func (c *SQLClient) QueryActiveSessions(ctx context.Context) (int64, error) {
+	var count sql.NullInt64
+	err := c.db.QueryRowContext(ctx, queries.ActiveSessionsSQL).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	if !count.Valid {
+		return 0, nil
+	}
+	return count.Int64, nil
+}
+
+// QueryInactiveSessions returns the inactive session count
+func (c *SQLClient) QueryInactiveSessions(ctx context.Context) (int64, error) {
+	var count sql.NullInt64
+	err := c.db.QueryRowContext(ctx, queries.InactiveSessionsSQL).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	if !count.Valid {
+		return 0, nil
+	}
+	return count.Int64, nil
+}
+
+// QuerySessionStatus returns session counts by status
+func (c *SQLClient) QuerySessionStatus(ctx context.Context) ([]models.SessionStatus, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SessionStatusSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SessionStatus
+	for rows.Next() {
+		var status models.SessionStatus
+		err := rows.Scan(&status.Status, &status.Count)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, status)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QuerySessionTypes returns session counts by type
+func (c *SQLClient) QuerySessionTypes(ctx context.Context) ([]models.SessionType, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SessionTypeSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SessionType
+	for rows.Next() {
+		var sessionType models.SessionType
+		err := rows.Scan(&sessionType.Type, &sessionType.Count)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, sessionType)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QueryLogonStats returns logon statistics
+func (c *SQLClient) QueryLogonStats(ctx context.Context) ([]models.LogonStat, error) {
+	rows, err := c.db.QueryContext(ctx, queries.LogonsStatsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.LogonStat
+	for rows.Next() {
+		var stat models.LogonStat
+		err := rows.Scan(&stat.Name, &stat.Value)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, stat)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QuerySessionResources returns session resource consumption
+func (c *SQLClient) QuerySessionResources(ctx context.Context) ([]models.SessionResource, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SessionResourceConsumptionSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SessionResource
+	for rows.Next() {
+		var resource models.SessionResource
+		err := rows.Scan(
+			&resource.SID,
+			&resource.Username,
+			&resource.Status,
+			&resource.Program,
+			&resource.Machine,
+			&resource.OSUser,
+			&resource.LogonTime,
+			&resource.LastCallET,
+			&resource.CPUUsageSeconds,
+			&resource.PGAMemoryBytes,
+			&resource.LogicalReads,
+		)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, resource)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QueryCurrentWaitEvents returns current wait events
+func (c *SQLClient) QueryCurrentWaitEvents(ctx context.Context) ([]models.CurrentWaitEvent, error) {
+	rows, err := c.db.QueryContext(ctx, queries.CurrentWaitEventsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.CurrentWaitEvent
+	for rows.Next() {
+		var event models.CurrentWaitEvent
+		err := rows.Scan(
+			&event.SID,
+			&event.Username,
+			&event.Event,
+			&event.WaitTime,
+			&event.State,
+			&event.SecondsInWait,
+			&event.WaitClass,
+		)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, event)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QueryBlockingSessions returns blocking sessions
+func (c *SQLClient) QueryBlockingSessions(ctx context.Context) ([]models.BlockingSession, error) {
+	rows, err := c.db.QueryContext(ctx, queries.BlockingSessionsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.BlockingSession
+	for rows.Next() {
+		var session models.BlockingSession
+		err := rows.Scan(
+			&session.SID,
+			&session.Serial,
+			&session.BlockingSession,
+			&session.Event,
+			&session.Username,
+			&session.Program,
+			&session.SecondsInWait,
+		)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, session)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QueryWaitEventSummary returns wait event summary
+func (c *SQLClient) QueryWaitEventSummary(ctx context.Context) ([]models.WaitEventSummary, error) {
+	rows, err := c.db.QueryContext(ctx, queries.WaitEventSummarySQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.WaitEventSummary
+	for rows.Next() {
+		var summary models.WaitEventSummary
+		err := rows.Scan(
+			&summary.Event,
+			&summary.TotalWaits,
+			&summary.TimeWaitedMicro,
+			&summary.AverageWaitMicro,
+			&summary.WaitClass,
+		)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, summary)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QueryConnectionPoolMetrics returns connection pool metrics
+func (c *SQLClient) QueryConnectionPoolMetrics(ctx context.Context) ([]models.ConnectionPoolMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.ConnectionPoolMetricsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.ConnectionPoolMetric
+	for rows.Next() {
+		var metric models.ConnectionPoolMetric
+		err := rows.Scan(&metric.MetricName, &metric.Value)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QuerySessionLimits returns session limits
+func (c *SQLClient) QuerySessionLimits(ctx context.Context) ([]models.SessionLimit, error) {
+	rows, err := c.db.QueryContext(ctx, queries.SessionLimitsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.SessionLimit
+	for rows.Next() {
+		var limit models.SessionLimit
+		err := rows.Scan(
+			&limit.ResourceName,
+			&limit.CurrentUtilization,
+			&limit.MaxUtilization,
+			&limit.InitialAllocation,
+			&limit.LimitValue,
+		)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, limit)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
+// QueryConnectionQuality returns connection quality metrics
+func (c *SQLClient) QueryConnectionQuality(ctx context.Context) ([]models.ConnectionQualityMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.ConnectionQualitySQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.ConnectionQualityMetric
+	for rows.Next() {
+		var metric models.ConnectionQualityMetric
+		err := rows.Scan(&metric.Name, &metric.Value)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, metric)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}

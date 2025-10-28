@@ -28,4 +28,25 @@ type OracleClient interface {
 
 	// Wait events
 	QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error)
+
+	// Connection metrics - simple counts
+	QueryTotalSessions(ctx context.Context) (int64, error)
+	QueryActiveSessions(ctx context.Context) (int64, error)
+	QueryInactiveSessions(ctx context.Context) (int64, error)
+
+	// Connection metrics - breakdowns
+	QuerySessionStatus(ctx context.Context) ([]models.SessionStatus, error)
+	QuerySessionTypes(ctx context.Context) ([]models.SessionType, error)
+	QueryLogonStats(ctx context.Context) ([]models.LogonStat, error)
+
+	// Connection metrics - resource consumption
+	QuerySessionResources(ctx context.Context) ([]models.SessionResource, error)
+	QueryCurrentWaitEvents(ctx context.Context) ([]models.CurrentWaitEvent, error)
+	QueryBlockingSessions(ctx context.Context) ([]models.BlockingSession, error)
+	QueryWaitEventSummary(ctx context.Context) ([]models.WaitEventSummary, error)
+
+	// Connection metrics - pool and limits
+	QueryConnectionPoolMetrics(ctx context.Context) ([]models.ConnectionPoolMetric, error)
+	QuerySessionLimits(ctx context.Context) ([]models.SessionLimit, error)
+	QueryConnectionQuality(ctx context.Context) ([]models.ConnectionQualityMetric, error)
 }
