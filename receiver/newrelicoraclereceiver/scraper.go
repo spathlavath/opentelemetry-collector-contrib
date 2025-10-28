@@ -168,22 +168,18 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 
 // initializeQPMScrapers initializes Query Performance Monitoring scrapers
 func (s *newRelicOracleScraper) initializeQPMScrapers() error {
-	var err error
-
 	// Initialize slow queries scraper
-	s.slowQueriesScraper, err = scrapers.NewSlowQueriesScraper(
+	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
 		s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
 	)
-	if err != nil {
-		return fmt.Errorf("failed to create slow queries scraper: %w", err)
-	}
 
 	// Initialize execution plan scraper
 	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	// Initialize blocking scraper
+	var err error
 	s.blockingScraper, err = scrapers.NewBlockingScraper(
 		s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
@@ -193,13 +189,10 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	}
 
 	// Initialize wait events scraper
-	s.waitEventsScraper, err = scrapers.NewWaitEventsScraper(
+	s.waitEventsScraper = scrapers.NewWaitEventsScraper(
 		s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
 	)
-	if err != nil {
-		return fmt.Errorf("failed to create wait events scraper: %w", err)
-	}
 
 	return nil
 }
