@@ -221,6 +221,20 @@ attributes:
   platform.name:
     description: Operating system platform name
     type: string
+  
+  # Database Role and Data Guard Attributes
+  db.role:
+    description: Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY)
+    type: string
+  db.open_mode:
+    description: Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.)
+    type: string
+  db.protection_mode:
+    description: Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE)
+    type: string
+  db.protection_level:
+    description: Oracle Data Guard protection level
+    type: string
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -3499,6 +3513,21 @@ metrics:
       - deployment.environment
       - host.arch
       - platform.name
+
+  # Database Role and Protection Information
+  newrelicoracledb.database.role:
+    description: Database role and Data Guard configuration
+    extended_documentation: Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY), open mode, and protection mode for Oracle Data Guard configurations
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - db.instance.name
+      - db.role
+      - db.open_mode
+      - db.protection_mode
+      - db.protection_level
 
   newrelicoracledb.wait_events.waiting_tasks_count:
     description: Number of waiting tasks for wait events

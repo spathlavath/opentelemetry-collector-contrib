@@ -19,185 +19,296 @@ import (
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 )
 
+// Constants for scraper configuration
 const (
-	// keepalive for connection
+	// keepAlive defines the connection keepalive duration
 	keepAlive = 30 * time.Second
+	// maxErrors defines the buffer size for error channel to prevent blocking
+	maxErrors = 100
 )
 
-// ScraperFunc represents a function that scrapes metrics and returns errors
-type ScraperFunc func(context.Context) []error
+// Type definitions
+type (
+	// ScraperFunc represents a function that scrapes metrics and returns errors
+	ScraperFunc func(context.Context) []error
 
-type dbProviderFunc func() (*sql.DB, error)
+	// dbProviderFunc represents a function that provides database connections
+	dbProviderFunc func() (*sql.DB, error)
+)
 
+// newRelicOracleScraper orchestrates all metric collection scrapers for Oracle database monitoring
 type newRelicOracleScraper struct {
-	// Keep session scraper and add tablespace scraper and core scraper
-	sessionScraper       *scrapers.SessionScraper
-	tablespaceScraper    *scrapers.TablespaceScraper
-	coreScraper          *scrapers.CoreScraper
-	pdbScraper           *scrapers.PdbScraper
-	systemScraper        *scrapers.SystemScraper
+	// Core scrapers for basic database metrics
+	sessionScraper      *scrapers.SessionScraper
+	tablespaceScraper   *scrapers.TablespaceScraper
+	coreScraper         *scrapers.CoreScraper
+	pdbScraper          *scrapers.PdbScraper
+	systemScraper       *scrapers.SystemScraper
+	connectionScraper   *scrapers.ConnectionScraper
+	containerScraper    *scrapers.ContainerScraper
+	racScraper          *scrapers.RacScraper
+	databaseInfoScraper *scrapers.DatabaseInfoScraper
+
+	// Query Performance Monitoring (QPM) scrapers
 	slowQueriesScraper   *scrapers.SlowQueriesScraper
 	executionPlanScraper *scrapers.ExecutionPlanScraper
 	blockingScraper      *scrapers.BlockingScraper
 	waitEventsScraper    *scrapers.WaitEventsScraper
-	connectionScraper    *scrapers.ConnectionScraper
-	containerScraper     *scrapers.ContainerScraper
-	racScraper           *scrapers.RacScraper
-	databaseInfoScraper  *scrapers.DatabaseInfoScraper
 
-	db                   *sql.DB
+	// Database and configuration
+	db             *sql.DB
+	client         client.OracleClient
+	dbProviderFunc dbProviderFunc
+	config         *Config
+
+	// Metrics building and logging
 	mb                   *metadata.MetricsBuilder
-	dbProviderFunc       dbProviderFunc
-	config               *Config
-	logger               *zap.Logger
-	instanceName         string
-	hostName             string
-	scrapeCfg            scraperhelper.ControllerConfig
-	startTime            pcommon.Timestamp
 	metricsBuilderConfig metadata.MetricsBuilderConfig
+	logger               *zap.Logger
+
+	// Runtime configuration
+	instanceName string
+	hostName     string
+	scrapeCfg    scraperhelper.ControllerConfig
+	startTime    pcommon.Timestamp
 }
 
-func newScraper(metricsBuilder *metadata.MetricsBuilder, metricsBuilderConfig metadata.MetricsBuilderConfig, scrapeCfg scraperhelper.ControllerConfig, config *Config, logger *zap.Logger, providerFunc dbProviderFunc, instanceName, hostName string) (scraper.Metrics, error) {
+// newScraper creates a new Oracle database metrics scraper
+func newScraper(
+	metricsBuilder *metadata.MetricsBuilder,
+	metricsBuilderConfig metadata.MetricsBuilderConfig,
+	scrapeCfg scraperhelper.ControllerConfig,
+	config *Config,
+	logger *zap.Logger,
+	providerFunc dbProviderFunc,
+	instanceName, hostName string,
+) (scraper.Metrics, error) {
 	s := &newRelicOracleScraper{
+		// Metrics and configuration
 		mb:                   metricsBuilder,
-		dbProviderFunc:       providerFunc,
-		config:               config,
-		logger:               logger,
-		scrapeCfg:            scrapeCfg,
 		metricsBuilderConfig: metricsBuilderConfig,
-		instanceName:         instanceName,
-		hostName:             hostName,
+		config:               config,
+		scrapeCfg:            scrapeCfg,
+
+		// Database connection
+		dbProviderFunc: providerFunc,
+
+		// Runtime info
+		logger:       logger,
+		instanceName: instanceName,
+		hostName:     hostName,
 	}
-	return scraper.NewMetrics(s.scrape, scraper.WithShutdown(s.shutdown), scraper.WithStart(s.start))
+
+	return scraper.NewMetrics(
+		s.scrape,
+		scraper.WithShutdown(s.shutdown),
+		scraper.WithStart(s.start),
+	)
 }
 
+// start initializes the scraper and establishes database connections
 func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	s.startTime = pcommon.NewTimestampFromTime(time.Now())
-	var err error
-	s.db, err = s.dbProviderFunc()
-	if err != nil {
-		return fmt.Errorf("failed to open db connection: %w", err)
+
+	// Establish database connection
+	if err := s.initializeDatabase(); err != nil {
+		return err
 	}
 
-	// Initialize session scraper with direct DB connection
-	s.sessionScraper = scrapers.NewSessionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize tablespace scraper with direct DB connection
-	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize core scraper with direct DB connection
-	s.coreScraper = scrapers.NewCoreScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize PDB scraper with direct DB connection
-	s.pdbScraper = scrapers.NewPdbScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize system scraper with direct DB connection
-	s.systemScraper = scrapers.NewSystemScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize slow queries scraper with direct DB connection and QPM config
-	s.slowQueriesScraper, err = scrapers.NewSlowQueriesScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.QueryMonitoringResponseTimeThreshold, s.config.QueryMonitoringCountThreshold)
-	if err != nil {
-		return fmt.Errorf("failed to create slow queries scraper: %w", err)
+	// Initialize all scrapers
+	if err := s.initializeScrapers(); err != nil {
+		return err
 	}
-
-	// Initialize execution plan scraper with direct DB connection
-	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize blocking scraper with direct DB connection and QPM config
-	s.blockingScraper, err = scrapers.NewBlockingScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.QueryMonitoringCountThreshold)
-	if err != nil {
-		return fmt.Errorf("failed to create blocking scraper: %w", err)
-	}
-
-	// Initialize wait events scraper with direct DB connection and QPM config
-	s.waitEventsScraper, err = scrapers.NewWaitEventsScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.QueryMonitoringCountThreshold)
-	if err != nil {
-		return fmt.Errorf("failed to create wait events scraper: %w", err)
-	}
-	// Initialize connection scraper with direct DB connection
-	s.connectionScraper = scrapers.NewConnectionScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize container scraper with direct DB connection
-	s.containerScraper = scrapers.NewContainerScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize RAC scraper with direct DB connection
-	s.racScraper = scrapers.NewRacScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize database info scraper with direct DB connection
-	s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.db, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	return nil
 }
 
+// initializeDatabase establishes the database connection
+func (s *newRelicOracleScraper) initializeDatabase() error {
+	db, err := s.dbProviderFunc()
+	if err != nil {
+		return fmt.Errorf("failed to open db connection: %w", err)
+	}
+	s.db = db
+	s.client = client.NewSQLClient(db)
+	return nil
+}
+
+// initializeScrapers initializes all metric scrapers
+func (s *newRelicOracleScraper) initializeScrapers() error {
+	// Initialize core database scrapers
+	if err := s.initializeCoreScrapers(); err != nil {
+		return err
+	}
+
+	// Initialize Query Performance Monitoring scrapers (with error handling)
+	if err := s.initializeQPMScrapers(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// initializeCoreScrapers initializes basic database metric scrapers
+func (s *newRelicOracleScraper) initializeCoreScrapers() error {
+	s.sessionScraper = scrapers.NewSessionScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	var err error
+	s.coreScraper, err = scrapers.NewCoreScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create core scraper: %w", err)
+	}
+
+	s.pdbScraper = scrapers.NewPdbScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.systemScraper = scrapers.NewSystemScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	s.connectionScraper, err = scrapers.NewConnectionScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create connection scraper: %w", err)
+	}
+
+	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create container scraper: %w", err)
+	}
+
+	s.racScraper = scrapers.NewRacScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	return nil
+}
+
+// initializeQPMScrapers initializes Query Performance Monitoring scrapers
+func (s *newRelicOracleScraper) initializeQPMScrapers() error {
+	// Initialize slow queries scraper
+	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.config.QueryMonitoringResponseTimeThreshold,
+		s.config.QueryMonitoringCountThreshold,
+	)
+
+	// Initialize execution plan scraper
+	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	// Initialize blocking scraper
+	var err error
+	s.blockingScraper, err = scrapers.NewBlockingScraper(
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.config.QueryMonitoringCountThreshold,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create blocking scraper: %w", err)
+	}
+
+	// Initialize wait events scraper
+	s.waitEventsScraper = scrapers.NewWaitEventsScraper(
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.config.QueryMonitoringCountThreshold,
+	)
+
+	return nil
+}
+
+// scrape orchestrates the collection of all Oracle database metrics
 func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
 	s.logger.Debug("Begin New Relic Oracle scrape")
 
-	// Create context with timeout for the entire scrape operation
-	// IMPORTANT: Use the original context, not a child context to ensure proper cancellation
-	scrapeCtx := ctx
-	if s.scrapeCfg.Timeout > 0 {
-		var cancel context.CancelFunc
-		scrapeCtx, cancel = context.WithTimeout(ctx, s.scrapeCfg.Timeout)
-		defer cancel()
-	}
+	// Setup scrape context with timeout
+	scrapeCtx := s.createScrapeContext(ctx)
 
-	// Channel to collect errors from concurrent scrapers
-	const maxErrors = 100 // Buffer size to prevent blocking
+	// Initialize error collection
 	errChan := make(chan error, maxErrors)
-
-	// WaitGroup to coordinate concurrent scrapers
 	var wg sync.WaitGroup
 
-	// Execute QPM scrapers only if Query Performance Monitoring is enabled
-	if s.config.EnableQueryMonitoring {
-		// First execute slow queries scraper to get query IDs
-		s.logger.Debug("Starting slow queries scraper to get query IDs (QPM enabled)")
-		queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
+	// Execute QPM scrapers sequentially (if enabled)
+	s.executeQPMScrapers(scrapeCtx, errChan)
 
-		s.logger.Info("Slow queries scraper completed",
-			zap.Int("query_ids_found", len(queryIDs)),
-			zap.Strings("query_ids", queryIDs),
-			zap.Int("slow_query_errors", len(slowQueryErrs)))
+	// Execute independent scrapers concurrently
+	s.executeIndependentScrapers(scrapeCtx, errChan, &wg)
 
-		// Add slow query errors to our error collection
-		for _, err := range slowQueryErrs {
-			select {
-			case errChan <- err:
-			default:
-				s.logger.Warn("Error channel full, dropping slow query error", zap.Error(err))
-			}
-		}
+	// Collect all errors
+	scrapeErrors := s.collectScrapingErrors(scrapeCtx, errChan, &wg)
 
-		// Execute execution plan scraper with the query IDs from slow queries
-		if len(queryIDs) > 0 {
-			s.logger.Debug("Starting execution plan scraper with query IDs", zap.Strings("query_ids", queryIDs))
-			executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, queryIDs)
+	// Build and return metrics
+	metrics := s.buildMetrics()
 
-			s.logger.Info("Execution plan scraper completed",
-				zap.Int("query_ids_processed", len(queryIDs)),
-				zap.Int("execution_plan_errors", len(executionPlanErrs)))
+	s.logScrapeCompletion(scrapeErrors)
 
-			// Add execution plan errors to our error collection
-			for _, err := range executionPlanErrs {
-				select {
-				case errChan <- err:
-				default:
-					s.logger.Warn("Error channel full, dropping execution plan error", zap.Error(err))
-				}
-			}
-		} else {
-			s.logger.Debug("No query IDs available for execution plan scraping")
-		}
-	} else {
+	if len(scrapeErrors) > 0 {
+		return metrics, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
+	}
+	return metrics, nil
+}
+
+// createScrapeContext creates a context with timeout for scraping operations
+func (s *newRelicOracleScraper) createScrapeContext(ctx context.Context) context.Context {
+	if s.scrapeCfg.Timeout > 0 {
+		scrapeCtx, cancel := context.WithTimeout(ctx, s.scrapeCfg.Timeout)
+		// Note: cancel is intentionally not deferred here as it's managed by the caller
+		_ = cancel
+		return scrapeCtx
+	}
+	return ctx
+}
+
+// executeQPMScrapers executes Query Performance Monitoring scrapers sequentially
+func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan chan<- error) {
+	if !s.config.EnableQueryMonitoring {
 		s.logger.Debug("Query Performance Monitoring disabled, skipping QPM scrapers")
+		return
 	}
 
-	// Define non-QPM scraper functions that don't depend on slow queries
-	independentScraperFuncs := []ScraperFunc{
+	// Execute slow queries scraper to get query IDs
+	s.logger.Debug("Starting slow queries scraper to get query IDs (QPM enabled)")
+	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
+
+	s.logger.Info("Slow queries scraper completed",
+		zap.Int("query_ids_found", len(queryIDs)),
+		zap.Strings("query_ids", queryIDs),
+		zap.Int("slow_query_errors", len(slowQueryErrs)))
+
+	// Collect slow query errors
+	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
+
+	// Execute execution plan scraper with query IDs
+	if len(queryIDs) > 0 {
+		s.executeExecutionPlanScraper(ctx, errChan, queryIDs)
+	} else {
+		s.logger.Debug("No query IDs available for execution plan scraping")
+	}
+}
+
+// executeExecutionPlanScraper executes the execution plan scraper with given query IDs
+func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context, errChan chan<- error, queryIDs []string) {
+	s.logger.Debug("Starting execution plan scraper with query IDs", zap.Strings("query_ids", queryIDs))
+	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, queryIDs)
+
+	s.logger.Info("Execution plan scraper completed",
+		zap.Int("query_ids_processed", len(queryIDs)),
+		zap.Int("execution_plan_errors", len(executionPlanErrs)))
+
+	s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plan")
+}
+
+// executeIndependentScrapers launches concurrent scrapers for independent metrics
+func (s *newRelicOracleScraper) executeIndependentScrapers(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup) {
+	scraperFuncs := s.getIndependentScraperFunctions()
+
+	for i, scraperFunc := range scraperFuncs {
+		wg.Add(1)
+		go s.runScraperWithErrorHandling(ctx, errChan, wg, i, scraperFunc)
+	}
+}
+
+// getIndependentScraperFunctions returns the list of scraper functions that can run independently
+func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
+	scraperFuncs := []ScraperFunc{
 		s.sessionScraper.ScrapeSessionCount,
 		s.tablespaceScraper.ScrapeTablespaceMetrics,
 		s.coreScraper.ScrapeCoreMetrics,
@@ -208,66 +319,53 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		s.racScraper.ScrapeRacMetrics,
 		s.databaseInfoScraper.ScrapeDatabaseInfo,
 		s.databaseInfoScraper.ScrapeHostingInfo,
+		s.databaseInfoScraper.ScrapeDatabaseRole,
 	}
 
-	// Add QPM scrapers only if QPM is enabled
+	// Add QPM scrapers if enabled
 	if s.config.EnableQueryMonitoring {
-		independentScraperFuncs = append(independentScraperFuncs,
+		scraperFuncs = append(scraperFuncs,
 			s.blockingScraper.ScrapeBlockingQueries,
 			s.waitEventsScraper.ScrapeWaitEvents,
 		)
 	}
 
-	// Launch concurrent scrapers for independent scrapers
-	for i, scraperFunc := range independentScraperFuncs {
-		wg.Add(1)
-		go func(index int, fn ScraperFunc) {
-			defer wg.Done()
+	return scraperFuncs
+}
 
-			// Check for context cancellation before starting
-			select {
-			case <-scrapeCtx.Done():
-				s.logger.Debug("Context cancelled before starting scraper",
-					zap.Int("scraper_index", index),
-					zap.Error(scrapeCtx.Err()))
-				return
-			default:
-			}
+// runScraperWithErrorHandling executes a single scraper function with proper error handling
+func (s *newRelicOracleScraper) runScraperWithErrorHandling(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup, index int, scraperFunc ScraperFunc) {
+	defer wg.Done()
 
-			s.logger.Debug("Starting scraper", zap.Int("scraper_index", index))
-			startTime := time.Now()
-
-			// Execute the scraper function with cancellation check
-			errs := fn(scrapeCtx)
-
-			duration := time.Since(startTime)
-			s.logger.Debug("Completed scraper",
-				zap.Int("scraper_index", index),
-				zap.Duration("duration", duration),
-				zap.Int("error_count", len(errs)))
-
-			// Send errors to the error channel with cancellation check
-			for _, err := range errs {
-				select {
-				case errChan <- err:
-				case <-scrapeCtx.Done():
-					// Context cancelled, stop sending errors and exit goroutine
-					s.logger.Debug("Context cancelled while sending errors",
-						zap.Int("scraper_index", index),
-						zap.Error(scrapeCtx.Err()))
-					return
-				default:
-					// Channel is full, log and continue
-					s.logger.Warn("Error channel full, dropping error",
-						zap.Error(err),
-						zap.Int("scraper_index", index))
-				}
-			}
-		}(i, scraperFunc)
+	// Check for context cancellation before starting
+	select {
+	case <-ctx.Done():
+		s.logger.Debug("Context cancelled before starting scraper",
+			zap.Int("scraper_index", index),
+			zap.Error(ctx.Err()))
+		return
+	default:
 	}
 
-	// Close error channel when all scrapers are done
-	// Close error channel when all scrapers are done, with timeout protection
+	// Execute scraper with timing
+	s.logger.Debug("Starting scraper", zap.Int("scraper_index", index))
+	startTime := time.Now()
+
+	errs := scraperFunc(ctx)
+
+	duration := time.Since(startTime)
+	s.logger.Debug("Completed scraper",
+		zap.Int("scraper_index", index),
+		zap.Duration("duration", duration),
+		zap.Int("error_count", len(errs)))
+
+	// Send errors to channel with cancellation check
+	s.sendErrorsToChannelWithCancellation(ctx, errChan, errs, index)
+}
+
+// collectScrapingErrors collects all errors from concurrent scrapers
+func (s *newRelicOracleScraper) collectScrapingErrors(ctx context.Context, errChan chan error, wg *sync.WaitGroup) []error {
+	// Setup cleanup
 	done := make(chan struct{})
 	go func() {
 		defer close(done)
@@ -275,9 +373,9 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		close(errChan)
 	}()
 
-	// Collect all errors from the channel with cancellation handling
 	var scrapeErrors []error
 	collecting := true
+
 	for collecting {
 		select {
 		case err, ok := <-errChan:
@@ -286,13 +384,12 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 				break
 			}
 			scrapeErrors = append(scrapeErrors, err)
-		case <-scrapeCtx.Done():
-			// Context cancelled, stop collecting errors
-			s.logger.Warn("Context cancelled while collecting errors", zap.Error(scrapeCtx.Err()))
-			scrapeErrors = append(scrapeErrors, fmt.Errorf("scrape operation cancelled: %w", scrapeCtx.Err()))
+		case <-ctx.Done():
+			s.logger.Warn("Context cancelled while collecting errors", zap.Error(ctx.Err()))
+			scrapeErrors = append(scrapeErrors, fmt.Errorf("scrape operation cancelled: %w", ctx.Err()))
 			collecting = false
 		case <-done:
-			// All scrapers completed, collect remaining errors
+			// Collect remaining errors
 			for err := range errChan {
 				scrapeErrors = append(scrapeErrors, err)
 			}
@@ -300,23 +397,58 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		}
 	}
 
-	// Build the resource with instance and host information
+	return scrapeErrors
+}
+
+// buildMetrics constructs the final metrics output
+func (s *newRelicOracleScraper) buildMetrics() pmetric.Metrics {
 	rb := s.mb.NewResourceBuilder()
 	rb.SetNewrelicoracledbInstanceName(s.instanceName)
 	rb.SetHostName(s.hostName)
-	out := s.mb.Emit(metadata.WithResource(rb.Emit()))
-
-	s.logger.Debug("Done New Relic Oracle scraping",
-		zap.Int("total_errors", len(scrapeErrors)),
-		zap.Int("independent_scrapers_count", len(independentScraperFuncs)),
-		zap.Int("total_scrapers_count", len(independentScraperFuncs)+1)) // +1 for slow queries
-
-	if len(scrapeErrors) > 0 {
-		return out, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
-	}
-	return out, nil
+	return s.mb.Emit(metadata.WithResource(rb.Emit()))
 }
 
+// logScrapeCompletion logs the completion of the scraping operation
+func (s *newRelicOracleScraper) logScrapeCompletion(scrapeErrors []error) {
+	scraperCount := len(s.getIndependentScraperFunctions())
+	s.logger.Debug("Done New Relic Oracle scraping",
+		zap.Int("total_errors", len(scrapeErrors)),
+		zap.Int("scrapers_executed", scraperCount),
+	)
+}
+
+// sendErrorsToChannel sends a slice of errors to the error channel
+func (s *newRelicOracleScraper) sendErrorsToChannel(errChan chan<- error, errs []error, scraperType string) {
+	for _, err := range errs {
+		select {
+		case errChan <- err:
+		default:
+			s.logger.Warn("Error channel full, dropping error",
+				zap.Error(err),
+				zap.String("scraper_type", scraperType))
+		}
+	}
+}
+
+// sendErrorsToChannelWithCancellation sends errors to channel with context cancellation check
+func (s *newRelicOracleScraper) sendErrorsToChannelWithCancellation(ctx context.Context, errChan chan<- error, errs []error, scraperIndex int) {
+	for _, err := range errs {
+		select {
+		case errChan <- err:
+		case <-ctx.Done():
+			s.logger.Debug("Context cancelled while sending errors",
+				zap.Int("scraper_index", scraperIndex),
+				zap.Error(ctx.Err()))
+			return
+		default:
+			s.logger.Warn("Error channel full, dropping error",
+				zap.Error(err),
+				zap.Int("scraper_index", scraperIndex))
+		}
+	}
+}
+
+// shutdown closes the database connection
 func (s *newRelicOracleScraper) shutdown(_ context.Context) error {
 	if s.db == nil {
 		return nil

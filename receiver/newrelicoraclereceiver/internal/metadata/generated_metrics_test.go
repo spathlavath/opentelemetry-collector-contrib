@@ -218,6 +218,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbDatabaseRoleDataPoint(ts, 1, "db.instance.name-val", "db.role-val", "db.open_mode-val", "db.protection_mode-val", "db.protection_level-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbDatafileAutoextensibleDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "tablespace.name-val", "file.name-val", "container.status-val")
 
 			defaultMetricsCount++
@@ -2115,6 +2119,33 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("db.compatible")
 					assert.True(t, ok)
 					assert.Equal(t, "db.compatible-val", attrVal.Str())
+				case "newrelicoracledb.database.role":
+					assert.False(t, validatedMetrics["newrelicoracledb.database.role"], "Found a duplicate in the metrics slice: newrelicoracledb.database.role")
+					validatedMetrics["newrelicoracledb.database.role"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Database role and Data Guard configuration", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("db.instance.name")
+					assert.True(t, ok)
+					assert.Equal(t, "db.instance.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("db.role")
+					assert.True(t, ok)
+					assert.Equal(t, "db.role-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("db.open_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "db.open_mode-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("db.protection_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "db.protection_mode-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("db.protection_level")
+					assert.True(t, ok)
+					assert.Equal(t, "db.protection_level-val", attrVal.Str())
 				case "newrelicoracledb.datafile.autoextensible":
 					assert.False(t, validatedMetrics["newrelicoracledb.datafile.autoextensible"], "Found a duplicate in the metrics slice: newrelicoracledb.datafile.autoextensible")
 					validatedMetrics["newrelicoracledb.datafile.autoextensible"] = true

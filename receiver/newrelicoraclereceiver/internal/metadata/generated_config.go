@@ -65,6 +65,7 @@ type MetricsConfig struct {
 	NewrelicoracledbContainerRestricted                                MetricConfig `mapstructure:"newrelicoracledb.container.restricted"`
 	NewrelicoracledbContainerStatus                                    MetricConfig `mapstructure:"newrelicoracledb.container.status"`
 	NewrelicoracledbDatabaseInfo                                       MetricConfig `mapstructure:"newrelicoracledb.database.info"`
+	NewrelicoracledbDatabaseRole                                       MetricConfig `mapstructure:"newrelicoracledb.database.role"`
 	NewrelicoracledbDatafileAutoextensible                             MetricConfig `mapstructure:"newrelicoracledb.datafile.autoextensible"`
 	NewrelicoracledbDatafileSizeBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.size_bytes"`
 	NewrelicoracledbDatafileUsedBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.used_bytes"`
@@ -458,6 +459,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbDatabaseInfo: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbDatabaseRole: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbDatafileAutoextensible: MetricConfig{

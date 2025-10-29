@@ -14,27 +14,23 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
-// RacScraper contains the scraper for Oracle RAC-specific metrics
 type RacScraper struct {
-	db                   *sql.DB
+	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
 	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
-
-	// Cache for RAC mode detection to avoid repeated queries
-	isRacMode    *bool
-	racModeMutex sync.RWMutex
+	isRacMode            *bool
+	racModeMutex         sync.RWMutex
 }
 
-// NewRacScraper creates a new RAC metrics scraper
-func NewRacScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *RacScraper {
+func NewRacScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *RacScraper {
 	return &RacScraper{
-		db:                   db,
+		client:               c,
 		mb:                   mb,
 		logger:               logger,
 		instanceName:         instanceName,
@@ -42,7 +38,6 @@ func NewRacScraper(db *sql.DB, mb *metadata.MetricsBuilder, logger *zap.Logger, 
 	}
 }
 
-// isRacEnabled checks if Oracle is running in RAC mode by querying the cluster_database parameter
 func (s *RacScraper) isRacEnabled(ctx context.Context) (bool, error) {
 	s.racModeMutex.RLock()
 	if s.isRacMode != nil {
@@ -55,101 +50,62 @@ func (s *RacScraper) isRacEnabled(ctx context.Context) (bool, error) {
 	s.racModeMutex.Lock()
 	defer s.racModeMutex.Unlock()
 
-	// Double-check pattern to avoid race conditions
 	if s.isRacMode != nil {
 		return *s.isRacMode, nil
 	}
 
-	rows, err := s.db.QueryContext(ctx, queries.RACDetectionSQL)
+	detection, err := s.client.QueryRACDetection(ctx)
 	if err != nil {
-		s.logger.Error("Failed to execute RAC detection query", zap.Error(err))
 		return false, err
 	}
-	defer rows.Close()
 
-	var clusterDB sql.NullString
-	if rows.Next() {
-		if err := rows.Scan(&clusterDB); err != nil {
-			s.logger.Error("Failed to scan RAC detection result", zap.Error(err))
-			return false, err
-		}
-	}
-
-	// RAC is enabled if cluster_database parameter is TRUE
-	racEnabled := clusterDB.Valid && strings.ToUpper(clusterDB.String) == "TRUE"
+	racEnabled := detection.ClusterDB.Valid && strings.ToUpper(detection.ClusterDB.String) == "TRUE"
 	s.isRacMode = &racEnabled
-
-	if racEnabled {
-		s.logger.Info("Oracle RAC mode detected", zap.String("cluster_database", clusterDB.String))
-	}
+	s.logger.Debug("RAC mode detection", zap.Bool("enabled", racEnabled))
 
 	return racEnabled, nil
 }
 
-// isASMAvailable checks if ASM (Automatic Storage Management) is available
 func (s *RacScraper) isASMAvailable(ctx context.Context) (bool, error) {
-	rows, err := s.db.QueryContext(ctx, queries.ASMDetectionSQL)
+	detection, err := s.client.QueryASMDetection(ctx)
 	if err != nil {
-		s.logger.Debug("Failed to execute ASM detection query (expected if ASM not configured)", zap.Error(err))
-		return false, nil // Don't treat as error - ASM might not be configured
-	}
-	defer rows.Close()
-
-	var asmCount int
-	if rows.Next() {
-		if err := rows.Scan(&asmCount); err != nil {
-			s.logger.Error("Failed to scan ASM detection result", zap.Error(err))
-			return false, err
-		}
+		s.logger.Debug("ASM not configured", zap.Error(err))
+		return false, nil
 	}
 
-	asmAvailable := asmCount > 0
-	if asmAvailable {
-		s.logger.Info("Oracle ASM storage detected", zap.Int("diskgroup_tables_found", asmCount))
-	}
+	asmAvailable := detection.ASMCount > 0
+	s.logger.Debug("ASM detection", zap.Bool("available", asmAvailable), zap.Int("diskgroups", detection.ASMCount))
 
 	return asmAvailable, nil
 }
 
-// ScrapeRacMetrics collects Oracle RAC and ASM metrics based on availability
-// It detects both RAC cluster configuration and ASM storage management,
-// running appropriate scrapers for the detected environment
 func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
-	// Check if RAC is enabled
 	racEnabled, err := s.isRacEnabled(ctx)
 	if err != nil {
-		s.logger.Error("Failed to detect RAC mode", zap.Error(err))
 		return []error{err}
 	}
 
-	// Check if ASM is available
 	asmAvailable, err := s.isASMAvailable(ctx)
 	if err != nil {
-		s.logger.Error("Failed to detect ASM availability", zap.Error(err))
 		return []error{err}
 	}
 
-	// Skip if neither RAC nor ASM is available
 	if !racEnabled && !asmAvailable {
 		return nil
 	}
 
-	// Check if context is already cancelled
 	if ctx.Err() != nil {
 		return []error{ctx.Err()}
 	}
 
-	// Determine which scrapers to run based on capabilities
 	var scrapers []func(context.Context) []error
 	var scraperCount int
 
-	// ASM scraper runs for both RAC and standalone ASM
 	if asmAvailable {
 		scrapers = append(scrapers, s.scrapeASMDiskGroups)
 		scraperCount++
 	}
 
-	// RAC-specific scrapers only run in RAC mode
 	if racEnabled {
 		scrapers = append(scrapers,
 			s.scrapeClusterWaitEvents,
@@ -163,7 +119,6 @@ func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 		return nil
 	}
 
-	// Launch concurrent scrapers
 	errorChan := make(chan []error, scraperCount)
 	var wg sync.WaitGroup
 	wg.Add(scraperCount)
@@ -185,13 +140,11 @@ func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 		}(scraper)
 	}
 
-	// Wait for completion
 	go func() {
 		wg.Wait()
 		close(errorChan)
 	}()
 
-	// Collect errors
 	var allErrors []error
 	for errors := range errorChan {
 		if errors != nil {
@@ -206,25 +159,6 @@ func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 	return allErrors
 }
 
-// Utility functions to reduce code duplication
-
-// executeQuery executes a database query with proper error handling and logging
-func (s *RacScraper) executeQuery(ctx context.Context, query string, queryType string) (*sql.Rows, error) {
-	rows, err := s.db.QueryContext(ctx, query)
-	if err != nil {
-		s.logger.Error("Failed to execute "+queryType+" query", zap.Error(err))
-		return nil, err
-	}
-	return rows, nil
-}
-
-// handleScanError handles row scanning errors with consistent logging and error collection
-func (s *RacScraper) handleScanError(err error, scrapeErrors []error, context string) []error {
-	s.logger.Error("Failed to scan "+context+" row", zap.Error(err))
-	return append(scrapeErrors, err)
-}
-
-// nullStringToString safely converts sql.NullString to string
 func nullStringToString(ns sql.NullString) string {
 	if ns.Valid {
 		return ns.String
@@ -232,7 +166,6 @@ func nullStringToString(ns sql.NullString) string {
 	return ""
 }
 
-// stringStatusToBinary converts string status to binary value (1 for match, 0 for no match)
 func stringStatusToBinary(status, expectedValue string) int64 {
 	if strings.ToUpper(status) == strings.ToUpper(expectedValue) {
 		return 1
@@ -240,9 +173,7 @@ func stringStatusToBinary(status, expectedValue string) int64 {
 	return 0
 }
 
-// scrapeASMDiskGroups implements Feature 1: Automatic Storage Management (ASM) Monitoring
 func (s *RacScraper) scrapeASMDiskGroups(ctx context.Context) []error {
-	// Check if any ASM metrics are enabled before querying
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupFreeMb.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks.Enabled {
@@ -251,47 +182,33 @@ func (s *RacScraper) scrapeASMDiskGroups(ctx context.Context) []error {
 
 	var scrapeErrors []error
 
-	rows, err := s.executeQuery(ctx, queries.ASMDiskGroupSQL, "ASM disk group")
+	diskGroups, err := s.client.QueryASMDiskGroups(ctx)
 	if err != nil {
 		return []error{err}
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var name sql.NullString
-		var totalMB sql.NullFloat64
-		var freeMB sql.NullFloat64
-		var offlineDisks sql.NullFloat64
-
-		if err := rows.Scan(&name, &totalMB, &freeMB, &offlineDisks); err != nil {
-			scrapeErrors = s.handleScanError(err, scrapeErrors, "ASM disk group")
-			continue
-		}
-
-		if !name.Valid {
+	for _, diskGroup := range diskGroups {
+		if !diskGroup.Name.Valid {
 			continue
 		}
 
 		now := pcommon.NewTimestampFromTime(time.Now())
 
-		// Record metrics only if enabled
-		if totalMB.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled {
-			s.mb.RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(now, totalMB.Float64, s.instanceName, name.String)
+		if diskGroup.TotalMB.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled {
+			s.mb.RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(now, diskGroup.TotalMB.Float64, s.instanceName, diskGroup.Name.String)
 		}
-		if freeMB.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupFreeMb.Enabled {
-			s.mb.RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(now, freeMB.Float64, s.instanceName, name.String)
+		if diskGroup.FreeMB.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupFreeMb.Enabled {
+			s.mb.RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(now, diskGroup.FreeMB.Float64, s.instanceName, diskGroup.Name.String)
 		}
-		if offlineDisks.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks.Enabled {
-			s.mb.RecordNewrelicoracledbAsmDiskgroupOfflineDisksDataPoint(now, int64(offlineDisks.Float64), s.instanceName, name.String)
+		if diskGroup.OfflineDisks.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks.Enabled {
+			s.mb.RecordNewrelicoracledbAsmDiskgroupOfflineDisksDataPoint(now, int64(diskGroup.OfflineDisks.Float64), s.instanceName, diskGroup.Name.String)
 		}
 	}
 
 	return scrapeErrors
 }
 
-// scrapeClusterWaitEvents implements Feature 2: Detailed Cluster Wait Events
 func (s *RacScraper) scrapeClusterWaitEvents(ctx context.Context) []error {
-	// Check if cluster wait event metrics are enabled
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacWaitTime.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacTotalWaits.Enabled {
 		return nil
@@ -299,44 +216,31 @@ func (s *RacScraper) scrapeClusterWaitEvents(ctx context.Context) []error {
 
 	var scrapeErrors []error
 
-	rows, err := s.executeQuery(ctx, queries.ClusterWaitEventsSQL, "cluster wait events")
+	events, err := s.client.QueryClusterWaitEvents(ctx)
 	if err != nil {
 		return []error{err}
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var instID sql.NullString
-		var event sql.NullString
-		var totalWaits sql.NullFloat64
-		var timeWaitedMicro sql.NullFloat64
-
-		if err := rows.Scan(&instID, &event, &totalWaits, &timeWaitedMicro); err != nil {
-			scrapeErrors = s.handleScanError(err, scrapeErrors, "cluster wait event")
-			continue
-		}
-
-		if !instID.Valid || !event.Valid {
+	for _, event := range events {
+		if !event.InstID.Valid || !event.Event.Valid {
 			continue
 		}
 
 		now := pcommon.NewTimestampFromTime(time.Now())
-		instanceIDStr := instID.String
-		eventName := event.String
+		instanceIDStr := event.InstID.String
+		eventName := event.Event.String
 
-		// Record metrics only if enabled
-		if timeWaitedMicro.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacWaitTime.Enabled {
-			s.mb.RecordNewrelicoracledbRacWaitTimeDataPoint(now, timeWaitedMicro.Float64, s.instanceName, instanceIDStr, eventName)
+		if event.TimeWaitedMicro.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacWaitTime.Enabled {
+			s.mb.RecordNewrelicoracledbRacWaitTimeDataPoint(now, event.TimeWaitedMicro.Float64, s.instanceName, instanceIDStr, eventName)
 		}
-		if totalWaits.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacTotalWaits.Enabled {
-			s.mb.RecordNewrelicoracledbRacTotalWaitsDataPoint(now, int64(totalWaits.Float64), s.instanceName, instanceIDStr, eventName)
+		if event.TotalWaits.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacTotalWaits.Enabled {
+			s.mb.RecordNewrelicoracledbRacTotalWaitsDataPoint(now, int64(event.TotalWaits.Float64), s.instanceName, instanceIDStr, eventName)
 		}
 	}
 
 	return scrapeErrors
 }
 
-// scrapeInstanceStatus implements Feature 3A: Node Availability (Instance Status)
 func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 	// Check if any instance status metrics are enabled
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceStatus.Enabled &&
@@ -351,45 +255,34 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 
 	var scrapeErrors []error
 
-	rows, err := s.executeQuery(ctx, queries.RACInstanceStatusSQL, "RAC instance status")
+	instances, err := s.client.QueryRACInstanceStatus(ctx)
 	if err != nil {
 		return []error{err}
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var instID, instanceName, hostName, status sql.NullString
-		var startupTime sql.NullTime
-		var databaseStatus, activeState, logins, archiver, version sql.NullString
-
-		if err := rows.Scan(&instID, &instanceName, &hostName, &status, &startupTime, &databaseStatus, &activeState, &logins, &archiver, &version); err != nil {
-			scrapeErrors = s.handleScanError(err, scrapeErrors, "RAC instance status")
-			continue
-		}
-
-		if !instID.Valid || !status.Valid {
+	for _, instance := range instances {
+		if !instance.InstID.Valid || !instance.Status.Valid {
 			continue
 		}
 
 		now := pcommon.NewTimestampFromTime(time.Now())
-		instanceIDStr := instID.String
-		statusStr := status.String
-		instanceNameStr := nullStringToString(instanceName)
-		hostNameStr := nullStringToString(hostName)
-		databaseStatusStr := nullStringToString(databaseStatus)
-		activeStateStr := nullStringToString(activeState)
-		loginsStr := nullStringToString(logins)
-		archiverStr := nullStringToString(archiver)
-		versionStr := nullStringToString(version)
+		instanceIDStr := instance.InstID.String
+		statusStr := instance.Status.String
+		instanceNameStr := nullStringToString(instance.InstanceName)
+		hostNameStr := nullStringToString(instance.HostName)
+		databaseStatusStr := nullStringToString(instance.DatabaseStatus)
+		activeStateStr := nullStringToString(instance.ActiveState)
+		loginsStr := nullStringToString(instance.Logins)
+		archiverStr := nullStringToString(instance.Archiver)
+		versionStr := nullStringToString(instance.Version)
 
-		// Record metrics only if enabled
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceStatus.Enabled {
 			statusValue := stringStatusToBinary(statusStr, "OPEN")
 			s.mb.RecordNewrelicoracledbRacInstanceStatusDataPoint(now, statusValue, s.instanceName, instanceIDStr, instanceNameStr, hostNameStr, statusStr)
 		}
 
-		if startupTime.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceUptimeSeconds.Enabled {
-			uptime := time.Since(startupTime.Time).Seconds()
+		if instance.StartupTime.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceUptimeSeconds.Enabled {
+			uptime := time.Since(instance.StartupTime.Time).Seconds()
 			s.mb.RecordNewrelicoracledbRacInstanceUptimeSecondsDataPoint(now, int64(uptime), s.instanceName, instanceIDStr, instanceNameStr, hostNameStr)
 		}
 
@@ -421,9 +314,7 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 	return scrapeErrors
 }
 
-// scrapeActiveServices implements Feature 3B: Service Failover Status
 func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
-	// Check if any service metrics are enabled
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceInstanceID.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverConfig.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled &&
@@ -436,28 +327,19 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 
 	var scrapeErrors []error
 
-	rows, err := s.executeQuery(ctx, queries.RACActiveServicesSQL, "RAC active services")
+	services, err := s.client.QueryRACActiveServices(ctx)
 	if err != nil {
 		return []error{err}
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var serviceName, instID, failoverMethod, failoverType, goal sql.NullString
-		var networkName, creationDate, failoverRetries, failoverDelay, clbGoal sql.NullString
-
-		if err := rows.Scan(&serviceName, &instID, &failoverMethod, &failoverType, &goal, &networkName, &creationDate, &failoverRetries, &failoverDelay, &clbGoal); err != nil {
-			scrapeErrors = s.handleScanError(err, scrapeErrors, "RAC active service")
-			continue
-		}
-
-		if !serviceName.Valid || !instID.Valid {
+	for _, service := range services {
+		if !service.ServiceName.Valid || !service.InstID.Valid {
 			continue
 		}
 
 		now := pcommon.NewTimestampFromTime(time.Now())
-		serviceNameStr := serviceName.String
-		instanceIDStr := instID.String
+		serviceNameStr := service.ServiceName.String
+		instanceIDStr := service.InstID.String
 
 		// Record metrics only if enabled
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceInstanceID.Enabled {
@@ -467,11 +349,11 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverConfig.Enabled {
 			s.mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(now, int64(1), s.instanceName, serviceNameStr, instanceIDStr,
-				nullStringToString(failoverMethod), nullStringToString(failoverType), nullStringToString(goal))
+				nullStringToString(service.FailoverMethod), nullStringToString(service.FailoverType), nullStringToString(service.Goal))
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(now, 1, s.instanceName, serviceNameStr, instanceIDStr, nullStringToString(networkName))
+			s.mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(now, 1, s.instanceName, serviceNameStr, instanceIDStr, nullStringToString(service.NetworkName))
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceCreationAgeDays.Enabled {
@@ -481,7 +363,7 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 		// Parse and record failover metrics only if enabled
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverRetries.Enabled {
 			var failoverRetriesValue int64 = 0
-			if failoverRetriesStr := nullStringToString(failoverRetries); failoverRetriesStr != "" {
+			if failoverRetriesStr := nullStringToString(service.FailoverRetries); failoverRetriesStr != "" {
 				if retriesInt, err := strconv.ParseInt(failoverRetriesStr, 10, 64); err == nil {
 					failoverRetriesValue = retriesInt
 				}
@@ -491,7 +373,7 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverDelaySeconds.Enabled {
 			var failoverDelayValue int64 = 0
-			if failoverDelayStr := nullStringToString(failoverDelay); failoverDelayStr != "" {
+			if failoverDelayStr := nullStringToString(service.FailoverDelay); failoverDelayStr != "" {
 				if delayInt, err := strconv.ParseInt(failoverDelayStr, 10, 64); err == nil {
 					failoverDelayValue = delayInt
 				}
@@ -500,7 +382,7 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(now, 1, s.instanceName, serviceNameStr, instanceIDStr, nullStringToString(clbGoal))
+			s.mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(now, 1, s.instanceName, serviceNameStr, instanceIDStr, nullStringToString(service.ClbGoal))
 		}
 	}
 

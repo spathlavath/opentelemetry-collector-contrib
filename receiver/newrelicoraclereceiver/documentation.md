@@ -591,6 +591,26 @@ Provides database version, edition, and configuration details following OpenTele
 | db.edition | Oracle database edition (Enterprise, Standard, Express) | Any Str | false |
 | db.compatible | Oracle database compatible parameter setting | Any Str | false |
 
+### newrelicoracledb.database.role
+
+Database role and Data Guard configuration
+
+Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY), open mode, and protection mode for Oracle Data Guard configurations
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| db.role | Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY) | Any Str | false |
+| db.open_mode | Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.) | Any Str | false |
+| db.protection_mode | Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE) | Any Str | false |
+| db.protection_level | Oracle Data Guard protection level | Any Str | false |
+
 ### newrelicoracledb.datafile.autoextensible
 
 Data file autoextensible status (1=YES, 0=NO)
