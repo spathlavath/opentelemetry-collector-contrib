@@ -214,7 +214,7 @@ receivers:
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/nginxreceiver v0.135.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/nsxtreceiver v0.135.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/ntpreceiver v0.135.0
-  # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/oracledbreceiver v0.135.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/oracledbreceiver v0.135.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/otelarrowreceiver v0.135.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/otlpjsonfilereceiver v0.135.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/podmanreceiver v0.135.0
