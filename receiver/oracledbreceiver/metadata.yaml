@@ -171,7 +171,7 @@ attributes:
 
 events:
   db.server.query_sample:
-    enabled: false
+    enabled: true
     description: sample query
     attributes:
       - db.query.text
@@ -201,7 +201,7 @@ events:
       - oracledb.osuser
       - oracledb.duration_sec
   db.server.top_query:
-    enabled: false
+    enabled: true
     description: Collection of event metrics for top N queries, filtered based on the highest CPU time consumed (oracledb.elapsed_time).
     attributes:
       - db.system.name
@@ -230,7 +230,7 @@ events:
 metrics:
   oracledb.consistent_gets:
     description: Number of times a consistent read was requested for a block from the buffer cache.
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -251,7 +251,7 @@ metrics:
     unit: s
   oracledb.db_block_gets:
     description: Number of times a current block was requested from the buffer cache.
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -262,7 +262,7 @@ metrics:
     unit: "{gets}"
   oracledb.ddl_statements_parallelized:
     description: Number of DDL statements that were executed in parallel
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -291,7 +291,7 @@ metrics:
     unit: "{locks}"
   oracledb.dml_statements_parallelized:
     description: Number of DML statements that were executed in parallel
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -393,7 +393,7 @@ metrics:
     unit: "{reads}"
   oracledb.logons:
     description: Number of logon operations
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -406,7 +406,7 @@ metrics:
 
   oracledb.parallel_operations_downgraded_1_to_25_pct:
     description: Number of times parallel execution was requested and the degree of parallelism was reduced down to 1-25% because of insufficient parallel execution servers
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -417,7 +417,7 @@ metrics:
     unit: "{executions}"
   oracledb.parallel_operations_downgraded_25_to_50_pct:
     description: Number of times parallel execution was requested and the degree of parallelism was reduced down to 25-50% because of insufficient parallel execution servers
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -428,7 +428,7 @@ metrics:
     unit: "{executions}"
   oracledb.parallel_operations_downgraded_50_to_75_pct:
     description: Number of times parallel execution was requested and the degree of parallelism was reduced down to 50-75% because of insufficient parallel execution servers
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -439,7 +439,7 @@ metrics:
     unit: "{executions}"
   oracledb.parallel_operations_downgraded_75_to_99_pct:
     description: Number of times parallel execution was requested and the degree of parallelism was reduced down to 75-99% because of insufficient parallel execution servers
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -450,7 +450,7 @@ metrics:
     unit: "{executions}"
   oracledb.parallel_operations_downgraded_to_serial:
     description: Number of times parallel execution was requested but execution was serial because of insufficient parallel execution servers
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -461,7 +461,7 @@ metrics:
     unit: "{executions}"
   oracledb.parallel_operations_not_downgraded:
     description: Number of times parallel execution was executed at the requested degree of parallelism
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -494,7 +494,7 @@ metrics:
     unit: By
   oracledb.physical_read_io_requests:
     description: Number of read requests for application activity
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -516,7 +516,7 @@ metrics:
     unit: "{reads}"
   oracledb.physical_reads_direct:
     description: Number of reads directly from disk, bypassing the buffer cache
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -527,7 +527,7 @@ metrics:
     unit: "{reads}"
   oracledb.physical_write_io_requests:
     description: Number of write requests for application activity
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -538,7 +538,7 @@ metrics:
     unit: "{requests}"
   oracledb.physical_writes:
     description: Number of physical writes
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -549,7 +549,7 @@ metrics:
     unit: "{writes}"
   oracledb.physical_writes_direct:
     description: Number of writes directly to disk, bypassing the buffer cache
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:
@@ -578,7 +578,7 @@ metrics:
     unit: "{processes}"
   oracledb.queries_parallelized:
     description: Number of SELECT statements executed in parallel
-    enabled: false
+    enabled: true
     stability:
       level: development
     sum:

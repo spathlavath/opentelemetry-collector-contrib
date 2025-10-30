@@ -12,6 +12,14 @@ metrics:
     enabled: false
 ```
 
+### oracledb.consistent_gets
+
+Number of times a consistent read was requested for a block from the buffer cache.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {gets} | Sum | Int | Cumulative | true | development |
+
 ### oracledb.cpu_time
 
 Cumulative CPU time, in seconds
@@ -19,6 +27,22 @@ Cumulative CPU time, in seconds
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | s | Sum | Double | Cumulative | true | development |
+
+### oracledb.db_block_gets
+
+Number of times a current block was requested from the buffer cache.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {gets} | Sum | Int | Cumulative | true | development |
+
+### oracledb.ddl_statements_parallelized
+
+Number of DDL statements that were executed in parallel
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {statements} | Sum | Int | Cumulative | true | development |
 
 ### oracledb.dml_locks.limit
 
@@ -35,6 +59,14 @@ Current count of active DML (Data Manipulation Language) locks.
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | {locks} | Gauge | Int | development |
+
+### oracledb.dml_statements_parallelized
+
+Number of DML statements that were executed in parallel
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {statements} | Sum | Int | Cumulative | true | development |
 
 ### oracledb.enqueue_deadlocks
 
@@ -108,6 +140,62 @@ Number of logical reads
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | {reads} | Sum | Int | Cumulative | true | development |
 
+### oracledb.logons
+
+Number of logon operations
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operation} | Sum | Int | Cumulative | true | development |
+
+### oracledb.parallel_operations_downgraded_1_to_25_pct
+
+Number of times parallel execution was requested and the degree of parallelism was reduced down to 1-25% because of insufficient parallel execution servers
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {executions} | Sum | Int | Cumulative | true | development |
+
+### oracledb.parallel_operations_downgraded_25_to_50_pct
+
+Number of times parallel execution was requested and the degree of parallelism was reduced down to 25-50% because of insufficient parallel execution servers
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {executions} | Sum | Int | Cumulative | true | development |
+
+### oracledb.parallel_operations_downgraded_50_to_75_pct
+
+Number of times parallel execution was requested and the degree of parallelism was reduced down to 50-75% because of insufficient parallel execution servers
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {executions} | Sum | Int | Cumulative | true | development |
+
+### oracledb.parallel_operations_downgraded_75_to_99_pct
+
+Number of times parallel execution was requested and the degree of parallelism was reduced down to 75-99% because of insufficient parallel execution servers
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {executions} | Sum | Int | Cumulative | true | development |
+
+### oracledb.parallel_operations_downgraded_to_serial
+
+Number of times parallel execution was requested but execution was serial because of insufficient parallel execution servers
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {executions} | Sum | Int | Cumulative | true | development |
+
+### oracledb.parallel_operations_not_downgraded
+
+Number of times parallel execution was executed at the requested degree of parallelism
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {executions} | Sum | Int | Cumulative | true | development |
+
 ### oracledb.parse_calls
 
 Total number of parse calls.
@@ -124,6 +212,14 @@ Session PGA (Program Global Area) memory
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | By | Sum | Int | Cumulative | true | development |
 
+### oracledb.physical_read_io_requests
+
+Number of read requests for application activity
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {requests} | Sum | Int | Cumulative | true | development |
+
 ### oracledb.physical_reads
 
 Number of physical reads
@@ -131,6 +227,38 @@ Number of physical reads
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | {reads} | Sum | Int | Cumulative | true | development |
+
+### oracledb.physical_reads_direct
+
+Number of reads directly from disk, bypassing the buffer cache
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {reads} | Sum | Int | Cumulative | true | development |
+
+### oracledb.physical_write_io_requests
+
+Number of write requests for application activity
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {requests} | Sum | Int | Cumulative | true | development |
+
+### oracledb.physical_writes
+
+Number of physical writes
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {writes} | Sum | Int | Cumulative | true | development |
+
+### oracledb.physical_writes_direct
+
+Number of writes directly to disk, bypassing the buffer cache
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {writes} | Sum | Int | Cumulative | true | development |
 
 ### oracledb.processes.limit
 
@@ -147,6 +275,14 @@ Current count of active processes.
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | {processes} | Gauge | Int | development |
+
+### oracledb.queries_parallelized
+
+Number of SELECT statements executed in parallel
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {queries} | Sum | Int | Cumulative | true | development |
 
 ### oracledb.sessions.limit
 
@@ -231,152 +367,6 @@ Number of times users manually issue the ROLLBACK statement or an error occurs d
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | development |
 
-## Optional Metrics
-
-The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
-
-```yaml
-metrics:
-  <metric_name>:
-    enabled: true
-```
-
-### oracledb.consistent_gets
-
-Number of times a consistent read was requested for a block from the buffer cache.
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {gets} | Sum | Int | Cumulative | true | development |
-
-### oracledb.db_block_gets
-
-Number of times a current block was requested from the buffer cache.
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {gets} | Sum | Int | Cumulative | true | development |
-
-### oracledb.ddl_statements_parallelized
-
-Number of DDL statements that were executed in parallel
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {statements} | Sum | Int | Cumulative | true | development |
-
-### oracledb.dml_statements_parallelized
-
-Number of DML statements that were executed in parallel
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {statements} | Sum | Int | Cumulative | true | development |
-
-### oracledb.logons
-
-Number of logon operations
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {operation} | Sum | Int | Cumulative | true | development |
-
-### oracledb.parallel_operations_downgraded_1_to_25_pct
-
-Number of times parallel execution was requested and the degree of parallelism was reduced down to 1-25% because of insufficient parallel execution servers
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {executions} | Sum | Int | Cumulative | true | development |
-
-### oracledb.parallel_operations_downgraded_25_to_50_pct
-
-Number of times parallel execution was requested and the degree of parallelism was reduced down to 25-50% because of insufficient parallel execution servers
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {executions} | Sum | Int | Cumulative | true | development |
-
-### oracledb.parallel_operations_downgraded_50_to_75_pct
-
-Number of times parallel execution was requested and the degree of parallelism was reduced down to 50-75% because of insufficient parallel execution servers
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {executions} | Sum | Int | Cumulative | true | development |
-
-### oracledb.parallel_operations_downgraded_75_to_99_pct
-
-Number of times parallel execution was requested and the degree of parallelism was reduced down to 75-99% because of insufficient parallel execution servers
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {executions} | Sum | Int | Cumulative | true | development |
-
-### oracledb.parallel_operations_downgraded_to_serial
-
-Number of times parallel execution was requested but execution was serial because of insufficient parallel execution servers
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {executions} | Sum | Int | Cumulative | true | development |
-
-### oracledb.parallel_operations_not_downgraded
-
-Number of times parallel execution was executed at the requested degree of parallelism
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {executions} | Sum | Int | Cumulative | true | development |
-
-### oracledb.physical_read_io_requests
-
-Number of read requests for application activity
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {requests} | Sum | Int | Cumulative | true | development |
-
-### oracledb.physical_reads_direct
-
-Number of reads directly from disk, bypassing the buffer cache
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {reads} | Sum | Int | Cumulative | true | development |
-
-### oracledb.physical_write_io_requests
-
-Number of write requests for application activity
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {requests} | Sum | Int | Cumulative | true | development |
-
-### oracledb.physical_writes
-
-Number of physical writes
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {writes} | Sum | Int | Cumulative | true | development |
-
-### oracledb.physical_writes_direct
-
-Number of writes directly to disk, bypassing the buffer cache
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {writes} | Sum | Int | Cumulative | true | development |
-
-### oracledb.queries_parallelized
-
-Number of SELECT statements executed in parallel
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {queries} | Sum | Int | Cumulative | true | development |
-
 ## Default Events
 
 The following events are emitted by default. Each of them can be disabled by applying the following configuration:
@@ -385,16 +375,6 @@ The following events are emitted by default. Each of them can be disabled by app
 events:
   <event_name>:
     enabled: false
-```
-
-## Optional Events
-
-The following events are not emitted by default. Each of them can be enabled by applying the following configuration:
-
-```yaml
-events:
-  <event_name>:
-    enabled: true
 ```
 
 ### db.server.query_sample
