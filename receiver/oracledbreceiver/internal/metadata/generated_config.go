@@ -75,16 +75,16 @@ type MetricsConfig struct {
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
 		OracledbConsistentGets: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbCPUTime: MetricConfig{
 			Enabled: true,
 		},
 		OracledbDbBlockGets: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbDdlStatementsParallelized: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbDmlLocksLimit: MetricConfig{
 			Enabled: true,
@@ -93,7 +93,7 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		OracledbDmlStatementsParallelized: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbEnqueueDeadlocks: MetricConfig{
 			Enabled: true,
@@ -123,25 +123,25 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		OracledbLogons: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbParallelOperationsDowngraded1To25Pct: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbParallelOperationsDowngraded25To50Pct: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbParallelOperationsDowngraded50To75Pct: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbParallelOperationsDowngraded75To99Pct: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbParallelOperationsDowngradedToSerial: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbParallelOperationsNotDowngraded: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbParseCalls: MetricConfig{
 			Enabled: true,
@@ -150,22 +150,22 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		OracledbPhysicalReadIoRequests: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbPhysicalReads: MetricConfig{
 			Enabled: true,
 		},
 		OracledbPhysicalReadsDirect: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbPhysicalWriteIoRequests: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbPhysicalWrites: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbPhysicalWritesDirect: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbProcessesLimit: MetricConfig{
 			Enabled: true,
@@ -174,7 +174,7 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		OracledbQueriesParallelized: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		OracledbSessionsLimit: MetricConfig{
 			Enabled: true,
@@ -231,10 +231,10 @@ type EventsConfig struct {
 func DefaultEventsConfig() EventsConfig {
 	return EventsConfig{
 		DbServerQuerySample: EventConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		DbServerTopQuery: EventConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 	}
 }
