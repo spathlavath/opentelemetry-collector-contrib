@@ -69,6 +69,8 @@ type newRelicOracleScraper struct {
 	// Metrics building and logging
 	mb                   *metadata.MetricsBuilder
 	metricsBuilderConfig metadata.MetricsBuilderConfig
+	lb                   *metadata.LogsBuilder
+	logsBuilderConfig    metadata.LogsBuilderConfig
 	logger               *zap.Logger
 
 	// Runtime configuration
@@ -82,6 +84,8 @@ type newRelicOracleScraper struct {
 func newScraper(
 	metricsBuilder *metadata.MetricsBuilder,
 	metricsBuilderConfig metadata.MetricsBuilderConfig,
+	logsBuilder *metadata.LogsBuilder,
+	logsBuilderConfig metadata.LogsBuilderConfig,
 	scrapeCfg scraperhelper.ControllerConfig,
 	config *Config,
 	logger *zap.Logger,
@@ -92,6 +96,8 @@ func newScraper(
 		// Metrics and configuration
 		mb:                   metricsBuilder,
 		metricsBuilderConfig: metricsBuilderConfig,
+		lb:                   logsBuilder,
+		logsBuilderConfig:    logsBuilderConfig,
 		config:               config,
 		scrapeCfg:            scrapeCfg,
 
@@ -193,8 +199,8 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.QueryMonitoringCountThreshold,
 	)
 
-	// Initialize execution plan scraper
-	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	// Initialize execution plan scraper (uses LogsBuilder for log events)
+	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
 
 	// Initialize blocking scraper
 	var err error

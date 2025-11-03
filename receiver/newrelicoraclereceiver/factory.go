@@ -40,6 +40,7 @@ func createDefaultConfig() component.Config {
 	config := &Config{
 		ControllerConfig:      cfg,
 		MetricsBuilderConfig:  metadata.DefaultMetricsBuilderConfig(),
+		LogsBuilderConfig:     metadata.DefaultLogsBuilderConfig(),
 		DisableConnectionPool: false,
 	}
 
@@ -67,6 +68,7 @@ func createReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetricsFunc 
 		}
 
 		metricsBuilder := metadata.NewMetricsBuilder(sqlCfg.MetricsBuilderConfig, settings)
+		logsBuilder := metadata.NewLogsBuilder(sqlCfg.LogsBuilderConfig, settings)
 
 		instanceName, err := getInstanceName(getDataSource(*sqlCfg))
 		if err != nil {
@@ -77,7 +79,7 @@ func createReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetricsFunc 
 			return nil, hostNameErr
 		}
 
-		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
+		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, logsBuilder, sqlCfg.LogsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
 			db, err := sqlOpenerFunc(getDataSource(*sqlCfg))
 			if err != nil {
 				return nil, err

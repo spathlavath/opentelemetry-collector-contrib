@@ -77,6 +77,7 @@ type Config struct {
 
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
+	metadata.LogsBuilderConfig     `mapstructure:",squash"`
 }
 
 // SetDefaults sets default values for configuration fields that are not explicitly set
@@ -92,7 +93,7 @@ func (c *Config) SetDefaults() {
 
 	// Set Query Performance Monitoring defaults if not set
 	if c.QueryMonitoringResponseTimeThreshold == 0 || c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
-		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold{
+		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold {
 		c.QueryMonitoringResponseTimeThreshold = defaultQueryMonitoringResponseTimeThreshold
 	}
 	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||

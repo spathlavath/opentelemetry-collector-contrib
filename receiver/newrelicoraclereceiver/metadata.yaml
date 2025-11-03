@@ -3,7 +3,7 @@ type: newrelicoracledb
 status:
   class: receiver
   stability:
-    alpha: [metrics]
+    alpha: [metrics, logs]
   distributions: [contrib]
   codeowners:
     active: [newrelic-team]
@@ -45,6 +45,9 @@ attributes:
     type: string
   execution_plan_text:
     description: Oracle execution plan text from DBMS_XPLAN.DISPLAY_CURSOR
+    type: string
+  execution_plan_json:
+    description: Oracle execution plan as hierarchical JSON structure
     type: string
   wait_event_name:
     description: Oracle wait event name for wait events
@@ -235,6 +238,16 @@ attributes:
   db.protection_level:
     description: Oracle Data Guard protection level
     type: string
+
+events:
+  newrelicoracledb.execution_plan:
+    enabled: false
+    description: Oracle SQL execution plan data as structured JSON. Contains hierarchical execution plan tree with operation details, costs, and cardinalities.
+    attributes:
+      - query_id
+      - plan_hash_value
+      - query_text
+      - execution_plan_json
 
 metrics:
   newrelicoracledb.sessions.count:
@@ -3542,7 +3555,7 @@ metrics:
       - wait_category
 
   newrelicoracledb.execution_plan.info:
-    description: Execution plan information for SQL queries using DBMS_XPLAN.DISPLAY_CURSOR
+    description: Execution plan information for SQL queries
     enabled: true
     gauge:
       value_type: int

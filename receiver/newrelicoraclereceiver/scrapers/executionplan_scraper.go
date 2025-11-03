@@ -19,20 +19,20 @@ import (
 )
 
 type ExecutionPlanScraper struct {
-	client               client.OracleClient
-	mb                   *metadata.MetricsBuilder
-	logger               *zap.Logger
-	instanceName         string
-	metricsBuilderConfig metadata.MetricsBuilderConfig
+	client            client.OracleClient
+	lb                *metadata.LogsBuilder
+	logger            *zap.Logger
+	instanceName      string
+	logsBuilderConfig metadata.LogsBuilderConfig
 }
 
-func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
+func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, instanceName string, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
-		client:               oracleClient,
-		mb:                   mb,
-		logger:               logger,
-		instanceName:         instanceName,
-		metricsBuilderConfig: metricsBuilderConfig,
+		client:            oracleClient,
+		lb:                lb,
+		logger:            logger,
+		instanceName:      instanceName,
+		logsBuilderConfig: logsBuilderConfig,
 	}
 }
 
@@ -59,19 +59,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		return errs
 	}
 
-	s.logger.Info("Retrieved execution plans from database",
-		zap.Int("count", len(executionPlans)),
-		zap.Strings("sql_ids", sqlIDs))
-
-	// Log each execution plan summary
-	for i, ep := range executionPlans {
-		s.logger.Debug("Execution plan details",
-			zap.Int("index", i),
-			zap.String("sql_id", ep.SQLID),
-			zap.Int64("child_number", ep.ChildNumber),
-			zap.Int64("plan_hash_value", ep.PlanHashValue),
-			zap.Bool("has_plan_tree", ep.PlanTree != nil))
-	}
+	s.logger.Debug("Retrieved execution plans",
+		zap.Int("count", len(executionPlans)))
 
 	successCount := 0
 	for _, executionPlan := range executionPlans {
@@ -81,8 +70,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 			continue
 		}
 
-		if err := s.buildExecutionPlanMetrics(&executionPlan); err != nil {
-			s.logger.Warn("Failed to build metrics for execution plan",
+		if err := s.buildExecutionPlanLogs(&executionPlan); err != nil {
+			s.logger.Warn("Failed to build logs for execution plan",
 				zap.String("sql_id", executionPlan.SQLID),
 				zap.Error(err))
 			errs = append(errs, err)
@@ -99,8 +88,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 	return errs
 }
 
-func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionPlan) error {
-	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlanInfo.Enabled {
+func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan) error {
+	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
 	}
 
@@ -110,18 +99,15 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionP
 		return fmt.Errorf("failed to marshal execution plan to JSON: %w", err)
 	}
 
-	s.logger.Info("Execution plan JSON generated",
-		zap.String("sql_id", plan.SQLID),
-		zap.Int64("plan_hash_value", plan.PlanHashValue),
-		zap.String("json", string(planJSON)))
-
-	s.mb.RecordNewrelicoracledbExecutionPlanInfoDataPoint(
+	// Note: query_text should be provided by the caller (e.g., QPM scraper)
+	// For now, we use the SQL_ID as the query_id
+	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
+		context.Background(),
 		pcommon.NewTimestampFromTime(time.Now()),
-		1,
-		s.instanceName,
-		plan.SQLID,
-		fmt.Sprintf("%d", plan.PlanHashValue),
-		string(planJSON),
+		plan.SQLID,                            // query_id
+		fmt.Sprintf("%d", plan.PlanHashValue), // plan_hash_value
+		"",                                    // query_text (empty for now, should be provided by caller)
+		string(planJSON),                      // execution_plan_json
 	)
 
 	return nil

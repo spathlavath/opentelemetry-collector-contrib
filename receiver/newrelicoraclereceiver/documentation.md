@@ -771,7 +771,7 @@ Number of physical disk writes
 
 ### newrelicoracledb.execution_plan.info
 
-Execution plan information for SQL queries using DBMS_XPLAN.DISPLAY_CURSOR
+Execution plan information for SQL queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4887,6 +4887,39 @@ Number of waiting tasks for wait events
 | query_id | SQL query identifier | Any Str | false |
 | wait_event_name | Oracle wait event name for wait events | Any Str | false |
 | wait_category | Oracle wait event category for wait events | Any Str | false |
+
+## Default Events
+
+The following events are emitted by default. Each of them can be disabled by applying the following configuration:
+
+```yaml
+events:
+  <event_name>:
+    enabled: false
+```
+
+## Optional Events
+
+The following events are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+events:
+  <event_name>:
+    enabled: true
+```
+
+### newrelicoracledb.execution_plan
+
+Oracle SQL execution plan data as structured JSON. Contains hierarchical execution plan tree with operation details, costs, and cardinalities.
+
+#### Attributes
+
+| Name | Description | Values |
+| ---- | ----------- | ------ |
+| query_id | SQL query identifier | Any Str |
+| plan_hash_value | Oracle execution plan hash value | Any Str |
+| query_text | SQL query text | Any Str |
+| execution_plan_json | Oracle execution plan as hierarchical JSON structure | Any Str |
 
 ## Resource Attributes
 
