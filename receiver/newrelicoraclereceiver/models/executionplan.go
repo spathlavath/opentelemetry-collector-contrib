@@ -25,17 +25,16 @@ type ExecutionPlanRow struct {
 
 // PlanNode represents a node in the execution plan tree
 type PlanNode struct {
-	ID            int64       `json:"id"`
-	Operation     string      `json:"operation"`
-	Options       *string     `json:"options,omitempty"`
-	ObjectName    *string     `json:"object_name,omitempty"`
-	PlanHashValue int64       `json:"plan_hash_value"`
-	Cost          *int64      `json:"cost,omitempty"`
-	Cardinality   *int64      `json:"cardinality,omitempty"`
-	Bytes         *int64      `json:"bytes,omitempty"`
-	CPUCost       *int64      `json:"cpu_cost,omitempty"`
-	IOCost        *int64      `json:"io_cost,omitempty"`
-	Children      []*PlanNode `json:"children"`
+	ID          int64       `json:"id"`
+	Operation   string      `json:"operation"`
+	Options     *string     `json:"options"`
+	ObjectName  *string     `json:"object_name"`
+	Cost        *int64      `json:"cost"`
+	Cardinality *int64      `json:"cardinality"`
+	Bytes       *int64      `json:"bytes"`
+	CPUCost     *int64      `json:"cpu_cost"`
+	IOCost      *int64      `json:"io_cost"`
+	Children    []*PlanNode `json:"children"`
 }
 
 // ExecutionPlan represents a complete execution plan in hierarchical format
@@ -98,7 +97,6 @@ func BuildExecutionPlansFromRows(rows []ExecutionPlanRow) []ExecutionPlan {
 func buildPlanTree(rows []ExecutionPlanRow, parentID int64) *PlanNode {
 	// Find the node with the given ID as parent
 	var currentNode *PlanNode
-	var childRows []ExecutionPlanRow
 
 	for _, row := range rows {
 		nodeID := int64(-1)
@@ -119,7 +117,6 @@ func buildPlanTree(rows []ExecutionPlanRow, parentID int64) *PlanNode {
 				// First child
 				currentNode = createPlanNode(row)
 			}
-			childRows = append(childRows, row)
 		}
 	}
 
@@ -176,9 +173,6 @@ func createPlanNode(row ExecutionPlanRow) *PlanNode {
 	}
 	if row.ObjectName.Valid && row.ObjectName.String != "" {
 		node.ObjectName = &row.ObjectName.String
-	}
-	if row.PlanHashValue.Valid {
-		node.PlanHashValue = row.PlanHashValue.Int64
 	}
 	if row.Cost.Valid {
 		node.Cost = &row.Cost.Int64

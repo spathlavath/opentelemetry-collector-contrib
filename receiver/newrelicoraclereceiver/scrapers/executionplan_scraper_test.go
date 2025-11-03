@@ -53,10 +53,9 @@ func TestScrapeExecutionPlansV2_WithValidData(t *testing.T) {
 			ChildNumber:   0,
 			PlanHashValue: 12345,
 			PlanTree: &models.PlanNode{
-				ID:            0,
-				Operation:     "SELECT STATEMENT",
-				PlanHashValue: 12345,
-				Children:      []*models.PlanNode{},
+				ID:        0,
+				Operation: "SELECT STATEMENT",
+				Children:  []*models.PlanNode{},
 			},
 		},
 	}
@@ -115,10 +114,9 @@ func TestBuildExecutionPlanMetricsV2_Enabled(t *testing.T) {
 		ChildNumber:   0,
 		PlanHashValue: 123456,
 		PlanTree: &models.PlanNode{
-			ID:            0,
-			Operation:     "SELECT STATEMENT",
-			PlanHashValue: 123456,
-			Children:      []*models.PlanNode{},
+			ID:        0,
+			Operation: "SELECT STATEMENT",
+			Children:  []*models.PlanNode{},
 		},
 	}
 
@@ -142,10 +140,9 @@ func TestBuildExecutionPlanMetricsV2_Disabled(t *testing.T) {
 		ChildNumber:   0,
 		PlanHashValue: 123456,
 		PlanTree: &models.PlanNode{
-			ID:            0,
-			Operation:     "SELECT STATEMENT",
-			PlanHashValue: 123456,
-			Children:      []*models.PlanNode{},
+			ID:        0,
+			Operation: "SELECT STATEMENT",
+			Children:  []*models.PlanNode{},
 		},
 	}
 
