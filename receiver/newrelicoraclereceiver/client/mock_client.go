@@ -131,12 +131,12 @@ func (m *MockClient) Ping(ctx context.Context) error {
 	return m.PingErr
 }
 
-func (m *MockClient) QueryExecutionPlans(ctx context.Context, sqlID string) ([]models.ExecutionPlan, error) {
+func (m *MockClient) QueryExecutionPlans(ctx context.Context, sqlIDs string) ([]models.ExecutionPlan, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 
-	if plans, ok := m.ExecutionPlans[sqlID]; ok {
+	if plans, ok := m.ExecutionPlans[sqlIDs]; ok {
 		return plans, nil
 	}
 

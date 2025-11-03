@@ -5,6 +5,7 @@ package scrapers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -42,95 +43,86 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		return errs
 	}
 
+	// Format SQL IDs for IN clause: 'id1', 'id2', 'id3'
+	quotedIDs := make([]string, len(sqlIDs))
+	for i, id := range sqlIDs {
+		quotedIDs[i] = fmt.Sprintf("'%s'", id)
+	}
+	sqlIDsParam := strings.Join(quotedIDs, ", ")
+
+	queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	executionPlans, err := s.client.QueryExecutionPlans(queryCtx, sqlIDsParam)
+	if err != nil {
+		errs = append(errs, fmt.Errorf("failed to query execution plans: %w", err))
+		return errs
+	}
+
+	s.logger.Info("Retrieved execution plans from database",
+		zap.Int("count", len(executionPlans)),
+		zap.Strings("sql_ids", sqlIDs))
+
+	// Log each execution plan summary
+	for i, ep := range executionPlans {
+		s.logger.Debug("Execution plan details",
+			zap.Int("index", i),
+			zap.String("sql_id", ep.SQLID),
+			zap.Int64("child_number", ep.ChildNumber),
+			zap.Int64("plan_hash_value", ep.PlanHashValue),
+			zap.Bool("has_plan_tree", ep.PlanTree != nil))
+	}
+
 	successCount := 0
-	for i, sqlID := range sqlIDs {
-		queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	for _, executionPlan := range executionPlans {
+		if executionPlan.SQLID == "" || executionPlan.PlanTree == nil {
+			s.logger.Debug("Skipping invalid execution plan",
+				zap.String("sql_id", executionPlan.SQLID))
+			continue
+		}
 
-		err := s.processSingleSQLID(queryCtx, sqlID, i+1)
-		cancel()
-
-		if err != nil {
-			s.logger.Warn("Failed to process execution plan for SQL ID",
-				zap.String("sql_id", sqlID),
-				zap.Int("sql_id_index", i+1),
+		if err := s.buildExecutionPlanMetrics(&executionPlan); err != nil {
+			s.logger.Warn("Failed to build metrics for execution plan",
+				zap.String("sql_id", executionPlan.SQLID),
 				zap.Error(err))
 			errs = append(errs, err)
 		} else {
 			successCount++
 		}
-
-		select {
-		case <-ctx.Done():
-			errs = append(errs, fmt.Errorf("execution plan processing cancelled: %w", ctx.Err()))
-			break
-		default:
-		}
 	}
 
 	s.logger.Debug("Scraped execution plans",
-		zap.Int("total", len(sqlIDs)),
+		zap.Int("total", len(executionPlans)),
 		zap.Int("success", successCount),
 		zap.Int("failed", len(errs)))
 
 	return errs
 }
 
-func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID string, index int) error {
-	executionPlans, err := s.client.QueryExecutionPlans(ctx, sqlID)
-	if err != nil {
-		return fmt.Errorf("failed to query execution plan for SQL ID %s: %w", sqlID, err)
-	}
-
-	s.logger.Debug("Retrieved execution plans",
-		zap.String("sql_id", sqlID),
-		zap.Int("count", len(executionPlans)))
-
-	for _, executionPlan := range executionPlans {
-		trimmedPlanText := s.trimExecutionPlanText(executionPlan.ExecutionPlanText.String)
-
-		plan := executionPlan
-		plan.ExecutionPlanText.String = trimmedPlanText
-
-		if !plan.IsValidForMetrics() {
-			s.logger.Debug("Skipping invalid execution plan",
-				zap.String("sql_id", sqlID),
-				zap.String("query_id", plan.GetQueryID()),
-				zap.Int64("plan_hash_value", plan.GetPlanHashValue()))
-		} else {
-			s.buildExecutionPlanMetrics(&plan)
-		}
-	}
-
-	return nil
-}
-
-func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionPlan) {
+func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionPlan) error {
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlanInfo.Enabled {
-		return
+		return nil
 	}
+
+	// Convert execution plan to JSON
+	planJSON, err := json.Marshal(plan)
+	if err != nil {
+		return fmt.Errorf("failed to marshal execution plan to JSON: %w", err)
+	}
+
+	s.logger.Info("Execution plan JSON generated",
+		zap.String("sql_id", plan.SQLID),
+		zap.Int64("plan_hash_value", plan.PlanHashValue),
+		zap.String("json", string(planJSON)))
 
 	s.mb.RecordNewrelicoracledbExecutionPlanInfoDataPoint(
 		pcommon.NewTimestampFromTime(time.Now()),
 		1,
-		plan.GetDatabaseName(),
-		plan.GetQueryID(),
-		fmt.Sprintf("%d", plan.GetPlanHashValue()),
-		plan.GetExecutionPlanText(),
+		s.instanceName,
+		plan.SQLID,
+		fmt.Sprintf("%d", plan.PlanHashValue),
+		string(planJSON),
 	)
-}
 
-func (s *ExecutionPlanScraper) trimExecutionPlanText(planText string) string {
-	planHashIndex := strings.Index(planText, "Plan hash value:")
-	if planHashIndex == -1 {
-		return planText
-	}
-
-	trimmedText := planText[planHashIndex:]
-
-	nextSQLIndex := strings.Index(trimmedText, "\nSQL_ID")
-	if nextSQLIndex > 0 {
-		trimmedText = trimmedText[:nextSQLIndex]
-	}
-
-	return strings.TrimSpace(trimmedText)
+	return nil
 }
