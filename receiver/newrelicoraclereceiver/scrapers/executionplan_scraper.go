@@ -4,19 +4,18 @@
 package scrapers
 
 import (
-	"context"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"strings"
-	"time"
+"context"
+"encoding/json"
+"fmt"
+"strings"
+"time"
 
-	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.uber.org/zap"
+"go.opentelemetry.io/collector/pdata/pcommon"
+"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
+"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 type ExecutionPlanScraper struct {
@@ -61,20 +60,20 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 	}
 
 	s.logger.Debug("Retrieved execution plans",
-		zap.Int("count", len(executionPlans)))
+zap.Int("count", len(executionPlans)))
 
 	successCount := 0
 	for _, executionPlan := range executionPlans {
 		if executionPlan.SQLID == "" || executionPlan.PlanTree == nil {
 			s.logger.Debug("Skipping invalid execution plan",
-				zap.String("sql_id", executionPlan.SQLID))
+zap.String("sql_id", executionPlan.SQLID))
 			continue
 		}
 
 		if err := s.buildExecutionPlanLogs(&executionPlan); err != nil {
 			s.logger.Warn("Failed to build logs for execution plan",
-				zap.String("sql_id", executionPlan.SQLID),
-				zap.Error(err))
+zap.String("sql_id", executionPlan.SQLID),
+zap.Error(err))
 			errs = append(errs, err)
 		} else {
 			successCount++
@@ -82,20 +81,19 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 	}
 
 	s.logger.Debug("Scraped execution plans",
-		zap.Int("total", len(executionPlans)),
-		zap.Int("success", successCount),
-		zap.Int("failed", len(errs)))
+zap.Int("total", len(executionPlans)),
+zap.Int("success", successCount),
+zap.Int("failed", len(errs)))
 
 	return errs
 }
 
-// buildExecutionPlanLogs converts an execution plan to a log event with base64-encoded JSON.
-// The JSON is base64-encoded to prevent New Relic from automatically parsing and flattening the nested structure.
-// To query the execution plan in New Relic, use:
-//
-//	SELECT decode(execution_plan_json, 'base64') FROM Log WHERE event.name = 'newrelicoracledb.execution_plan'
+// buildExecutionPlanLogs converts an execution plan to a log event with escaped JSON string.
+// The JSON is converted to an escaped string format (with \" characters) to prevent New Relic 
+// from automatically parsing and flattening the nested structure into dot-notation fields.
+// This matches the format used in the metric version where execution_plan_text contains escaped JSON.
 func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan) error {
-	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+	if !s.logsBuilderConfig.Events.NewrelicoracaledbExecutionPlan.Enabled {
 		return nil
 	}
 
@@ -105,19 +103,26 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan
 		return fmt.Errorf("failed to marshal execution plan to JSON: %w", err)
 	}
 
-	// Base64 encode the JSON to prevent New Relic from auto-parsing and flattening it
-	// Users can decode it in New Relic using: decode(execution_plan_json, 'base64')
-	executionPlanStr := base64.StdEncoding.EncodeToString(planJSON)
+	// Marshal the JSON string again to create an escaped JSON string
+	// This produces: "{\"sql_id\":\"...\",\"plan_tree\":{...}}"
+	// which prevents New Relic from flattening it into execution_plan_json.sql_id, etc.
+	escapedJSON, err := json.Marshal(string(planJSON))
+	if err != nil {
+		return fmt.Errorf("failed to escape execution plan JSON: %w", err)
+	}
+	
+	// Remove the outer quotes that json.Marshal adds (we want the escaped content only)
+	executionPlanStr := string(escapedJSON[1 : len(escapedJSON)-1])
 
 	// Note: query_text should be provided by the caller (e.g., QPM scraper)
 	// For now, we use the SQL_ID as the query_id
-	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
-		context.Background(),
+	s.lb.RecordNewrelicoracaledbExecutionPlanEvent(
+context.Background(),
 		pcommon.NewTimestampFromTime(time.Now()),
 		plan.SQLID,                            // query_id
 		fmt.Sprintf("%d", plan.PlanHashValue), // plan_hash_value
 		"",                                    // query_text (empty for now, should be provided by caller)
-		executionPlanStr,                      // execution_plan_json as base64-encoded JSON
+		executionPlanStr,                      // execution_plan_json as escaped JSON string
 	)
 
 	return nil
