@@ -88,30 +88,24 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 	return errs
 }
 
-// buildExecutionPlanLogs converts an execution plan to a log event with escaped JSON string.
-// The JSON is converted to an escaped string format (with \" characters) to prevent New Relic
-// from automatically parsing and flattening the nested structure into dot-notation fields.
-// This matches the format used in the metric version where execution_plan_text contains escaped JSON.
+// buildExecutionPlanLogs converts an execution plan to a log event with hierarchical JSON structure.
+// The execution plan is sent as a plain JSON string with the hierarchical tree structure preserved.
+// This allows for direct querying in New Relic without needing to decode or decompress.
+// The hierarchical structure makes it easier to understand the query execution flow compared to flat arrays.
 func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan) error {
 	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
 	}
 
-	// Convert execution plan to JSON
+	// Convert execution plan to JSON with hierarchical structure
 	planJSON, err := json.Marshal(plan)
 	if err != nil {
 		return fmt.Errorf("failed to marshal execution plan to JSON: %w", err)
 	}
 
-	// Marshal the JSON string again to create an escaped JSON string
-	// This produces: "{\"sql_id\":\"...\",\"plan_tree\":{...}}"
-	// which prevents New Relic from flattening it into execution_plan_json.sql_id, etc.
-	escapedJSON, err := json.Marshal(string(planJSON))
-	if err != nil {
-		return fmt.Errorf("failed to escape execution plan JSON: %w", err)
-	}
-	// Remove the outer quotes that json.Marshal adds (we want the escaped content only)
-	executionPlanStr := string(escapedJSON[1 : len(escapedJSON)-1])
+	// Send as plain JSON string - this preserves the hierarchical tree structure
+	// and makes it directly queryable in New Relic
+	executionPlanStr := string(planJSON)
 
 	// Note: query_text should be provided by the caller (e.g., QPM scraper)
 	// For now, we use the SQL_ID as the query_id
@@ -121,7 +115,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan
 		plan.SQLID,                            // query_id
 		fmt.Sprintf("%d", plan.PlanHashValue), // plan_hash_value
 		"",                                    // query_text (empty for now, should be provided by caller)
-		executionPlanStr,                      // execution_plan_json as escaped JSON string
+		executionPlanStr,                      // execution_plan_json as hierarchical JSON string
 	)
 
 	return nil

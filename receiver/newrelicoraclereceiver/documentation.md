@@ -4919,7 +4919,7 @@ Oracle SQL execution plan data as structured JSON. Contains hierarchical executi
 | query_id | SQL query identifier | Any Str |
 | plan_hash_value | Oracle execution plan hash value | Any Str |
 | query_text | SQL query text | Any Str |
-| execution_plan_json | Oracle execution plan as hierarchical JSON structure (base64-encoded to prevent auto-parsing) | Any Str |
+| execution_plan_json | Oracle execution plan as hierarchical JSON structure with nested plan tree. Stored as a plain JSON string that can be directly queried in New Relic. | Any Str |
 
 ## Resource Attributes
 
