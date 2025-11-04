@@ -99,6 +99,16 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan
 		return fmt.Errorf("failed to marshal execution plan to JSON: %w", err)
 	}
 
+	// Double-encode the JSON to prevent New Relic from parsing and flattening it
+	// First marshal gives us the JSON structure, second marshal escapes it as a JSON string
+	executionPlanJSON, err := json.Marshal(string(planJSON))
+	if err != nil {
+		return fmt.Errorf("failed to encode execution plan JSON: %w", err)
+	}
+
+	// Remove the outer quotes added by json.Marshal (we want escaped content, not quoted)
+	executionPlanStr := string(executionPlanJSON[1 : len(executionPlanJSON)-1])
+
 	// Note: query_text should be provided by the caller (e.g., QPM scraper)
 	// For now, we use the SQL_ID as the query_id
 	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
@@ -107,7 +117,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan
 		plan.SQLID,                            // query_id
 		fmt.Sprintf("%d", plan.PlanHashValue), // plan_hash_value
 		"",                                    // query_text (empty for now, should be provided by caller)
-		string(planJSON),                      // execution_plan_json
+		executionPlanStr,                      // execution_plan_json as escaped string
 	)
 
 	return nil
