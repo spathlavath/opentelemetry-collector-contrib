@@ -5,6 +5,7 @@ package scrapers
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -88,6 +89,11 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 	return errs
 }
 
+// buildExecutionPlanLogs converts an execution plan to a log event with base64-encoded JSON.
+// The JSON is base64-encoded to prevent New Relic from automatically parsing and flattening the nested structure.
+// To query the execution plan in New Relic, use:
+//
+//	SELECT decode(execution_plan_json, 'base64') FROM Log WHERE event.name = 'newrelicoracledb.execution_plan'
 func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan) error {
 	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
@@ -99,8 +105,9 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan
 		return fmt.Errorf("failed to marshal execution plan to JSON: %w", err)
 	}
 
-	// Use simple single encoding - pass the JSON string directly
-	executionPlanStr := string(planJSON)
+	// Base64 encode the JSON to prevent New Relic from auto-parsing and flattening it
+	// Users can decode it in New Relic using: decode(execution_plan_json, 'base64')
+	executionPlanStr := base64.StdEncoding.EncodeToString(planJSON)
 
 	// Note: query_text should be provided by the caller (e.g., QPM scraper)
 	// For now, we use the SQL_ID as the query_id
@@ -110,7 +117,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan
 		plan.SQLID,                            // query_id
 		fmt.Sprintf("%d", plan.PlanHashValue), // plan_hash_value
 		"",                                    // query_text (empty for now, should be provided by caller)
-		executionPlanStr,                      // execution_plan_json as clean JSON string
+		executionPlanStr,                      // execution_plan_json as base64-encoded JSON
 	)
 
 	return nil

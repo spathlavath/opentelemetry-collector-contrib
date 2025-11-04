@@ -2355,7 +2355,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.execution_plan.info"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Execution plan information for SQL queries using DBMS_XPLAN.DISPLAY_CURSOR", ms.At(i).Description())
+					assert.Equal(t, "Execution plan information for SQL queries", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())

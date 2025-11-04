@@ -3854,7 +3854,7 @@ type metricNewrelicoracledbExecutionPlanInfo struct {
 // init fills newrelicoracledb.execution_plan.info metric with initial data.
 func (m *metricNewrelicoracledbExecutionPlanInfo) init() {
 	m.data.SetName("newrelicoracledb.execution_plan.info")
-	m.data.SetDescription("Execution plan information for SQL queries using DBMS_XPLAN.DISPLAY_CURSOR")
+	m.data.SetDescription("Execution plan information for SQL queries")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)

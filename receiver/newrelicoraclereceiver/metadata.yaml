@@ -47,7 +47,7 @@ attributes:
     description: Oracle execution plan text from DBMS_XPLAN.DISPLAY_CURSOR
     type: string
   execution_plan_json:
-    description: Oracle execution plan as hierarchical JSON structure
+    description: Oracle execution plan as hierarchical JSON structure (base64-encoded to prevent auto-parsing)
     type: string
   wait_event_name:
     description: Oracle wait event name for wait events
