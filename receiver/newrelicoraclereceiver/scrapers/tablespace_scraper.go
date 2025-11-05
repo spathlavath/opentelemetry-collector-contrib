@@ -19,11 +19,13 @@ import (
 )
 
 type TablespaceScraper struct {
-	client       client.OracleClient
-	mb           *metadata.MetricsBuilder
-	logger       *zap.Logger
-	instanceName string
-	config       metadata.MetricsBuilderConfig
+	client            client.OracleClient
+	mb                *metadata.MetricsBuilder
+	logger            *zap.Logger
+	instanceName      string
+	config            metadata.MetricsBuilderConfig
+	includeTablespaces []string
+	excludeTablespaces []string
 
 	isCDBCapable       *bool
 	isPDBCapable       *bool
@@ -34,13 +36,15 @@ type TablespaceScraper struct {
 	detectionMutex     sync.RWMutex
 }
 
-func NewTablespaceScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *TablespaceScraper {
+func NewTablespaceScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig, includeTablespaces, excludeTablespaces []string) *TablespaceScraper {
 	return &TablespaceScraper{
-		client:       c,
-		mb:           mb,
-		logger:       logger,
-		instanceName: instanceName,
-		config:       config,
+		client:             c,
+		mb:                 mb,
+		logger:             logger,
+		instanceName:       instanceName,
+		config:             config,
+		includeTablespaces: includeTablespaces,
+		excludeTablespaces: excludeTablespaces,
 	}
 }
 
@@ -83,7 +87,7 @@ func (s *TablespaceScraper) scrapeTablespaceUsageMetrics(ctx context.Context, no
 		return nil
 	}
 
-	tablespaces, err := s.client.QueryTablespaceUsage(ctx)
+	tablespaces, err := s.client.QueryTablespaceUsage(ctx, s.includeTablespaces, s.excludeTablespaces)
 	if err != nil {
 		return []error{fmt.Errorf("error executing tablespace metrics query: %w", err)}
 	}
@@ -125,7 +129,7 @@ func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Contex
 		return nil
 	}
 
-	tablespaces, err := s.client.QueryTablespaceGlobalName(ctx)
+	tablespaces, err := s.client.QueryTablespaceGlobalName(ctx, s.includeTablespaces, s.excludeTablespaces)
 	if err != nil {
 		return []error{fmt.Errorf("error executing global name tablespace query: %w", err)}
 	}
@@ -143,7 +147,7 @@ func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now
 		return nil
 	}
 
-	tablespaces, err := s.client.QueryTablespaceDBID(ctx)
+	tablespaces, err := s.client.QueryTablespaceDBID(ctx, s.includeTablespaces, s.excludeTablespaces)
 	if err != nil {
 		return []error{fmt.Errorf("error executing DB ID tablespace query: %w", err)}
 	}
@@ -161,7 +165,7 @@ func (s *TablespaceScraper) scrapeCDBDatafilesOfflineTablespaceMetrics(ctx conte
 		return nil
 	}
 
-	tablespaces, err := s.client.QueryTablespaceCDBDatafilesOffline(ctx)
+	tablespaces, err := s.client.QueryTablespaceCDBDatafilesOffline(ctx, s.includeTablespaces, s.excludeTablespaces)
 	if err != nil {
 		return []error{fmt.Errorf("error executing CDB datafiles offline tablespace query: %w", err)}
 	}
@@ -183,9 +187,9 @@ func (s *TablespaceScraper) scrapePDBDatafilesOfflineTablespaceMetrics(ctx conte
 	var err error
 
 	if s.isConnectedToCDBRoot() {
-		tablespaces, err = s.client.QueryTablespacePDBDatafilesOffline(ctx)
+		tablespaces, err = s.client.QueryTablespacePDBDatafilesOffline(ctx, s.includeTablespaces, s.excludeTablespaces)
 	} else if s.isConnectedToPDB() {
-		tablespaces, err = s.client.QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx)
+		tablespaces, err = s.client.QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx, s.includeTablespaces, s.excludeTablespaces)
 	} else {
 		return nil
 	}
@@ -211,9 +215,9 @@ func (s *TablespaceScraper) scrapePDBNonWriteTablespaceMetrics(ctx context.Conte
 	var err error
 
 	if s.isConnectedToCDBRoot() {
-		tablespaces, err = s.client.QueryTablespacePDBNonWrite(ctx)
+		tablespaces, err = s.client.QueryTablespacePDBNonWrite(ctx, s.includeTablespaces, s.excludeTablespaces)
 	} else if s.isConnectedToPDB() {
-		tablespaces, err = s.client.QueryTablespacePDBNonWriteCurrentContainer(ctx)
+		tablespaces, err = s.client.QueryTablespacePDBNonWriteCurrentContainer(ctx, s.includeTablespaces, s.excludeTablespaces)
 	} else {
 		return nil
 	}

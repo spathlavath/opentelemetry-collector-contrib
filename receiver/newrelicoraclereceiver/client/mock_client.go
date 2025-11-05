@@ -541,56 +541,56 @@ func (m *MockClient) QuerySystemMetrics(_ context.Context) ([]models.SystemMetri
 	return m.SystemMetricsList, nil
 }
 
-func (m *MockClient) QueryTablespaceUsage(_ context.Context) ([]models.TablespaceUsage, error) {
+func (m *MockClient) QueryTablespaceUsage(_ context.Context, _, _ []string) ([]models.TablespaceUsage, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.TablespaceUsageList, nil
 }
 
-func (m *MockClient) QueryTablespaceGlobalName(_ context.Context) ([]models.TablespaceGlobalName, error) {
+func (m *MockClient) QueryTablespaceGlobalName(_ context.Context, _, _ []string) ([]models.TablespaceGlobalName, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.TablespaceGlobalNameList, nil
 }
 
-func (m *MockClient) QueryTablespaceDBID(_ context.Context) ([]models.TablespaceDBID, error) {
+func (m *MockClient) QueryTablespaceDBID(_ context.Context, _, _ []string) ([]models.TablespaceDBID, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.TablespaceDBIDList, nil
 }
 
-func (m *MockClient) QueryTablespaceCDBDatafilesOffline(_ context.Context) ([]models.TablespaceCDBDatafilesOffline, error) {
+func (m *MockClient) QueryTablespaceCDBDatafilesOffline(_ context.Context, _, _ []string) ([]models.TablespaceCDBDatafilesOffline, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.TablespaceCDBDatafilesOfflineList, nil
 }
 
-func (m *MockClient) QueryTablespacePDBDatafilesOffline(_ context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
+func (m *MockClient) QueryTablespacePDBDatafilesOffline(_ context.Context, _, _ []string) ([]models.TablespacePDBDatafilesOffline, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.TablespacePDBDatafilesOfflineList, nil
 }
 
-func (m *MockClient) QueryTablespacePDBDatafilesOfflineCurrentContainer(_ context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
+func (m *MockClient) QueryTablespacePDBDatafilesOfflineCurrentContainer(_ context.Context, _, _ []string) ([]models.TablespacePDBDatafilesOffline, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.TablespacePDBDatafilesOfflineCurrentContainerList, nil
 }
 
-func (m *MockClient) QueryTablespacePDBNonWrite(_ context.Context) ([]models.TablespacePDBNonWrite, error) {
+func (m *MockClient) QueryTablespacePDBNonWrite(_ context.Context, _, _ []string) ([]models.TablespacePDBNonWrite, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.TablespacePDBNonWriteList, nil
 }
 
-func (m *MockClient) QueryTablespacePDBNonWriteCurrentContainer(_ context.Context) ([]models.TablespacePDBNonWrite, error) {
+func (m *MockClient) QueryTablespacePDBNonWriteCurrentContainer(_ context.Context, _, _ []string) ([]models.TablespacePDBNonWrite, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}

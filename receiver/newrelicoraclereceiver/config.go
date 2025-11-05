@@ -59,6 +59,12 @@ var (
 	errInvalidQueryMonitoringCountThreshold    = errors.New("query_monitoring_count_threshold must be between 10 and 50")
 )
 
+// TablespaceFilterConfig defines tablespace filtering options
+type TablespaceFilterConfig struct {
+	IncludeTablespaces []string `mapstructure:"include_tablespaces"`
+	ExcludeTablespaces []string `mapstructure:"exclude_tablespaces"`
+}
+
 type Config struct {
 	DataSource string `mapstructure:"datasource"`
 	Endpoint   string `mapstructure:"endpoint"`
@@ -74,6 +80,9 @@ type Config struct {
 	EnableQueryMonitoring                bool `mapstructure:"enable_query_monitoring"`
 	QueryMonitoringResponseTimeThreshold int  `mapstructure:"query_monitoring_response_time_threshold"`
 	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
+
+	// Tablespace Filtering Configuration
+	TablespaceFilter TablespaceFilterConfig `mapstructure:"tablespace_filter"`
 
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`

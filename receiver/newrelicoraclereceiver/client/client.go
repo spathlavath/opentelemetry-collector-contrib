@@ -113,13 +113,13 @@ type OracleClient interface {
 	// System metrics
 	QuerySystemMetrics(ctx context.Context) ([]models.SystemMetric, error)
 
-	// Tablespace metrics
-	QueryTablespaceUsage(ctx context.Context) ([]models.TablespaceUsage, error)
-	QueryTablespaceGlobalName(ctx context.Context) ([]models.TablespaceGlobalName, error)
-	QueryTablespaceDBID(ctx context.Context) ([]models.TablespaceDBID, error)
-	QueryTablespaceCDBDatafilesOffline(ctx context.Context) ([]models.TablespaceCDBDatafilesOffline, error)
-	QueryTablespacePDBDatafilesOffline(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error)
-	QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error)
-	QueryTablespacePDBNonWrite(ctx context.Context) ([]models.TablespacePDBNonWrite, error)
-	QueryTablespacePDBNonWriteCurrentContainer(ctx context.Context) ([]models.TablespacePDBNonWrite, error)
+	// Tablespace metrics with filtering support
+	QueryTablespaceUsage(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceUsage, error)
+	QueryTablespaceGlobalName(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceGlobalName, error)
+	QueryTablespaceDBID(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceDBID, error)
+	QueryTablespaceCDBDatafilesOffline(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceCDBDatafilesOffline, error)
+	QueryTablespacePDBDatafilesOffline(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBDatafilesOffline, error)
+	QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBDatafilesOffline, error)
+	QueryTablespacePDBNonWrite(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBNonWrite, error)
+	QueryTablespacePDBNonWriteCurrentContainer(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBNonWrite, error)
 }

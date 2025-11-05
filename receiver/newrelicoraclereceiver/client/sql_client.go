@@ -1409,8 +1409,9 @@ func (c *SQLClient) QuerySystemMetrics(ctx context.Context) ([]models.SystemMetr
 	return metrics, nil
 }
 
-func (c *SQLClient) QueryTablespaceUsage(ctx context.Context) ([]models.TablespaceUsage, error) {
-	rows, err := c.db.QueryContext(ctx, queries.TablespaceMetricsSQL)
+func (c *SQLClient) QueryTablespaceUsage(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceUsage, error) {
+	sqlQuery := queries.BuildTablespaceUsageSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -1432,8 +1433,9 @@ func (c *SQLClient) QueryTablespaceUsage(ctx context.Context) ([]models.Tablespa
 	return tablespaces, nil
 }
 
-func (c *SQLClient) QueryTablespaceGlobalName(ctx context.Context) ([]models.TablespaceGlobalName, error) {
-	rows, err := c.db.QueryContext(ctx, queries.GlobalNameTablespaceSQL)
+func (c *SQLClient) QueryTablespaceGlobalName(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceGlobalName, error) {
+	sqlQuery := queries.BuildGlobalNameTablespaceSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -1455,8 +1457,9 @@ func (c *SQLClient) QueryTablespaceGlobalName(ctx context.Context) ([]models.Tab
 	return tablespaces, nil
 }
 
-func (c *SQLClient) QueryTablespaceDBID(ctx context.Context) ([]models.TablespaceDBID, error) {
-	rows, err := c.db.QueryContext(ctx, queries.DBIDTablespaceSQL)
+func (c *SQLClient) QueryTablespaceDBID(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceDBID, error) {
+	sqlQuery := queries.BuildDBIDTablespaceSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -1478,8 +1481,9 @@ func (c *SQLClient) QueryTablespaceDBID(ctx context.Context) ([]models.Tablespac
 	return tablespaces, nil
 }
 
-func (c *SQLClient) QueryTablespaceCDBDatafilesOffline(ctx context.Context) ([]models.TablespaceCDBDatafilesOffline, error) {
-	rows, err := c.db.QueryContext(ctx, queries.CDBDatafilesOfflineTablespaceSQL)
+func (c *SQLClient) QueryTablespaceCDBDatafilesOffline(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespaceCDBDatafilesOffline, error) {
+	sqlQuery := queries.BuildCDBDatafilesOfflineSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -1501,8 +1505,9 @@ func (c *SQLClient) QueryTablespaceCDBDatafilesOffline(ctx context.Context) ([]m
 	return tablespaces, nil
 }
 
-func (c *SQLClient) QueryTablespacePDBDatafilesOffline(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
-	rows, err := c.db.QueryContext(ctx, queries.PDBDatafilesOfflineTablespaceSQL)
+func (c *SQLClient) QueryTablespacePDBDatafilesOffline(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBDatafilesOffline, error) {
+	sqlQuery := queries.BuildPDBDatafilesOfflineSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -1524,8 +1529,9 @@ func (c *SQLClient) QueryTablespacePDBDatafilesOffline(ctx context.Context) ([]m
 	return tablespaces, nil
 }
 
-func (c *SQLClient) QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx context.Context) ([]models.TablespacePDBDatafilesOffline, error) {
-	rows, err := c.db.QueryContext(ctx, queries.PDBDatafilesOfflineCurrentContainerSQL)
+func (c *SQLClient) QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBDatafilesOffline, error) {
+	sqlQuery := queries.BuildPDBDatafilesOfflineCurrentContainerSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -1547,8 +1553,9 @@ func (c *SQLClient) QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx conte
 	return tablespaces, nil
 }
 
-func (c *SQLClient) QueryTablespacePDBNonWrite(ctx context.Context) ([]models.TablespacePDBNonWrite, error) {
-	rows, err := c.db.QueryContext(ctx, queries.PDBNonWriteTablespaceSQL)
+func (c *SQLClient) QueryTablespacePDBNonWrite(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBNonWrite, error) {
+	sqlQuery := queries.BuildPDBNonWriteSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -1570,8 +1577,9 @@ func (c *SQLClient) QueryTablespacePDBNonWrite(ctx context.Context) ([]models.Ta
 	return tablespaces, nil
 }
 
-func (c *SQLClient) QueryTablespacePDBNonWriteCurrentContainer(ctx context.Context) ([]models.TablespacePDBNonWrite, error) {
-	rows, err := c.db.QueryContext(ctx, queries.PDBNonWriteCurrentContainerSQL)
+func (c *SQLClient) QueryTablespacePDBNonWriteCurrentContainer(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.TablespacePDBNonWrite, error) {
+	sqlQuery := queries.BuildPDBNonWriteCurrentContainerSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, sqlQuery)
 	if err != nil {
 		return nil, err
 	}
