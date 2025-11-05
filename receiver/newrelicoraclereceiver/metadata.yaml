@@ -295,6 +295,7 @@ metrics:
     attributes:
       - db.instance.name
       - tablespace.name
+      - global.name
 
   newrelicoracledb.tablespace.db_id:
     description: Database ID information for tablespace
@@ -305,6 +306,7 @@ metrics:
     attributes:
       - db.instance.name
       - tablespace.name
+      - db.id
 
   newrelicoracledb.tablespace.offline_cdb_datafiles:
     description: Count of offline CDB datafiles by tablespace

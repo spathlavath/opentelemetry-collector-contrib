@@ -135,7 +135,7 @@ func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Contex
 	}
 
 	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, s.instanceName, ts.TablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, s.instanceName, ts.TablespaceName, ts.GlobalName)
 		*metricCount++
 	}
 

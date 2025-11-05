@@ -4683,6 +4683,7 @@ Global name information for tablespace
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| global.name | Oracle database global name | Any Str | false |
 
 ### newrelicoracledb.tablespace.is_offline
 
