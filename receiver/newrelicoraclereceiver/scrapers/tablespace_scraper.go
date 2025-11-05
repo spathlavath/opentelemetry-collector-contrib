@@ -19,11 +19,11 @@ import (
 )
 
 type TablespaceScraper struct {
-	client            client.OracleClient
-	mb                *metadata.MetricsBuilder
-	logger            *zap.Logger
-	instanceName      string
-	config            metadata.MetricsBuilderConfig
+	client             client.OracleClient
+	mb                 *metadata.MetricsBuilder
+	logger             *zap.Logger
+	instanceName       string
+	config             metadata.MetricsBuilderConfig
 	includeTablespaces []string
 	excludeTablespaces []string
 

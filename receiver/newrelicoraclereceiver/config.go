@@ -101,7 +101,7 @@ func (c *Config) SetDefaults() {
 
 	// Set Query Performance Monitoring defaults if not set
 	if c.QueryMonitoringResponseTimeThreshold == 0 || c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
-		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold{
+		c.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold {
 		c.QueryMonitoringResponseTimeThreshold = defaultQueryMonitoringResponseTimeThreshold
 	}
 	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
