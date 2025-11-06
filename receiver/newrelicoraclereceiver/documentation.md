@@ -2477,6 +2477,22 @@ Slow Query Details
 | statement_type | Type of SQL statement or application module | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
+### newrelicoracledb.slow_queries.rows_processed
+
+Total number of rows processed by slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
 ### newrelicoracledb.slow_queries.runtime_memory
 
 Runtime memory used by slow query cursors
@@ -4668,6 +4684,7 @@ Database ID information for tablespace
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| db.id | Oracle database ID | Any Str | false |
 
 ### newrelicoracledb.tablespace.global_name
 

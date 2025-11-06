@@ -3364,6 +3364,17 @@ metrics:
       - query_id
       - user_name
 
+  newrelicoracledb.slow_queries.rows_processed:
+    description: Total number of rows processed by slow queries
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{rows}"
+    attributes:
+      - database_name
+      - query_id
+      - user_name
+
   newrelicoracledb.slow_queries.avg_cpu_time:
     description: Average CPU time per execution for slow queries
     enabled: true
