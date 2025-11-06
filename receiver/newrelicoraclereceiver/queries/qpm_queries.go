@@ -136,10 +136,8 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 			BYTES,
 			CPU_COST,
 			IO_COST
-		FROM
-			V$SQL_PLAN
-		WHERE
-			SQL_ID IN (%s)
-		ORDER BY
-			SQL_ID, CHILD_NUMBER, ID`, sqlIDs)
+	FROM
+		V$SQL_PLAN
+	WHERE
+		SQL_ID IN (%s)`, sqlIDs)
 }

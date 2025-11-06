@@ -53,26 +53,24 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 	queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	executionPlans, err := s.client.QueryExecutionPlans(queryCtx, sqlIDsParam)
+	planRows, err := s.client.QueryExecutionPlanRows(queryCtx, sqlIDsParam)
 	if err != nil {
 		errs = append(errs, fmt.Errorf("failed to query execution plans: %w", err))
 		return errs
 	}
 
-	s.logger.Debug("Retrieved execution plans",
-		zap.Int("count", len(executionPlans)))
+	s.logger.Debug("Retrieved execution plan rows",
+		zap.Int("count", len(planRows)))
 
 	successCount := 0
-	for _, executionPlan := range executionPlans {
-		if executionPlan.SQLID == "" || executionPlan.PlanTree == nil {
-			s.logger.Debug("Skipping invalid execution plan",
-				zap.String("sql_id", executionPlan.SQLID))
+	for _, row := range planRows {
+		if !row.SQLID.Valid || row.SQLID.String == "" {
 			continue
 		}
 
-		if err := s.buildExecutionPlanLogs(&executionPlan); err != nil {
-			s.logger.Warn("Failed to build logs for execution plan",
-				zap.String("sql_id", executionPlan.SQLID),
+		if err := s.buildExecutionPlanLogs(&row); err != nil {
+			s.logger.Warn("Failed to build logs for execution plan row",
+				zap.String("sql_id", row.SQLID.String),
 				zap.Error(err))
 			errs = append(errs, err)
 		} else {
@@ -80,8 +78,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		}
 	}
 
-	s.logger.Debug("Scraped execution plans",
-		zap.Int("total", len(executionPlans)),
+	s.logger.Debug("Scraped execution plan rows",
+		zap.Int("total", len(planRows)),
 		zap.Int("success", successCount),
 		zap.Int("failed", len(errs)))
 
