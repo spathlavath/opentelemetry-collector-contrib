@@ -11,7 +11,6 @@ import (
 
 // MockClient is a mock implementation of OracleClient for testing.
 type MockClient struct {
-	ExecutionPlans  map[string][]models.ExecutionPlan
 	SlowQueries     []models.SlowQuery
 	BlockingQueries []models.BlockingQuery
 	WaitEvents      []models.WaitEvent
@@ -112,7 +111,6 @@ type MockClient struct {
 // NewMockClient creates a new mock client for testing.
 func NewMockClient() *MockClient {
 	return &MockClient{
-		ExecutionPlans:  make(map[string][]models.ExecutionPlan),
 		SlowQueries:     []models.SlowQuery{},
 		BlockingQueries: []models.BlockingQuery{},
 		WaitEvents:      []models.WaitEvent{},
@@ -129,18 +127,6 @@ func (m *MockClient) Close() error {
 
 func (m *MockClient) Ping(ctx context.Context) error {
 	return m.PingErr
-}
-
-func (m *MockClient) QueryExecutionPlans(ctx context.Context, sqlIDs string) ([]models.ExecutionPlan, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-
-	if plans, ok := m.ExecutionPlans[sqlIDs]; ok {
-		return plans, nil
-	}
-
-	return []models.ExecutionPlan{}, nil
 }
 
 func (m *MockClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error) {

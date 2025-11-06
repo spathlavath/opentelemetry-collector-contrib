@@ -18,7 +18,6 @@ type OracleClient interface {
 	Ping(ctx context.Context) error
 
 	// Execution plan queries
-	QueryExecutionPlans(ctx context.Context, sqlIDs string) ([]models.ExecutionPlan, error)
 	QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error)
 
 	// Slow queries
