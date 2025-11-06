@@ -17,15 +17,13 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			sa.sharable_mem AS sharable_memory_bytes,
 			sa.persistent_mem AS persistent_memory_bytes,
 			sa.runtime_mem AS runtime_memory_bytes,
-			COALESCE(sa.module,
-				CASE
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%%' THEN 'SELECT'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'INSERT%%' THEN 'INSERT'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'UPDATE%%' THEN 'UPDATE'
-					WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'DELETE%%' THEN 'DELETE'
-					ELSE 'OTHER'
-				END
-			) AS statement_type,
+			CASE
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%%' THEN 'SELECT'
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'INSERT%%' THEN 'INSERT'
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'UPDATE%%' THEN 'UPDATE'
+				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'DELETE%%' THEN 'DELETE'
+				ELSE 'OTHER'
+			END AS statement_type,
 			sa.executions AS execution_count,
 			sa.rows_processed AS rows_processed,
 			sa.sql_text AS query_text,
