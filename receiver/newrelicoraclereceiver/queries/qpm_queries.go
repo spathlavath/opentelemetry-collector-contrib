@@ -117,6 +117,12 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 	return fmt.Sprintf(`
 		SELECT
 			SQL_ID,
+			TIMESTAMP,
+			TEMP_SPACE,
+			ACCESS_PREDICATES,
+			PROJECTION,
+			TIME,
+			FILTER_PREDICATES,
 			CHILD_NUMBER,
 			ID,
 			PARENT_ID,

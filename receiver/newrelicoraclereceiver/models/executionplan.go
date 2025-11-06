@@ -7,34 +7,46 @@ import "database/sql"
 
 // ExecutionPlanRow represents a single row from V$SQL_PLAN
 type ExecutionPlanRow struct {
-	SQLID         sql.NullString
-	ChildNumber   sql.NullInt64
-	ID            sql.NullInt64
-	ParentID      sql.NullInt64
-	Depth         sql.NullInt64
-	Operation     sql.NullString
-	Options       sql.NullString
-	ObjectName    sql.NullString
-	PlanHashValue sql.NullInt64
-	Cost          sql.NullInt64
-	Cardinality   sql.NullInt64
-	Bytes         sql.NullInt64
-	CPUCost       sql.NullInt64
-	IOCost        sql.NullInt64
+	SQLID            sql.NullString
+	Timestamp        sql.NullString
+	TempSpace        sql.NullInt64
+	AccessPredicates sql.NullString
+	Projection       sql.NullString
+	Time             sql.NullInt64
+	FilterPredicates sql.NullString
+	ChildNumber      sql.NullInt64
+	ID               sql.NullInt64
+	ParentID         sql.NullInt64
+	Depth            sql.NullInt64
+	Operation        sql.NullString
+	Options          sql.NullString
+	ObjectName       sql.NullString
+	PlanHashValue    sql.NullInt64
+	Cost             sql.NullInt64
+	Cardinality      sql.NullInt64
+	Bytes            sql.NullInt64
+	CPUCost          sql.NullInt64
+	IOCost           sql.NullInt64
 }
 
 // PlanNode represents a node in the execution plan tree
 type PlanNode struct {
-	ID          int64       `json:"id"`
-	Operation   string      `json:"operation"`
-	Options     *string     `json:"options"`
-	ObjectName  *string     `json:"object_name"`
-	Cost        *int64      `json:"cost"`
-	Cardinality *int64      `json:"cardinality"`
-	Bytes       *int64      `json:"bytes"`
-	CPUCost     *int64      `json:"cpu_cost"`
-	IOCost      *int64      `json:"io_cost"`
-	Children    []*PlanNode `json:"children"`
+	ID               int64       `json:"id"`
+	Operation        string      `json:"operation"`
+	Options          *string     `json:"options"`
+	ObjectName       *string     `json:"object_name"`
+	Cost             *int64      `json:"cost"`
+	Cardinality      *int64      `json:"cardinality"`
+	Bytes            *int64      `json:"bytes"`
+	CPUCost          *int64      `json:"cpu_cost"`
+	IOCost           *int64      `json:"io_cost"`
+	Timestamp        *string     `json:"timestamp"`
+	TempSpace        *int64      `json:"temp_space"`
+	AccessPredicates *string     `json:"access_predicates"`
+	Projection       *string     `json:"projection"`
+	Time             *int64      `json:"time"`
+	FilterPredicates *string     `json:"filter_predicates"`
+	Children         []*PlanNode `json:"children"`
 }
 
 // ExecutionPlan represents a complete execution plan in hierarchical format
@@ -188,6 +200,24 @@ func createPlanNode(row ExecutionPlanRow) *PlanNode {
 	}
 	if row.IOCost.Valid {
 		node.IOCost = &row.IOCost.Int64
+	}
+	if row.Timestamp.Valid && row.Timestamp.String != "" {
+		node.Timestamp = &row.Timestamp.String
+	}
+	if row.TempSpace.Valid {
+		node.TempSpace = &row.TempSpace.Int64
+	}
+	if row.AccessPredicates.Valid && row.AccessPredicates.String != "" {
+		node.AccessPredicates = &row.AccessPredicates.String
+	}
+	if row.Projection.Valid && row.Projection.String != "" {
+		node.Projection = &row.Projection.String
+	}
+	if row.Time.Valid {
+		node.Time = &row.Time.Int64
+	}
+	if row.FilterPredicates.Valid && row.FilterPredicates.String != "" {
+		node.FilterPredicates = &row.FilterPredicates.String
 	}
 
 	return node
