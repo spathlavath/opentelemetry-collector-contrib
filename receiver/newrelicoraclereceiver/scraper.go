@@ -157,7 +157,7 @@ func (s *newRelicOracleScraper) initializeScrapers() error {
 // initializeCoreScrapers initializes basic database metric scrapers
 func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 	s.sessionScraper = scrapers.NewSessionScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
 
 	var err error
 	s.coreScraper, err = scrapers.NewCoreScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
@@ -173,7 +173,7 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 		return fmt.Errorf("failed to create connection scraper: %w", err)
 	}
 
-	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
 	if err != nil {
 		return fmt.Errorf("failed to create container scraper: %w", err)
 	}

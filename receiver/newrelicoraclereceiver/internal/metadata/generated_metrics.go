@@ -17230,7 +17230,7 @@ func (m *metricNewrelicoracledbTablespaceGlobalName) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbTablespaceGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
+func (m *metricNewrelicoracledbTablespaceGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string, globalNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -17240,6 +17240,7 @@ func (m *metricNewrelicoracledbTablespaceGlobalName) recordDataPoint(start pcomm
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
+	dp.Attributes().PutStr("global.name", globalNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -20577,8 +20578,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceDbIDDataPoint(ts pcomm
 }
 
 // RecordNewrelicoracledbTablespaceGlobalNameDataPoint adds a data point to newrelicoracledb.tablespace.global_name metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceGlobalName.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, tablespaceNameAttributeValue string, globalNameAttributeValue string) {
+	mb.metricNewrelicoracledbTablespaceGlobalName.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, tablespaceNameAttributeValue, globalNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceIsOfflineDataPoint adds a data point to newrelicoracledb.tablespace.is_offline metric.

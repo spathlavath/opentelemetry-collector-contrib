@@ -1286,7 +1286,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val", "global.name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -7150,6 +7150,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("global.name")
+					assert.True(t, ok)
+					assert.Equal(t, "global.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.is_offline":
 					assert.False(t, validatedMetrics["newrelicoracledb.tablespace.is_offline"], "Found a duplicate in the metrics slice: newrelicoracledb.tablespace.is_offline")
 					validatedMetrics["newrelicoracledb.tablespace.is_offline"] = true
