@@ -17,7 +17,7 @@ type eventNewrelicoracledbExecutionPlan struct {
 	config EventConfig         // event config provided by user.
 }
 
-func (e *eventNewrelicoracledbExecutionPlan) recordEvent(ctx context.Context, timestamp pcommon.Timestamp, queryIDAttributeValue string, planHashValueAttributeValue string, queryTextAttributeValue string, executionPlanJSONAttributeValue string) {
+func (e *eventNewrelicoracledbExecutionPlan) recordEvent(ctx context.Context, timestamp pcommon.Timestamp, queryIDAttributeValue string, planHashValueAttributeValue string, queryTextAttributeValue string, childNumberAttributeValue int64, planIDAttributeValue int64, parentIDAttributeValue int64, depthAttributeValue int64, operationAttributeValue string, optionsAttributeValue string, objectNameAttributeValue string, costAttributeValue int64, cardinalityAttributeValue int64, bytesAttributeValue int64, cpuCostAttributeValue int64, ioCostAttributeValue int64, timestampAttributeValue string, tempSpaceAttributeValue int64, accessPredicatesAttributeValue string, projectionAttributeValue string, timeAttributeValue int64, filterPredicatesAttributeValue string) {
 	if !e.config.Enabled {
 		return
 	}
@@ -32,7 +32,24 @@ func (e *eventNewrelicoracledbExecutionPlan) recordEvent(ctx context.Context, ti
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_hash_value", planHashValueAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
-	dp.Attributes().PutStr("execution_plan_json", executionPlanJSONAttributeValue)
+	dp.Attributes().PutInt("child_number", childNumberAttributeValue)
+	dp.Attributes().PutInt("plan_id", planIDAttributeValue)
+	dp.Attributes().PutInt("parent_id", parentIDAttributeValue)
+	dp.Attributes().PutInt("depth", depthAttributeValue)
+	dp.Attributes().PutStr("operation", operationAttributeValue)
+	dp.Attributes().PutStr("options", optionsAttributeValue)
+	dp.Attributes().PutStr("object_name", objectNameAttributeValue)
+	dp.Attributes().PutInt("cost", costAttributeValue)
+	dp.Attributes().PutInt("cardinality", cardinalityAttributeValue)
+	dp.Attributes().PutInt("bytes", bytesAttributeValue)
+	dp.Attributes().PutInt("cpu_cost", cpuCostAttributeValue)
+	dp.Attributes().PutInt("io_cost", ioCostAttributeValue)
+	dp.Attributes().PutStr("timestamp", timestampAttributeValue)
+	dp.Attributes().PutInt("temp_space", tempSpaceAttributeValue)
+	dp.Attributes().PutStr("access_predicates", accessPredicatesAttributeValue)
+	dp.Attributes().PutStr("projection", projectionAttributeValue)
+	dp.Attributes().PutInt("time", timeAttributeValue)
+	dp.Attributes().PutStr("filter_predicates", filterPredicatesAttributeValue)
 
 }
 
@@ -171,6 +188,6 @@ func (lb *LogsBuilder) Emit(options ...ResourceLogsOption) plog.Logs {
 }
 
 // RecordNewrelicoracledbExecutionPlanEvent adds a log record of newrelicoracledb.execution_plan event.
-func (lb *LogsBuilder) RecordNewrelicoracledbExecutionPlanEvent(ctx context.Context, timestamp pcommon.Timestamp, queryIDAttributeValue string, planHashValueAttributeValue string, queryTextAttributeValue string, executionPlanJSONAttributeValue string) {
-	lb.eventNewrelicoracledbExecutionPlan.recordEvent(ctx, timestamp, queryIDAttributeValue, planHashValueAttributeValue, queryTextAttributeValue, executionPlanJSONAttributeValue)
+func (lb *LogsBuilder) RecordNewrelicoracledbExecutionPlanEvent(ctx context.Context, timestamp pcommon.Timestamp, queryIDAttributeValue string, planHashValueAttributeValue string, queryTextAttributeValue string, childNumberAttributeValue int64, planIDAttributeValue int64, parentIDAttributeValue int64, depthAttributeValue int64, operationAttributeValue string, optionsAttributeValue string, objectNameAttributeValue string, costAttributeValue int64, cardinalityAttributeValue int64, bytesAttributeValue int64, cpuCostAttributeValue int64, ioCostAttributeValue int64, timestampAttributeValue string, tempSpaceAttributeValue int64, accessPredicatesAttributeValue string, projectionAttributeValue string, timeAttributeValue int64, filterPredicatesAttributeValue string) {
+	lb.eventNewrelicoracledbExecutionPlan.recordEvent(ctx, timestamp, queryIDAttributeValue, planHashValueAttributeValue, queryTextAttributeValue, childNumberAttributeValue, planIDAttributeValue, parentIDAttributeValue, depthAttributeValue, operationAttributeValue, optionsAttributeValue, objectNameAttributeValue, costAttributeValue, cardinalityAttributeValue, bytesAttributeValue, cpuCostAttributeValue, ioCostAttributeValue, timestampAttributeValue, tempSpaceAttributeValue, accessPredicatesAttributeValue, projectionAttributeValue, timeAttributeValue, filterPredicatesAttributeValue)
 }

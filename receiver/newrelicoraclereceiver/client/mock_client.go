@@ -143,6 +143,16 @@ func (m *MockClient) QueryExecutionPlans(ctx context.Context, sqlIDs string) ([]
 	return []models.ExecutionPlan{}, nil
 }
 
+func (m *MockClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+
+	// For mock testing, return empty rows
+	// In real tests, this can be populated with test data
+	return []models.ExecutionPlanRow{}, nil
+}
+
 func (m *MockClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr

@@ -5,7 +5,6 @@ package scrapers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -86,34 +85,141 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 	return errs
 }
 
-// buildExecutionPlanLogs converts an execution plan to a log event with hierarchical JSON structure.
-// The execution plan is sent as a plain JSON string with the hierarchical tree structure preserved.
-// This allows for direct querying in New Relic without needing to decode or decompress.
-// The hierarchical structure makes it easier to understand the query execution flow compared to flat arrays.
-func (s *ExecutionPlanScraper) buildExecutionPlanLogs(plan *models.ExecutionPlan) error {
+// buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
+// Each field from V$SQL_PLAN is sent as a separate attribute for direct querying in New Relic.
+func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow) error {
 	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
 	}
 
-	// Convert execution plan to JSON with hierarchical structure
-	planJSON, err := json.Marshal(plan)
-	if err != nil {
-		return fmt.Errorf("failed to marshal execution plan to JSON: %w", err)
+	// Extract values with defaults for null fields
+	queryID := ""
+	if row.SQLID.Valid {
+		queryID = row.SQLID.String
 	}
 
-	// Send as plain JSON string - this preserves the hierarchical tree structure
-	// and makes it directly queryable in New Relic
-	executionPlanStr := string(planJSON)
+	planHashValue := ""
+	if row.PlanHashValue.Valid {
+		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
+	}
 
-	// Note: query_text should be provided by the caller (e.g., QPM scraper)
-	// For now, we use the SQL_ID as the query_id
+	queryText := "" // Empty for now, should be provided by caller
+
+	childNumber := int64(0)
+	if row.ChildNumber.Valid {
+		childNumber = row.ChildNumber.Int64
+	}
+
+	planID := int64(0)
+	if row.ID.Valid {
+		planID = row.ID.Int64
+	}
+
+	parentID := int64(0)
+	if row.ParentID.Valid {
+		parentID = row.ParentID.Int64
+	}
+
+	depth := int64(0)
+	if row.Depth.Valid {
+		depth = row.Depth.Int64
+	}
+
+	operation := ""
+	if row.Operation.Valid {
+		operation = row.Operation.String
+	}
+
+	options := ""
+	if row.Options.Valid {
+		options = row.Options.String
+	}
+
+	objectName := ""
+	if row.ObjectName.Valid {
+		objectName = row.ObjectName.String
+	}
+
+	cost := int64(0)
+	if row.Cost.Valid {
+		cost = row.Cost.Int64
+	}
+
+	cardinality := int64(0)
+	if row.Cardinality.Valid {
+		cardinality = row.Cardinality.Int64
+	}
+
+	bytes := int64(0)
+	if row.Bytes.Valid {
+		bytes = row.Bytes.Int64
+	}
+
+	cpuCost := int64(0)
+	if row.CPUCost.Valid {
+		cpuCost = row.CPUCost.Int64
+	}
+
+	ioCost := int64(0)
+	if row.IOCost.Valid {
+		ioCost = row.IOCost.Int64
+	}
+
+	timestamp := ""
+	if row.Timestamp.Valid {
+		timestamp = row.Timestamp.String
+	}
+
+	tempSpace := int64(0)
+	if row.TempSpace.Valid {
+		tempSpace = row.TempSpace.Int64
+	}
+
+	accessPredicates := ""
+	if row.AccessPredicates.Valid {
+		accessPredicates = row.AccessPredicates.String
+	}
+
+	projection := ""
+	if row.Projection.Valid {
+		projection = row.Projection.String
+	}
+
+	timeVal := int64(0)
+	if row.Time.Valid {
+		timeVal = row.Time.Int64
+	}
+
+	filterPredicates := ""
+	if row.FilterPredicates.Valid {
+		filterPredicates = row.FilterPredicates.String
+	}
+
+	// Record the event with all attributes
 	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
 		context.Background(),
 		pcommon.NewTimestampFromTime(time.Now()),
-		plan.SQLID,                            // query_id
-		fmt.Sprintf("%d", plan.PlanHashValue), // plan_hash_value
-		"",                                    // query_text (empty for now, should be provided by caller)
-		executionPlanStr,                      // execution_plan_json as hierarchical JSON string
+		queryID,
+		planHashValue,
+		queryText,
+		childNumber,
+		planID,
+		parentID,
+		depth,
+		operation,
+		options,
+		objectName,
+		cost,
+		cardinality,
+		bytes,
+		cpuCost,
+		ioCost,
+		timestamp,
+		tempSpace,
+		accessPredicates,
+		projection,
+		timeVal,
+		filterPredicates,
 	)
 
 	return nil

@@ -19,6 +19,7 @@ type OracleClient interface {
 
 	// Execution plan queries
 	QueryExecutionPlans(ctx context.Context, sqlIDs string) ([]models.ExecutionPlan, error)
+	QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error)
 
 	// Slow queries
 	QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error)

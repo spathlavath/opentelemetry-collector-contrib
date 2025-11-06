@@ -97,6 +97,57 @@ func (c *SQLClient) QueryExecutionPlans(ctx context.Context, sqlIDs string) ([]m
 	return results, nil
 }
 
+// QueryExecutionPlanRows executes the execution plan query and returns raw rows without hierarchical transformation.
+func (c *SQLClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error) {
+	query := queries.GetExecutionPlanQuery(sqlIDs)
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var planRows []models.ExecutionPlanRow
+
+	for rows.Next() {
+		var row models.ExecutionPlanRow
+
+		err := rows.Scan(
+			&row.SQLID,
+			&row.Timestamp,
+			&row.TempSpace,
+			&row.AccessPredicates,
+			&row.Projection,
+			&row.Time,
+			&row.FilterPredicates,
+			&row.ChildNumber,
+			&row.ID,
+			&row.ParentID,
+			&row.Depth,
+			&row.Operation,
+			&row.Options,
+			&row.ObjectName,
+			&row.PlanHashValue,
+			&row.Cost,
+			&row.Cardinality,
+			&row.Bytes,
+			&row.CPUCost,
+			&row.IOCost,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		planRows = append(planRows, row)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return planRows, nil
+}
+
 // QuerySlowQueries executes the slow queries query.
 func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
 	query := queries.GetSlowQueriesSQL(responseTimeThreshold, countThreshold)

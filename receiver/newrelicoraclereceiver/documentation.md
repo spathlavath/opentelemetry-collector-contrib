@@ -4910,7 +4910,7 @@ events:
 
 ### newrelicoracledb.execution_plan
 
-Oracle SQL execution plan data as structured JSON. Contains hierarchical execution plan tree with operation details, costs, and cardinalities.
+Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
 
 #### Attributes
 
@@ -4919,7 +4919,24 @@ Oracle SQL execution plan data as structured JSON. Contains hierarchical executi
 | query_id | SQL query identifier | Any Str |
 | plan_hash_value | Oracle execution plan hash value | Any Str |
 | query_text | SQL query text | Any Str |
-| execution_plan_json | Oracle execution plan as hierarchical JSON structure with nested plan tree. Stored as a plain JSON string that can be directly queried in New Relic. | Any Str |
+| child_number | Child cursor number | Any Int |
+| plan_id | Step ID in the execution plan | Any Int |
+| parent_id | Parent step ID in the execution plan | Any Int |
+| depth | Depth level in the execution plan tree | Any Int |
+| operation | Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN) | Any Str |
+| options | Options for the operation (e.g., FULL, RANGE) | Any Str |
+| object_name | Name of the database object being accessed | Any Str |
+| cost | Estimated cost of the operation | Any Int |
+| cardinality | Estimated number of rows the operation will return | Any Int |
+| bytes | Estimated number of bytes the operation will return | Any Int |
+| cpu_cost | Estimated CPU cost of the operation | Any Int |
+| io_cost | Estimated I/O cost of the operation | Any Int |
+| timestamp | Timestamp when the execution plan was created | Any Str |
+| temp_space | Estimated temporary space required for the operation (in bytes) | Any Int |
+| access_predicates | Access predicates used to locate rows in an access structure | Any Str |
+| projection | Column projection information from the operation | Any Str |
+| time | Estimated elapsed time for the operation (in seconds) | Any Int |
+| filter_predicates | Filter predicates applied after accessing rows | Any Str |
 
 ## Resource Attributes
 
