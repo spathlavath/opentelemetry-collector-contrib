@@ -12,17 +12,6 @@ import (
 
 // Container Database Tablespace Queries
 const (
-	// CDBTablespaceUsageSQL returns tablespace usage across all containers
-	CDBTablespaceUsageSQL = `
-		SELECT 
-			con_id,
-			tablespace_name,
-			used_space * block_size AS used_bytes,
-			tablespace_size * block_size AS total_bytes,
-			used_percent
-		FROM CDB_TABLESPACE_USAGE_METRICS
-		WHERE ROWNUM <= 5000`
-
 	// CDBDataFilesSQL returns datafile information across all containers
 	CDBDataFilesSQL = `
 		SELECT 
@@ -64,6 +53,26 @@ func BuildTablespaceWhereClause(tablespaceColumn string, includeTablespaces, exc
 	}
 
 	return strings.Join(conditions, " AND ")
+}
+
+// BuildCDBTablespaceUsageSQL builds the CDB tablespace usage query with optional filtering
+func BuildCDBTablespaceUsageSQL(includeTablespaces, excludeTablespaces []string) string {
+	baseQuery := `
+		SELECT 
+			con_id,
+			tablespace_name,
+			used_space * block_size AS used_bytes,
+			tablespace_size * block_size AS total_bytes,
+			used_percent
+		FROM CDB_TABLESPACE_USAGE_METRICS
+		WHERE ROWNUM <= 5000`
+
+	whereClause := BuildTablespaceWhereClause("tablespace_name", includeTablespaces, excludeTablespaces)
+	if whereClause != "" {
+		baseQuery += " AND " + whereClause
+	}
+
+	return baseQuery
 }
 
 // BuildPDBDatafilesOfflineSQL builds the PDB datafiles offline query with tablespace filtering

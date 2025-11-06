@@ -58,7 +58,7 @@ type OracleClient interface {
 	// Container metrics - data queries
 	QueryContainerStatus(ctx context.Context) ([]models.ContainerStatus, error)
 	QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, error)
-	QueryCDBTablespaceUsage(ctx context.Context) ([]models.CDBTablespaceUsage, error)
+	QueryCDBTablespaceUsage(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.CDBTablespaceUsage, error)
 	QueryCDBDataFiles(ctx context.Context) ([]models.CDBDataFile, error)
 	QueryCDBServices(ctx context.Context) ([]models.CDBService, error)
 

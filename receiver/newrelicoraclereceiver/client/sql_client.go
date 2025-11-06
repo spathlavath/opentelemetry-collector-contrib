@@ -612,8 +612,9 @@ func (c *SQLClient) QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, err
 }
 
 // QueryCDBTablespaceUsage queries tablespace usage across containers
-func (c *SQLClient) QueryCDBTablespaceUsage(ctx context.Context) ([]models.CDBTablespaceUsage, error) {
-	rows, err := c.db.QueryContext(ctx, queries.CDBTablespaceUsageSQL)
+func (c *SQLClient) QueryCDBTablespaceUsage(ctx context.Context, includeTablespaces, excludeTablespaces []string) ([]models.CDBTablespaceUsage, error) {
+	query := queries.BuildCDBTablespaceUsageSQL(includeTablespaces, excludeTablespaces)
+	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}

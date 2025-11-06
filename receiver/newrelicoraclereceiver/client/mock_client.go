@@ -296,7 +296,7 @@ func (m *MockClient) QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, er
 }
 
 // QueryCDBTablespaceUsage mock
-func (m *MockClient) QueryCDBTablespaceUsage(ctx context.Context) ([]models.CDBTablespaceUsage, error) {
+func (m *MockClient) QueryCDBTablespaceUsage(_ context.Context, _, _ []string) ([]models.CDBTablespaceUsage, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}

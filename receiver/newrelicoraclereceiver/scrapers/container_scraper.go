@@ -25,12 +25,14 @@ type ContainerScraper struct {
 	logger             *zap.Logger
 	instanceName       string
 	config             metadata.MetricsBuilderConfig
-	isCDBCapable       *bool  // Cache for CDB capability check
-	isPDBCapable       *bool  // Cache for PDB capability check
-	environmentChecked bool   // Track if environment has been checked
-	currentContainer   string // Current container context (CDB$ROOT, FREEPDB1, etc.)
-	currentContainerID string // Current container ID (1, 3, etc.)
-	contextChecked     bool   // Track if context has been checked
+	isCDBCapable       *bool    // Cache for CDB capability check
+	isPDBCapable       *bool    // Cache for PDB capability check
+	environmentChecked bool     // Track if environment has been checked
+	currentContainer   string   // Current container context (CDB$ROOT, FREEPDB1, etc.)
+	currentContainerID string   // Current container ID (1, 3, etc.)
+	contextChecked     bool     // Track if context has been checked
+	includeTablespaces []string // Tablespace filter: include list
+	excludeTablespaces []string // Tablespace filter: exclude list
 }
 
 // NewContainerScraper creates a new Container scraper
@@ -40,6 +42,7 @@ func NewContainerScraper(
 	logger *zap.Logger,
 	instanceName string,
 	config metadata.MetricsBuilderConfig,
+	includeTablespaces, excludeTablespaces []string,
 ) (*ContainerScraper, error) {
 	if oracleClient == nil {
 		return nil, fmt.Errorf("client cannot be nil")
@@ -55,11 +58,13 @@ func NewContainerScraper(
 	}
 
 	return &ContainerScraper{
-		client:       oracleClient,
-		mb:           mb,
-		logger:       logger,
-		instanceName: instanceName,
-		config:       config,
+		client:             oracleClient,
+		mb:                 mb,
+		logger:             logger,
+		instanceName:       instanceName,
+		config:             config,
+		includeTablespaces: includeTablespaces,
+		excludeTablespaces: excludeTablespaces,
 	}, nil
 }
 
@@ -252,7 +257,7 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 
 // scrapeCDBTablespaceUsage scrapes CDB tablespace usage from CDB_TABLESPACE_USAGE_METRICS
 func (s *ContainerScraper) scrapeCDBTablespaceUsage(ctx context.Context, now pcommon.Timestamp) []error {
-	tablespaces, err := s.client.QueryCDBTablespaceUsage(ctx)
+	tablespaces, err := s.client.QueryCDBTablespaceUsage(ctx, s.includeTablespaces, s.excludeTablespaces)
 	if err != nil {
 		s.logger.Error("Failed to execute CDB tablespace usage query", zap.Error(err))
 		return []error{err}
