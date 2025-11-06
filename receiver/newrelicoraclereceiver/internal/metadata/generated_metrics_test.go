@@ -702,6 +702,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesRowsProcessedDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbSlowQueriesRuntimeMemoryDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
@@ -1282,7 +1286,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val")
+			mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val", "db.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4498,6 +4502,27 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.rows_processed":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.rows_processed"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.rows_processed")
+					validatedMetrics["newrelicoracledb.slow_queries.rows_processed"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of rows processed by slow queries", ms.At(i).Description())
+					assert.Equal(t, "{rows}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.runtime_memory":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.runtime_memory"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.runtime_memory")
 					validatedMetrics["newrelicoracledb.slow_queries.runtime_memory"] = true
@@ -7132,6 +7157,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("db.id")
+					assert.True(t, ok)
+					assert.Equal(t, "db.id-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.global_name":
 					assert.False(t, validatedMetrics["newrelicoracledb.tablespace.global_name"], "Found a duplicate in the metrics slice: newrelicoracledb.tablespace.global_name")
 					validatedMetrics["newrelicoracledb.tablespace.global_name"] = true

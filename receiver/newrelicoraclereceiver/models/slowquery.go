@@ -14,6 +14,7 @@ type SlowQuery struct {
 	RuntimeMemoryBytes    sql.NullInt64  // NEW: Runtime memory used by the cursor
 	StatementType         sql.NullString
 	ExecutionCount        sql.NullInt64
+	RowsProcessed         sql.NullInt64 // Total rows processed by the query
 	QueryText             sql.NullString
 	AvgCPUTimeMs          sql.NullFloat64
 	AvgDiskReads          sql.NullFloat64

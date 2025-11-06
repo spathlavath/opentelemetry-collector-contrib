@@ -186,6 +186,7 @@ type MetricsConfig struct {
 	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
 	NewrelicoracledbSlowQueriesPersistentMemory                        MetricConfig `mapstructure:"newrelicoracledb.slow_queries.persistent_memory"`
 	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
+	NewrelicoracledbSlowQueriesRowsProcessed                           MetricConfig `mapstructure:"newrelicoracledb.slow_queries.rows_processed"`
 	NewrelicoracledbSlowQueriesRuntimeMemory                           MetricConfig `mapstructure:"newrelicoracledb.slow_queries.runtime_memory"`
 	NewrelicoracledbSlowQueriesSharableMemory                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.sharable_memory"`
 	NewrelicoracledbSortsDisk                                          MetricConfig `mapstructure:"newrelicoracledb.sorts_disk"`
@@ -822,6 +823,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesQueryDetails: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesRowsProcessed: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesRuntimeMemory: MetricConfig{

@@ -27,6 +27,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 				END
 			) AS statement_type,
 			sa.executions AS execution_count,
+			sa.rows_processed AS rows_processed,
 			sa.sql_text AS query_text,
 			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
 			sa.disk_reads / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_reads,

@@ -85,6 +85,16 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
+	if slowQuery.RowsProcessed.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesRowsProcessedDataPoint(
+			now,
+			slowQuery.RowsProcessed.Int64,
+			dbName,
+			qID,
+			userName,
+		)
+	}
+
 	if slowQuery.AvgCPUTimeMs.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
 			now,

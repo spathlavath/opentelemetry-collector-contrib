@@ -317,6 +317,8 @@ all_set:
       enabled: true
     newrelicoracledb.slow_queries.query_details:
       enabled: true
+    newrelicoracledb.slow_queries.rows_processed:
+      enabled: true
     newrelicoracledb.slow_queries.runtime_memory:
       enabled: true
     newrelicoracledb.slow_queries.sharable_memory:
@@ -959,6 +961,8 @@ none_set:
     newrelicoracledb.slow_queries.persistent_memory:
       enabled: false
     newrelicoracledb.slow_queries.query_details:
+      enabled: false
+    newrelicoracledb.slow_queries.rows_processed:
       enabled: false
     newrelicoracledb.slow_queries.runtime_memory:
       enabled: false
