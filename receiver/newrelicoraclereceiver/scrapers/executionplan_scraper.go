@@ -18,20 +18,20 @@ import (
 )
 
 type ExecutionPlanScraper struct {
-	client               client.OracleClient
-	mb                   *metadata.MetricsBuilder
-	logger               *zap.Logger
-	instanceName         string
-	metricsBuilderConfig metadata.MetricsBuilderConfig
+	client            client.OracleClient
+	lb                *metadata.LogsBuilder
+	logger            *zap.Logger
+	instanceName      string
+	logsBuilderConfig metadata.LogsBuilderConfig
 }
 
-func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
+func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, instanceName string, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
-		client:               oracleClient,
-		mb:                   mb,
-		logger:               logger,
-		instanceName:         instanceName,
-		metricsBuilderConfig: metricsBuilderConfig,
+		client:            oracleClient,
+		lb:                lb,
+		logger:            logger,
+		instanceName:      instanceName,
+		logsBuilderConfig: logsBuilderConfig,
 	}
 }
 
@@ -42,95 +42,197 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		return errs
 	}
 
+	// Format SQL IDs for IN clause: 'id1', 'id2', 'id3'
+	quotedIDs := make([]string, len(sqlIDs))
+	for i, id := range sqlIDs {
+		quotedIDs[i] = fmt.Sprintf("'%s'", id)
+	}
+	sqlIDsParam := strings.Join(quotedIDs, ", ")
+
+	queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	planRows, err := s.client.QueryExecutionPlanRows(queryCtx, sqlIDsParam)
+	if err != nil {
+		errs = append(errs, fmt.Errorf("failed to query execution plans: %w", err))
+		return errs
+	}
+
+	s.logger.Debug("Retrieved execution plan rows",
+		zap.Int("count", len(planRows)))
+
 	successCount := 0
-	for i, sqlID := range sqlIDs {
-		queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	for _, row := range planRows {
+		if !row.SQLID.Valid || row.SQLID.String == "" {
+			continue
+		}
 
-		err := s.processSingleSQLID(queryCtx, sqlID, i+1)
-		cancel()
-
-		if err != nil {
-			s.logger.Warn("Failed to process execution plan for SQL ID",
-				zap.String("sql_id", sqlID),
-				zap.Int("sql_id_index", i+1),
+		if err := s.buildExecutionPlanLogs(&row); err != nil {
+			s.logger.Warn("Failed to build logs for execution plan row",
+				zap.String("sql_id", row.SQLID.String),
 				zap.Error(err))
 			errs = append(errs, err)
 		} else {
 			successCount++
 		}
-
-		select {
-		case <-ctx.Done():
-			errs = append(errs, fmt.Errorf("execution plan processing cancelled: %w", ctx.Err()))
-			break
-		default:
-		}
 	}
 
-	s.logger.Debug("Scraped execution plans",
-		zap.Int("total", len(sqlIDs)),
+	s.logger.Debug("Scraped execution plan rows",
+		zap.Int("total", len(planRows)),
 		zap.Int("success", successCount),
 		zap.Int("failed", len(errs)))
 
 	return errs
 }
 
-func (s *ExecutionPlanScraper) processSingleSQLID(ctx context.Context, sqlID string, index int) error {
-	executionPlans, err := s.client.QueryExecutionPlans(ctx, sqlID)
-	if err != nil {
-		return fmt.Errorf("failed to query execution plan for SQL ID %s: %w", sqlID, err)
+// buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
+// Each field from V$SQL_PLAN is sent as a separate attribute for direct querying in New Relic.
+func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow) error {
+	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+		return nil
 	}
 
-	s.logger.Debug("Retrieved execution plans",
-		zap.String("sql_id", sqlID),
-		zap.Int("count", len(executionPlans)))
-
-	for _, executionPlan := range executionPlans {
-		trimmedPlanText := s.trimExecutionPlanText(executionPlan.ExecutionPlanText.String)
-
-		plan := executionPlan
-		plan.ExecutionPlanText.String = trimmedPlanText
-
-		if !plan.IsValidForMetrics() {
-			s.logger.Debug("Skipping invalid execution plan",
-				zap.String("sql_id", sqlID),
-				zap.String("query_id", plan.GetQueryID()),
-				zap.Int64("plan_hash_value", plan.GetPlanHashValue()))
-		} else {
-			s.buildExecutionPlanMetrics(&plan)
-		}
+	// Extract values with defaults for null fields
+	queryID := ""
+	if row.SQLID.Valid {
+		queryID = row.SQLID.String
 	}
+
+	planHashValue := ""
+	if row.PlanHashValue.Valid {
+		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
+	}
+
+	queryText := "" // Empty for now, should be provided by caller
+
+	childNumber := int64(-1)
+	if row.ChildNumber.Valid {
+		childNumber = row.ChildNumber.Int64
+	}
+
+	planID := int64(-1)
+	if row.ID.Valid {
+		planID = row.ID.Int64
+	}
+
+	parentID := int64(-1)
+	if row.ParentID.Valid {
+		parentID = row.ParentID.Int64
+	}
+
+	depth := int64(-1)
+	if row.Depth.Valid {
+		depth = row.Depth.Int64
+	}
+
+	operation := ""
+	if row.Operation.Valid {
+		operation = row.Operation.String
+	}
+
+	options := ""
+	if row.Options.Valid {
+		options = row.Options.String
+	}
+
+	objectOwner := ""
+	if row.ObjectOwner.Valid {
+		objectOwner = row.ObjectOwner.String
+	}
+
+	objectName := ""
+	if row.ObjectName.Valid {
+		objectName = row.ObjectName.String
+	}
+
+	position := int64(-1)
+	if row.Position.Valid {
+		position = row.Position.Int64
+	}
+
+	cost := int64(-1)
+	if row.Cost.Valid {
+		cost = row.Cost.Int64
+	}
+
+	cardinality := int64(-1)
+	if row.Cardinality.Valid {
+		cardinality = row.Cardinality.Int64
+	}
+
+	bytes := int64(-1)
+	if row.Bytes.Valid {
+		bytes = row.Bytes.Int64
+	}
+
+	cpuCost := int64(-1)
+	if row.CPUCost.Valid {
+		cpuCost = row.CPUCost.Int64
+	}
+
+	ioCost := int64(-1)
+	if row.IOCost.Valid {
+		ioCost = row.IOCost.Int64
+	}
+
+	timestamp := ""
+	if row.Timestamp.Valid {
+		timestamp = row.Timestamp.String
+	}
+
+	tempSpace := int64(-1)
+	if row.TempSpace.Valid {
+		tempSpace = row.TempSpace.Int64
+	}
+
+	accessPredicates := ""
+	if row.AccessPredicates.Valid {
+		accessPredicates = row.AccessPredicates.String
+	}
+
+	projection := ""
+	if row.Projection.Valid {
+		projection = row.Projection.String
+	}
+
+	timeVal := int64(-1)
+	if row.Time.Valid {
+		timeVal = row.Time.Int64
+	}
+
+	filterPredicates := ""
+	if row.FilterPredicates.Valid {
+		filterPredicates = row.FilterPredicates.String
+	}
+
+	// Record the event with all attributes
+	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
+		context.Background(),
+		pcommon.NewTimestampFromTime(time.Now()),
+		queryID,
+		planHashValue,
+		queryText,
+		childNumber,
+		planID,
+		parentID,
+		depth,
+		operation,
+		options,
+		objectOwner,
+		objectName,
+		position,
+		cost,
+		cardinality,
+		bytes,
+		cpuCost,
+		ioCost,
+		timestamp,
+		tempSpace,
+		accessPredicates,
+		projection,
+		timeVal,
+		filterPredicates,
+	)
 
 	return nil
-}
-
-func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(plan *models.ExecutionPlan) {
-	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlanInfo.Enabled {
-		return
-	}
-
-	s.mb.RecordNewrelicoracledbExecutionPlanInfoDataPoint(
-		pcommon.NewTimestampFromTime(time.Now()),
-		1,
-		plan.GetDatabaseName(),
-		plan.GetQueryID(),
-		fmt.Sprintf("%d", plan.GetPlanHashValue()),
-		plan.GetExecutionPlanText(),
-	)
-}
-
-func (s *ExecutionPlanScraper) trimExecutionPlanText(planText string) string {
-	planHashIndex := strings.Index(planText, "Plan hash value:")
-	if planHashIndex == -1 {
-		return planText
-	}
-
-	trimmedText := planText[planHashIndex:]
-
-	nextSQLIndex := strings.Index(trimmedText, "\nSQL_ID")
-	if nextSQLIndex > 0 {
-		trimmedText = trimmedText[:nextSQLIndex]
-	}
-
-	return strings.TrimSpace(trimmedText)
 }

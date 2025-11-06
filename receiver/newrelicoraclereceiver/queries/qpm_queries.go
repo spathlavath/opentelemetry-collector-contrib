@@ -40,6 +40,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 		WHERE
 			sa.executions > 0
 			AND sa.sql_text NOT LIKE '%%ALL_USERS%%'
+			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS')
 			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
 		ORDER BY
 			avg_elapsed_time_ms DESC
@@ -111,18 +112,34 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
-// GetExecutionPlanQuery returns SQL to get execution plan using DBMS_XPLAN.DISPLAY_CURSOR
-func GetExecutionPlanQuery(sqlID string) string {
+// GetExecutionPlanQuery returns SQL to get execution plan from V$SQL_PLAN
+func GetExecutionPlanQuery(sqlIDs string) string {
 	return fmt.Sprintf(`
 		SELECT
-			d.name AS database_name,
-			'%s' AS query_id,
-			sa.plan_hash_value,
-			p.plan_table_output AS execution_plan_text
-		FROM
-			v$database d,
-			v$sqlarea sa,
-			TABLE(DBMS_XPLAN.DISPLAY_CURSOR('%s', NULL, 'TYPICAL')) p
-		WHERE
-			sa.sql_id = '%s'`, sqlID, sqlID, sqlID)
+			SQL_ID,
+			TIMESTAMP,
+			TEMP_SPACE,
+			ACCESS_PREDICATES,
+			PROJECTION,
+			TIME,
+			FILTER_PREDICATES,
+			CHILD_NUMBER,
+			ID,
+			PARENT_ID,
+			DEPTH,
+			OPERATION,
+			OPTIONS,
+			OBJECT_OWNER,
+			OBJECT_NAME,
+			POSITION,
+			PLAN_HASH_VALUE,
+			COST,
+			CARDINALITY,
+			BYTES,
+			CPU_COST,
+			IO_COST
+	FROM
+		V$SQL_PLAN
+	WHERE
+		SQL_ID IN (%s)`, sqlIDs)
 }

@@ -639,6 +639,9 @@ all_set:
       enabled: true
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: true
+  events:
+    newrelicoracledb.execution_plan:
+      enabled: true
   resource_attributes:
     host.name:
       enabled: true
@@ -1284,6 +1287,9 @@ none_set:
       enabled: false
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: false
+  events:
+    newrelicoracledb.execution_plan:
+      enabled: false
   resource_attributes:
     host.name:
       enabled: false
@@ -1295,9 +1301,13 @@ filter_set_include:
       enabled: true
       metrics_include:
         - regexp: ".*"
+      events_include:
+        - regexp: ".*"
     newrelicoracledb.instance.name:
       enabled: true
       metrics_include:
+        - regexp: ".*"
+      events_include:
         - regexp: ".*"
 filter_set_exclude:
   resource_attributes:
@@ -1305,7 +1315,11 @@ filter_set_exclude:
       enabled: true
       metrics_exclude:
         - strict: "host.name-val"
+      events_exclude:
+        - strict: "host.name-val"
     newrelicoracledb.instance.name:
       enabled: true
       metrics_exclude:
+        - strict: "newrelicoracledb.instance.name-val"
+      events_exclude:
         - strict: "newrelicoracledb.instance.name-val"

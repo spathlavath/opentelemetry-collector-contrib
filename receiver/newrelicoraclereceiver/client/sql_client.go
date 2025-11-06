@@ -37,9 +37,9 @@ func (c *SQLClient) Ping(ctx context.Context) error {
 	return c.db.PingContext(ctx)
 }
 
-// QueryExecutionPlans executes the execution plan query for a given SQL ID.
-func (c *SQLClient) QueryExecutionPlans(ctx context.Context, sqlID string) ([]models.ExecutionPlan, error) {
-	query := queries.GetExecutionPlanQuery(sqlID)
+// QueryExecutionPlanRows executes the execution plan query and returns raw rows without hierarchical transformation.
+func (c *SQLClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error) {
+	query := queries.GetExecutionPlanQuery(sqlIDs)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -47,45 +47,47 @@ func (c *SQLClient) QueryExecutionPlans(ctx context.Context, sqlID string) ([]mo
 	}
 	defer rows.Close()
 
-	var results []models.ExecutionPlan
-	var currentPlan *models.ExecutionPlan
-	var planLines []string
+	var planRows []models.ExecutionPlanRow
 
 	for rows.Next() {
-		var databaseName, queryID, planLine sql.NullString
-		var planHashValue sql.NullInt64
+		var row models.ExecutionPlanRow
 
-		err := rows.Scan(&databaseName, &queryID, &planHashValue, &planLine)
+		err := rows.Scan(
+			&row.SQLID,
+			&row.Timestamp,
+			&row.TempSpace,
+			&row.AccessPredicates,
+			&row.Projection,
+			&row.Time,
+			&row.FilterPredicates,
+			&row.ChildNumber,
+			&row.ID,
+			&row.ParentID,
+			&row.Depth,
+			&row.Operation,
+			&row.Options,
+			&row.ObjectOwner,
+			&row.ObjectName,
+			&row.Position,
+			&row.PlanHashValue,
+			&row.Cost,
+			&row.Cardinality,
+			&row.Bytes,
+			&row.CPUCost,
+			&row.IOCost,
+		)
 		if err != nil {
 			return nil, err
 		}
 
-		if currentPlan == nil {
-			currentPlan = &models.ExecutionPlan{
-				DatabaseName:  databaseName,
-				QueryID:       queryID,
-				PlanHashValue: planHashValue,
-			}
-		}
-
-		if planLine.Valid && planLine.String != "" {
-			planLines = append(planLines, planLine.String)
-		}
+		planRows = append(planRows, row)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
-	if currentPlan != nil && len(planLines) > 0 {
-		currentPlan.ExecutionPlanText = sql.NullString{
-			String: strings.Join(planLines, "\n"),
-			Valid:  true,
-		}
-		results = append(results, *currentPlan)
-	}
-
-	return results, nil
+	return planRows, nil
 }
 
 // QuerySlowQueries executes the slow queries query.

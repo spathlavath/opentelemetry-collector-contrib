@@ -12,7 +12,9 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
+	"go.opentelemetry.io/collector/pdata/plog"
 	"go.opentelemetry.io/collector/pdata/pmetric"
+	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/scraper"
 	"go.opentelemetry.io/collector/scraper/scrapererror"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
@@ -69,6 +71,8 @@ type newRelicOracleScraper struct {
 	// Metrics building and logging
 	mb                   *metadata.MetricsBuilder
 	metricsBuilderConfig metadata.MetricsBuilderConfig
+	lb                   *metadata.LogsBuilder
+	logsBuilderConfig    metadata.LogsBuilderConfig
 	logger               *zap.Logger
 
 	// Runtime configuration
@@ -82,6 +86,8 @@ type newRelicOracleScraper struct {
 func newScraper(
 	metricsBuilder *metadata.MetricsBuilder,
 	metricsBuilderConfig metadata.MetricsBuilderConfig,
+	logsBuilder *metadata.LogsBuilder,
+	logsBuilderConfig metadata.LogsBuilderConfig,
 	scrapeCfg scraperhelper.ControllerConfig,
 	config *Config,
 	logger *zap.Logger,
@@ -92,6 +98,8 @@ func newScraper(
 		// Metrics and configuration
 		mb:                   metricsBuilder,
 		metricsBuilderConfig: metricsBuilderConfig,
+		lb:                   logsBuilder,
+		logsBuilderConfig:    logsBuilderConfig,
 		config:               config,
 		scrapeCfg:            scrapeCfg,
 
@@ -108,6 +116,39 @@ func newScraper(
 		s.scrape,
 		scraper.WithShutdown(s.shutdown),
 		scraper.WithStart(s.start),
+	)
+}
+
+// newLogsScraper creates a new logs scraper for Oracle execution plans
+func newLogsScraper(
+	logsBuilder *metadata.LogsBuilder,
+	logsBuilderConfig metadata.LogsBuilderConfig,
+	scrapeCfg scraperhelper.ControllerConfig,
+	config *Config,
+	logger *zap.Logger,
+	providerFunc dbProviderFunc,
+	instanceName, hostName string,
+) (scraper.Logs, error) {
+	s := &newRelicOracleScraper{
+		// Logs and configuration
+		lb:                logsBuilder,
+		logsBuilderConfig: logsBuilderConfig,
+		config:            config,
+		scrapeCfg:         scrapeCfg,
+
+		// Database connection
+		dbProviderFunc: providerFunc,
+
+		// Runtime info
+		logger:       logger,
+		instanceName: instanceName,
+		hostName:     hostName,
+	}
+
+	return scraper.NewLogs(
+		s.scrapeLogs,
+		scraper.WithShutdown(s.shutdown),
+		scraper.WithStart(s.startLogs),
 	)
 }
 
@@ -193,8 +234,8 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.QueryMonitoringCountThreshold,
 	)
 
-	// Initialize execution plan scraper
-	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	// Initialize execution plan scraper (uses LogsBuilder for log events)
+	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
 
 	// Initialize blocking scraper
 	var err error
@@ -244,6 +285,112 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 		return metrics, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
 	}
 	return metrics, nil
+}
+
+// scrapeLogs orchestrates the collection of Oracle execution plans as logs
+func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
+	s.logger.Debug("Begin New Relic Oracle logs scrape for execution plans")
+
+	logs := plog.NewLogs()
+
+	// Only scrape execution plans if event is enabled
+	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+		s.logger.Debug("Execution plan event disabled, skipping logs scrape")
+		return logs, nil
+	}
+
+	// Check if QPM is enabled
+	if !s.config.EnableQueryMonitoring {
+		s.logger.Debug("Query Performance Monitoring disabled, skipping execution plan scrape")
+		return logs, nil
+	}
+
+	// Setup scrape context with timeout
+	scrapeCtx := s.createScrapeContext(ctx)
+
+	// First, get query IDs from slow queries
+	s.logger.Debug("Starting slow queries scraper to get query IDs for execution plans")
+	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
+
+	if len(slowQueryErrs) > 0 {
+		s.logger.Warn("Errors occurred while getting query IDs for execution plans",
+			zap.Int("error_count", len(slowQueryErrs)))
+	}
+
+	s.logger.Info("Slow queries scraper completed for logs",
+		zap.Int("query_ids_found", len(queryIDs)),
+		zap.Strings("query_ids", queryIDs))
+
+	if len(queryIDs) == 0 {
+		s.logger.Debug("No query IDs found, skipping execution plan scrape")
+		return logs, nil
+	}
+
+	// Scrape execution plans (which now emits logs)
+	s.logger.Debug("Starting execution plan scraper for logs", zap.Strings("query_ids", queryIDs))
+	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, queryIDs)
+
+	s.logger.Info("Execution plan scraper completed for logs",
+		zap.Int("query_ids_processed", len(queryIDs)),
+		zap.Int("execution_plan_errors", len(executionPlanErrs)))
+
+	// Emit logs
+	logs = s.lb.Emit()
+
+	if len(executionPlanErrs) > 0 {
+		return logs, scrapererror.NewPartialScrapeError(multierr.Combine(executionPlanErrs...), len(executionPlanErrs))
+	}
+
+	return logs, nil
+}
+
+// startLogs initializes the logs scraper (execution plans only)
+func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) error {
+	s.startTime = pcommon.NewTimestampFromTime(time.Now())
+
+	// Establish database connection
+	if err := s.initializeDatabase(); err != nil {
+		return err
+	}
+
+	// Initialize only the scrapers needed for logs (slow queries + execution plans)
+	s.logger.Info("Initializing logs scrapers for execution plans")
+
+	// Initialize Oracle client
+	s.client = client.NewSQLClient(s.db)
+
+	// Initialize temporary metrics builder for slow queries scraper (needed to get query IDs)
+	// We need a metrics builder because slow queries scraper uses it, even though we only need the IDs
+	tempSettings := receiver.Settings{
+		TelemetrySettings: component.TelemetrySettings{
+			Logger: s.logger,
+		},
+	}
+	tempMb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), tempSettings)
+
+	// Initialize slow queries scraper
+	slowQueriesScraper := scrapers.NewSlowQueriesScraper(
+		s.client,
+		tempMb,
+		s.logger,
+		s.instanceName,
+		metadata.DefaultMetricsBuilderConfig(),
+		s.config.QueryMonitoringResponseTimeThreshold,
+		s.config.QueryMonitoringCountThreshold,
+	)
+	s.slowQueriesScraper = slowQueriesScraper
+
+	// Initialize execution plan scraper
+	executionPlanScraper := scrapers.NewExecutionPlanScraper(
+		s.client,
+		s.lb,
+		s.logger,
+		s.instanceName,
+		s.logsBuilderConfig,
+	)
+	s.executionPlanScraper = executionPlanScraper
+
+	return nil
 }
 
 // createScrapeContext creates a context with timeout for scraping operations
