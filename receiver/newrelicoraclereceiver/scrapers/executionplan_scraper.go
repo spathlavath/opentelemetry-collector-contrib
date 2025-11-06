@@ -105,22 +105,22 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	queryText := "" // Empty for now, should be provided by caller
 
-	childNumber := int64(0)
+	childNumber := int64(-1)
 	if row.ChildNumber.Valid {
 		childNumber = row.ChildNumber.Int64
 	}
 
-	planID := int64(0)
+	planID := int64(-1)
 	if row.ID.Valid {
 		planID = row.ID.Int64
 	}
 
-	parentID := int64(0)
+	parentID := int64(-1)
 	if row.ParentID.Valid {
 		parentID = row.ParentID.Int64
 	}
 
-	depth := int64(0)
+	depth := int64(-1)
 	if row.Depth.Valid {
 		depth = row.Depth.Int64
 	}
@@ -145,32 +145,32 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		objectName = row.ObjectName.String
 	}
 
-	position := int64(0)
+	position := int64(-1)
 	if row.Position.Valid {
 		position = row.Position.Int64
 	}
 
-	cost := int64(0)
+	cost := int64(-1)
 	if row.Cost.Valid {
 		cost = row.Cost.Int64
 	}
 
-	cardinality := int64(0)
+	cardinality := int64(-1)
 	if row.Cardinality.Valid {
 		cardinality = row.Cardinality.Int64
 	}
 
-	bytes := int64(0)
+	bytes := int64(-1)
 	if row.Bytes.Valid {
 		bytes = row.Bytes.Int64
 	}
 
-	cpuCost := int64(0)
+	cpuCost := int64(-1)
 	if row.CPUCost.Valid {
 		cpuCost = row.CPUCost.Int64
 	}
 
-	ioCost := int64(0)
+	ioCost := int64(-1)
 	if row.IOCost.Valid {
 		ioCost = row.IOCost.Int64
 	}
@@ -180,7 +180,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		timestamp = row.Timestamp.String
 	}
 
-	tempSpace := int64(0)
+	tempSpace := int64(-1)
 	if row.TempSpace.Valid {
 		tempSpace = row.TempSpace.Int64
 	}
@@ -195,7 +195,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		projection = row.Projection.String
 	}
 
-	timeVal := int64(0)
+	timeVal := int64(-1)
 	if row.Time.Valid {
 		timeVal = row.Time.Int64
 	}
