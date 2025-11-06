@@ -6,6 +6,7 @@ package scrapers
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"sync"
 	"time"
 
@@ -153,7 +154,7 @@ func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now
 	}
 
 	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, ts.DBID, s.instanceName, ts.TablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, ts.DBID, s.instanceName, ts.TablespaceName, strconv.FormatInt(ts.DBID, 10))
 		*metricCount++
 	}
 
