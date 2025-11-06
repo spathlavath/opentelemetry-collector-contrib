@@ -135,9 +135,19 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		options = row.Options.String
 	}
 
+	objectOwner := ""
+	if row.ObjectOwner.Valid {
+		objectOwner = row.ObjectOwner.String
+	}
+
 	objectName := ""
 	if row.ObjectName.Valid {
 		objectName = row.ObjectName.String
+	}
+
+	position := int64(0)
+	if row.Position.Valid {
+		position = row.Position.Int64
 	}
 
 	cost := int64(0)
@@ -208,7 +218,9 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		depth,
 		operation,
 		options,
+		objectOwner,
 		objectName,
+		position,
 		cost,
 		cardinality,
 		bytes,
