@@ -129,7 +129,7 @@ func TestLogsBuilder(t *testing.T) {
 			allEventsCount := 0
 
 			allEventsCount++
-			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_name-val", 4, 11, 5, 8, 7, "timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
+			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
 
 			rb := lb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -190,9 +190,15 @@ func TestLogsBuilder(t *testing.T) {
 					attrVal, ok = lr.Attributes().Get("options")
 					assert.True(t, ok)
 					assert.Equal(t, "options-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("object_owner")
+					assert.True(t, ok)
+					assert.Equal(t, "object_owner-val", attrVal.Str())
 					attrVal, ok = lr.Attributes().Get("object_name")
 					assert.True(t, ok)
 					assert.Equal(t, "object_name-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("position")
+					assert.True(t, ok)
+					assert.EqualValues(t, 8, attrVal.Int())
 					attrVal, ok = lr.Attributes().Get("cost")
 					assert.True(t, ok)
 					assert.EqualValues(t, 4, attrVal.Int())

@@ -4925,7 +4925,9 @@ Oracle SQL execution plan data with individual fields for each plan step. Contai
 | depth | Depth level in the execution plan tree | Any Int |
 | operation | Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN) | Any Str |
 | options | Options for the operation (e.g., FULL, RANGE) | Any Str |
+| object_owner | Owner of the database object being accessed | Any Str |
 | object_name | Name of the database object being accessed | Any Str |
+| position | Order of execution for steps at the same depth level | Any Int |
 | cost | Estimated cost of the operation | Any Int |
 | cardinality | Estimated number of rows the operation will return | Any Int |
 | bytes | Estimated number of bytes the operation will return | Any Int |

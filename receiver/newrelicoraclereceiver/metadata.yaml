@@ -66,9 +66,15 @@ attributes:
   options:
     description: Options for the operation (e.g., FULL, RANGE)
     type: string
+  object_owner:
+    description: Owner of the database object being accessed
+    type: string
   object_name:
     description: Name of the database object being accessed
     type: string
+  position:
+    description: Order of execution for steps at the same depth level
+    type: int
   cost:
     description: Estimated cost of the operation
     type: int
@@ -307,7 +313,9 @@ events:
       - depth
       - operation
       - options
+      - object_owner
       - object_name
+      - position
       - cost
       - cardinality
       - bytes

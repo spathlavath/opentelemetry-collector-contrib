@@ -20,7 +20,9 @@ type ExecutionPlanRow struct {
 	Depth            sql.NullInt64
 	Operation        sql.NullString
 	Options          sql.NullString
+	ObjectOwner      sql.NullString
 	ObjectName       sql.NullString
+	Position         sql.NullInt64
 	PlanHashValue    sql.NullInt64
 	Cost             sql.NullInt64
 	Cardinality      sql.NullInt64
