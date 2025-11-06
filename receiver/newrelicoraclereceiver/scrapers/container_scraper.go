@@ -33,6 +33,7 @@ type ContainerScraper struct {
 	contextChecked     bool     // Track if context has been checked
 	includeTablespaces []string // Tablespace filter: include list
 	excludeTablespaces []string // Tablespace filter: exclude list
+	metricsSource      string   // Metrics source: "pdb", "system", or "both"
 }
 
 // NewContainerScraper creates a new Container scraper
@@ -43,6 +44,7 @@ func NewContainerScraper(
 	instanceName string,
 	config metadata.MetricsBuilderConfig,
 	includeTablespaces, excludeTablespaces []string,
+	metricsSource string,
 ) (*ContainerScraper, error) {
 	if oracleClient == nil {
 		return nil, fmt.Errorf("client cannot be nil")
@@ -57,6 +59,12 @@ func NewContainerScraper(
 		return nil, fmt.Errorf("instance name cannot be empty")
 	}
 
+	// Normalize metrics source to lowercase
+	normalizedSource := strings.ToLower(metricsSource)
+	if normalizedSource == "" {
+		normalizedSource = "both" // Default
+	}
+
 	return &ContainerScraper{
 		client:             oracleClient,
 		mb:                 mb,
@@ -65,6 +73,7 @@ func NewContainerScraper(
 		config:             config,
 		includeTablespaces: includeTablespaces,
 		excludeTablespaces: excludeTablespaces,
+		metricsSource:      normalizedSource,
 	}, nil
 }
 
@@ -72,7 +81,7 @@ func NewContainerScraper(
 func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 	var errors []error
 
-	s.logger.Debug("Scraping Oracle CDB/PDB container metrics")
+	s.logger.Debug("Scraping Oracle CDB/PDB container metrics", zap.String("metrics_source", s.metricsSource))
 
 	// Check environment capability first
 	if err := s.checkEnvironmentCapability(ctx); err != nil {
@@ -94,43 +103,54 @@ func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 
-	// Scrape container status metrics (only from CDB$ROOT)
-	if s.isConnectedToCDBRoot() {
+	// Determine if we should collect System/CDB metrics
+	collectSystemMetrics := s.metricsSource == "system" || s.metricsSource == "both"
+	// Determine if we should collect PDB metrics
+	collectPDBMetrics := s.metricsSource == "pdb" || s.metricsSource == "both"
+
+	// Scrape container status metrics (only from CDB$ROOT) - System metrics
+	if collectSystemMetrics && s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeContainerStatus(ctx, now)...)
 	} else {
-		s.logger.Debug("Not connected to CDB$ROOT, skipping container status metrics",
+		s.logger.Debug("Skipping container status metrics",
+			zap.String("metrics_source", s.metricsSource),
 			zap.String("current_container", s.currentContainer))
 	}
 
-	// Scrape PDB status metrics (only if PDB is supported and connected to CDB$ROOT)
-	if s.isPDBSupported() && s.isConnectedToCDBRoot() {
+	// Scrape PDB status metrics (only if PDB is supported and connected to CDB$ROOT) - PDB metrics
+	if collectPDBMetrics && s.isPDBSupported() && s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapePDBStatus(ctx, now)...)
 	} else {
-		s.logger.Debug("PDB features not supported or not in CDB$ROOT, skipping PDB metrics",
+		s.logger.Debug("Skipping PDB status metrics",
+			zap.String("metrics_source", s.metricsSource),
+			zap.Bool("pdb_supported", s.isPDBSupported()),
 			zap.String("current_container", s.currentContainer))
 	}
 
-	// Scrape CDB tablespace usage (only from CDB$ROOT)
-	if s.isConnectedToCDBRoot() {
+	// Scrape CDB tablespace usage (only from CDB$ROOT) - System metrics
+	if collectSystemMetrics && s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeCDBTablespaceUsage(ctx, now)...)
 	} else {
-		s.logger.Debug("Not connected to CDB$ROOT, skipping CDB tablespace metrics",
+		s.logger.Debug("Skipping CDB tablespace metrics",
+			zap.String("metrics_source", s.metricsSource),
 			zap.String("current_container", s.currentContainer))
 	}
 
-	// Scrape CDB data files (only from CDB$ROOT)
-	if s.isConnectedToCDBRoot() {
+	// Scrape CDB data files (only from CDB$ROOT) - System metrics
+	if collectSystemMetrics && s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeCDBDataFiles(ctx, now)...)
 	} else {
-		s.logger.Debug("Not connected to CDB$ROOT, skipping CDB data file metrics",
+		s.logger.Debug("Skipping CDB data file metrics",
+			zap.String("metrics_source", s.metricsSource),
 			zap.String("current_container", s.currentContainer))
 	}
 
-	// Scrape CDB services (only from CDB$ROOT)
-	if s.isConnectedToCDBRoot() {
+	// Scrape CDB services (only from CDB$ROOT) - System metrics
+	if collectSystemMetrics && s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeCDBServices(ctx, now)...)
 	} else {
-		s.logger.Debug("Not connected to CDB$ROOT, skipping CDB service metrics",
+		s.logger.Debug("Skipping CDB service metrics",
+			zap.String("metrics_source", s.metricsSource),
 			zap.String("current_container", s.currentContainer))
 	}
 

@@ -30,6 +30,9 @@ const (
 	defaultQueryMonitoringResponseTimeThreshold = queries.DefaultQueryMonitoringResponseTimeThreshold
 	defaultQueryMonitoringCountThreshold        = queries.DefaultQueryMonitoringCountThreshold
 
+	// Metrics Source defaults
+	defaultMetricsSource = "both" // Collect both PDB and System metrics by default
+
 	// Validation ranges
 	minCollectionInterval                   = 10 * time.Second
 	maxCollectionInterval                   = 3600 * time.Second
@@ -57,6 +60,7 @@ var (
 	errInvalidService                          = errors.New("service name cannot contain special characters")
 	errInvalidQueryMonitoringResponseThreshold = errors.New("query_monitoring_response_time_threshold must be between 1ms and 5000ms")
 	errInvalidQueryMonitoringCountThreshold    = errors.New("query_monitoring_count_threshold must be between 10 and 50")
+	errInvalidMetricsSource                    = errors.New("metrics_source must be one of: 'pdb', 'system', or 'both'")
 )
 
 // TablespaceFilterConfig defines tablespace filtering options
@@ -84,6 +88,10 @@ type Config struct {
 	// Tablespace Filtering Configuration
 	TablespaceFilter TablespaceFilterConfig `mapstructure:"tablespace_filter"`
 
+	// Metrics Source Configuration - Controls which container metrics to collect
+	// Valid values: "pdb" (PDB metrics only), "system" (System/CDB metrics only), "both" (default)
+	MetricsSource string `mapstructure:"metrics_source"`
+
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
 }
@@ -107,6 +115,11 @@ func (c *Config) SetDefaults() {
 	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
 		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 		c.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
+	}
+
+	// Set Metrics Source default if not set or invalid
+	if c.MetricsSource == "" {
+		c.MetricsSource = defaultMetricsSource
 	}
 }
 
@@ -164,6 +177,11 @@ func (c Config) Validate() error {
 
 	// Validate Query Performance Monitoring configuration
 	if err := c.validateQueryPerformanceMonitoring(); err != nil {
+		allErrs = multierr.Append(allErrs, err)
+	}
+
+	// Validate Metrics Source configuration
+	if err := c.validateMetricsSource(); err != nil {
 		allErrs = multierr.Append(allErrs, err)
 	}
 
@@ -276,4 +294,17 @@ func (c Config) validateQueryPerformanceMonitoring() error {
 	}
 
 	return allErrs
+}
+
+// validateMetricsSource validates Metrics Source configuration
+func (c Config) validateMetricsSource() error {
+	// Normalize to lowercase for comparison
+	source := strings.ToLower(c.MetricsSource)
+
+	// Valid values: "pdb", "system", "both"
+	if source != "pdb" && source != "system" && source != "both" {
+		return fmt.Errorf("%w: got '%s'", errInvalidMetricsSource, c.MetricsSource)
+	}
+
+	return nil
 }

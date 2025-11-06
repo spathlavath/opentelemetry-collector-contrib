@@ -173,7 +173,7 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 		return fmt.Errorf("failed to create connection scraper: %w", err)
 	}
 
-	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
+	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces, s.config.MetricsSource)
 	if err != nil {
 		return fmt.Errorf("failed to create container scraper: %w", err)
 	}
