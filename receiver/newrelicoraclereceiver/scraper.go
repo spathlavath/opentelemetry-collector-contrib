@@ -59,6 +59,7 @@ type newRelicOracleScraper struct {
 	executionPlanScraper *scrapers.ExecutionPlanScraper
 	blockingScraper      *scrapers.BlockingScraper
 	waitEventsScraper    *scrapers.WaitEventsScraper
+	lockScraper          *scrapers.LockScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -212,6 +213,9 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.QueryMonitoringCountThreshold,
 	)
 
+	// Initialize lock scraper
+	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
+
 	return nil
 }
 
@@ -329,6 +333,11 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 			s.waitEventsScraper.ScrapeWaitEvents,
 		)
 	}
+
+	// Add lock scraper (always enabled for lock monitoring)
+	scraperFuncs = append(scraperFuncs,
+		s.lockScraper.ScrapeLocks,
+	)
 
 	return scraperFuncs
 }

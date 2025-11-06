@@ -51,6 +51,12 @@ type MockClient struct {
 	DBIDList               []models.DBIDMetric
 	LongRunningQueriesList []models.LongRunningQueriesMetric
 
+	// Lock metrics
+	LockCountsList         []models.LockCount
+	LockSessionCountsList  []models.LockSessionCount
+	LockedObjectCountsList []models.LockedObjectCount
+	DeadlockCount          *models.DeadlockCount
+
 	// Memory metrics
 	PGAMetricsList                    []models.PGAMetric
 	SGAUGATotalMemoryList             []models.SGAUGATotalMemoryMetric
@@ -357,6 +363,38 @@ func (m *MockClient) QueryLongRunningQueries(_ context.Context) ([]models.LongRu
 		return nil, m.QueryErr
 	}
 	return m.LongRunningQueriesList, nil
+}
+
+// QueryLockCounts mock
+func (m *MockClient) QueryLockCounts(ctx context.Context) ([]models.LockCount, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.LockCountsList, nil
+}
+
+// QueryLockSessionCounts mock
+func (m *MockClient) QueryLockSessionCounts(ctx context.Context) ([]models.LockSessionCount, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.LockSessionCountsList, nil
+}
+
+// QueryLockedObjectCounts mock
+func (m *MockClient) QueryLockedObjectCounts(ctx context.Context) ([]models.LockedObjectCount, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.LockedObjectCountsList, nil
+}
+
+// QueryDeadlockCount mock
+func (m *MockClient) QueryDeadlockCount(ctx context.Context) (*models.DeadlockCount, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.DeadlockCount, nil
 }
 
 func (m *MockClient) QueryPGAMetrics(_ context.Context) ([]models.PGAMetric, error) {
