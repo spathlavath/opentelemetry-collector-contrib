@@ -71,6 +71,11 @@ type OracleClient interface {
 	QueryDBID(ctx context.Context) ([]models.DBIDMetric, error)
 	QueryLongRunningQueries(ctx context.Context) ([]models.LongRunningQueriesMetric, error)
 
+	// Lock metrics
+	QueryLockCounts(ctx context.Context) ([]models.LockCount, error)
+	QueryLockSessionCounts(ctx context.Context) ([]models.LockSessionCount, error)
+	QueryLockedObjectCounts(ctx context.Context) ([]models.LockedObjectCount, error)
+
 	// Memory metrics
 	QueryPGAMetrics(ctx context.Context) ([]models.PGAMetric, error)
 	QuerySGAUGATotalMemory(ctx context.Context) ([]models.SGAUGATotalMemoryMetric, error)

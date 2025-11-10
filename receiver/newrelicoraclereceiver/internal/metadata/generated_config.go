@@ -79,7 +79,13 @@ type MetricsConfig struct {
 	NewrelicoracledbExecutionPlanInfo                                  MetricConfig `mapstructure:"newrelicoracledb.execution_plan.info"`
 	NewrelicoracledbGlobalName                                         MetricConfig `mapstructure:"newrelicoracledb.global_name"`
 	NewrelicoracledbHostingInfo                                        MetricConfig `mapstructure:"newrelicoracledb.hosting.info"`
+	NewrelicoracledbLockCount                                          MetricConfig `mapstructure:"newrelicoracledb.lock.count"`
+	NewrelicoracledbLockObjectCount                                    MetricConfig `mapstructure:"newrelicoracledb.lock.object_count"`
+	NewrelicoracledbLockSessionCount                                   MetricConfig `mapstructure:"newrelicoracledb.lock.session_count"`
 	NewrelicoracledbLockedAccounts                                     MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
+	NewrelicoracledbLocksBlockedSessions                               MetricConfig `mapstructure:"newrelicoracledb.locks.blocked_sessions"`
+	NewrelicoracledbLocksCount                                         MetricConfig `mapstructure:"newrelicoracledb.locks.count"`
+	NewrelicoracledbLocksDeadlockCount                                 MetricConfig `mapstructure:"newrelicoracledb.locks.deadlock_count"`
 	NewrelicoracledbLongRunningQueries                                 MetricConfig `mapstructure:"newrelicoracledb.long_running_queries"`
 	NewrelicoracledbMemoryPgaAllocatedBytes                            MetricConfig `mapstructure:"newrelicoracledb.memory.pga_allocated_bytes"`
 	NewrelicoracledbMemoryPgaFreeableBytes                             MetricConfig `mapstructure:"newrelicoracledb.memory.pga_freeable_bytes"`
@@ -504,7 +510,25 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbHostingInfo: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbLockCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbLockObjectCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbLockSessionCount: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbLockedAccounts: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbLocksBlockedSessions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbLocksCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbLocksDeadlockCount: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbLongRunningQueries: MetricConfig{
