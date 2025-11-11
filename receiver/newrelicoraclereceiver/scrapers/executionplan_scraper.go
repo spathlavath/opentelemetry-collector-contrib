@@ -193,7 +193,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	projection := ""
 	if row.Projection.Valid {
-		projection = commonutils.AnonymizePlanData(row.Projection.String)
+		projection = row.Projection.String
 	}
 
 	timeVal := int64(-1)
