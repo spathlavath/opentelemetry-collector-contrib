@@ -203,7 +203,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	filterPredicates := ""
 	if row.FilterPredicates.Valid {
-		filterPredicates = commonutils.AnonymizePlanData(row.FilterPredicates.String)
+		filterPredicates = commonutils.AnonymizeAndNormalize(row.FilterPredicates.String)
 	}
 
 	// Record the event with all attributes
