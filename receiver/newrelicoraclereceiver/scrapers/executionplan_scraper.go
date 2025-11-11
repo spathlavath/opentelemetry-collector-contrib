@@ -13,6 +13,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
+	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
@@ -187,12 +188,12 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	accessPredicates := ""
 	if row.AccessPredicates.Valid {
-		accessPredicates = row.AccessPredicates.String
+		accessPredicates = commonutils.AnonymizePlanData(row.AccessPredicates.String)
 	}
 
 	projection := ""
 	if row.Projection.Valid {
-		projection = row.Projection.String
+		projection = commonutils.AnonymizePlanData(row.Projection.String)
 	}
 
 	timeVal := int64(-1)
@@ -202,7 +203,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	filterPredicates := ""
 	if row.FilterPredicates.Valid {
-		filterPredicates = row.FilterPredicates.String
+		filterPredicates = commonutils.AnonymizePlanData(row.FilterPredicates.String)
 	}
 
 	// Record the event with all attributes
