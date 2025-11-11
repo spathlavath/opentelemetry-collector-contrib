@@ -188,7 +188,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	accessPredicates := ""
 	if row.AccessPredicates.Valid {
-		accessPredicates = commonutils.AnonymizePlanData(row.AccessPredicates.String)
+		accessPredicates = commonutils.AnonymizeAndNormalize(row.AccessPredicates.String)
 	}
 
 	projection := ""
