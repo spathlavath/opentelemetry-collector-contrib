@@ -61,8 +61,8 @@ func BuildCDBTablespaceUsageSQL(includeTablespaces, excludeTablespaces []string)
 		SELECT 
 			con_id,
 			tablespace_name,
-			used_space * block_size AS used_bytes,
-			tablespace_size * block_size AS total_bytes,
+			used_space AS used_bytes,
+			tablespace_size AS total_bytes,
 			used_percent
 		FROM CDB_TABLESPACE_USAGE_METRICS
 		WHERE ROWNUM <= 5000`
