@@ -10,7 +10,7 @@ const (
 	DefaultQueryMonitoringCountThreshold        = 20  // queries
 
 	// Validation ranges for configuration values
-	MinQueryMonitoringResponseTimeThreshold = 1    // minimum realistic threshold for Oracle
+	MinQueryMonitoringResponseTimeThreshold = 0    // minimum realistic threshold for Oracle
 	MaxQueryMonitoringResponseTimeThreshold = 5000 // practical limit for OLTP workloads
 	MinQueryMonitoringCountThreshold        = 10   // prevents too little data collection
 	MaxQueryMonitoringCountThreshold        = 50   // performance limit for concurrent queries
