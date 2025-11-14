@@ -123,10 +123,6 @@ attributes:
     description: Username of the blocked session
     type: string
 
-  blocked_sql_id:
-    description: SQL ID of the blocked query
-    type: string
-
   blocked_sid:
     description: Session ID of the blocked session
     type: string
@@ -3644,7 +3640,7 @@ metrics:
       - instance.id
       - blocked_user
       - blocking_user
-      - blocked_sql_id
+      - query_id
       - blocked_sid
       - blocking_sid
       - blocked_serial

@@ -92,7 +92,7 @@ func TestBlockingScraper_ScrapeWithValidData(t *testing.T) {
 			BlockedSerial:    sql.NullInt64{Int64: 5001, Valid: true},
 			BlockedUser:      sql.NullString{String: "USER1", Valid: true},
 			BlockedWaitSec:   sql.NullFloat64{Float64: 125.5, Valid: true},
-			BlockedSQLID:     sql.NullString{String: "blocked_sql_1", Valid: true},
+			QueryID:          sql.NullString{String: "blocked_sql_1", Valid: true},
 			BlockedQueryText: sql.NullString{String: "UPDATE users SET status = 1", Valid: true},
 			BlockingSID:      sql.NullInt64{Int64: 200, Valid: true},
 			BlockingSerial:   sql.NullInt64{Int64: 6001, Valid: true},

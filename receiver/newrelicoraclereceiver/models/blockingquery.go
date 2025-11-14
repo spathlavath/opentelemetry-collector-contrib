@@ -8,7 +8,7 @@ type BlockingQuery struct {
 	BlockedSerial    sql.NullInt64
 	BlockedUser      sql.NullString
 	BlockedWaitSec   sql.NullFloat64
-	BlockedSQLID     sql.NullString
+	QueryID          sql.NullString
 	BlockedQueryText sql.NullString
 	BlockingSID      sql.NullInt64
 	BlockingSerial   sql.NullInt64
@@ -40,10 +40,10 @@ func (bq *BlockingQuery) GetBlockingUser() string {
 	return ""
 }
 
-// GetBlockedSQLID returns the blocked SQL ID as a string, empty if null
-func (bq *BlockingQuery) GetBlockedSQLID() string {
-	if bq.BlockedSQLID.Valid {
-		return bq.BlockedSQLID.String
+// GetQueryID returns the query ID as a string, empty if null
+func (bq *BlockingQuery) GetQueryID() string {
+	if bq.QueryID.Valid {
+		return bq.QueryID.String
 	}
 	return ""
 }
@@ -61,12 +61,12 @@ func (bq *BlockingQuery) HasValidWaitTime() bool {
 	return bq.BlockedWaitSec.Valid && bq.BlockedWaitSec.Float64 >= 0
 }
 
-// HasValidBlockedSQLID checks if the query has a valid blocked SQL ID
-func (bq *BlockingQuery) HasValidBlockedSQLID() bool {
-	return bq.BlockedSQLID.Valid
+// HasValidQueryID checks if the query has a valid query ID
+func (bq *BlockingQuery) HasValidQueryID() bool {
+	return bq.QueryID.Valid
 }
 
 // IsValidForMetrics checks if the blocking query has the minimum required fields for metrics
 func (bq *BlockingQuery) IsValidForMetrics() bool {
-	return bq.HasValidBlockedSQLID() && bq.HasValidWaitTime()
+	return bq.HasValidQueryID() && bq.HasValidWaitTime()
 }

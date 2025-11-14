@@ -55,7 +55,7 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 			s2.serial# AS blocked_serial,
 			s2.username AS blocked_user,
 			s2.seconds_in_wait AS blocked_wait_sec,
-			s2.sql_id AS blocked_sql_id,
+			s2.sql_id AS query_id,
 			blocked_sql.sql_text AS blocked_query_text,
 			s1.sid AS blocking_sid,
 			s1.serial# AS blocking_serial,
