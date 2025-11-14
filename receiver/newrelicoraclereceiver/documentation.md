@@ -5012,16 +5012,6 @@ events:
     enabled: false
 ```
 
-## Optional Events
-
-The following events are not emitted by default. Each of them can be enabled by applying the following configuration:
-
-```yaml
-events:
-  <event_name>:
-    enabled: true
-```
-
 ### newrelicoracledb.execution_plan
 
 Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.

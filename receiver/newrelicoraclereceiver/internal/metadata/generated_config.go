@@ -1362,7 +1362,7 @@ type EventsConfig struct {
 func DefaultEventsConfig() EventsConfig {
 	return EventsConfig{
 		NewrelicoracledbExecutionPlan: EventConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 	}
 }
