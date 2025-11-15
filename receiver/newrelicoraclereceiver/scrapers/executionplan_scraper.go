@@ -167,7 +167,8 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	cpuCost := int64(-1)
 	if row.CPUCost.Valid {
-		cpuCost = row.CPUCost.Int64
+		// Parse CPU cost from string to handle large values
+		cpuCost = s.parseCPUCost(row.CPUCost.String)
 	}
 
 	ioCost := int64(-1)
@@ -235,4 +236,30 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	)
 
 	return nil
+}
+
+// parseCPUCost parses CPU cost from string to int64, handling overflow cases
+// Oracle CPU_COST can be very large (up to NUMBER(38)) and may exceed int64 max
+// Returns -1 for invalid/overflow values or Oracle's sentinel value (2^64-1)
+func (s *ExecutionPlanScraper) parseCPUCost(cpuCostStr string) int64 {
+	// Handle empty string
+	if cpuCostStr == "" {
+		return -1
+	}
+
+	// Try to parse as int64
+	var cpuCost int64
+	_, err := fmt.Sscanf(cpuCostStr, "%d", &cpuCost)
+	if err != nil {
+		// If parsing fails or value is out of range, check if it's the sentinel value
+		// Oracle uses 18446744073709551615 (2^64-1) to indicate undefined/max cost
+		if cpuCostStr == "18446744073709551615" {
+			s.logger.Debug("CPU cost is at maximum value (undefined)", zap.String("value", cpuCostStr))
+			return -1
+		}
+		s.logger.Warn("Failed to parse CPU cost, using -1", zap.String("value", cpuCostStr), zap.Error(err))
+		return -1
+	}
+
+	return cpuCost
 }

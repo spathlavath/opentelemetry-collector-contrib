@@ -13,6 +13,8 @@ type BlockingQuery struct {
 	BlockingSID      sql.NullInt64
 	BlockingSerial   sql.NullInt64
 	BlockingUser     sql.NullString
+	BlockingSQLID    sql.NullString
+	BlockingQueryText sql.NullString
 	DatabaseName     sql.NullString
 }
 
@@ -52,6 +54,22 @@ func (bq *BlockingQuery) GetQueryID() string {
 func (bq *BlockingQuery) GetDatabaseName() string {
 	if bq.DatabaseName.Valid {
 		return bq.DatabaseName.String
+	}
+	return ""
+}
+
+// GetBlockingSQLID returns the blocking SQL ID as a string, empty if null
+func (bq *BlockingQuery) GetBlockingSQLID() string {
+	if bq.BlockingSQLID.Valid {
+		return bq.BlockingSQLID.String
+	}
+	return ""
+}
+
+// GetBlockingQueryText returns the blocking query text as a string, empty if null
+func (bq *BlockingQuery) GetBlockingQueryText() string {
+	if bq.BlockingQueryText.Valid {
+		return bq.BlockingQueryText.String
 	}
 	return ""
 }

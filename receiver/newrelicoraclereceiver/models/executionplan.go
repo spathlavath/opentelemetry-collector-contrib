@@ -27,6 +27,6 @@ type ExecutionPlanRow struct {
 	Cost             sql.NullInt64
 	Cardinality      sql.NullInt64
 	Bytes            sql.NullInt64
-	CPUCost          sql.NullInt64
+	CPUCost          sql.NullString // Changed to String to handle large values that exceed int64 max
 	IOCost           sql.NullInt64
 }
