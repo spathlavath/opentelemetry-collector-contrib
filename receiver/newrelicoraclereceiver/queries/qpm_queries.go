@@ -60,6 +60,8 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 			s1.sid AS blocking_sid,
 			s1.serial# AS blocking_serial,
 			s1.username AS blocking_user,
+			s1.sql_id AS blocking_sql_id,
+			blocking_sql.sql_text AS blocking_query_text,
 			d.name AS database_name
 		FROM
 			v$session s2
@@ -67,8 +69,10 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 			v$session s1 ON s2.blocking_session = s1.sid
 		LEFT JOIN
 			v$sql blocked_sql ON s2.sql_id = blocked_sql.sql_id
+		LEFT JOIN
+			v$sql blocking_sql ON s1.sql_id = blocking_sql.sql_id
 		CROSS JOIN
-			v$database d
+			v$database d 
 		WHERE
 			s2.blocking_session IS NOT NULL
 		ORDER BY

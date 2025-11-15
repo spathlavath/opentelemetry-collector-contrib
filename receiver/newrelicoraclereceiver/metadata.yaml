@@ -138,6 +138,12 @@ attributes:
   blocked_query_text:
     description: SQL query text of the blocked query
     type: string
+  blocking_sql_id:
+    description: SQL ID of the blocking query
+    type: string
+  blocking_query_text:
+    description: SQL query text of the blocking query
+    type: string
 
   db.instance.name:
     description: Oracle database instance name
@@ -3646,6 +3652,8 @@ metrics:
       - blocked_serial
       - blocking_serial
       - blocked_query_text
+      - blocking_sql_id
+      - blocking_query_text
       - database_name
 
   newrelicoracledb.wait_events.total_wait_time_ms:

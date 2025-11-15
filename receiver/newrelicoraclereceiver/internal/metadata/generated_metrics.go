@@ -1493,7 +1493,7 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
+func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, blockingSQLIDAttributeValue string, blockingQueryTextAttributeValue string, databaseNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1510,6 +1510,8 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pc
 	dp.Attributes().PutStr("blocked_serial", blockedSerialAttributeValue)
 	dp.Attributes().PutStr("blocking_serial", blockingSerialAttributeValue)
 	dp.Attributes().PutStr("blocked_query_text", blockedQueryTextAttributeValue)
+	dp.Attributes().PutStr("blocking_sql_id", blockingSQLIDAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 }
 
@@ -19496,8 +19498,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(ts 
 }
 
 // RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint adds a data point to newrelicoracledb.blocking_queries.wait_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, databaseNameAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, queryIDAttributeValue, blockedSidAttributeValue, blockingSidAttributeValue, blockedSerialAttributeValue, blockingSerialAttributeValue, blockedQueryTextAttributeValue, databaseNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, blockedSidAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockedQueryTextAttributeValue string, blockingSQLIDAttributeValue string, blockingQueryTextAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, queryIDAttributeValue, blockedSidAttributeValue, blockingSidAttributeValue, blockedSerialAttributeValue, blockingSerialAttributeValue, blockedQueryTextAttributeValue, blockingSQLIDAttributeValue, blockingQueryTextAttributeValue, databaseNameAttributeValue)
 }
 
 // RecordNewrelicoracledbConnectionActiveSessionsDataPoint adds a data point to newrelicoracledb.connection.active_sessions metric.

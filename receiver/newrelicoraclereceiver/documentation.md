@@ -78,6 +78,8 @@ Wait time in seconds for blocked queries
 | blocked_serial | Serial number of the blocked session | Any Str | false |
 | blocking_serial | Serial number of the blocking session | Any Str | false |
 | blocked_query_text | SQL query text of the blocked query | Any Str | false |
+| blocking_sql_id | SQL ID of the blocking query | Any Str | false |
+| blocking_query_text | SQL query text of the blocking query | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.connection.active_sessions
