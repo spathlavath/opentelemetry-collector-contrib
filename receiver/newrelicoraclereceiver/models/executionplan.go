@@ -9,10 +9,10 @@ import "database/sql"
 type ExecutionPlanRow struct {
 	SQLID            sql.NullString
 	Timestamp        sql.NullString
-	TempSpace        sql.NullInt64
+	TempSpace        sql.NullString // Changed to string to handle large values
 	AccessPredicates sql.NullString
 	Projection       sql.NullString
-	Time             sql.NullInt64
+	Time             sql.NullString // Changed to string to handle large values
 	FilterPredicates sql.NullString
 	ChildNumber      sql.NullInt64
 	ID               sql.NullInt64
@@ -24,9 +24,9 @@ type ExecutionPlanRow struct {
 	ObjectName       sql.NullString
 	Position         sql.NullInt64
 	PlanHashValue    sql.NullInt64
-	Cost             sql.NullInt64
-	Cardinality      sql.NullInt64
-	Bytes            sql.NullInt64
-	CPUCost          sql.NullInt64
-	IOCost           sql.NullInt64
+	Cost             sql.NullString // Changed to string to handle large values
+	Cardinality      sql.NullString // Changed to string to handle large values
+	Bytes            sql.NullString // Changed to string to handle large values
+	CPUCost          sql.NullString // Changed to string to handle large values that exceed int64 max
+	IOCost           sql.NullString // Changed to string to handle large values
 }
