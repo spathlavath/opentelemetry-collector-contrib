@@ -40,6 +40,10 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 		WHERE
 			sa.executions > 0
 			AND sa.sql_text NOT LIKE '%%ALL_USERS%%'
+			AND sa.sql_text NOT LIKE '%%V$SQL_PLAN%%'
+			AND sa.sql_text NOT LIKE '%%V$SQLAREA%%'
+			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
+			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER')
 			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
 		ORDER BY
