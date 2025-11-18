@@ -307,7 +307,7 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceVersionInfo.Enabled {
-			s.mb.RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(now, 1, s.instanceName, instanceIDStr, instanceNameStr, hostNameStr, versionStr)
+			s.mb.RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(now, 1, s.instanceName, instanceNameStr, hostNameStr, versionStr)
 		}
 	}
 
@@ -348,16 +348,16 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverConfig.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(now, int64(1), s.instanceName, serviceNameStr, instanceIDStr,
+			s.mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(now, int64(1), s.instanceName, serviceNameStr,
 				nullStringToString(service.FailoverMethod), nullStringToString(service.FailoverType), nullStringToString(service.Goal))
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(now, 1, s.instanceName, serviceNameStr, instanceIDStr, nullStringToString(service.NetworkName))
+			s.mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.NetworkName))
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceCreationAgeDays.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(now, 1, s.instanceName, serviceNameStr, instanceIDStr)
+			s.mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(now, 1, s.instanceName, serviceNameStr)
 		}
 
 		// Parse and record failover metrics only if enabled
@@ -382,7 +382,7 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(now, 1, s.instanceName, serviceNameStr, instanceIDStr, nullStringToString(service.ClbGoal))
+			s.mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.ClbGoal))
 		}
 	}
 

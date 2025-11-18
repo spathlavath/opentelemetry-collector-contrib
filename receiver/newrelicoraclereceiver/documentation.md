@@ -676,7 +676,6 @@ Oracle database ID information
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
 | db.id | Oracle database ID | Any Str | false |
 
 ### newrelicoracledb.disk.blocks_read
@@ -799,7 +798,6 @@ Oracle database global name information
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
 | global.name | Oracle database global name | Any Str | false |
 
 ### newrelicoracledb.hosting.info
@@ -1959,7 +1957,6 @@ Oracle database version information (always 1, version in attributes)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
 | rac.instance.name | Oracle RAC instance name | Any Str | false |
 | host.name.rac | Oracle RAC host name | Any Str | false |
 | oracle.version | Oracle database version | Any Str | false |
@@ -1978,7 +1975,6 @@ Connection load balancing configuration (always 1, config in attributes)
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
 | clb.goal | Oracle service connection load balancing goal | Any Str | false |
 
 ### newrelicoracledb.rac.service.creation_age_days
@@ -1995,7 +1991,6 @@ Service age in days since creation
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rac.service.failover_config
 
@@ -2011,7 +2006,6 @@ Service failover configuration indicator (always 1, config in attributes)
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
 | failover.method | Oracle service failover method | Any Str | false |
 | failover.type | Oracle service failover type | Any Str | false |
 | service.goal | Oracle service goal (THROUGHPUT, SERVICE_TIME, etc.) | Any Str | false |
@@ -2078,7 +2072,6 @@ Service network configuration (always 1, config in attributes)
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
 | network.name | Oracle service network name | Any Str | false |
 
 ### newrelicoracledb.rac.total_waits
@@ -2538,22 +2531,6 @@ Number of executions for slow queries
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
-### newrelicoracledb.slow_queries.persistent_memory
-
-Persistent memory used by slow query cursors
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
 ### newrelicoracledb.slow_queries.query_details
 
 Slow Query Details
@@ -2570,55 +2547,6 @@ Slow Query Details
 | query_id | SQL query identifier | Any Str | false |
 | query_text | SQL query text | Any Str | false |
 | schema_name | Schema name where the query is executed | Any Str | false |
-| statement_type | Type of SQL statement or application module | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.rows_processed
-
-Total number of rows processed by slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.runtime_memory
-
-Runtime memory used by slow query cursors
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.sharable_memory
-
-Total memory used in the Shared Pool by slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.sorts_disk

@@ -45,21 +45,16 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.SlowQueries = []models.SlowQuery{
 		{
-			DatabaseName:          sql.NullString{String: "TESTDB", Valid: true},
-			QueryID:               sql.NullString{String: "test_query_1", Valid: true},
-			SchemaName:            sql.NullString{String: "TEST_SCHEMA", Valid: true},
-			UserName:              sql.NullString{String: "TEST_USER", Valid: true},
-			LastLoadTime:          sql.NullString{String: "2024-10-28 10:00:00", Valid: true},
-			SharableMemoryBytes:   sql.NullInt64{Int64: 1024000, Valid: true},
-			PersistentMemoryBytes: sql.NullInt64{Int64: 512000, Valid: true},
-			RuntimeMemoryBytes:    sql.NullInt64{Int64: 256000, Valid: true},
-			StatementType:         sql.NullString{String: "SELECT", Valid: true},
-			ExecutionCount:        sql.NullInt64{Int64: 150, Valid: true},
-			QueryText:             sql.NullString{String: "SELECT * FROM users WHERE id = 1", Valid: true},
-			AvgCPUTimeMs:          sql.NullFloat64{Float64: 125.5, Valid: true},
-			AvgDiskReads:          sql.NullFloat64{Float64: 50.2, Valid: true},
-			AvgDiskWrites:         sql.NullFloat64{Float64: 10.3, Valid: true},
-			AvgElapsedTimeMs:      sql.NullFloat64{Float64: 1500.75, Valid: true},
+			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
+			QueryID:          sql.NullString{String: "test_query_1", Valid: true},
+			SchemaName:       sql.NullString{String: "TEST_SCHEMA", Valid: true},
+			UserName:         sql.NullString{String: "TEST_USER", Valid: true},
+			ExecutionCount:   sql.NullInt64{Int64: 150, Valid: true},
+			QueryText:        sql.NullString{String: "SELECT * FROM users WHERE id = 1", Valid: true},
+			AvgCPUTimeMs:     sql.NullFloat64{Float64: 125.5, Valid: true},
+			AvgDiskReads:     sql.NullFloat64{Float64: 50.2, Valid: true},
+			AvgDiskWrites:    sql.NullFloat64{Float64: 10.3, Valid: true},
+			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.75, Valid: true},
 		},
 		{
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
@@ -152,17 +147,14 @@ func TestSlowQueriesScraper_RecordMetrics(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.SlowQueries = []models.SlowQuery{
 		{
-			DatabaseName:          sql.NullString{String: "TESTDB", Valid: true},
-			QueryID:               sql.NullString{String: "test_query", Valid: true},
-			UserName:              sql.NullString{String: "TEST_USER", Valid: true},
-			ExecutionCount:        sql.NullInt64{Int64: 100, Valid: true},
-			SharableMemoryBytes:   sql.NullInt64{Int64: 1024, Valid: true},
-			PersistentMemoryBytes: sql.NullInt64{Int64: 512, Valid: true},
-			RuntimeMemoryBytes:    sql.NullInt64{Int64: 256, Valid: true},
-			AvgCPUTimeMs:          sql.NullFloat64{Float64: 50.5, Valid: true},
-			AvgDiskReads:          sql.NullFloat64{Float64: 20.2, Valid: true},
-			AvgDiskWrites:         sql.NullFloat64{Float64: 5.3, Valid: true},
-			AvgElapsedTimeMs:      sql.NullFloat64{Float64: 1000.0, Valid: true},
+			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
+			QueryID:          sql.NullString{String: "test_query", Valid: true},
+			UserName:         sql.NullString{String: "TEST_USER", Valid: true},
+			ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
+			AvgCPUTimeMs:     sql.NullFloat64{Float64: 50.5, Valid: true},
+			AvgDiskReads:     sql.NullFloat64{Float64: 20.2, Valid: true},
+			AvgDiskWrites:    sql.NullFloat64{Float64: 5.3, Valid: true},
+			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1000.0, Valid: true},
 		},
 	}
 
@@ -172,9 +164,6 @@ func TestSlowQueriesScraper_RecordMetrics(t *testing.T) {
 	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads.Enabled = true
 	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites.Enabled = true
 	config.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesSharableMemory.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesPersistentMemory.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesRuntimeMemory.Enabled = true
 
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)

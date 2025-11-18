@@ -31,9 +31,6 @@ attributes:
   schema_name:
     description: Schema name where the query is executed
     type: string
-  statement_type:
-    description: Type of SQL statement or application module
-    type: string
   username:
     description: Oracle username who parsed the SQL
     type: string
@@ -585,7 +582,6 @@ metrics:
     unit: "1"
     attributes:
       - db.instance.name
-      - instance.id
       - global.name
 
   newrelicoracledb.db_id:
@@ -596,7 +592,6 @@ metrics:
     unit: "1"
     attributes:
       - db.instance.name
-      - instance.id
       - db.id
 
   newrelicoracledb.long_running_queries:
@@ -3441,7 +3436,6 @@ metrics:
     attributes:
       - db.instance.name
       - service.name
-      - instance.id
       - failover.method
       - failover.type
       - service.goal
@@ -3455,7 +3449,6 @@ metrics:
     unit: "1"
     attributes:
       - db.instance.name
-      - instance.id
       - rac.instance.name
       - host.name.rac
       - oracle.version
@@ -3470,7 +3463,6 @@ metrics:
     attributes:
       - db.instance.name
       - service.name
-      - instance.id
       - network.name
 
   newrelicoracledb.rac.service.creation_age_days:
@@ -3482,7 +3474,6 @@ metrics:
     attributes:
       - db.instance.name
       - service.name
-      - instance.id
 
   newrelicoracledb.rac.service.failover_retries:
     description: Number of failover retries configured for the service
@@ -3515,7 +3506,6 @@ metrics:
     attributes:
       - db.instance.name
       - service.name
-      - instance.id
       - clb.goal
   newrelicoracledb.slow_queries.execution_count:
     description: Number of executions for slow queries
@@ -3523,17 +3513,6 @@ metrics:
     gauge:
       value_type: double
     unit: "{executions}"
-    attributes:
-      - database_name
-      - query_id
-      - user_name
-
-  newrelicoracledb.slow_queries.rows_processed:
-    description: Total number of rows processed by slow queries
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{rows}"
     attributes:
       - database_name
       - query_id
@@ -3583,39 +3562,6 @@ metrics:
       - query_id
       - user_name
 
-  newrelicoracledb.slow_queries.sharable_memory:
-    description: Total memory used in the Shared Pool by slow queries
-    enabled: true
-    gauge:
-      value_type: int
-    unit: By
-    attributes:
-      - database_name
-      - query_id
-      - user_name
-
-  newrelicoracledb.slow_queries.persistent_memory:
-    description: Persistent memory used by slow query cursors
-    enabled: true
-    gauge:
-      value_type: int
-    unit: By
-    attributes:
-      - database_name
-      - query_id
-      - user_name
-
-  newrelicoracledb.slow_queries.runtime_memory:
-    description: Runtime memory used by slow query cursors
-    enabled: true
-    gauge:
-      value_type: int
-    unit: By
-    attributes:
-      - database_name
-      - query_id
-      - user_name
-
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
     enabled: true
@@ -3627,7 +3573,6 @@ metrics:
       - query_id
       - query_text
       - schema_name
-      - statement_type
       - user_name    
 
   newrelicoracledb.blocking_queries.wait_time:

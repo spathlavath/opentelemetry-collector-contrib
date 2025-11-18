@@ -499,20 +499,8 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSlowQueriesExecutionCount: metricInfo{
 		Name: "newrelicoracledb.slow_queries.execution_count",
 	},
-	NewrelicoracledbSlowQueriesPersistentMemory: metricInfo{
-		Name: "newrelicoracledb.slow_queries.persistent_memory",
-	},
 	NewrelicoracledbSlowQueriesQueryDetails: metricInfo{
 		Name: "newrelicoracledb.slow_queries.query_details",
-	},
-	NewrelicoracledbSlowQueriesRowsProcessed: metricInfo{
-		Name: "newrelicoracledb.slow_queries.rows_processed",
-	},
-	NewrelicoracledbSlowQueriesRuntimeMemory: metricInfo{
-		Name: "newrelicoracledb.slow_queries.runtime_memory",
-	},
-	NewrelicoracledbSlowQueriesSharableMemory: metricInfo{
-		Name: "newrelicoracledb.slow_queries.sharable_memory",
 	},
 	NewrelicoracledbSortsDisk: metricInfo{
 		Name: "newrelicoracledb.sorts_disk",
@@ -1153,11 +1141,7 @@ type metricsInfo struct {
 	NewrelicoracledbSlowQueriesAvgDiskWrites                           metricInfo
 	NewrelicoracledbSlowQueriesAvgElapsedTime                          metricInfo
 	NewrelicoracledbSlowQueriesExecutionCount                          metricInfo
-	NewrelicoracledbSlowQueriesPersistentMemory                        metricInfo
 	NewrelicoracledbSlowQueriesQueryDetails                            metricInfo
-	NewrelicoracledbSlowQueriesRowsProcessed                           metricInfo
-	NewrelicoracledbSlowQueriesRuntimeMemory                           metricInfo
-	NewrelicoracledbSlowQueriesSharableMemory                          metricInfo
 	NewrelicoracledbSortsDisk                                          metricInfo
 	NewrelicoracledbSortsMemory                                        metricInfo
 	NewrelicoracledbSystemActiveParallelSessions                       metricInfo
@@ -3523,7 +3507,7 @@ func (m *metricNewrelicoracledbDbID) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, dbIDAttributeValue string) {
+func (m *metricNewrelicoracledbDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, dbIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3532,7 +3516,6 @@ func (m *metricNewrelicoracledbDbID) recordDataPoint(start pcommon.Timestamp, ts
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("db.id", dbIDAttributeValue)
 }
 
@@ -3942,7 +3925,7 @@ func (m *metricNewrelicoracledbGlobalName) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, globalNameAttributeValue string) {
+func (m *metricNewrelicoracledbGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, globalNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -3951,7 +3934,6 @@ func (m *metricNewrelicoracledbGlobalName) recordDataPoint(start pcommon.Timesta
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("global.name", globalNameAttributeValue)
 }
 
@@ -7877,7 +7859,7 @@ func (m *metricNewrelicoracledbRacInstanceVersionInfo) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRacInstanceVersionInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, oracleVersionAttributeValue string) {
+func (m *metricNewrelicoracledbRacInstanceVersionInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, oracleVersionAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7886,7 +7868,6 @@ func (m *metricNewrelicoracledbRacInstanceVersionInfo) recordDataPoint(start pco
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("rac.instance.name", racInstanceNameAttributeValue)
 	dp.Attributes().PutStr("host.name.rac", hostNameRacAttributeValue)
 	dp.Attributes().PutStr("oracle.version", oracleVersionAttributeValue)
@@ -7932,7 +7913,7 @@ func (m *metricNewrelicoracledbRacServiceClbConfig) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRacServiceClbConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, clbGoalAttributeValue string) {
+func (m *metricNewrelicoracledbRacServiceClbConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, clbGoalAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7942,7 +7923,6 @@ func (m *metricNewrelicoracledbRacServiceClbConfig) recordDataPoint(start pcommo
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("clb.goal", clbGoalAttributeValue)
 }
 
@@ -7986,7 +7966,7 @@ func (m *metricNewrelicoracledbRacServiceCreationAgeDays) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRacServiceCreationAgeDays) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
+func (m *metricNewrelicoracledbRacServiceCreationAgeDays) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7996,7 +7976,6 @@ func (m *metricNewrelicoracledbRacServiceCreationAgeDays) recordDataPoint(start 
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -8039,7 +8018,7 @@ func (m *metricNewrelicoracledbRacServiceFailoverConfig) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRacServiceFailoverConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
+func (m *metricNewrelicoracledbRacServiceFailoverConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8049,7 +8028,6 @@ func (m *metricNewrelicoracledbRacServiceFailoverConfig) recordDataPoint(start p
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("failover.method", failoverMethodAttributeValue)
 	dp.Attributes().PutStr("failover.type", failoverTypeAttributeValue)
 	dp.Attributes().PutStr("service.goal", serviceGoalAttributeValue)
@@ -8254,7 +8232,7 @@ func (m *metricNewrelicoracledbRacServiceNetworkConfig) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRacServiceNetworkConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, networkNameAttributeValue string) {
+func (m *metricNewrelicoracledbRacServiceNetworkConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, networkNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8264,7 +8242,6 @@ func (m *metricNewrelicoracledbRacServiceNetworkConfig) recordDataPoint(start pc
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
 	dp.Attributes().PutStr("network.name", networkNameAttributeValue)
 }
 
@@ -9860,59 +9837,6 @@ func newMetricNewrelicoracledbSlowQueriesExecutionCount(cfg MetricConfig) metric
 	return m
 }
 
-type metricNewrelicoracledbSlowQueriesPersistentMemory struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.persistent_memory metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesPersistentMemory) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.persistent_memory")
-	m.data.SetDescription("Persistent memory used by slow query cursors")
-	m.data.SetUnit("By")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesPersistentMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesPersistentMemory) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesPersistentMemory) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesPersistentMemory(cfg MetricConfig) metricNewrelicoracledbSlowQueriesPersistentMemory {
-	m := metricNewrelicoracledbSlowQueriesPersistentMemory{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbSlowQueriesQueryDetails struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9928,7 +9852,7 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, userNameAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, userNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9940,7 +9864,6 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pc
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 }
 
@@ -9962,165 +9885,6 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) emit(metrics pmetric.Met
 
 func newMetricNewrelicoracledbSlowQueriesQueryDetails(cfg MetricConfig) metricNewrelicoracledbSlowQueriesQueryDetails {
 	m := metricNewrelicoracledbSlowQueriesQueryDetails{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesRowsProcessed struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.rows_processed metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesRowsProcessed) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.rows_processed")
-	m.data.SetDescription("Total number of rows processed by slow queries")
-	m.data.SetUnit("{rows}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesRowsProcessed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesRowsProcessed) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesRowsProcessed) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesRowsProcessed(cfg MetricConfig) metricNewrelicoracledbSlowQueriesRowsProcessed {
-	m := metricNewrelicoracledbSlowQueriesRowsProcessed{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesRuntimeMemory struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.runtime_memory metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesRuntimeMemory) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.runtime_memory")
-	m.data.SetDescription("Runtime memory used by slow query cursors")
-	m.data.SetUnit("By")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesRuntimeMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesRuntimeMemory) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesRuntimeMemory) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesRuntimeMemory(cfg MetricConfig) metricNewrelicoracledbSlowQueriesRuntimeMemory {
-	m := metricNewrelicoracledbSlowQueriesRuntimeMemory{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesSharableMemory struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.sharable_memory metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesSharableMemory) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.sharable_memory")
-	m.data.SetDescription("Total memory used in the Shared Pool by slow queries")
-	m.data.SetUnit("By")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesSharableMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesSharableMemory) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesSharableMemory) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesSharableMemory(cfg MetricConfig) metricNewrelicoracledbSlowQueriesSharableMemory {
-	m := metricNewrelicoracledbSlowQueriesSharableMemory{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18527,11 +18291,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbSlowQueriesAvgDiskWrites                           metricNewrelicoracledbSlowQueriesAvgDiskWrites
 	metricNewrelicoracledbSlowQueriesAvgElapsedTime                          metricNewrelicoracledbSlowQueriesAvgElapsedTime
 	metricNewrelicoracledbSlowQueriesExecutionCount                          metricNewrelicoracledbSlowQueriesExecutionCount
-	metricNewrelicoracledbSlowQueriesPersistentMemory                        metricNewrelicoracledbSlowQueriesPersistentMemory
 	metricNewrelicoracledbSlowQueriesQueryDetails                            metricNewrelicoracledbSlowQueriesQueryDetails
-	metricNewrelicoracledbSlowQueriesRowsProcessed                           metricNewrelicoracledbSlowQueriesRowsProcessed
-	metricNewrelicoracledbSlowQueriesRuntimeMemory                           metricNewrelicoracledbSlowQueriesRuntimeMemory
-	metricNewrelicoracledbSlowQueriesSharableMemory                          metricNewrelicoracledbSlowQueriesSharableMemory
 	metricNewrelicoracledbSortsDisk                                          metricNewrelicoracledbSortsDisk
 	metricNewrelicoracledbSortsMemory                                        metricNewrelicoracledbSortsMemory
 	metricNewrelicoracledbSystemActiveParallelSessions                       metricNewrelicoracledbSystemActiveParallelSessions
@@ -18877,11 +18637,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbSlowQueriesAvgDiskWrites:                           newMetricNewrelicoracledbSlowQueriesAvgDiskWrites(mbc.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites),
 		metricNewrelicoracledbSlowQueriesAvgElapsedTime:                          newMetricNewrelicoracledbSlowQueriesAvgElapsedTime(mbc.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime),
 		metricNewrelicoracledbSlowQueriesExecutionCount:                          newMetricNewrelicoracledbSlowQueriesExecutionCount(mbc.Metrics.NewrelicoracledbSlowQueriesExecutionCount),
-		metricNewrelicoracledbSlowQueriesPersistentMemory:                        newMetricNewrelicoracledbSlowQueriesPersistentMemory(mbc.Metrics.NewrelicoracledbSlowQueriesPersistentMemory),
 		metricNewrelicoracledbSlowQueriesQueryDetails:                            newMetricNewrelicoracledbSlowQueriesQueryDetails(mbc.Metrics.NewrelicoracledbSlowQueriesQueryDetails),
-		metricNewrelicoracledbSlowQueriesRowsProcessed:                           newMetricNewrelicoracledbSlowQueriesRowsProcessed(mbc.Metrics.NewrelicoracledbSlowQueriesRowsProcessed),
-		metricNewrelicoracledbSlowQueriesRuntimeMemory:                           newMetricNewrelicoracledbSlowQueriesRuntimeMemory(mbc.Metrics.NewrelicoracledbSlowQueriesRuntimeMemory),
-		metricNewrelicoracledbSlowQueriesSharableMemory:                          newMetricNewrelicoracledbSlowQueriesSharableMemory(mbc.Metrics.NewrelicoracledbSlowQueriesSharableMemory),
 		metricNewrelicoracledbSortsDisk:                                          newMetricNewrelicoracledbSortsDisk(mbc.Metrics.NewrelicoracledbSortsDisk),
 		metricNewrelicoracledbSortsMemory:                                        newMetricNewrelicoracledbSortsMemory(mbc.Metrics.NewrelicoracledbSortsMemory),
 		metricNewrelicoracledbSystemActiveParallelSessions:                       newMetricNewrelicoracledbSystemActiveParallelSessions(mbc.Metrics.NewrelicoracledbSystemActiveParallelSessions),
@@ -19286,11 +19042,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbSlowQueriesAvgDiskWrites.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesAvgElapsedTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesExecutionCount.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesPersistentMemory.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesQueryDetails.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesRowsProcessed.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesRuntimeMemory.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesSharableMemory.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSortsDisk.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSortsMemory.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSystemActiveParallelSessions.emit(ils.Metrics())
@@ -19686,8 +19438,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbDatafileUsedBytesDataPoint(ts pc
 }
 
 // RecordNewrelicoracledbDbIDDataPoint adds a data point to newrelicoracledb.db_id metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDbIDDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, dbIDAttributeValue string) {
-	mb.metricNewrelicoracledbDbID.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, dbIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbDbIDDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, dbIDAttributeValue string) {
+	mb.metricNewrelicoracledbDbID.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, dbIDAttributeValue)
 }
 
 // RecordNewrelicoracledbDiskBlocksReadDataPoint adds a data point to newrelicoracledb.disk.blocks_read metric.
@@ -19726,8 +19478,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbExecutionPlanInfoDataPoint(ts pc
 }
 
 // RecordNewrelicoracledbGlobalNameDataPoint adds a data point to newrelicoracledb.global_name metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, globalNameAttributeValue string) {
-	mb.metricNewrelicoracledbGlobalName.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, globalNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, globalNameAttributeValue string) {
+	mb.metricNewrelicoracledbGlobalName.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, globalNameAttributeValue)
 }
 
 // RecordNewrelicoracledbHostingInfoDataPoint adds a data point to newrelicoracledb.hosting.info metric.
@@ -20101,23 +19853,23 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceUptimeSecondsDataPoin
 }
 
 // RecordNewrelicoracledbRacInstanceVersionInfoDataPoint adds a data point to newrelicoracledb.rac.instance.version_info metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, oracleVersionAttributeValue string) {
-	mb.metricNewrelicoracledbRacInstanceVersionInfo.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, oracleVersionAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, racInstanceNameAttributeValue string, hostNameRacAttributeValue string, oracleVersionAttributeValue string) {
+	mb.metricNewrelicoracledbRacInstanceVersionInfo.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, oracleVersionAttributeValue)
 }
 
 // RecordNewrelicoracledbRacServiceClbConfigDataPoint adds a data point to newrelicoracledb.rac.service.clb_config metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, clbGoalAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceClbConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue, clbGoalAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, clbGoalAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceClbConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, clbGoalAttributeValue)
 }
 
 // RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint adds a data point to newrelicoracledb.rac.service.creation_age_days metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceCreationAgeDays.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceCreationAgeDays.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbRacServiceFailoverConfigDataPoint adds a data point to newrelicoracledb.rac.service.failover_config metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceFailoverConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue, failoverMethodAttributeValue, failoverTypeAttributeValue, serviceGoalAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceFailoverConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, failoverMethodAttributeValue, failoverTypeAttributeValue, serviceGoalAttributeValue)
 }
 
 // RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint adds a data point to newrelicoracledb.rac.service.failover_delay_seconds metric.
@@ -20136,8 +19888,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceInstanceIDDataPoint(ts
 }
 
 // RecordNewrelicoracledbRacServiceNetworkConfigDataPoint adds a data point to newrelicoracledb.rac.service.network_config metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string, networkNameAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceNetworkConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue, networkNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, networkNameAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceNetworkConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, networkNameAttributeValue)
 }
 
 // RecordNewrelicoracledbRacTotalWaitsDataPoint adds a data point to newrelicoracledb.rac.total_waits metric.
@@ -20290,29 +20042,9 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesExecutionCountDataPoi
 	mb.metricNewrelicoracledbSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue)
 }
 
-// RecordNewrelicoracledbSlowQueriesPersistentMemoryDataPoint adds a data point to newrelicoracledb.slow_queries.persistent_memory metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesPersistentMemoryDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesPersistentMemory.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue)
-}
-
 // RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint adds a data point to newrelicoracledb.slow_queries.query_details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, userNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, userNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesRowsProcessedDataPoint adds a data point to newrelicoracledb.slow_queries.rows_processed metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesRowsProcessedDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesRowsProcessed.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesRuntimeMemoryDataPoint adds a data point to newrelicoracledb.slow_queries.runtime_memory metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesRuntimeMemoryDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesRuntimeMemory.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesSharableMemoryDataPoint adds a data point to newrelicoracledb.slow_queries.sharable_memory metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesSharableMemoryDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesSharableMemory.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, userNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, schemaNameAttributeValue, userNameAttributeValue)
 }
 
 // RecordNewrelicoracledbSortsDiskDataPoint adds a data point to newrelicoracledb.sorts_disk metric.

@@ -13,19 +13,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,
-			TO_CHAR(sa.last_load_time, 'YYYY-MM-DD HH24:MI:SS') AS last_load_time,
-			sa.sharable_mem AS sharable_memory_bytes,
-			sa.persistent_mem AS persistent_memory_bytes,
-			sa.runtime_mem AS runtime_memory_bytes,
-			CASE
-				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'SELECT%%' THEN 'SELECT'
-				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'INSERT%%' THEN 'INSERT'
-				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'UPDATE%%' THEN 'UPDATE'
-				WHEN UPPER(LTRIM(sa.sql_text)) LIKE 'DELETE%%' THEN 'DELETE'
-				ELSE 'OTHER'
-			END AS statement_type,
 			sa.executions AS execution_count,
-			sa.rows_processed AS rows_processed,
 			sa.sql_text AS query_text,
 			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
 			sa.disk_reads / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_reads,

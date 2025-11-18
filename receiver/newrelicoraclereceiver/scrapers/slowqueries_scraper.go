@@ -57,9 +57,8 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
 		userName := slowQuery.GetUserName()
 		schName := slowQuery.GetSchemaName()
-		stmtType := slowQuery.GetStatementType()
 
-		s.recordMetrics(now, &slowQuery, dbName, qID, qText, userName, schName, stmtType)
+		s.recordMetrics(now, &slowQuery, dbName, qID, qText, userName, schName)
 
 		if slowQuery.QueryID.Valid {
 			queryIDs = append(queryIDs, slowQuery.QueryID.String)
@@ -74,21 +73,11 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	return queryIDs, scrapeErrors
 }
 
-func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, dbName, qID, qText, userName, schName, stmtType string) {
+func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, dbName, qID, qText, userName, schName string) {
 	if slowQuery.ExecutionCount.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 			now,
 			float64(slowQuery.ExecutionCount.Int64),
-			dbName,
-			qID,
-			userName,
-		)
-	}
-
-	if slowQuery.RowsProcessed.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesRowsProcessedDataPoint(
-			now,
-			slowQuery.RowsProcessed.Int64,
 			dbName,
 			qID,
 			userName,
@@ -133,36 +122,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		userName,
 	)
 
-	if slowQuery.SharableMemoryBytes.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesSharableMemoryDataPoint(
-			now,
-			slowQuery.SharableMemoryBytes.Int64,
-			dbName,
-			qID,
-			userName,
-		)
-	}
-
-	if slowQuery.PersistentMemoryBytes.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesPersistentMemoryDataPoint(
-			now,
-			slowQuery.PersistentMemoryBytes.Int64,
-			dbName,
-			qID,
-			userName,
-		)
-	}
-
-	if slowQuery.RuntimeMemoryBytes.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesRuntimeMemoryDataPoint(
-			now,
-			slowQuery.RuntimeMemoryBytes.Int64,
-			dbName,
-			qID,
-			userName,
-		)
-	}
-
 	s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 		now,
 		1,
@@ -170,7 +129,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		qID,
 		qText,
 		schName,
-		stmtType,
 		userName,
 	)
 }
