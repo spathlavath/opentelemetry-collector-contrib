@@ -42,8 +42,7 @@ func (s *CoreScraper) scrapeGlobalNameInstanceMetrics(ctx context.Context, now p
 
 	metricCount := 0
 	for _, metric := range metrics {
-		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbGlobalNameDataPoint(now, 1, s.instanceName, instanceID, metric.GlobalName)
+		s.mb.RecordNewrelicoracledbGlobalNameDataPoint(now, 1, s.instanceName, metric.GlobalName)
 		metricCount++
 	}
 
@@ -61,8 +60,7 @@ func (s *CoreScraper) scrapeDBIDInstanceMetrics(ctx context.Context, now pcommon
 
 	metricCount := 0
 	for _, metric := range metrics {
-		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbDbIDDataPoint(now, 1, s.instanceName, instanceID, metric.DBID)
+		s.mb.RecordNewrelicoracledbDbIDDataPoint(now, 1, s.instanceName, metric.DBID)
 		metricCount++
 	}
 

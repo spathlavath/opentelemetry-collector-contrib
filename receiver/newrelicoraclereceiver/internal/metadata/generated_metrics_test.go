@@ -234,7 +234,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbDbIDDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "db.id-val")
+			mb.RecordNewrelicoracledbDbIDDataPoint(ts, 1, "db.instance.name-val", "db.id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -266,7 +266,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbGlobalNameDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "global.name-val")
+			mb.RecordNewrelicoracledbGlobalNameDataPoint(ts, 1, "db.instance.name-val", "global.name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -566,19 +566,19 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "rac.instance.name-val", "host.name.rac-val", "oracle.version-val")
+			mb.RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(ts, 1, "db.instance.name-val", "rac.instance.name-val", "host.name.rac-val", "oracle.version-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val", "clb.goal-val")
+			mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "clb.goal-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts, 1, "db.instance.name-val", "service.name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val", "failover.method-val", "failover.type-val", "service.goal-val")
+			mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "failover.method-val", "failover.type-val", "service.goal-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -594,7 +594,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val", "network.name-val")
+			mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "network.name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -718,23 +718,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesPersistentMemoryDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "statement_type-val", "user_name-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesRowsProcessedDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesRuntimeMemoryDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesSharableMemoryDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2264,9 +2248,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("db.instance.name")
 					assert.True(t, ok)
 					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("db.id")
 					assert.True(t, ok)
 					assert.Equal(t, "db.id-val", attrVal.Str())
@@ -2417,9 +2398,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("db.instance.name")
 					assert.True(t, ok)
 					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("global.name")
 					assert.True(t, ok)
 					assert.Equal(t, "global.name-val", attrVal.Str())
@@ -3868,9 +3846,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("db.instance.name")
 					assert.True(t, ok)
 					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("rac.instance.name")
 					assert.True(t, ok)
 					assert.Equal(t, "rac.instance.name-val", attrVal.Str())
@@ -3898,9 +3873,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("service.name")
 					assert.True(t, ok)
 					assert.Equal(t, "service.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("clb.goal")
 					assert.True(t, ok)
 					assert.Equal(t, "clb.goal-val", attrVal.Str())
@@ -3922,9 +3894,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("service.name")
 					assert.True(t, ok)
 					assert.Equal(t, "service.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.rac.service.failover_config":
 					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.failover_config"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.failover_config")
 					validatedMetrics["newrelicoracledb.rac.service.failover_config"] = true
@@ -3943,9 +3912,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("service.name")
 					assert.True(t, ok)
 					assert.Equal(t, "service.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("failover.method")
 					assert.True(t, ok)
 					assert.Equal(t, "failover.method-val", attrVal.Str())
@@ -4036,9 +4002,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("service.name")
 					assert.True(t, ok)
 					assert.Equal(t, "service.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("network.name")
 					assert.True(t, ok)
 					assert.Equal(t, "network.name-val", attrVal.Str())
@@ -4603,27 +4566,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
-				case "newrelicoracledb.slow_queries.persistent_memory":
-					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.persistent_memory"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.persistent_memory")
-					validatedMetrics["newrelicoracledb.slow_queries.persistent_memory"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Persistent memory used by slow query cursors", ms.At(i).Description())
-					assert.Equal(t, "By", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("user_name")
-					assert.True(t, ok)
-					assert.Equal(t, "user_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.query_details":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.query_details"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.query_details")
 					validatedMetrics["newrelicoracledb.slow_queries.query_details"] = true
@@ -4648,72 +4590,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("user_name")
-					assert.True(t, ok)
-					assert.Equal(t, "user_name-val", attrVal.Str())
-				case "newrelicoracledb.slow_queries.rows_processed":
-					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.rows_processed"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.rows_processed")
-					validatedMetrics["newrelicoracledb.slow_queries.rows_processed"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Total number of rows processed by slow queries", ms.At(i).Description())
-					assert.Equal(t, "{rows}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("user_name")
-					assert.True(t, ok)
-					assert.Equal(t, "user_name-val", attrVal.Str())
-				case "newrelicoracledb.slow_queries.runtime_memory":
-					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.runtime_memory"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.runtime_memory")
-					validatedMetrics["newrelicoracledb.slow_queries.runtime_memory"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Runtime memory used by slow query cursors", ms.At(i).Description())
-					assert.Equal(t, "By", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("user_name")
-					assert.True(t, ok)
-					assert.Equal(t, "user_name-val", attrVal.Str())
-				case "newrelicoracledb.slow_queries.sharable_memory":
-					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.sharable_memory"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.sharable_memory")
-					validatedMetrics["newrelicoracledb.slow_queries.sharable_memory"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Total memory used in the Shared Pool by slow queries", ms.At(i).Description())
-					assert.Equal(t, "By", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
