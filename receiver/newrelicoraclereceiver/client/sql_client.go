@@ -91,8 +91,8 @@ func (c *SQLClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) (
 }
 
 // QuerySlowQueries executes the slow queries query.
-func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
-	query := queries.GetSlowQueriesSQL(responseTimeThreshold, countThreshold)
+func (c *SQLClient) QuerySlowQueries(ctx context.Context, countThreshold int) ([]models.SlowQuery, error) {
+	query := queries.GetSlowQueriesSQL(countThreshold)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {

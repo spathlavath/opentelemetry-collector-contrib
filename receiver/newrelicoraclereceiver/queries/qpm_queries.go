@@ -5,8 +5,8 @@ package queries
 
 import "fmt"
 
-// GetSlowQueriesSQL returns SQL for slow queries with configurable response time threshold and row limit
-func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
+// GetSlowQueriesSQL returns SQL for slow queries with configurable row limit
+func GetSlowQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
 			d.name AS database_name,
@@ -36,10 +36,9 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
 			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER')
-			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
 		ORDER BY
 			avg_elapsed_time_ms DESC
-		FETCH FIRST %d ROWS ONLY`, responseTimeThreshold, rowLimit)
+		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
 // GetBlockingQueriesSQL returns SQL for blocking queries with configurable row limit

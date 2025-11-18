@@ -40,7 +40,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	var scrapeErrors []error
 	var queryIDs []string
 
-	slowQueries, err := s.client.QuerySlowQueries(ctx, s.queryMonitoringResponseTimeThreshold, s.queryMonitoringCountThreshold)
+	slowQueries, err := s.client.QuerySlowQueries(ctx, s.queryMonitoringCountThreshold)
 	if err != nil {
 		return nil, []error{err}
 	}
