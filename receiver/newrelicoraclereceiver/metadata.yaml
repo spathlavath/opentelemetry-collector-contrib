@@ -37,6 +37,9 @@ attributes:
   user_name:
     description: Oracle username for slow queries
     type: string
+  last_active_time:
+    description: Last active time for the SQL query
+    type: string
   plan_hash_value:
     description: Oracle execution plan hash value
     type: string
@@ -3562,6 +3565,28 @@ metrics:
       - query_id
       - user_name
 
+  newrelicoracledb.slow_queries.avg_rows_examined:
+    description: Average rows examined per execution for slow queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{rows}"
+    attributes:
+      - database_name
+      - query_id
+      - user_name
+
+  newrelicoracledb.slow_queries.avg_lock_time:
+    description: Average lock/concurrency wait time per execution for slow queries
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - database_name
+      - query_id
+      - user_name
+
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
     enabled: true
@@ -3573,7 +3598,8 @@ metrics:
       - query_id
       - query_text
       - schema_name
-      - user_name    
+      - user_name
+      - last_active_time
 
   newrelicoracledb.blocking_queries.wait_time:
     description: Wait time in seconds for blocked queries

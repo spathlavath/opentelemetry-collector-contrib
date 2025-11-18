@@ -2515,6 +2515,38 @@ Average elapsed time per execution for slow queries
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
+### newrelicoracledb.slow_queries.avg_lock_time
+
+Average lock/concurrency wait time per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_rows_examined
+
+Average rows examined per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
 ### newrelicoracledb.slow_queries.execution_count
 
 Number of executions for slow queries
@@ -2548,6 +2580,7 @@ Slow Query Details
 | query_text | SQL query text | Any Str | false |
 | schema_name | Schema name where the query is executed | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| last_active_time | Last active time for the SQL query | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
 

@@ -18,7 +18,10 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
 			sa.disk_reads / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_reads,
 			sa.direct_writes / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_writes,
-			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms
+			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms,
+			sa.buffer_gets / DECODE(sa.executions, 0, 1, sa.executions) AS rows_examined,
+			sa.concurrency_wait_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_lock_time_ms,
+			sa.last_active_time AS last_active_time_ms
 		FROM
 			v$sqlarea sa
 		INNER JOIN

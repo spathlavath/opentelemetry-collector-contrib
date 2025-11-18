@@ -189,6 +189,8 @@ type MetricsConfig struct {
 	NewrelicoracledbSlowQueriesAvgDiskReads                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_reads"`
 	NewrelicoracledbSlowQueriesAvgDiskWrites                           MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_writes"`
 	NewrelicoracledbSlowQueriesAvgElapsedTime                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_elapsed_time"`
+	NewrelicoracledbSlowQueriesAvgLockTime                             MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_lock_time"`
+	NewrelicoracledbSlowQueriesAvgRowsExamined                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_rows_examined"`
 	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
 	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
 	NewrelicoracledbSortsDisk                                          MetricConfig `mapstructure:"newrelicoracledb.sorts_disk"`
@@ -834,6 +836,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesAvgElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesAvgLockTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesAvgRowsExamined: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesExecutionCount: MetricConfig{

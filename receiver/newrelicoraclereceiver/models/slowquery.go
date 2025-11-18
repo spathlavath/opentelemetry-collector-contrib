@@ -14,6 +14,9 @@ type SlowQuery struct {
 	AvgDiskReads     sql.NullFloat64
 	AvgDiskWrites    sql.NullFloat64
 	AvgElapsedTimeMs sql.NullFloat64
+	AvgRowsExamined  sql.NullFloat64
+	AvgLockTimeMs    sql.NullFloat64
+	LastActiveTime   sql.NullString
 	HasFullTableScan sql.NullString
 }
 
@@ -53,6 +56,14 @@ func (sq *SlowQuery) GetQueryText() string {
 func (sq *SlowQuery) GetUserName() string {
 	if sq.UserName.Valid {
 		return sq.UserName.String
+	}
+	return ""
+}
+
+// GetLastActiveTime returns the last active time as a string, empty if null
+func (sq *SlowQuery) GetLastActiveTime() string {
+	if sq.LastActiveTime.Valid {
+		return sq.LastActiveTime.String
 	}
 	return ""
 }
