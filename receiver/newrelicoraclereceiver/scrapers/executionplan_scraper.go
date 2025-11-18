@@ -6,6 +6,7 @@ package scrapers
 import (
 	"context"
 	"fmt"
+	"math"
 	"strings"
 	"time"
 
@@ -152,28 +153,28 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	}
 
 	cost := int64(-1)
-	if row.Cost.Valid {
-		cost = row.Cost.Int64
+	if row.Cost.Valid && row.Cost.String != "" {
+		cost = s.parseIntSafe(row.Cost.String)
 	}
 
 	cardinality := int64(-1)
-	if row.Cardinality.Valid {
-		cardinality = row.Cardinality.Int64
+	if row.Cardinality.Valid && row.Cardinality.String != "" {
+		cardinality = s.parseIntSafe(row.Cardinality.String)
 	}
 
 	bytes := int64(-1)
-	if row.Bytes.Valid {
-		bytes = row.Bytes.Int64
+	if row.Bytes.Valid && row.Bytes.String != "" {
+		bytes = s.parseIntSafe(row.Bytes.String)
 	}
 
 	cpuCost := int64(-1)
-	if row.CPUCost.Valid {
-		cpuCost = row.CPUCost.Int64
+	if row.CPUCost.Valid && row.CPUCost.String != "" {
+		cpuCost = s.parseIntSafe(row.CPUCost.String)
 	}
 
 	ioCost := int64(-1)
-	if row.IOCost.Valid {
-		ioCost = row.IOCost.Int64
+	if row.IOCost.Valid && row.IOCost.String != "" {
+		ioCost = s.parseIntSafe(row.IOCost.String)
 	}
 
 	timestamp := ""
@@ -182,8 +183,8 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	}
 
 	tempSpace := int64(-1)
-	if row.TempSpace.Valid {
-		tempSpace = row.TempSpace.Int64
+	if row.TempSpace.Valid && row.TempSpace.String != "" {
+		tempSpace = s.parseIntSafe(row.TempSpace.String)
 	}
 
 	accessPredicates := ""
@@ -197,8 +198,8 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	}
 
 	timeVal := int64(-1)
-	if row.Time.Valid {
-		timeVal = row.Time.Int64
+	if row.Time.Valid && row.Time.String != "" {
+		timeVal = s.parseIntSafe(row.Time.String)
 	}
 
 	filterPredicates := ""
@@ -236,4 +237,28 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	)
 
 	return nil
+}
+
+// parseIntSafe safely parses a string to int64, handling overflow cases.
+// If the value exceeds int64 max, it returns the max int64 value.
+// If parsing fails, it returns -1.
+func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
+	if value == "" {
+		return -1
+	}
+
+	// Try to parse as int64
+	var result int64
+	_, err := fmt.Sscanf(value, "%d", &result)
+	if err != nil {
+		// If parsing fails, it's likely a very large number that exceeds int64 max
+		// Oracle can return values that exceed int64 max (e.g., 18446744073709551615)
+		// In such cases, we'll use int64 max value to indicate an extremely high cost
+		s.logger.Debug("Failed to parse large numeric value, using int64 max",
+			zap.String("value", value),
+			zap.Error(err))
+		return math.MaxInt64
+	}
+
+	return result
 }
