@@ -323,6 +323,10 @@ all_set:
       enabled: true
     newrelicoracledb.slow_queries.avg_elapsed_time:
       enabled: true
+    newrelicoracledb.slow_queries.avg_lock_time:
+      enabled: true
+    newrelicoracledb.slow_queries.avg_rows_examined:
+      enabled: true
     newrelicoracledb.slow_queries.execution_count:
       enabled: true
     newrelicoracledb.slow_queries.query_details:
@@ -974,6 +978,10 @@ none_set:
     newrelicoracledb.slow_queries.avg_disk_writes:
       enabled: false
     newrelicoracledb.slow_queries.avg_elapsed_time:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_lock_time:
+      enabled: false
+    newrelicoracledb.slow_queries.avg_rows_examined:
       enabled: false
     newrelicoracledb.slow_queries.execution_count:
       enabled: false

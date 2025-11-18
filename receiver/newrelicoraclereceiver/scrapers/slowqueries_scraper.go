@@ -57,8 +57,9 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
 		userName := slowQuery.GetUserName()
 		schName := slowQuery.GetSchemaName()
+		lastActiveTime := slowQuery.GetLastActiveTime()
 
-		s.recordMetrics(now, &slowQuery, dbName, qID, qText, userName, schName)
+		s.recordMetrics(now, &slowQuery, dbName, qID, qText, userName, schName, lastActiveTime)
 
 		if slowQuery.QueryID.Valid {
 			queryIDs = append(queryIDs, slowQuery.QueryID.String)
@@ -73,7 +74,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	return queryIDs, scrapeErrors
 }
 
-func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, dbName, qID, qText, userName, schName string) {
+func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, dbName, qID, qText, userName, schName, lastActiveTime string) {
 	if slowQuery.ExecutionCount.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 			now,
@@ -122,6 +123,26 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		userName,
 	)
 
+	if slowQuery.AvgRowsExamined.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(
+			now,
+			slowQuery.AvgRowsExamined.Float64,
+			dbName,
+			qID,
+			userName,
+		)
+	}
+
+	if slowQuery.AvgLockTimeMs.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(
+			now,
+			slowQuery.AvgLockTimeMs.Float64,
+			dbName,
+			qID,
+			userName,
+		)
+	}
+
 	s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 		now,
 		1,
@@ -130,5 +151,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		qText,
 		schName,
 		userName,
+		lastActiveTime,
 	)
 }

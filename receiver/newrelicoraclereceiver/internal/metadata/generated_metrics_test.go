@@ -714,11 +714,19 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4545,6 +4553,48 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_lock_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_lock_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_lock_time")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_lock_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average lock/concurrency wait time per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.avg_rows_examined":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_rows_examined"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_rows_examined")
+					validatedMetrics["newrelicoracledb.slow_queries.avg_rows_examined"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average rows examined per execution for slow queries", ms.At(i).Description())
+					assert.Equal(t, "{rows}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.execution_count":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.execution_count")
 					validatedMetrics["newrelicoracledb.slow_queries.execution_count"] = true
@@ -4593,6 +4643,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("last_active_time")
+					assert.True(t, ok)
+					assert.Equal(t, "last_active_time-val", attrVal.Str())
 				case "newrelicoracledb.sorts_disk":
 					assert.False(t, validatedMetrics["newrelicoracledb.sorts_disk"], "Found a duplicate in the metrics slice: newrelicoracledb.sorts_disk")
 					validatedMetrics["newrelicoracledb.sorts_disk"] = true
