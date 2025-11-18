@@ -8,7 +8,6 @@ type SlowQuery struct {
 	QueryID          sql.NullString
 	SchemaName       sql.NullString
 	UserName         sql.NullString // NEW: The user who parsed the statement
-	LastLoadTime     sql.NullString // NEW: Time the cursor was last loaded
 	ExecutionCount   sql.NullInt64
 	QueryText        sql.NullString
 	AvgCPUTimeMs     sql.NullFloat64
@@ -54,14 +53,6 @@ func (sq *SlowQuery) GetQueryText() string {
 func (sq *SlowQuery) GetUserName() string {
 	if sq.UserName.Valid {
 		return sq.UserName.String
-	}
-	return ""
-}
-
-// GetLastLoadTime returns the last load time as a string, empty if null
-func (sq *SlowQuery) GetLastLoadTime() string {
-	if sq.LastLoadTime.Valid {
-		return sq.LastLoadTime.String
 	}
 	return ""
 }

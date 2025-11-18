@@ -49,7 +49,6 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 			QueryID:          sql.NullString{String: "test_query_1", Valid: true},
 			SchemaName:       sql.NullString{String: "TEST_SCHEMA", Valid: true},
 			UserName:         sql.NullString{String: "TEST_USER", Valid: true},
-			LastLoadTime:     sql.NullString{String: "2024-10-28 10:00:00", Valid: true},
 			ExecutionCount:   sql.NullInt64{Int64: 150, Valid: true},
 			QueryText:        sql.NullString{String: "SELECT * FROM users WHERE id = 1", Valid: true},
 			AvgCPUTimeMs:     sql.NullFloat64{Float64: 125.5, Valid: true},

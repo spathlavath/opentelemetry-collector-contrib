@@ -13,7 +13,6 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,
-			TO_CHAR(sa.last_load_time, 'YYYY-MM-DD HH24:MI:SS') AS last_load_time,
 			sa.executions AS execution_count,
 			sa.sql_text AS query_text,
 			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
