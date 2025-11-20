@@ -151,7 +151,8 @@ func GetActiveSessionQueriesSQL(sqlIDs string) string {
 			s.sql_id AS query_id,
 			s.SQL_CHILD_NUMBER,
 			s.SQL_EXEC_START,
-			s.SQL_EXEC_ID
+			s.SQL_EXEC_ID,
+			s.SECONDS_IN_WAIT
 		FROM
 			v$session s
 		WHERE

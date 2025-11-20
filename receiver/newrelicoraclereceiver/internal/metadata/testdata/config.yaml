@@ -1,7 +1,7 @@
 default:
 all_set:
   metrics:
-    newrelicoracledb.active_sessions.info:
+    newrelicoracledb.active_sessions.seconds_in_wait:
       enabled: true
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: true
@@ -655,7 +655,7 @@ all_set:
       enabled: true
 none_set:
   metrics:
-    newrelicoracledb.active_sessions.info:
+    newrelicoracledb.active_sessions.seconds_in_wait:
       enabled: false
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: false

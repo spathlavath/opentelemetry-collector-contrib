@@ -28,7 +28,7 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
-	NewrelicoracledbActiveSessionsInfo                                 MetricConfig `mapstructure:"newrelicoracledb.active_sessions.info"`
+	NewrelicoracledbActiveSessionsSecondsInWait                        MetricConfig `mapstructure:"newrelicoracledb.active_sessions.seconds_in_wait"`
 	NewrelicoracledbAsmDiskgroupFreeMb                                 MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.free_mb"`
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
 	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
@@ -354,7 +354,7 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		NewrelicoracledbActiveSessionsInfo: MetricConfig{
+		NewrelicoracledbActiveSessionsSecondsInWait: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbAsmDiskgroupFreeMb: MetricConfig{

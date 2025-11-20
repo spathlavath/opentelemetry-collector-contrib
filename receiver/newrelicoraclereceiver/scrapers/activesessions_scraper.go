@@ -95,58 +95,22 @@ func (s *ActiveSessionsScraper) ScrapeActiveSessions(ctx context.Context, sqlIDs
 
 // recordActiveSessionMetric records an active session as a metric with all session attributes
 func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.ActiveSession, now pcommon.Timestamp) error {
-	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsInfo.Enabled {
+	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsSecondsInWait.Enabled {
 		return nil
 	}
 
-	// Extract values with defaults for null fields
-	username := ""
-	if session.Username.Valid {
-		username = session.Username.String
-	}
-
-	sid := int64(0)
-	if session.SID.Valid {
-		sid = session.SID.Int64
-	}
-
-	serial := int64(0)
-	if session.Serial.Valid {
-		serial = session.Serial.Int64
-	}
-
-	queryID := ""
-	if session.QueryID.Valid {
-		queryID = session.QueryID.String
-	}
-
-	sqlChildNumber := int64(0)
-	if session.SQLChildNumber.Valid {
-		sqlChildNumber = session.SQLChildNumber.Int64
-	}
-
-	sqlExecStart := ""
-	if session.SQLExecStart.Valid {
-		sqlExecStart = session.SQLExecStart.Time.Format("2006-01-02 15:04:05")
-	}
-
-	sqlExecID := int64(0)
-	if session.SQLExecID.Valid {
-		sqlExecID = session.SQLExecID.Int64
-	}
-
-	// Record metric with value 1 for this active session
+	// Record metric with seconds_in_wait as the value
 	// All session details are in the attributes/dimensions
-	s.mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(
+	s.mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(
 		now,
-		1, // Value is always 1, indicating this session is active
-		username,
-		fmt.Sprintf("%d", sid),
-		serial,
-		queryID,
-		sqlChildNumber,
-		sqlExecStart,
-		sqlExecID,
+		session.GetSecondsInWait(),
+		session.GetUsername(),
+		fmt.Sprintf("%d", session.GetSID()),
+		session.GetSerial(),
+		session.GetQueryID(),
+		session.GetSQLChildNumber(),
+		session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
+		session.GetSQLExecID(),
 	)
 
 	return nil

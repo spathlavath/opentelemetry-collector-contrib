@@ -12,19 +12,19 @@ metrics:
     enabled: false
 ```
 
-### newrelicoracledb.active_sessions.info
+### newrelicoracledb.active_sessions.seconds_in_wait
 
-Information about active Oracle sessions with query execution details
+Number of seconds the active session has been waiting
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| s | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| session_username | Oracle session username | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
 | query_id | SQL query identifier | Any Str | false |
@@ -97,7 +97,6 @@ Wait time in seconds for blocked queries
 | blocking_sid | Session ID of the blocking session | Any Str | false |
 | blocked_serial | Serial number of the blocked session | Any Str | false |
 | blocking_serial | Serial number of the blocking session | Any Str | false |
-| blocked_query_text | SQL query text of the blocked query | Any Str | false |
 | blocked_sql_exec_start | SQL execution start time of the blocked query | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 
@@ -4945,7 +4944,7 @@ Current wait time in seconds for active wait events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| session_username | Oracle session username | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |

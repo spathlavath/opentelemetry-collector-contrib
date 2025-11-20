@@ -252,6 +252,7 @@ func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string
 			&session.SQLChildNumber,
 			&session.SQLExecStart,
 			&session.SQLExecID,
+			&session.SecondsInWait,
 		)
 		if err != nil {
 			return nil, err
