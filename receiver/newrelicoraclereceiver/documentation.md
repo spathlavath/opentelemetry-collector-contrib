@@ -12,6 +12,26 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.active_sessions.info
+
+Information about active Oracle sessions with query execution details
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| session_username | Oracle session username | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+
 ### newrelicoracledb.asm.diskgroup.free_mb
 
 Available free space in the ASM disk group in MB

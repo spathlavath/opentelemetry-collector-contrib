@@ -77,7 +77,7 @@ func TestConnectionScraper_CoreConnectionCounts(t *testing.T) {
 	t.Run("valid session counts", func(t *testing.T) {
 		mockClient := client.NewMockClient()
 		mockClient.TotalSessions = 150
-		mockClient.ActiveSessions = 85
+		mockClient.ActiveSessionCount = 85
 		mockClient.InactiveSessions = 65
 
 		config := metadata.DefaultMetricsBuilderConfig()
@@ -112,7 +112,7 @@ func TestConnectionScraper_CoreConnectionCounts(t *testing.T) {
 	t.Run("zero session counts", func(t *testing.T) {
 		mockClient := client.NewMockClient()
 		mockClient.TotalSessions = 0
-		mockClient.ActiveSessions = 0
+		mockClient.ActiveSessionCount = 0
 		mockClient.InactiveSessions = 0
 
 		config := metadata.DefaultMetricsBuilderConfig()

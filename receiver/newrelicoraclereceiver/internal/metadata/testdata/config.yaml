@@ -1,6 +1,8 @@
 default:
 all_set:
   metrics:
+    newrelicoracledb.active_sessions.info:
+      enabled: true
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: true
     newrelicoracledb.asm.diskgroup.offline_disks:
@@ -653,6 +655,8 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    newrelicoracledb.active_sessions.info:
+      enabled: false
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: false
     newrelicoracledb.asm.diskgroup.offline_disks:

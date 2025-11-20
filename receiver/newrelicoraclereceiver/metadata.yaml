@@ -170,6 +170,16 @@ attributes:
     description: Wait event parameter 3 value
     type: string
 
+  session_serial:
+    description: Oracle session serial number
+    type: int
+  sql_child_number:
+    description: SQL child cursor number
+    type: int
+  sql_exec_id:
+    description: SQL execution identifier
+    type: int
+
   blocking_user:
     description: Username of the blocking session
     type: string
@@ -3764,6 +3774,21 @@ metrics:
       - wait_p2
       - wait_p3text
       - wait_p3
+
+  newrelicoracledb.active_sessions.info:
+    description: Information about active Oracle sessions with query execution details
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
+      - session_username
+      - session_id
+      - session_serial
+      - query_id
+      - sql_child_number
+      - sql_exec_start
+      - sql_exec_id
 
   newrelicoracledb.execution_plan.info:
     description: Execution plan information for SQL queries

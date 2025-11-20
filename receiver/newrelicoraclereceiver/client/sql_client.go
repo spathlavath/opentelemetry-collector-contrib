@@ -229,6 +229,44 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 	return results, nil
 }
 
+// QueryActiveSessionDetails executes the active sessions query for given SQL IDs.
+func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string) ([]models.ActiveSession, error) {
+	query := queries.GetActiveSessionQueriesSQL(sqlIDs)
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.ActiveSession
+
+	for rows.Next() {
+		var session models.ActiveSession
+
+		err := rows.Scan(
+			&session.Username,
+			&session.SID,
+			&session.Serial,
+			&session.QueryID,
+			&session.SQLChildNumber,
+			&session.SQLExecStart,
+			&session.SQLExecID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		results = append(results, session)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
 // QueryTotalSessions returns the total session count
 func (c *SQLClient) QueryTotalSessions(ctx context.Context) (int64, error) {
 	var count sql.NullInt64
