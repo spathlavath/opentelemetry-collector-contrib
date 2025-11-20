@@ -47,7 +47,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 func GetBlockingQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
-			s2.sid AS blocked_sid,
+			s2.sid AS session_id,
 			s2.serial# AS blocked_serial,
 			s2.username AS blocked_user,
 			s2.seconds_in_wait AS blocked_wait_sec,
@@ -139,4 +139,23 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 		V$SQL_PLAN
 	WHERE
 		SQL_ID = '%s'`, sqlIDs)
+}
+
+// GetActiveSessionQueriesSQL returns SQL to fetch active session queries by SQL IDs
+func GetActiveSessionQueriesSQL(sqlIDs string) string {
+	return fmt.Sprintf(`
+		SELECT
+			s.username,
+			s.sid,
+			s.serial#,
+			s.sql_id AS query_id,
+			s.SQL_CHILD_NUMBER,
+			s.SQL_EXEC_START,
+			s.SQL_EXEC_ID
+		FROM
+			v$session s
+		WHERE
+			s.sql_id IN (%s)
+			AND s.status = 'ACTIVE'
+			AND s.wait_class <> 'Idle'`, sqlIDs)
 }

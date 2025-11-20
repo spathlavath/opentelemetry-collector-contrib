@@ -14,11 +14,12 @@ type MockClient struct {
 	SlowQueries     []models.SlowQuery
 	BlockingQueries []models.BlockingQuery
 	WaitEvents      []models.WaitEvent
+	ActiveSessions  []models.ActiveSession
 
 	// Connection metrics
-	TotalSessions    int64
-	ActiveSessions   int64
-	InactiveSessions int64
+	TotalSessions      int64
+	ActiveSessionCount int64
+	InactiveSessions   int64
 
 	SessionStatusList            []models.SessionStatus
 	SessionTypeList              []models.SessionType
@@ -165,6 +166,13 @@ func (m *MockClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([
 	return m.WaitEvents, nil
 }
 
+func (m *MockClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string) ([]models.ActiveSession, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.ActiveSessions, nil
+}
+
 func (m *MockClient) QueryTotalSessions(ctx context.Context) (int64, error) {
 	if m.QueryErr != nil {
 		return 0, m.QueryErr
@@ -176,7 +184,7 @@ func (m *MockClient) QueryActiveSessions(ctx context.Context) (int64, error) {
 	if m.QueryErr != nil {
 		return 0, m.QueryErr
 	}
-	return m.ActiveSessions, nil
+	return m.ActiveSessionCount, nil
 }
 
 func (m *MockClient) QueryInactiveSessions(ctx context.Context) (int64, error) {

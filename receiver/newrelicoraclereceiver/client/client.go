@@ -29,6 +29,9 @@ type OracleClient interface {
 	// Wait events
 	QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error)
 
+	// Active session details
+	QueryActiveSessionDetails(ctx context.Context, sqlIDs string) ([]models.ActiveSession, error)
+
 	// Connection metrics - simple counts
 	QueryTotalSessions(ctx context.Context) (int64, error)
 	QueryActiveSessions(ctx context.Context) (int64, error)

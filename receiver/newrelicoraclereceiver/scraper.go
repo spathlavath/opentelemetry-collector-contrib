@@ -57,11 +57,12 @@ type newRelicOracleScraper struct {
 	databaseInfoScraper *scrapers.DatabaseInfoScraper
 
 	// Query Performance Monitoring (QPM) scrapers
-	slowQueriesScraper   *scrapers.SlowQueriesScraper
-	executionPlanScraper *scrapers.ExecutionPlanScraper
-	blockingScraper      *scrapers.BlockingScraper
-	waitEventsScraper    *scrapers.WaitEventsScraper
-	lockScraper          *scrapers.LockScraper
+	slowQueriesScraper    *scrapers.SlowQueriesScraper
+	executionPlanScraper  *scrapers.ExecutionPlanScraper
+	blockingScraper       *scrapers.BlockingScraper
+	waitEventsScraper     *scrapers.WaitEventsScraper
+	activeSessionsScraper *scrapers.ActiveSessionsScraper
+	lockScraper           *scrapers.LockScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -254,6 +255,11 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.QueryMonitoringCountThreshold,
 	)
 
+	// Initialize active sessions scraper
+	s.activeSessionsScraper = scrapers.NewActiveSessionsScraper(
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+	)
+
 	// Initialize lock scraper
 	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
 
@@ -430,6 +436,7 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	// Execute execution plan scraper with query IDs
 	if len(queryIDs) > 0 {
 		s.executeExecutionPlanScraper(ctx, errChan, queryIDs)
+		s.executeActiveSessionsScraper(ctx, errChan, queryIDs)
 	} else {
 		s.logger.Debug("No query IDs available for execution plan scraping")
 	}
@@ -445,6 +452,18 @@ func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context,
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
 	s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plan")
+}
+
+// executeActiveSessionsScraper executes the active sessions scraper with given query IDs
+func (s *newRelicOracleScraper) executeActiveSessionsScraper(ctx context.Context, errChan chan<- error, queryIDs []string) {
+	s.logger.Debug("Starting active sessions scraper with query IDs", zap.Strings("query_ids", queryIDs))
+	activeSessionErrs := s.activeSessionsScraper.ScrapeActiveSessions(ctx, queryIDs)
+
+	s.logger.Info("Active sessions scraper completed",
+		zap.Int("query_ids_processed", len(queryIDs)),
+		zap.Int("active_session_errors", len(activeSessionErrs)))
+
+	s.sendErrorsToChannel(errChan, activeSessionErrs, "active sessions")
 }
 
 // executeIndependentScrapers launches concurrent scrapers for independent metrics
