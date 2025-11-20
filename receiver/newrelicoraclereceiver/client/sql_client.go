@@ -90,9 +90,16 @@ func (c *SQLClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) (
 	return planRows, nil
 }
 
-// QueryActiveSessionsForSQLID executes the active sessions query for a specific SQL ID.
-func (c *SQLClient) QueryActiveSessionsForSQLID(ctx context.Context, sqlID string) ([]models.ActiveSession, error) {
-	query := queries.GetActiveSessionsForSQLID(sqlID)
+// QueryActiveSessionsForSQLIDs executes the active sessions query for multiple SQL IDs at once using IN clause.
+func (c *SQLClient) QueryActiveSessionsForSQLIDs(ctx context.Context, sqlIDs []string) ([]models.ActiveSession, error) {
+	if len(sqlIDs) == 0 {
+		return []models.ActiveSession{}, nil
+	}
+
+	query := queries.GetActiveSessionsForSQLIDs(sqlIDs)
+	if query == "" {
+		return []models.ActiveSession{}, nil
+	}
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {

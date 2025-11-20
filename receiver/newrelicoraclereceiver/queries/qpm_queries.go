@@ -139,8 +139,22 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 		SQL_ID IN (%s)`, sqlIDs)
 }
 
-// GetActiveSessionsForSQLID returns SQL to get active running sessions for a specific SQL ID
-func GetActiveSessionsForSQLID(sqlID string) string {
+// GetActiveSessionsForSQLIDs returns SQL to get active running sessions for multiple SQL IDs using IN clause
+func GetActiveSessionsForSQLIDs(sqlIDs []string) string {
+	if len(sqlIDs) == 0 {
+		return ""
+	}
+
+	// Build IN clause with quoted SQL IDs
+	inClause := "("
+	for i, sqlID := range sqlIDs {
+		if i > 0 {
+			inClause += ", "
+		}
+		inClause += fmt.Sprintf("'%s'", sqlID)
+	}
+	inClause += ")"
+
 	return fmt.Sprintf(`
 		SELECT
 			s.username,
@@ -153,10 +167,11 @@ func GetActiveSessionsForSQLID(sqlID string) string {
 		FROM
 			v$session s
 		WHERE
-			s.sql_id = '%s'
+			s.sql_id IN %s
 			AND s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
 		ORDER BY
+			s.sql_id,
 			s.SQL_CHILD_NUMBER,
-			s.SECONDS_IN_WAIT DESC`, sqlID)
+			s.SECONDS_IN_WAIT DESC`, inClause)
 }

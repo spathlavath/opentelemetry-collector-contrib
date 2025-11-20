@@ -144,7 +144,7 @@ func (m *MockClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) 
 	return []models.ExecutionPlanRow{}, nil
 }
 
-func (m *MockClient) QueryActiveSessionsForSQLID(ctx context.Context, sqlID string) ([]models.ActiveSession, error) {
+func (m *MockClient) QueryActiveSessionsForSQLIDs(ctx context.Context, sqlIDs []string) ([]models.ActiveSession, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}

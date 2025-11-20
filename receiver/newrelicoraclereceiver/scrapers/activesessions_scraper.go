@@ -42,33 +42,37 @@ func (s *ActiveSessionsScraper) ScrapeActiveSessions(ctx context.Context, sqlIDs
 	}
 
 	s.logger.Debug("Starting active sessions scrape",
-		zap.Int("sql_id_count", len(sqlIDs)))
+		zap.Int("sql_id_count", len(sqlIDs)),
+		zap.Strings("sql_ids", sqlIDs))
 
 	queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
 	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// Fetch all active sessions for all SQL IDs at once using IN clause
+	sessions, err := s.client.QueryActiveSessionsForSQLIDs(queryCtx, sqlIDs)
+	if err != nil {
+		errs = append(errs, fmt.Errorf("failed to query active sessions for SQL IDs: %w", err))
+		s.logger.Warn("Failed to retrieve active sessions",
+			zap.Strings("sql_ids", sqlIDs),
+			zap.Error(err))
+		return errs
+	}
+
+	s.logger.Debug("Retrieved active sessions",
+		zap.Int("sql_id_count", len(sqlIDs)),
+		zap.Int("sessions_count", len(sessions)))
+
+	// Record metrics for all sessions
 	successCount := 0
-
-	for _, sqlID := range sqlIDs {
-		sessions, err := s.client.QueryActiveSessionsForSQLID(queryCtx, sqlID)
-		if err != nil {
-			errs = append(errs, fmt.Errorf("failed to query active sessions for SQL ID %s: %w", sqlID, err))
-			s.logger.Warn("Failed to retrieve active sessions",
-				zap.String("sql_id", sqlID),
+	for _, session := range sessions {
+		if err := s.recordActiveSessionMetric(&session, now); err != nil {
+			s.logger.Warn("Failed to record metric for active session",
 				zap.Error(err))
-			continue
-		}
-
-		for _, session := range sessions {
-			if err := s.recordActiveSessionMetric(&session, now); err != nil {
-				s.logger.Warn("Failed to record metric for active session",
-					zap.String("sql_id", sqlID),
-					zap.Error(err))
-				errs = append(errs, err)
-			} else {
-				successCount++
-			}
+			errs = append(errs, err)
+		} else {
+			successCount++
 		}
 	}
 
