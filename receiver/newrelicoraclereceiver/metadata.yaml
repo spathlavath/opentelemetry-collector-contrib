@@ -115,6 +115,60 @@ attributes:
   wait_category:
     description: Oracle wait event category for wait events
     type: string
+  session_username:
+    description: Oracle session username
+    type: string
+  session_id:
+    description: Oracle session ID (SID)
+    type: string
+  session_status:
+    description: Oracle session status (ACTIVE, INACTIVE, etc.)
+    type: string
+  session_program:
+    description: Program name of the session
+    type: string
+  session_machine:
+    description: Machine name where the session is running
+    type: string
+  wait_object_owner:
+    description: Owner of the database object being waited on
+    type: string
+  wait_object_name:
+    description: Name of the database object being waited on
+    type: string
+  wait_object_type:
+    description: Type of the database object being waited on (TABLE, INDEX, etc.)
+    type: string
+  sql_exec_start:
+    description: Timestamp when the SQL execution started
+    type: string
+  row_wait_obj_id:
+    description: Object ID of the row being waited on
+    type: string
+  row_wait_file_id:
+    description: File ID of the row being waited on
+    type: string
+  row_wait_block_id:
+    description: Block ID of the row being waited on
+    type: string
+  wait_p1text:
+    description: Description of wait event parameter 1
+    type: string
+  wait_p1:
+    description: Wait event parameter 1 value
+    type: string
+  wait_p2text:
+    description: Description of wait event parameter 2
+    type: string
+  wait_p2:
+    description: Wait event parameter 2 value
+    type: string
+  wait_p3text:
+    description: Description of wait event parameter 3
+    type: string
+  wait_p3:
+    description: Wait event parameter 3 value
+    type: string
 
   blocking_user:
     description: Username of the blocking session
@@ -3623,17 +3677,18 @@ metrics:
       - blocked_sql_exec_start
       - database_name
 
-  newrelicoracledb.wait_events.total_wait_time_ms:
-    description: Total wait time in milliseconds for wait events
-    enabled: true
-    gauge:
-      value_type: double
-    unit: ms
-    attributes:
-      - database_name
-      - query_id
-      - wait_event_name
-      - wait_category
+  # Disabled old wait events metrics - replaced with current_wait_seconds
+  # newrelicoracledb.wait_events.total_wait_time_ms:
+  #   description: Total wait time in milliseconds for wait events
+  #   enabled: false
+  #   gauge:
+  #     value_type: double
+  #   unit: ms
+  #   attributes:
+  #     - database_name
+  #     - query_id
+  #     - wait_event_name
+  #     - wait_category
 
   # Database Version and Configuration Information
   newrelicoracledb.database.info:
@@ -3681,17 +3736,34 @@ metrics:
       - db.protection_mode
       - db.protection_level
 
-  newrelicoracledb.wait_events.waiting_tasks_count:
-    description: Number of waiting tasks for wait events
+  newrelicoracledb.wait_events.current_wait_seconds:
+    description: Current wait time in seconds for active wait events
     enabled: true
     gauge:
       value_type: double
-    unit: "{tasks}"
+    unit: s
     attributes:
-      - database_name
+      - session_username
+      - session_id
+      - session_status
       - query_id
       - wait_event_name
       - wait_category
+      - session_program
+      - session_machine
+      - wait_object_owner
+      - wait_object_name
+      - wait_object_type
+      - sql_exec_start
+      - row_wait_obj_id
+      - row_wait_file_id
+      - row_wait_block_id
+      - wait_p1text
+      - wait_p1
+      - wait_p2text
+      - wait_p2
+      - wait_p3text
+      - wait_p3
 
   newrelicoracledb.execution_plan.info:
     description: Execution plan information for SQL queries
@@ -3705,17 +3777,18 @@ metrics:
       - plan_hash_value
       - execution_plan_text
 
-  newrelicoracledb.wait_events.avg_wait_time_ms:
-      description: Average wait time in milliseconds for wait events
-      enabled: true
-      gauge:
-        value_type: double
-      unit: ms
-      attributes:
-        - database_name
-        - query_id
-        - wait_event_name
-        - wait_category    
+  # Disabled old wait events metrics - replaced with current_wait_seconds
+  # newrelicoracledb.wait_events.avg_wait_time_ms:
+  #     description: Average wait time in milliseconds for wait events
+  #     enabled: false
+  #     gauge:
+  #       value_type: double
+  #     unit: ms
+  #     attributes:
+  #       - database_name
+  #       - query_id
+  #       - wait_event_name
+  #       - wait_category    
 
 tests:
   config:

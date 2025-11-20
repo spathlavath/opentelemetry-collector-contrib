@@ -2,6 +2,7 @@ package scrapers
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -47,41 +48,53 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			continue
 		}
 
-		dbName := waitEvent.GetDatabaseName()
+		username := waitEvent.GetUsername()
+		sid := strconv.FormatInt(waitEvent.GetSID(), 10)
+		status := waitEvent.GetStatus()
 		qID := waitEvent.GetQueryID()
 		waitCat := waitEvent.GetWaitCategory()
 		waitEventName := waitEvent.GetWaitEventName()
+		program := waitEvent.GetProgram()
+		machine := waitEvent.GetMachine()
+		waitObjectOwner := waitEvent.GetObjectOwner()
+		waitObjectName := waitEvent.GetObjectNameWaitedOn()
+		waitObjectType := waitEvent.GetObjectTypeWaitedOn()
+		sqlExecStart := waitEvent.GetSQLExecStart().Format("2006-01-02 15:04:05")
+		rowWaitObjID := strconv.FormatInt(waitEvent.GetLockedObjectID(), 10)
+		rowWaitFileID := strconv.FormatInt(waitEvent.GetLockedFileID(), 10)
+		rowWaitBlockID := strconv.FormatInt(waitEvent.GetLockedBlockID(), 10)
+		p1Text := waitEvent.GetP1Text()
+		p1 := strconv.FormatInt(waitEvent.GetP1(), 10)
+		p2Text := waitEvent.GetP2Text()
+		p2 := strconv.FormatInt(waitEvent.GetP2(), 10)
+		p3Text := waitEvent.GetP3Text()
+		p3 := strconv.FormatInt(waitEvent.GetP3(), 10)
 
-		if waitEvent.HasValidWaitingTasksCount() {
-			s.mb.RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(
+		if waitEvent.HasValidCurrentWaitSeconds() {
+			s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(
 				now,
-				float64(waitEvent.GetWaitingTasksCount()),
-				dbName,
+				float64(waitEvent.GetCurrentWaitSeconds()),
+				username,
+				sid,
+				status,
 				qID,
 				waitEventName,
 				waitCat,
-			)
-			metricCount++
-		}
-
-		s.mb.RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(
-			now,
-			waitEvent.GetTotalWaitTimeMs(),
-			dbName,
-			qID,
-			waitEventName,
-			waitCat,
-		)
-		metricCount++
-
-		if waitEvent.HasValidAvgWaitTime() {
-			s.mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(
-				now,
-				waitEvent.GetAvgWaitTimeMs(),
-				dbName,
-				qID,
-				waitEventName,
-				waitCat,
+				program,
+				machine,
+				waitObjectOwner,
+				waitObjectName,
+				waitObjectType,
+				sqlExecStart,
+				rowWaitObjID,
+				rowWaitFileID,
+				rowWaitBlockID,
+				p1Text,
+				p1,
+				p2Text,
+				p2,
+				p3Text,
+				p3,
 			)
 			metricCount++
 		}

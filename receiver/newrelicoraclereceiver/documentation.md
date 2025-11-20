@@ -4913,56 +4913,39 @@ Used percentage of tablespace
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
-### newrelicoracledb.wait_events.avg_wait_time_ms
+### newrelicoracledb.wait_events.current_wait_seconds
 
-Average wait time in milliseconds for wait events
+Current wait time in seconds for active wait events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| s | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| session_username | Oracle session username | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | wait_event_name | Oracle wait event name for wait events | Any Str | false |
 | wait_category | Oracle wait event category for wait events | Any Str | false |
-
-### newrelicoracledb.wait_events.total_wait_time_ms
-
-Total wait time in milliseconds for wait events
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| wait_event_name | Oracle wait event name for wait events | Any Str | false |
-| wait_category | Oracle wait event category for wait events | Any Str | false |
-
-### newrelicoracledb.wait_events.waiting_tasks_count
-
-Number of waiting tasks for wait events
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {tasks} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| wait_event_name | Oracle wait event name for wait events | Any Str | false |
-| wait_category | Oracle wait event category for wait events | Any Str | false |
+| session_program | Program name of the session | Any Str | false |
+| session_machine | Machine name where the session is running | Any Str | false |
+| wait_object_owner | Owner of the database object being waited on | Any Str | false |
+| wait_object_name | Name of the database object being waited on | Any Str | false |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
+| row_wait_file_id | File ID of the row being waited on | Any Str | false |
+| row_wait_block_id | Block ID of the row being waited on | Any Str | false |
+| wait_p1text | Description of wait event parameter 1 | Any Str | false |
+| wait_p1 | Wait event parameter 1 value | Any Str | false |
+| wait_p2text | Description of wait event parameter 2 | Any Str | false |
+| wait_p2 | Wait event parameter 2 value | Any Str | false |
+| wait_p3text | Description of wait event parameter 3 | Any Str | false |
+| wait_p3 | Wait event parameter 3 value | Any Str | false |
 
 ## Default Events
 

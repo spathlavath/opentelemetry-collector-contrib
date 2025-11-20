@@ -192,14 +192,28 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 		var waitEvent models.WaitEvent
 
 		err := rows.Scan(
-			&waitEvent.DatabaseName,
+			&waitEvent.Username,
+			&waitEvent.SID,
+			&waitEvent.Status,
 			&waitEvent.QueryID,
 			&waitEvent.WaitCategory,
 			&waitEvent.WaitEventName,
-			&waitEvent.CollectionTimestamp,
-			&waitEvent.WaitingTasksCount,
-			&waitEvent.TotalWaitTimeMs,
-			&waitEvent.AvgWaitTimeMs,
+			&waitEvent.CurrentWaitSeconds,
+			&waitEvent.SQLExecStart,
+			&waitEvent.Program,
+			&waitEvent.Machine,
+			&waitEvent.LockedObjectID,
+			&waitEvent.ObjectOwner,
+			&waitEvent.ObjectNameWaitedOn,
+			&waitEvent.ObjectTypeWaitedOn,
+			&waitEvent.LockedFileID,
+			&waitEvent.LockedBlockID,
+			&waitEvent.P1Text,
+			&waitEvent.P1,
+			&waitEvent.P2Text,
+			&waitEvent.P2,
+			&waitEvent.P3Text,
+			&waitEvent.P3,
 		)
 		if err != nil {
 			return nil, err

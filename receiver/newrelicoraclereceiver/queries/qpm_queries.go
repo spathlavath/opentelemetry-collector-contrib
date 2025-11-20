@@ -76,36 +76,36 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 // GetWaitEventQueriesSQL returns SQL for wait event queries with configurable row limit
 func GetWaitEventQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
-		SELECT
-			d.name AS database_name,
-			ash.sql_id AS query_id,
-			ash.wait_class AS wait_category,
-			ash.event AS wait_event_name,
-			SYSTIMESTAMP AS collection_timestamp,
-			COUNT(DISTINCT ash.session_id || ',' || ash.session_serial#) AS waiting_tasks_count,
-			ROUND(
-				(SUM(ash.time_waited) / 1000) +
-				(SUM(CASE WHEN ash.time_waited = 0 THEN 1 ELSE 0 END) * 1000)
-			) AS total_wait_time_ms,
-			ROUND(
-				SUM(ash.time_waited) / NULLIF(COUNT(*), 0) / 1000, 2
-			) AS avg_wait_time_ms
-		FROM
-			v$active_session_history ash
-		CROSS JOIN
-			v$database d
-		WHERE
-			ash.sql_id IS NOT NULL
-			AND ash.wait_class <> 'Idle'
-			AND ash.event IS NOT NULL
-			AND ash.sample_time >= SYSDATE - INTERVAL '5' MINUTE
-		GROUP BY
-			d.name,
-			ash.sql_id,
-			ash.wait_class,
-			ash.event
-		ORDER BY
-			total_wait_time_ms DESC
+		SELECT 
+			s.username,
+			s.sid,
+			s.status,
+			s.sql_id,
+			s.wait_class,
+			s.event,
+			s.SECONDS_IN_WAIT,
+			s.SQL_EXEC_START,
+			s.PROGRAM,
+			s.MACHINE,
+			s.ROW_WAIT_OBJ#,
+			o.OWNER,
+			o.OBJECT_NAME,
+			o.OBJECT_TYPE,
+			s.ROW_WAIT_FILE#,
+			s.ROW_WAIT_BLOCK#,
+			s.p1text,
+			s.p1,
+			s.p2text,
+			s.p2,
+			s.p3text,
+			s.p3
+		FROM 
+			v$session s
+		LEFT JOIN 
+			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID
+		WHERE 
+			s.status = 'ACTIVE' 
+			AND s.wait_class <> 'Idle'
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
