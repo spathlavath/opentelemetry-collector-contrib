@@ -3773,7 +3773,7 @@ metrics:
     description: Number of seconds the active session has been waiting
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: s
     attributes:
       - user_name
