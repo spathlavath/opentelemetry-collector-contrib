@@ -155,6 +155,7 @@ func (c *SQLClient) QueryBlockingQueries(ctx context.Context, countThreshold int
 			&blockingQuery.BlockedUser,
 			&blockingQuery.BlockedWaitSec,
 			&blockingQuery.QueryID,
+			&blockingQuery.BlockedSQLExecStart,
 			&blockingQuery.BlockedQueryText,
 			&blockingQuery.BlockingSID,
 			&blockingQuery.BlockingSerial,
