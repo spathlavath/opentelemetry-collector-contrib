@@ -88,7 +88,7 @@ func TestBlockingScraper_ScrapeWithValidData(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.BlockingQueries = []models.BlockingQuery{
 		{
-			BlockedSID:       sql.NullInt64{Int64: 100, Valid: true},
+			SessionID:        sql.NullInt64{Int64: 100, Valid: true},
 			BlockedSerial:    sql.NullInt64{Int64: 5001, Valid: true},
 			BlockedUser:      sql.NullString{String: "USER1", Valid: true},
 			BlockedWaitSec:   sql.NullFloat64{Float64: 125.5, Valid: true},
@@ -150,7 +150,7 @@ func TestBlockingScraper_ScrapeWithMultipleBlocking(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.BlockingQueries = []models.BlockingQuery{
 		{
-			BlockedSID:     sql.NullInt64{Int64: 100, Valid: true},
+			SessionID:      sql.NullInt64{Int64: 100, Valid: true},
 			BlockedUser:    sql.NullString{String: "USER1", Valid: true},
 			BlockedWaitSec: sql.NullFloat64{Float64: 50.0, Valid: true},
 			BlockingSID:    sql.NullInt64{Int64: 200, Valid: true},
@@ -158,7 +158,7 @@ func TestBlockingScraper_ScrapeWithMultipleBlocking(t *testing.T) {
 			DatabaseName:   sql.NullString{String: "TESTDB", Valid: true},
 		},
 		{
-			BlockedSID:     sql.NullInt64{Int64: 150, Valid: true},
+			SessionID:      sql.NullInt64{Int64: 150, Valid: true},
 			BlockedUser:    sql.NullString{String: "USER3", Valid: true},
 			BlockedWaitSec: sql.NullFloat64{Float64: 75.5, Valid: true},
 			BlockingSID:    sql.NullInt64{Int64: 250, Valid: true},
@@ -184,7 +184,7 @@ func TestBlockingScraper_ScrapeWithInvalidWaitTime(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.BlockingQueries = []models.BlockingQuery{
 		{
-			BlockedSID:     sql.NullInt64{Int64: 100, Valid: true},
+			SessionID:      sql.NullInt64{Int64: 100, Valid: true},
 			BlockedUser:    sql.NullString{String: "USER1", Valid: true},
 			BlockedWaitSec: sql.NullFloat64{Valid: false},
 			BlockingSID:    sql.NullInt64{Int64: 200, Valid: true},

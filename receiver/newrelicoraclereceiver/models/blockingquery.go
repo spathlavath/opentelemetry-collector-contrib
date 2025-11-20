@@ -4,17 +4,17 @@ import "database/sql"
 
 // BlockingQuery represents a blocking query record from Oracle V$SESSION views
 type BlockingQuery struct {
-	BlockedSID       sql.NullInt64
-	BlockedSerial    sql.NullInt64
-	BlockedUser      sql.NullString
-	BlockedWaitSec     sql.NullFloat64
-	QueryID            sql.NullString
+	SessionID           sql.NullInt64
+	BlockedSerial       sql.NullInt64
+	BlockedUser         sql.NullString
+	BlockedWaitSec      sql.NullFloat64
+	QueryID             sql.NullString
 	BlockedSQLExecStart sql.NullString
-	BlockedQueryText   sql.NullString
-	BlockingSID        sql.NullInt64
-	BlockingSerial     sql.NullInt64
-	BlockingUser       sql.NullString
-	DatabaseName       sql.NullString
+	BlockedQueryText    sql.NullString
+	BlockingSID         sql.NullInt64
+	BlockingSerial      sql.NullInt64
+	BlockingUser        sql.NullString
+	DatabaseName        sql.NullString
 }
 
 // GetBlockedUser returns the blocked user as a string, empty if null

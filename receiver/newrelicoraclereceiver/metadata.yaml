@@ -187,9 +187,6 @@ attributes:
     description: Username of the blocked session
     type: string
 
-  blocked_sid:
-    description: Session ID of the blocked session
-    type: string
   blocking_sid:
     description: Session ID of the blocking session
     type: string
@@ -3679,7 +3676,7 @@ metrics:
       - blocked_user
       - blocking_user
       - query_id
-      - blocked_sid
+      - session_id
       - blocking_sid
       - blocked_serial
       - blocking_serial

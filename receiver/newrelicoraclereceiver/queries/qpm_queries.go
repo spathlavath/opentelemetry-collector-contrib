@@ -47,7 +47,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 func GetBlockingQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
-			s2.sid AS blocked_sid,
+			s2.sid AS session_id,
 			s2.serial# AS blocked_serial,
 			s2.username AS blocked_user,
 			s2.seconds_in_wait AS blocked_wait_sec,

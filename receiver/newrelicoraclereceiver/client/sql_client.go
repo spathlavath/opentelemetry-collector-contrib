@@ -150,7 +150,7 @@ func (c *SQLClient) QueryBlockingQueries(ctx context.Context, countThreshold int
 		var blockingQuery models.BlockingQuery
 
 		err := rows.Scan(
-			&blockingQuery.BlockedSID,
+			&blockingQuery.SessionID,
 			&blockingQuery.BlockedSerial,
 			&blockingQuery.BlockedUser,
 			&blockingQuery.BlockedWaitSec,

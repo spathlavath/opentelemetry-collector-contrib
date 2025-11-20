@@ -88,7 +88,7 @@ func (s *BlockingScraper) recordBlockingQueryMetric(now pcommon.Timestamp, block
 		blockingQuery.GetBlockedUser(),
 		blockingQuery.GetBlockingUser(),
 		blockingQuery.GetQueryID(),
-		formatInt64(blockingQuery.BlockedSID),
+		formatInt64(blockingQuery.SessionID),
 		formatInt64(blockingQuery.BlockingSID),
 		formatInt64(blockingQuery.BlockedSerial),
 		formatInt64(blockingQuery.BlockingSerial),
