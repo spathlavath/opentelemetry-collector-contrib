@@ -12,13 +12,13 @@ metrics:
     enabled: false
 ```
 
-### newrelicoracledb.active_sessions.info
+### newrelicoracledb.active_sessions.seconds_in_wait
 
-Information about active Oracle sessions with query execution details
+Number of seconds the active session has been waiting
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| s | Gauge | Int |
 
 #### Attributes
 
@@ -31,7 +31,6 @@ Information about active Oracle sessions with query execution details
 | sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
-| seconds_in_wait | Number of seconds the session has been waiting | Any Int | false |
 
 ### newrelicoracledb.asm.diskgroup.free_mb
 

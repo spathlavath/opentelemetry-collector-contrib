@@ -176,9 +176,6 @@ attributes:
   sql_exec_id:
     description: SQL execution identifier
     type: int
-  seconds_in_wait:
-    description: Number of seconds the session has been waiting
-    type: int
 
   blocking_user:
     description: Username of the blocking session
@@ -3772,12 +3769,12 @@ metrics:
       - wait_p3text
       - wait_p3
 
-  newrelicoracledb.active_sessions.info:
-    description: Information about active Oracle sessions with query execution details
+  newrelicoracledb.active_sessions.seconds_in_wait:
+    description: Number of seconds the active session has been waiting
     enabled: true
     gauge:
       value_type: int
-    unit: "1"
+    unit: s
     attributes:
       - user_name
       - session_id
@@ -3786,7 +3783,6 @@ metrics:
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
-      - seconds_in_wait
 
   newrelicoracledb.execution_plan.info:
     description: Execution plan information for SQL queries

@@ -95,7 +95,7 @@ func (s *ActiveSessionsScraper) ScrapeActiveSessions(ctx context.Context, sqlIDs
 
 // recordActiveSessionMetric records an active session as a metric with all session attributes
 func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.ActiveSession, now pcommon.Timestamp) error {
-	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsInfo.Enabled {
+	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsSecondsInWait.Enabled {
 		return nil
 	}
 
@@ -140,11 +140,11 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 		secondsInWait = session.SecondsInWait.Int64
 	}
 
-	// Record metric with value 1 for this active session
+	// Record metric with seconds_in_wait as the value
 	// All session details are in the attributes/dimensions
-	s.mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(
+	s.mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(
 		now,
-		1, // Value is always 1, indicating this session is active
+		secondsInWait,
 		username,
 		fmt.Sprintf("%d", sid),
 		serial,
@@ -152,7 +152,6 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 		sqlChildNumber,
 		sqlExecStart,
 		sqlExecID,
-		secondsInWait,
 	)
 
 	return nil

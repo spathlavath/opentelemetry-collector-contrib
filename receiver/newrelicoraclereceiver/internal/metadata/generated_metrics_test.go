@@ -70,7 +70,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(ts, 1, "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11, 15)
+			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1381,13 +1381,13 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
-				case "newrelicoracledb.active_sessions.info":
-					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.info"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.info")
-					validatedMetrics["newrelicoracledb.active_sessions.info"] = true
+				case "newrelicoracledb.active_sessions.seconds_in_wait":
+					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.seconds_in_wait"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.seconds_in_wait")
+					validatedMetrics["newrelicoracledb.active_sessions.seconds_in_wait"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Information about active Oracle sessions with query execution details", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.Equal(t, "Number of seconds the active session has been waiting", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -1414,9 +1414,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sql_exec_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 11, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("seconds_in_wait")
-					assert.True(t, ok)
-					assert.EqualValues(t, 15, attrVal.Int())
 				case "newrelicoracledb.asm.diskgroup.free_mb":
 					assert.False(t, validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"], "Found a duplicate in the metrics slice: newrelicoracledb.asm.diskgroup.free_mb")
 					validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"] = true

@@ -13,8 +13,8 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
-	NewrelicoracledbActiveSessionsInfo: metricInfo{
-		Name: "newrelicoracledb.active_sessions.info",
+	NewrelicoracledbActiveSessionsSecondsInWait: metricInfo{
+		Name: "newrelicoracledb.active_sessions.seconds_in_wait",
 	},
 	NewrelicoracledbAsmDiskgroupFreeMb: metricInfo{
 		Name: "newrelicoracledb.asm.diskgroup.free_mb",
@@ -982,7 +982,7 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
-	NewrelicoracledbActiveSessionsInfo                                 metricInfo
+	NewrelicoracledbActiveSessionsSecondsInWait                        metricInfo
 	NewrelicoracledbAsmDiskgroupFreeMb                                 metricInfo
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           metricInfo
 	NewrelicoracledbAsmDiskgroupTotalMb                                metricInfo
@@ -1310,22 +1310,22 @@ type metricInfo struct {
 	Name string
 }
 
-type metricNewrelicoracledbActiveSessionsInfo struct {
+type metricNewrelicoracledbActiveSessionsSecondsInWait struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
 	capacity int            // max observed number of data points added to the metric.
 }
 
-// init fills newrelicoracledb.active_sessions.info metric with initial data.
-func (m *metricNewrelicoracledbActiveSessionsInfo) init() {
-	m.data.SetName("newrelicoracledb.active_sessions.info")
-	m.data.SetDescription("Information about active Oracle sessions with query execution details")
-	m.data.SetUnit("1")
+// init fills newrelicoracledb.active_sessions.seconds_in_wait metric with initial data.
+func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) init() {
+	m.data.SetName("newrelicoracledb.active_sessions.seconds_in_wait")
+	m.data.SetDescription("Number of seconds the active session has been waiting")
+	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbActiveSessionsInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, secondsInWaitAttributeValue int64) {
+func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1340,18 +1340,17 @@ func (m *metricNewrelicoracledbActiveSessionsInfo) recordDataPoint(start pcommon
 	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
 	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
 	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
-	dp.Attributes().PutInt("seconds_in_wait", secondsInWaitAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbActiveSessionsInfo) updateCapacity() {
+func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) updateCapacity() {
 	if m.data.Gauge().DataPoints().Len() > m.capacity {
 		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbActiveSessionsInfo) emit(metrics pmetric.MetricSlice) {
+func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) emit(metrics pmetric.MetricSlice) {
 	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
@@ -1359,8 +1358,8 @@ func (m *metricNewrelicoracledbActiveSessionsInfo) emit(metrics pmetric.MetricSl
 	}
 }
 
-func newMetricNewrelicoracledbActiveSessionsInfo(cfg MetricConfig) metricNewrelicoracledbActiveSessionsInfo {
-	m := metricNewrelicoracledbActiveSessionsInfo{config: cfg}
+func newMetricNewrelicoracledbActiveSessionsSecondsInWait(cfg MetricConfig) metricNewrelicoracledbActiveSessionsSecondsInWait {
+	m := metricNewrelicoracledbActiveSessionsSecondsInWait{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18208,7 +18207,7 @@ type MetricsBuilder struct {
 	buildInfo                                                                component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                                           map[string]filter.Filter
 	resourceAttributeExcludeFilter                                           map[string]filter.Filter
-	metricNewrelicoracledbActiveSessionsInfo                                 metricNewrelicoracledbActiveSessionsInfo
+	metricNewrelicoracledbActiveSessionsSecondsInWait                        metricNewrelicoracledbActiveSessionsSecondsInWait
 	metricNewrelicoracledbAsmDiskgroupFreeMb                                 metricNewrelicoracledbAsmDiskgroupFreeMb
 	metricNewrelicoracledbAsmDiskgroupOfflineDisks                           metricNewrelicoracledbAsmDiskgroupOfflineDisks
 	metricNewrelicoracledbAsmDiskgroupTotalMb                                metricNewrelicoracledbAsmDiskgroupTotalMb
@@ -18551,12 +18550,12 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                   mbc,
-		startTime:                                pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                            pmetric.NewMetrics(),
-		buildInfo:                                settings.BuildInfo,
-		metricNewrelicoracledbActiveSessionsInfo: newMetricNewrelicoracledbActiveSessionsInfo(mbc.Metrics.NewrelicoracledbActiveSessionsInfo),
-		metricNewrelicoracledbAsmDiskgroupFreeMb: newMetricNewrelicoracledbAsmDiskgroupFreeMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupFreeMb),
+		config:        mbc,
+		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer: pmetric.NewMetrics(),
+		buildInfo:     settings.BuildInfo,
+		metricNewrelicoracledbActiveSessionsSecondsInWait:                        newMetricNewrelicoracledbActiveSessionsSecondsInWait(mbc.Metrics.NewrelicoracledbActiveSessionsSecondsInWait),
+		metricNewrelicoracledbAsmDiskgroupFreeMb:                                 newMetricNewrelicoracledbAsmDiskgroupFreeMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupFreeMb),
 		metricNewrelicoracledbAsmDiskgroupOfflineDisks:                           newMetricNewrelicoracledbAsmDiskgroupOfflineDisks(mbc.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks),
 		metricNewrelicoracledbAsmDiskgroupTotalMb:                                newMetricNewrelicoracledbAsmDiskgroupTotalMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupTotalMb),
 		metricNewrelicoracledbBlockingQueriesWaitTime:                            newMetricNewrelicoracledbBlockingQueriesWaitTime(mbc.Metrics.NewrelicoracledbBlockingQueriesWaitTime),
@@ -18961,7 +18960,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
-	mb.metricNewrelicoracledbActiveSessionsInfo.emit(ils.Metrics())
+	mb.metricNewrelicoracledbActiveSessionsSecondsInWait.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupFreeMb.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupOfflineDisks.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupTotalMb.emit(ils.Metrics())
@@ -19314,9 +19313,9 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	return metrics
 }
 
-// RecordNewrelicoracledbActiveSessionsInfoDataPoint adds a data point to newrelicoracledb.active_sessions.info metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsInfoDataPoint(ts pcommon.Timestamp, val int64, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, secondsInWaitAttributeValue int64) {
-	mb.metricNewrelicoracledbActiveSessionsInfo.recordDataPoint(mb.startTime, ts, val, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue, secondsInWaitAttributeValue)
+// RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint adds a data point to newrelicoracledb.active_sessions.seconds_in_wait metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts pcommon.Timestamp, val int64, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
+	mb.metricNewrelicoracledbActiveSessionsSecondsInWait.recordDataPoint(mb.startTime, ts, val, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue)
 }
 
 // RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint adds a data point to newrelicoracledb.asm.diskgroup.free_mb metric.
