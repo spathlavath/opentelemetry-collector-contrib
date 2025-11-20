@@ -10,7 +10,6 @@ type ActiveSession struct {
 	Username       sql.NullString
 	SID            sql.NullInt64
 	Serial         sql.NullInt64
-	Status         sql.NullString
 	QueryID        sql.NullString
 	SQLChildNumber sql.NullInt64
 	SQLExecStart   sql.NullString

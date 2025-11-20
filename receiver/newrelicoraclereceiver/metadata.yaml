@@ -351,20 +351,22 @@ events:
       - time
       - filter_predicates
 
-  newrelicoracledb.active_session:
+metrics:
+  newrelicoracledb.active_sessions.info:
+    description: Active Oracle database session information for queries. Reports 1 for each active session with all session attributes as dimensions.
     enabled: true
-    description: Active Oracle database sessions currently executing specific SQL statements. Contains session details from V$SESSION view including session identifiers, execution state, and timing information.
+    gauge:
+      value_type: int
+    unit: "1"
     attributes:
       - username
       - sid
       - serial
-      - status
       - query_id
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
 
-metrics:
   newrelicoracledb.sessions.count:
     description: Total number of active Oracle database sessions
     enabled: true
@@ -3631,6 +3633,36 @@ metrics:
       - schema_name
       - user_name
       - last_active_time
+
+  newrelicoracledb.active_sessions.count_by_query:
+    description: Number of active sessions executing a specific SQL ID
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{sessions}"
+    attributes:
+      - database_name
+      - query_id
+
+  newrelicoracledb.active_sessions.count_by_user:
+    description: Number of active sessions grouped by username
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{sessions}"
+    attributes:
+      - database_name
+      - username
+
+  newrelicoracledb.active_sessions.count_by_status:
+    description: Number of active sessions grouped by status
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{sessions}"
+    attributes:
+      - database_name
+      - status
 
   newrelicoracledb.blocking_queries.wait_time:
     description: Wait time in seconds for blocked queries

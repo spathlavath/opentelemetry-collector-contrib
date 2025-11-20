@@ -27,6 +27,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbActiveSessionsCountByQuery:                         MetricConfig{Enabled: true},
+					NewrelicoracledbActiveSessionsCountByStatus:                        MetricConfig{Enabled: true},
+					NewrelicoracledbActiveSessionsCountByUser:                          MetricConfig{Enabled: true},
+					NewrelicoracledbActiveSessionsInfo:                                 MetricConfig{Enabled: true},
 					NewrelicoracledbAsmDiskgroupFreeMb:                                 MetricConfig{Enabled: true},
 					NewrelicoracledbAsmDiskgroupOfflineDisks:                           MetricConfig{Enabled: true},
 					NewrelicoracledbAsmDiskgroupTotalMb:                                MetricConfig{Enabled: true},
@@ -361,6 +365,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					NewrelicoracledbActiveSessionsCountByQuery:                         MetricConfig{Enabled: false},
+					NewrelicoracledbActiveSessionsCountByStatus:                        MetricConfig{Enabled: false},
+					NewrelicoracledbActiveSessionsCountByUser:                          MetricConfig{Enabled: false},
+					NewrelicoracledbActiveSessionsInfo:                                 MetricConfig{Enabled: false},
 					NewrelicoracledbAsmDiskgroupFreeMb:                                 MetricConfig{Enabled: false},
 					NewrelicoracledbAsmDiskgroupOfflineDisks:                           MetricConfig{Enabled: false},
 					NewrelicoracledbAsmDiskgroupTotalMb:                                MetricConfig{Enabled: false},

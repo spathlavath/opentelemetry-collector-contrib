@@ -146,7 +146,6 @@ func GetActiveSessionsForSQLID(sqlID string) string {
 			s.username,
 			s.sid,
 			s.serial#,
-			s.status,
 			s.sql_id AS query_id,
 			s.SQL_CHILD_NUMBER,
 			s.SQL_EXEC_START,

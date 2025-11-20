@@ -13,6 +13,18 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	NewrelicoracledbActiveSessionsCountByQuery: metricInfo{
+		Name: "newrelicoracledb.active_sessions.count_by_query",
+	},
+	NewrelicoracledbActiveSessionsCountByStatus: metricInfo{
+		Name: "newrelicoracledb.active_sessions.count_by_status",
+	},
+	NewrelicoracledbActiveSessionsCountByUser: metricInfo{
+		Name: "newrelicoracledb.active_sessions.count_by_user",
+	},
+	NewrelicoracledbActiveSessionsInfo: metricInfo{
+		Name: "newrelicoracledb.active_sessions.info",
+	},
 	NewrelicoracledbAsmDiskgroupFreeMb: metricInfo{
 		Name: "newrelicoracledb.asm.diskgroup.free_mb",
 	},
@@ -985,6 +997,10 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	NewrelicoracledbActiveSessionsCountByQuery                         metricInfo
+	NewrelicoracledbActiveSessionsCountByStatus                        metricInfo
+	NewrelicoracledbActiveSessionsCountByUser                          metricInfo
+	NewrelicoracledbActiveSessionsInfo                                 metricInfo
 	NewrelicoracledbAsmDiskgroupFreeMb                                 metricInfo
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           metricInfo
 	NewrelicoracledbAsmDiskgroupTotalMb                                metricInfo
@@ -1312,6 +1328,219 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricNewrelicoracledbActiveSessionsCountByQuery struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.active_sessions.count_by_query metric with initial data.
+func (m *metricNewrelicoracledbActiveSessionsCountByQuery) init() {
+	m.data.SetName("newrelicoracledb.active_sessions.count_by_query")
+	m.data.SetDescription("Number of active sessions executing a specific SQL ID")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbActiveSessionsCountByQuery) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbActiveSessionsCountByQuery) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbActiveSessionsCountByQuery) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbActiveSessionsCountByQuery(cfg MetricConfig) metricNewrelicoracledbActiveSessionsCountByQuery {
+	m := metricNewrelicoracledbActiveSessionsCountByQuery{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbActiveSessionsCountByStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.active_sessions.count_by_status metric with initial data.
+func (m *metricNewrelicoracledbActiveSessionsCountByStatus) init() {
+	m.data.SetName("newrelicoracledb.active_sessions.count_by_status")
+	m.data.SetDescription("Number of active sessions grouped by status")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbActiveSessionsCountByStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, statusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("status", statusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbActiveSessionsCountByStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbActiveSessionsCountByStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbActiveSessionsCountByStatus(cfg MetricConfig) metricNewrelicoracledbActiveSessionsCountByStatus {
+	m := metricNewrelicoracledbActiveSessionsCountByStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbActiveSessionsCountByUser struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.active_sessions.count_by_user metric with initial data.
+func (m *metricNewrelicoracledbActiveSessionsCountByUser) init() {
+	m.data.SetName("newrelicoracledb.active_sessions.count_by_user")
+	m.data.SetDescription("Number of active sessions grouped by username")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbActiveSessionsCountByUser) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, usernameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbActiveSessionsCountByUser) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbActiveSessionsCountByUser) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbActiveSessionsCountByUser(cfg MetricConfig) metricNewrelicoracledbActiveSessionsCountByUser {
+	m := metricNewrelicoracledbActiveSessionsCountByUser{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbActiveSessionsInfo struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.active_sessions.info metric with initial data.
+func (m *metricNewrelicoracledbActiveSessionsInfo) init() {
+	m.data.SetName("newrelicoracledb.active_sessions.info")
+	m.data.SetDescription("Active Oracle database session information for queries. Reports 1 for each active session with all session attributes as dimensions.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbActiveSessionsInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutInt("sid", sidAttributeValue)
+	dp.Attributes().PutInt("serial", serialAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
+	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
+	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbActiveSessionsInfo) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbActiveSessionsInfo) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbActiveSessionsInfo(cfg MetricConfig) metricNewrelicoracledbActiveSessionsInfo {
+	m := metricNewrelicoracledbActiveSessionsInfo{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricNewrelicoracledbAsmDiskgroupFreeMb struct {
@@ -18244,6 +18473,10 @@ type MetricsBuilder struct {
 	buildInfo                                                                component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                                           map[string]filter.Filter
 	resourceAttributeExcludeFilter                                           map[string]filter.Filter
+	metricNewrelicoracledbActiveSessionsCountByQuery                         metricNewrelicoracledbActiveSessionsCountByQuery
+	metricNewrelicoracledbActiveSessionsCountByStatus                        metricNewrelicoracledbActiveSessionsCountByStatus
+	metricNewrelicoracledbActiveSessionsCountByUser                          metricNewrelicoracledbActiveSessionsCountByUser
+	metricNewrelicoracledbActiveSessionsInfo                                 metricNewrelicoracledbActiveSessionsInfo
 	metricNewrelicoracledbAsmDiskgroupFreeMb                                 metricNewrelicoracledbAsmDiskgroupFreeMb
 	metricNewrelicoracledbAsmDiskgroupOfflineDisks                           metricNewrelicoracledbAsmDiskgroupOfflineDisks
 	metricNewrelicoracledbAsmDiskgroupTotalMb                                metricNewrelicoracledbAsmDiskgroupTotalMb
@@ -18588,11 +18821,15 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                   mbc,
-		startTime:                                pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                            pmetric.NewMetrics(),
-		buildInfo:                                settings.BuildInfo,
-		metricNewrelicoracledbAsmDiskgroupFreeMb: newMetricNewrelicoracledbAsmDiskgroupFreeMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupFreeMb),
+		config:        mbc,
+		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer: pmetric.NewMetrics(),
+		buildInfo:     settings.BuildInfo,
+		metricNewrelicoracledbActiveSessionsCountByQuery:                         newMetricNewrelicoracledbActiveSessionsCountByQuery(mbc.Metrics.NewrelicoracledbActiveSessionsCountByQuery),
+		metricNewrelicoracledbActiveSessionsCountByStatus:                        newMetricNewrelicoracledbActiveSessionsCountByStatus(mbc.Metrics.NewrelicoracledbActiveSessionsCountByStatus),
+		metricNewrelicoracledbActiveSessionsCountByUser:                          newMetricNewrelicoracledbActiveSessionsCountByUser(mbc.Metrics.NewrelicoracledbActiveSessionsCountByUser),
+		metricNewrelicoracledbActiveSessionsInfo:                                 newMetricNewrelicoracledbActiveSessionsInfo(mbc.Metrics.NewrelicoracledbActiveSessionsInfo),
+		metricNewrelicoracledbAsmDiskgroupFreeMb:                                 newMetricNewrelicoracledbAsmDiskgroupFreeMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupFreeMb),
 		metricNewrelicoracledbAsmDiskgroupOfflineDisks:                           newMetricNewrelicoracledbAsmDiskgroupOfflineDisks(mbc.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks),
 		metricNewrelicoracledbAsmDiskgroupTotalMb:                                newMetricNewrelicoracledbAsmDiskgroupTotalMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupTotalMb),
 		metricNewrelicoracledbBlockingQueriesWaitTime:                            newMetricNewrelicoracledbBlockingQueriesWaitTime(mbc.Metrics.NewrelicoracledbBlockingQueriesWaitTime),
@@ -18999,6 +19236,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricNewrelicoracledbActiveSessionsCountByQuery.emit(ils.Metrics())
+	mb.metricNewrelicoracledbActiveSessionsCountByStatus.emit(ils.Metrics())
+	mb.metricNewrelicoracledbActiveSessionsCountByUser.emit(ils.Metrics())
+	mb.metricNewrelicoracledbActiveSessionsInfo.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupFreeMb.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupOfflineDisks.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupTotalMb.emit(ils.Metrics())
@@ -19351,6 +19592,26 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordNewrelicoracledbActiveSessionsCountByQueryDataPoint adds a data point to newrelicoracledb.active_sessions.count_by_query metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsCountByQueryDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricNewrelicoracledbActiveSessionsCountByQuery.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue)
+}
+
+// RecordNewrelicoracledbActiveSessionsCountByStatusDataPoint adds a data point to newrelicoracledb.active_sessions.count_by_status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsCountByStatusDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, statusAttributeValue string) {
+	mb.metricNewrelicoracledbActiveSessionsCountByStatus.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, statusAttributeValue)
+}
+
+// RecordNewrelicoracledbActiveSessionsCountByUserDataPoint adds a data point to newrelicoracledb.active_sessions.count_by_user metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsCountByUserDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, usernameAttributeValue string) {
+	mb.metricNewrelicoracledbActiveSessionsCountByUser.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, usernameAttributeValue)
+}
+
+// RecordNewrelicoracledbActiveSessionsInfoDataPoint adds a data point to newrelicoracledb.active_sessions.info metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsInfoDataPoint(ts pcommon.Timestamp, val int64, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
+	mb.metricNewrelicoracledbActiveSessionsInfo.recordDataPoint(mb.startTime, ts, val, usernameAttributeValue, sidAttributeValue, serialAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue)
 }
 
 // RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint adds a data point to newrelicoracledb.asm.diskgroup.free_mb metric.

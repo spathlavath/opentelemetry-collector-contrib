@@ -1,6 +1,14 @@
 default:
 all_set:
   metrics:
+    newrelicoracledb.active_sessions.count_by_query:
+      enabled: true
+    newrelicoracledb.active_sessions.count_by_status:
+      enabled: true
+    newrelicoracledb.active_sessions.count_by_user:
+      enabled: true
+    newrelicoracledb.active_sessions.info:
+      enabled: true
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: true
     newrelicoracledb.asm.diskgroup.offline_disks:
@@ -648,8 +656,6 @@ all_set:
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: true
   events:
-    newrelicoracledb.active_session:
-      enabled: true
     newrelicoracledb.execution_plan:
       enabled: true
   resource_attributes:
@@ -659,6 +665,14 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    newrelicoracledb.active_sessions.count_by_query:
+      enabled: false
+    newrelicoracledb.active_sessions.count_by_status:
+      enabled: false
+    newrelicoracledb.active_sessions.count_by_user:
+      enabled: false
+    newrelicoracledb.active_sessions.info:
+      enabled: false
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: false
     newrelicoracledb.asm.diskgroup.offline_disks:
@@ -1306,8 +1320,6 @@ none_set:
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: false
   events:
-    newrelicoracledb.active_session:
-      enabled: false
     newrelicoracledb.execution_plan:
       enabled: false
   resource_attributes:

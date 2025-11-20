@@ -70,6 +70,22 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbActiveSessionsCountByQueryDataPoint(ts, 1, "database_name-val", "query_id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbActiveSessionsCountByStatusDataPoint(ts, 1, "database_name-val", "status-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbActiveSessionsCountByUserDataPoint(ts, 1, "database_name-val", "username-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(ts, 1, "username-val", 3, 6, "query_id-val", 16, "sql_exec_start-val", 11)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(ts, 1, "db.instance.name-val", "diskgroup.name-val")
 
 			defaultMetricsCount++
@@ -1385,6 +1401,93 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "newrelicoracledb.active_sessions.count_by_query":
+					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.count_by_query"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.count_by_query")
+					validatedMetrics["newrelicoracledb.active_sessions.count_by_query"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of active sessions executing a specific SQL ID", ms.At(i).Description())
+					assert.Equal(t, "{sessions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "newrelicoracledb.active_sessions.count_by_status":
+					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.count_by_status"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.count_by_status")
+					validatedMetrics["newrelicoracledb.active_sessions.count_by_status"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of active sessions grouped by status", ms.At(i).Description())
+					assert.Equal(t, "{sessions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("status")
+					assert.True(t, ok)
+					assert.Equal(t, "status-val", attrVal.Str())
+				case "newrelicoracledb.active_sessions.count_by_user":
+					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.count_by_user"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.count_by_user")
+					validatedMetrics["newrelicoracledb.active_sessions.count_by_user"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of active sessions grouped by username", ms.At(i).Description())
+					assert.Equal(t, "{sessions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("username")
+					assert.True(t, ok)
+					assert.Equal(t, "username-val", attrVal.Str())
+				case "newrelicoracledb.active_sessions.info":
+					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.info"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.info")
+					validatedMetrics["newrelicoracledb.active_sessions.info"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Active Oracle database session information for queries. Reports 1 for each active session with all session attributes as dimensions.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("username")
+					assert.True(t, ok)
+					assert.Equal(t, "username-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sid")
+					assert.True(t, ok)
+					assert.EqualValues(t, 3, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("serial")
+					assert.True(t, ok)
+					assert.EqualValues(t, 6, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sql_child_number")
+					assert.True(t, ok)
+					assert.EqualValues(t, 16, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("sql_exec_start")
+					assert.True(t, ok)
+					assert.Equal(t, "sql_exec_start-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sql_exec_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 11, attrVal.Int())
 				case "newrelicoracledb.asm.diskgroup.free_mb":
 					assert.False(t, validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"], "Found a duplicate in the metrics slice: newrelicoracledb.asm.diskgroup.free_mb")
 					validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"] = true

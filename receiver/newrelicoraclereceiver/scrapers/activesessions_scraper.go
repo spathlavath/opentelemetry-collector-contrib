@@ -17,20 +17,20 @@ import (
 )
 
 type ActiveSessionsScraper struct {
-	client            client.OracleClient
-	lb                *metadata.LogsBuilder
-	logger            *zap.Logger
-	instanceName      string
-	logsBuilderConfig metadata.LogsBuilderConfig
+	client               client.OracleClient
+	mb                   *metadata.MetricsBuilder
+	logger               *zap.Logger
+	instanceName         string
+	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-func NewActiveSessionsScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, instanceName string, logsBuilderConfig metadata.LogsBuilderConfig) *ActiveSessionsScraper {
+func NewActiveSessionsScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *ActiveSessionsScraper {
 	return &ActiveSessionsScraper{
-		client:            oracleClient,
-		lb:                lb,
-		logger:            logger,
-		instanceName:      instanceName,
-		logsBuilderConfig: logsBuilderConfig,
+		client:               oracleClient,
+		mb:                   mb,
+		logger:               logger,
+		instanceName:         instanceName,
+		metricsBuilderConfig: metricsBuilderConfig,
 	}
 }
 
@@ -47,7 +47,9 @@ func (s *ActiveSessionsScraper) ScrapeActiveSessions(ctx context.Context, sqlIDs
 	queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
+	now := pcommon.NewTimestampFromTime(time.Now())
 	successCount := 0
+
 	for _, sqlID := range sqlIDs {
 		sessions, err := s.client.QueryActiveSessionsForSQLID(queryCtx, sqlID)
 		if err != nil {
@@ -59,8 +61,8 @@ func (s *ActiveSessionsScraper) ScrapeActiveSessions(ctx context.Context, sqlIDs
 		}
 
 		for _, session := range sessions {
-			if err := s.buildActiveSessionLog(&session); err != nil {
-				s.logger.Warn("Failed to build log for active session",
+			if err := s.recordActiveSessionMetric(&session, now); err != nil {
+				s.logger.Warn("Failed to record metric for active session",
 					zap.String("sql_id", sqlID),
 					zap.Error(err))
 				errs = append(errs, err)
@@ -78,9 +80,9 @@ func (s *ActiveSessionsScraper) ScrapeActiveSessions(ctx context.Context, sqlIDs
 	return errs
 }
 
-// buildActiveSessionLog converts an active session to a log event with individual attributes
-func (s *ActiveSessionsScraper) buildActiveSessionLog(session *models.ActiveSession) error {
-	if !s.logsBuilderConfig.Events.NewrelicoracledbActiveSession.Enabled {
+// recordActiveSessionMetric records an active session as a metric with all session attributes
+func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.ActiveSession, now pcommon.Timestamp) error {
+	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsInfo.Enabled {
 		return nil
 	}
 
@@ -90,19 +92,14 @@ func (s *ActiveSessionsScraper) buildActiveSessionLog(session *models.ActiveSess
 		username = session.Username.String
 	}
 
-	sid := int64(-1)
+	sid := int64(0)
 	if session.SID.Valid {
 		sid = session.SID.Int64
 	}
 
-	serial := int64(-1)
+	serial := int64(0)
 	if session.Serial.Valid {
 		serial = session.Serial.Int64
-	}
-
-	status := ""
-	if session.Status.Valid {
-		status = session.Status.String
 	}
 
 	queryID := ""
@@ -110,7 +107,7 @@ func (s *ActiveSessionsScraper) buildActiveSessionLog(session *models.ActiveSess
 		queryID = session.QueryID.String
 	}
 
-	sqlChildNumber := int64(-1)
+	sqlChildNumber := int64(0)
 	if session.SQLChildNumber.Valid {
 		sqlChildNumber = session.SQLChildNumber.Int64
 	}
@@ -120,19 +117,19 @@ func (s *ActiveSessionsScraper) buildActiveSessionLog(session *models.ActiveSess
 		sqlExecStart = session.SQLExecStart.String
 	}
 
-	sqlExecID := int64(-1)
+	sqlExecID := int64(0)
 	if session.SQLExecID.Valid {
 		sqlExecID = session.SQLExecID.Int64
 	}
 
-	// Record the event with all attributes
-	s.lb.RecordNewrelicoracledbActiveSessionEvent(
-		context.Background(),
-		pcommon.NewTimestampFromTime(time.Now()),
+	// Record metric with value 1 for this active session
+	// All session details are in the attributes/dimensions
+	s.mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(
+		now,
+		1, // Value is always 1, indicating this session is active
 		username,
 		sid,
 		serial,
-		status,
 		queryID,
 		sqlChildNumber,
 		sqlExecStart,

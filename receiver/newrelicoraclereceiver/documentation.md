@@ -12,6 +12,71 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.active_sessions.count_by_query
+
+Number of active sessions executing a specific SQL ID
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+
+### newrelicoracledb.active_sessions.count_by_status
+
+Number of active sessions grouped by status
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| status | Session status (e.g., ACTIVE, INACTIVE) | Any Str | false |
+
+### newrelicoracledb.active_sessions.count_by_user
+
+Number of active sessions grouped by username
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| username | Oracle username who parsed the SQL | Any Str | false |
+
+### newrelicoracledb.active_sessions.info
+
+Active Oracle database session information for queries. Reports 1 for each active session with all session attributes as dimensions.
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| sid | Session identifier (SID) | Any Int | false |
+| serial | Session serial number | Any Int | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | Child number of the SQL statement being executed | Any Int | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+
 ### newrelicoracledb.asm.diskgroup.free_mb
 
 Available free space in the ASM disk group in MB
@@ -4972,23 +5037,6 @@ events:
   <event_name>:
     enabled: false
 ```
-
-### newrelicoracledb.active_session
-
-Active Oracle database sessions currently executing specific SQL statements. Contains session details from V$SESSION view including session identifiers, execution state, and timing information.
-
-#### Attributes
-
-| Name | Description | Values |
-| ---- | ----------- | ------ |
-| username | Oracle username who parsed the SQL | Any Str |
-| sid | Session identifier (SID) | Any Int |
-| serial | Session serial number | Any Int |
-| status | Session status (e.g., ACTIVE, INACTIVE) | Any Str |
-| query_id | SQL query identifier | Any Str |
-| sql_child_number | Child number of the SQL statement being executed | Any Int |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str |
-| sql_exec_id | SQL execution identifier | Any Int |
 
 ### newrelicoracledb.execution_plan
 

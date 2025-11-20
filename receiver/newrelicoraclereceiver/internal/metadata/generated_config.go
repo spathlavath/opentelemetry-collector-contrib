@@ -28,6 +28,10 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
+	NewrelicoracledbActiveSessionsCountByQuery                         MetricConfig `mapstructure:"newrelicoracledb.active_sessions.count_by_query"`
+	NewrelicoracledbActiveSessionsCountByStatus                        MetricConfig `mapstructure:"newrelicoracledb.active_sessions.count_by_status"`
+	NewrelicoracledbActiveSessionsCountByUser                          MetricConfig `mapstructure:"newrelicoracledb.active_sessions.count_by_user"`
+	NewrelicoracledbActiveSessionsInfo                                 MetricConfig `mapstructure:"newrelicoracledb.active_sessions.info"`
 	NewrelicoracledbAsmDiskgroupFreeMb                                 MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.free_mb"`
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
 	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
@@ -355,6 +359,18 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		NewrelicoracledbActiveSessionsCountByQuery: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbActiveSessionsCountByStatus: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbActiveSessionsCountByUser: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbActiveSessionsInfo: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbAsmDiskgroupFreeMb: MetricConfig{
 			Enabled: true,
 		},
@@ -1348,15 +1364,11 @@ func (ec *EventConfig) Unmarshal(parser *confmap.Conf) error {
 
 // EventsConfig provides config for newrelicoracledb events.
 type EventsConfig struct {
-	NewrelicoracledbActiveSession EventConfig `mapstructure:"newrelicoracledb.active_session"`
 	NewrelicoracledbExecutionPlan EventConfig `mapstructure:"newrelicoracledb.execution_plan"`
 }
 
 func DefaultEventsConfig() EventsConfig {
 	return EventsConfig{
-		NewrelicoracledbActiveSession: EventConfig{
-			Enabled: true,
-		},
 		NewrelicoracledbExecutionPlan: EventConfig{
 			Enabled: true,
 		},

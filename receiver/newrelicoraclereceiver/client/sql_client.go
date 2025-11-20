@@ -109,7 +109,6 @@ func (c *SQLClient) QueryActiveSessionsForSQLID(ctx context.Context, sqlID strin
 			&session.Username,
 			&session.SID,
 			&session.Serial,
-			&session.Status,
 			&session.QueryID,
 			&session.SQLChildNumber,
 			&session.SQLExecStart,

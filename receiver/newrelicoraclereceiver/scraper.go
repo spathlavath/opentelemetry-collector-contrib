@@ -239,8 +239,8 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	// Initialize execution plan scraper (uses LogsBuilder for log events)
 	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
 
-	// Initialize active sessions scraper (uses LogsBuilder for log events)
-	s.activeSessionsScraper = scrapers.NewActiveSessionsScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
+	// Initialize active sessions scraper (uses MetricsBuilder for metrics)
+	s.activeSessionsScraper = scrapers.NewActiveSessionsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	// Initialize blocking scraper
 	var err error
@@ -342,21 +342,15 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 		zap.Int("query_ids_processed", len(queryIDs)),
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
-	// Scrape active sessions for the same query IDs
-	s.logger.Debug("Starting active sessions scraper for logs", zap.Strings("query_ids", queryIDs))
-	activeSessionsErrs := s.activeSessionsScraper.ScrapeActiveSessions(scrapeCtx, queryIDs)
-
-	s.logger.Info("Active sessions scraper completed for logs",
-		zap.Int("query_ids_processed", len(queryIDs)),
-		zap.Int("active_sessions_errors", len(activeSessionsErrs)))
+	// Note: Active sessions are now scraped as metrics (not logs)
+	// See executeExecutionPlanScraper in the metrics workflow
 
 	// Emit logs
 	logs = s.lb.Emit()
 
-	// Combine all errors
-	allErrs := append(executionPlanErrs, activeSessionsErrs...)
-	if len(allErrs) > 0 {
-		return logs, scrapererror.NewPartialScrapeError(multierr.Combine(allErrs...), len(allErrs))
+	// Return execution plan errors
+	if len(executionPlanErrs) > 0 {
+		return logs, scrapererror.NewPartialScrapeError(multierr.Combine(executionPlanErrs...), len(executionPlanErrs))
 	}
 
 	return logs, nil
@@ -408,15 +402,8 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 	)
 	s.executionPlanScraper = executionPlanScraper
 
-	// Initialize active sessions scraper
-	activeSessionsScraper := scrapers.NewActiveSessionsScraper(
-		s.client,
-		s.lb,
-		s.logger,
-		s.instanceName,
-		s.logsBuilderConfig,
-	)
-	s.activeSessionsScraper = activeSessionsScraper
+	// Note: Active sessions scraper is not initialized here as it's now used in metrics workflow
+	// and is initialized in initializeQPMScrapers() when the receiver starts
 
 	return nil
 }
@@ -469,6 +456,16 @@ func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context,
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
 	s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plan")
+
+	// Execute active sessions scraper with the same query IDs
+	s.logger.Debug("Starting active sessions scraper with query IDs", zap.Strings("query_ids", queryIDs))
+	activeSessionsErrs := s.activeSessionsScraper.ScrapeActiveSessions(ctx, queryIDs)
+
+	s.logger.Info("Active sessions scraper completed",
+		zap.Int("query_ids_processed", len(queryIDs)),
+		zap.Int("active_sessions_errors", len(activeSessionsErrs)))
+
+	s.sendErrorsToChannel(errChan, activeSessionsErrs, "active sessions")
 }
 
 // executeIndependentScrapers launches concurrent scrapers for independent metrics
