@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"strings"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -44,45 +43,42 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		return errs
 	}
 
-	// Format SQL IDs for IN clause: 'id1', 'id2', 'id3'
-	quotedIDs := make([]string, len(sqlIDs))
-	for i, id := range sqlIDs {
-		quotedIDs[i] = fmt.Sprintf("'%s'", id)
-	}
-	sqlIDsParam := strings.Join(quotedIDs, ", ")
+	for _, id := range sqlIDs {
+		// Create a separate timeout for each SQL ID query
+		queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 
-	queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
+		planRows, err := s.client.QueryExecutionPlanRows(queryCtx, id)
+		cancel() // Clean up immediately after query
+		if err != nil {
+			errs = append(errs, fmt.Errorf("failed to query execution plans for SQL_ID %s: %w", id, err))
+			continue // Skip this SQL ID but continue processing others
+		}
+		s.logger.Debug("Retrieved execution plan rows",
+			zap.String("sql_id", id),
+			zap.Int("count", len(planRows)))
 
-	planRows, err := s.client.QueryExecutionPlanRows(queryCtx, sqlIDsParam)
-	if err != nil {
-		errs = append(errs, fmt.Errorf("failed to query execution plans: %w", err))
-		return errs
-	}
+		successCount := 0
+		for _, row := range planRows {
+			if !row.SQLID.Valid || row.SQLID.String == "" {
+				continue
+			}
 
-	s.logger.Debug("Retrieved execution plan rows",
-		zap.Int("count", len(planRows)))
-
-	successCount := 0
-	for _, row := range planRows {
-		if !row.SQLID.Valid || row.SQLID.String == "" {
-			continue
+			if err := s.buildExecutionPlanLogs(&row); err != nil {
+				s.logger.Warn("Failed to build logs for execution plan row",
+					zap.String("sql_id", row.SQLID.String),
+					zap.Error(err))
+				errs = append(errs, err)
+			} else {
+				successCount++
+			}
 		}
 
-		if err := s.buildExecutionPlanLogs(&row); err != nil {
-			s.logger.Warn("Failed to build logs for execution plan row",
-				zap.String("sql_id", row.SQLID.String),
-				zap.Error(err))
-			errs = append(errs, err)
-		} else {
-			successCount++
-		}
+		s.logger.Debug("Scraped execution plan rows",
+			zap.String("sql_id", id),
+			zap.Int("total", len(planRows)),
+			zap.Int("success", successCount),
+			zap.Int("failed", len(errs)))
 	}
-
-	s.logger.Debug("Scraped execution plan rows",
-		zap.Int("total", len(planRows)),
-		zap.Int("success", successCount),
-		zap.Int("failed", len(errs)))
 
 	return errs
 }

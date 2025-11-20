@@ -138,5 +138,5 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 	FROM
 		V$SQL_PLAN
 	WHERE
-		SQL_ID IN (%s)`, sqlIDs)
+		SQL_ID = %s`, sqlIDs)
 }
