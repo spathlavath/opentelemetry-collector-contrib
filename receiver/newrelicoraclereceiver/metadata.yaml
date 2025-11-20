@@ -193,9 +193,6 @@ attributes:
   blocking_serial:
     description: Serial number of the blocking session
     type: string
-  blocked_query_text:
-    description: SQL query text of the blocked query
-    type: string
   blocked_sql_exec_start:
     description: SQL execution start time of the blocked query
     type: string
@@ -3677,7 +3674,6 @@ metrics:
       - blocking_sid
       - blocked_serial
       - blocking_serial
-      - blocked_query_text
       - blocked_sql_exec_start
       - database_name
 

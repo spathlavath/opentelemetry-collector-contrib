@@ -13,7 +13,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
@@ -92,7 +91,6 @@ func (s *BlockingScraper) recordBlockingQueryMetric(now pcommon.Timestamp, block
 		formatInt64(blockingQuery.BlockingSID),
 		formatInt64(blockingQuery.BlockedSerial),
 		formatInt64(blockingQuery.BlockingSerial),
-		commonutils.AnonymizeAndNormalize(blockingQuery.GetBlockedQueryText()),
 		blockingQuery.GetBlockedSQLExecStart(),
 		blockingQuery.GetDatabaseName(),
 	)
