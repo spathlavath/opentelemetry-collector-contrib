@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"errors"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -84,14 +83,18 @@ func TestWaitEventsScraper_ScrapeWithValidData(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.WaitEvents = []models.WaitEvent{
 		{
-			QueryID:             sql.NullString{String: "wait_sql_1", Valid: true},
-			WaitCategory:        sql.NullString{String: "User I/O", Valid: true},
-			WaitEventName:       sql.NullString{String: "db file sequential read", Valid: true},
-			WaitingTasksCount:   sql.NullInt64{Int64: 1500, Valid: true},
-			TotalWaitTimeMs:     sql.NullFloat64{Float64: 45.7, Valid: true},
-			AvgWaitTimeMs:       sql.NullFloat64{Float64: 0.03, Valid: true},
-			DatabaseName:        sql.NullString{String: "TESTDB", Valid: true},
-			CollectionTimestamp: sql.NullTime{Time: time.Now(), Valid: true},
+			Username:           sql.NullString{String: "testuser", Valid: true},
+			SID:                sql.NullInt64{Int64: 123, Valid: true},
+			Status:             sql.NullString{String: "ACTIVE", Valid: true},
+			QueryID:            sql.NullString{String: "wait_sql_1", Valid: true},
+			SQLExecID:          sql.NullInt64{Int64: 456, Valid: true},
+			WaitCategory:       sql.NullString{String: "User I/O", Valid: true},
+			WaitEventName:      sql.NullString{String: "db file sequential read", Valid: true},
+			CurrentWaitSeconds: sql.NullInt64{Int64: 5, Valid: true},
+			Program:            sql.NullString{String: "sqlplus@test", Valid: true},
+			Machine:            sql.NullString{String: "testmachine", Valid: true},
+			ObjectOwner:        sql.NullString{String: "SCOTT", Valid: true},
+			ObjectNameWaitedOn: sql.NullString{String: "EMP", Valid: true},
 		},
 	}
 
@@ -140,18 +143,22 @@ func TestWaitEventsScraper_ScrapeWithMultipleEvents(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.WaitEvents = []models.WaitEvent{
 		{
-			QueryID:           sql.NullString{String: "wait_sql_1", Valid: true},
-			WaitCategory:      sql.NullString{String: "User I/O", Valid: true},
-			WaitEventName:     sql.NullString{String: "db file sequential read", Valid: true},
-			WaitingTasksCount: sql.NullInt64{Int64: 1500, Valid: true},
-			TotalWaitTimeMs:   sql.NullFloat64{Float64: 25.0, Valid: true},
+			Username:           sql.NullString{String: "user1", Valid: true},
+			SID:                sql.NullInt64{Int64: 100, Valid: true},
+			Status:             sql.NullString{String: "ACTIVE", Valid: true},
+			QueryID:            sql.NullString{String: "wait_sql_1", Valid: true},
+			WaitCategory:       sql.NullString{String: "User I/O", Valid: true},
+			WaitEventName:      sql.NullString{String: "db file sequential read", Valid: true},
+			CurrentWaitSeconds: sql.NullInt64{Int64: 3, Valid: true},
 		},
 		{
-			QueryID:           sql.NullString{String: "wait_sql_2", Valid: true},
-			WaitCategory:      sql.NullString{String: "Commit", Valid: true},
-			WaitEventName:     sql.NullString{String: "log file sync", Valid: true},
-			WaitingTasksCount: sql.NullInt64{Int64: 800, Valid: true},
-			TotalWaitTimeMs:   sql.NullFloat64{Float64: 15.0, Valid: true},
+			Username:           sql.NullString{String: "user2", Valid: true},
+			SID:                sql.NullInt64{Int64: 200, Valid: true},
+			Status:             sql.NullString{String: "ACTIVE", Valid: true},
+			QueryID:            sql.NullString{String: "wait_sql_2", Valid: true},
+			WaitCategory:       sql.NullString{String: "Commit", Valid: true},
+			WaitEventName:      sql.NullString{String: "log file sync", Valid: true},
+			CurrentWaitSeconds: sql.NullInt64{Int64: 2, Valid: true},
 		},
 	}
 
@@ -170,11 +177,10 @@ func TestWaitEventsScraper_ScrapeWithInvalidData(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.WaitEvents = []models.WaitEvent{
 		{
-			QueryID:           sql.NullString{Valid: false}, // Invalid
-			WaitCategory:      sql.NullString{String: "User I/O", Valid: true},
-			WaitEventName:     sql.NullString{String: "db file sequential read", Valid: true},
-			WaitingTasksCount: sql.NullInt64{Int64: 1500, Valid: true},
-			TotalWaitTimeMs:   sql.NullFloat64{Float64: 25.0, Valid: true},
+			QueryID:            sql.NullString{Valid: false}, // Invalid
+			WaitCategory:       sql.NullString{String: "User I/O", Valid: true},
+			WaitEventName:      sql.NullString{String: "db file sequential read", Valid: true},
+			CurrentWaitSeconds: sql.NullInt64{Int64: 5, Valid: true},
 		},
 	}
 

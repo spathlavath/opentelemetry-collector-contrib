@@ -348,9 +348,7 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceTotalBytes                               MetricConfig `mapstructure:"newrelicoracledb.tablespace.total_bytes"`
 	NewrelicoracledbTablespaceUsedBytes                                MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_bytes"`
 	NewrelicoracledbTablespaceUsedPercent                              MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_percent"`
-	NewrelicoracledbWaitEventsAvgWaitTimeMs                            MetricConfig `mapstructure:"newrelicoracledb.wait_events.avg_wait_time_ms"`
-	NewrelicoracledbWaitEventsTotalWaitTimeMs                          MetricConfig `mapstructure:"newrelicoracledb.wait_events.total_wait_time_ms"`
-	NewrelicoracledbWaitEventsWaitingTasksCount                        MetricConfig `mapstructure:"newrelicoracledb.wait_events.waiting_tasks_count"`
+	NewrelicoracledbWaitEventsCurrentWaitSeconds                       MetricConfig `mapstructure:"newrelicoracledb.wait_events.current_wait_seconds"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -1315,13 +1313,7 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbTablespaceUsedPercent: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbWaitEventsAvgWaitTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbWaitEventsTotalWaitTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbWaitEventsWaitingTasksCount: MetricConfig{
+		NewrelicoracledbWaitEventsCurrentWaitSeconds: MetricConfig{
 			Enabled: true,
 		},
 	}

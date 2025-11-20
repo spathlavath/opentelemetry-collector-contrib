@@ -2,6 +2,7 @@ package scrapers
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -47,41 +48,31 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 			continue
 		}
 
-		dbName := waitEvent.GetDatabaseName()
+		username := waitEvent.GetUsername()
+		sid := strconv.FormatInt(waitEvent.GetSID(), 10)
+		status := waitEvent.GetStatus()
 		qID := waitEvent.GetQueryID()
 		waitCat := waitEvent.GetWaitCategory()
 		waitEventName := waitEvent.GetWaitEventName()
+		program := waitEvent.GetProgram()
+		machine := waitEvent.GetMachine()
+		waitObjectOwner := waitEvent.GetObjectOwner()
+		waitObjectName := waitEvent.GetObjectNameWaitedOn()
 
-		if waitEvent.HasValidWaitingTasksCount() {
-			s.mb.RecordNewrelicoracledbWaitEventsWaitingTasksCountDataPoint(
+		if waitEvent.HasValidCurrentWaitSeconds() {
+			s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(
 				now,
-				float64(waitEvent.GetWaitingTasksCount()),
-				dbName,
+				float64(waitEvent.GetCurrentWaitSeconds()),
+				username,
+				sid,
+				status,
 				qID,
 				waitEventName,
 				waitCat,
-			)
-			metricCount++
-		}
-
-		s.mb.RecordNewrelicoracledbWaitEventsTotalWaitTimeMsDataPoint(
-			now,
-			waitEvent.GetTotalWaitTimeMs(),
-			dbName,
-			qID,
-			waitEventName,
-			waitCat,
-		)
-		metricCount++
-
-		if waitEvent.HasValidAvgWaitTime() {
-			s.mb.RecordNewrelicoracledbWaitEventsAvgWaitTimeMsDataPoint(
-				now,
-				waitEvent.GetAvgWaitTimeMs(),
-				dbName,
-				qID,
-				waitEventName,
-				waitCat,
+				program,
+				machine,
+				waitObjectOwner,
+				waitObjectName,
 			)
 			metricCount++
 		}

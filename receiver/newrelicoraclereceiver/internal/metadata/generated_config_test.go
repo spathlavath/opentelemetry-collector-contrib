@@ -347,9 +347,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbTablespaceTotalBytes:                               MetricConfig{Enabled: true},
 					NewrelicoracledbTablespaceUsedBytes:                                MetricConfig{Enabled: true},
 					NewrelicoracledbTablespaceUsedPercent:                              MetricConfig{Enabled: true},
-					NewrelicoracledbWaitEventsAvgWaitTimeMs:                            MetricConfig{Enabled: true},
-					NewrelicoracledbWaitEventsTotalWaitTimeMs:                          MetricConfig{Enabled: true},
-					NewrelicoracledbWaitEventsWaitingTasksCount:                        MetricConfig{Enabled: true},
+					NewrelicoracledbWaitEventsCurrentWaitSeconds:                       MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: true},
@@ -681,9 +679,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbTablespaceTotalBytes:                               MetricConfig{Enabled: false},
 					NewrelicoracledbTablespaceUsedBytes:                                MetricConfig{Enabled: false},
 					NewrelicoracledbTablespaceUsedPercent:                              MetricConfig{Enabled: false},
-					NewrelicoracledbWaitEventsAvgWaitTimeMs:                            MetricConfig{Enabled: false},
-					NewrelicoracledbWaitEventsTotalWaitTimeMs:                          MetricConfig{Enabled: false},
-					NewrelicoracledbWaitEventsWaitingTasksCount:                        MetricConfig{Enabled: false},
+					NewrelicoracledbWaitEventsCurrentWaitSeconds:                       MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: false},
