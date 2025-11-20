@@ -11,12 +11,10 @@ type WaitEvent struct {
 	SID                sql.NullInt64
 	Status             sql.NullString
 	QueryID            sql.NullString
-	SQLExecID          sql.NullInt64
 	WaitCategory       sql.NullString
 	WaitEventName      sql.NullString
 	CurrentWaitSeconds sql.NullInt64
 	SQLExecStart       sql.NullTime
-	BlockingSession    sql.NullInt64
 	Program            sql.NullString
 	Machine            sql.NullString
 	LockedObjectID     sql.NullInt64
@@ -145,26 +143,10 @@ func (we *WaitEvent) GetSID() int64 {
 	return 0
 }
 
-// GetSQLExecID returns the SQL execution ID as int64, 0 if null
-func (we *WaitEvent) GetSQLExecID() int64 {
-	if we.SQLExecID.Valid {
-		return we.SQLExecID.Int64
-	}
-	return 0
-}
-
 // GetCurrentWaitSeconds returns the current wait seconds as int64, 0 if null
 func (we *WaitEvent) GetCurrentWaitSeconds() int64 {
 	if we.CurrentWaitSeconds.Valid {
 		return we.CurrentWaitSeconds.Int64
-	}
-	return 0
-}
-
-// GetBlockingSession returns the blocking session ID as int64, 0 if null
-func (we *WaitEvent) GetBlockingSession() int64 {
-	if we.BlockingSession.Valid {
-		return we.BlockingSession.Int64
 	}
 	return 0
 }

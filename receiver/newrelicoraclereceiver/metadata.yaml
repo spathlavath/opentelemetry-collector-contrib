@@ -136,6 +136,39 @@ attributes:
   wait_object_name:
     description: Name of the database object being waited on
     type: string
+  wait_object_type:
+    description: Type of the database object being waited on (TABLE, INDEX, etc.)
+    type: string
+  sql_exec_start:
+    description: Timestamp when the SQL execution started
+    type: string
+  row_wait_obj_id:
+    description: Object ID of the row being waited on
+    type: string
+  row_wait_file_id:
+    description: File ID of the row being waited on
+    type: string
+  row_wait_block_id:
+    description: Block ID of the row being waited on
+    type: string
+  wait_p1text:
+    description: Description of wait event parameter 1
+    type: string
+  wait_p1:
+    description: Wait event parameter 1 value
+    type: string
+  wait_p2text:
+    description: Description of wait event parameter 2
+    type: string
+  wait_p2:
+    description: Wait event parameter 2 value
+    type: string
+  wait_p3text:
+    description: Description of wait event parameter 3
+    type: string
+  wait_p3:
+    description: Wait event parameter 3 value
+    type: string
 
   blocking_user:
     description: Username of the blocking session
@@ -3716,6 +3749,17 @@ metrics:
       - session_machine
       - wait_object_owner
       - wait_object_name
+      - wait_object_type
+      - sql_exec_start
+      - row_wait_obj_id
+      - row_wait_file_id
+      - row_wait_block_id
+      - wait_p1text
+      - wait_p1
+      - wait_p2text
+      - wait_p2
+      - wait_p3text
+      - wait_p3
 
   newrelicoracledb.execution_plan.info:
     description: Execution plan information for SQL queries

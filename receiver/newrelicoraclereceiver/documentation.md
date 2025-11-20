@@ -4934,6 +4934,17 @@ Current wait time in seconds for active wait events
 | session_machine | Machine name where the session is running | Any Str | false |
 | wait_object_owner | Owner of the database object being waited on | Any Str | false |
 | wait_object_name | Name of the database object being waited on | Any Str | false |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
+| row_wait_file_id | File ID of the row being waited on | Any Str | false |
+| row_wait_block_id | Block ID of the row being waited on | Any Str | false |
+| wait_p1text | Description of wait event parameter 1 | Any Str | false |
+| wait_p1 | Wait event parameter 1 value | Any Str | false |
+| wait_p2text | Description of wait event parameter 2 | Any Str | false |
+| wait_p2 | Wait event parameter 2 value | Any Str | false |
+| wait_p3text | Description of wait event parameter 3 | Any Str | false |
+| wait_p3 | Wait event parameter 3 value | Any Str | false |
 
 ## Default Events
 

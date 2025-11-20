@@ -58,6 +58,17 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		machine := waitEvent.GetMachine()
 		waitObjectOwner := waitEvent.GetObjectOwner()
 		waitObjectName := waitEvent.GetObjectNameWaitedOn()
+		waitObjectType := waitEvent.GetObjectTypeWaitedOn()
+		sqlExecStart := waitEvent.GetSQLExecStart().Format("2006-01-02 15:04:05")
+		rowWaitObjID := strconv.FormatInt(waitEvent.GetLockedObjectID(), 10)
+		rowWaitFileID := strconv.FormatInt(waitEvent.GetLockedFileID(), 10)
+		rowWaitBlockID := strconv.FormatInt(waitEvent.GetLockedBlockID(), 10)
+		p1Text := waitEvent.GetP1Text()
+		p1 := strconv.FormatInt(waitEvent.GetP1(), 10)
+		p2Text := waitEvent.GetP2Text()
+		p2 := strconv.FormatInt(waitEvent.GetP2(), 10)
+		p3Text := waitEvent.GetP3Text()
+		p3 := strconv.FormatInt(waitEvent.GetP3(), 10)
 
 		if waitEvent.HasValidCurrentWaitSeconds() {
 			s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(
@@ -73,6 +84,17 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				machine,
 				waitObjectOwner,
 				waitObjectName,
+				waitObjectType,
+				sqlExecStart,
+				rowWaitObjID,
+				rowWaitFileID,
+				rowWaitBlockID,
+				p1Text,
+				p1,
+				p2Text,
+				p2,
+				p3Text,
+				p3,
 			)
 			metricCount++
 		}

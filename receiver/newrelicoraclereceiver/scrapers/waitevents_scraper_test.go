@@ -87,7 +87,6 @@ func TestWaitEventsScraper_ScrapeWithValidData(t *testing.T) {
 			SID:                sql.NullInt64{Int64: 123, Valid: true},
 			Status:             sql.NullString{String: "ACTIVE", Valid: true},
 			QueryID:            sql.NullString{String: "wait_sql_1", Valid: true},
-			SQLExecID:          sql.NullInt64{Int64: 456, Valid: true},
 			WaitCategory:       sql.NullString{String: "User I/O", Valid: true},
 			WaitEventName:      sql.NullString{String: "db file sequential read", Valid: true},
 			CurrentWaitSeconds: sql.NullInt64{Int64: 5, Valid: true},
