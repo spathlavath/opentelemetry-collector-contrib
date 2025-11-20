@@ -7,30 +7,30 @@ import (
 
 // WaitEvent represents a wait event record from Oracle wait events queries
 type WaitEvent struct {
-	Username            sql.NullString
-	SID                 sql.NullInt64
-	Status              sql.NullString
-	QueryID             sql.NullString
-	SQLExecID           sql.NullInt64
-	WaitCategory        sql.NullString
-	WaitEventName       sql.NullString
-	CurrentWaitSeconds  sql.NullInt64
-	SQLExecStart        sql.NullTime
-	BlockingSession     sql.NullInt64
-	Program             sql.NullString
-	Machine             sql.NullString
-	LockedObjectID      sql.NullInt64
-	ObjectOwner         sql.NullString
-	ObjectNameWaitedOn  sql.NullString
-	ObjectTypeWaitedOn  sql.NullString
-	LockedFileID        sql.NullInt64
-	LockedBlockID       sql.NullInt64
-	P1Text              sql.NullString
-	P1                  sql.NullInt64
-	P2Text              sql.NullString
-	P2                  sql.NullInt64
-	P3Text              sql.NullString
-	P3                  sql.NullInt64
+	Username           sql.NullString
+	SID                sql.NullInt64
+	Status             sql.NullString
+	QueryID            sql.NullString
+	SQLExecID          sql.NullInt64
+	WaitCategory       sql.NullString
+	WaitEventName      sql.NullString
+	CurrentWaitSeconds sql.NullInt64
+	SQLExecStart       sql.NullTime
+	BlockingSession    sql.NullInt64
+	Program            sql.NullString
+	Machine            sql.NullString
+	LockedObjectID     sql.NullInt64
+	ObjectOwner        sql.NullString
+	ObjectNameWaitedOn sql.NullString
+	ObjectTypeWaitedOn sql.NullString
+	LockedFileID       sql.NullInt64
+	LockedBlockID      sql.NullInt64
+	P1Text             sql.NullString
+	P1                 sql.NullInt64
+	P2Text             sql.NullString
+	P2                 sql.NullInt64
+	P3Text             sql.NullString
+	P3                 sql.NullInt64
 }
 
 // GetUsername returns the username as a string, empty if null
