@@ -36,6 +36,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
 			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER')
+			AND sa.last_active_time >= TRUNC(SYSDATE)
 			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
 		ORDER BY
 			avg_elapsed_time_ms DESC
@@ -51,6 +52,7 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 			s2.username AS blocked_user,
 			s2.seconds_in_wait AS blocked_wait_sec,
 			s2.sql_id AS query_id,
+			s2.sql_exec_start AS blocked_sql_exec_start,
 			blocked_sql.sql_text AS blocked_query_text,
 			s1.sid AS blocking_sid,
 			s1.serial# AS blocking_serial,

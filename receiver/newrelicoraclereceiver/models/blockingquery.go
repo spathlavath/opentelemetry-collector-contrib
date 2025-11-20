@@ -7,13 +7,14 @@ type BlockingQuery struct {
 	BlockedSID       sql.NullInt64
 	BlockedSerial    sql.NullInt64
 	BlockedUser      sql.NullString
-	BlockedWaitSec   sql.NullFloat64
-	QueryID          sql.NullString
-	BlockedQueryText sql.NullString
-	BlockingSID      sql.NullInt64
-	BlockingSerial   sql.NullInt64
-	BlockingUser     sql.NullString
-	DatabaseName     sql.NullString
+	BlockedWaitSec     sql.NullFloat64
+	QueryID            sql.NullString
+	BlockedSQLExecStart sql.NullString
+	BlockedQueryText   sql.NullString
+	BlockingSID        sql.NullInt64
+	BlockingSerial     sql.NullInt64
+	BlockingUser       sql.NullString
+	DatabaseName       sql.NullString
 }
 
 // GetBlockedUser returns the blocked user as a string, empty if null
@@ -44,6 +45,14 @@ func (bq *BlockingQuery) GetBlockingUser() string {
 func (bq *BlockingQuery) GetQueryID() string {
 	if bq.QueryID.Valid {
 		return bq.QueryID.String
+	}
+	return ""
+}
+
+// GetBlockedSQLExecStart returns the blocked SQL execution start time as a string, empty if null
+func (bq *BlockingQuery) GetBlockedSQLExecStart() string {
+	if bq.BlockedSQLExecStart.Valid {
+		return bq.BlockedSQLExecStart.String
 	}
 	return ""
 }

@@ -93,6 +93,7 @@ func (s *BlockingScraper) recordBlockingQueryMetric(now pcommon.Timestamp, block
 		formatInt64(blockingQuery.BlockedSerial),
 		formatInt64(blockingQuery.BlockingSerial),
 		commonutils.AnonymizeAndNormalize(blockingQuery.GetBlockedQueryText()),
+		blockingQuery.GetBlockedSQLExecStart(),
 		blockingQuery.GetDatabaseName(),
 	)
 }

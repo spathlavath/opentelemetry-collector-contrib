@@ -82,7 +82,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "instance.id-val", "blocked_user-val", "blocking_user-val", "query_id-val", "blocked_sid-val", "blocking_sid-val", "blocked_serial-val", "blocking_serial-val", "blocked_query_text-val", "database_name-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "instance.id-val", "blocked_user-val", "blocking_user-val", "query_id-val", "blocked_sid-val", "blocking_sid-val", "blocked_serial-val", "blocking_serial-val", "blocked_query_text-val", "blocked_sql_exec_start-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1478,6 +1478,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("blocked_query_text")
 					assert.True(t, ok)
 					assert.Equal(t, "blocked_query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocked_sql_exec_start")
+					assert.True(t, ok)
+					assert.Equal(t, "blocked_sql_exec_start-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
