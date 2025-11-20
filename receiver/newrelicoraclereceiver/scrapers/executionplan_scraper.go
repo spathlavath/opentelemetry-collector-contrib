@@ -43,12 +43,23 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		return errs
 	}
 
+	// Create a single timeout context for all queries to prevent excessive total runtime
+	// If processing many SQL IDs, this ensures we don't exceed a reasonable total time
+	totalTimeout := 30 * time.Second // Adjust based on your needs
+	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
+	defer cancel()
+
 	for _, id := range sqlIDs {
-		// Create a separate timeout for each SQL ID query
-		queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		// Check if context is already cancelled/timed out before proceeding
+		select {
+		case <-queryCtx.Done():
+			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
+			return errs
+		default:
+			// Continue processing
+		}
 
 		planRows, err := s.client.QueryExecutionPlanRows(queryCtx, id)
-		cancel() // Clean up immediately after query
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to query execution plans for SQL_ID %s: %w", id, err))
 			continue // Skip this SQL ID but continue processing others
