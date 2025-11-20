@@ -1348,11 +1348,15 @@ func (ec *EventConfig) Unmarshal(parser *confmap.Conf) error {
 
 // EventsConfig provides config for newrelicoracledb events.
 type EventsConfig struct {
+	NewrelicoracledbActiveSession EventConfig `mapstructure:"newrelicoracledb.active_session"`
 	NewrelicoracledbExecutionPlan EventConfig `mapstructure:"newrelicoracledb.execution_plan"`
 }
 
 func DefaultEventsConfig() EventsConfig {
 	return EventsConfig{
+		NewrelicoracledbActiveSession: EventConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbExecutionPlan: EventConfig{
 			Enabled: true,
 		},

@@ -12,6 +12,50 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
+type eventNewrelicoracledbActiveSession struct {
+	data   plog.LogRecordSlice // data buffer for generated log records.
+	config EventConfig         // event config provided by user.
+}
+
+func (e *eventNewrelicoracledbActiveSession) recordEvent(ctx context.Context, timestamp pcommon.Timestamp, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, statusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, instanceNameAttributeValue string) {
+	if !e.config.Enabled {
+		return
+	}
+	dp := e.data.AppendEmpty()
+	dp.SetEventName("newrelicoracledb.active_session")
+	dp.SetTimestamp(timestamp)
+
+	if span := trace.SpanContextFromContext(ctx); span.IsValid() {
+		dp.SetTraceID(pcommon.TraceID(span.TraceID()))
+		dp.SetSpanID(pcommon.SpanID(span.SpanID()))
+	}
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutInt("sid", sidAttributeValue)
+	dp.Attributes().PutInt("serial", serialAttributeValue)
+	dp.Attributes().PutStr("status", statusAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
+	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
+	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
+	dp.Attributes().PutStr("instance_name", instanceNameAttributeValue)
+
+}
+
+// emit appends recorded event data to a events slice and prepares it for recording another set of log records.
+func (e *eventNewrelicoracledbActiveSession) emit(lrs plog.LogRecordSlice) {
+	if e.config.Enabled && e.data.Len() > 0 {
+		e.data.MoveAndAppendTo(lrs)
+	}
+}
+
+func newEventNewrelicoracledbActiveSession(cfg EventConfig) eventNewrelicoracledbActiveSession {
+	e := eventNewrelicoracledbActiveSession{config: cfg}
+	if cfg.Enabled {
+		e.data = plog.NewLogRecordSlice()
+	}
+	return e
+}
+
 type eventNewrelicoracledbExecutionPlan struct {
 	data   plog.LogRecordSlice // data buffer for generated log records.
 	config EventConfig         // event config provided by user.
@@ -79,6 +123,7 @@ type LogsBuilder struct {
 	buildInfo                          component.BuildInfo // contains version information.
 	resourceAttributeIncludeFilter     map[string]filter.Filter
 	resourceAttributeExcludeFilter     map[string]filter.Filter
+	eventNewrelicoracledbActiveSession eventNewrelicoracledbActiveSession
 	eventNewrelicoracledbExecutionPlan eventNewrelicoracledbExecutionPlan
 }
 
@@ -93,6 +138,7 @@ func NewLogsBuilder(lbc LogsBuilderConfig, settings receiver.Settings) *LogsBuil
 		logsBuffer:                         plog.NewLogs(),
 		logRecordsBuffer:                   plog.NewLogRecordSlice(),
 		buildInfo:                          settings.BuildInfo,
+		eventNewrelicoracledbActiveSession: newEventNewrelicoracledbActiveSession(lbc.Events.NewrelicoracledbActiveSession),
 		eventNewrelicoracledbExecutionPlan: newEventNewrelicoracledbExecutionPlan(lbc.Events.NewrelicoracledbExecutionPlan),
 		resourceAttributeIncludeFilter:     make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:     make(map[string]filter.Filter),
@@ -152,6 +198,7 @@ func (lb *LogsBuilder) EmitForResource(options ...ResourceLogsOption) {
 	ils := rl.ScopeLogs().AppendEmpty()
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(lb.buildInfo.Version)
+	lb.eventNewrelicoracledbActiveSession.emit(ils.LogRecords())
 	lb.eventNewrelicoracledbExecutionPlan.emit(ils.LogRecords())
 
 	for _, op := range options {
@@ -187,6 +234,11 @@ func (lb *LogsBuilder) Emit(options ...ResourceLogsOption) plog.Logs {
 	logs := lb.logsBuffer
 	lb.logsBuffer = plog.NewLogs()
 	return logs
+}
+
+// RecordNewrelicoracledbActiveSessionEvent adds a log record of newrelicoracledb.active_session event.
+func (lb *LogsBuilder) RecordNewrelicoracledbActiveSessionEvent(ctx context.Context, timestamp pcommon.Timestamp, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, statusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, instanceNameAttributeValue string) {
+	lb.eventNewrelicoracledbActiveSession.recordEvent(ctx, timestamp, usernameAttributeValue, sidAttributeValue, serialAttributeValue, statusAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue, instanceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbExecutionPlanEvent adds a log record of newrelicoracledb.execution_plan event.

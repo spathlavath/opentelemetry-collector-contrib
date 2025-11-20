@@ -138,3 +138,26 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 	WHERE
 		SQL_ID IN (%s)`, sqlIDs)
 }
+
+// GetActiveSessionsForSQLID returns SQL to get active running sessions for a specific SQL ID
+func GetActiveSessionsForSQLID(sqlID string) string {
+	return fmt.Sprintf(`
+		SELECT
+			s.username,
+			s.sid,
+			s.serial#,
+			s.status,
+			s.sql_id AS query_id,
+			s.SQL_CHILD_NUMBER,
+			s.SQL_EXEC_START,
+			s.SQL_EXEC_ID
+		FROM
+			v$session s
+		WHERE
+			s.sql_id = '%s'
+			AND s.status = 'ACTIVE'
+			AND s.wait_class <> 'Idle'
+		ORDER BY
+			s.SQL_CHILD_NUMBER,
+			s.SECONDS_IN_WAIT DESC`, sqlID)
+}

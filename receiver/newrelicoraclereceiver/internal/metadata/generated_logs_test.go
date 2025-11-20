@@ -129,6 +129,9 @@ func TestLogsBuilder(t *testing.T) {
 			allEventsCount := 0
 			defaultEventsCount++
 			allEventsCount++
+			lb.RecordNewrelicoracledbActiveSessionEvent(ctx, timestamp, "username-val", 3, 6, "status-val", "query_id-val", 16, "sql_exec_start-val", 11, "instance_name-val")
+			defaultEventsCount++
+			allEventsCount++
 			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
 
 			rb := lb.NewResourceBuilder()
@@ -156,6 +159,40 @@ func TestLogsBuilder(t *testing.T) {
 			validatedEvents := make(map[string]bool)
 			for i := 0; i < lrs.Len(); i++ {
 				switch lrs.At(i).EventName() {
+				case "newrelicoracledb.active_session":
+					assert.False(t, validatedEvents["newrelicoracledb.active_session"], "Found a duplicate in the events slice: newrelicoracledb.active_session")
+					validatedEvents["newrelicoracledb.active_session"] = true
+					lr := lrs.At(i)
+					assert.Equal(t, timestamp, lr.Timestamp())
+					assert.Equal(t, pcommon.TraceID(traceID), lr.TraceID())
+					assert.Equal(t, pcommon.SpanID(spanID), lr.SpanID())
+					attrVal, ok := lr.Attributes().Get("username")
+					assert.True(t, ok)
+					assert.Equal(t, "username-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("sid")
+					assert.True(t, ok)
+					assert.EqualValues(t, 3, attrVal.Int())
+					attrVal, ok = lr.Attributes().Get("serial")
+					assert.True(t, ok)
+					assert.EqualValues(t, 6, attrVal.Int())
+					attrVal, ok = lr.Attributes().Get("status")
+					assert.True(t, ok)
+					assert.Equal(t, "status-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("sql_child_number")
+					assert.True(t, ok)
+					assert.EqualValues(t, 16, attrVal.Int())
+					attrVal, ok = lr.Attributes().Get("sql_exec_start")
+					assert.True(t, ok)
+					assert.Equal(t, "sql_exec_start-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("sql_exec_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 11, attrVal.Int())
+					attrVal, ok = lr.Attributes().Get("instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "instance_name-val", attrVal.Str())
 				case "newrelicoracledb.execution_plan":
 					assert.False(t, validatedEvents["newrelicoracledb.execution_plan"], "Found a duplicate in the events slice: newrelicoracledb.execution_plan")
 					validatedEvents["newrelicoracledb.execution_plan"] = true

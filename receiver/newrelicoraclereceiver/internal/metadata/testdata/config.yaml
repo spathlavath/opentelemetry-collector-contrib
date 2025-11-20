@@ -648,6 +648,8 @@ all_set:
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: true
   events:
+    newrelicoracledb.active_session:
+      enabled: true
     newrelicoracledb.execution_plan:
       enabled: true
   resource_attributes:
@@ -1304,6 +1306,8 @@ none_set:
     newrelicoracledb.wait_events.waiting_tasks_count:
       enabled: false
   events:
+    newrelicoracledb.active_session:
+      enabled: false
     newrelicoracledb.execution_plan:
       enabled: false
   resource_attributes:

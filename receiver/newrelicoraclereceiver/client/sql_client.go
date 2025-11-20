@@ -90,6 +90,45 @@ func (c *SQLClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) (
 	return planRows, nil
 }
 
+// QueryActiveSessionsForSQLID executes the active sessions query for a specific SQL ID.
+func (c *SQLClient) QueryActiveSessionsForSQLID(ctx context.Context, sqlID string) ([]models.ActiveSession, error) {
+	query := queries.GetActiveSessionsForSQLID(sqlID)
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var activeSessions []models.ActiveSession
+
+	for rows.Next() {
+		var session models.ActiveSession
+
+		err := rows.Scan(
+			&session.Username,
+			&session.SID,
+			&session.Serial,
+			&session.Status,
+			&session.QueryID,
+			&session.SQLChildNumber,
+			&session.SQLExecStart,
+			&session.SQLExecID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		activeSessions = append(activeSessions, session)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return activeSessions, nil
+}
+
 // QuerySlowQueries executes the slow queries query.
 func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
 	query := queries.GetSlowQueriesSQL(responseTimeThreshold, countThreshold)

@@ -4973,6 +4973,24 @@ events:
     enabled: false
 ```
 
+### newrelicoracledb.active_session
+
+Active Oracle database sessions currently executing specific SQL statements. Contains session details from V$SESSION view including session identifiers, execution state, and timing information.
+
+#### Attributes
+
+| Name | Description | Values |
+| ---- | ----------- | ------ |
+| username | Oracle username who parsed the SQL | Any Str |
+| sid | Session identifier (SID) | Any Int |
+| serial | Session serial number | Any Int |
+| status | Session status (e.g., ACTIVE, INACTIVE) | Any Str |
+| query_id | SQL query identifier | Any Str |
+| sql_child_number | Child number of the SQL statement being executed | Any Int |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str |
+| sql_exec_id | SQL execution identifier | Any Int |
+| instance_name | Oracle database instance name | Any Str |
+
 ### newrelicoracledb.execution_plan
 
 Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.

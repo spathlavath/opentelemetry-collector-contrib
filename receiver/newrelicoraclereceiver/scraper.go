@@ -57,11 +57,12 @@ type newRelicOracleScraper struct {
 	databaseInfoScraper *scrapers.DatabaseInfoScraper
 
 	// Query Performance Monitoring (QPM) scrapers
-	slowQueriesScraper   *scrapers.SlowQueriesScraper
-	executionPlanScraper *scrapers.ExecutionPlanScraper
-	blockingScraper      *scrapers.BlockingScraper
-	waitEventsScraper    *scrapers.WaitEventsScraper
-	lockScraper          *scrapers.LockScraper
+	slowQueriesScraper     *scrapers.SlowQueriesScraper
+	executionPlanScraper   *scrapers.ExecutionPlanScraper
+	activeSessionsScraper  *scrapers.ActiveSessionsScraper
+	blockingScraper        *scrapers.BlockingScraper
+	waitEventsScraper      *scrapers.WaitEventsScraper
+	lockScraper            *scrapers.LockScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -238,6 +239,9 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	// Initialize execution plan scraper (uses LogsBuilder for log events)
 	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
 
+	// Initialize active sessions scraper (uses LogsBuilder for log events)
+	s.activeSessionsScraper = scrapers.NewActiveSessionsScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
+
 	// Initialize blocking scraper
 	var err error
 	s.blockingScraper, err = scrapers.NewBlockingScraper(
@@ -338,11 +342,21 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 		zap.Int("query_ids_processed", len(queryIDs)),
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
+	// Scrape active sessions for the same query IDs
+	s.logger.Debug("Starting active sessions scraper for logs", zap.Strings("query_ids", queryIDs))
+	activeSessionsErrs := s.activeSessionsScraper.ScrapeActiveSessions(scrapeCtx, queryIDs)
+
+	s.logger.Info("Active sessions scraper completed for logs",
+		zap.Int("query_ids_processed", len(queryIDs)),
+		zap.Int("active_sessions_errors", len(activeSessionsErrs)))
+
 	// Emit logs
 	logs = s.lb.Emit()
 
-	if len(executionPlanErrs) > 0 {
-		return logs, scrapererror.NewPartialScrapeError(multierr.Combine(executionPlanErrs...), len(executionPlanErrs))
+	// Combine all errors
+	allErrs := append(executionPlanErrs, activeSessionsErrs...)
+	if len(allErrs) > 0 {
+		return logs, scrapererror.NewPartialScrapeError(multierr.Combine(allErrs...), len(allErrs))
 	}
 
 	return logs, nil
@@ -393,6 +407,16 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		s.logsBuilderConfig,
 	)
 	s.executionPlanScraper = executionPlanScraper
+
+	// Initialize active sessions scraper
+	activeSessionsScraper := scrapers.NewActiveSessionsScraper(
+		s.client,
+		s.lb,
+		s.logger,
+		s.instanceName,
+		s.logsBuilderConfig,
+	)
+	s.activeSessionsScraper = activeSessionsScraper
 
 	return nil
 }
