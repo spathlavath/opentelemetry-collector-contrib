@@ -318,16 +318,16 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 	// Setup scrape context with timeout
 	scrapeCtx := s.createScrapeContext(ctx)
 
-	// First, get query IDs from slow queries
-	s.logger.Debug("Starting slow queries scraper to get query IDs for execution plans")
-	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
+	// Get query IDs without emitting metrics (metrics already emitted by metrics scraper)
+	s.logger.Debug("Fetching query IDs for execution plans (no metrics)")
+	queryIDs, slowQueryErrs := s.slowQueriesScraper.GetSlowQueryIDs(scrapeCtx)
 
 	if len(slowQueryErrs) > 0 {
 		s.logger.Warn("Errors occurred while getting query IDs for execution plans",
 			zap.Int("error_count", len(slowQueryErrs)))
 	}
 
-	s.logger.Info("Slow queries scraper completed for logs",
+	s.logger.Info("Query IDs fetched for execution plans",
 		zap.Int("query_ids_found", len(queryIDs)),
 		zap.Strings("query_ids", queryIDs))
 
