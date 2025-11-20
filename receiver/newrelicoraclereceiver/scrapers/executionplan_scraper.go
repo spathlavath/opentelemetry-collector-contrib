@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"strings"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -44,45 +43,53 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		return errs
 	}
 
-	// Format SQL IDs for IN clause: 'id1', 'id2', 'id3'
-	quotedIDs := make([]string, len(sqlIDs))
-	for i, id := range sqlIDs {
-		quotedIDs[i] = fmt.Sprintf("'%s'", id)
-	}
-	sqlIDsParam := strings.Join(quotedIDs, ", ")
-
-	queryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	// Create a single timeout context for all queries to prevent excessive total runtime
+	// If processing many SQL IDs, this ensures we don't exceed a reasonable total time
+	totalTimeout := 30 * time.Second // Adjust based on your needs
+	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	planRows, err := s.client.QueryExecutionPlanRows(queryCtx, sqlIDsParam)
-	if err != nil {
-		errs = append(errs, fmt.Errorf("failed to query execution plans: %w", err))
-		return errs
-	}
-
-	s.logger.Debug("Retrieved execution plan rows",
-		zap.Int("count", len(planRows)))
-
-	successCount := 0
-	for _, row := range planRows {
-		if !row.SQLID.Valid || row.SQLID.String == "" {
-			continue
+	for _, id := range sqlIDs {
+		// Check if context is already cancelled/timed out before proceeding
+		select {
+		case <-queryCtx.Done():
+			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
+			return errs
+		default:
+			// Continue processing
 		}
 
-		if err := s.buildExecutionPlanLogs(&row); err != nil {
-			s.logger.Warn("Failed to build logs for execution plan row",
-				zap.String("sql_id", row.SQLID.String),
-				zap.Error(err))
-			errs = append(errs, err)
-		} else {
-			successCount++
+		planRows, err := s.client.QueryExecutionPlanRows(queryCtx, id)
+		if err != nil {
+			errs = append(errs, fmt.Errorf("failed to query execution plans for SQL_ID %s: %w", id, err))
+			continue // Skip this SQL ID but continue processing others
 		}
-	}
+		s.logger.Debug("Retrieved execution plan rows",
+			zap.String("sql_id", id),
+			zap.Int("count", len(planRows)))
 
-	s.logger.Debug("Scraped execution plan rows",
-		zap.Int("total", len(planRows)),
-		zap.Int("success", successCount),
-		zap.Int("failed", len(errs)))
+		successCount := 0
+		for _, row := range planRows {
+			if !row.SQLID.Valid || row.SQLID.String == "" {
+				continue
+			}
+
+			if err := s.buildExecutionPlanLogs(&row); err != nil {
+				s.logger.Warn("Failed to build logs for execution plan row",
+					zap.String("sql_id", row.SQLID.String),
+					zap.Error(err))
+				errs = append(errs, err)
+			} else {
+				successCount++
+			}
+		}
+
+		s.logger.Debug("Scraped execution plan rows",
+			zap.String("sql_id", id),
+			zap.Int("total", len(planRows)),
+			zap.Int("success", successCount),
+			zap.Int("failed", len(errs)))
+	}
 
 	return errs
 }
