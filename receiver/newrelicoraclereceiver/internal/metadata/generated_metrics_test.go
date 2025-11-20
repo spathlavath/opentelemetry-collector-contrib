@@ -70,7 +70,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(ts, 1, "session_username-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11)
+			mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(ts, 1, "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11, 15)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1354,7 +1354,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "session_username-val", "session_id-val", "session_status-val", "query_id-val", "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "user_name-val", "session_id-val", "session_status-val", "query_id-val", "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -1393,9 +1393,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("session_username")
+					attrVal, ok := dp.Attributes().Get("user_name")
 					assert.True(t, ok)
-					assert.Equal(t, "session_username-val", attrVal.Str())
+					assert.Equal(t, "user_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("session_id")
 					assert.True(t, ok)
 					assert.Equal(t, "session_id-val", attrVal.Str())
@@ -1414,6 +1414,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sql_exec_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 11, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("seconds_in_wait")
+					assert.True(t, ok)
+					assert.EqualValues(t, 15, attrVal.Int())
 				case "newrelicoracledb.asm.diskgroup.free_mb":
 					assert.False(t, validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"], "Found a duplicate in the metrics slice: newrelicoracledb.asm.diskgroup.free_mb")
 					validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"] = true
@@ -7495,9 +7498,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("session_username")
+					attrVal, ok := dp.Attributes().Get("user_name")
 					assert.True(t, ok)
-					assert.Equal(t, "session_username-val", attrVal.Str())
+					assert.Equal(t, "user_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("session_id")
 					assert.True(t, ok)
 					assert.Equal(t, "session_id-val", attrVal.Str())

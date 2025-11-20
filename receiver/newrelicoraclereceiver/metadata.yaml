@@ -115,9 +115,6 @@ attributes:
   wait_category:
     description: Oracle wait event category for wait events
     type: string
-  session_username:
-    description: Oracle session username
-    type: string
   session_id:
     description: Oracle session ID (SID)
     type: string
@@ -178,6 +175,9 @@ attributes:
     type: int
   sql_exec_id:
     description: SQL execution identifier
+    type: int
+  seconds_in_wait:
+    description: Number of seconds the session has been waiting
     type: int
 
   blocking_user:
@@ -3750,7 +3750,7 @@ metrics:
       value_type: double
     unit: s
     attributes:
-      - session_username
+      - user_name
       - session_id
       - session_status
       - query_id
@@ -3779,13 +3779,14 @@ metrics:
       value_type: int
     unit: "1"
     attributes:
-      - session_username
+      - user_name
       - session_id
       - session_serial
       - query_id
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
+      - seconds_in_wait
 
   newrelicoracledb.execution_plan.info:
     description: Execution plan information for SQL queries

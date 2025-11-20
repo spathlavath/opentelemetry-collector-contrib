@@ -24,13 +24,14 @@ Information about active Oracle sessions with query execution details
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| session_username | Oracle session username | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
 | query_id | SQL query identifier | Any Str | false |
 | sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
+| seconds_in_wait | Number of seconds the session has been waiting | Any Int | false |
 
 ### newrelicoracledb.asm.diskgroup.free_mb
 
@@ -4945,7 +4946,7 @@ Current wait time in seconds for active wait events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| session_username | Oracle session username | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |

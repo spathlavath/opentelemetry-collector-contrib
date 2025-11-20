@@ -135,6 +135,11 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 		sqlExecID = session.SQLExecID.Int64
 	}
 
+	secondsInWait := int64(0)
+	if session.SecondsInWait.Valid {
+		secondsInWait = session.SecondsInWait.Int64
+	}
+
 	// Record metric with value 1 for this active session
 	// All session details are in the attributes/dimensions
 	s.mb.RecordNewrelicoracledbActiveSessionsInfoDataPoint(
@@ -147,6 +152,7 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 		sqlChildNumber,
 		sqlExecStart,
 		sqlExecID,
+		secondsInWait,
 	)
 
 	return nil

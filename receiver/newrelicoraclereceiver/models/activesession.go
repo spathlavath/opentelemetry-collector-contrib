@@ -14,6 +14,7 @@ type ActiveSession struct {
 	SQLChildNumber sql.NullInt64
 	SQLExecStart   sql.NullTime
 	SQLExecID      sql.NullInt64
+	SecondsInWait  sql.NullInt64
 }
 
 // GetUsername returns the username as a string, empty if null
@@ -68,6 +69,14 @@ func (as *ActiveSession) GetSQLExecStart() time.Time {
 func (as *ActiveSession) GetSQLExecID() int64 {
 	if as.SQLExecID.Valid {
 		return as.SQLExecID.Int64
+	}
+	return 0
+}
+
+// GetSecondsInWait returns the seconds in wait as int64, 0 if null
+func (as *ActiveSession) GetSecondsInWait() int64 {
+	if as.SecondsInWait.Valid {
+		return as.SecondsInWait.Int64
 	}
 	return 0
 }
