@@ -58,9 +58,6 @@ attributes:
   sql_exec_id:
     description: SQL execution identifier
     type: int
-  instance_name:
-    description: Oracle database instance name
-    type: string
   plan_hash_value:
     description: Oracle execution plan hash value
     type: string
@@ -366,7 +363,6 @@ events:
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
-      - instance_name
 
 metrics:
   newrelicoracledb.sessions.count:

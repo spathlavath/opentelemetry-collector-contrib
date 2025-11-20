@@ -137,7 +137,6 @@ func (s *ActiveSessionsScraper) buildActiveSessionLog(session *models.ActiveSess
 		sqlChildNumber,
 		sqlExecStart,
 		sqlExecID,
-		s.instanceName,
 	)
 
 	return nil

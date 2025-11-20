@@ -57,12 +57,12 @@ type newRelicOracleScraper struct {
 	databaseInfoScraper *scrapers.DatabaseInfoScraper
 
 	// Query Performance Monitoring (QPM) scrapers
-	slowQueriesScraper     *scrapers.SlowQueriesScraper
-	executionPlanScraper   *scrapers.ExecutionPlanScraper
-	activeSessionsScraper  *scrapers.ActiveSessionsScraper
-	blockingScraper        *scrapers.BlockingScraper
-	waitEventsScraper      *scrapers.WaitEventsScraper
-	lockScraper            *scrapers.LockScraper
+	slowQueriesScraper    *scrapers.SlowQueriesScraper
+	executionPlanScraper  *scrapers.ExecutionPlanScraper
+	activeSessionsScraper *scrapers.ActiveSessionsScraper
+	blockingScraper       *scrapers.BlockingScraper
+	waitEventsScraper     *scrapers.WaitEventsScraper
+	lockScraper           *scrapers.LockScraper
 
 	// Database and configuration
 	db             *sql.DB

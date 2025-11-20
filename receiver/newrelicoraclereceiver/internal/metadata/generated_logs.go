@@ -17,7 +17,7 @@ type eventNewrelicoracledbActiveSession struct {
 	config EventConfig         // event config provided by user.
 }
 
-func (e *eventNewrelicoracledbActiveSession) recordEvent(ctx context.Context, timestamp pcommon.Timestamp, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, statusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, instanceNameAttributeValue string) {
+func (e *eventNewrelicoracledbActiveSession) recordEvent(ctx context.Context, timestamp pcommon.Timestamp, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, statusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
 	if !e.config.Enabled {
 		return
 	}
@@ -37,7 +37,6 @@ func (e *eventNewrelicoracledbActiveSession) recordEvent(ctx context.Context, ti
 	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
 	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
 	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
-	dp.Attributes().PutStr("instance_name", instanceNameAttributeValue)
 
 }
 
@@ -237,8 +236,8 @@ func (lb *LogsBuilder) Emit(options ...ResourceLogsOption) plog.Logs {
 }
 
 // RecordNewrelicoracledbActiveSessionEvent adds a log record of newrelicoracledb.active_session event.
-func (lb *LogsBuilder) RecordNewrelicoracledbActiveSessionEvent(ctx context.Context, timestamp pcommon.Timestamp, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, statusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, instanceNameAttributeValue string) {
-	lb.eventNewrelicoracledbActiveSession.recordEvent(ctx, timestamp, usernameAttributeValue, sidAttributeValue, serialAttributeValue, statusAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue, instanceNameAttributeValue)
+func (lb *LogsBuilder) RecordNewrelicoracledbActiveSessionEvent(ctx context.Context, timestamp pcommon.Timestamp, usernameAttributeValue string, sidAttributeValue int64, serialAttributeValue int64, statusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
+	lb.eventNewrelicoracledbActiveSession.recordEvent(ctx, timestamp, usernameAttributeValue, sidAttributeValue, serialAttributeValue, statusAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue)
 }
 
 // RecordNewrelicoracledbExecutionPlanEvent adds a log record of newrelicoracledb.execution_plan event.

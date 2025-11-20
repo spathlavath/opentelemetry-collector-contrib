@@ -4989,7 +4989,6 @@ Active Oracle database sessions currently executing specific SQL statements. Con
 | sql_child_number | Child number of the SQL statement being executed | Any Int |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str |
 | sql_exec_id | SQL execution identifier | Any Int |
-| instance_name | Oracle database instance name | Any Str |
 
 ### newrelicoracledb.execution_plan
 

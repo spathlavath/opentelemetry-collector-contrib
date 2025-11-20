@@ -129,7 +129,7 @@ func TestLogsBuilder(t *testing.T) {
 			allEventsCount := 0
 			defaultEventsCount++
 			allEventsCount++
-			lb.RecordNewrelicoracledbActiveSessionEvent(ctx, timestamp, "username-val", 3, 6, "status-val", "query_id-val", 16, "sql_exec_start-val", 11, "instance_name-val")
+			lb.RecordNewrelicoracledbActiveSessionEvent(ctx, timestamp, "username-val", 3, 6, "status-val", "query_id-val", 16, "sql_exec_start-val", 11)
 			defaultEventsCount++
 			allEventsCount++
 			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
@@ -190,9 +190,6 @@ func TestLogsBuilder(t *testing.T) {
 					attrVal, ok = lr.Attributes().Get("sql_exec_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 11, attrVal.Int())
-					attrVal, ok = lr.Attributes().Get("instance_name")
-					assert.True(t, ok)
-					assert.Equal(t, "instance_name-val", attrVal.Str())
 				case "newrelicoracledb.execution_plan":
 					assert.False(t, validatedEvents["newrelicoracledb.execution_plan"], "Found a duplicate in the events slice: newrelicoracledb.execution_plan")
 					validatedEvents["newrelicoracledb.execution_plan"] = true
