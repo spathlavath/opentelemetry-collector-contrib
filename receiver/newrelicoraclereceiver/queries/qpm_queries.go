@@ -73,7 +73,6 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 			AND blocked.seconds_in_wait > 0
 		ORDER BY
 			blocked.seconds_in_wait DESC
-			blocked.seconds_in_wait DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
