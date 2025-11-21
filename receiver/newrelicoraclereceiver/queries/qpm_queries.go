@@ -166,7 +166,6 @@ func GetActiveSessionQueriesSQL(sqlIDs string) string {
 			s.sql_id IN (%s)
 			AND s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
-			AND s.SECONDS_IN_WAIT > 0
 		ORDER BY
 			s.SECONDS_IN_WAIT DESC`, sqlIDs)
 }
