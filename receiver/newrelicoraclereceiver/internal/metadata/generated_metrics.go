@@ -1538,7 +1538,7 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, sessionIDAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockingQueryTextAttributeValue string, blockedSQLExecStartAttributeValue string, databaseNameAttributeValue string) {
+func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, sessionIDAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockingQueryTextAttributeValue string, blockingQueryIDAttributeValue string, sqlExecIDAttributeValue int64, databaseNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1555,7 +1555,8 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTime) recordDataPoint(start pc
 	dp.Attributes().PutStr("blocked_serial", blockedSerialAttributeValue)
 	dp.Attributes().PutStr("blocking_serial", blockingSerialAttributeValue)
 	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
-	dp.Attributes().PutStr("blocked_sql_exec_start", blockedSQLExecStartAttributeValue)
+	dp.Attributes().PutStr("blocking_query_id", blockingQueryIDAttributeValue)
+	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 }
 
@@ -19334,8 +19335,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(ts 
 }
 
 // RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint adds a data point to newrelicoracledb.blocking_queries.wait_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, sessionIDAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockingQueryTextAttributeValue string, blockedSQLExecStartAttributeValue string, databaseNameAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, queryIDAttributeValue, sessionIDAttributeValue, blockingSidAttributeValue, blockedSerialAttributeValue, blockingSerialAttributeValue, blockingQueryTextAttributeValue, blockedSQLExecStartAttributeValue, databaseNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts pcommon.Timestamp, val float64, instanceIDAttributeValue string, blockedUserAttributeValue string, blockingUserAttributeValue string, queryIDAttributeValue string, sessionIDAttributeValue string, blockingSidAttributeValue string, blockedSerialAttributeValue string, blockingSerialAttributeValue string, blockingQueryTextAttributeValue string, blockingQueryIDAttributeValue string, sqlExecIDAttributeValue int64, databaseNameAttributeValue string) {
+	mb.metricNewrelicoracledbBlockingQueriesWaitTime.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue, blockedUserAttributeValue, blockingUserAttributeValue, queryIDAttributeValue, sessionIDAttributeValue, blockingSidAttributeValue, blockedSerialAttributeValue, blockingSerialAttributeValue, blockingQueryTextAttributeValue, blockingQueryIDAttributeValue, sqlExecIDAttributeValue, databaseNameAttributeValue)
 }
 
 // RecordNewrelicoracledbConnectionActiveSessionsDataPoint adds a data point to newrelicoracledb.connection.active_sessions metric.

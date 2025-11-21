@@ -196,8 +196,8 @@ attributes:
   blocking_query_text:
     description: SQL query text of the blocking query
     type: string
-  blocked_sql_exec_start:
-    description: SQL execution start time of the blocked query
+  blocking_query_id:
+    description: SQL query ID of the blocking query
     type: string
 
   db.instance.name:
@@ -3678,7 +3678,8 @@ metrics:
       - blocked_serial
       - blocking_serial
       - blocking_query_text
-      - blocked_sql_exec_start
+      - blocking_query_id
+      - sql_exec_id
       - database_name
 
   # Disabled old wait events metrics - replaced with current_wait_seconds

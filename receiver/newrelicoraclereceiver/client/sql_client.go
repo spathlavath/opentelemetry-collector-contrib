@@ -155,11 +155,12 @@ func (c *SQLClient) QueryBlockingQueries(ctx context.Context, countThreshold int
 			&blockingQuery.BlockedUser,
 			&blockingQuery.BlockedWaitSec,
 			&blockingQuery.QueryID,
-			&blockingQuery.BlockedSQLExecStart,
+			&blockingQuery.SQLExecID,
 			&blockingQuery.BlockingQueryText,
 			&blockingQuery.BlockingSID,
 			&blockingQuery.BlockingSerial,
 			&blockingQuery.BlockingUser,
+			&blockingQuery.BlockingQueryID,
 			&blockingQuery.DatabaseName,
 		)
 		if err != nil {
