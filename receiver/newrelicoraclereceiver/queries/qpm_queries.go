@@ -47,6 +47,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 func GetBlockingQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
+			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
 			s2.sid AS session_id,
 			s2.serial# AS blocked_serial,
 			s2.username AS blocked_user,
@@ -68,6 +69,7 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 			v$database d
 		WHERE
 			s2.blocking_session IS NOT NULL
+			AND s2.seconds_in_wait > 0
 		ORDER BY
 			s2.seconds_in_wait DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
@@ -77,6 +79,7 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 func GetWaitEventQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT 
+			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
 			s.username,
 			s.sid,
 			s.status,
@@ -106,6 +109,9 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 		WHERE 
 			s.status = 'ACTIVE' 
 			AND s.wait_class <> 'Idle'
+			AND s.SECONDS_IN_WAIT > 0
+		ORDER BY
+			s.SECONDS_IN_WAIT DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
@@ -145,6 +151,7 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 func GetActiveSessionQueriesSQL(sqlIDs string) string {
 	return fmt.Sprintf(`
 		SELECT
+			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
 			s.username,
 			s.sid,
 			s.serial#,
@@ -158,5 +165,8 @@ func GetActiveSessionQueriesSQL(sqlIDs string) string {
 		WHERE
 			s.sql_id IN (%s)
 			AND s.status = 'ACTIVE'
-			AND s.wait_class <> 'Idle'`, sqlIDs)
+			AND s.wait_class <> 'Idle'
+			AND s.SECONDS_IN_WAIT > 0
+		ORDER BY
+			s.SECONDS_IN_WAIT DESC`, sqlIDs)
 }

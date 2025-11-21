@@ -1,9 +1,13 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 // BlockingQuery represents a blocking query record from Oracle V$SESSION views
 type BlockingQuery struct {
+	CollectionTimestamp sql.NullTime
 	SessionID           sql.NullInt64
 	BlockedSerial       sql.NullInt64
 	BlockedUser         sql.NullString
@@ -78,4 +82,12 @@ func (bq *BlockingQuery) HasValidQueryID() bool {
 // IsValidForMetrics checks if the blocking query has the minimum required fields for metrics
 func (bq *BlockingQuery) IsValidForMetrics() bool {
 	return bq.HasValidQueryID() && bq.HasValidWaitTime()
+}
+
+// GetCollectionTimestamp returns the collection timestamp, or zero time if null
+func (bq *BlockingQuery) GetCollectionTimestamp() time.Time {
+	if bq.CollectionTimestamp.Valid {
+		return bq.CollectionTimestamp.Time
+	}
+	return time.Time{}
 }

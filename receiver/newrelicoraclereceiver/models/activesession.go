@@ -7,14 +7,15 @@ import (
 
 // ActiveSession represents an active session executing a query
 type ActiveSession struct {
-	Username       sql.NullString
-	SID            sql.NullInt64
-	Serial         sql.NullInt64
-	QueryID        sql.NullString
-	SQLChildNumber sql.NullInt64
-	SQLExecStart   sql.NullTime
-	SQLExecID      sql.NullInt64
-	SecondsInWait  sql.NullFloat64
+	CollectionTimestamp sql.NullTime
+	Username            sql.NullString
+	SID                 sql.NullInt64
+	Serial              sql.NullInt64
+	QueryID             sql.NullString
+	SQLChildNumber      sql.NullInt64
+	SQLExecStart        sql.NullTime
+	SQLExecID           sql.NullInt64
+	SecondsInWait       sql.NullFloat64
 }
 
 // GetUsername returns the username as a string, empty if null
@@ -84,4 +85,12 @@ func (as *ActiveSession) GetSecondsInWait() float64 {
 // IsValidForMetrics checks if the active session has the minimum required fields
 func (as *ActiveSession) IsValidForMetrics() bool {
 	return as.QueryID.Valid && as.SID.Valid
+}
+
+// GetCollectionTimestamp returns the collection timestamp, or zero time if null
+func (as *ActiveSession) GetCollectionTimestamp() time.Time {
+	if as.CollectionTimestamp.Valid {
+		return as.CollectionTimestamp.Time
+	}
+	return time.Time{}
 }

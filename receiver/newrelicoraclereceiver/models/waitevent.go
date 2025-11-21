@@ -7,28 +7,29 @@ import (
 
 // WaitEvent represents a wait event record from Oracle wait events queries
 type WaitEvent struct {
-	Username           sql.NullString
-	SID                sql.NullInt64
-	Status             sql.NullString
-	QueryID            sql.NullString
-	WaitCategory       sql.NullString
-	WaitEventName      sql.NullString
-	CurrentWaitSeconds sql.NullInt64
-	SQLExecStart       sql.NullTime
-	Program            sql.NullString
-	Machine            sql.NullString
-	LockedObjectID     sql.NullInt64
-	ObjectOwner        sql.NullString
-	ObjectNameWaitedOn sql.NullString
-	ObjectTypeWaitedOn sql.NullString
-	LockedFileID       sql.NullInt64
-	LockedBlockID      sql.NullInt64
-	P1Text             sql.NullString
-	P1                 sql.NullInt64
-	P2Text             sql.NullString
-	P2                 sql.NullInt64
-	P3Text             sql.NullString
-	P3                 sql.NullInt64
+	CollectionTimestamp sql.NullTime
+	Username            sql.NullString
+	SID                 sql.NullInt64
+	Status              sql.NullString
+	QueryID             sql.NullString
+	WaitCategory        sql.NullString
+	WaitEventName       sql.NullString
+	CurrentWaitSeconds  sql.NullInt64
+	SQLExecStart        sql.NullTime
+	Program             sql.NullString
+	Machine             sql.NullString
+	LockedObjectID      sql.NullInt64
+	ObjectOwner         sql.NullString
+	ObjectNameWaitedOn  sql.NullString
+	ObjectTypeWaitedOn  sql.NullString
+	LockedFileID        sql.NullInt64
+	LockedBlockID       sql.NullInt64
+	P1Text              sql.NullString
+	P1                  sql.NullInt64
+	P2Text              sql.NullString
+	P2                  sql.NullInt64
+	P3Text              sql.NullString
+	P3                  sql.NullInt64
 }
 
 // GetUsername returns the username as a string, empty if null
@@ -225,4 +226,12 @@ func (we *WaitEvent) HasValidCurrentWaitSeconds() bool {
 // IsValidForMetrics checks if the wait event has the minimum required fields for metrics
 func (we *WaitEvent) IsValidForMetrics() bool {
 	return we.HasValidQueryID() && we.HasValidWaitEventName() && we.HasValidCurrentWaitSeconds()
+}
+
+// GetCollectionTimestamp returns the collection timestamp, or zero time if null
+func (we *WaitEvent) GetCollectionTimestamp() time.Time {
+	if we.CollectionTimestamp.Valid {
+		return we.CollectionTimestamp.Time
+	}
+	return time.Time{}
 }

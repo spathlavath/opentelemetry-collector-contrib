@@ -83,6 +83,7 @@ func (s *BlockingScraper) recordBlockingQueryMetric(now pcommon.Timestamp, block
 	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(
 		now,
 		blockingQuery.BlockedWaitSec.Float64,
+		blockingQuery.GetCollectionTimestamp().Format("2006-01-02 15:04:05"),
 		s.instanceName,
 		blockingQuery.GetBlockedUser(),
 		blockingQuery.GetBlockingUser(),

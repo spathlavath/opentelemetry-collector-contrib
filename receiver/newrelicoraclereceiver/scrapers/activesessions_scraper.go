@@ -104,6 +104,7 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 	s.mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(
 		now,
 		session.GetSecondsInWait(),
+		session.GetCollectionTimestamp().Format("2006-01-02 15:04:05"),
 		session.GetUsername(),
 		fmt.Sprintf("%d", session.GetSID()),
 		session.GetSerial(),
