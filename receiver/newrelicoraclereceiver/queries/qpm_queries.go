@@ -69,9 +69,10 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 		CROSS JOIN
 			v$database d
 		WHERE
-			s2.blocking_session IS NOT NULL
-			AND s2.seconds_in_wait > 0
+			blocked.blocking_session IS NOT NULL
+			AND blocked.seconds_in_wait > 0
 		ORDER BY
+			blocked.seconds_in_wait DESC
 			blocked.seconds_in_wait DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
