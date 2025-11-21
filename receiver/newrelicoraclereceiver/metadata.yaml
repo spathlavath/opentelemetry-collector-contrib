@@ -3760,6 +3760,7 @@ metrics:
       - wait_object_name
       - wait_object_type
       - sql_exec_start
+      - sql_exec_id
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id

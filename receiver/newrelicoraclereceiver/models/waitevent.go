@@ -15,6 +15,7 @@ type WaitEvent struct {
 	WaitEventName      sql.NullString
 	CurrentWaitSeconds sql.NullInt64
 	SQLExecStart       sql.NullTime
+	SQLExecID          sql.NullInt64
 	Program            sql.NullString
 	Machine            sql.NullString
 	LockedObjectID     sql.NullInt64
@@ -141,6 +142,14 @@ func (we *WaitEvent) GetSID() int64 {
 		return we.SID.Int64
 	}
 	return 0
+}
+
+// GetSQLExecID returns the SQL execution ID as int64, -1 if null
+func (we *WaitEvent) GetSQLExecID() int64 {
+	if we.SQLExecID.Valid {
+		return we.SQLExecID.Int64
+	}
+	return -1
 }
 
 // GetCurrentWaitSeconds returns the current wait seconds as int64, 0 if null

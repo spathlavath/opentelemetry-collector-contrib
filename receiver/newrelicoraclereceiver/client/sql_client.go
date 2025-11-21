@@ -201,6 +201,7 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 			&waitEvent.WaitEventName,
 			&waitEvent.CurrentWaitSeconds,
 			&waitEvent.SQLExecStart,
+			&waitEvent.SQLExecID,
 			&waitEvent.Program,
 			&waitEvent.Machine,
 			&waitEvent.LockedObjectID,

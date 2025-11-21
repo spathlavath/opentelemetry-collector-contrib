@@ -60,6 +60,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		waitObjectName := waitEvent.GetObjectNameWaitedOn()
 		waitObjectType := waitEvent.GetObjectTypeWaitedOn()
 		sqlExecStart := waitEvent.GetSQLExecStart().Format("2006-01-02 15:04:05")
+		sqlExecID := waitEvent.GetSQLExecID()
 		rowWaitObjID := strconv.FormatInt(waitEvent.GetLockedObjectID(), 10)
 		rowWaitFileID := strconv.FormatInt(waitEvent.GetLockedFileID(), 10)
 		rowWaitBlockID := strconv.FormatInt(waitEvent.GetLockedBlockID(), 10)
@@ -86,6 +87,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				waitObjectName,
 				waitObjectType,
 				sqlExecStart,
+				sqlExecID,
 				rowWaitObjID,
 				rowWaitFileID,
 				rowWaitBlockID,

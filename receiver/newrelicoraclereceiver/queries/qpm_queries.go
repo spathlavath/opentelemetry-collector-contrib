@@ -86,6 +86,7 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 			s.event,
 			s.SECONDS_IN_WAIT,
 			s.SQL_EXEC_START,
+			s.SQL_EXEC_ID,
 			s.PROGRAM,
 			s.MACHINE,
 			s.ROW_WAIT_OBJ#,
