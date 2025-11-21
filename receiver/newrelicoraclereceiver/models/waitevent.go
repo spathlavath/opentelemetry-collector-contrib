@@ -8,28 +8,29 @@ import (
 // WaitEvent represents a wait event record from Oracle wait events queries
 type WaitEvent struct {
 	CollectionTimestamp sql.NullTime
-	Username            sql.NullString
-	SID                 sql.NullInt64
-	Status              sql.NullString
-	QueryID             sql.NullString
-	WaitCategory        sql.NullString
-	WaitEventName       sql.NullString
-	CurrentWaitSeconds  sql.NullInt64
-	SQLExecStart        sql.NullTime
-	Program             sql.NullString
-	Machine             sql.NullString
-	LockedObjectID      sql.NullInt64
-	ObjectOwner         sql.NullString
-	ObjectNameWaitedOn  sql.NullString
-	ObjectTypeWaitedOn  sql.NullString
-	LockedFileID        sql.NullInt64
-	LockedBlockID       sql.NullInt64
-	P1Text              sql.NullString
-	P1                  sql.NullInt64
-	P2Text              sql.NullString
-	P2                  sql.NullInt64
-	P3Text              sql.NullString
-	P3                  sql.NullInt64
+	Username           sql.NullString
+	SID                sql.NullInt64
+	Status             sql.NullString
+	QueryID            sql.NullString
+	WaitCategory       sql.NullString
+	WaitEventName      sql.NullString
+	CurrentWaitSeconds sql.NullInt64
+	SQLExecStart       sql.NullTime
+	SQLExecID          sql.NullInt64
+	Program            sql.NullString
+	Machine            sql.NullString
+	LockedObjectID     sql.NullInt64
+	ObjectOwner        sql.NullString
+	ObjectNameWaitedOn sql.NullString
+	ObjectTypeWaitedOn sql.NullString
+	LockedFileID       sql.NullInt64
+	LockedBlockID      sql.NullInt64
+	P1Text             sql.NullString
+	P1                 sql.NullInt64
+	P2Text             sql.NullString
+	P2                 sql.NullInt64
+	P3Text             sql.NullString
+	P3                 sql.NullInt64
 }
 
 // GetUsername returns the username as a string, empty if null
@@ -142,6 +143,14 @@ func (we *WaitEvent) GetSID() int64 {
 		return we.SID.Int64
 	}
 	return 0
+}
+
+// GetSQLExecID returns the SQL execution ID as int64, -1 if null
+func (we *WaitEvent) GetSQLExecID() int64 {
+	if we.SQLExecID.Valid {
+		return we.SQLExecID.Int64
+	}
+	return -1
 }
 
 // GetCurrentWaitSeconds returns the current wait seconds as int64, 0 if null

@@ -86,7 +86,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "instance.id-val", "blocked_user-val", "blocking_user-val", "query_id-val", "session_id-val", "blocking_sid-val", "blocked_serial-val", "blocking_serial-val", "blocked_sql_exec_start-val", "database_name-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "instance.id-val", "blocked_user-val", "blocking_user-val", "query_id-val", "session_id-val", "blocking_sid-val", "blocked_serial-val", "blocking_serial-val", "blocking_query_text-val", "blocking_query_id-val", 11, "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1354,7 +1354,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", "session_status-val", "query_id-val", "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", "session_status-val", "query_id-val", "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -1510,9 +1510,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("blocking_serial")
 					assert.True(t, ok)
 					assert.Equal(t, "blocking_serial-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocked_sql_exec_start")
+					attrVal, ok = dp.Attributes().Get("blocking_query_text")
 					assert.True(t, ok)
-					assert.Equal(t, "blocked_sql_exec_start-val", attrVal.Str())
+					assert.Equal(t, "blocking_query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sql_exec_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 11, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -7537,6 +7543,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sql_exec_start")
 					assert.True(t, ok)
 					assert.Equal(t, "sql_exec_start-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sql_exec_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 11, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("row_wait_obj_id")
 					assert.True(t, ok)
 					assert.Equal(t, "row_wait_obj_id-val", attrVal.Str())

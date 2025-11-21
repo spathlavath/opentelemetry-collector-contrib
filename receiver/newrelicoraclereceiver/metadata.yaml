@@ -197,8 +197,11 @@ attributes:
   blocking_serial:
     description: Serial number of the blocking session
     type: string
-  blocked_sql_exec_start:
-    description: SQL execution start time of the blocked query
+  blocking_query_text:
+    description: SQL query text of the blocking query
+    type: string
+  blocking_query_id:
+    description: SQL query ID of the blocking query
     type: string
 
   db.instance.name:
@@ -3679,7 +3682,9 @@ metrics:
       - blocking_sid
       - blocked_serial
       - blocking_serial
-      - blocked_sql_exec_start
+      - blocking_query_text
+      - blocking_query_id
+      - sql_exec_id
       - database_name
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
@@ -3761,6 +3766,7 @@ metrics:
       - wait_object_name
       - wait_object_type
       - sql_exec_start
+      - sql_exec_id
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id

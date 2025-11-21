@@ -7,18 +7,19 @@ import (
 
 // BlockingQuery represents a blocking query record from Oracle V$SESSION views
 type BlockingQuery struct {
-	CollectionTimestamp sql.NullTime
-	SessionID           sql.NullInt64
-	BlockedSerial       sql.NullInt64
-	BlockedUser         sql.NullString
-	BlockedWaitSec      sql.NullFloat64
-	QueryID             sql.NullString
-	BlockedSQLExecStart sql.NullString
-	BlockedQueryText    sql.NullString
-	BlockingSID         sql.NullInt64
-	BlockingSerial      sql.NullInt64
-	BlockingUser        sql.NullString
-	DatabaseName        sql.NullString
+	CollectionTimestamp sql.NullTime	
+	SessionID         sql.NullInt64
+	BlockedSerial     sql.NullInt64
+	BlockedUser       sql.NullString
+	BlockedWaitSec    sql.NullFloat64
+	QueryID           sql.NullString
+	SQLExecID         sql.NullInt64
+	BlockingQueryText sql.NullString
+	BlockingSID       sql.NullInt64
+	BlockingSerial    sql.NullInt64
+	BlockingUser      sql.NullString
+	BlockingQueryID   sql.NullString
+	DatabaseName      sql.NullString
 }
 
 // GetBlockedUser returns the blocked user as a string, empty if null
@@ -29,10 +30,10 @@ func (bq *BlockingQuery) GetBlockedUser() string {
 	return ""
 }
 
-// GetBlockedQueryText returns the blocked query text as a string, empty if null
-func (bq *BlockingQuery) GetBlockedQueryText() string {
-	if bq.BlockedQueryText.Valid {
-		return bq.BlockedQueryText.String
+// GetBlockingQueryText returns the blocking query text as a string, empty if null
+func (bq *BlockingQuery) GetBlockingQueryText() string {
+	if bq.BlockingQueryText.Valid {
+		return bq.BlockingQueryText.String
 	}
 	return ""
 }
@@ -53,12 +54,20 @@ func (bq *BlockingQuery) GetQueryID() string {
 	return ""
 }
 
-// GetBlockedSQLExecStart returns the blocked SQL execution start time as a string, empty if null
-func (bq *BlockingQuery) GetBlockedSQLExecStart() string {
-	if bq.BlockedSQLExecStart.Valid {
-		return bq.BlockedSQLExecStart.String
+// GetBlockingQueryID returns the blocking query ID as a string, empty if null
+func (bq *BlockingQuery) GetBlockingQueryID() string {
+	if bq.BlockingQueryID.Valid {
+		return bq.BlockingQueryID.String
 	}
 	return ""
+}
+
+// GetSQLExecID returns the blocked SQL execution ID as int64, -1 if null
+func (bq *BlockingQuery) GetSQLExecID() int64 {
+	if bq.SQLExecID.Valid {
+		return bq.SQLExecID.Int64
+	}
+	return -1
 }
 
 // GetDatabaseName returns the database name as a string, empty if null

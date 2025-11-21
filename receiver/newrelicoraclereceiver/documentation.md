@@ -99,7 +99,9 @@ Wait time in seconds for blocked queries
 | blocking_sid | Session ID of the blocking session | Any Str | false |
 | blocked_serial | Serial number of the blocked session | Any Str | false |
 | blocking_serial | Serial number of the blocking session | Any Str | false |
-| blocked_sql_exec_start | SQL execution start time of the blocked query | Any Str | false |
+| blocking_query_text | SQL query text of the blocking query | Any Str | false |
+| blocking_query_id | SQL query ID of the blocking query | Any Str | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
 | database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.connection.active_sessions
@@ -4959,6 +4961,7 @@ Current wait time in seconds for active wait events
 | wait_object_name | Name of the database object being waited on | Any Str | false |
 | wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
 | row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
 | row_wait_file_id | File ID of the row being waited on | Any Str | false |
 | row_wait_block_id | Block ID of the row being waited on | Any Str | false |
