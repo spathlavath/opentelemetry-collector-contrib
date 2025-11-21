@@ -7,6 +7,7 @@ import (
 
 // WaitEvent represents a wait event record from Oracle wait events queries
 type WaitEvent struct {
+	CollectionTimestamp sql.NullTime
 	Username           sql.NullString
 	SID                sql.NullInt64
 	Status             sql.NullString
@@ -234,4 +235,12 @@ func (we *WaitEvent) HasValidCurrentWaitSeconds() bool {
 // IsValidForMetrics checks if the wait event has the minimum required fields for metrics
 func (we *WaitEvent) IsValidForMetrics() bool {
 	return we.HasValidQueryID() && we.HasValidWaitEventName() && we.HasValidCurrentWaitSeconds()
+}
+
+// GetCollectionTimestamp returns the collection timestamp, or zero time if null
+func (we *WaitEvent) GetCollectionTimestamp() time.Time {
+	if we.CollectionTimestamp.Valid {
+		return we.CollectionTimestamp.Time
+	}
+	return time.Time{}
 }

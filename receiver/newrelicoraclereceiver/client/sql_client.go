@@ -150,6 +150,7 @@ func (c *SQLClient) QueryBlockingQueries(ctx context.Context, countThreshold int
 		var blockingQuery models.BlockingQuery
 
 		err := rows.Scan(
+			&blockingQuery.CollectionTimestamp,
 			&blockingQuery.SessionID,
 			&blockingQuery.BlockedSerial,
 			&blockingQuery.BlockedUser,
@@ -193,6 +194,7 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 		var waitEvent models.WaitEvent
 
 		err := rows.Scan(
+			&waitEvent.CollectionTimestamp,
 			&waitEvent.Username,
 			&waitEvent.SID,
 			&waitEvent.Status,
@@ -247,6 +249,7 @@ func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string
 		var session models.ActiveSession
 
 		err := rows.Scan(
+			&session.CollectionTimestamp,
 			&session.Username,
 			&session.SID,
 			&session.Serial,

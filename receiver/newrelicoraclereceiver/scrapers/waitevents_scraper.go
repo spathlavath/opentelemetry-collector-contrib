@@ -72,9 +72,11 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		p3 := strconv.FormatInt(waitEvent.GetP3(), 10)
 
 		if waitEvent.HasValidCurrentWaitSeconds() {
+			collectionTimestamp := waitEvent.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
 			s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(
 				now,
 				float64(waitEvent.GetCurrentWaitSeconds()),
+				collectionTimestamp,
 				username,
 				sid,
 				status,

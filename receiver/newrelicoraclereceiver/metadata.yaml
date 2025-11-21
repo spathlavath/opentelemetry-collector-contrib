@@ -166,6 +166,10 @@ attributes:
   wait_p3:
     description: Wait event parameter 3 value
     type: string
+  
+  collection_timestamp:
+    description: Timestamp when the metric data was collected from Oracle
+    type: string
 
   session_serial:
     description: Oracle session serial number
@@ -3669,6 +3673,7 @@ metrics:
       value_type: double
     unit: s
     attributes:
+      - collection_timestamp
       - instance.id
       - blocked_user
       - blocking_user
@@ -3748,6 +3753,7 @@ metrics:
       value_type: double
     unit: s
     attributes:
+      - collection_timestamp
       - user_name
       - session_id
       - session_status
@@ -3778,6 +3784,7 @@ metrics:
       value_type: double
     unit: s
     attributes:
+      - collection_timestamp
       - user_name
       - session_id
       - session_serial

@@ -24,6 +24,7 @@ Number of seconds the active session has been waiting
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
@@ -89,6 +90,7 @@ Wait time in seconds for blocked queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 | blocked_user | Username of the blocked session | Any Str | false |
 | blocking_user | Username of the blocking session | Any Str | false |
@@ -4946,6 +4948,7 @@ Current wait time in seconds for active wait events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
