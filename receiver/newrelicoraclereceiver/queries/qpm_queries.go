@@ -47,29 +47,29 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 func GetBlockingQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
-			s2.sid AS session_id,
-			s2.serial# AS blocked_serial,
-			s2.username AS blocked_user,
-			s2.seconds_in_wait AS blocked_wait_sec,
-			s2.sql_id AS query_id,
-			s2.sql_exec_start AS blocked_sql_exec_start,
-			blocked_sql.sql_text AS blocked_query_text,
-			s1.sid AS blocking_sid,
-			s1.serial# AS blocking_serial,
-			s1.username AS blocking_user,
+			blocked.sid AS session_id,
+			blocked.serial# AS blocked_serial,
+			blocked.username AS blocked_user,
+			blocked.seconds_in_wait AS blocked_wait_sec,
+			blocked.sql_id AS query_id,
+			blocked.sql_exec_start AS blocked_sql_exec_start,
+			blocking_sql.sql_text AS blocking_query_text,
+			blocking.sid AS blocking_sid,
+			blocking.serial# AS blocking_serial,
+			blocking.username AS blocking_user,
 			d.name AS database_name
 		FROM
-			v$session s2
+			v$session blocked
 		JOIN
-			v$session s1 ON s2.blocking_session = s1.sid
+			v$session blocking ON blocked.blocking_session = blocking.sid
 		LEFT JOIN
-			v$sql blocked_sql ON s2.sql_id = blocked_sql.sql_id
+			v$sql blocking_sql ON blocking.sql_id = blocking_sql.sql_id
 		CROSS JOIN
 			v$database d
 		WHERE
-			s2.blocking_session IS NOT NULL
+			blocked.blocking_session IS NOT NULL
 		ORDER BY
-			s2.seconds_in_wait DESC
+			blocked.seconds_in_wait DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 

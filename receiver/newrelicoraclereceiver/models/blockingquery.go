@@ -10,7 +10,7 @@ type BlockingQuery struct {
 	BlockedWaitSec      sql.NullFloat64
 	QueryID             sql.NullString
 	BlockedSQLExecStart sql.NullString
-	BlockedQueryText    sql.NullString
+	BlockingQueryText   sql.NullString
 	BlockingSID         sql.NullInt64
 	BlockingSerial      sql.NullInt64
 	BlockingUser        sql.NullString
@@ -25,10 +25,10 @@ func (bq *BlockingQuery) GetBlockedUser() string {
 	return ""
 }
 
-// GetBlockedQueryText returns the blocked query text as a string, empty if null
-func (bq *BlockingQuery) GetBlockedQueryText() string {
-	if bq.BlockedQueryText.Valid {
-		return bq.BlockedQueryText.String
+// GetBlockingQueryText returns the blocking query text as a string, empty if null
+func (bq *BlockingQuery) GetBlockingQueryText() string {
+	if bq.BlockingQueryText.Valid {
+		return bq.BlockingQueryText.String
 	}
 	return ""
 }

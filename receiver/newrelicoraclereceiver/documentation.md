@@ -97,6 +97,7 @@ Wait time in seconds for blocked queries
 | blocking_sid | Session ID of the blocking session | Any Str | false |
 | blocked_serial | Serial number of the blocked session | Any Str | false |
 | blocking_serial | Serial number of the blocking session | Any Str | false |
+| blocking_query_text | SQL query text of the blocking query | Any Str | false |
 | blocked_sql_exec_start | SQL execution start time of the blocked query | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 
