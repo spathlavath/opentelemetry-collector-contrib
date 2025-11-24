@@ -108,10 +108,14 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 		session.GetUsername(),
 		fmt.Sprintf("%d", session.GetSID()),
 		session.GetSerial(),
+		session.GetStatus(),
 		session.GetQueryID(),
 		session.GetSQLChildNumber(),
 		session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
 		session.GetSQLExecID(),
+		session.GetFailoverType(),
+		session.GetFailoverMethod(),
+		session.GetFailedOver(),
 	)
 
 	return nil

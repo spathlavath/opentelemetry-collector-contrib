@@ -157,11 +157,15 @@ func GetActiveSessionQueriesSQL(sqlIDs string) string {
 			s.username,
 			s.sid,
 			s.serial#,
+			s.status,
 			s.sql_id AS query_id,
 			s.SQL_CHILD_NUMBER,
 			s.SQL_EXEC_START,
 			s.SQL_EXEC_ID,
-			s.SECONDS_IN_WAIT
+			s.SECONDS_IN_WAIT,
+			s.FAILOVER_TYPE,
+			s.FAILOVER_METHOD,
+			s.FAILED_OVER
 		FROM
 			v$session s
 		WHERE

@@ -1325,7 +1325,7 @@ func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
+func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionStatusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, failoverTypeAttributeValue string, failoverMethodAttributeValue string, failedOverAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1337,10 +1337,14 @@ func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) recordDataPoint(star
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("session_id", sessionIDAttributeValue)
 	dp.Attributes().PutInt("session_serial", sessionSerialAttributeValue)
+	dp.Attributes().PutStr("session_status", sessionStatusAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
 	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
 	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
+	dp.Attributes().PutStr("failover_type", failoverTypeAttributeValue)
+	dp.Attributes().PutStr("failover_method", failoverMethodAttributeValue)
+	dp.Attributes().PutStr("failed_over", failedOverAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -19319,8 +19323,8 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 }
 
 // RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint adds a data point to newrelicoracledb.active_sessions.seconds_in_wait metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
-	mb.metricNewrelicoracledbActiveSessionsSecondsInWait.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionStatusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, failoverTypeAttributeValue string, failoverMethodAttributeValue string, failedOverAttributeValue string) {
+	mb.metricNewrelicoracledbActiveSessionsSecondsInWait.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionStatusAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue, failoverTypeAttributeValue, failoverMethodAttributeValue, failedOverAttributeValue)
 }
 
 // RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint adds a data point to newrelicoracledb.asm.diskgroup.free_mb metric.

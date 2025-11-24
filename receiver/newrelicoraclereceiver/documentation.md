@@ -28,10 +28,14 @@ Number of seconds the active session has been waiting
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
+| failover_type | Type of failover configured for the session (NONE, SESSION, SELECT, or TRANSACTION) | Any Str | false |
+| failover_method | Method of failover for the session (BASIC or PRECONNECT) | Any Str | false |
+| failed_over | Indicates whether the session has failed over (YES or NO) | Any Str | false |
 
 ### newrelicoracledb.asm.diskgroup.free_mb
 

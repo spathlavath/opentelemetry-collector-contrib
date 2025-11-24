@@ -70,7 +70,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11)
+			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "session_status-val", "query_id-val", 16, "sql_exec_start-val", 11, "failover_type-val", "failover_method-val", "failed_over-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1405,6 +1405,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("session_serial")
 					assert.True(t, ok)
 					assert.EqualValues(t, 14, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("session_status")
+					assert.True(t, ok)
+					assert.Equal(t, "session_status-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
@@ -1417,6 +1420,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sql_exec_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 11, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("failover_type")
+					assert.True(t, ok)
+					assert.Equal(t, "failover_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("failover_method")
+					assert.True(t, ok)
+					assert.Equal(t, "failover_method-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("failed_over")
+					assert.True(t, ok)
+					assert.Equal(t, "failed_over-val", attrVal.Str())
 				case "newrelicoracledb.asm.diskgroup.free_mb":
 					assert.False(t, validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"], "Found a duplicate in the metrics slice: newrelicoracledb.asm.diskgroup.free_mb")
 					validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"] = true

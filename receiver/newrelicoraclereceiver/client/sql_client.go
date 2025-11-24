@@ -253,11 +253,15 @@ func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string
 			&session.Username,
 			&session.SID,
 			&session.Serial,
+			&session.Status,
 			&session.QueryID,
 			&session.SQLChildNumber,
 			&session.SQLExecStart,
 			&session.SQLExecID,
 			&session.SecondsInWait,
+			&session.FailoverType,
+			&session.FailoverMethod,
+			&session.FailedOver,
 		)
 		if err != nil {
 			return nil, err

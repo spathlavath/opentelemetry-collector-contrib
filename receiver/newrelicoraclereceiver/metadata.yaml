@@ -180,6 +180,16 @@ attributes:
   sql_exec_id:
     description: SQL execution identifier
     type: int
+  
+  failover_type:
+    description: Type of failover configured for the session (NONE, SESSION, SELECT, or TRANSACTION)
+    type: string
+  failover_method:
+    description: Method of failover for the session (BASIC or PRECONNECT)
+    type: string
+  failed_over:
+    description: Indicates whether the session has failed over (YES or NO)
+    type: string
 
   blocking_user:
     description: Username of the blocking session
@@ -3788,10 +3798,14 @@ metrics:
       - user_name
       - session_id
       - session_serial
+      - session_status
       - query_id
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
+      - failover_type
+      - failover_method
+      - failed_over
 
   newrelicoracledb.execution_plan.info:
     description: Execution plan information for SQL queries
