@@ -8,7 +8,7 @@ service:
   pipelines:
     metrics:
       receivers: [newrelicsqlserver]
-      processors: [memory_limiter, cumulativetorate, batch, resource]
+      processors: [memory_limiter, batch, resource]
       exporters: [otlphttp, debug]
     
     # Logs pipeline: receiver -> processor -> exporter (for execution plans)
@@ -30,29 +30,6 @@ processors:
     check_interval: 1s
     limit_mib: 256
     spike_limit_mib: 64
-  
-  # Convert cumulative metrics to rate metrics for New Relic
-  cumulativetorate:
-    state_ttl: 60m
-    include:
-      # Core SQL Server rate metrics
-      - "sqlserver.stats.sql_compilations_per_sec"
-      - "sqlserver.stats.sql_recompilations_per_sec"
-      - "sqlserver.stats.lock_waits_per_sec"
-      - "sqlserver.access.page_splits_per_sec"
-      - "sqlserver.buffer.checkpoint_pages_per_sec"
-      - "sqlserver.stats.deadlocks_per_sec"
-      - "sqlserver.stats.user_errors_per_sec"
-      - "sqlserver.stats.kill_connection_errors_per_sec"
-      - "sqlserver.bufferpool.batch_requests_per_sec"
-      - "sqlserver.instance.transactions_per_sec"
-      - "sqlserver.instance.forced_parameterizations_per_sec"
-      - "sqlserver.wait_stats.wait_time_ms"
-      - "sqlserver.wait_stats.waiting_tasks_count"
-      # Enhanced metrics (new)
-      - "sqlserver.instance.full_scans_rate"
-      - "sqlserver.instance.lock_timeouts_rate"
-      - "sqlserver.wait_stats.latch.*"
   
   batch:
     timeout: 10s
@@ -78,7 +55,7 @@ receivers:
     # SQL Server connection
     hostname: ""
     port: "1433"
-    username: ""
+    username: "sa"
     password: ""
     collection_interval: 15s
     
@@ -127,7 +104,7 @@ exporters:
     # Headers for authentication
     headers:
       # ⚠️  REPLACE WITH YOUR ACTUAL NEW RELIC LICENSE KEY ⚠️
-      api-key: "your-newrelic-license-key"
+      api-key: ""
     
     # TLS configuration
     tls:
@@ -160,7 +137,7 @@ exporters:
     # Headers for authentication
     headers:
       # ⚠️  REPLACE WITH YOUR ACTUAL NEW RELIC LICENSE KEY ⚠️
-      api-key: "your-newrelic-license-key"
+      api-key: ""
     
     # TLS configuration
     tls:

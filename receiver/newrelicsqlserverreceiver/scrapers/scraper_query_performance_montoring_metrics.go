@@ -210,7 +210,6 @@ func (s *QueryPerformanceScraper) ScrapeQueryExecutionPlanMetrics(ctx context.Co
 	}
 
 	return nil
-	return nil
 }
 
 // processSlowQueryMetrics processes slow query metrics and creates separate OpenTelemetry metrics for each measurement
@@ -596,7 +595,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	// Use dedicated logging function with cardinality-safe approach
 	s.logger.Debug("Processed slow query metrics with cardinality safety", logAttributes()...)
 
-	return nil
 	return nil
 }
 

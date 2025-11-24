@@ -912,27 +912,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Instance comprehensive statistics collection is disabled")
 	}
 
-	if s.config.EnableQueryMonitoring {
-		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-		defer cancel()
-
-		// Use config values for wait analysis parameters
-		topN := s.config.QueryMonitoringCountThreshold
-		textTruncateLimit := 4094 // Default text truncate limit
-
-		if err := s.queryPerformanceScraper.ScrapeWaitTimeAnalysisMetrics(scrapeCtx, scopeMetrics, topN, textTruncateLimit); err != nil {
-			s.logger.Warn("Failed to scrape wait time analysis metrics - continuing with other metrics",
-				zap.Error(err),
-				zap.Duration("timeout", s.config.Timeout),
-				zap.Int("top_n", topN),
-				zap.Int("text_truncate_limit", textTruncateLimit))
-			// Don't add to scrapeErrors - just warn and continue with other metrics
-		} else {
-			s.logger.Debug("Successfully scraped wait time analysis metrics",
-				zap.Int("top_n", topN),
-				zap.Int("text_truncate_limit", textTruncateLimit))
-		}
-	}
 	// Scrape instance-level memory metrics
 	if s.config.EnableInstanceMemoryMetrics {
 		s.logger.Debug("Starting instance memory metrics scraping")
@@ -1073,6 +1052,9 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		} else {
 			s.logger.Debug("Successfully scraped instance comprehensive statistics")
 		}
+	} else {
+		s.logger.Debug("Instance comprehensive statistics collection is disabled")
+	}
 		
 	// Scrape enhanced instance metrics (new performance monitoring capabilities)
 	s.logger.Debug("Checking enhanced instance metrics configuration",
@@ -1590,7 +1572,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape wait time metrics
 	s.logger.Debug("Starting wait time metrics scraping")
-	scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
+	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
 	defer cancel()
 	if err := s.waitTimeScraper.ScrapeWaitTimeMetrics(scrapeCtx, scopeMetrics); err != nil {
 		s.logger.Error("Failed to scrape wait time metrics",
@@ -1707,7 +1689,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 }
 
 // addSystemInformationAsResourceAttributes collects system/host information and adds it as resource attributes
-// This ensures that all metrics sent by the scraper include comprehensive host context
+// This ensures that all metrics sent by the scraper include comprehensive host context  
 func (s *sqlServerScraper) addSystemInformationAsResourceAttributes(ctx context.Context, attrs pcommon.Map) error {
 	// Collect system information using the main scraper
 	systemInfo, err := s.CollectSystemInformation(ctx)
