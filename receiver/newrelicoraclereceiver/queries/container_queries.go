@@ -23,6 +23,7 @@ const (
 		SELECT 
 			CON_ID,
 			NAME AS PDB_NAME,
+			STATUS,
 			CREATE_SCN,
 			OPEN_MODE,
 			RESTRICTED,
