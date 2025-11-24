@@ -193,8 +193,14 @@ func extractCloudProviderForOTEL(hostingProvider string) string {
 	switch hostingProvider {
 	case "aws", "azure", "gcp", "oci":
 		return hostingProvider
+	case "on-premises":
+		return "on-premises"
+	case "kubernetes":
+		return "kubernetes"
+	case "container":
+		return "container"
 	default:
-		return ""
+		return hostingProvider // Return the actual value instead of empty string
 	}
 }
 
