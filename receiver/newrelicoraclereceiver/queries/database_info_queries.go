@@ -16,8 +16,8 @@ const (
 	// CheckPDBCapabilitySQL checks if PDB functionality is available
 	CheckPDBCapabilitySQL = `
 		SELECT COUNT(*) AS PDB_COUNT
-		FROM ALL_TABLES 
-		WHERE TABLE_NAME = 'CDB_PDBS' 
+		FROM ALL_VIEWS
+		WHERE VIEW_NAME = 'CDB_PDBS'
 			AND OWNER = 'SYS'`
 
 	// CheckCurrentContainerSQL returns current container context information
