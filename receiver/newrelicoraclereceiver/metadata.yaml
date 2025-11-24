@@ -43,9 +43,6 @@ attributes:
   plan_hash_value:
     description: Oracle execution plan hash value
     type: string
-  execution_plan_text:
-    description: Oracle execution plan text from DBMS_XPLAN.DISPLAY_CURSOR
-    type: string
   
   # Execution Plan Row Attributes (from V$SQL_PLAN)
   child_number:
@@ -3792,18 +3789,6 @@ metrics:
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
-
-  newrelicoracledb.execution_plan.info:
-    description: Execution plan information for SQL queries
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - database_name
-      - query_id
-      - plan_hash_value
-      - execution_plan_text
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.avg_wait_time_ms:
