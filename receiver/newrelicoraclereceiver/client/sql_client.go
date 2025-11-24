@@ -657,7 +657,7 @@ func (c *SQLClient) QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, err
 	var results []models.PDBStatus
 	for rows.Next() {
 		var ps models.PDBStatus
-		if err := rows.Scan(&ps.ConID, &ps.PDBName, &ps.Status, &ps.CreationSCN, &ps.OpenMode, &ps.Restricted, &ps.OpenTime, &ps.TotalSize); err != nil {
+		if err := rows.Scan(&ps.ConID, &ps.PDBName, &ps.CreationSCN, &ps.OpenMode, &ps.Restricted, &ps.OpenTime, &ps.TotalSize); err != nil {
 			return nil, err
 		}
 		results = append(results, ps)

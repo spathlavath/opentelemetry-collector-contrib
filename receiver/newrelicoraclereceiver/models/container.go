@@ -18,7 +18,6 @@ type ContainerStatus struct {
 type PDBStatus struct {
 	ConID       sql.NullInt64
 	PDBName     sql.NullString
-	Status      sql.NullString
 	CreationSCN sql.NullInt64
 	OpenMode    sql.NullString
 	Restricted  sql.NullString
