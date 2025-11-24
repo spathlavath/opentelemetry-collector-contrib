@@ -221,12 +221,7 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 
 		conIDStr := strconv.FormatInt(pdb.ConID.Int64, 10)
 		pdbNameStr := pdb.PDBName.String
-		statusStr := ""
 		openModeStr := ""
-
-		if pdb.Status.Valid {
-			statusStr = pdb.Status.String
-		}
 		if pdb.OpenMode.Valid {
 			openModeStr = pdb.OpenMode.String
 		}
@@ -234,17 +229,9 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 		s.logger.Info("Processing PDB",
 			zap.String("con_id", conIDStr),
 			zap.String("pdb_name", pdbNameStr),
-			zap.String("status", statusStr),
 			zap.String("open_mode", openModeStr),
 			zap.Bool("total_size_valid", pdb.TotalSize.Valid),
 			zap.Int64("total_size_value", pdb.TotalSize.Int64))
-
-		// PDB status metric (1=NORMAL, 0=other)
-		var statusValue int64 = 0
-		if strings.ToUpper(statusStr) == "NORMAL" {
-			statusValue = 1
-		}
-		s.mb.RecordNewrelicoracledbPdbStatusDataPoint(now, statusValue, s.instanceName, conIDStr, pdbNameStr, statusStr)
 
 		// PDB open mode metric (1=READ WRITE, 0=other)
 		var openModeValue int64 = 0
@@ -268,7 +255,6 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 		s.logger.Debug("Processed PDB status",
 			zap.String("con_id", conIDStr),
 			zap.String("pdb_name", pdbNameStr),
-			zap.String("status", statusStr),
 			zap.String("open_mode", openModeStr))
 	}
 
