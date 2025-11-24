@@ -64,6 +64,8 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		rowWaitObjID := strconv.FormatInt(waitEvent.GetLockedObjectID(), 10)
 		rowWaitFileID := strconv.FormatInt(waitEvent.GetLockedFileID(), 10)
 		rowWaitBlockID := strconv.FormatInt(waitEvent.GetLockedBlockID(), 10)
+		blockingSession := waitEvent.GetBlockingSession()
+		blockingSessionStatus := waitEvent.GetBlockingSessionStatus()
 		p1Text := waitEvent.GetP1Text()
 		p1 := strconv.FormatInt(waitEvent.GetP1(), 10)
 		p2Text := waitEvent.GetP2Text()
@@ -93,6 +95,8 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				rowWaitObjID,
 				rowWaitFileID,
 				rowWaitBlockID,
+				blockingSession,
+				blockingSessionStatus,
 				p1Text,
 				p1,
 				p2Text,

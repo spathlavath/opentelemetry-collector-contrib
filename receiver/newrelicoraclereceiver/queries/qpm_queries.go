@@ -98,6 +98,8 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 			o.OBJECT_TYPE,
 			s.ROW_WAIT_FILE#,
 			s.ROW_WAIT_BLOCK#,
+			s.BLOCKING_SESSION,
+			s.BLOCKING_SESSION_STATUS,
 			s.p1text,
 			s.p1,
 			s.p2text,

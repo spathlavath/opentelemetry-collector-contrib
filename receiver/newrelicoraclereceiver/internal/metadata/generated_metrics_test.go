@@ -1354,7 +1354,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", "session_status-val", "query_id-val", "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", "session_status-val", "query_id-val", "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", 16, "blocking_session_status-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -7567,6 +7567,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("row_wait_block_id")
 					assert.True(t, ok)
 					assert.Equal(t, "row_wait_block_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_session")
+					assert.True(t, ok)
+					assert.EqualValues(t, 16, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("blocking_session_status")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_session_status-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("wait_p1text")
 					assert.True(t, ok)
 					assert.Equal(t, "wait_p1text-val", attrVal.Str())

@@ -191,6 +191,13 @@ attributes:
     description: Indicates whether the session has failed over (YES or NO)
     type: string
 
+  blocking_session:
+    description: Session ID of the blocking session
+    type: int
+  blocking_session_status:
+    description: Status of the blocking session (ACTIVE, INACTIVE, etc.)
+    type: string
+
   blocking_user:
     description: Username of the blocking session
     type: string
@@ -3780,6 +3787,8 @@ metrics:
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id
+      - blocking_session
+      - blocking_session_status
       - wait_p1text
       - wait_p1
       - wait_p2text

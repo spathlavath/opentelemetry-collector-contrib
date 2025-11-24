@@ -212,6 +212,8 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 			&waitEvent.ObjectTypeWaitedOn,
 			&waitEvent.LockedFileID,
 			&waitEvent.LockedBlockID,
+			&waitEvent.BlockingSession,
+			&waitEvent.BlockingSessionStatus,
 			&waitEvent.P1Text,
 			&waitEvent.P1,
 			&waitEvent.P2Text,

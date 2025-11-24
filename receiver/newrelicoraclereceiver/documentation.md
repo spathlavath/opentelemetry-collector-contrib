@@ -4969,6 +4969,8 @@ Current wait time in seconds for active wait events
 | row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
 | row_wait_file_id | File ID of the row being waited on | Any Str | false |
 | row_wait_block_id | Block ID of the row being waited on | Any Str | false |
+| blocking_session | Session ID of the blocking session | Any Int | false |
+| blocking_session_status | Status of the blocking session (ACTIVE, INACTIVE, etc.) | Any Str | false |
 | wait_p1text | Description of wait event parameter 1 | Any Str | false |
 | wait_p1 | Wait event parameter 1 value | Any Str | false |
 | wait_p2text | Description of wait event parameter 2 | Any Str | false |
