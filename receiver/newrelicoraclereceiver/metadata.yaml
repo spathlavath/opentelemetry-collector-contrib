@@ -427,16 +427,6 @@ metrics:
       - lock.type
       - object.type
 
-  newrelicoracledb.locks.deadlock_count:
-    description: Total number of deadlocks detected
-    enabled: true
-    sum:
-      value_type: int
-      monotonic: true
-    unit: "{deadlocks}"
-    attributes:
-      - db.instance.name
-
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace
     enabled: true
@@ -2020,41 +2010,6 @@ metrics:
       - db.instance.name
       - instance.id
 
-  newrelicoracledb.lock.count:
-    description: Number of locks by type and mode
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - instance.id
-      - lock.type
-      - lock.mode
-
-  newrelicoracledb.lock.session_count:
-    description: Number of sessions holding locks by type
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - instance.id
-      - lock.type
-
-  newrelicoracledb.lock.object_count:
-    description: Number of locked objects by lock type
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - instance.id
-      - lock.type
-      - object.type
-
   newrelicoracledb.system.enqueue_requests_per_second:
     description: Enqueue Requests Per Sec
     enabled: true
@@ -3205,18 +3160,6 @@ metrics:
       - con.id
       - container.name
       - restricted.status
-
-  newrelicoracledb.pdb.status:
-    description: Oracle PDB status (1=NORMAL, 0=other)
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - con.id
-      - pdb.name
-      - container.status
 
   newrelicoracledb.pdb.open_mode:
     description: Oracle PDB open mode (1=READ WRITE, 0=other)

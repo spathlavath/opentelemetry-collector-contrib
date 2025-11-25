@@ -828,56 +828,6 @@ Provides information about the hosting environment including cloud provider, pla
 | host.arch | The CPU architecture the host system is running on | Any Str | false |
 | platform.name | Operating system platform name | Any Str | false |
 
-### newrelicoracledb.lock.count
-
-Number of locks by type and mode
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| lock.mode | Oracle lock mode (Exclusive, Share, etc.) | Any Str | false |
-
-### newrelicoracledb.lock.object_count
-
-Number of locked objects by lock type
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| object.type | Oracle object type (TABLE, INDEX, etc.) | Any Str | false |
-
-### newrelicoracledb.lock.session_count
-
-Number of sessions holding locks by type
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-
 ### newrelicoracledb.locked_accounts
 
 Count of locked user accounts in the database
@@ -924,20 +874,6 @@ Number of locks by type and mode
 | db.instance.name | Oracle database instance name | Any Str | false |
 | lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
 | lock.mode | Oracle lock mode (Exclusive, Share, etc.) | Any Str | false |
-
-### newrelicoracledb.locks.deadlock_count
-
-Total number of deadlocks detected
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {deadlocks} | Sum | Int | Unspecified | true |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.long_running_queries
 
@@ -1660,23 +1596,6 @@ SQL service response time in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.status
-
-Oracle PDB status (1=NORMAL, 0=other)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| pdb.name | Oracle Pluggable Database name | Any Str | false |
-| container.status | Oracle container status (NORMAL, RESTRICTED, etc.) | Any Str | false |
 
 ### newrelicoracledb.pdb.total_parse_count_per_second
 
