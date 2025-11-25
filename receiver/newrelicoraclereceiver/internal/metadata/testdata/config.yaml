@@ -103,19 +103,11 @@ all_set:
       enabled: true
     newrelicoracledb.hosting.info:
       enabled: true
-    newrelicoracledb.lock.count:
-      enabled: true
-    newrelicoracledb.lock.object_count:
-      enabled: true
-    newrelicoracledb.lock.session_count:
-      enabled: true
     newrelicoracledb.locked_accounts:
       enabled: true
     newrelicoracledb.locks.blocked_sessions:
       enabled: true
     newrelicoracledb.locks.count:
-      enabled: true
-    newrelicoracledb.locks.deadlock_count:
       enabled: true
     newrelicoracledb.long_running_queries:
       enabled: true
@@ -212,8 +204,6 @@ all_set:
     newrelicoracledb.pdb.soft_parse_ratio:
       enabled: true
     newrelicoracledb.pdb.sql_service_response_time:
-      enabled: true
-    newrelicoracledb.pdb.status:
       enabled: true
     newrelicoracledb.pdb.total_parse_count_per_second:
       enabled: true
@@ -755,19 +745,11 @@ none_set:
       enabled: false
     newrelicoracledb.hosting.info:
       enabled: false
-    newrelicoracledb.lock.count:
-      enabled: false
-    newrelicoracledb.lock.object_count:
-      enabled: false
-    newrelicoracledb.lock.session_count:
-      enabled: false
     newrelicoracledb.locked_accounts:
       enabled: false
     newrelicoracledb.locks.blocked_sessions:
       enabled: false
     newrelicoracledb.locks.count:
-      enabled: false
-    newrelicoracledb.locks.deadlock_count:
       enabled: false
     newrelicoracledb.long_running_queries:
       enabled: false
@@ -864,8 +846,6 @@ none_set:
     newrelicoracledb.pdb.soft_parse_ratio:
       enabled: false
     newrelicoracledb.pdb.sql_service_response_time:
-      enabled: false
-    newrelicoracledb.pdb.status:
       enabled: false
     newrelicoracledb.pdb.total_parse_count_per_second:
       enabled: false

@@ -166,15 +166,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbHostingInfo: metricInfo{
 		Name: "newrelicoracledb.hosting.info",
 	},
-	NewrelicoracledbLockCount: metricInfo{
-		Name: "newrelicoracledb.lock.count",
-	},
-	NewrelicoracledbLockObjectCount: metricInfo{
-		Name: "newrelicoracledb.lock.object_count",
-	},
-	NewrelicoracledbLockSessionCount: metricInfo{
-		Name: "newrelicoracledb.lock.session_count",
-	},
 	NewrelicoracledbLockedAccounts: metricInfo{
 		Name: "newrelicoracledb.locked_accounts",
 	},
@@ -183,9 +174,6 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicoracledbLocksCount: metricInfo{
 		Name: "newrelicoracledb.locks.count",
-	},
-	NewrelicoracledbLocksDeadlockCount: metricInfo{
-		Name: "newrelicoracledb.locks.deadlock_count",
 	},
 	NewrelicoracledbLongRunningQueries: metricInfo{
 		Name: "newrelicoracledb.long_running_queries",
@@ -330,9 +318,6 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicoracledbPdbSQLServiceResponseTime: metricInfo{
 		Name: "newrelicoracledb.pdb.sql_service_response_time",
-	},
-	NewrelicoracledbPdbStatus: metricInfo{
-		Name: "newrelicoracledb.pdb.status",
 	},
 	NewrelicoracledbPdbTotalParseCountPerSecond: metricInfo{
 		Name: "newrelicoracledb.pdb.total_parse_count_per_second",
@@ -1030,13 +1015,9 @@ type metricsInfo struct {
 	NewrelicoracledbDiskWrites                                         metricInfo
 	NewrelicoracledbGlobalName                                         metricInfo
 	NewrelicoracledbHostingInfo                                        metricInfo
-	NewrelicoracledbLockCount                                          metricInfo
-	NewrelicoracledbLockObjectCount                                    metricInfo
-	NewrelicoracledbLockSessionCount                                   metricInfo
 	NewrelicoracledbLockedAccounts                                     metricInfo
 	NewrelicoracledbLocksBlockedSessions                               metricInfo
 	NewrelicoracledbLocksCount                                         metricInfo
-	NewrelicoracledbLocksDeadlockCount                                 metricInfo
 	NewrelicoracledbLongRunningQueries                                 metricInfo
 	NewrelicoracledbMemoryPgaAllocatedBytes                            metricInfo
 	NewrelicoracledbMemoryPgaFreeableBytes                             metricInfo
@@ -1085,7 +1066,6 @@ type metricsInfo struct {
 	NewrelicoracledbPdbSessionCount                                    metricInfo
 	NewrelicoracledbPdbSoftParseRatio                                  metricInfo
 	NewrelicoracledbPdbSQLServiceResponseTime                          metricInfo
-	NewrelicoracledbPdbStatus                                          metricInfo
 	NewrelicoracledbPdbTotalParseCountPerSecond                        metricInfo
 	NewrelicoracledbPdbTotalParseCountPerTransaction                   metricInfo
 	NewrelicoracledbPdbTotalSizeBytes                                  metricInfo
@@ -4025,167 +4005,6 @@ func newMetricNewrelicoracledbHostingInfo(cfg MetricConfig) metricNewrelicoracle
 	return m
 }
 
-type metricNewrelicoracledbLockCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.lock.count metric with initial data.
-func (m *metricNewrelicoracledbLockCount) init() {
-	m.data.SetName("newrelicoracledb.lock.count")
-	m.data.SetDescription("Number of locks by type and mode")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbLockCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, lockTypeAttributeValue string, lockModeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("lock.type", lockTypeAttributeValue)
-	dp.Attributes().PutStr("lock.mode", lockModeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbLockCount) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbLockCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbLockCount(cfg MetricConfig) metricNewrelicoracledbLockCount {
-	m := metricNewrelicoracledbLockCount{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbLockObjectCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.lock.object_count metric with initial data.
-func (m *metricNewrelicoracledbLockObjectCount) init() {
-	m.data.SetName("newrelicoracledb.lock.object_count")
-	m.data.SetDescription("Number of locked objects by lock type")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbLockObjectCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, lockTypeAttributeValue string, objectTypeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("lock.type", lockTypeAttributeValue)
-	dp.Attributes().PutStr("object.type", objectTypeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbLockObjectCount) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbLockObjectCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbLockObjectCount(cfg MetricConfig) metricNewrelicoracledbLockObjectCount {
-	m := metricNewrelicoracledbLockObjectCount{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbLockSessionCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.lock.session_count metric with initial data.
-func (m *metricNewrelicoracledbLockSessionCount) init() {
-	m.data.SetName("newrelicoracledb.lock.session_count")
-	m.data.SetDescription("Number of sessions holding locks by type")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbLockSessionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, lockTypeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("lock.type", lockTypeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbLockSessionCount) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbLockSessionCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbLockSessionCount(cfg MetricConfig) metricNewrelicoracledbLockSessionCount {
-	m := metricNewrelicoracledbLockSessionCount{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbLockedAccounts struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -4337,59 +4156,6 @@ func (m *metricNewrelicoracledbLocksCount) emit(metrics pmetric.MetricSlice) {
 
 func newMetricNewrelicoracledbLocksCount(cfg MetricConfig) metricNewrelicoracledbLocksCount {
 	m := metricNewrelicoracledbLocksCount{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbLocksDeadlockCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.locks.deadlock_count metric with initial data.
-func (m *metricNewrelicoracledbLocksDeadlockCount) init() {
-	m.data.SetName("newrelicoracledb.locks.deadlock_count")
-	m.data.SetDescription("Total number of deadlocks detected")
-	m.data.SetUnit("{deadlocks}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityUnspecified)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbLocksDeadlockCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbLocksDeadlockCount) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbLocksDeadlockCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbLocksDeadlockCount(cfg MetricConfig) metricNewrelicoracledbLocksDeadlockCount {
-	m := metricNewrelicoracledbLocksDeadlockCount{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -6888,60 +6654,6 @@ func (m *metricNewrelicoracledbPdbSQLServiceResponseTime) emit(metrics pmetric.M
 
 func newMetricNewrelicoracledbPdbSQLServiceResponseTime(cfg MetricConfig) metricNewrelicoracledbPdbSQLServiceResponseTime {
 	m := metricNewrelicoracledbPdbSQLServiceResponseTime{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbPdbStatus struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.pdb.status metric with initial data.
-func (m *metricNewrelicoracledbPdbStatus) init() {
-	m.data.SetName("newrelicoracledb.pdb.status")
-	m.data.SetDescription("Oracle PDB status (1=NORMAL, 0=other)")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbPdbStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string, containerStatusAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("con.id", conIDAttributeValue)
-	dp.Attributes().PutStr("pdb.name", pdbNameAttributeValue)
-	dp.Attributes().PutStr("container.status", containerStatusAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbPdbStatus) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbPdbStatus) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbPdbStatus(cfg MetricConfig) metricNewrelicoracledbPdbStatus {
-	m := metricNewrelicoracledbPdbStatus{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18205,13 +17917,9 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbDiskWrites                                         metricNewrelicoracledbDiskWrites
 	metricNewrelicoracledbGlobalName                                         metricNewrelicoracledbGlobalName
 	metricNewrelicoracledbHostingInfo                                        metricNewrelicoracledbHostingInfo
-	metricNewrelicoracledbLockCount                                          metricNewrelicoracledbLockCount
-	metricNewrelicoracledbLockObjectCount                                    metricNewrelicoracledbLockObjectCount
-	metricNewrelicoracledbLockSessionCount                                   metricNewrelicoracledbLockSessionCount
 	metricNewrelicoracledbLockedAccounts                                     metricNewrelicoracledbLockedAccounts
 	metricNewrelicoracledbLocksBlockedSessions                               metricNewrelicoracledbLocksBlockedSessions
 	metricNewrelicoracledbLocksCount                                         metricNewrelicoracledbLocksCount
-	metricNewrelicoracledbLocksDeadlockCount                                 metricNewrelicoracledbLocksDeadlockCount
 	metricNewrelicoracledbLongRunningQueries                                 metricNewrelicoracledbLongRunningQueries
 	metricNewrelicoracledbMemoryPgaAllocatedBytes                            metricNewrelicoracledbMemoryPgaAllocatedBytes
 	metricNewrelicoracledbMemoryPgaFreeableBytes                             metricNewrelicoracledbMemoryPgaFreeableBytes
@@ -18260,7 +17968,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbPdbSessionCount                                    metricNewrelicoracledbPdbSessionCount
 	metricNewrelicoracledbPdbSoftParseRatio                                  metricNewrelicoracledbPdbSoftParseRatio
 	metricNewrelicoracledbPdbSQLServiceResponseTime                          metricNewrelicoracledbPdbSQLServiceResponseTime
-	metricNewrelicoracledbPdbStatus                                          metricNewrelicoracledbPdbStatus
 	metricNewrelicoracledbPdbTotalParseCountPerSecond                        metricNewrelicoracledbPdbTotalParseCountPerSecond
 	metricNewrelicoracledbPdbTotalParseCountPerTransaction                   metricNewrelicoracledbPdbTotalParseCountPerTransaction
 	metricNewrelicoracledbPdbTotalSizeBytes                                  metricNewrelicoracledbPdbTotalSizeBytes
@@ -18551,13 +18258,9 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbDiskWrites:                                         newMetricNewrelicoracledbDiskWrites(mbc.Metrics.NewrelicoracledbDiskWrites),
 		metricNewrelicoracledbGlobalName:                                         newMetricNewrelicoracledbGlobalName(mbc.Metrics.NewrelicoracledbGlobalName),
 		metricNewrelicoracledbHostingInfo:                                        newMetricNewrelicoracledbHostingInfo(mbc.Metrics.NewrelicoracledbHostingInfo),
-		metricNewrelicoracledbLockCount:                                          newMetricNewrelicoracledbLockCount(mbc.Metrics.NewrelicoracledbLockCount),
-		metricNewrelicoracledbLockObjectCount:                                    newMetricNewrelicoracledbLockObjectCount(mbc.Metrics.NewrelicoracledbLockObjectCount),
-		metricNewrelicoracledbLockSessionCount:                                   newMetricNewrelicoracledbLockSessionCount(mbc.Metrics.NewrelicoracledbLockSessionCount),
 		metricNewrelicoracledbLockedAccounts:                                     newMetricNewrelicoracledbLockedAccounts(mbc.Metrics.NewrelicoracledbLockedAccounts),
 		metricNewrelicoracledbLocksBlockedSessions:                               newMetricNewrelicoracledbLocksBlockedSessions(mbc.Metrics.NewrelicoracledbLocksBlockedSessions),
 		metricNewrelicoracledbLocksCount:                                         newMetricNewrelicoracledbLocksCount(mbc.Metrics.NewrelicoracledbLocksCount),
-		metricNewrelicoracledbLocksDeadlockCount:                                 newMetricNewrelicoracledbLocksDeadlockCount(mbc.Metrics.NewrelicoracledbLocksDeadlockCount),
 		metricNewrelicoracledbLongRunningQueries:                                 newMetricNewrelicoracledbLongRunningQueries(mbc.Metrics.NewrelicoracledbLongRunningQueries),
 		metricNewrelicoracledbMemoryPgaAllocatedBytes:                            newMetricNewrelicoracledbMemoryPgaAllocatedBytes(mbc.Metrics.NewrelicoracledbMemoryPgaAllocatedBytes),
 		metricNewrelicoracledbMemoryPgaFreeableBytes:                             newMetricNewrelicoracledbMemoryPgaFreeableBytes(mbc.Metrics.NewrelicoracledbMemoryPgaFreeableBytes),
@@ -18606,7 +18309,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbPdbSessionCount:                                    newMetricNewrelicoracledbPdbSessionCount(mbc.Metrics.NewrelicoracledbPdbSessionCount),
 		metricNewrelicoracledbPdbSoftParseRatio:                                  newMetricNewrelicoracledbPdbSoftParseRatio(mbc.Metrics.NewrelicoracledbPdbSoftParseRatio),
 		metricNewrelicoracledbPdbSQLServiceResponseTime:                          newMetricNewrelicoracledbPdbSQLServiceResponseTime(mbc.Metrics.NewrelicoracledbPdbSQLServiceResponseTime),
-		metricNewrelicoracledbPdbStatus:                                          newMetricNewrelicoracledbPdbStatus(mbc.Metrics.NewrelicoracledbPdbStatus),
 		metricNewrelicoracledbPdbTotalParseCountPerSecond:                        newMetricNewrelicoracledbPdbTotalParseCountPerSecond(mbc.Metrics.NewrelicoracledbPdbTotalParseCountPerSecond),
 		metricNewrelicoracledbPdbTotalParseCountPerTransaction:                   newMetricNewrelicoracledbPdbTotalParseCountPerTransaction(mbc.Metrics.NewrelicoracledbPdbTotalParseCountPerTransaction),
 		metricNewrelicoracledbPdbTotalSizeBytes:                                  newMetricNewrelicoracledbPdbTotalSizeBytes(mbc.Metrics.NewrelicoracledbPdbTotalSizeBytes),
@@ -18956,13 +18658,9 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbDiskWrites.emit(ils.Metrics())
 	mb.metricNewrelicoracledbGlobalName.emit(ils.Metrics())
 	mb.metricNewrelicoracledbHostingInfo.emit(ils.Metrics())
-	mb.metricNewrelicoracledbLockCount.emit(ils.Metrics())
-	mb.metricNewrelicoracledbLockObjectCount.emit(ils.Metrics())
-	mb.metricNewrelicoracledbLockSessionCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLockedAccounts.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLocksBlockedSessions.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLocksCount.emit(ils.Metrics())
-	mb.metricNewrelicoracledbLocksDeadlockCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLongRunningQueries.emit(ils.Metrics())
 	mb.metricNewrelicoracledbMemoryPgaAllocatedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbMemoryPgaFreeableBytes.emit(ils.Metrics())
@@ -19011,7 +18709,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbPdbSessionCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbSoftParseRatio.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbSQLServiceResponseTime.emit(ils.Metrics())
-	mb.metricNewrelicoracledbPdbStatus.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbTotalParseCountPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbTotalParseCountPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPdbTotalSizeBytes.emit(ils.Metrics())
@@ -19512,21 +19209,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbHostingInfoDataPoint(ts pcommon.
 	mb.metricNewrelicoracledbHostingInfo.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, cloudProviderAttributeValue, cloudPlatformAttributeValue, deploymentEnvironmentAttributeValue, hostArchAttributeValue, platformNameAttributeValue)
 }
 
-// RecordNewrelicoracledbLockCountDataPoint adds a data point to newrelicoracledb.lock.count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLockCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, lockTypeAttributeValue string, lockModeAttributeValue string) {
-	mb.metricNewrelicoracledbLockCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, lockTypeAttributeValue, lockModeAttributeValue)
-}
-
-// RecordNewrelicoracledbLockObjectCountDataPoint adds a data point to newrelicoracledb.lock.object_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLockObjectCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, lockTypeAttributeValue string, objectTypeAttributeValue string) {
-	mb.metricNewrelicoracledbLockObjectCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, lockTypeAttributeValue, objectTypeAttributeValue)
-}
-
-// RecordNewrelicoracledbLockSessionCountDataPoint adds a data point to newrelicoracledb.lock.session_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLockSessionCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, lockTypeAttributeValue string) {
-	mb.metricNewrelicoracledbLockSessionCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, lockTypeAttributeValue)
-}
-
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbLockedAccountsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbLockedAccounts.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
@@ -19540,11 +19222,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbLocksBlockedSessionsDataPoint(ts
 // RecordNewrelicoracledbLocksCountDataPoint adds a data point to newrelicoracledb.locks.count metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbLocksCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, lockTypeAttributeValue string, lockModeAttributeValue string) {
 	mb.metricNewrelicoracledbLocksCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, lockTypeAttributeValue, lockModeAttributeValue)
-}
-
-// RecordNewrelicoracledbLocksDeadlockCountDataPoint adds a data point to newrelicoracledb.locks.deadlock_count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLocksDeadlockCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string) {
-	mb.metricNewrelicoracledbLocksDeadlockCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue)
 }
 
 // RecordNewrelicoracledbLongRunningQueriesDataPoint adds a data point to newrelicoracledb.long_running_queries metric.
@@ -19785,11 +19462,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts pc
 // RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint adds a data point to newrelicoracledb.pdb.sql_service_response_time metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbPdbSQLServiceResponseTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
-}
-
-// RecordNewrelicoracledbPdbStatusDataPoint adds a data point to newrelicoracledb.pdb.status metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbPdbStatusDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, conIDAttributeValue string, pdbNameAttributeValue string, containerStatusAttributeValue string) {
-	mb.metricNewrelicoracledbPdbStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, conIDAttributeValue, pdbNameAttributeValue, containerStatusAttributeValue)
 }
 
 // RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint adds a data point to newrelicoracledb.pdb.total_parse_count_per_second metric.
