@@ -29,6 +29,8 @@ func (e *eventNewrelicoracledbExecutionPlan) recordEvent(ctx context.Context, ti
 		dp.SetTraceID(pcommon.TraceID(span.TraceID()))
 		dp.SetSpanID(pcommon.SpanID(span.SpanID()))
 	}
+	// Add New Relic custom event type attribute to ingest as Custom Event instead of Log
+	dp.Attributes().PutStr("newrelic.event.type", "OracleExecutionPlan")
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_hash_value", planHashValueAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
