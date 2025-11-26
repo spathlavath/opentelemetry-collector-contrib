@@ -28,6 +28,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					NewrelicoracledbActiveSessionsSecondsInWait:                        MetricConfig{Enabled: true},
+					NewrelicoracledbActiveSessionsTimeRemaining:                        MetricConfig{Enabled: true},
 					NewrelicoracledbAsmDiskgroupFreeMb:                                 MetricConfig{Enabled: true},
 					NewrelicoracledbAsmDiskgroupOfflineDisks:                           MetricConfig{Enabled: true},
 					NewrelicoracledbAsmDiskgroupTotalMb:                                MetricConfig{Enabled: true},
@@ -343,6 +344,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbTablespaceUsedBytes:                                MetricConfig{Enabled: true},
 					NewrelicoracledbTablespaceUsedPercent:                              MetricConfig{Enabled: true},
 					NewrelicoracledbWaitEventsCurrentWaitSeconds:                       MetricConfig{Enabled: true},
+					NewrelicoracledbWaitEventsTimeRemaining:                            MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: true},
@@ -355,6 +357,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					NewrelicoracledbActiveSessionsSecondsInWait:                        MetricConfig{Enabled: false},
+					NewrelicoracledbActiveSessionsTimeRemaining:                        MetricConfig{Enabled: false},
 					NewrelicoracledbAsmDiskgroupFreeMb:                                 MetricConfig{Enabled: false},
 					NewrelicoracledbAsmDiskgroupOfflineDisks:                           MetricConfig{Enabled: false},
 					NewrelicoracledbAsmDiskgroupTotalMb:                                MetricConfig{Enabled: false},
@@ -670,6 +673,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbTablespaceUsedBytes:                                MetricConfig{Enabled: false},
 					NewrelicoracledbTablespaceUsedPercent:                              MetricConfig{Enabled: false},
 					NewrelicoracledbWaitEventsCurrentWaitSeconds:                       MetricConfig{Enabled: false},
+					NewrelicoracledbWaitEventsTimeRemaining:                            MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					HostName:                     ResourceAttributeConfig{Enabled: false},

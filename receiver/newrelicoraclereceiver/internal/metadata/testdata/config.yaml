@@ -3,6 +3,8 @@ all_set:
   metrics:
     newrelicoracledb.active_sessions.seconds_in_wait:
       enabled: true
+    newrelicoracledb.active_sessions.time_remaining:
+      enabled: true
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: true
     newrelicoracledb.asm.diskgroup.offline_disks:
@@ -632,6 +634,8 @@ all_set:
     newrelicoracledb.tablespace.used_percent:
       enabled: true
     newrelicoracledb.wait_events.current_wait_seconds:
+      enabled: true
+    newrelicoracledb.wait_events.time_remaining:
       enabled: true
   events:
     newrelicoracledb.execution_plan:
@@ -645,6 +649,8 @@ none_set:
   metrics:
     newrelicoracledb.active_sessions.seconds_in_wait:
       enabled: false
+    newrelicoracledb.active_sessions.time_remaining:
+      enabled: false
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: false
     newrelicoracledb.asm.diskgroup.offline_disks:
@@ -1274,6 +1280,8 @@ none_set:
     newrelicoracledb.tablespace.used_percent:
       enabled: false
     newrelicoracledb.wait_events.current_wait_seconds:
+      enabled: false
+    newrelicoracledb.wait_events.time_remaining:
       enabled: false
   events:
     newrelicoracledb.execution_plan:

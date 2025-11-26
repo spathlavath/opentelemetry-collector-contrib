@@ -73,6 +73,8 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 
 		if waitEvent.HasValidCurrentWaitSeconds() {
 			collectionTimestamp := waitEvent.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
+			
+			// Record current_wait_seconds metric
 			s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(
 				now,
 				float64(waitEvent.GetCurrentWaitSeconds()),
@@ -83,7 +85,6 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				qID,
 				waitEventName,
 				waitCat,
-				waitEvent.GetTimeRemainingSeconds(),
 				program,
 				machine,
 				waitObjectOwner,
@@ -101,6 +102,38 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				p3Text,
 				p3,
 			)
+			
+			// Record time_remaining metric
+			if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeRemaining.Enabled {
+				s.mb.RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(
+					now,
+					waitEvent.GetTimeRemainingSeconds(),
+					collectionTimestamp,
+					username,
+					sid,
+					status,
+					qID,
+					waitEventName,
+					waitCat,
+					program,
+					machine,
+					waitObjectOwner,
+					waitObjectName,
+					waitObjectType,
+					sqlExecStart,
+					sqlExecID,
+					rowWaitObjID,
+					rowWaitFileID,
+					rowWaitBlockID,
+					p1Text,
+					p1,
+					p2Text,
+					p2,
+					p3Text,
+					p3,
+				)
+			}
+			
 			metricCount++
 		}
 	}
