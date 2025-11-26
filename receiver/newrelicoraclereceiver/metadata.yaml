@@ -19,8 +19,11 @@ resource_attributes:
     type: string
 
 attributes:
+  cdb_name:
+    description: Oracle Container Database (CDB) name - the root container in multitenant architecture
+    type: string
   database_name:
-    description: Oracle database name
+    description: Oracle database name (PDB name in multitenant, instance name otherwise)
     type: string
   query_id:
     description: SQL query identifier
@@ -3599,6 +3602,7 @@ metrics:
       value_type: int
     unit: "{count}"
     attributes:
+      - cdb_name
       - database_name
       - query_id
       - query_text

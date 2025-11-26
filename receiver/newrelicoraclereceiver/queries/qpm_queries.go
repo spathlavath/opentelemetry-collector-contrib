@@ -10,7 +10,7 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
 			d.name AS cdb_name,
-			p.name AS database_name,                                  -- <<< MODIFIED: Renamed PDB name column to database_name
+			p.name AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,

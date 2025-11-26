@@ -4,6 +4,7 @@ import "database/sql"
 
 // SlowQuery represents a slow query record from Oracle V$SQL view
 type SlowQuery struct {
+	CDBName          sql.NullString // Container Database name (for multitenant environments)
 	DatabaseName     sql.NullString
 	QueryID          sql.NullString
 	SchemaName       sql.NullString
@@ -18,6 +19,14 @@ type SlowQuery struct {
 	AvgLockTimeMs    sql.NullFloat64
 	LastActiveTime   sql.NullString
 	HasFullTableScan sql.NullString
+}
+
+// GetCDBName returns the container database name as a string, empty if null
+func (sq *SlowQuery) GetCDBName() string {
+	if sq.CDBName.Valid {
+		return sq.CDBName.String
+	}
+	return ""
 }
 
 // GetDatabaseName returns the database name as a string, empty if null
