@@ -3746,6 +3746,7 @@ metrics:
       - sql_exec_start
       - sql_exec_id
       - wait_category
+      - session_machine
 
   newrelicoracledb.active_sessions.time_remaining:
     description: Time remaining for the active session operation in seconds

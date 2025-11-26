@@ -70,7 +70,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11, "wait_category-val")
+			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11, "wait_category-val", "session_machine-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1404,6 +1404,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("wait_category")
 					assert.True(t, ok)
 					assert.Equal(t, "wait_category-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("session_machine")
+					assert.True(t, ok)
+					assert.Equal(t, "session_machine-val", attrVal.Str())
 				case "newrelicoracledb.active_sessions.time_remaining":
 					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.time_remaining"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.time_remaining")
 					validatedMetrics["newrelicoracledb.active_sessions.time_remaining"] = true

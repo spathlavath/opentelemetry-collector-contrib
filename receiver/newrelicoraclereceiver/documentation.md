@@ -33,6 +33,7 @@ Number of seconds the active session has been waiting
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
 | wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
+| session_machine | Machine name where the session is running | Any Str | false |
 
 ### newrelicoracledb.active_sessions.time_remaining
 

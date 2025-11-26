@@ -18,6 +18,7 @@ type ActiveSession struct {
 	SecondsInWait        sql.NullFloat64
 	WaitCategory         sql.NullString
 	TimeRemainingSeconds sql.NullFloat64
+	Machine              sql.NullString
 }
 
 // GetUsername returns the username as a string, empty if null
@@ -98,6 +99,14 @@ func (as *ActiveSession) GetTimeRemainingSeconds() float64 {
 		return as.TimeRemainingSeconds.Float64
 	}
 	return 0
+}
+
+// GetMachine returns the machine name as a string, empty if null
+func (as *ActiveSession) GetMachine() string {
+	if as.Machine.Valid {
+		return as.Machine.String
+	}
+	return ""
 }
 
 // IsValidForMetrics checks if the active session has the minimum required fields

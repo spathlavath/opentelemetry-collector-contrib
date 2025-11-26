@@ -261,6 +261,7 @@ func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string
 			&session.SecondsInWait,
 			&session.WaitCategory,
 			&session.TimeRemainingSeconds,
+			&session.Machine,
 		)
 		if err != nil {
 			return nil, err

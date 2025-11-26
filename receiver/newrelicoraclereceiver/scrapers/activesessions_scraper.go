@@ -109,6 +109,7 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 			session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
 			session.GetSQLExecID(),
 			session.GetWaitCategory(),
+			session.GetMachine(),
 		)
 	}
 
