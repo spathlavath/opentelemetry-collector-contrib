@@ -32,22 +32,15 @@ const (
 		GROUP BY INST_ID`
 
 	// LongRunningQueriesSQL returns count of long-running queries per instance
+	// Returns count of ACTIVE non-BACKGROUND sessions that have been running for more than 60 seconds
 	LongRunningQueriesSQL = `
-		SELECT inst_id, SUM(num) AS total 
-		FROM ((
-			SELECT i.inst_id, 1 AS num
-			FROM gv$session s, gv$instance i
-			WHERE i.inst_id = s.inst_id
-				AND s.status = 'ACTIVE'
-				AND s.type <> 'BACKGROUND'
-				AND s.last_call_et > 60
-			GROUP BY i.inst_id
-		) UNION (
-			SELECT i.inst_id, 0 AS num
-			FROM gv$session s, gv$instance i
-			WHERE i.inst_id = s.inst_id
-		))
-		GROUP BY inst_id`
+		SELECT i.inst_id, COUNT(s.sid) AS total
+		FROM gv$instance i
+		LEFT JOIN gv$session s ON i.inst_id = s.inst_id
+			AND s.status = 'ACTIVE'
+			AND s.type <> 'BACKGROUND'
+			AND s.last_call_et > 60
+		GROUP BY i.inst_id`
 )
 
 // System Statistics Queries
