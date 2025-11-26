@@ -9,7 +9,8 @@ import "fmt"
 func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
-			d.name AS database_name,
+			d.name AS cdb_name,
+			p.name AS database_name,                                  -- <<< MODIFIED: Renamed PDB name column to database_name
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,
@@ -26,6 +27,8 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			v$sqlarea sa
 		INNER JOIN
 			ALL_USERS au ON sa.parsing_user_id = au.user_id
+		INNER JOIN
+			v$pdbs p ON sa.con_id = p.con_id
 		CROSS JOIN
 			v$database d
 		WHERE
