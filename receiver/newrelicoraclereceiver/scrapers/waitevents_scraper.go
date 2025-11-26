@@ -83,6 +83,7 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 				qID,
 				waitEventName,
 				waitCat,
+				waitEvent.GetTimeRemainingSeconds(),
 				program,
 				machine,
 				waitObjectOwner,

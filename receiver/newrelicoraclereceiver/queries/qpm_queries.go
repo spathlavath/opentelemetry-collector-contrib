@@ -88,6 +88,7 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 			s.wait_class,
 			s.event,
 			s.SECONDS_IN_WAIT,
+			s.TIME_REMAINING_MICRO / 1000000.0 AS time_remaining_seconds,
 			s.SQL_EXEC_START,
 			s.SQL_EXEC_ID,
 			s.PROGRAM,
@@ -161,7 +162,9 @@ func GetActiveSessionQueriesSQL(sqlIDs string) string {
 			s.SQL_CHILD_NUMBER,
 			s.SQL_EXEC_START,
 			s.SQL_EXEC_ID,
-			s.SECONDS_IN_WAIT
+			s.SECONDS_IN_WAIT,
+			s.wait_class,
+			s.TIME_REMAINING_MICRO / 1000000.0 AS time_remaining_seconds
 		FROM
 			v$session s
 		WHERE

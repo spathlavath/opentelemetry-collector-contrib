@@ -32,6 +32,8 @@ Number of seconds the active session has been waiting
 | sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
+| wait_class | Oracle wait class for active sessions | Any Str | false |
+| time_remaining_seconds | Time remaining for the operation in seconds | Any Double | false |
 
 ### newrelicoracledb.asm.diskgroup.free_mb
 
@@ -4857,6 +4859,7 @@ Current wait time in seconds for active wait events
 | query_id | SQL query identifier | Any Str | false |
 | wait_event_name | Oracle wait event name for wait events | Any Str | false |
 | wait_category | Oracle wait event category for wait events | Any Str | false |
+| time_remaining_seconds | Time remaining for the operation in seconds | Any Double | false |
 | session_program | Program name of the session | Any Str | false |
 | session_machine | Machine name where the session is running | Any Str | false |
 | wait_object_owner | Owner of the database object being waited on | Any Str | false |

@@ -202,6 +202,7 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 			&waitEvent.WaitCategory,
 			&waitEvent.WaitEventName,
 			&waitEvent.CurrentWaitSeconds,
+			&waitEvent.TimeRemainingSeconds,
 			&waitEvent.SQLExecStart,
 			&waitEvent.SQLExecID,
 			&waitEvent.Program,
@@ -258,6 +259,8 @@ func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string
 			&session.SQLExecStart,
 			&session.SQLExecID,
 			&session.SecondsInWait,
+			&session.WaitClass,
+			&session.TimeRemainingSeconds,
 		)
 		if err != nil {
 			return nil, err

@@ -7,15 +7,17 @@ import (
 
 // ActiveSession represents an active session executing a query
 type ActiveSession struct {
-	CollectionTimestamp sql.NullTime
-	Username            sql.NullString
-	SID                 sql.NullInt64
-	Serial              sql.NullInt64
-	QueryID             sql.NullString
-	SQLChildNumber      sql.NullInt64
-	SQLExecStart        sql.NullTime
-	SQLExecID           sql.NullInt64
-	SecondsInWait       sql.NullFloat64
+	CollectionTimestamp  sql.NullTime
+	Username             sql.NullString
+	SID                  sql.NullInt64
+	Serial               sql.NullInt64
+	QueryID              sql.NullString
+	SQLChildNumber       sql.NullInt64
+	SQLExecStart         sql.NullTime
+	SQLExecID            sql.NullInt64
+	SecondsInWait        sql.NullFloat64
+	WaitClass            sql.NullString
+	TimeRemainingSeconds sql.NullFloat64
 }
 
 // GetUsername returns the username as a string, empty if null
@@ -78,6 +80,22 @@ func (as *ActiveSession) GetSQLExecID() int64 {
 func (as *ActiveSession) GetSecondsInWait() float64 {
 	if as.SecondsInWait.Valid {
 		return as.SecondsInWait.Float64
+	}
+	return 0
+}
+
+// GetWaitClass returns the wait class as a string, empty if null
+func (as *ActiveSession) GetWaitClass() string {
+	if as.WaitClass.Valid {
+		return as.WaitClass.String
+	}
+	return ""
+}
+
+// GetTimeRemainingSeconds returns the time remaining in seconds as float64, 0 if null
+func (as *ActiveSession) GetTimeRemainingSeconds() float64 {
+	if as.TimeRemainingSeconds.Valid {
+		return as.TimeRemainingSeconds.Float64
 	}
 	return 0
 }
