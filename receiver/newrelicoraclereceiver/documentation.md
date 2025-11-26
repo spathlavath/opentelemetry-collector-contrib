@@ -123,7 +123,7 @@ Wait time in seconds for blocked queries
 | blocking_query_text | SQL query text of the blocking query | Any Str | false |
 | blocking_query_id | SQL query ID of the blocking query | Any Str | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 
 ### newrelicoracledb.connection.active_sessions
 
@@ -2410,7 +2410,7 @@ Average CPU time per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
@@ -2426,7 +2426,7 @@ Average disk reads per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
@@ -2442,7 +2442,7 @@ Average disk writes per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
@@ -2458,7 +2458,7 @@ Average elapsed time per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
@@ -2474,7 +2474,7 @@ Average lock/concurrency wait time per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
@@ -2490,7 +2490,7 @@ Average rows examined per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
@@ -2506,7 +2506,7 @@ Number of executions for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
@@ -2522,7 +2522,8 @@ Slow Query Details
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name - the root container in multitenant architecture | Any Str | false |
+| database_name | Oracle database name (PDB name in multitenant, instance name otherwise) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | query_text | SQL query text | Any Str | false |
 | schema_name | Schema name where the query is executed | Any Str | false |

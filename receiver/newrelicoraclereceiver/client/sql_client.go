@@ -106,6 +106,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold,
 		var slowQuery models.SlowQuery
 
 		err := rows.Scan(
+			&slowQuery.CDBName,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
