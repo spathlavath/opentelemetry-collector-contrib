@@ -29,6 +29,7 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
 	NewrelicoracledbActiveSessionsSecondsInWait                        MetricConfig `mapstructure:"newrelicoracledb.active_sessions.seconds_in_wait"`
+	NewrelicoracledbActiveSessionsTimeRemaining                        MetricConfig `mapstructure:"newrelicoracledb.active_sessions.time_remaining"`
 	NewrelicoracledbAsmDiskgroupFreeMb                                 MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.free_mb"`
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
 	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
@@ -344,11 +345,15 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceUsedBytes                                MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_bytes"`
 	NewrelicoracledbTablespaceUsedPercent                              MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_percent"`
 	NewrelicoracledbWaitEventsCurrentWaitSeconds                       MetricConfig `mapstructure:"newrelicoracledb.wait_events.current_wait_seconds"`
+	NewrelicoracledbWaitEventsTimeRemaining                            MetricConfig `mapstructure:"newrelicoracledb.wait_events.time_remaining"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
 		NewrelicoracledbActiveSessionsSecondsInWait: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbActiveSessionsTimeRemaining: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbAsmDiskgroupFreeMb: MetricConfig{
@@ -1294,6 +1299,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbWaitEventsCurrentWaitSeconds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbWaitEventsTimeRemaining: MetricConfig{
 			Enabled: true,
 		},
 	}

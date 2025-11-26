@@ -7,30 +7,31 @@ import (
 
 // WaitEvent represents a wait event record from Oracle wait events queries
 type WaitEvent struct {
-	CollectionTimestamp sql.NullTime
-	Username           sql.NullString
-	SID                sql.NullInt64
-	Status             sql.NullString
-	QueryID            sql.NullString
-	WaitCategory       sql.NullString
-	WaitEventName      sql.NullString
-	CurrentWaitSeconds sql.NullInt64
-	SQLExecStart       sql.NullTime
-	SQLExecID          sql.NullInt64
-	Program            sql.NullString
-	Machine            sql.NullString
-	LockedObjectID     sql.NullInt64
-	ObjectOwner        sql.NullString
-	ObjectNameWaitedOn sql.NullString
-	ObjectTypeWaitedOn sql.NullString
-	LockedFileID       sql.NullInt64
-	LockedBlockID      sql.NullInt64
-	P1Text             sql.NullString
-	P1                 sql.NullInt64
-	P2Text             sql.NullString
-	P2                 sql.NullInt64
-	P3Text             sql.NullString
-	P3                 sql.NullInt64
+	CollectionTimestamp  sql.NullTime
+	Username             sql.NullString
+	SID                  sql.NullInt64
+	Status               sql.NullString
+	QueryID              sql.NullString
+	WaitCategory         sql.NullString
+	WaitEventName        sql.NullString
+	CurrentWaitSeconds   sql.NullInt64
+	TimeRemainingSeconds sql.NullFloat64
+	SQLExecStart         sql.NullTime
+	SQLExecID            sql.NullInt64
+	Program              sql.NullString
+	Machine              sql.NullString
+	LockedObjectID       sql.NullInt64
+	ObjectOwner          sql.NullString
+	ObjectNameWaitedOn   sql.NullString
+	ObjectTypeWaitedOn   sql.NullString
+	LockedFileID         sql.NullInt64
+	LockedBlockID        sql.NullInt64
+	P1Text               sql.NullString
+	P1                   sql.NullInt64
+	P2Text               sql.NullString
+	P2                   sql.NullInt64
+	P3Text               sql.NullString
+	P3                   sql.NullInt64
 }
 
 // GetUsername returns the username as a string, empty if null
@@ -157,6 +158,14 @@ func (we *WaitEvent) GetSQLExecID() int64 {
 func (we *WaitEvent) GetCurrentWaitSeconds() int64 {
 	if we.CurrentWaitSeconds.Valid {
 		return we.CurrentWaitSeconds.Int64
+	}
+	return 0
+}
+
+// GetTimeRemainingSeconds returns the time remaining in seconds as float64, 0 if null
+func (we *WaitEvent) GetTimeRemainingSeconds() float64 {
+	if we.TimeRemainingSeconds.Valid {
+		return we.TimeRemainingSeconds.Float64
 	}
 	return 0
 }

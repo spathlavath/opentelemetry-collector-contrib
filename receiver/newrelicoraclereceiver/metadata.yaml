@@ -110,7 +110,7 @@ attributes:
     description: Oracle wait event name for wait events
     type: string
   wait_category:
-    description: Oracle wait event category for wait events
+    description: Oracle wait event category/class for wait events and active sessions
     type: string
   session_id:
     description: Oracle session ID (SID)
@@ -3717,6 +3717,37 @@ metrics:
       - wait_p3text
       - wait_p3
 
+  newrelicoracledb.wait_events.time_remaining:
+    description: Time remaining for the wait event operation in seconds
+    enabled: true
+    gauge:
+      value_type: double
+    unit: s
+    attributes:
+      - collection_timestamp
+      - user_name
+      - session_id
+      - session_status
+      - query_id
+      - wait_event_name
+      - wait_category
+      - session_program
+      - session_machine
+      - wait_object_owner
+      - wait_object_name
+      - wait_object_type
+      - sql_exec_start
+      - sql_exec_id
+      - row_wait_obj_id
+      - row_wait_file_id
+      - row_wait_block_id
+      - wait_p1text
+      - wait_p1
+      - wait_p2text
+      - wait_p2
+      - wait_p3text
+      - wait_p3
+
   newrelicoracledb.active_sessions.seconds_in_wait:
     description: Number of seconds the active session has been waiting
     enabled: true
@@ -3732,6 +3763,24 @@ metrics:
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
+      - wait_category
+
+  newrelicoracledb.active_sessions.time_remaining:
+    description: Time remaining for the active session operation in seconds
+    enabled: true
+    gauge:
+      value_type: double
+    unit: s
+    attributes:
+      - collection_timestamp
+      - user_name
+      - session_id
+      - session_serial
+      - query_id
+      - sql_child_number
+      - sql_exec_start
+      - sql_exec_id
+      - wait_category
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.avg_wait_time_ms:

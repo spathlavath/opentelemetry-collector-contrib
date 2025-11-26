@@ -95,24 +95,39 @@ func (s *ActiveSessionsScraper) ScrapeActiveSessions(ctx context.Context, sqlIDs
 
 // recordActiveSessionMetric records an active session as a metric with all session attributes
 func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.ActiveSession, now pcommon.Timestamp) error {
-	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsSecondsInWait.Enabled {
-		return nil
+	// Record seconds_in_wait metric
+	if s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsSecondsInWait.Enabled {
+		s.mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(
+			now,
+			session.GetSecondsInWait(),
+			session.GetCollectionTimestamp().Format("2006-01-02 15:04:05"),
+			session.GetUsername(),
+			fmt.Sprintf("%d", session.GetSID()),
+			session.GetSerial(),
+			session.GetQueryID(),
+			session.GetSQLChildNumber(),
+			session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
+			session.GetSQLExecID(),
+			session.GetWaitCategory(),
+		)
 	}
 
-	// Record metric with seconds_in_wait as the value
-	// All session details are in the attributes/dimensions
-	s.mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(
-		now,
-		session.GetSecondsInWait(),
-		session.GetCollectionTimestamp().Format("2006-01-02 15:04:05"),
-		session.GetUsername(),
-		fmt.Sprintf("%d", session.GetSID()),
-		session.GetSerial(),
-		session.GetQueryID(),
-		session.GetSQLChildNumber(),
-		session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
-		session.GetSQLExecID(),
-	)
+	// Record time_remaining metric
+	if s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsTimeRemaining.Enabled {
+		s.mb.RecordNewrelicoracledbActiveSessionsTimeRemainingDataPoint(
+			now,
+			session.GetTimeRemainingSeconds(),
+			session.GetCollectionTimestamp().Format("2006-01-02 15:04:05"),
+			session.GetUsername(),
+			fmt.Sprintf("%d", session.GetSID()),
+			session.GetSerial(),
+			session.GetQueryID(),
+			session.GetSQLChildNumber(),
+			session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
+			session.GetSQLExecID(),
+			session.GetWaitCategory(),
+		)
+	}
 
 	return nil
 }
