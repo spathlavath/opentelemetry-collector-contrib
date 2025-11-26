@@ -70,7 +70,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11, "wait_class-val", 22.100000)
+			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11, "wait_category-val", 22.100000)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1393,9 +1393,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sql_exec_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 11, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("wait_class")
+					attrVal, ok = dp.Attributes().Get("wait_category")
 					assert.True(t, ok)
-					assert.Equal(t, "wait_class-val", attrVal.Str())
+					assert.Equal(t, "wait_category-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("time_remaining_seconds")
 					assert.True(t, ok)
 					assert.Equal(t, 22.100000, attrVal.Double())

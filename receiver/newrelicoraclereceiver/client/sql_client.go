@@ -259,7 +259,7 @@ func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string
 			&session.SQLExecStart,
 			&session.SQLExecID,
 			&session.SecondsInWait,
-			&session.WaitClass,
+			&session.WaitCategory,
 			&session.TimeRemainingSeconds,
 		)
 		if err != nil {

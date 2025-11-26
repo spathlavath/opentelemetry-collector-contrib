@@ -16,7 +16,7 @@ type ActiveSession struct {
 	SQLExecStart         sql.NullTime
 	SQLExecID            sql.NullInt64
 	SecondsInWait        sql.NullFloat64
-	WaitClass            sql.NullString
+	WaitCategory         sql.NullString
 	TimeRemainingSeconds sql.NullFloat64
 }
 
@@ -84,10 +84,10 @@ func (as *ActiveSession) GetSecondsInWait() float64 {
 	return 0
 }
 
-// GetWaitClass returns the wait class as a string, empty if null
-func (as *ActiveSession) GetWaitClass() string {
-	if as.WaitClass.Valid {
-		return as.WaitClass.String
+// GetWaitCategory returns the wait category as a string, empty if null
+func (as *ActiveSession) GetWaitCategory() string {
+	if as.WaitCategory.Valid {
+		return as.WaitCategory.String
 	}
 	return ""
 }

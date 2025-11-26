@@ -110,10 +110,7 @@ attributes:
     description: Oracle wait event name for wait events
     type: string
   wait_category:
-    description: Oracle wait event category for wait events
-    type: string
-  wait_class:
-    description: Oracle wait class for active sessions
+    description: Oracle wait event category/class for wait events and active sessions
     type: string
   time_remaining_seconds:
     description: Time remaining for the operation in seconds
@@ -3739,7 +3736,7 @@ metrics:
       - sql_child_number
       - sql_exec_start
       - sql_exec_id
-      - wait_class
+      - wait_category
       - time_remaining_seconds
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
