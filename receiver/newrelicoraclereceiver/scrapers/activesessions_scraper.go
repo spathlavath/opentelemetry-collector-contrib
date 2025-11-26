@@ -109,23 +109,21 @@ func (s *ActiveSessionsScraper) recordActiveSessionMetric(session *models.Active
 			session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
 			session.GetSQLExecID(),
 			session.GetWaitCategory(),
+			session.GetMachine(),
 		)
 	}
 
-	// Record time_remaining metric
+	// Record time_remaining metric with reduced attributes to avoid high cardinality
 	if s.metricsBuilderConfig.Metrics.NewrelicoracledbActiveSessionsTimeRemaining.Enabled {
 		s.mb.RecordNewrelicoracledbActiveSessionsTimeRemainingDataPoint(
 			now,
 			session.GetTimeRemainingSeconds(),
 			session.GetCollectionTimestamp().Format("2006-01-02 15:04:05"),
-			session.GetUsername(),
 			fmt.Sprintf("%d", session.GetSID()),
-			session.GetSerial(),
 			session.GetQueryID(),
 			session.GetSQLChildNumber(),
 			session.GetSQLExecStart().Format("2006-01-02 15:04:05"),
 			session.GetSQLExecID(),
-			session.GetWaitCategory(),
 		)
 	}
 
