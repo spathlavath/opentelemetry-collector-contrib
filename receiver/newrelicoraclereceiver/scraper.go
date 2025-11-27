@@ -414,6 +414,17 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 	)
 	s.executionPlanScraper = executionPlanScraper
 
+	// Initialize wait events scraper (needed for execution plan SQL identifier fetching)
+	waitEventsScraper := scrapers.NewWaitEventsScraper(
+		s.client,
+		tempMb,
+		s.logger,
+		s.instanceName,
+		metadata.DefaultMetricsBuilderConfig(),
+		s.config.QueryMonitoringCountThreshold,
+	)
+	s.waitEventsScraper = waitEventsScraper
+
 	return nil
 }
 
