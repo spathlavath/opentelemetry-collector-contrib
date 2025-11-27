@@ -47,7 +47,7 @@ attributes:
     description: Time when the SQL statement was first loaded into the library cache
     type: string
   last_load_time:
-    description: Time when the SQL statement was last loaded into the library cache
+    description: Time at which the query plan was loaded into the library cache
     type: string
 
   # Execution Plan Row Attributes (from V$SQL_PLAN)

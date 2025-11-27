@@ -131,7 +131,7 @@ Child cursor details including load times
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 | first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
-| last_load_time | Time when the SQL statement was last loaded into the library cache | Any Str | false |
+| last_load_time | Time at which the query plan was loaded into the library cache | Any Str | false |
 
 ### newrelicoracledb.child_cursors.disk_reads
 
