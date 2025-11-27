@@ -125,25 +125,28 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 func GetChildCursorsQuery(sqlID string, childLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
-			sql_id,
-			child_number,
-			cpu_time,
-			elapsed_time,
-			user_io_wait_time,
-			executions,
-			disk_reads,
-			buffer_gets,
-			loads,
-			parse_calls,
-			invalidations,
-			first_load_time,
-			last_load_time
+			d.name AS database_name,
+			s.sql_id,
+			s.child_number,
+			s.cpu_time,
+			s.elapsed_time,
+			s.user_io_wait_time,
+			s.executions,
+			s.disk_reads,
+			s.buffer_gets,
+			s.loads,
+			s.parse_calls,
+			s.invalidations,
+			s.first_load_time,
+			s.last_load_time
 		FROM
-			v$sql
+			v$sql s
+		CROSS JOIN
+			v$database d
 		WHERE
-			sql_id = '%s'
+			s.sql_id = '%s'
 		ORDER BY
-			last_load_time DESC
+			s.last_load_time DESC
 		FETCH FIRST %d ROWS ONLY`, sqlID, childLimit)
 }
 

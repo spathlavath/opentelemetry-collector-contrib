@@ -86,7 +86,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursors(ctx context.Context, sqlIDs []s
 func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cursor *models.ChildCursor) {
 	sqlID := cursor.GetSQLID()
 	childNumber := cursor.GetChildNumber()
-	databaseName := s.instanceName
+	databaseName := cursor.GetDatabaseName()
 
 	// Record CPU time
 	if s.metricsBuilderConfig.Metrics.NewrelicoracledbChildCursorsCPUTime.Enabled {

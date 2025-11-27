@@ -9,6 +9,7 @@ import (
 
 // ChildCursor represents a child cursor from V$SQL with execution statistics
 type ChildCursor struct {
+	DatabaseName   sql.NullString
 	SQLID          sql.NullString
 	ChildNumber    sql.NullInt64
 	CPUTime        sql.NullInt64
@@ -22,6 +23,14 @@ type ChildCursor struct {
 	Invalidations  sql.NullInt64
 	FirstLoadTime  sql.NullString
 	LastLoadTime   sql.NullString
+}
+
+// GetDatabaseName returns the database name as a string, empty if null
+func (cc *ChildCursor) GetDatabaseName() string {
+	if cc.DatabaseName.Valid {
+		return cc.DatabaseName.String
+	}
+	return ""
 }
 
 // GetSQLID returns the SQL ID as a string, empty if null

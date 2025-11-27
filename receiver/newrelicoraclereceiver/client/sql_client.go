@@ -155,6 +155,7 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 		var childCursor models.ChildCursor
 
 		err := rows.Scan(
+			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
 			&childCursor.CPUTime,
