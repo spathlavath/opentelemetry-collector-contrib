@@ -141,13 +141,13 @@ type MemoryFractions struct {
 
 // IndexScan contains index scan operation details
 type IndexScan struct {
-	XMLName       xml.Name `xml:"IndexScan"`
-	Ordered       string   `xml:"Ordered,attr"`
-	ScanDirection string   `xml:"ScanDirection,attr"`
-	ForcedIndex   string   `xml:"ForcedIndex,attr"`
-	ForceSeek     string   `xml:"ForceSeek,attr"`
-	Object        *Object  `xml:"Object,omitempty"`     // Table/Index information
-	RelOp         []RelOp  `xml:"RelOp"`                // Child operators
+	XMLName       xml.Name    `xml:"IndexScan"`
+	Ordered       string      `xml:"Ordered,attr"`
+	ScanDirection string      `xml:"ScanDirection,attr"`
+	ForcedIndex   string      `xml:"ForcedIndex,attr"`
+	ForceSeek     string      `xml:"ForceSeek,attr"`
+	Object        *Object     `xml:"Object,omitempty"`     // Table/Index information
+	RelOp         []RelOp     `xml:"RelOp"`                // Child operators
 	OutputList    *OutputList `xml:"OutputList,omitempty"` // Referenced columns
 }
 
@@ -234,12 +234,12 @@ type QueryTimeStats struct {
 
 // Object represents table/index information in execution plan
 type Object struct {
-	XMLName  xml.Name `xml:"Object"`
-	Database string   `xml:"Database,attr"`
-	Schema   string   `xml:"Schema,attr"`
-	Table    string   `xml:"Table,attr"`
-	Index    string   `xml:"Index,attr"`
-	IndexKind string  `xml:"IndexKind,attr"`
+	XMLName   xml.Name `xml:"Object"`
+	Database  string   `xml:"Database,attr"`
+	Schema    string   `xml:"Schema,attr"`
+	Table     string   `xml:"Table,attr"`
+	Index     string   `xml:"Index,attr"`
+	IndexKind string   `xml:"IndexKind,attr"`
 }
 
 // OutputList contains list of columns being output by an operator
@@ -373,7 +373,7 @@ func parseRelOpRecursively(relOp *RelOp, analysis *ExecutionPlanAnalysis, queryI
 		node.TableName = obj.Table
 		node.IndexName = obj.Index
 	}
-	
+
 	// Extract referenced columns from OutputList (at RelOp level for all operators)
 	if relOp.OutputList != nil {
 		var columns []string
@@ -384,7 +384,7 @@ func parseRelOpRecursively(relOp *RelOp, analysis *ExecutionPlanAnalysis, queryI
 		}
 		node.ReferencedColumns = strings.Join(columns, ", ")
 	}
-	
+
 	// Fallback: Extract columns from IndexScan.OutputList if RelOp.OutputList is empty
 	if node.ReferencedColumns == "" && relOp.IndexScan != nil && relOp.IndexScan.OutputList != nil {
 		var columns []string
@@ -506,4 +506,210 @@ func checkForMissingJoinPredicate(relOp *RelOp) bool {
 		}
 	}
 	return false
+}
+
+// ParseExecutionPlanTopLevelDetails parses execution plan XML to extract only top-level details
+// This is much faster than full node parsing and suitable for high-volume active query monitoring
+// Returns top-level plan information: costs, compilation details, optimizer info, and warnings
+func ParseExecutionPlanTopLevelDetails(xmlContent string, queryID string, planHandle string, planHandleResult *PlanHandleResult) (*ExecutionPlanTopLevelDetails, error) {
+	if xmlContent == "" {
+		return nil, fmt.Errorf("empty execution plan XML")
+	}
+
+	// Parse XML
+	var showPlan ShowPlanXML
+	if err := xml.Unmarshal([]byte(xmlContent), &showPlan); err != nil {
+		return nil, fmt.Errorf("failed to parse execution plan XML: %w", err)
+	}
+
+	// Initialize top-level details
+	details := &ExecutionPlanTopLevelDetails{
+		QueryID:             queryID,
+		PlanHandle:          planHandle,
+		CollectionTimestamp: time.Now().UTC().Format(time.RFC3339),
+	}
+
+	// Extract from PlanHandleResult (if provided)
+	if planHandleResult != nil {
+		if planHandleResult.ExecutionCount != nil {
+			details.ExecutionCount = *planHandleResult.ExecutionCount
+		}
+		if planHandleResult.AvgElapsedTimeMs != nil {
+			details.AvgElapsedTimeMs = *planHandleResult.AvgElapsedTimeMs
+		}
+		if planHandleResult.AvgWorkerTimeMs != nil {
+			details.AvgWorkerTimeMs = *planHandleResult.AvgWorkerTimeMs
+		}
+		if planHandleResult.LastExecutionTime != nil {
+			details.LastExecutionTime = *planHandleResult.LastExecutionTime
+		}
+		if planHandleResult.CreationTime != nil {
+			details.CreationTime = *planHandleResult.CreationTime
+		}
+		if planHandleResult.QueryPlanHash != nil {
+			details.QueryPlanHash = planHandleResult.QueryPlanHash.String()
+		}
+	}
+
+	// Extract from first batch/statement (most execution plans have single batch/statement)
+	if len(showPlan.BatchSequence) == 0 || len(showPlan.BatchSequence[0].Batch) == 0 || len(showPlan.BatchSequence[0].Batch[0].Statements) == 0 {
+		return nil, fmt.Errorf("no statements found in execution plan")
+	}
+
+	stmt := showPlan.BatchSequence[0].Batch[0].Statements[0]
+
+	// Statement details
+	details.SQLText = stmt.StatementText
+	if stmt.QueryPlanHash != "" && details.QueryPlanHash == "" {
+		details.QueryPlanHash = stmt.QueryPlanHash
+	}
+	details.StatementOptmLevel = stmt.StatementOptmLevel
+
+	// Statement costs
+	if cost, err := strconv.ParseFloat(stmt.StatementSubTreeCost, 64); err == nil {
+		details.StatementSubTreeCost = cost
+		details.EstimatedTotalCost = cost
+	}
+	if rows, err := strconv.ParseFloat(stmt.StatementEstRows, 64); err == nil {
+		details.EstimateRows = rows
+	}
+
+	// QueryPlan details
+	plan := stmt.QueryPlan
+	details.CompileTime = plan.CompileTime
+	if cpu, err := strconv.ParseInt(plan.CompileCPU, 10, 64); err == nil {
+		details.CompileCPU = cpu
+	}
+	if mem, err := strconv.ParseInt(plan.CompileMemory, 10, 64); err == nil {
+		details.CompileMemory = mem
+	}
+	if size, err := strconv.ParseInt(plan.CachedPlanSize, 10, 64); err == nil {
+		details.CachedPlanSize = size
+		details.CachedPlanSize64 = size
+	}
+	if dop, err := strconv.ParseInt(plan.DegreeOfParallelism, 10, 64); err == nil {
+		details.DegreeOfParallelism = dop
+	}
+	if mem, err := strconv.ParseInt(plan.MemoryGrant, 10, 64); err == nil {
+		details.MemoryGrant = mem
+	}
+
+	// Root RelOp costs
+	rootOp := plan.RelOp
+	if cost, err := strconv.ParseFloat(rootOp.EstimatedTotalSubtreeCost, 64); err == nil {
+		details.TotalSubtreeCost = cost
+		if details.EstimatedTotalCost == 0 {
+			details.EstimatedTotalCost = cost
+		}
+	}
+	if io, err := strconv.ParseFloat(rootOp.EstimateIO, 64); err == nil {
+		details.EstimateIO = io
+	}
+	if cpu, err := strconv.ParseFloat(rootOp.EstimateCPU, 64); err == nil {
+		details.EstimateCPU = cpu
+	}
+	if size, err := strconv.ParseInt(rootOp.AvgRowSize, 10, 64); err == nil {
+		details.AvgRowSize = size
+	}
+
+	// Analyze operators for summary statistics (lightweight scan)
+	details.TotalOperators = 1 // Start with root
+	details.ScansCount = 0
+	details.SeeksCount = 0
+	details.NoJoinPredicate = false
+	details.ColumnsWithNoStatistics = 0
+	details.UnmatchedIndexes = 0
+
+	// Scan operators recursively (lightweight)
+	scanOperatorsSummary(&rootOp, details)
+
+	// Missing index warnings (placeholder - would need Warnings section parsing)
+	details.MissingIndexCount = 0
+	details.MissingIndexImpact = 0.0
+
+	return details, nil
+}
+
+// scanOperatorsSummary performs lightweight recursive scan of operators for summary statistics
+// Only counts operators and identifies scans/seeks (no detailed parsing)
+func scanOperatorsSummary(relOp *RelOp, details *ExecutionPlanTopLevelDetails) {
+	// Count this operator
+	details.TotalOperators++
+
+	// Check operator type
+	opType := strings.ToLower(relOp.PhysicalOp)
+	if strings.Contains(opType, "scan") {
+		details.ScansCount++
+	}
+	if strings.Contains(opType, "seek") {
+		details.SeeksCount++
+	}
+	if checkForMissingJoinPredicate(relOp) {
+		details.NoJoinPredicate = true
+	}
+
+	// Recursively process child operators (lightweight)
+	for i := range relOp.RelOp {
+		scanOperatorsSummary(&relOp.RelOp[i], details)
+	}
+
+	// Process join children
+	if relOp.OneSide != nil {
+		scanOperatorsSummary(relOp.OneSide, details)
+	}
+	if relOp.OtherSide != nil {
+		scanOperatorsSummary(relOp.OtherSide, details)
+	}
+
+	// Process operator-specific children (lightweight)
+	if relOp.IndexScan != nil {
+		for i := range relOp.IndexScan.RelOp {
+			scanOperatorsSummary(&relOp.IndexScan.RelOp[i], details)
+		}
+	}
+	if relOp.NestedLoops != nil {
+		for i := range relOp.NestedLoops.RelOp {
+			scanOperatorsSummary(&relOp.NestedLoops.RelOp[i], details)
+		}
+	}
+	if relOp.Hash != nil {
+		for i := range relOp.Hash.RelOp {
+			scanOperatorsSummary(&relOp.Hash.RelOp[i], details)
+		}
+	}
+	if relOp.Sort != nil {
+		for i := range relOp.Sort.RelOp {
+			scanOperatorsSummary(&relOp.Sort.RelOp[i], details)
+		}
+	}
+	if relOp.Filter != nil {
+		for i := range relOp.Filter.RelOp {
+			scanOperatorsSummary(&relOp.Filter.RelOp[i], details)
+		}
+	}
+	if relOp.ComputeScalar != nil {
+		for i := range relOp.ComputeScalar.RelOp {
+			scanOperatorsSummary(&relOp.ComputeScalar.RelOp[i], details)
+		}
+	}
+	if relOp.StreamAggregate != nil {
+		for i := range relOp.StreamAggregate.RelOp {
+			scanOperatorsSummary(&relOp.StreamAggregate.RelOp[i], details)
+		}
+	}
+	if relOp.Merge != nil {
+		for i := range relOp.Merge.RelOp {
+			scanOperatorsSummary(&relOp.Merge.RelOp[i], details)
+		}
+	}
+	if relOp.Concatenation != nil {
+		for i := range relOp.Concatenation.RelOp {
+			scanOperatorsSummary(&relOp.Concatenation.RelOp[i], details)
+		}
+	}
+	if relOp.Parallelism != nil {
+		for i := range relOp.Parallelism.RelOp {
+			scanOperatorsSummary(&relOp.Parallelism.RelOp[i], details)
+		}
+	}
 }

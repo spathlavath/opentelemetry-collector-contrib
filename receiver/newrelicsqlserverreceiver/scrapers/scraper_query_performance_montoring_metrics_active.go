@@ -21,13 +21,26 @@ import (
 // ScrapeActiveRunningQueriesMetrics collects currently executing queries with wait and blocking details
 // This scraper captures real-time query execution state from sys.dm_exec_requests
 // If a plan_handle is available, it fetches, parses, and emits execution plan as OTLP logs
-func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, logs plog.Logs, limit, textTruncateLimit int) error {
+// Filters queries by:
+//   - elapsedTimeThreshold: minimum elapsed time in milliseconds (0 = capture all)
+//   - Must have valid wait_type (not null)
+//   - Must have valid plan_handle (not null and not empty)
+func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int) error {
+	// Refresh metadata cache if needed (auto-throttled by refresh interval)
+	if s.metadataCache != nil {
+		if err := s.metadataCache.Refresh(ctx); err != nil {
+			s.logger.Warn("Failed to refresh metadata cache", zap.Error(err))
+			// Continue with stale cache data
+		}
+	}
+
 	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit)
 
 	s.logger.Debug("Executing active running queries metrics collection",
 		zap.String("query", queries.TruncateQuery(query, 100)),
 		zap.Int("limit", limit),
-		zap.Int("text_truncate_limit", textTruncateLimit))
+		zap.Int("text_truncate_limit", textTruncateLimit),
+		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
 
 	var results []models.ActiveRunningQuery
 	if err := s.connection.Query(ctx, &results, query); err != nil {
@@ -36,8 +49,46 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 	s.logger.Debug("Active running queries metrics fetched", zap.Int("result_count", len(results)))
 
+	// Track filtered queries for logging
+	filteredCount := 0
+	processedCount := 0
+
 	// Log each query result from SQL Server
 	for i, result := range results {
+		// FILTERING CRITERIA:
+		// 1. Elapsed time must meet threshold (if threshold > 0)
+		// 2. Must have valid wait_type (not null)
+		// 3. Must have valid plan_handle (not null and not empty)
+
+		// Check elapsed time threshold (skip very short queries if threshold > 0)
+		if elapsedTimeThreshold > 0 && result.TotalElapsedTimeMs != nil && *result.TotalElapsedTimeMs < int64(elapsedTimeThreshold) {
+			filteredCount++
+			s.logger.Debug("Filtering active query: below elapsed time threshold",
+				zap.Any("session_id", result.CurrentSessionID),
+				zap.Int64("elapsed_time_ms", *result.TotalElapsedTimeMs),
+				zap.Int("threshold_ms", elapsedTimeThreshold))
+			continue
+		}
+
+		// Check for valid wait_type (skip queries with no wait information)
+		if result.WaitType == nil || *result.WaitType == "" {
+			filteredCount++
+			s.logger.Debug("Filtering active query: no wait_type",
+				zap.Any("session_id", result.CurrentSessionID))
+			continue
+		}
+
+		// Check for valid plan_handle (skip queries without execution plans)
+		if result.PlanHandle == nil || result.PlanHandle.IsEmpty() {
+			filteredCount++
+			s.logger.Debug("Filtering active query: no plan_handle",
+				zap.Any("session_id", result.CurrentSessionID),
+				zap.Any("query_id", result.QueryID))
+			continue
+		}
+
+		// Query passed all filters, process it
+		processedCount++
 		s.logger.Info("=== SCRAPED ACTIVE QUERY FROM DB ===",
 			zap.Int("index", i),
 			zap.Any("session_id", result.CurrentSessionID),
@@ -67,6 +118,25 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		// Fetch and parse execution plan for active queries with plan_handle
 		var executionPlanXML string
 
+		// NEW: Fetch top 5 most recently used plan_handles for this query_hash
+		// This provides historical execution plans for performance analysis
+		if result.QueryID != nil && !result.QueryID.IsEmpty() {
+			top5PlanHandles, err := s.fetchTop5PlanHandlesForActiveQuery(ctx, result)
+			if err != nil {
+				s.logger.Warn("Failed to fetch top 5 plan_handles for active query",
+					zap.Error(err),
+					zap.Any("session_id", result.CurrentSessionID))
+			} else if len(top5PlanHandles) > 0 {
+				// Emit top-level execution plan details as custom events
+				s.emitExecutionPlanTopLevelDetailsAsCustomEvents(ctx, result, top5PlanHandles, logs)
+
+				s.logger.Info("Successfully fetched and emitted top 5 execution plans as custom events",
+					zap.Any("session_id", result.CurrentSessionID),
+					zap.Int("plan_count", len(top5PlanHandles)))
+			}
+		}
+
+		// OLD: Fetch current execution plan for detailed node-level analysis (keep for backward compatibility)
 		// Only fetch execution plan if plan_handle is available (active executing queries)
 		if result.PlanHandle != nil && !result.PlanHandle.IsEmpty() {
 			planXML, err := s.fetchExecutionPlanForActiveQuery(ctx, result)
@@ -119,6 +189,13 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 			s.logger.Error("Failed to process active running query metric", zap.Error(err), zap.Int("index", i))
 		}
 	}
+
+	// Log filtering summary
+	s.logger.Info("Active running queries filtering summary",
+		zap.Int("total_fetched", len(results)),
+		zap.Int("filtered_out", filteredCount),
+		zap.Int("processed", processedCount),
+		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
 
 	return nil
 }
@@ -374,8 +451,8 @@ func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, re
 		if result.WaitResourceDecoded != nil {
 			attrs.PutStr("wait_resource_decoded", *result.WaitResourceDecoded)
 		}
-		// Add Go helper's parsed resource type and description (as backup/supplement)
-		resourceType, resourceDesc := helpers.DecodeWaitResource(waitResource)
+		// Add Go helper's parsed resource type and description (with enrichment if enabled)
+		resourceType, resourceDesc := helpers.DecodeWaitResourceWithMetadata(waitResource, s.metadataCache)
 		attrs.PutStr("wait_resource_type", resourceType)
 		attrs.PutStr("wait_resource_description", resourceDesc)
 	}
@@ -412,9 +489,9 @@ func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, re
 		attrs.PutInt("parallel_worker_count", *result.ParallelWorkerCount)
 	}
 
-	// Blocking details
+	// Blocking details (LINKING FIX: Now int64 for proper joins)
 	if result.BlockingSessionID != nil {
-		attrs.PutStr("blocking_session_id", *result.BlockingSessionID)
+		attrs.PutInt("blocking_session_id", *result.BlockingSessionID)
 	}
 	if result.BlockerLoginName != nil {
 		attrs.PutStr("blocker_login_name", *result.BlockerLoginName)
@@ -748,8 +825,8 @@ func (s *QueryPerformanceScraper) createActiveQueryExecutionPlanNodeLog(node *mo
 		if activeQuery.WaitResourceDecoded != nil {
 			attrs.PutStr("wait_resource_decoded", *activeQuery.WaitResourceDecoded)
 		}
-		// Add Go helper's parsed resource type and description (as backup/supplement)
-		resourceType, resourceDesc := helpers.DecodeWaitResource(waitResource)
+		// Add Go helper's parsed resource type and description (with enrichment if enabled)
+		resourceType, resourceDesc := helpers.DecodeWaitResourceWithMetadata(waitResource, s.metadataCache)
 		attrs.PutStr("wait_resource_type", resourceType)
 		attrs.PutStr("wait_resource_description", resourceDesc)
 	}
@@ -769,9 +846,9 @@ func (s *QueryPerformanceScraper) createActiveQueryExecutionPlanNodeLog(node *mo
 		attrs.PutStr("request_command", *activeQuery.RequestCommand)
 	}
 
-	// Add blocking information for execution plan correlation
+	// Add blocking information for execution plan correlation (LINKING FIX: Now int64)
 	if activeQuery.BlockingSessionID != nil {
-		attrs.PutStr("blocking_session_id", *activeQuery.BlockingSessionID)
+		attrs.PutInt("blocking_session_id", *activeQuery.BlockingSessionID)
 	}
 	if activeQuery.BlockerLoginName != nil {
 		attrs.PutStr("blocker_login_name", *activeQuery.BlockerLoginName)
@@ -948,4 +1025,201 @@ func (s *QueryPerformanceScraper) emitActiveQueryExecutionPlanMetrics(planAnalys
 		zap.String("plan_handle", planAnalysis.PlanHandle),
 		zap.Int("operator_count", len(planAnalysis.Nodes)),
 		zap.Float64("total_cost", planAnalysis.TotalCost))
+}
+
+// fetchTop5PlanHandlesForActiveQuery fetches the top 5 most recently used plan_handles
+// for the query_hash of the currently active query from dm_exec_query_stats
+// This provides historical execution plans for performance analysis
+func (s *QueryPerformanceScraper) fetchTop5PlanHandlesForActiveQuery(ctx context.Context, activeQuery models.ActiveRunningQuery) ([]models.PlanHandleResult, error) {
+	// Check if query_id (query_hash) is available
+	if activeQuery.QueryID == nil || activeQuery.QueryID.IsEmpty() {
+		s.logger.Debug("No query_hash available for active query, skipping top 5 plan_handles fetch",
+			zap.Any("session_id", activeQuery.CurrentSessionID))
+		return nil, nil
+	}
+
+	queryHashHex := activeQuery.QueryID.String()
+	query := fmt.Sprintf(queries.Top5PlanHandlesForActiveQueryQuery, queryHashHex)
+
+	s.logger.Debug("Fetching top 5 plan_handles for active query using query_hash",
+		zap.String("query_hash", queryHashHex),
+		zap.Any("session_id", activeQuery.CurrentSessionID))
+
+	// Execute the query to fetch plan_handles
+	var results []models.PlanHandleResult
+	if err := s.connection.Query(ctx, &results, query); err != nil {
+		return nil, fmt.Errorf("failed to fetch top 5 plan_handles for query_hash: %w", err)
+	}
+
+	s.logger.Debug("Successfully fetched plan_handles for query_hash",
+		zap.String("query_hash", queryHashHex),
+		zap.Int("plan_count", len(results)),
+		zap.Any("session_id", activeQuery.CurrentSessionID))
+
+	return results, nil
+}
+
+// emitExecutionPlanTopLevelDetailsAsCustomEvents emits execution plan top-level details as custom events
+// This is the new implementation using newrelic.event.type instead of logs
+// Each plan becomes a separate custom event: SqlServerExecutionPlanTopLevel
+func (s *QueryPerformanceScraper) emitExecutionPlanTopLevelDetailsAsCustomEvents(ctx context.Context, activeQuery models.ActiveRunningQuery, planHandleResults []models.PlanHandleResult, logs plog.Logs) {
+	if len(planHandleResults) == 0 {
+		return
+	}
+
+	// Create resource logs
+	resourceLogs := logs.ResourceLogs().AppendEmpty()
+
+	// Add resource attributes for correlation
+	resourceAttrs := resourceLogs.Resource().Attributes()
+	if activeQuery.DatabaseName != nil {
+		resourceAttrs.PutStr("db.name", *activeQuery.DatabaseName)
+	}
+	if activeQuery.LoginName != nil {
+		resourceAttrs.PutStr("db.user", *activeQuery.LoginName)
+	}
+
+	// Create scope logs
+	scopeLogs := resourceLogs.ScopeLogs().AppendEmpty()
+	scopeLogs.Scope().SetName("newrelicsqlserverreceiver")
+	scopeLogs.Scope().SetVersion("1.0.0")
+
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+
+	// Process each plan_handle
+	for i, planResult := range planHandleResults {
+		if planResult.ExecutionPlanXML == nil || *planResult.ExecutionPlanXML == "" {
+			s.logger.Debug("Skipping plan_handle with no execution plan XML",
+				zap.Int("index", i),
+				zap.Any("plan_handle", planResult.PlanHandle))
+			continue
+		}
+
+		// Parse top-level details (lightweight parsing)
+		queryID := ""
+		if activeQuery.QueryID != nil {
+			queryID = activeQuery.QueryID.String()
+		}
+		planHandle := ""
+		if planResult.PlanHandle != nil {
+			planHandle = planResult.PlanHandle.String()
+		}
+
+		topLevelDetails, err := models.ParseExecutionPlanTopLevelDetails(*planResult.ExecutionPlanXML, queryID, planHandle, &planResult)
+		if err != nil {
+			s.logger.Warn("Failed to parse execution plan top-level details",
+				zap.Error(err),
+				zap.Int("index", i),
+				zap.String("plan_handle", planHandle))
+			continue
+		}
+
+		// Emit as custom event
+		s.createExecutionPlanTopLevelCustomEvent(topLevelDetails, activeQuery, scopeLogs, timestamp, i)
+	}
+
+	s.logger.Info("Emitted execution plan top-level details as custom events",
+		zap.Any("session_id", activeQuery.CurrentSessionID),
+		zap.Int("plan_count", len(planHandleResults)))
+}
+
+// createExecutionPlanTopLevelCustomEvent creates a single custom event for execution plan top-level details
+// Uses newrelic.event.type attribute to create SqlServerExecutionPlanTopLevel custom event
+func (s *QueryPerformanceScraper) createExecutionPlanTopLevelCustomEvent(topLevel *models.ExecutionPlanTopLevelDetails, activeQuery models.ActiveRunningQuery, scopeLogs plog.ScopeLogs, timestamp pcommon.Timestamp, index int) {
+	logRecord := scopeLogs.LogRecords().AppendEmpty()
+	logRecord.SetTimestamp(timestamp)
+	logRecord.SetObservedTimestamp(timestamp)
+	logRecord.SetSeverityNumber(plog.SeverityNumberInfo)
+	logRecord.SetSeverityText("INFO")
+
+	// Set body with meaningful description
+	logRecord.Body().SetStr(fmt.Sprintf("Execution Plan Top-Level: Plan #%d for Query %s (Cost: %.2f, Operators: %d)",
+		index+1, topLevel.QueryID, topLevel.EstimatedTotalCost, topLevel.TotalOperators))
+
+	// Set all attributes
+	attrs := logRecord.Attributes()
+
+	// CRITICAL: Signal New Relic to ingest this as a Custom Event
+	// Allows querying via: SELECT * FROM SqlServerExecutionPlanTopLevel
+	attrs.PutStr("newrelic.event.type", "SqlServerExecutionPlanTopLevel")
+
+	// Correlation keys
+	attrs.PutStr("query_id", topLevel.QueryID)
+	attrs.PutStr("plan_handle", topLevel.PlanHandle)
+	attrs.PutStr("query_plan_hash", topLevel.QueryPlanHash)
+	if activeQuery.CurrentSessionID != nil {
+		attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
+	}
+	if activeQuery.RequestID != nil {
+		attrs.PutInt("request_id", *activeQuery.RequestID)
+	}
+	if activeQuery.DatabaseName != nil {
+		attrs.PutStr("database_name", *activeQuery.DatabaseName)
+	}
+
+	// SQL Query Information
+	attrs.PutStr("sql_text", topLevel.SQLText)
+
+	// Top-Level Plan Costs
+	attrs.PutDouble("total_subtree_cost", topLevel.TotalSubtreeCost)
+	attrs.PutDouble("statement_subtree_cost", topLevel.StatementSubTreeCost)
+	attrs.PutDouble("estimated_total_cost", topLevel.EstimatedTotalCost)
+
+	// Compilation Details
+	attrs.PutStr("compile_time", topLevel.CompileTime)
+	attrs.PutInt("compile_cpu", topLevel.CompileCPU)
+	attrs.PutInt("compile_memory", topLevel.CompileMemory)
+	attrs.PutInt("cached_plan_size", topLevel.CachedPlanSize)
+
+	// Optimizer Details
+	attrs.PutStr("statement_optm_level", topLevel.StatementOptmLevel)
+	if topLevel.StatementOptmEarlyAbortReason != "" {
+		attrs.PutStr("statement_optm_early_abort_reason", topLevel.StatementOptmEarlyAbortReason)
+	}
+
+	// Execution Counts and Timing
+	attrs.PutInt("execution_count", topLevel.ExecutionCount)
+	attrs.PutDouble("avg_elapsed_time_ms", topLevel.AvgElapsedTimeMs)
+	attrs.PutDouble("avg_worker_time_ms", topLevel.AvgWorkerTimeMs)
+	attrs.PutStr("last_execution_time", topLevel.LastExecutionTime)
+	attrs.PutStr("creation_time", topLevel.CreationTime)
+
+	// Resource Estimates
+	attrs.PutDouble("estimate_rows", topLevel.EstimateRows)
+	attrs.PutDouble("estimate_io", topLevel.EstimateIO)
+	attrs.PutDouble("estimate_cpu", topLevel.EstimateCPU)
+	attrs.PutInt("avg_row_size", topLevel.AvgRowSize)
+
+	// Plan Details
+	attrs.PutInt("degree_of_parallelism", topLevel.DegreeOfParallelism)
+	attrs.PutInt("memory_grant", topLevel.MemoryGrant)
+	attrs.PutInt("cached_plan_size_64", topLevel.CachedPlanSize64)
+
+	// Missing Index Information
+	attrs.PutInt("missing_index_count", int64(topLevel.MissingIndexCount))
+	attrs.PutDouble("missing_index_impact", topLevel.MissingIndexImpact)
+
+	// Warnings
+	attrs.PutBool("no_join_predicate", topLevel.NoJoinPredicate)
+	attrs.PutInt("columns_with_no_statistics", int64(topLevel.ColumnsWithNoStatistics))
+	attrs.PutInt("unmatched_indexes", int64(topLevel.UnmatchedIndexes))
+
+	// Operator Summary
+	attrs.PutInt("total_operators", int64(topLevel.TotalOperators))
+	attrs.PutInt("scans_count", int64(topLevel.ScansCount))
+	attrs.PutInt("seeks_count", int64(topLevel.SeeksCount))
+
+	// Timestamps
+	attrs.PutStr("collection_timestamp", topLevel.CollectionTimestamp)
+
+	// Additional context from active query
+	if activeQuery.WaitType != nil {
+		attrs.PutStr("active_wait_type", *activeQuery.WaitType)
+	}
+	if activeQuery.WaitTimeS != nil {
+		attrs.PutDouble("active_wait_time_s", *activeQuery.WaitTimeS)
+	}
+	if activeQuery.TotalElapsedTimeMs != nil {
+		attrs.PutInt("active_elapsed_time_ms", *activeQuery.TotalElapsedTimeMs)
+	}
 }

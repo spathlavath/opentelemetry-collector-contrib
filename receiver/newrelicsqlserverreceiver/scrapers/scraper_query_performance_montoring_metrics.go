@@ -87,6 +87,7 @@ type QueryPerformanceScraper struct {
 	logConsumer         plog.Logs                     // For emitting execution plan logs
 	slowQuerySmoother   *SlowQuerySmoother            // EWMA-based smoothing algorithm for slow queries
 	intervalCalculator  *SimplifiedIntervalCalculator // Simplified delta-based interval calculator
+	metadataCache       *helpers.MetadataCache        // Metadata cache for wait_resource enrichment
 }
 
 // NewQueryPerformanceScraper creates a new query performance scraper with smoothing and interval calculator configuration
@@ -100,6 +101,7 @@ func NewQueryPerformanceScraper(
 	maxAgeMinutes int,
 	intervalCalcEnabled bool,
 	intervalCalcCacheTTLMinutes int,
+	metadataCache *helpers.MetadataCache,
 ) *QueryPerformanceScraper {
 	var smoother *SlowQuerySmoother
 	var intervalCalc *SimplifiedIntervalCalculator
@@ -135,11 +137,20 @@ func NewQueryPerformanceScraper(
 		executionPlanLogger: models.NewExecutionPlanLogger(),
 		slowQuerySmoother:   smoother,
 		intervalCalculator:  intervalCalc,
+		metadataCache:       metadataCache,
 	}
 }
 
 // ScrapeSlowQueryMetrics collects slow query performance monitoring metrics with interval-based averaging and/or EWMA smoothing
 func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit int) error {
+	// Refresh metadata cache if needed (auto-throttled by refresh interval)
+	if s.metadataCache != nil {
+		if err := s.metadataCache.Refresh(ctx); err != nil {
+			s.logger.Warn("Failed to refresh metadata cache", zap.Error(err))
+			// Continue with stale cache data
+		}
+	}
+
 	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
 
 	s.logger.Debug("Executing slow query metrics collection",
@@ -156,6 +167,54 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, sc
 	}
 
 	s.logger.Debug("Raw slow query metrics fetched", zap.Int("raw_result_count", len(rawResults)))
+
+	// Fetch currently active queries to backfill slow query metrics
+	// This ensures all active queries have corresponding slow query metrics for complete correlation
+	activeQueryStatsQuery := fmt.Sprintf(queries.ActiveQueryStatsForSlowQueryUnion, textTruncateLimit)
+	var activeQueryStats []models.SlowQuery
+	if err := s.connection.Query(ctx, &activeQueryStats, activeQueryStatsQuery); err != nil {
+		s.logger.Warn("Failed to fetch active query stats for union, continuing without them",
+			zap.Error(err))
+	} else {
+		s.logger.Debug("Active query stats fetched for union", zap.Int("active_count", len(activeQueryStats)))
+
+		// Merge active queries with slow queries
+		// Use a map to deduplicate by (query_hash, plan_handle)
+		// Priority: Keep slow query stat if it exists, otherwise use active query stat
+		queryMap := make(map[string]models.SlowQuery)
+
+		// First, add all slow queries from dm_exec_query_stats
+		for _, sq := range rawResults {
+			if sq.QueryID != nil && sq.PlanHandle != nil {
+				key := sq.QueryID.String() + "|" + sq.PlanHandle.String()
+				queryMap[key] = sq
+			}
+		}
+
+		// Then, add active queries that aren't already in the map
+		addedCount := 0
+		for _, aq := range activeQueryStats {
+			if aq.QueryID != nil && aq.PlanHandle != nil {
+				key := aq.QueryID.String() + "|" + aq.PlanHandle.String()
+				if _, exists := queryMap[key]; !exists {
+					queryMap[key] = aq
+					addedCount++
+				}
+			}
+		}
+
+		s.logger.Debug("Merged active queries with slow queries",
+			zap.Int("slow_query_count", len(rawResults)),
+			zap.Int("active_query_count", len(activeQueryStats)),
+			zap.Int("added_from_active", addedCount),
+			zap.Int("total_after_merge", len(queryMap)))
+
+		// Convert map back to slice
+		rawResults = make([]models.SlowQuery, 0, len(queryMap))
+		for _, sq := range queryMap {
+			rawResults = append(rawResults, sq)
+		}
+	}
 
 	// Apply simplified interval-based delta calculation if enabled
 	var resultsWithIntervalMetrics []models.SlowQuery
@@ -279,6 +338,14 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, sc
 
 // ScrapeBlockingSessionMetrics collects blocking session metrics
 func (s *QueryPerformanceScraper) ScrapeBlockingSessionMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, limit, textTruncateLimit int) error {
+	// Refresh metadata cache if needed (auto-throttled by refresh interval)
+	if s.metadataCache != nil {
+		if err := s.metadataCache.Refresh(ctx); err != nil {
+			s.logger.Warn("Failed to refresh metadata cache", zap.Error(err))
+			// Continue with stale cache data
+		}
+	}
+
 	query := fmt.Sprintf(queries.BlockingSessionsQuery, limit, textTruncateLimit)
 
 	s.logger.Debug("Executing blocking session metrics collection",
@@ -737,7 +804,13 @@ func (s *QueryPerformanceScraper) processBlockingSessionMetrics(result models.Bl
 
 		// RCA Enhancement: Lock resource details (WHAT is being locked)
 		if result.WaitResource != nil {
-			attrs.PutStr("wait_resource", *result.WaitResource)
+			waitResource := *result.WaitResource
+			attrs.PutStr("wait_resource", waitResource)
+
+			// Add enriched wait_resource description with metadata
+			resourceType, resourceDesc := helpers.DecodeWaitResourceWithMetadata(waitResource, s.metadataCache)
+			attrs.PutStr("wait_resource_type", resourceType)
+			attrs.PutStr("wait_resource_description", resourceDesc)
 		}
 
 		// RCA Enhancement: Blocker activity context (WHAT is blocker doing)

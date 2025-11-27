@@ -29,6 +29,7 @@
 //   - 0.3: Smooth, good for stable trending
 //   - 0.5: Balanced between responsiveness and stability
 //   - 0.7: Responsive, quick to react to changes
+//
 // - decayThreshold: Number of consecutive misses before removing query from history
 // - maxAge: Maximum age of history entries before forced cleanup
 //
@@ -65,13 +66,13 @@ type SlowQuerySmoother struct {
 
 // QueryHistory tracks the historical performance of a specific query
 type QueryHistory struct {
-	QueryID              string
-	LastSeen             time.Time
-	FirstSeen            time.Time
-	ConsecutiveMisses    int // Number of collection cycles where query didn't appear
-	SmoothedMetrics      *models.SlowQuery
-	RawMetricsCount      int64 // Number of raw observations smoothed
-	LastUpdateTimestamp  time.Time
+	QueryID             string
+	LastSeen            time.Time
+	FirstSeen           time.Time
+	ConsecutiveMisses   int // Number of collection cycles where query didn't appear
+	SmoothedMetrics     *models.SlowQuery
+	RawMetricsCount     int64 // Number of raw observations smoothed
+	LastUpdateTimestamp time.Time
 }
 
 // NewSlowQuerySmoother creates a new slow query smoother with specified parameters
@@ -82,6 +83,7 @@ type QueryHistory struct {
 //   - 0.0 = no smoothing (use only historical data)
 //   - 1.0 = no smoothing (use only current data)
 //   - 0.3 = recommended default (30% new, 70% historical)
+//
 // - decayThreshold: Consecutive misses before removal. Default: 3
 // - maxAge: Maximum history age. Default: 5 minutes
 func NewSlowQuerySmoother(logger *zap.Logger, smoothingFactor float64, decayThreshold int, maxAge time.Duration) *SlowQuerySmoother {

@@ -170,76 +170,76 @@ func TestGetWaitTypeCategory(t *testing.T) {
 
 func TestDecodeWaitResource(t *testing.T) {
 	tests := []struct {
-		name               string
-		waitResource       string
-		expectedType       string
-		expectedDesc       string
+		name         string
+		waitResource string
+		expectedType string
+		expectedDesc string
 	}{
 		{
-			name:               "Empty wait resource",
-			waitResource:       "",
-			expectedType:       "N/A",
-			expectedDesc:       "Not Applicable",
+			name:         "Empty wait resource",
+			waitResource: "",
+			expectedType: "N/A",
+			expectedDesc: "Not Applicable",
 		},
 		{
-			name:               "KEY lock",
-			waitResource:       "KEY: 5:72057594049986560 (419e4517fb6a)",
-			expectedType:       "Key Lock",
-			expectedDesc:       "Database ID: 5 | HOBT: 72057594049986560 | Key Hash: 419e4517fb6a",
+			name:         "KEY lock",
+			waitResource: "KEY: 5:72057594049986560 (419e4517fb6a)",
+			expectedType: "Key Lock",
+			expectedDesc: "Database ID: 5 | HOBT: 72057594049986560 | Key Hash: 419e4517fb6a",
 		},
 		{
-			name:               "PAGE lock",
-			waitResource:       "PAGE: 5:1:104",
-			expectedType:       "Page Lock",
-			expectedDesc:       "Database ID: 5 | File: 1 | Page: 104",
+			name:         "PAGE lock",
+			waitResource: "PAGE: 5:1:104",
+			expectedType: "Page Lock",
+			expectedDesc: "Database ID: 5 | File: 1 | Page: 104",
 		},
 		{
-			name:               "RID lock",
-			waitResource:       "RID: 5:1:104:0",
-			expectedType:       "Row Lock",
-			expectedDesc:       "Database ID: 5 | File: 1 | Page: 104 | Row: 0",
+			name:         "RID lock",
+			waitResource: "RID: 5:1:104:0",
+			expectedType: "Row Lock",
+			expectedDesc: "Database ID: 5 | File: 1 | Page: 104 | Row: 0",
 		},
 		{
-			name:               "OBJECT lock",
-			waitResource:       "OBJECT: 5:245575913:0",
-			expectedType:       "Object Lock",
-			expectedDesc:       "Database ID: 5 | Object ID: 245575913 | Partition: 0",
+			name:         "OBJECT lock",
+			waitResource: "OBJECT: 5:245575913:0",
+			expectedType: "Object Lock",
+			expectedDesc: "Database ID: 5 | Object ID: 245575913 | Partition: 0",
 		},
 		{
-			name:               "DATABASE lock",
-			waitResource:       "DATABASE: 5",
-			expectedType:       "Database Lock",
-			expectedDesc:       "Database ID: 5",
+			name:         "DATABASE lock",
+			waitResource: "DATABASE: 5",
+			expectedType: "Database Lock",
+			expectedDesc: "Database ID: 5",
 		},
 		{
-			name:               "FILE lock",
-			waitResource:       "FILE: 5:1",
-			expectedType:       "File Lock",
-			expectedDesc:       "Database ID: 5 | File: 1",
+			name:         "FILE lock",
+			waitResource: "FILE: 5:1",
+			expectedType: "File Lock",
+			expectedDesc: "Database ID: 5 | File: 1",
 		},
 		{
-			name:               "EXTENT lock",
-			waitResource:       "EXTENT: 5:1:104",
-			expectedType:       "Extent Lock",
-			expectedDesc:       "Database ID: 5 | File: 1 | First Page: 104",
+			name:         "EXTENT lock",
+			waitResource: "EXTENT: 5:1:104",
+			expectedType: "Extent Lock",
+			expectedDesc: "Database ID: 5 | File: 1 | First Page: 104",
 		},
 		{
-			name:               "HOBT lock",
-			waitResource:       "HOBT: 72057594049986560",
-			expectedType:       "Heap/B-Tree Lock",
-			expectedDesc:       "HOBT ID: 72057594049986560",
+			name:         "HOBT lock",
+			waitResource: "HOBT: 72057594049986560",
+			expectedType: "Heap/B-Tree Lock",
+			expectedDesc: "HOBT ID: 72057594049986560",
 		},
 		{
-			name:               "APPLICATION lock",
-			waitResource:       "APPLICATION: 1:MyAppLock:(abc123)",
-			expectedType:       "Application Lock",
-			expectedDesc:       "Principal: 1 | Lock Name: MyAppLock | Hash: abc123",
+			name:         "APPLICATION lock",
+			waitResource: "APPLICATION: 1:MyAppLock:(abc123)",
+			expectedType: "Application Lock",
+			expectedDesc: "Principal: 1 | Lock Name: MyAppLock | Hash: abc123",
 		},
 		{
-			name:               "Unknown format",
-			waitResource:       "UNKNOWN_FORMAT: test",
-			expectedType:       "Unknown",
-			expectedDesc:       "UNKNOWN_FORMAT: test",
+			name:         "Unknown format",
+			waitResource: "UNKNOWN_FORMAT: test",
+			expectedType: "Unknown",
+			expectedDesc: "UNKNOWN_FORMAT: test",
 		},
 	}
 

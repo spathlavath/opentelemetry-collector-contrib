@@ -340,7 +340,9 @@ type ActiveRunningQuery struct {
 	ExecutionPlanXML *string  `db:"execution_plan_xml" metric_name:"execution_plan_xml" source_type:"attribute"`
 
 	// I. Blocking Details
-	BlockingSessionID  *string `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
+	// LINKING FIX: Changed from *string to *int64 for proper numeric joins
+	// NULL when not blocked (was "N/A" string) - enables: WHERE blocking_session_id = 123
+	BlockingSessionID  *int64  `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
 	BlockerLoginName   *string `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
 	BlockerHostName    *string `db:"blocker_host_name" metric_name:"blocker_host_name" source_type:"attribute"`
 	BlockerProgramName *string `db:"blocker_program_name" metric_name:"blocker_program_name" source_type:"attribute"`
@@ -371,4 +373,82 @@ type LockedObject struct {
 
 	// Metadata
 	CollectionTimestamp *string `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
+}
+
+// PlanHandleResult represents a plan_handle and its associated execution plan for an active query
+// Used to fetch top N most recently used execution plans for a given query_hash
+type PlanHandleResult struct {
+	PlanHandle         *QueryID `db:"plan_handle"`
+	QueryHash          *QueryID `db:"query_hash"`
+	QueryPlanHash      *QueryID `db:"query_plan_hash"`
+	LastExecutionTime  *string  `db:"last_execution_time"`
+	ExecutionCount     *int64   `db:"execution_count"`
+	TotalElapsedTimeMs *float64 `db:"total_elapsed_time_ms"`
+	TotalWorkerTimeMs  *float64 `db:"total_worker_time_ms"`
+	AvgElapsedTimeMs   *float64 `db:"avg_elapsed_time_ms"`
+	AvgWorkerTimeMs    *float64 `db:"avg_worker_time_ms"`
+	CreationTime       *string  `db:"creation_time"`
+	ExecutionPlanXML   *string  `db:"execution_plan_xml"`
+}
+
+// ExecutionPlanTopLevelDetails represents high-level execution plan details (not node-level)
+// Extracted from XML execution plan for lightweight analysis
+type ExecutionPlanTopLevelDetails struct {
+	// Identifiers
+	QueryID       string `json:"query_id"`
+	PlanHandle    string `json:"plan_handle"`
+	QueryPlanHash string `json:"query_plan_hash"`
+
+	// SQL Query Information
+	SQLText string `json:"sql_text"`
+
+	// Top-Level Plan Costs (from root RelOp)
+	TotalSubtreeCost     float64 `json:"total_subtree_cost"`
+	StatementSubTreeCost float64 `json:"statement_subtree_cost"`
+	EstimatedTotalCost   float64 `json:"estimated_total_cost"`
+
+	// Compilation Details
+	CompileTime    string `json:"compile_time"`
+	CompileCPU     int64  `json:"compile_cpu"`
+	CompileMemory  int64  `json:"compile_memory"`
+	CachedPlanSize int64  `json:"cached_plan_size"`
+
+	// Optimizer Details
+	StatementOptmLevel            string `json:"statement_optm_level"`
+	StatementOptmEarlyAbortReason string `json:"statement_optm_early_abort_reason"`
+
+	// Execution Counts and Timing
+	ExecutionCount    int64   `json:"execution_count"`
+	AvgElapsedTimeMs  float64 `json:"avg_elapsed_time_ms"`
+	AvgWorkerTimeMs   float64 `json:"avg_worker_time_ms"`
+	LastExecutionTime string  `json:"last_execution_time"`
+	CreationTime      string  `json:"creation_time"`
+
+	// Resource Estimates (from StmtSimple)
+	EstimateRows float64 `json:"estimate_rows"`
+	EstimateIO   float64 `json:"estimate_io"`
+	EstimateCPU  float64 `json:"estimate_cpu"`
+	AvgRowSize   int64   `json:"avg_row_size"`
+
+	// Plan Details
+	DegreeOfParallelism int64 `json:"degree_of_parallelism"`
+	MemoryGrant         int64 `json:"memory_grant"`
+	CachedPlanSize64    int64 `json:"cached_plan_size_64"`
+
+	// Missing Index Information (if any)
+	MissingIndexCount  int     `json:"missing_index_count"`
+	MissingIndexImpact float64 `json:"missing_index_impact"`
+
+	// Warnings
+	NoJoinPredicate         bool `json:"no_join_predicate"`
+	ColumnsWithNoStatistics int  `json:"columns_with_no_statistics"`
+	UnmatchedIndexes        int  `json:"unmatched_indexes"`
+
+	// Operator Summary
+	TotalOperators int `json:"total_operators"`
+	ScansCount     int `json:"scans_count"`
+	SeeksCount     int `json:"seeks_count"`
+
+	// Timestamps
+	CollectionTimestamp string `json:"collection_timestamp"`
 }

@@ -1,7 +1,6 @@
 // Copyright The OpenTelemetry Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//
 // Security Metrics Categories:
 //
 // 1. Server Principals Monitoring:

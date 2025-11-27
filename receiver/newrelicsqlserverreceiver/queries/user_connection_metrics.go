@@ -1,7 +1,6 @@
 // Copyright The OpenTelemetry Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//
 // User Connection Metrics Queries:
 //
 // 1. Connection Status Distribution:
@@ -31,7 +30,6 @@
 // - No locks or blocking operations
 package queries
 
-//
 // The query returns:
 // - status: Current status of the user session (running, sleeping, suspended, etc.)
 // - session_count: Number of user sessions in each status
@@ -193,7 +191,6 @@ SELECT
     END AS connection_efficiency
 FROM ConnectionStats`
 
-//
 // The query returns:
 // - host_name: Name of the client host/machine making the connection
 // - program_name: Name of the client application/program
@@ -345,7 +342,6 @@ SELECT
     (SELECT COUNT(*) FROM HostStats WHERE programs_per_host > 1) AS hosts_with_multiple_programs,
     (SELECT COUNT(*) FROM ProgramStats WHERE hosts_per_program > 1) AS programs_from_multiple_hosts`
 
-//
 // The query returns:
 // - counter_name: Name of the performance counter (Logins/sec, Logouts/sec)
 // - cntr_value: Current counter value representing rate per second

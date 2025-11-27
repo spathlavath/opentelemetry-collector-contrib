@@ -95,7 +95,6 @@ JOIN
 JOIN
     sys.databases AS d ON drs.database_id = d.database_id;`
 
-//
 // The query returns:
 // - replica_server_name: Name of the server instance hosting the availability replica
 // - role_desc: Current role of the replica (PRIMARY, SECONDARY)
@@ -125,7 +124,6 @@ FROM
 INNER JOIN
     sys.availability_replicas AS ar ON ars.replica_id = ar.replica_id;`
 
-//
 // The query returns:
 // - group_name: Name of the availability group
 // - automated_backup_preference_desc: Backup preference setting (PRIMARY, SECONDARY_ONLY, SECONDARY, NONE)

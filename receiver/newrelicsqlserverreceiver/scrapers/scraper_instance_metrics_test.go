@@ -20,14 +20,14 @@ import (
 
 // MockInstanceSQLConnection is a simple mock implementation for testing
 type MockInstanceSQLConnection struct {
-	shouldFail      bool
-	errorMessage    string
-	memoryResults   []models.InstanceMemoryDefinitionsModel
-	statsResults    []models.InstanceStatsModel
-	bufferResults   []models.BufferPoolHitPercentMetricsModel
-	processResults  []models.InstanceProcessCountsModel
-	runnableResults []models.RunnableTasksMetricsModel
-	diskResults     []models.InstanceDiskMetricsModel
+	shouldFail        bool
+	errorMessage      string
+	memoryResults     []models.InstanceMemoryDefinitionsModel
+	statsResults      []models.InstanceStatsModel
+	bufferResults     []models.BufferPoolHitPercentMetricsModel
+	processResults    []models.InstanceProcessCountsModel
+	runnableResults   []models.RunnableTasksMetricsModel
+	diskResults       []models.InstanceDiskMetricsModel
 	connectionResults []models.InstanceActiveConnectionsMetricsModel
 	bufferSizeResults []models.InstanceBufferMetricsModel
 }
@@ -68,9 +68,9 @@ func createTestInstanceScraper(mockConn *MockInstanceSQLConnection, engineEditio
 
 // Helper function to create test memory data
 func createTestMemoryData() []models.InstanceMemoryDefinitionsModel {
-	totalMemory := 16777216000.0  // 16GB in bytes
+	totalMemory := 16777216000.0    // 16GB in bytes
 	availableMemory := 4194304000.0 // 4GB in bytes
-	utilization := 75.0           // 75% utilization
+	utilization := 75.0             // 75% utilization
 
 	return []models.InstanceMemoryDefinitionsModel{
 		{
@@ -91,10 +91,10 @@ func createTestStatsData() []models.InstanceStatsModel {
 
 	return []models.InstanceStatsModel{
 		{
-			UserConnections:  &userConnections,
-			BatchRequestSec:  &batchRequests,
-			SQLCompilations:  &sqlCompilations,
-			PageSplitsSec:    &pageReads,
+			UserConnections:    &userConnections,
+			BatchRequestSec:    &batchRequests,
+			SQLCompilations:    &sqlCompilations,
+			PageSplitsSec:      &pageReads,
 			CheckpointPagesSec: &pageWrites,
 		},
 	}
@@ -128,13 +128,13 @@ func TestInstanceScraper_ScrapeInstanceMemoryMetrics_Success(t *testing.T) {
 		metric := scopeMetrics.Metrics().At(i)
 		assert.NotEmpty(t, metric.Name(), "Metric should have a name")
 		assert.Equal(t, pmetric.MetricTypeGauge, metric.Type(), "Memory metrics should be gauge type")
-		
+
 		gauge := metric.Gauge()
 		assert.Greater(t, gauge.DataPoints().Len(), 0, "Gauge should have data points")
-		
+
 		dataPoint := gauge.DataPoints().At(0)
 		assert.True(t, dataPoint.ValueType() == pmetric.NumberDataPointValueTypeInt || dataPoint.ValueType() == pmetric.NumberDataPointValueTypeDouble, "Data point should have a value")
-		
+
 		// Verify attributes
 		attrs := dataPoint.Attributes()
 		metricType, exists := attrs.Get("metric.type")
@@ -217,15 +217,15 @@ func TestInstanceScraper_ScrapeInstanceComprehensiveStats_Success(t *testing.T) 
 	for i := 0; i < scopeMetrics.Metrics().Len(); i++ {
 		metric := scopeMetrics.Metrics().At(i)
 		assert.NotEmpty(t, metric.Name(), "Metric should have a name")
-		
+
 		if metric.Type() == pmetric.MetricTypeGauge {
 			hasGaugeMetric = true
 			gauge := metric.Gauge()
 			assert.Greater(t, gauge.DataPoints().Len(), 0, "Gauge should have data points")
-			
+
 			dataPoint := gauge.DataPoints().At(0)
 			assert.True(t, dataPoint.ValueType() == pmetric.NumberDataPointValueTypeInt || dataPoint.ValueType() == pmetric.NumberDataPointValueTypeDouble, "Data point should have a value")
-			
+
 			// For gauge metrics, start time should equal timestamp
 			assert.Equal(t, dataPoint.StartTimestamp(), dataPoint.Timestamp(), "Gauge metrics should have instantaneous interval")
 		} else if metric.Type() == pmetric.MetricTypeSum {
@@ -233,12 +233,12 @@ func TestInstanceScraper_ScrapeInstanceComprehensiveStats_Success(t *testing.T) 
 			sum := metric.Sum()
 			assert.True(t, sum.IsMonotonic(), "Rate metrics should be monotonic")
 			assert.Equal(t, pmetric.AggregationTemporalityCumulative, sum.AggregationTemporality(), "Should use cumulative aggregation")
-			
+
 			assert.Greater(t, sum.DataPoints().Len(), 0, "Sum should have data points")
-			
+
 			dataPoint := sum.DataPoints().At(0)
 			assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dataPoint.ValueType(), "Sum data point should have double value")
-			
+
 			// For cumulative metrics, start time should be different from timestamp
 			assert.NotEqual(t, dataPoint.StartTimestamp(), dataPoint.Timestamp(), "Cumulative metrics should have fixed start time")
 		}
@@ -253,7 +253,7 @@ func TestInstanceScraper_ScrapeInstanceMemoryMetrics_UnsupportedEngine(t *testin
 	config := InstanceConfig{
 		EnableInstanceMemoryMetrics: true,
 	}
-	
+
 	// Use Azure SQL Database edition which may not support certain instance metrics
 	scraper := createTestInstanceScraper(mockConn, queries.AzureSQLDatabaseEngineEdition, config)
 
@@ -267,7 +267,7 @@ func TestInstanceScraper_ScrapeInstanceMemoryMetrics_UnsupportedEngine(t *testin
 	// Assertions - should complete without error but may not create metrics
 	// The behavior depends on whether the metric is compatible with Azure SQL Database
 	require.NoError(t, err, "Should not error for unsupported engine, just skip gracefully")
-	
+
 	// If the metric is not compatible, no database calls should be made
 	// The actual behavior depends on the queries.IsMetricCompatible implementation
 	// This test verifies graceful handling of unsupported scenarios
@@ -311,7 +311,7 @@ func TestInstanceScraper_GetQueryForMetric(t *testing.T) {
 
 	// Test getting a query for a metric
 	query, found := scraper.getQueryForMetric("sqlserver.instance.memory_metrics")
-	
+
 	// Assertions depend on the actual implementation of queries.GetQueryForMetric
 	// This test verifies the method works and returns appropriate values
 	if found {
