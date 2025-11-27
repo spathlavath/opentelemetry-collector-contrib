@@ -6,6 +6,7 @@ package client
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"strings"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
@@ -136,6 +137,10 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold,
 
 // QueryChildCursors executes the child cursors query for a given SQL_ID.
 func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error) {
+	if c == nil || c.db == nil {
+		return nil, fmt.Errorf("SQL client or database connection is nil")
+	}
+
 	query := queries.GetChildCursorsQuery(sqlID, childLimit)
 
 	rows, err := c.db.QueryContext(ctx, query)
