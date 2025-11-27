@@ -76,15 +76,18 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
-// GetWaitEventQueriesSQL returns SQL for wait event queries with configurable row limit
-func GetWaitEventQueriesSQL(rowLimit int) string {
-	return fmt.Sprintf(`
+// GetWaitEventQueriesSQL returns SQL for wait event queries with configurable row limit and optional SQL ID filter
+// If sqlIDs is empty, returns all wait events. If sqlIDs is provided, filters by those specific SQL IDs.
+func GetWaitEventQueriesSQL(rowLimit int, sqlIDs string) string {
+	baseQuery := `
 		SELECT 
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
 			s.username,
 			s.sid,
+			s.serial#,
 			s.status,
 			s.sql_id,
+			s.SQL_CHILD_NUMBER,
 			s.wait_class,
 			s.event,
 			s.SECONDS_IN_WAIT,
@@ -112,15 +115,27 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 		WHERE 
 			s.status = 'ACTIVE' 
 			AND s.wait_class <> 'Idle'
-			AND s.SECONDS_IN_WAIT > 0
+			AND s.SECONDS_IN_WAIT > 0`
+
+	// Add SQL ID filter if provided
+	if sqlIDs != "" {
+		baseQuery += fmt.Sprintf(`
+			AND s.sql_id IN (%s)`, sqlIDs)
+	}
+
+	baseQuery += `
 		ORDER BY
 			s.SECONDS_IN_WAIT DESC
-		FETCH FIRST %d ROWS ONLY`, rowLimit)
+		FETCH FIRST %d ROWS ONLY`
+
+	return fmt.Sprintf(baseQuery, rowLimit)
 }
 
 // GetExecutionPlanQuery returns SQL to get execution plan from V$SQL_PLAN
-func GetExecutionPlanQuery(sqlIDs string) string {
-	return fmt.Sprintf(`
+// If childNumber is -1, fetches all child numbers for the SQL_ID (backward compatible)
+// If childNumber >= 0, fetches only that specific child number
+func GetExecutionPlanQuery(sqlID string, childNumber int64) string {
+	baseQuery := `
 		SELECT
 			SQL_ID,
 			TIMESTAMP,
@@ -147,31 +162,12 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 	FROM
 		V$SQL_PLAN
 	WHERE
-		SQL_ID = '%s'`, sqlIDs)
-}
+		SQL_ID = '%s'`
 
-// GetActiveSessionQueriesSQL returns SQL to fetch active session queries by SQL IDs
-func GetActiveSessionQueriesSQL(sqlIDs string) string {
-	return fmt.Sprintf(`
-		SELECT
-			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			s.username,
-			s.sid,
-			s.serial#,
-			s.sql_id AS query_id,
-			s.SQL_CHILD_NUMBER,
-			s.SQL_EXEC_START,
-			s.SQL_EXEC_ID,
-			s.SECONDS_IN_WAIT,
-			s.wait_class,
-			s.TIME_REMAINING_MICRO / 1000000.0 AS time_remaining_seconds,
-			s.MACHINE
-		FROM
-			v$session s
-		WHERE
-			s.sql_id IN (%s)
-			AND s.status = 'ACTIVE'
-			AND s.wait_class <> 'Idle'
-		ORDER BY
-			s.SECONDS_IN_WAIT DESC`, sqlIDs)
+	// Add CHILD_NUMBER filter if specified (when >= 0)
+	if childNumber >= 0 {
+		baseQuery += fmt.Sprintf(` AND CHILD_NUMBER = %d`, childNumber)
+	}
+
+	return fmt.Sprintf(baseQuery, sqlID)
 }
