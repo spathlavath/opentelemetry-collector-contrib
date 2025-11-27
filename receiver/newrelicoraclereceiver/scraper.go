@@ -226,20 +226,28 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 	return nil
 }
 
-// initializeQPMScrapers initializes Query Performance Monitoring scrapers
+// initializeQPMScrapers initializes Query Performance Monitoring scrapers in logical flow order
+// Flow: Slow Queries → Wait Events (for each slow query) → Execution Plans → Blocking Queries → Locks
 func (s *newRelicOracleScraper) initializeQPMScrapers() error {
-	// Initialize slow queries scraper
+	var err error
+
+	// 1. Initialize slow queries scraper (entry point - identifies slow-running queries from V$SQLAREA)
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
 		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
 	)
 
-	// Initialize execution plan scraper (uses LogsBuilder for log events)
+	// 2. Initialize wait events scraper (captures active sessions with wait events for each slow query)
+	s.waitEventsScraper = scrapers.NewWaitEventsScraper(
+		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.config.QueryMonitoringCountThreshold,
+	)
+
+	// 3. Initialize execution plan scraper (gets plans for queries identified from wait events, uses LogsBuilder)
 	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
 
-	// Initialize blocking scraper
-	var err error
+	// 4. Initialize blocking scraper (detects blocking sessions related to active sessions with wait events)
 	s.blockingScraper, err = scrapers.NewBlockingScraper(
 		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
@@ -248,13 +256,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		return fmt.Errorf("failed to create blocking scraper: %w", err)
 	}
 
-	// Initialize wait events scraper
-	s.waitEventsScraper = scrapers.NewWaitEventsScraper(
-		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
-		s.config.QueryMonitoringCountThreshold,
-	)
-
-	// Initialize lock scraper
+	// 5. Initialize lock scraper (monitors lock contention)
 	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
 
 	return nil
@@ -362,9 +364,6 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 	// Initialize only the scrapers needed for logs (slow queries + execution plans)
 	s.logger.Info("Initializing logs scrapers for execution plans")
 
-	// Initialize Oracle client
-	s.client = client.NewSQLClient(s.db)
-
 	// Initialize temporary metrics builder for slow queries scraper (needed to get query IDs)
 	// We need a metrics builder because slow queries scraper uses it, even though we only need the IDs
 	tempSettings := receiver.Settings{
@@ -374,7 +373,9 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 	}
 	tempMb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), tempSettings)
 
-	// Initialize slow queries scraper
+	// Follow QPM flow order: Slow Queries → Wait Events → Execution Plans
+
+	// 1. Initialize slow queries scraper (entry point - identifies slow queries)
 	slowQueriesScraper := scrapers.NewSlowQueriesScraper(
 		s.client,
 		tempMb,
@@ -386,7 +387,23 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 	)
 	s.slowQueriesScraper = slowQueriesScraper
 
-	// Initialize execution plan scraper
+	// 2. Initialize wait events scraper only if not already initialized (captures wait events for slow queries)
+	if s.waitEventsScraper == nil {
+		waitEventsScraper := scrapers.NewWaitEventsScraper(
+			s.client,
+			tempMb,
+			s.logger,
+			s.instanceName,
+			metadata.DefaultMetricsBuilderConfig(),
+			s.config.QueryMonitoringCountThreshold,
+		)
+		s.waitEventsScraper = waitEventsScraper
+		s.logger.Debug("Initialized waitEventsScraper in startLogs()")
+	} else {
+		s.logger.Debug("waitEventsScraper already initialized, reusing existing instance")
+	}
+
+	// 3. Initialize execution plan scraper (gets plans for queries from wait events)
 	executionPlanScraper := scrapers.NewExecutionPlanScraper(
 		s.client,
 		s.lb,
