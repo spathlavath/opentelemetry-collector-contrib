@@ -32,6 +32,16 @@ type MetricsConfig struct {
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
 	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
 	NewrelicoracledbBlockingQueriesWaitTime                            MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time"`
+	NewrelicoracledbChildCursorsBufferGets                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.buffer_gets"`
+	NewrelicoracledbChildCursorsCPUTime                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.cpu_time"`
+	NewrelicoracledbChildCursorsDetails                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.details"`
+	NewrelicoracledbChildCursorsDiskReads                              MetricConfig `mapstructure:"newrelicoracledb.child_cursors.disk_reads"`
+	NewrelicoracledbChildCursorsElapsedTime                            MetricConfig `mapstructure:"newrelicoracledb.child_cursors.elapsed_time"`
+	NewrelicoracledbChildCursorsExecutions                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.executions"`
+	NewrelicoracledbChildCursorsInvalidations                          MetricConfig `mapstructure:"newrelicoracledb.child_cursors.invalidations"`
+	NewrelicoracledbChildCursorsLoads                                  MetricConfig `mapstructure:"newrelicoracledb.child_cursors.loads"`
+	NewrelicoracledbChildCursorsParseCalls                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.parse_calls"`
+	NewrelicoracledbChildCursorsUserIoWaitTime                         MetricConfig `mapstructure:"newrelicoracledb.child_cursors.user_io_wait_time"`
 	NewrelicoracledbConnectionActiveSessions                           MetricConfig `mapstructure:"newrelicoracledb.connection.active_sessions"`
 	NewrelicoracledbConnectionBlockingSessions                         MetricConfig `mapstructure:"newrelicoracledb.connection.blocking_sessions"`
 	NewrelicoracledbConnectionBytesReceived                            MetricConfig `mapstructure:"newrelicoracledb.connection.bytes_received"`
@@ -358,6 +368,36 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbBlockingQueriesWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsBufferGets: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsDetails: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsExecutions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsInvalidations: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsLoads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsParseCalls: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsUserIoWaitTime: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbConnectionActiveSessions: MetricConfig{

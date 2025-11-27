@@ -83,6 +83,168 @@ Wait time in seconds for blocked queries
 | sql_exec_id | SQL execution identifier | Any Int | false |
 | database_name | Oracle database name | Any Str | false |
 
+### newrelicoracledb.child_cursors.buffer_gets
+
+Number of buffer gets performed by this child cursor
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {gets} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.cpu_time
+
+CPU time consumed by this child cursor (in microseconds)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.details
+
+Child cursor details including load times
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
+| last_load_time | Time when the SQL statement was last loaded into the library cache | Any Str | false |
+
+### newrelicoracledb.child_cursors.disk_reads
+
+Number of disk reads performed by this child cursor
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.elapsed_time
+
+Elapsed time for this child cursor (in microseconds)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.executions
+
+Number of executions of this child cursor
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.invalidations
+
+Number of times this child cursor was invalidated
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {invalidations} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.loads
+
+Number of times this child cursor was loaded into the library cache
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {loads} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.parse_calls
+
+Number of parse calls for this child cursor
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {calls} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
+### newrelicoracledb.child_cursors.user_io_wait_time
+
+User I/O wait time for this child cursor (in microseconds)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+
 ### newrelicoracledb.connection.active_sessions
 
 Number of active Oracle database sessions

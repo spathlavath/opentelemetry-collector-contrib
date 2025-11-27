@@ -62,6 +62,7 @@ type newRelicOracleScraper struct {
 	blockingScraper      *scrapers.BlockingScraper
 	waitEventsScraper    *scrapers.WaitEventsScraper
 	lockScraper          *scrapers.LockScraper
+	childCursorsScraper  *scrapers.ChildCursorsScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -256,6 +257,9 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 
 	// Initialize lock scraper
 	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
+
+	// Initialize child cursors scraper
+	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	return nil
 }
@@ -496,9 +500,17 @@ func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context,
 		return
 	}
 
-	s.logger.Info("Fetching execution plans",
+	s.logger.Info("Fetching execution plans and child cursor metrics",
 		zap.Int("sql_identifiers", len(sqlIdentifiers)),
 		zap.Int("slow_query_ids", len(queryIDs)))
+
+	// Scrape child cursor metrics for the slow queries
+	childCursorErrs := s.childCursorsScraper.ScrapeChildCursors(ctx, queryIDs, 5)
+	if len(childCursorErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping child cursor metrics",
+			zap.Int("error_count", len(childCursorErrs)))
+		s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
+	}
 
 	// Fetch execution plans for the merged SQL identifiers
 	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)

@@ -43,7 +43,13 @@ attributes:
   plan_hash_value:
     description: Oracle execution plan hash value
     type: string
-  
+  first_load_time:
+    description: Time when the SQL statement was first loaded into the library cache
+    type: string
+  last_load_time:
+    description: Time when the SQL statement was last loaded into the library cache
+    type: string
+
   # Execution Plan Row Attributes (from V$SQL_PLAN)
   child_number:
     description: Child cursor number
@@ -3605,6 +3611,119 @@ metrics:
       - schema_name
       - user_name
       - last_active_time
+
+  # Child Cursor Metrics (from V$SQL)
+  newrelicoracledb.child_cursors.cpu_time:
+    description: CPU time consumed by this child cursor (in microseconds)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: us
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.elapsed_time:
+    description: Elapsed time for this child cursor (in microseconds)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: us
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.user_io_wait_time:
+    description: User I/O wait time for this child cursor (in microseconds)
+    enabled: true
+    gauge:
+      value_type: int
+    unit: us
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.executions:
+    description: Number of executions of this child cursor
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{executions}"
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.disk_reads:
+    description: Number of disk reads performed by this child cursor
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{reads}"
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.buffer_gets:
+    description: Number of buffer gets performed by this child cursor
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{gets}"
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.loads:
+    description: Number of times this child cursor was loaded into the library cache
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{loads}"
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.parse_calls:
+    description: Number of parse calls for this child cursor
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{calls}"
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.invalidations:
+    description: Number of times this child cursor was invalidated
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{invalidations}"
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+
+  newrelicoracledb.child_cursors.details:
+    description: Child cursor details including load times
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{count}"
+    attributes:
+      - database_name
+      - query_id
+      - child_number
+      - first_load_time
+      - last_load_time
 
   newrelicoracledb.blocking_queries.wait_time:
     description: Wait time in seconds for blocked queries
