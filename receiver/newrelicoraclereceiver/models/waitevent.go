@@ -10,8 +10,10 @@ type WaitEvent struct {
 	CollectionTimestamp  sql.NullTime
 	Username             sql.NullString
 	SID                  sql.NullInt64
+	Serial               sql.NullInt64
 	Status               sql.NullString
 	QueryID              sql.NullString
+	SQLChildNumber       sql.NullInt64
 	WaitCategory         sql.NullString
 	WaitEventName        sql.NullString
 	CurrentWaitSeconds   sql.NullInt64
@@ -142,6 +144,22 @@ func (we *WaitEvent) GetP3Text() string {
 func (we *WaitEvent) GetSID() int64 {
 	if we.SID.Valid {
 		return we.SID.Int64
+	}
+	return 0
+}
+
+// GetSerial returns the serial number as int64, 0 if null
+func (we *WaitEvent) GetSerial() int64 {
+	if we.Serial.Valid {
+		return we.Serial.Int64
+	}
+	return 0
+}
+
+// GetSQLChildNumber returns the SQL child number as int64, 0 if null
+func (we *WaitEvent) GetSQLChildNumber() int64 {
+	if we.SQLChildNumber.Valid {
+		return we.SQLChildNumber.Int64
 	}
 	return 0
 }
