@@ -31,6 +31,29 @@ processors:
     limit_mib: 256
     spike_limit_mib: 64
   
+  # # Convert cumulative metrics to rate metrics for New Relic
+  # cumulativetorate:
+  #   state_ttl: 60m
+  #   include:
+  #     # Core SQL Server rate metrics
+  #     - "sqlserver.stats.sql_compilations_per_sec"
+  #     - "sqlserver.stats.sql_recompilations_per_sec"
+  #     - "sqlserver.stats.lock_waits_per_sec"
+  #     - "sqlserver.access.page_splits_per_sec"
+  #     - "sqlserver.buffer.checkpoint_pages_per_sec"
+  #     - "sqlserver.stats.deadlocks_per_sec"
+  #     - "sqlserver.stats.user_errors_per_sec"
+  #     - "sqlserver.stats.kill_connection_errors_per_sec"
+  #     - "sqlserver.bufferpool.batch_requests_per_sec"
+  #     - "sqlserver.instance.transactions_per_sec"
+  #     - "sqlserver.instance.forced_parameterizations_per_sec"
+  #     - "sqlserver.wait_stats.wait_time_ms"
+  #     - "sqlserver.wait_stats.waiting_tasks_count"
+  #     # Enhanced metrics (new)
+  #     - "sqlserver.instance.full_scans_rate"
+  #     - "sqlserver.instance.lock_timeouts_rate"
+  #     - "sqlserver.wait_stats.latch.*"
+  
   batch:
     timeout: 10s
     send_batch_size: 1024
