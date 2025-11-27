@@ -516,14 +516,10 @@ func (s *FailoverClusterScraper) processFailoverClusterAvailabilityGroupMetrics(
 // This method retrieves log send queue, redo queue, and redo rate metrics for monitoring replication performance
 // Compatible with both Standard SQL Server and Azure SQL Managed Instance
 func (s *FailoverClusterScraper) ScrapeFailoverClusterRedoQueueMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
-	// Skip for all engine types except Azure SQL Managed Instance
-	if s.engineEdition != 8 { // Azure SQL Managed Instance
-		s.logger.Debug("Skipping failover cluster redo queue metrics - only supported in Azure SQL Managed Instance",
-			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-		return nil
-	}
-
-	s.logger.Debug("Scraping SQL Server Always On redo queue metrics")
+	// Check if this SQL Server instance supports Always On Availability Groups
+	// This works for both Standard SQL Server and Azure SQL Managed Instance
+	s.logger.Debug("Scraping SQL Server Always On redo queue metrics",
+		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
 
 	// Get the appropriate query for this engine edition using centralized query selection
 	query, found := queries.GetQueryForMetric(queries.FailoverClusterQueries, "sqlserver.failover_cluster.redo_queue_metrics", s.engineEdition)
@@ -544,9 +540,9 @@ func (s *FailoverClusterScraper) ScrapeFailoverClusterRedoQueueMetrics(ctx conte
 		return fmt.Errorf("failed to execute failover cluster redo queue query: %w", err)
 	}
 
-	// If no results, this Azure SQL Managed Instance may not have Always On AG enabled or configured
+	// If no results, this SQL Server instance may not have Always On AG enabled or configured
 	if len(results) == 0 {
-		s.logger.Debug("No Always On redo queue metrics found - Azure SQL Managed Instance may not have Always On Availability Groups enabled")
+		s.logger.Debug("No Always On redo queue metrics found - SQL Server may not have Always On Availability Groups enabled or configured")
 		return nil
 	}
 
@@ -580,30 +576,45 @@ func (s *FailoverClusterScraper) ScrapeFailoverClusterRedoQueueMetrics(ctx conte
 // processFailoverClusterRedoQueueMetrics processes redo queue metrics and creates OpenTelemetry metrics
 func (s *FailoverClusterScraper) processFailoverClusterRedoQueueMetrics(result models.FailoverClusterRedoQueueMetrics, scopeMetrics pmetric.ScopeMetrics) error {
 	// Helper function to create a metric for a specific redo queue counter
+	// Always create metrics even if value is null (use 0 for nulls)
 	createMetric := func(value *int64, metricName, unit, description string) {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName(metricName)
+		metric.SetUnit(unit)
+		metric.SetDescription(description)
+
+		gauge := metric.SetEmptyGauge()
+		dataPoint := gauge.DataPoints().AppendEmpty()
+		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
+		dataPoint.SetStartTimestamp(s.startTime)
+		
+		// Use 0 for NULL values instead of skipping the metric
+		var metricValue int64 = 0
 		if value != nil {
-			metric := scopeMetrics.Metrics().AppendEmpty()
-			metric.SetName(metricName)
-			metric.SetUnit(unit)
-			metric.SetDescription(description)
-
-			gauge := metric.SetEmptyGauge()
-			dataPoint := gauge.DataPoints().AppendEmpty()
-			dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-			dataPoint.SetStartTimestamp(s.startTime)
-			dataPoint.SetIntValue(*value)
-
-			// Add attributes
-			dataPoint.Attributes().PutStr("replica_server_name", result.ReplicaServerName)
-			dataPoint.Attributes().PutStr("database_name", result.DatabaseName)
-			dataPoint.Attributes().PutStr("metric.source", "sys.dm_hadr_database_replica_states")
-			dataPoint.Attributes().PutStr("metric.category", "always_on_redo_queue")
-			dataPoint.Attributes().PutStr("engine_edition", queries.GetEngineTypeName(s.engineEdition))
-			dataPoint.Attributes().PutInt("engine_edition_id", int64(s.engineEdition))
+			metricValue = *value
 		}
+		dataPoint.SetIntValue(metricValue)
+
+		// Add attributes
+		dataPoint.Attributes().PutStr("replica_server_name", result.ReplicaServerName)
+		dataPoint.Attributes().PutStr("database_name", result.DatabaseName)
+		dataPoint.Attributes().PutStr("metric.source", "sys.dm_hadr_database_replica_states")
+		dataPoint.Attributes().PutStr("metric.category", "always_on_redo_queue")
+		dataPoint.Attributes().PutStr("engine_edition", queries.GetEngineTypeName(s.engineEdition))
+		dataPoint.Attributes().PutInt("engine_edition_id", int64(s.engineEdition))
+		
+		// Add a flag to indicate if the original value was null
+		dataPoint.Attributes().PutBool("value_was_null", value == nil)
 	}
 
 	// Create metrics for each of the 3 redo queue columns
+	s.logger.Debug("Creating failover cluster redo queue metrics",
+		zap.String("replica_server", result.ReplicaServerName),
+		zap.String("database", result.DatabaseName),
+		zap.Int64p("log_send_queue_kb", result.LogSendQueueKB),
+		zap.Int64p("redo_queue_kb", result.RedoQueueKB),
+		zap.Int64p("redo_rate_kb_sec", result.RedoRateKBSec))
+
 	createMetric(result.LogSendQueueKB, "sqlserver.failover_cluster.log_send_queue_kb", "KBy",
 		"Amount of log records not yet sent to secondary replica in kilobytes")
 
@@ -612,6 +623,10 @@ func (s *FailoverClusterScraper) processFailoverClusterRedoQueueMetrics(result m
 
 	createMetric(result.RedoRateKBSec, "sqlserver.failover_cluster.redo_rate_kb_sec", "KBy/s",
 		"Rate at which log records are being redone on secondary replica in kilobytes per second")
+
+	s.logger.Info("Successfully created failover cluster redo queue metrics",
+		zap.String("replica_server", result.ReplicaServerName),
+		zap.String("database", result.DatabaseName))
 
 	return nil
 }

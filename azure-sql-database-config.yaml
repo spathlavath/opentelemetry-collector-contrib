@@ -1,0 +1,286 @@
+# OpenTelemetry Collector Configuration for New Relic SQL Server Integration
+# Configuration for Azure SQL Database with New Relic Staging Environment
+# Optimized for Azure SQL Database (Engine Edition 5) specific features
+
+# Extensions provide additional functionality
+extensions:
+  # Health check endpoint for monitoring collector health
+  health_check:
+    endpoint: localhost:13133
+
+# Service configuration
+service:
+  # Enable extensions
+  extensions: [health_check]
+
+  # Define the data pipeline
+  pipelines:
+    # Metrics pipeline: receiver -> processor -> exporter
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [memory_limiter, batch, resource]
+      exporters: [otlphttp, debug]
+
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: debug # Set to debug for troubleshooting
+    metrics:
+      level: none # Disable internal metrics to avoid port conflicts
+
+# Processors transform and enrich the data
+processors:
+  # Memory limiter prevents out-of-memory issues
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  # Batch processor groups data for efficient transmission
+  batch:
+    timeout: 10s
+    send_batch_size: 512
+    send_batch_max_size: 1000
+
+  # Resource processor adds metadata to all telemetry
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "staging"
+        action: upsert
+      - key: service.name
+        value: "azure-sql-database-monitoring"
+        action: upsert
+      - key: service.version
+        value: "1.0.0"
+        action: upsert
+      - key: host.name
+        value: "azure-sql-database"
+        action: upsert
+      - key: cloud.provider
+        value: "azure"
+        action: upsert
+      - key: azure.sql.engine_edition
+        value: "5"
+        action: upsert
+      - key: azure.sql.service_type
+        value: "database"
+        action: upsert
+
+# Receivers collect telemetry data
+receivers:
+  # New Relic SQL Server Receiver for Azure SQL Database
+  newrelicsqlserver:
+    # Azure SQL Database connection configuration
+    hostname: "pkudikyala-sql-server.database.windows.net" # Azure SQL Database server FQDN
+    port: "1433" # Default SQL Server port for Azure SQL Database
+    username: "pkudikyala" # Azure SQL Database username (without domain)
+    password: "Prvn@6842" # Azure SQL Database password
+
+    # Collection interval (collect metrics every 30 seconds for testing)
+    collection_interval: 30s
+
+    # Connection timeout for Azure SQL Database connections
+    timeout: 30s
+
+    # Enable SSL for secure connection (required for Azure SQL Database)
+    enable_ssl: true
+    trust_server_certificate: true
+
+    # =============================================================================
+    # GRANULAR METRIC CONFIGURATION
+    # =============================================================================
+    # All metrics are enabled by default (true). Only specify toggles you want to disable.
+    # Uncomment and set to false to disable specific metrics:
+
+    # Database Sample Metrics (core database monitoring)
+    # enable_buffer_metrics: false                     # Buffer pool size metrics
+    # enable_database_reserve_metrics: false           # Database space reservation metrics
+    # enable_disk_metrics_in_bytes: false             # Disk space usage metrics (Azure SQL DB only)
+    # enable_io_metrics: false                         # I/O stall time metrics
+    # enable_log_growth_metrics: false                # Transaction log growth metrics
+    # enable_page_file_metrics: false                 # Page file availability metrics
+    # enable_page_file_total_metrics: false           # Page file total metrics
+    # enable_memory_metrics: false                     # Memory usage metrics (Azure SQL DB only)
+    # enable_memory_total_metrics: false              # Total memory metrics (Azure SQL DB only)
+    # enable_memory_available_metrics: false          # Available memory metrics (Azure SQL DB only)
+    # enable_memory_utilization_metrics: false        # Memory utilization percentage (Azure SQL DB only)
+
+    # System Performance Metrics (new metrics)
+    # enable_system_cpu_queue_metrics: false          # Average CPU queue length
+    # enable_system_memory_pages_metrics: false       # Memory pages/sec
+    # enable_system_disk_queue_metrics: false         # Average disk queue length
+
+    # Failover Cluster Metrics (Always On Availability Groups only)
+    # enable_failover_cluster_replica_metrics: false                 # Replica performance metrics
+    # enable_failover_cluster_replica_state_metrics: false           # Replica state and sync status
+    # enable_failover_cluster_availability_group_health_metrics: false # AG health and role status
+    # enable_failover_cluster_availability_group_metrics: false      # AG configuration metrics
+    # enable_failover_cluster_redo_queue_metrics: false              # Redo queue metrics (Azure SQL MI only)
+
+    # Database Principals Metrics (security and user management)
+    # enable_database_principals_details_metrics: false              # Database user and role details
+
+    # Database Role Membership Metrics (role assignments and permissions)
+    # enable_database_role_membership_details_metrics: false         # Role membership details
+
+    # User Connection Metrics (connection monitoring and analysis)
+    # enable_user_connection_status_metrics: false      # Individual connection status counts
+    # enable_user_connection_summary_metrics: false     # Aggregated connection counts by status
+    # enable_user_connection_utilization_metrics: false # Connection efficiency ratios and percentages
+    # enable_user_connection_client_metrics: false      # Connections by host/program
+    # enable_user_connection_client_summary: false      # Aggregated client statistics
+    # enable_user_connection_stats_metrics: false       # General statistical analysis metrics
+
+    # =============================================================================
+    # QUERY MONITORING CONFIGURATION
+    # =============================================================================
+    enable_query_monitoring: true
+    query_monitoring_response_time_threshold: 1000 # Monitor queries > 1000ms (1 second)
+    query_monitoring_count_threshold: 10 # Monitor queries executed > 10 times
+    query_monitoring_fetch_interval: 15 # Fetch query stats every 15 seconds
+
+    # Concurrency settings
+    max_concurrent_workers: 5
+
+# Exporters send telemetry data to destinations
+exporters:
+  # New Relic OTLP HTTP Exporter for Staging Environment
+  otlphttp:
+    # New Relic Staging OTLP endpoint (using HTTPS on port 4318)
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+
+    # Headers for New Relic authentication
+    headers:
+      # New Relic License Key for staging environment
+      api-key: "5848a0c9c053a43ff9c2cc5af33cfe60FFFFNRAL"
+
+    # TLS configuration for HTTPS
+    tls:
+      insecure: false
+      insecure_skip_verify: false
+
+    # Retry configuration for robust delivery
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 30s
+      max_elapsed_time: 300s
+      randomization_factor: 0.5
+
+    # Queue configuration for handling traffic bursts
+    sending_queue:
+      enabled: true
+      num_consumers: 4
+      queue_size: 200
+
+    # Enable gzip compression for better performance
+    compression: gzip
+
+    # HTTP request timeout
+    timeout: 30s
+
+  # Debug exporter for local troubleshooting
+  debug:
+    verbosity: detailed
+    # Show first 5 metrics then every 100th for debugging
+    sampling_initial: 5
+    sampling_thereafter: 100
+# Notes for Azure SQL Database Usage:
+#
+# 1. IMPORTANT: Update connection details before using:
+#    - hostname: Replace "your-server.database.windows.net" with your Azure SQL Database server
+#    - username: Replace "your-azure-sql-username" with your Azure SQL Database user
+#    - password: Replace "your-azure-sql-password" with your Azure SQL Database password
+#
+# 2. Azure SQL Database Specific Features:
+#    - Engine Edition 5 (Azure SQL Database)
+#    - SSL/TLS encryption is REQUIRED and enabled
+#    - Uses Azure SQL Database specific queries for optimal performance
+#    - Memory metrics are ONLY available on Azure SQL Database
+#    - Max disk size metrics are ONLY available on Azure SQL Database
+#
+# 3. Metrics Available for Azure SQL Database:
+#    ✅ Buffer Pool Metrics (sqlserver.database.buffer_pool_size)
+#    ✅ I/O Stall Metrics (sqlserver.database.io_stall)
+#    ✅ Log Growth Metrics (sqlserver.database.log_growth)
+#    ✅ Page File Metrics (sqlserver.database.page_file_available/total)
+#    ✅ Memory Metrics (sqlserver.database_memory_metrics) - AZURE SQL DATABASE ONLY
+#    ✅ Max Disk Size Metrics (sqlserver.database.max_disk_size) - AZURE SQL DATABASE ONLY
+#    ✅ Failover Cluster Metrics (sqlserver.failover_cluster.*) - ALWAYS ON AG ONLY
+#
+# 4. Failover Cluster Metrics (Always On Availability Groups):
+#    ✅ Log Bytes Received/sec (sqlserver.failover_cluster.log_bytes_received_per_sec)
+#    ✅ Transaction Delay (sqlserver.failover_cluster.transaction_delay_ms)
+#    ✅ Flow Control Time (sqlserver.failover_cluster.flow_control_time_ms)
+#    Note: Only available on SQL Server instances with Always On Availability Groups enabled
+#
+# 5. Metrics NOT Available for Azure SQL Database:
+#    ❌ OS-level instance metrics (not supported in Azure SQL Database)
+#    ❌ Some advanced instance-level DMVs (Azure limitation)
+#    ❌ Always On AG metrics (single database model, no replica support)
+#
+# 6. Engine-Specific Behavior:
+#    - The collector automatically detects engine edition 5 (Azure SQL Database)
+#    - Memory and max disk size metrics are only collected for Azure SQL Database
+#    - Other engine editions (3, 8) will skip these Azure-specific metrics
+#
+# To run this configuration:
+# ./bin/otelcontribcol_darwin_arm64 --config=azure-sql-database-config.yaml
+#
+# Expected Azure SQL Database Metrics (with gauge type and statistical attributes):
+# - sqlserver.database.buffer_pool_size (count, sum, min, max, avg, latest)
+# - sqlserver.database.io_stall (count, sum, min, max, avg, latest)
+# - sqlserver.database.log_growth (count, sum, min, max, avg, latest)
+# - sqlserver.database.page_file_available (count, sum, min, max, avg, latest)
+# - sqlserver.database.page_file_total (count, sum, min, max, avg, latest)
+# - sqlserver.database_memory_metrics (count, sum, min, max, avg, latest) - AZURE ONLY
+# - sqlserver.database.max_disk_size (count, sum, min, max, avg, latest) - AZURE ONLY
+# - sqlserver.failover_cluster.log_bytes_received_per_sec (count, sum, min, max, avg, latest) - ALWAYS ON AG ONLY
+# - sqlserver.failover_cluster.transaction_delay_ms (count, sum, min, max, avg, latest) - ALWAYS ON AG ONLY
+# - sqlserver.failover_cluster.flow_control_time_ms (count, sum, min, max, avg, latest) - ALWAYS ON AG ONLY
+#
+# Configuration Options:
+# Option 1 - Master Toggle (Simplified, Recommended):
+#   enable_database_sample_metrics: true
+#
+# Option 2 - Granular Control (Individual flags when master toggle is false):
+#   enable_database_sample_metrics: false
+#   enable_buffer_metrics: true
+#   enable_memory_total_metrics: true     # Only works on Azure SQL Database
+#   enable_memory_available_metrics: true # Only works on Azure SQL Database
+#   # ... other individual flags
+#
+# Azure SQL Database Connection Examples:
+#
+# Example 1 - Standard Azure SQL Database:
+# hostname: "myserver.database.windows.net"
+# username: "myuser"
+# password: "MyPassword123!"
+#
+# Example 2 - Azure SQL Database with Azure AD:
+# hostname: "myserver.database.windows.net"
+# username: "myuser@mydomain.com"
+# password: "MyPassword123!"
+#
+# Monitor the logs for:
+# - Successful Azure SQL Database connection (should show engine edition 5)
+# - Master toggle enabling all supported database metrics
+# - Azure-specific metrics (memory, max disk size) being collected
+# - SSL/TLS connection establishment
+# - Metrics being scraped and exported to New Relic
+# - Any authentication or network issues
+#
+# Security Notes:
+# - This config contains sensitive credentials - update before use
+# - SSL/TLS is REQUIRED for Azure SQL Database and is enabled
+# - In production, use Azure Key Vault or environment variables
+# - Ensure Azure SQL Database firewall allows collector's IP address
+# - Consider using Azure AD authentication for enhanced security
+#
+# Troubleshooting Azure SQL Database:
+# - Verify server name format: "servername.database.windows.net"
+# - Check Azure SQL Database firewall rules
+# - Ensure SSL is enabled (required for Azure SQL Database)
+# - Verify Azure SQL Database service tier supports required features
+# - Check that username doesn't include domain prefix (Azure SQL Database specific)
