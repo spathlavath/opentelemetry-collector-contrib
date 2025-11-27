@@ -2,6 +2,7 @@ package scrapers
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 type WaitEventsScraper struct {
@@ -35,7 +37,8 @@ func NewWaitEventsScraper(oracleClient client.OracleClient, mb *metadata.Metrics
 func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 	var scrapeErrors []error
 
-	waitEvents, err := s.client.QueryWaitEvents(ctx, s.queryMonitoringCountThreshold)
+	// Pass empty string for sqlIDs to get all wait events (no filtering)
+	waitEvents, err := s.client.QueryWaitEvents(ctx, s.queryMonitoringCountThreshold, "")
 	if err != nil {
 		return []error{err}
 	}
@@ -126,4 +129,46 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 		zap.Int("errors", len(scrapeErrors)))
 
 	return scrapeErrors
+}
+
+// GetUniqueSQLIdentifiers extracts unique (SQL_ID, CHILD_NUMBER) combinations from current wait events
+// This is used to fetch execution plans only for queries that are actively executing
+func (s *WaitEventsScraper) GetUniqueSQLIdentifiers(ctx context.Context) ([]models.SQLIdentifier, error) {
+	// Pass empty string for sqlIDs to get all wait events (no filtering)
+	waitEvents, err := s.client.QueryWaitEvents(ctx, s.queryMonitoringCountThreshold, "")
+	if err != nil {
+		return nil, err
+	}
+
+	// Use a map to track unique combinations
+	uniqueMap := make(map[string]models.SQLIdentifier)
+
+	for _, waitEvent := range waitEvents {
+		if !waitEvent.HasValidQueryID() {
+			continue
+		}
+
+		sqlID := waitEvent.GetQueryID()
+		childNum := waitEvent.GetSQLChildNumber()
+
+		// Create a unique key
+		key := fmt.Sprintf("%s#%d", sqlID, childNum)
+
+		// Only add if not already present
+		if _, exists := uniqueMap[key]; !exists {
+			uniqueMap[key] = models.NewSQLIdentifier(sqlID, childNum)
+		}
+	}
+
+	// Convert map to slice
+	result := make([]models.SQLIdentifier, 0, len(uniqueMap))
+	for _, identifier := range uniqueMap {
+		result = append(result, identifier)
+	}
+
+	s.logger.Debug("Extracted unique SQL identifiers from wait events",
+		zap.Int("total_wait_events", len(waitEvents)),
+		zap.Int("unique_sql_identifiers", len(result)))
+
+	return result, nil
 }

@@ -154,31 +154,3 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		lastActiveTime,
 	)
 }
-
-// GetSlowQueryIDs returns only the query IDs without emitting metrics
-// This is used by the logs scraper to get query IDs for execution plans
-// without duplicating the slow query metrics already emitted by the metrics scraper
-func (s *SlowQueriesScraper) GetSlowQueryIDs(ctx context.Context) ([]string, []error) {
-	var queryIDs []string
-
-	slowQueries, err := s.client.QuerySlowQueries(ctx, s.queryMonitoringResponseTimeThreshold, s.queryMonitoringCountThreshold)
-	if err != nil {
-		return nil, []error{err}
-	}
-
-	for _, slowQuery := range slowQueries {
-		if !slowQuery.IsValidForMetrics() {
-			continue
-		}
-
-		if slowQuery.QueryID.Valid {
-			queryIDs = append(queryIDs, slowQuery.QueryID.String)
-		}
-	}
-
-	s.logger.Debug("Fetched slow query IDs (no metrics emitted)",
-		zap.Int("rows", len(slowQueries)),
-		zap.Int("query_ids", len(queryIDs)))
-
-	return queryIDs, nil
-}
