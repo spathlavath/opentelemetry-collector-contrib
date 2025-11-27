@@ -333,6 +333,13 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 	// Scrape execution plans (which now emits logs)
 	s.logger.Debug("Starting execution plan scraper for logs", zap.Strings("query_ids", queryIDs))
 
+	// Safety check: ensure waitEventsScraper is initialized
+	if s.waitEventsScraper == nil {
+		err := fmt.Errorf("waitEventsScraper is not initialized")
+		s.logger.Error("Cannot get SQL identifiers for execution plans", zap.Error(err))
+		return logs, err
+	}
+
 	// Get SQL identifiers from V$SQL child cursors + wait events
 	sqlIdentifiers, err := s.waitEventsScraper.GetSQLIdentifiersForExecutionPlans(scrapeCtx, queryIDs, 5)
 	if err != nil {
@@ -452,6 +459,14 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 // Flow: Slow Query IDs → V$SQL top 5 child cursors → Check wait events for new child numbers → Merge → Execution plans
 func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context, errChan chan<- error, queryIDs []string) {
 	s.logger.Debug("Starting execution plan scraper with query IDs", zap.Strings("query_ids", queryIDs))
+
+	// Safety check: ensure waitEventsScraper is initialized
+	if s.waitEventsScraper == nil {
+		err := fmt.Errorf("waitEventsScraper is not initialized")
+		s.logger.Error("Cannot get SQL identifiers for execution plans", zap.Error(err))
+		s.sendErrorsToChannel(errChan, []error{err}, "execution plan - scraper not initialized")
+		return
+	}
 
 	// Get SQL identifiers (SQL_ID, CHILD_NUMBER) for execution plan fetching
 	// 1. Fetch top 5 child cursors per SQL_ID from V$SQL
