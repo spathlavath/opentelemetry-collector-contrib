@@ -316,8 +316,9 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 
 	// Get unique SQL_ID + CHILD_NUMBER combinations from active wait events
 	// This ensures we only fetch execution plans for queries that are actively executing
+	// Note: In logs pipeline, we don't filter by slow queries (pass nil) - we get all active wait events
 	s.logger.Debug("Fetching unique SQL identifiers from wait events")
-	sqlIdentifiers, err := s.waitEventsScraper.GetUniqueSQLIdentifiers(scrapeCtx)
+	sqlIdentifiers, err := s.waitEventsScraper.GetUniqueSQLIdentifiers(scrapeCtx, nil)
 
 	if err != nil {
 		s.logger.Warn("Failed to get SQL identifiers from wait events",
@@ -446,23 +447,38 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	// Collect slow query errors
 	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
 
-	// Execute execution plan scraper - now gets SQL identifiers from wait events internally
-	s.executeExecutionPlanScraper(ctx, errChan)
+	// Execute execution plan scraper - passes queryIDs to filter wait events by slow queries
+	s.executeExecutionPlanScraper(ctx, errChan, queryIDs)
 
 }
 
 // executeExecutionPlanScraper executes the execution plan scraper with SQL identifiers from wait events
-func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context, errChan chan<- error) {
-	s.logger.Debug("Getting SQL identifiers from wait events for execution plans")
+// Fetches all wait events, filters by slow query IDs, then extracts unique (SQL_ID, CHILD_NUMBER) combinations
+func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context, errChan chan<- error, queryIDs []string) {
+	s.logger.Debug("Getting SQL identifiers from wait events for execution plans",
+		zap.Int("slow_query_count", len(queryIDs)))
 
-	// Get unique SQL_ID + CHILD_NUMBER combinations from active wait events
-	sqlIdentifiers, err := s.waitEventsScraper.GetUniqueSQLIdentifiers(ctx)
+	// Get unique (SQL_ID, CHILD_NUMBER) combinations from wait events
+	// If queryIDs provided, only includes wait events matching those slow query IDs
+	sqlIdentifiers, err := s.waitEventsScraper.GetUniqueSQLIdentifiers(ctx, queryIDs)
 	if err != nil {
 		s.logger.Warn("Failed to get SQL identifiers from wait events", zap.Error(err))
 		s.sendErrorsToChannel(errChan, []error{err}, "execution plan - get identifiers")
 		return
 	}
 
+	if len(sqlIdentifiers) == 0 {
+		if len(queryIDs) > 0 {
+			s.logger.Info("No wait events found matching slow query IDs",
+				zap.Int("slow_query_ids_checked", len(queryIDs)),
+				zap.Strings("slow_query_ids", queryIDs))
+		} else {
+			s.logger.Info("No active wait events found with valid SQL_IDs")
+		}
+		return
+	}
+
+	// Fetch execution plans for the SQL identifiers
 	s.logger.Debug("Starting execution plan scraper", zap.Int("sql_identifier_count", len(sqlIdentifiers)))
 	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
 

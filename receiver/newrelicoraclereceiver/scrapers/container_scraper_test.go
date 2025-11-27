@@ -298,7 +298,6 @@ func TestContainerScraper_ScrapePDBStatus_Success(t *testing.T) {
 		{
 			ConID:     sql.NullInt64{Int64: 3, Valid: true},
 			PDBName:   sql.NullString{String: "PDB1", Valid: true},
-			Status:    sql.NullString{String: "NORMAL", Valid: true},
 			OpenMode:  sql.NullString{String: "READ WRITE", Valid: true},
 			TotalSize: sql.NullInt64{Int64: 1073741824, Valid: true},
 		},

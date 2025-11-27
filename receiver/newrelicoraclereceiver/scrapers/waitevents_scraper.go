@@ -132,26 +132,45 @@ func (s *WaitEventsScraper) ScrapeWaitEvents(ctx context.Context) []error {
 }
 
 // GetUniqueSQLIdentifiers extracts unique (SQL_ID, CHILD_NUMBER) combinations from current wait events
-// This is used to fetch execution plans only for queries that are actively executing
-func (s *WaitEventsScraper) GetUniqueSQLIdentifiers(ctx context.Context) ([]models.SQLIdentifier, error) {
-	// Pass empty string for sqlIDs to get all wait events (no filtering)
+// Optionally filters by slow query IDs before extracting unique combinations
+func (s *WaitEventsScraper) GetUniqueSQLIdentifiers(ctx context.Context, slowQueryIDs []string) ([]models.SQLIdentifier, error) {
+	// Query all wait events (no filtering at database level)
 	waitEvents, err := s.client.QueryWaitEvents(ctx, s.queryMonitoringCountThreshold, "")
 	if err != nil {
 		return nil, err
 	}
 
-	// Use a map to track unique combinations
+	// Build a map of slow query IDs for fast lookup (only if provided)
+	var slowQueryMap map[string]bool
+	if len(slowQueryIDs) > 0 {
+		slowQueryMap = make(map[string]bool, len(slowQueryIDs))
+		for _, id := range slowQueryIDs {
+			slowQueryMap[id] = true
+		}
+	}
+
+	// Use a map to track unique (SQL_ID, CHILD_NUMBER) combinations
 	uniqueMap := make(map[string]models.SQLIdentifier)
+	totalWaitEvents := 0
+	filteredWaitEvents := 0
 
 	for _, waitEvent := range waitEvents {
 		if !waitEvent.HasValidQueryID() {
 			continue
 		}
 
+		totalWaitEvents++
 		sqlID := waitEvent.GetQueryID()
+
+		// Filter by slow query IDs if provided
+		if slowQueryMap != nil && !slowQueryMap[sqlID] {
+			continue // Skip wait events not matching slow queries
+		}
+
+		filteredWaitEvents++
 		childNum := waitEvent.GetSQLChildNumber()
 
-		// Create a unique key
+		// Create a unique key for (SQL_ID, CHILD_NUMBER) combination
 		key := fmt.Sprintf("%s#%d", sqlID, childNum)
 
 		// Only add if not already present
@@ -166,9 +185,17 @@ func (s *WaitEventsScraper) GetUniqueSQLIdentifiers(ctx context.Context) ([]mode
 		result = append(result, identifier)
 	}
 
-	s.logger.Debug("Extracted unique SQL identifiers from wait events",
-		zap.Int("total_wait_events", len(waitEvents)),
-		zap.Int("unique_sql_identifiers", len(result)))
+	if slowQueryMap != nil {
+		s.logger.Debug("Extracted unique SQL identifiers from wait events filtered by slow queries",
+			zap.Int("total_wait_events", totalWaitEvents),
+			zap.Int("filtered_wait_events", filteredWaitEvents),
+			zap.Int("slow_query_ids", len(slowQueryIDs)),
+			zap.Int("unique_sql_identifiers", len(result)))
+	} else {
+		s.logger.Debug("Extracted unique SQL identifiers from all wait events",
+			zap.Int("total_wait_events", totalWaitEvents),
+			zap.Int("unique_sql_identifiers", len(result)))
+	}
 
 	return result, nil
 }
