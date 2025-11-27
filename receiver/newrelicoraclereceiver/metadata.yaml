@@ -3696,8 +3696,10 @@ metrics:
       - collection_timestamp
       - user_name
       - session_id
+      - session_serial
       - session_status
       - query_id
+      - sql_child_number
       - wait_event_name
       - wait_category
       - session_program
@@ -3727,40 +3729,9 @@ metrics:
       - collection_timestamp
       - session_id
       - query_id
-      - sql_exec_id
-      - sql_exec_start
-
-  newrelicoracledb.active_sessions.seconds_in_wait:
-    description: Number of seconds the active session has been waiting
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - collection_timestamp
-      - user_name
-      - session_id
-      - session_serial
-      - query_id
       - sql_child_number
-      - sql_exec_start
       - sql_exec_id
-      - wait_category
-      - session_machine
-
-  newrelicoracledb.active_sessions.time_remaining:
-    description: Time remaining for the active session operation in seconds
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - collection_timestamp
-      - session_id
-      - query_id
-      - sql_child_number
       - sql_exec_start
-      - sql_exec_id
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.avg_wait_time_ms:

@@ -79,12 +79,14 @@ func GetBlockingQueriesSQL(rowLimit int) string {
 // GetWaitEventQueriesSQL returns SQL for wait event queries with configurable row limit
 func GetWaitEventQueriesSQL(rowLimit int) string {
 	return fmt.Sprintf(`
-		SELECT 
+		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
 			s.username,
 			s.sid,
+			s.serial#,
 			s.status,
 			s.sql_id,
+			s.SQL_CHILD_NUMBER,
 			s.wait_class,
 			s.event,
 			s.SECONDS_IN_WAIT,
@@ -105,12 +107,12 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 			s.p2,
 			s.p3text,
 			s.p3
-		FROM 
+		FROM
 			v$session s
-		LEFT JOIN 
+		LEFT JOIN
 			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID
-		WHERE 
-			s.status = 'ACTIVE' 
+		WHERE
+			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
 			AND s.SECONDS_IN_WAIT > 0
 		ORDER BY
@@ -118,8 +120,35 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
-// GetExecutionPlanQuery returns SQL to get execution plan from V$SQL_PLAN
-func GetExecutionPlanQuery(sqlIDs string) string {
+// GetChildCursorsQuery returns SQL to get top N child cursors for a given SQL_ID from V$SQL
+// Ordered by most recent load time to get the latest child cursor versions
+func GetChildCursorsQuery(sqlID string, childLimit int) string {
+	return fmt.Sprintf(`
+		SELECT
+			sql_id,
+			child_number,
+			cpu_time,
+			elapsed_time,
+			user_io_wait_time,
+			executions,
+			disk_reads,
+			buffer_gets,
+			loads,
+			parse_calls,
+			invalidations,
+			first_load_time,
+			last_load_time
+		FROM
+			v$sql
+		WHERE
+			sql_id = '%s'
+		ORDER BY
+			last_load_time DESC
+		FETCH FIRST %d ROWS ONLY`, sqlID, childLimit)
+}
+
+// GetExecutionPlanForChildQuery returns SQL to get execution plan from V$SQL_PLAN for specific child number
+func GetExecutionPlanForChildQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
 			SQL_ID,
@@ -147,31 +176,6 @@ func GetExecutionPlanQuery(sqlIDs string) string {
 	FROM
 		V$SQL_PLAN
 	WHERE
-		SQL_ID = '%s'`, sqlIDs)
-}
-
-// GetActiveSessionQueriesSQL returns SQL to fetch active session queries by SQL IDs
-func GetActiveSessionQueriesSQL(sqlIDs string) string {
-	return fmt.Sprintf(`
-		SELECT
-			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			s.username,
-			s.sid,
-			s.serial#,
-			s.sql_id AS query_id,
-			s.SQL_CHILD_NUMBER,
-			s.SQL_EXEC_START,
-			s.SQL_EXEC_ID,
-			s.SECONDS_IN_WAIT,
-			s.wait_class,
-			s.TIME_REMAINING_MICRO / 1000000.0 AS time_remaining_seconds,
-			s.MACHINE
-		FROM
-			v$session s
-		WHERE
-			s.sql_id IN (%s)
-			AND s.status = 'ACTIVE'
-			AND s.wait_class <> 'Idle'
-		ORDER BY
-			s.SECONDS_IN_WAIT DESC`, sqlIDs)
+		SQL_ID = '%s'
+		AND CHILD_NUMBER = %d`, sqlID, childNumber)
 }

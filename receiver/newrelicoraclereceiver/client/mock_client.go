@@ -12,9 +12,9 @@ import (
 // MockClient is a mock implementation of OracleClient for testing.
 type MockClient struct {
 	SlowQueries     []models.SlowQuery
+	ChildCursors    []models.ChildCursor
 	BlockingQueries []models.BlockingQuery
 	WaitEvents      []models.WaitEvent
-	ActiveSessions  []models.ActiveSession
 
 	// Connection metrics
 	TotalSessions      int64
@@ -135,7 +135,7 @@ func (m *MockClient) Ping(ctx context.Context) error {
 	return m.PingErr
 }
 
-func (m *MockClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error) {
+func (m *MockClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -152,6 +152,13 @@ func (m *MockClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold
 	return m.SlowQueries, nil
 }
 
+func (m *MockClient) QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.ChildCursors, nil
+}
+
 func (m *MockClient) QueryBlockingQueries(ctx context.Context, countThreshold int) ([]models.BlockingQuery, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
@@ -164,13 +171,6 @@ func (m *MockClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([
 		return nil, m.QueryErr
 	}
 	return m.WaitEvents, nil
-}
-
-func (m *MockClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string) ([]models.ActiveSession, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.ActiveSessions, nil
 }
 
 func (m *MockClient) QueryTotalSessions(ctx context.Context) (int64, error) {

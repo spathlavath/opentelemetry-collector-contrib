@@ -18,19 +18,19 @@ type OracleClient interface {
 	Ping(ctx context.Context) error
 
 	// Execution plan queries
-	QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error)
+	QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error)
 
 	// Slow queries
 	QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error)
+
+	// Child cursors (V$SQL)
+	QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error)
 
 	// Blocking queries
 	QueryBlockingQueries(ctx context.Context, countThreshold int) ([]models.BlockingQuery, error)
 
 	// Wait events
 	QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error)
-
-	// Active session details
-	QueryActiveSessionDetails(ctx context.Context, sqlIDs string) ([]models.ActiveSession, error)
 
 	// Connection metrics - simple counts
 	QueryTotalSessions(ctx context.Context) (int64, error)

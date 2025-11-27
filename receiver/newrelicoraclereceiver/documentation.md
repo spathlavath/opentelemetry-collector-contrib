@@ -12,48 +12,6 @@ metrics:
     enabled: false
 ```
 
-### newrelicoracledb.active_sessions.seconds_in_wait
-
-Number of seconds the active session has been waiting
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| session_serial | Oracle session serial number | Any Int | false |
-| query_id | SQL query identifier | Any Str | false |
-| sql_child_number | SQL child cursor number | Any Int | false |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
-| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
-| session_machine | Machine name where the session is running | Any Str | false |
-
-### newrelicoracledb.active_sessions.time_remaining
-
-Time remaining for the active session operation in seconds
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| sql_child_number | SQL child cursor number | Any Int | false |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
-
 ### newrelicoracledb.asm.diskgroup.free_mb
 
 Available free space in the ASM disk group in MB
@@ -4874,8 +4832,10 @@ Current wait time in seconds for active wait events
 | collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
 | session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
 | wait_event_name | Oracle wait event name for wait events | Any Str | false |
 | wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
 | session_program | Program name of the session | Any Str | false |
@@ -4910,6 +4870,7 @@ Time remaining for the wait event operation in seconds
 | collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
 

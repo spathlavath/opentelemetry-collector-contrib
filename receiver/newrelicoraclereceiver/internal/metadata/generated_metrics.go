@@ -13,12 +13,6 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
-	NewrelicoracledbActiveSessionsSecondsInWait: metricInfo{
-		Name: "newrelicoracledb.active_sessions.seconds_in_wait",
-	},
-	NewrelicoracledbActiveSessionsTimeRemaining: metricInfo{
-		Name: "newrelicoracledb.active_sessions.time_remaining",
-	},
 	NewrelicoracledbAsmDiskgroupFreeMb: metricInfo{
 		Name: "newrelicoracledb.asm.diskgroup.free_mb",
 	},
@@ -970,8 +964,6 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
-	NewrelicoracledbActiveSessionsSecondsInWait                        metricInfo
-	NewrelicoracledbActiveSessionsTimeRemaining                        metricInfo
 	NewrelicoracledbAsmDiskgroupFreeMb                                 metricInfo
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           metricInfo
 	NewrelicoracledbAsmDiskgroupTotalMb                                metricInfo
@@ -1292,122 +1284,6 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
-}
-
-type metricNewrelicoracledbActiveSessionsSecondsInWait struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.active_sessions.seconds_in_wait metric with initial data.
-func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) init() {
-	m.data.SetName("newrelicoracledb.active_sessions.seconds_in_wait")
-	m.data.SetDescription("Number of seconds the active session has been waiting")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, waitCategoryAttributeValue string, sessionMachineAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("session_serial", sessionSerialAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
-	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
-	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
-	dp.Attributes().PutStr("wait_category", waitCategoryAttributeValue)
-	dp.Attributes().PutStr("session_machine", sessionMachineAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbActiveSessionsSecondsInWait) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbActiveSessionsSecondsInWait(cfg MetricConfig) metricNewrelicoracledbActiveSessionsSecondsInWait {
-	m := metricNewrelicoracledbActiveSessionsSecondsInWait{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbActiveSessionsTimeRemaining struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.active_sessions.time_remaining metric with initial data.
-func (m *metricNewrelicoracledbActiveSessionsTimeRemaining) init() {
-	m.data.SetName("newrelicoracledb.active_sessions.time_remaining")
-	m.data.SetDescription("Time remaining for the active session operation in seconds")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbActiveSessionsTimeRemaining) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, sessionIDAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
-	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
-	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbActiveSessionsTimeRemaining) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbActiveSessionsTimeRemaining) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbActiveSessionsTimeRemaining(cfg MetricConfig) metricNewrelicoracledbActiveSessionsTimeRemaining {
-	m := metricNewrelicoracledbActiveSessionsTimeRemaining{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
 }
 
 type metricNewrelicoracledbAsmDiskgroupFreeMb struct {
@@ -17864,7 +17740,7 @@ func (m *metricNewrelicoracledbWaitEventsCurrentWaitSeconds) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsCurrentWaitSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionStatusAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string, sessionProgramAttributeValue string, sessionMachineAttributeValue string, waitObjectOwnerAttributeValue string, waitObjectNameAttributeValue string, waitObjectTypeAttributeValue string, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, rowWaitObjIDAttributeValue string, rowWaitFileIDAttributeValue string, rowWaitBlockIDAttributeValue string, waitP1textAttributeValue string, waitP1AttributeValue string, waitP2textAttributeValue string, waitP2AttributeValue string, waitP3textAttributeValue string, waitP3AttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsCurrentWaitSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionStatusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, waitEventNameAttributeValue string, waitCategoryAttributeValue string, sessionProgramAttributeValue string, sessionMachineAttributeValue string, waitObjectOwnerAttributeValue string, waitObjectNameAttributeValue string, waitObjectTypeAttributeValue string, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, rowWaitObjIDAttributeValue string, rowWaitFileIDAttributeValue string, rowWaitBlockIDAttributeValue string, waitP1textAttributeValue string, waitP1AttributeValue string, waitP2textAttributeValue string, waitP2AttributeValue string, waitP3textAttributeValue string, waitP3AttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -17875,8 +17751,10 @@ func (m *metricNewrelicoracledbWaitEventsCurrentWaitSeconds) recordDataPoint(sta
 	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("session_id", sessionIDAttributeValue)
+	dp.Attributes().PutInt("session_serial", sessionSerialAttributeValue)
 	dp.Attributes().PutStr("session_status", sessionStatusAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
 	dp.Attributes().PutStr("wait_event_name", waitEventNameAttributeValue)
 	dp.Attributes().PutStr("wait_category", waitCategoryAttributeValue)
 	dp.Attributes().PutStr("session_program", sessionProgramAttributeValue)
@@ -17937,7 +17815,7 @@ func (m *metricNewrelicoracledbWaitEventsTimeRemaining) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbWaitEventsTimeRemaining) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, sessionIDAttributeValue string, queryIDAttributeValue string, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string) {
+func (m *metricNewrelicoracledbWaitEventsTimeRemaining) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, sessionIDAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -17948,6 +17826,7 @@ func (m *metricNewrelicoracledbWaitEventsTimeRemaining) recordDataPoint(start pc
 	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("session_id", sessionIDAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutInt("sql_child_number", sqlChildNumberAttributeValue)
 	dp.Attributes().PutInt("sql_exec_id", sqlExecIDAttributeValue)
 	dp.Attributes().PutStr("sql_exec_start", sqlExecStartAttributeValue)
 }
@@ -17987,8 +17866,6 @@ type MetricsBuilder struct {
 	buildInfo                                                                component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                                           map[string]filter.Filter
 	resourceAttributeExcludeFilter                                           map[string]filter.Filter
-	metricNewrelicoracledbActiveSessionsSecondsInWait                        metricNewrelicoracledbActiveSessionsSecondsInWait
-	metricNewrelicoracledbActiveSessionsTimeRemaining                        metricNewrelicoracledbActiveSessionsTimeRemaining
 	metricNewrelicoracledbAsmDiskgroupFreeMb                                 metricNewrelicoracledbAsmDiskgroupFreeMb
 	metricNewrelicoracledbAsmDiskgroupOfflineDisks                           metricNewrelicoracledbAsmDiskgroupOfflineDisks
 	metricNewrelicoracledbAsmDiskgroupTotalMb                                metricNewrelicoracledbAsmDiskgroupTotalMb
@@ -18326,13 +18203,11 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:        mbc,
-		startTime:     pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer: pmetric.NewMetrics(),
-		buildInfo:     settings.BuildInfo,
-		metricNewrelicoracledbActiveSessionsSecondsInWait:                        newMetricNewrelicoracledbActiveSessionsSecondsInWait(mbc.Metrics.NewrelicoracledbActiveSessionsSecondsInWait),
-		metricNewrelicoracledbActiveSessionsTimeRemaining:                        newMetricNewrelicoracledbActiveSessionsTimeRemaining(mbc.Metrics.NewrelicoracledbActiveSessionsTimeRemaining),
-		metricNewrelicoracledbAsmDiskgroupFreeMb:                                 newMetricNewrelicoracledbAsmDiskgroupFreeMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupFreeMb),
+		config:                                   mbc,
+		startTime:                                pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                            pmetric.NewMetrics(),
+		buildInfo:                                settings.BuildInfo,
+		metricNewrelicoracledbAsmDiskgroupFreeMb: newMetricNewrelicoracledbAsmDiskgroupFreeMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupFreeMb),
 		metricNewrelicoracledbAsmDiskgroupOfflineDisks:                           newMetricNewrelicoracledbAsmDiskgroupOfflineDisks(mbc.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks),
 		metricNewrelicoracledbAsmDiskgroupTotalMb:                                newMetricNewrelicoracledbAsmDiskgroupTotalMb(mbc.Metrics.NewrelicoracledbAsmDiskgroupTotalMb),
 		metricNewrelicoracledbBlockingQueriesWaitTime:                            newMetricNewrelicoracledbBlockingQueriesWaitTime(mbc.Metrics.NewrelicoracledbBlockingQueriesWaitTime),
@@ -18732,8 +18607,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
-	mb.metricNewrelicoracledbActiveSessionsSecondsInWait.emit(ils.Metrics())
-	mb.metricNewrelicoracledbActiveSessionsTimeRemaining.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupFreeMb.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupOfflineDisks.emit(ils.Metrics())
 	mb.metricNewrelicoracledbAsmDiskgroupTotalMb.emit(ils.Metrics())
@@ -19079,16 +18952,6 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
-}
-
-// RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint adds a data point to newrelicoracledb.active_sessions.seconds_in_wait metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, waitCategoryAttributeValue string, sessionMachineAttributeValue string) {
-	mb.metricNewrelicoracledbActiveSessionsSecondsInWait.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue, waitCategoryAttributeValue, sessionMachineAttributeValue)
-}
-
-// RecordNewrelicoracledbActiveSessionsTimeRemainingDataPoint adds a data point to newrelicoracledb.active_sessions.time_remaining metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbActiveSessionsTimeRemainingDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, sessionIDAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64) {
-	mb.metricNewrelicoracledbActiveSessionsTimeRemaining.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, sessionIDAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue)
 }
 
 // RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint adds a data point to newrelicoracledb.asm.diskgroup.free_mb metric.
@@ -20662,13 +20525,13 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceUsedPercentDataPoint(t
 }
 
 // RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint adds a data point to newrelicoracledb.wait_events.current_wait_seconds metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionStatusAttributeValue string, queryIDAttributeValue string, waitEventNameAttributeValue string, waitCategoryAttributeValue string, sessionProgramAttributeValue string, sessionMachineAttributeValue string, waitObjectOwnerAttributeValue string, waitObjectNameAttributeValue string, waitObjectTypeAttributeValue string, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, rowWaitObjIDAttributeValue string, rowWaitFileIDAttributeValue string, rowWaitBlockIDAttributeValue string, waitP1textAttributeValue string, waitP1AttributeValue string, waitP2textAttributeValue string, waitP2AttributeValue string, waitP3textAttributeValue string, waitP3AttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsCurrentWaitSeconds.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, userNameAttributeValue, sessionIDAttributeValue, sessionStatusAttributeValue, queryIDAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue, sessionProgramAttributeValue, sessionMachineAttributeValue, waitObjectOwnerAttributeValue, waitObjectNameAttributeValue, waitObjectTypeAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue, rowWaitObjIDAttributeValue, rowWaitFileIDAttributeValue, rowWaitBlockIDAttributeValue, waitP1textAttributeValue, waitP1AttributeValue, waitP2textAttributeValue, waitP2AttributeValue, waitP3textAttributeValue, waitP3AttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionStatusAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, waitEventNameAttributeValue string, waitCategoryAttributeValue string, sessionProgramAttributeValue string, sessionMachineAttributeValue string, waitObjectOwnerAttributeValue string, waitObjectNameAttributeValue string, waitObjectTypeAttributeValue string, sqlExecStartAttributeValue string, sqlExecIDAttributeValue int64, rowWaitObjIDAttributeValue string, rowWaitFileIDAttributeValue string, rowWaitBlockIDAttributeValue string, waitP1textAttributeValue string, waitP1AttributeValue string, waitP2textAttributeValue string, waitP2AttributeValue string, waitP3textAttributeValue string, waitP3AttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsCurrentWaitSeconds.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionStatusAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, waitEventNameAttributeValue, waitCategoryAttributeValue, sessionProgramAttributeValue, sessionMachineAttributeValue, waitObjectOwnerAttributeValue, waitObjectNameAttributeValue, waitObjectTypeAttributeValue, sqlExecStartAttributeValue, sqlExecIDAttributeValue, rowWaitObjIDAttributeValue, rowWaitFileIDAttributeValue, rowWaitBlockIDAttributeValue, waitP1textAttributeValue, waitP1AttributeValue, waitP2textAttributeValue, waitP2AttributeValue, waitP3textAttributeValue, waitP3AttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint adds a data point to newrelicoracledb.wait_events.time_remaining metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, sessionIDAttributeValue string, queryIDAttributeValue string, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string) {
-	mb.metricNewrelicoracledbWaitEventsTimeRemaining.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, sessionIDAttributeValue, queryIDAttributeValue, sqlExecIDAttributeValue, sqlExecStartAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, sessionIDAttributeValue string, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string) {
+	mb.metricNewrelicoracledbWaitEventsTimeRemaining.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, sessionIDAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecIDAttributeValue, sqlExecStartAttributeValue)
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,

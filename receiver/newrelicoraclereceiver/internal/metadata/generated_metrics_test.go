@@ -70,14 +70,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbActiveSessionsSecondsInWaitDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, "sql_exec_start-val", 11, "wait_category-val", "session_machine-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbActiveSessionsTimeRemainingDataPoint(ts, 1, "collection_timestamp-val", "session_id-val", "query_id-val", 16, "sql_exec_start-val", 11)
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(ts, 1, "db.instance.name-val", "diskgroup.name-val")
 
 			defaultMetricsCount++
@@ -1334,11 +1326,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", "session_status-val", "query_id-val", "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "session_status-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(ts, 1, "collection_timestamp-val", "session_id-val", "query_id-val", 11, "sql_exec_start-val")
+			mb.RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(ts, 1, "collection_timestamp-val", "session_id-val", "query_id-val", 16, 11, "sql_exec_start-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -1365,78 +1357,6 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
-				case "newrelicoracledb.active_sessions.seconds_in_wait":
-					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.seconds_in_wait"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.seconds_in_wait")
-					validatedMetrics["newrelicoracledb.active_sessions.seconds_in_wait"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of seconds the active session has been waiting", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("collection_timestamp")
-					assert.True(t, ok)
-					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("user_name")
-					assert.True(t, ok)
-					assert.Equal(t, "user_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_id")
-					assert.True(t, ok)
-					assert.Equal(t, "session_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_serial")
-					assert.True(t, ok)
-					assert.EqualValues(t, 14, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("sql_child_number")
-					assert.True(t, ok)
-					assert.EqualValues(t, 16, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("sql_exec_start")
-					assert.True(t, ok)
-					assert.Equal(t, "sql_exec_start-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("sql_exec_id")
-					assert.True(t, ok)
-					assert.EqualValues(t, 11, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("wait_category")
-					assert.True(t, ok)
-					assert.Equal(t, "wait_category-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_machine")
-					assert.True(t, ok)
-					assert.Equal(t, "session_machine-val", attrVal.Str())
-				case "newrelicoracledb.active_sessions.time_remaining":
-					assert.False(t, validatedMetrics["newrelicoracledb.active_sessions.time_remaining"], "Found a duplicate in the metrics slice: newrelicoracledb.active_sessions.time_remaining")
-					validatedMetrics["newrelicoracledb.active_sessions.time_remaining"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Time remaining for the active session operation in seconds", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("collection_timestamp")
-					assert.True(t, ok)
-					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_id")
-					assert.True(t, ok)
-					assert.Equal(t, "session_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("sql_child_number")
-					assert.True(t, ok)
-					assert.EqualValues(t, 16, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("sql_exec_start")
-					assert.True(t, ok)
-					assert.Equal(t, "sql_exec_start-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("sql_exec_id")
-					assert.True(t, ok)
-					assert.EqualValues(t, 11, attrVal.Int())
 				case "newrelicoracledb.asm.diskgroup.free_mb":
 					assert.False(t, validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"], "Found a duplicate in the metrics slice: newrelicoracledb.asm.diskgroup.free_mb")
 					validatedMetrics["newrelicoracledb.asm.diskgroup.free_mb"] = true
@@ -7399,12 +7319,18 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("session_id")
 					assert.True(t, ok)
 					assert.Equal(t, "session_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("session_serial")
+					assert.True(t, ok)
+					assert.EqualValues(t, 14, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("session_status")
 					assert.True(t, ok)
 					assert.Equal(t, "session_status-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sql_child_number")
+					assert.True(t, ok)
+					assert.EqualValues(t, 16, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("wait_event_name")
 					assert.True(t, ok)
 					assert.Equal(t, "wait_event_name-val", attrVal.Str())
@@ -7480,6 +7406,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sql_child_number")
+					assert.True(t, ok)
+					assert.EqualValues(t, 16, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("sql_exec_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 11, attrVal.Int())
