@@ -170,6 +170,11 @@ func (s *WaitEventsScraper) GetSQLIdentifiersForExecutionPlans(ctx context.Conte
 		zap.Int("new_from_wait_events", len(waitEventIdentifiers)),
 		zap.Int("total_unique", len(mergedIdentifiers)))
 
+	// Ensure we never return nil, return empty slice instead
+	if mergedIdentifiers == nil {
+		return []models.SQLIdentifier{}, nil
+	}
+
 	return mergedIdentifiers, nil
 }
 
@@ -184,6 +189,13 @@ func (s *WaitEventsScraper) getIdentifiersFromVSQL(ctx context.Context, slowQuer
 			s.logger.Warn("Failed to fetch child cursors for SQL_ID from V$SQL",
 				zap.String("sql_id", sqlID),
 				zap.Error(err))
+			continue
+		}
+
+		// Skip if no child cursors returned
+		if childCursors == nil || len(childCursors) == 0 {
+			s.logger.Debug("No child cursors found for SQL_ID",
+				zap.String("sql_id", sqlID))
 			continue
 		}
 
