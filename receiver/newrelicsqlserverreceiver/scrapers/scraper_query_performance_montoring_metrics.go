@@ -322,12 +322,16 @@ func (s *QueryPerformanceScraper) ScrapeBlockingSessionMetrics(ctx context.Conte
 func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, scopeMetrics pmetric.ScopeMetrics, index int) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// CARDINALITY-SAFE: Create limited common attributes (query_id only as primary key)
-	// Avoids high-cardinality attributes like full query text, timestamps, and multiple identifiers
+	// CARDINALITY-SAFE: Create limited common attributes (query_id + plan_handle as composite key)
+	// plan_handle is included because delta calculation tracks state per (query_id, plan_handle)
+	// and same query can have multiple execution plans with different performance characteristics
 	createSafeAttributes := func() pcommon.Map {
 		attrs := pcommon.NewMap()
 		if result.QueryID != nil {
 			attrs.PutStr("query_id", result.QueryID.String())
+		}
+		if result.PlanHandle != nil {
+			attrs.PutStr("plan_handle", result.PlanHandle.String())
 		}
 		if result.DatabaseName != nil {
 			attrs.PutStr("database_name", *result.DatabaseName)
@@ -338,7 +342,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		if result.StatementType != nil {
 			attrs.PutStr("statement_type", *result.StatementType)
 		}
-		// NOTE: NOT including CollectionTimestamp, PlanHandle, QueryText as attributes to prevent cardinality explosion
+		// NOTE: NOT including CollectionTimestamp, QueryText as attributes to prevent cardinality explosion
 		// These can be logged separately for debugging/drill-down analysis
 		return attrs
 	}
@@ -494,42 +498,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		createSafeAttributes().CopyTo(dataPoint.Attributes())
 	}
 
-	// Create query_id metric - CARDINALITY SAFE (QueryID as attribute)
-	if result.QueryID != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.query_id")
-		metric.SetDescription("Query ID for slow query identification")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetIntValue(1) // Dummy value since this is primarily for the query ID attribute
-
-		attrs := createSafeAttributes()
-		attrs.PutStr("query_id", result.QueryID.String())
-		attrs.CopyTo(dataPoint.Attributes())
-	}
-
-	// Create plan_handle metric - CARDINALITY SAFE (QueryID + PlanHandle as attribute)
-	if result.PlanHandle != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.plan_handle")
-		metric.SetDescription("Plan handle for slow query execution plan")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetIntValue(1) // Dummy value since this is primarily for the plan handle attribute
-
-		// Include PlanHandle as additional attribute (controlled cardinality)
-		attrs := createSafeAttributes()
-		attrs.PutStr("plan_handle", result.PlanHandle.String())
-		attrs.CopyTo(dataPoint.Attributes())
-	}
+	// NOTE: Removed separate query_id and plan_handle metrics as these attributes
+	// are now included in ALL slow query metrics via createSafeAttributes()
+	// This eliminates redundant metric emission
 
 	// Create query_text metric with cardinality control
 	if result.QueryText != nil {

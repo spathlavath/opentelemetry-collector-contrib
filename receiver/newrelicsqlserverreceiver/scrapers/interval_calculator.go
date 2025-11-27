@@ -17,11 +17,12 @@
 // Algorithm:
 // 1. First Scrape: Use historical (cumulative) average, filter by threshold
 // 2. Subsequent Scrapes: Calculate delta between current and previous values
-//    - interval_avg = (current_total_elapsed - prev_total_elapsed) / (current_exec_count - prev_exec_count)
+//   - interval_avg = (current_total_elapsed - prev_total_elapsed) / (current_exec_count - prev_exec_count)
+//
 // 3. Emit both interval average AND historical average
 // 4. Only emit metrics if interval average > threshold (memory efficient)
 // 5. Eviction: Only TTL-based (inactive queries), NOT threshold-based
-//    - This preserves delta calculation ability when queries oscillate
+//   - This preserves delta calculation ability when queries oscillate
 //
 // Example (threshold = 100ms):
 // Scrape 1: 100 execs, 500ms total → cumulative avg = 5ms → not slow
@@ -43,7 +44,7 @@ import (
 // SimplifiedQueryState tracks previous scrape data for delta calculation
 type SimplifiedQueryState struct {
 	// Previous cumulative values from DB DMV
-	PrevExecutionCount    int64
+	PrevExecutionCount     int64
 	PrevTotalElapsedTimeMs float64 // milliseconds (from SQL Server directly, no precision loss)
 
 	// Timestamps for TTL-based cleanup
@@ -106,6 +107,20 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 
 	queryID := query.QueryID.String()
 
+	// IMPORTANT: Cache key MUST include both query_hash AND plan_handle
+	// Per SQL Server documentation: dm_exec_query_stats returns "one row per query statement within the cached plan"
+	// Stats are tracked per plan_handle, not per query_hash
+	// Same query (query_hash) can have multiple plans (plan_handles) with independent counters
+	var cacheKey string
+	if query.PlanHandle != nil && !query.PlanHandle.IsEmpty() {
+		cacheKey = queryID + "|" + query.PlanHandle.String()
+	} else {
+		// Fallback: if plan_handle is missing, use query_hash only (shouldn't happen in normal operation)
+		cacheKey = queryID
+		sic.logger.Warn("Missing plan_handle for query - using query_hash only as cache key",
+			zap.String("query_id", queryID))
+	}
+
 	// Extract current cumulative values from query
 	currentExecCount := getInt64FromPtr(query.ExecutionCount)
 	// Use total_elapsed_time_ms directly from SQL Server (no precision loss from reconstruction)
@@ -127,19 +142,32 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 	sic.stateCacheMutex.Lock()
 	defer sic.stateCacheMutex.Unlock()
 
-	// Check if query exists in cache
-	state, exists := sic.stateCache[queryID]
+	// Check if query exists in cache (using query_hash + plan_handle as key)
+	state, exists := sic.stateCache[cacheKey]
 
 	// FIRST SCRAPE: Use historical (cumulative) average
 	if !exists {
+		// Handle edge case: execution_count = 0 from DMV
+		// This shouldn't happen due to SQL filter (qs.execution_count > 0), but be defensive
+		if currentExecCount == 0 {
+			sic.logger.Warn("Query with zero execution count - skipping",
+				zap.String("query_id", queryID),
+				zap.String("plan_handle", query.PlanHandle.String()),
+				zap.Float64("total_elapsed_ms", currentTotalElapsedMs),
+				zap.Float64("historical_avg_ms", historicalAvgElapsedMs))
+			return nil
+		}
+
 		sic.logger.Debug("First scrape for query - using historical average",
 			zap.String("query_id", queryID),
+			zap.String("plan_handle", query.PlanHandle.String()),
 			zap.Int64("execution_count", currentExecCount),
-			zap.Float64("historical_avg_ms", historicalAvgElapsedMs))
+			zap.Float64("historical_avg_ms", historicalAvgElapsedMs),
+			zap.Float64("total_elapsed_ms", currentTotalElapsedMs))
 
-		// Add to cache for next scrape
-		sic.stateCache[queryID] = &SimplifiedQueryState{
-			PrevExecutionCount:    currentExecCount,
+		// Add to cache for next scrape (using query_hash + plan_handle as key)
+		sic.stateCache[cacheKey] = &SimplifiedQueryState{
+			PrevExecutionCount:     currentExecCount,
 			PrevTotalElapsedTimeMs: currentTotalElapsedMs,
 			FirstSeenTimestamp:     now,
 			LastSeenTimestamp:      now,
@@ -169,6 +197,7 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 	if deltaExecCount == 0 {
 		sic.logger.Debug("No new executions for query",
 			zap.String("query_id", queryID),
+			zap.String("plan_handle", query.PlanHandle.String()),
 			zap.Float64("time_since_last_exec_sec", timeSinceLastExec))
 
 		// Update last seen timestamp (query is still in DB results)
@@ -195,20 +224,22 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 		if deltaExecCount < 0 {
 			sic.logger.Warn("Plan cache reset detected - execution count decreased",
 				zap.String("query_id", queryID),
+				zap.String("plan_handle", query.PlanHandle.String()),
 				zap.Int64("current_exec_count", currentExecCount),
 				zap.Int64("prev_exec_count", state.PrevExecutionCount))
 		}
 		if deltaElapsedMs < 0 {
 			sic.logger.Warn("Negative delta elapsed time detected - possible stats corruption",
 				zap.String("query_id", queryID),
+				zap.String("plan_handle", query.PlanHandle.String()),
 				zap.Float64("current_total_ms", currentTotalElapsedMs),
 				zap.Float64("prev_total_ms", state.PrevTotalElapsedTimeMs),
 				zap.Float64("delta_ms", deltaElapsedMs))
 		}
 
 		// Reset state - treat as first scrape but PRESERVE FirstSeenTimestamp
-		sic.stateCache[queryID] = &SimplifiedQueryState{
-			PrevExecutionCount:    currentExecCount,
+		sic.stateCache[cacheKey] = &SimplifiedQueryState{
+			PrevExecutionCount:     currentExecCount,
 			PrevTotalElapsedTimeMs: currentTotalElapsedMs,
 			FirstSeenTimestamp:     state.FirstSeenTimestamp, // FIX #4: Preserve original timestamp
 			LastSeenTimestamp:      now,
@@ -230,8 +261,20 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 	// Fix #2: Use milliseconds directly (no μs conversion, no precision loss)
 	intervalAvgElapsedMs := deltaElapsedMs / float64(deltaExecCount)
 
+	// Warn if we have executions but zero elapsed time (possible data corruption or sub-microsecond queries)
+	if deltaElapsedMs == 0 && deltaExecCount > 0 {
+		sic.logger.Warn("Zero elapsed time with non-zero executions - possible data issue or extremely fast query",
+			zap.String("query_id", queryID),
+			zap.String("plan_handle", query.PlanHandle.String()),
+			zap.Int64("delta_exec_count", deltaExecCount),
+			zap.Float64("delta_elapsed_ms", deltaElapsedMs),
+			zap.Float64("current_total_ms", currentTotalElapsedMs),
+			zap.Float64("prev_total_ms", state.PrevTotalElapsedTimeMs))
+	}
+
 	sic.logger.Debug("Delta calculation for query",
 		zap.String("query_id", queryID),
+		zap.String("plan_handle", query.PlanHandle.String()),
 		zap.Int64("delta_exec_count", deltaExecCount),
 		zap.Float64("delta_elapsed_ms", deltaElapsedMs),
 		zap.Float64("interval_avg_elapsed_ms", intervalAvgElapsedMs),

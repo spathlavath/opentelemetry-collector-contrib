@@ -99,6 +99,10 @@ receivers:
     query_monitoring_count_threshold: 20           # minimum execution count for queries to be monitored
     query_monitoring_text_truncate_limit: 4094    # characters - maximum length of SQL text in query monitoring results (4KB - 2 bytes)
 
+    # Interval-based averaging (delta calculation) - EXPLICITLY ENABLED
+    enable_interval_based_averaging: true          # Enable delta-based interval calculations
+    interval_calculator_cache_ttl_minutes: 10      # Cache TTL for query state (10 minutes)
+
 # Exporters send telemetry data to destinations
 exporters:
   # New Relic OTLP HTTP Exporter

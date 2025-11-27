@@ -442,6 +442,9 @@ WITH blocking_info AS (
         req.database_id AS database_id,
         req.sql_handle AS blocked_sql_handle,
 
+        -- RCA Enhancement: Correlation keys (query_hash for linking to slow queries)
+        req.query_hash AS blocked_query_id,
+
         -- RCA Enhancement: Lock resource details (WHAT is being locked)
         req.wait_resource AS wait_resource,
 
@@ -456,6 +459,7 @@ WITH blocking_info AS (
 
         -- Blocker query details
         blocking_req.sql_handle AS blocking_sql_handle,
+        blocking_req.query_hash AS blocking_query_id,
 
         -- RCA Enhancement: Blocker activity context (WHAT is blocker doing)
         blocking_req.start_time AS blocker_start_time,
@@ -481,6 +485,10 @@ SELECT TOP (@Limit)
     blocking_info.blocked_command_type AS command_type,
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(blocking_info.blocked_start_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS blocked_query_start_time,
     DB_NAME(blocking_info.database_id) AS database_name,
+
+    -- RCA Enhancement: Correlation keys (query_hash for linking to slow queries and active queries)
+    blocking_info.blocked_query_id,
+    blocking_info.blocking_query_id,
 
     -- RCA Enhancement: Blocker session identity (WHO is causing the block)
     blocking_sessions.login_name AS blocker_login_name,
@@ -533,12 +541,8 @@ const WaitQuery = `DECLARE @TopN INT = %d; 				-- Number of results to retrieve
 SELECT TOP (@TopN)
     r.query_hash AS query_id,
     DB_NAME(r.database_id) AS database_name,
-    LEFT(SUBSTRING(st.text, (r.statement_start_offset / 2) + 1,
-        ((CASE r.statement_end_offset
-            WHEN -1 THEN DATALENGTH(st.text)
-            ELSE r.statement_end_offset
-        END - r.statement_start_offset) / 2) + 1
-    ), @TextTruncateLimit) AS query_text,
+    -- Using full text to avoid SUBSTRING calculation errors when offsets are invalid
+    LEFT(st.text, @TextTruncateLimit) AS query_text,
     -- Categorize wait types
     CASE
         WHEN r.wait_type LIKE 'PAGEIOLATCH%%' OR r.wait_type LIKE 'WRITELOG%%' OR r.wait_type LIKE 'IO_COMPLETION%%' THEN 'I/O'
@@ -598,6 +602,10 @@ SELECT TOP (@Limit)
     -- NULL indicates query is not correlatable (ad-hoc SQL with different literals, OPTION(RECOMPILE), etc.)
     -- Only parameterized queries and stored procedures get consistent query_hash values
     r_wait.query_hash AS query_id,
+
+    -- B2. QUERY TEXT (moved up before wait decoding to avoid SUBSTRING errors in later sections)
+    -- Using full text to avoid SUBSTRING calculation errors when offsets are invalid
+    LEFT(st_wait.text, @TextTruncateLimit) AS query_statement_text,
 
     -- C. WAIT DETAILS
     r_wait.wait_type AS wait_type,
@@ -709,11 +717,7 @@ SELECT TOP (@Limit)
     ISNULL(s_blocker.host_name, 'N/A') AS blocker_host_name,
     ISNULL(s_blocker.program_name, 'N/A') AS blocker_program_name,
 
-    -- J. QUERY TEXT - Current Session
-    -- Using full text to avoid SUBSTRING errors
-    LEFT(st_wait.text, @TextTruncateLimit) AS query_statement_text,
-
-    -- K. QUERY TEXT - Blocking Session
+    -- J. QUERY TEXT - Blocking Session
     -- Simplified to avoid SUBSTRING errors
     CASE
         WHEN r_wait.blocking_session_id = 0 THEN 'N/A'
@@ -722,7 +726,7 @@ SELECT TOP (@Limit)
         ELSE 'N/A'
     END AS blocking_query_statement_text,
 
-    -- L. EXECUTION PLAN XML
+    -- K. EXECUTION PLAN XML
     CAST(qp_wait.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
 
 FROM

@@ -151,17 +151,22 @@ type SlowQuery struct {
 // BlockingSession represents blocking session information with RCA enhancement fields
 type BlockingSession struct {
 	// Existing fields - Basic blocking context
-		BlockingSPID          *int64   `db:"blocking_spid" metric_name:"sqlserver.blocking.spid" source_type:"gauge"`
-	BlockingStatus        *string  `db:"blocking_status" metric_name:"sqlserver.blocking.status" source_type:"attribute"`
-	BlockedSPID           *int64   `db:"blocked_spid" metric_name:"sqlserver.blocked.spid" source_type:"gauge"`
-	BlockedStatus         *string  `db:"blocked_status" metric_name:"sqlserver.blocked.status" source_type:"attribute"`
-	WaitType              *string  `db:"wait_type" metric_name:"sqlserver.wait.type" source_type:"attribute"`
-	WaitTimeInSeconds     *float64 `db:"wait_time_in_seconds" metric_name:"sqlserver.wait.time_seconds" source_type:"gauge"`
-	CommandType           *string  `db:"command_type" metric_name:"sqlserver.command.type" source_type:"attribute"`
-	DatabaseName          *string  `db:"database_name" metric_name:"sqlserver.database.name" source_type:"attribute"`
-	BlockingQueryText     *string  `db:"blocking_query_text" metric_name:"sqlserver.blocking.query_text" source_type:"attribute"`
-	BlockedQueryText      *string  `db:"blocked_query_text" metric_name:"sqlserver.blocked.query_text" source_type:"attribute"`
-	BlockedQueryStartTime *string  `db:"blocked_query_start_time" metric_name:"sqlserver.blocked.query_start_time" source_type:"attribute"`
+	BlockingSPID      *int64   `db:"blocking_spid" metric_name:"sqlserver.blocking.spid" source_type:"gauge"`
+	BlockingStatus    *string  `db:"blocking_status" metric_name:"sqlserver.blocking.status" source_type:"attribute"`
+	BlockedSPID       *int64   `db:"blocked_spid" metric_name:"sqlserver.blocked.spid" source_type:"gauge"`
+	BlockedStatus     *string  `db:"blocked_status" metric_name:"sqlserver.blocked.status" source_type:"attribute"`
+	WaitType          *string  `db:"wait_type" metric_name:"sqlserver.wait.type" source_type:"attribute"`
+	WaitTimeInSeconds *float64 `db:"wait_time_in_seconds" metric_name:"sqlserver.wait.time_seconds" source_type:"gauge"`
+	CommandType       *string  `db:"command_type" metric_name:"sqlserver.command.type" source_type:"attribute"`
+	DatabaseName      *string  `db:"database_name" metric_name:"sqlserver.database.name" source_type:"attribute"`
+
+	// RCA Enhancement: Correlation keys (query_hash for linking to slow queries and active queries)
+	BlockedQueryID  *QueryID `db:"blocked_query_id" metric_name:"sqlserver.blocked.query_id" source_type:"attribute"`
+	BlockingQueryID *QueryID `db:"blocking_query_id" metric_name:"sqlserver.blocking.query_id" source_type:"attribute"`
+
+	BlockingQueryText     *string `db:"blocking_query_text" metric_name:"sqlserver.blocking.query_text" source_type:"attribute"`
+	BlockedQueryText      *string `db:"blocked_query_text" metric_name:"sqlserver.blocked.query_text" source_type:"attribute"`
+	BlockedQueryStartTime *string `db:"blocked_query_start_time" metric_name:"sqlserver.blocked.query_start_time" source_type:"attribute"`
 
 	// RCA Enhancement: Blocker session identity (WHO is causing the block)
 	BlockerLoginName   *string `db:"blocker_login_name" metric_name:"sqlserver.blocker.login_name" source_type:"attribute"`
