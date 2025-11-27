@@ -57,12 +57,11 @@ type newRelicOracleScraper struct {
 	databaseInfoScraper *scrapers.DatabaseInfoScraper
 
 	// Query Performance Monitoring (QPM) scrapers
-	slowQueriesScraper    *scrapers.SlowQueriesScraper
-	executionPlanScraper  *scrapers.ExecutionPlanScraper
-	blockingScraper       *scrapers.BlockingScraper
-	waitEventsScraper     *scrapers.WaitEventsScraper
-	activeSessionsScraper *scrapers.ActiveSessionsScraper
-	lockScraper           *scrapers.LockScraper
+	slowQueriesScraper   *scrapers.SlowQueriesScraper
+	executionPlanScraper *scrapers.ExecutionPlanScraper
+	blockingScraper      *scrapers.BlockingScraper
+	waitEventsScraper    *scrapers.WaitEventsScraper
+	lockScraper          *scrapers.LockScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -255,11 +254,6 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.QueryMonitoringCountThreshold,
 	)
 
-	// Initialize active sessions scraper
-	s.activeSessionsScraper = scrapers.NewActiveSessionsScraper(
-		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
-	)
-
 	// Initialize lock scraper
 	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
 
@@ -318,30 +312,32 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 	// Setup scrape context with timeout
 	scrapeCtx := s.createScrapeContext(ctx)
 
-	// Get query IDs without emitting metrics (metrics already emitted by metrics scraper)
-	s.logger.Debug("Fetching query IDs for execution plans (no metrics)")
-	queryIDs, slowQueryErrs := s.slowQueriesScraper.GetSlowQueryIDs(scrapeCtx)
+	// Get unique SQL_ID + CHILD_NUMBER combinations from active wait events
+	// This ensures we only fetch execution plans for queries that are actively executing
+	s.logger.Debug("Fetching unique SQL identifiers from wait events")
+	sqlIdentifiers, err := s.waitEventsScraper.GetUniqueSQLIdentifiers(scrapeCtx)
 
-	if len(slowQueryErrs) > 0 {
-		s.logger.Warn("Errors occurred while getting query IDs for execution plans",
-			zap.Int("error_count", len(slowQueryErrs)))
-	}
-
-	s.logger.Info("Query IDs fetched for execution plans",
-		zap.Int("query_ids_found", len(queryIDs)),
-		zap.Strings("query_ids", queryIDs))
-
-	if len(queryIDs) == 0 {
-		s.logger.Debug("No query IDs found, skipping execution plan scrape")
+	if err != nil {
+		s.logger.Warn("Failed to get SQL identifiers from wait events",
+			zap.Error(err))
 		return logs, nil
 	}
 
-	// Scrape execution plans (which now emits logs)
-	s.logger.Debug("Starting execution plan scraper for logs", zap.Strings("query_ids", queryIDs))
-	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, queryIDs)
+	s.logger.Info("SQL identifiers extracted from wait events",
+		zap.Int("unique_combinations", len(sqlIdentifiers)))
+
+	if len(sqlIdentifiers) == 0 {
+		s.logger.Debug("No SQL identifiers found in wait events, skipping execution plan scrape")
+		return logs, nil
+	}
+
+	// Scrape execution plans for specific SQL_ID + CHILD_NUMBER combinations
+	s.logger.Debug("Starting execution plan scraper for logs",
+		zap.Int("sql_identifier_count", len(sqlIdentifiers)))
+	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, sqlIdentifiers)
 
 	s.logger.Info("Execution plan scraper completed for logs",
-		zap.Int("query_ids_processed", len(queryIDs)),
+		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
 	// Emit logs
@@ -433,37 +429,31 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	// Collect slow query errors
 	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
 
-	// Execute execution plan scraper with query IDs
-	if len(queryIDs) > 0 {
-		s.executeExecutionPlanScraper(ctx, errChan, queryIDs)
-		s.executeActiveSessionsScraper(ctx, errChan, queryIDs)
-	} else {
-		s.logger.Debug("No query IDs available for execution plan scraping")
-	}
+	// Execute execution plan scraper - now gets SQL identifiers from wait events internally
+	s.executeExecutionPlanScraper(ctx, errChan)
+
 }
 
-// executeExecutionPlanScraper executes the execution plan scraper with given query IDs
-func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context, errChan chan<- error, queryIDs []string) {
-	s.logger.Debug("Starting execution plan scraper with query IDs", zap.Strings("query_ids", queryIDs))
-	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, queryIDs)
+// executeExecutionPlanScraper executes the execution plan scraper with SQL identifiers from wait events
+func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context, errChan chan<- error) {
+	s.logger.Debug("Getting SQL identifiers from wait events for execution plans")
+
+	// Get unique SQL_ID + CHILD_NUMBER combinations from active wait events
+	sqlIdentifiers, err := s.waitEventsScraper.GetUniqueSQLIdentifiers(ctx)
+	if err != nil {
+		s.logger.Warn("Failed to get SQL identifiers from wait events", zap.Error(err))
+		s.sendErrorsToChannel(errChan, []error{err}, "execution plan - get identifiers")
+		return
+	}
+
+	s.logger.Debug("Starting execution plan scraper", zap.Int("sql_identifier_count", len(sqlIdentifiers)))
+	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
 
 	s.logger.Info("Execution plan scraper completed",
-		zap.Int("query_ids_processed", len(queryIDs)),
+		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
 	s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plan")
-}
-
-// executeActiveSessionsScraper executes the active sessions scraper with given query IDs
-func (s *newRelicOracleScraper) executeActiveSessionsScraper(ctx context.Context, errChan chan<- error, queryIDs []string) {
-	s.logger.Debug("Starting active sessions scraper with query IDs", zap.Strings("query_ids", queryIDs))
-	activeSessionErrs := s.activeSessionsScraper.ScrapeActiveSessions(ctx, queryIDs)
-
-	s.logger.Info("Active sessions scraper completed",
-		zap.Int("query_ids_processed", len(queryIDs)),
-		zap.Int("active_session_errors", len(activeSessionErrs)))
-
-	s.sendErrorsToChannel(errChan, activeSessionErrs, "active sessions")
 }
 
 // executeIndependentScrapers launches concurrent scrapers for independent metrics
