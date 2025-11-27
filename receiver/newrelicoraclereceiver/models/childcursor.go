@@ -5,7 +5,6 @@ package models
 
 import (
 	"database/sql"
-	"time"
 )
 
 // ChildCursor represents a child cursor from V$SQL with execution statistics
@@ -22,7 +21,7 @@ type ChildCursor struct {
 	ParseCalls     sql.NullInt64
 	Invalidations  sql.NullInt64
 	FirstLoadTime  sql.NullString
-	LastLoadTime   sql.NullTime
+	LastLoadTime   sql.NullString
 }
 
 // GetSQLID returns the SQL ID as a string, empty if null
@@ -121,12 +120,12 @@ func (cc *ChildCursor) GetFirstLoadTime() string {
 	return ""
 }
 
-// GetLastLoadTime returns the last load time, zero time if null
-func (cc *ChildCursor) GetLastLoadTime() time.Time {
+// GetLastLoadTime returns the last load time as a string, empty if null
+func (cc *ChildCursor) GetLastLoadTime() string {
 	if cc.LastLoadTime.Valid {
-		return cc.LastLoadTime.Time
+		return cc.LastLoadTime.String
 	}
-	return time.Time{}
+	return ""
 }
 
 // HasValidIdentifier checks if the child cursor has valid SQL_ID and child_number
