@@ -653,10 +653,7 @@ SELECT TOP (@Limit)
     r_wait.logical_reads AS logical_reads,
     r_wait.row_count AS row_count,
     r_wait.granted_query_memory AS granted_query_memory_pages,
-    FORMAT(
-        r_wait.start_time AT TIME ZONE 'UTC',
-        'yyyy-MM-ddTHH:mm:ssZ'
-    ) AS request_start_time,
+    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(r_wait.start_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS request_start_time,
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp,
 
     -- E. TRANSACTION CONTEXT (RCA for long-running transactions)
