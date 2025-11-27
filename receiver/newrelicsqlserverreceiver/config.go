@@ -146,6 +146,17 @@ type Config struct {
 
 	// Active running queries configuration
 	EnableActiveRunningQueries bool `mapstructure:"enable_active_running_queries"`
+
+	// Slow query smoothing configuration (EWMA-based smoothing)
+	EnableSlowQuerySmoothing       bool    `mapstructure:"enable_slow_query_smoothing"`         // Enable/disable EWMA smoothing algorithm
+	SlowQuerySmoothingFactor       float64 `mapstructure:"slow_query_smoothing_factor"`         // Weight for new data (0.0-1.0, default: 0.3)
+	SlowQuerySmoothingDecayThreshold int   `mapstructure:"slow_query_smoothing_decay_threshold"` // Consecutive misses before removal (default: 3)
+	SlowQuerySmoothingMaxAgeMinutes  int   `mapstructure:"slow_query_smoothing_max_age_minutes"` // Maximum age in minutes (default: 5)
+
+	// Interval-based averaging configuration (Simplified delta-based interval calculations)
+	// This addresses the problem of cumulative averages masking recent query optimizations
+	EnableIntervalBasedAveraging      bool `mapstructure:"enable_interval_based_averaging"`       // Enable/disable interval-based averaging
+	IntervalCalculatorCacheTTLMinutes int  `mapstructure:"interval_calculator_cache_ttl_minutes"` // State cache TTL in minutes (default: 10)
 }
 
 // DefaultConfig returns a Config struct with default values
@@ -263,6 +274,16 @@ func DefaultConfig() component.Config {
 
 		// Default active running queries settings
 		EnableActiveRunningQueries: true, // Enable by default for comprehensive query monitoring
+
+		// Default slow query smoothing settings (EWMA-based)
+		EnableSlowQuerySmoothing:         false, // Disabled - using delta calculation only
+		SlowQuerySmoothingFactor:         0.3,   // 30% new data, 70% historical data
+		SlowQuerySmoothingDecayThreshold: 3,     // Remove after 3 consecutive misses
+		SlowQuerySmoothingMaxAgeMinutes:  5,     // Maximum age of 5 minutes
+
+		// Default interval-based averaging settings (Simplified delta-based)
+		EnableIntervalBasedAveraging:      true, // Enabled by default for delta-based averaging
+		IntervalCalculatorCacheTTLMinutes: 10,   // 10 minute TTL for state cache
 	}
 
 	// Set default collection interval to 15 seconds

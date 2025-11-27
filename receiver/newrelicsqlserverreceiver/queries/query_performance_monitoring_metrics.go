@@ -334,6 +334,8 @@ WITH StatementDetails AS (
         -- Historical average metrics (reflecting all runs since caching)
 		(qs.total_worker_time / qs.execution_count) / 1000.0 AS avg_cpu_time_ms,
 		(qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
+		-- Total elapsed time for precise delta calculation (avoids floating point precision loss)
+		qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
 		(qs.total_logical_reads / qs.execution_count) AS avg_disk_reads,
 		(qs.total_logical_writes / qs.execution_count) AS avg_disk_writes,
 		-- Average rows processed (returned by query)
@@ -386,7 +388,9 @@ WITH StatementDetails AS (
 		AND qt.text NOT LIKE '%%schema_name()%%'
 )
 -- Select the raw, non-aggregated statement data.
-SELECT TOP (@TopN)
+-- NOTE: TOP N filtering removed - will be applied in Go code AFTER delta calculation
+-- This ensures we get enough candidates for interval-based (delta) averaging
+SELECT
     s.query_id,
 	s.plan_handle,
     s.query_text,
@@ -399,6 +403,7 @@ SELECT TOP (@TopN)
     s.execution_count,
     s.avg_cpu_time_ms,
     s.avg_elapsed_time_ms,
+    s.total_elapsed_time_ms,
     s.avg_disk_reads,
     s.avg_disk_writes,
     s.avg_rows_processed,
@@ -416,8 +421,8 @@ SELECT TOP (@TopN)
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
 FROM
     StatementDetails s
-WHERE
-	    s.avg_elapsed_time_ms > @ElapsedTimeThreshold
+-- NOTE: Threshold filtering removed from SQL - will be applied in Go code on delta metrics
+-- This ensures we calculate delta for all recent queries, then filter by interval average
 ORDER BY
     s.last_execution_time DESC;`
 
@@ -560,24 +565,8 @@ WHERE r.session_id > 50
     AND st.text NOT LIKE '%%INFORMATION_SCHEMA%%'
 ORDER BY r.wait_time DESC;`
 
-const QueryExecutionPlan = `
-SELECT
-    qs.query_hash AS query_id,
-    qs.plan_handle,
-    qs.query_plan_hash AS query_plan_id,
-    CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml,
-    qs.total_worker_time / 1000.0 AS total_cpu_ms,
-    qs.total_elapsed_time / 1000.0 AS total_elapsed_ms,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_time,
-    st.text AS sql_text
-FROM sys.dm_exec_query_stats AS qs
-CROSS APPLY sys.dm_exec_query_plan(qs.plan_handle) AS qp
-CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) AS st
-WHERE qs.query_hash IN (%s)
-    AND qp.query_plan IS NOT NULL;`
-
 // ActiveQueryExecutionPlanQuery fetches the execution plan for an active query using its plan_handle
+// NOTE: This is used only for active running queries, NOT for slow queries from dm_exec_query_stats
 const ActiveQueryExecutionPlanQuery = `
 SELECT
     CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
@@ -616,28 +605,63 @@ SELECT TOP (@Limit)
     r_wait.wait_resource AS wait_resource,
     r_wait.last_wait_type AS last_wait_type,
 
-    -- C2. DECODED WAIT RESOURCE (Human-readable names)
-    -- Simplified to avoid SUBSTRING errors - detailed parsing done in Go helpers
+    -- C2. DECODED WAIT RESOURCE (Human-readable names with object names from SQL Server metadata)
     CASE
-        -- KEY Lock: Show raw wait_resource (parsing done in Go helper)
+        -- KEY Lock: KEY: <db_id>:<hobt_id> (<hash>)
+        -- Decode HOBT to table name via sys.partitions
         WHEN r_wait.wait_resource LIKE 'KEY:%%' THEN
-            'KEY Lock: ' + r_wait.wait_resource
+            COALESCE(
+                (
+                    SELECT TOP 1
+                        'KEY Lock on ' +
+                        QUOTENAME(DB_NAME(TRY_CAST(SUBSTRING(r_wait.wait_resource, 6, CHARINDEX(':', r_wait.wait_resource, 6) - 6) AS INT))) + '.' +
+                        QUOTENAME(OBJECT_SCHEMA_NAME(p.object_id, TRY_CAST(SUBSTRING(r_wait.wait_resource, 6, CHARINDEX(':', r_wait.wait_resource, 6) - 6) AS INT))) + '.' +
+                        QUOTENAME(OBJECT_NAME(p.object_id, TRY_CAST(SUBSTRING(r_wait.wait_resource, 6, CHARINDEX(':', r_wait.wait_resource, 6) - 6) AS INT))) +
+                        ' | Hash: ' + SUBSTRING(r_wait.wait_resource, CHARINDEX('(', r_wait.wait_resource) + 1, CHARINDEX(')', r_wait.wait_resource) - CHARINDEX('(', r_wait.wait_resource) - 1)
+                    FROM sys.partitions p
+                    WHERE p.hobt_id = TRY_CAST(
+                        SUBSTRING(
+                            r_wait.wait_resource,
+                            CHARINDEX(':', r_wait.wait_resource, 6) + 1,
+                            CHARINDEX(' ', r_wait.wait_resource + ' ', CHARINDEX(':', r_wait.wait_resource, 6)) - CHARINDEX(':', r_wait.wait_resource, 6) - 1
+                        ) AS BIGINT
+                    )
+                ),
+                'KEY Lock: ' + r_wait.wait_resource + ' (object not found)'
+            )
 
-        -- PAGE Lock: Show raw wait_resource
+        -- PAGE Lock: PAGE: <db_id>:<file_id>:<page_id>
         WHEN r_wait.wait_resource LIKE 'PAGE:%%' THEN
-            'PAGE Lock: ' + r_wait.wait_resource
+            'PAGE Lock on ' +
+            QUOTENAME(DB_NAME(TRY_CAST(SUBSTRING(r_wait.wait_resource, 7, CHARINDEX(':', r_wait.wait_resource, 7) - 7) AS INT))) +
+            ' | File: ' + SUBSTRING(r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 7) + 1, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 7) + 1) - CHARINDEX(':', r_wait.wait_resource, 7) - 1) +
+            ' | Page: ' + SUBSTRING(r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 7) + 1) + 1, LEN(r_wait.wait_resource))
 
-        -- RID Lock: Show raw wait_resource
+        -- RID Lock: RID: <db_id>:<file_id>:<page_id>:<row_slot>
         WHEN r_wait.wait_resource LIKE 'RID:%%' THEN
-            'RID Lock: ' + r_wait.wait_resource
+            'RID Lock on ' +
+            QUOTENAME(DB_NAME(TRY_CAST(SUBSTRING(r_wait.wait_resource, 6, CHARINDEX(':', r_wait.wait_resource, 6) - 6) AS INT))) +
+            ' | Row: ' + SUBSTRING(r_wait.wait_resource, 6, LEN(r_wait.wait_resource))
 
-        -- OBJECT Lock: Show raw wait_resource
+        -- OBJECT Lock: OBJECT: <db_id>:<object_id>:<partition>
         WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
-            'OBJECT Lock: ' + r_wait.wait_resource
+            COALESCE(
+                'OBJECT Lock on ' +
+                QUOTENAME(DB_NAME(TRY_CAST(SUBSTRING(r_wait.wait_resource, 9, CHARINDEX(':', r_wait.wait_resource, 9) - 9) AS INT))) + '.' +
+                QUOTENAME(OBJECT_SCHEMA_NAME(
+                    TRY_CAST(SUBSTRING(r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 9) + 1, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 9) + 1) - CHARINDEX(':', r_wait.wait_resource, 9) - 1) AS INT),
+                    TRY_CAST(SUBSTRING(r_wait.wait_resource, 9, CHARINDEX(':', r_wait.wait_resource, 9) - 9) AS INT)
+                )) + '.' +
+                QUOTENAME(OBJECT_NAME(
+                    TRY_CAST(SUBSTRING(r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 9) + 1, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 9) + 1) - CHARINDEX(':', r_wait.wait_resource, 9) - 1) AS INT),
+                    TRY_CAST(SUBSTRING(r_wait.wait_resource, 9, CHARINDEX(':', r_wait.wait_resource, 9) - 9) AS INT)
+                )),
+                'OBJECT Lock: ' + r_wait.wait_resource + ' (object not found)'
+            )
 
-        -- DATABASE Lock: Show raw wait_resource
+        -- DATABASE Lock: DATABASE: <db_id>
         WHEN r_wait.wait_resource LIKE 'DATABASE:%%' THEN
-            'DATABASE Lock: ' + r_wait.wait_resource
+            'DATABASE Lock on ' + QUOTENAME(DB_NAME(TRY_CAST(SUBSTRING(r_wait.wait_resource, 11, LEN(r_wait.wait_resource)) AS INT)))
 
         -- Not applicable for non-lock waits
         WHEN r_wait.wait_resource = '' OR r_wait.wait_resource IS NULL THEN 'N/A'
@@ -696,7 +720,10 @@ SELECT TOP (@Limit)
         WHEN r_blocker.command IS NULL AND ib_blocker.event_info IS NOT NULL THEN LEFT(ib_blocker.event_info, @TextTruncateLimit)
         WHEN st_blocker.text IS NOT NULL THEN LEFT(st_blocker.text, @TextTruncateLimit)
         ELSE 'N/A'
-    END AS blocking_query_statement_text
+    END AS blocking_query_statement_text,
+
+    -- L. EXECUTION PLAN XML
+    CAST(qp_wait.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
 
 FROM
     sys.dm_exec_requests AS r_wait
@@ -704,6 +731,8 @@ INNER JOIN
     sys.dm_exec_sessions AS s_wait ON s_wait.session_id = r_wait.session_id
 CROSS APPLY
     sys.dm_exec_sql_text(r_wait.sql_handle) AS st_wait
+OUTER APPLY
+    sys.dm_exec_query_plan(r_wait.plan_handle) AS qp_wait
 LEFT JOIN
     sys.dm_exec_requests AS r_blocker ON r_wait.blocking_session_id = r_blocker.session_id
 LEFT JOIN

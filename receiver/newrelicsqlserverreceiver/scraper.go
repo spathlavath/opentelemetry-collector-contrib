@@ -108,7 +108,18 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 	s.databaseRoleMembershipScraper = scrapers.NewDatabaseRoleMembershipScraper(s.logger, s.connection, s.engineEdition)
 
 	// Initialize query performance scraper for blocking sessions and performance monitoring
-	s.queryPerformanceScraper = scrapers.NewQueryPerformanceScraper(s.connection, s.logger, s.engineEdition)
+	// Pass smoothing and simplified interval calculator configuration parameters from config
+	s.queryPerformanceScraper = scrapers.NewQueryPerformanceScraper(
+		s.connection,
+		s.logger,
+		s.engineEdition,
+		s.config.EnableSlowQuerySmoothing,
+		s.config.SlowQuerySmoothingFactor,
+		s.config.SlowQuerySmoothingDecayThreshold,
+		s.config.SlowQuerySmoothingMaxAgeMinutes,
+		s.config.EnableIntervalBasedAveraging,
+		s.config.IntervalCalculatorCacheTTLMinutes,
+	)
 	// s.slowQueryScraper = scrapers.NewSlowQueryScraper(s.logger, s.connection)
 
 	// Initialize user connection scraper for user connection and authentication metrics
@@ -189,202 +200,6 @@ func (s *sqlServerScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
 	return logs, nil
 }
 
-// collectExecutionPlanData collects execution plan data directly from the database for logs
-// DEPRECATED: This function collected slow query execution plans from dm_exec_query_stats
-// It is no longer called by scrapeLogs(). Execution plans are now collected ONLY for
-// ACTIVE running queries (from dm_exec_requests) during ScrapeActiveRunningQueriesMetrics()
-// This function remains for reference but is not used in the current implementation.
-func (s *sqlServerScraper) collectExecutionPlanData(ctx context.Context) ([]*models.ExecutionPlanAnalysis, error) {
-	if s.queryPerformanceScraper == nil {
-		s.logger.Debug("Query performance scraper not initialized, skipping execution plan collection")
-		return nil, nil
-	}
-
-	s.logger.Debug("Starting execution plan data collection for logs")
-
-	// Step 1: Get slow queries to identify which execution plans to collect
-	slowQueries, err := s.getSlowQueriesForLogs(ctx)
-	if err != nil {
-		s.logger.Error("Failed to get slow queries for execution plan logs", zap.Error(err))
-		return nil, err
-	}
-
-	if len(slowQueries) == 0 {
-		s.logger.Debug("No slow queries found, no execution plans to collect for logs")
-		return []*models.ExecutionPlanAnalysis{}, nil
-	}
-
-	// Step 2: Extract query hashes from slow queries
-	queryHashes := s.extractQueryHashesFromSlowQueries(slowQueries)
-	if len(queryHashes) == 0 {
-		s.logger.Debug("No query hashes found in slow queries for logs")
-		return []*models.ExecutionPlanAnalysis{}, nil
-	}
-
-	// Step 3: Get execution plan data using query hashes
-	executionPlans, err := s.getExecutionPlansForLogs(ctx, queryHashes)
-	if err != nil {
-		s.logger.Error("Failed to get execution plans for logs", zap.Error(err))
-		return nil, err
-	}
-
-	s.logger.Debug("Collected execution plans for logs",
-		zap.Int("slow_queries", len(slowQueries)),
-		zap.Int("query_hashes", len(queryHashes)),
-		zap.Int("execution_plans", len(executionPlans)))
-
-	return executionPlans, nil
-}
-
-// getSlowQueriesForLogs retrieves slow queries for execution plan analysis
-func (s *sqlServerScraper) getSlowQueriesForLogs(ctx context.Context) ([]models.SlowQuery, error) {
-	// Use config values for threshold and fetch interval
-	intervalSeconds := s.config.QueryMonitoringFetchInterval              // Use config value
-	topN := s.config.QueryMonitoringCountThreshold                        // Use config value for top N queries
-	elapsedTimeThreshold := s.config.QueryMonitoringResponseTimeThreshold // Use config threshold (in ms)
-	textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit        // Use config value for text truncate limit
-
-	formattedQuery := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
-
-	s.logger.Info("Executing slow query for logs collection",
-		zap.String("query", queries.TruncateQuery(formattedQuery, 200)),
-		zap.Int("interval_seconds", intervalSeconds),
-		zap.Int("top_n", topN),
-		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
-
-	var results []models.SlowQuery
-	if err := s.connection.Query(ctx, &results, formattedQuery); err != nil {
-		return nil, fmt.Errorf("failed to execute slow query for logs: %w", err)
-	}
-
-	s.logger.Info("Retrieved slow queries for logs", zap.Int("count", len(results)))
-	return results, nil
-}
-
-// extractQueryHashesFromSlowQueries extracts query hashes from slow query results
-func (s *sqlServerScraper) extractQueryHashesFromSlowQueries(slowQueries []models.SlowQuery) []string {
-	queryHashMap := make(map[string]bool)
-	var queryHashes []string
-
-	nullCount := 0
-	emptyCount := 0
-
-	for _, slowQuery := range slowQueries {
-		if slowQuery.QueryID == nil {
-			nullCount++
-			continue
-		}
-		if slowQuery.QueryID.IsEmpty() {
-			emptyCount++
-			continue
-		}
-		queryHashStr := slowQuery.QueryID.String()
-		if !queryHashMap[queryHashStr] {
-			queryHashMap[queryHashStr] = true
-			queryHashes = append(queryHashes, queryHashStr)
-		}
-	}
-
-	s.logger.Info("Extracted query hashes for logs",
-		zap.Int("total_slow_queries", len(slowQueries)),
-		zap.Int("unique_query_hashes", len(queryHashes)),
-		zap.Int("null_query_hashes", nullCount),
-		zap.Int("empty_query_hashes", emptyCount))
-
-	return queryHashes
-}
-
-// getExecutionPlansForLogs retrieves execution plan data for the given query hashes
-func (s *sqlServerScraper) getExecutionPlansForLogs(ctx context.Context, queryHashes []string) ([]*models.ExecutionPlanAnalysis, error) {
-	if len(queryHashes) == 0 {
-		s.logger.Info("No query hashes provided for execution plan retrieval")
-		return []*models.ExecutionPlanAnalysis{}, nil
-	}
-
-	s.logger.Info("Executing execution plan queries for logs",
-		zap.Int("query_hash_count", len(queryHashes)))
-
-	var allExecutionPlans []*models.ExecutionPlanAnalysis
-	successCount := 0
-	errorCount := 0
-	emptyCount := 0
-
-	// Execute the query for each query hash individually
-	for i, queryHash := range queryHashes {
-		// Format query with the query hash parameter
-		formattedQuery := fmt.Sprintf(queries.QueryExecutionPlan, queryHash)
-
-		if i < 3 { // Log first few queries for debugging
-			s.logger.Debug("Executing execution plan query",
-				zap.Int("index", i),
-				zap.String("query_hash", queryHash),
-				zap.String("query", queries.TruncateQuery(formattedQuery, 200)))
-		}
-
-		var results []models.QueryExecutionPlan
-		if err := s.connection.Query(ctx, &results, formattedQuery); err != nil {
-			s.logger.Warn("Failed to execute execution plan query for query hash",
-				zap.String("query_hash", queryHash),
-				zap.Error(err))
-			errorCount++
-			continue
-		}
-
-		if len(results) == 0 {
-			emptyCount++
-			continue
-		}
-
-		// Parse execution plans and convert to analysis
-		for _, result := range results {
-			if result.ExecutionPlanXML == nil || *result.ExecutionPlanXML == "" {
-				s.logger.Debug("Skipping empty execution plan XML", zap.String("query_hash", queryHash))
-				continue
-			}
-
-			queryID := ""
-			planHandle := ""
-			sqlText := ""
-
-			if result.QueryID != nil {
-				queryID = result.QueryID.String()
-			}
-			if result.PlanHandle != nil {
-				planHandle = result.PlanHandle.String()
-			}
-			if result.SQLText != nil {
-				sqlText = *result.SQLText
-			}
-
-			planAnalysis, err := models.ParseExecutionPlanXML(*result.ExecutionPlanXML, queryID, planHandle)
-			if err != nil {
-				s.logger.Warn("Failed to parse execution plan XML",
-					zap.String("query_hash", queryHash),
-					zap.Error(err))
-				continue
-			}
-
-			// Set additional metadata
-			if planAnalysis != nil {
-				planAnalysis.QueryID = queryID
-				planAnalysis.PlanHandle = planHandle
-				planAnalysis.SQLText = sqlText
-				planAnalysis.CollectionTime = time.Now().Format(time.RFC3339)
-				allExecutionPlans = append(allExecutionPlans, planAnalysis)
-				successCount++
-			}
-		}
-	}
-
-	s.logger.Info("Retrieved execution plan query results",
-		zap.Int("total_query_hashes", len(queryHashes)),
-		zap.Int("successful_plans", successCount),
-		zap.Int("empty_results", emptyCount),
-		zap.Int("errors", errorCount),
-		zap.Int("total_plans", len(allExecutionPlans)))
-
-	return allExecutionPlans, nil
-}
 
 // formatPlanHandlesForSQL formats plan handles for use in SQL IN clause
 func (s *sqlServerScraper) formatPlanHandlesForSQL(planHandles []string) string {
@@ -868,35 +683,10 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	//     ... ScrapeWaitTimeAnalysisMetrics call ...
 	// }
 
-	// Scrape query execution plan metrics if query monitoring is enabled
-	if s.config.EnableQueryMonitoring {
-		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-		defer cancel()
-
-		// Use config values for query execution plan parameters
-		intervalSeconds := s.config.QueryMonitoringFetchInterval
-		topN := s.config.QueryMonitoringCountThreshold
-		elapsedTimeThreshold := s.config.QueryMonitoringResponseTimeThreshold
-		textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit // Use config value
-
-		// Dynamic QueryID extraction from slow queries - no more hardcoded values!
-		if err := s.queryPerformanceScraper.ScrapeQueryExecutionPlanMetrics(scrapeCtx, scopeMetrics, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit); err != nil {
-			s.logger.Warn("Failed to scrape query execution plan metrics - continuing with other metrics",
-				zap.Error(err),
-				zap.Duration("timeout", s.config.Timeout),
-				zap.Int("interval_seconds", intervalSeconds),
-				zap.Int("top_n", topN),
-				zap.Int("elapsed_time_threshold", elapsedTimeThreshold),
-				zap.Int("text_truncate_limit", textTruncateLimit))
-			// Don't add to scrapeErrors - just warn and continue with other metrics
-		} else {
-			s.logger.Debug("Successfully scraped query execution plan metrics with dynamic QueryID extraction",
-				zap.Int("interval_seconds", intervalSeconds),
-				zap.Int("top_n", topN),
-				zap.Int("elapsed_time_threshold", elapsedTimeThreshold),
-				zap.Int("text_truncate_limit", textTruncateLimit))
-		}
-	}
+	// NOTE: Removed ScrapeQueryExecutionPlanMetrics fallback scraper
+	// Execution plans are now only fetched from ActiveRunningQuery via OUTER APPLY sys.dm_exec_query_plan
+	// Execution plans are NOT included in SlowQuery (dm_exec_query_stats) as they are not needed for stats-level metrics
+	// This eliminates the redundant separate scraper and simplifies the architecture
 
 	// Continue with other SQL Server metrics collection
 	s.logger.Debug("Starting instance buffer pool hit percent metrics scraping")
@@ -1055,7 +845,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	} else {
 		s.logger.Debug("Instance comprehensive statistics collection is disabled")
 	}
-		
+
 	// Scrape enhanced instance metrics (new performance monitoring capabilities)
 	s.logger.Debug("Checking enhanced instance metrics configuration",
 		zap.Bool("enable_instance_target_memory_metrics", s.config.EnableInstanceTargetMemoryMetrics),
@@ -1689,7 +1479,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 }
 
 // addSystemInformationAsResourceAttributes collects system/host information and adds it as resource attributes
-// This ensures that all metrics sent by the scraper include comprehensive host context  
+// This ensures that all metrics sent by the scraper include comprehensive host context
 func (s *sqlServerScraper) addSystemInformationAsResourceAttributes(ctx context.Context, attrs pcommon.Map) error {
 	// Collect system information using the main scraper
 	systemInfo, err := s.CollectSystemInformation(ctx)

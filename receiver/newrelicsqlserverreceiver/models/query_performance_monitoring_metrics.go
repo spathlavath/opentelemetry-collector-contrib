@@ -124,6 +124,7 @@ type SlowQuery struct {
 	ExecutionCount         *int64   `db:"execution_count" metric_name:"execution_count" source_type:"gauge"`
 	AvgCPUTimeMS           *float64 `db:"avg_cpu_time_ms" metric_name:"sqlserver.slowquery.avg_cpu_time_ms" source_type:"gauge"`
 	AvgElapsedTimeMS       *float64 `db:"avg_elapsed_time_ms" metric_name:"sqlserver.slowquery.avg_elapsed_time_ms" source_type:"gauge"`
+	TotalElapsedTimeMS     *float64 `db:"total_elapsed_time_ms"` // Used for precise delta calculation only
 	AvgDiskReads           *float64 `db:"avg_disk_reads" metric_name:"sqlserver.slowquery.avg_disk_reads" source_type:"gauge"`
 	AvgDiskWrites          *float64 `db:"avg_disk_writes" metric_name:"sqlserver.slowquery.avg_disk_writes" source_type:"gauge"`
 	AvgRowsProcessed       *float64 `db:"avg_rows_processed" metric_name:"sqlserver.slowquery.rows_processed" source_type:"gauge"`
@@ -139,6 +140,12 @@ type SlowQuery struct {
 	LastSpills        *float64 `db:"last_spills" metric_name:"sqlserver.slowquery.last_spills" source_type:"gauge"`
 	MaxSpills         *float64 `db:"max_spills" metric_name:"sqlserver.slowquery.max_spills" source_type:"gauge"`
 	LastDOP           *float64 `db:"last_dop" metric_name:"sqlserver.slowquery.last_dop" source_type:"gauge"`
+
+	// Interval-based delta metrics (calculated in-memory, not from DB)
+	// These are populated by the SimplifiedIntervalCalculator
+	// NOTE: Only elapsed time has delta calculation, CPU uses historical average from DB
+	IntervalAvgElapsedTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_elapsed_time_ms" source_type:"gauge"`
+	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
 }
 
 // BlockingSession represents blocking session information with RCA enhancement fields
@@ -324,7 +331,8 @@ type ActiveRunningQuery struct {
 	ClientInterfaceName *string `db:"client_interface_name" metric_name:"client_interface_name" source_type:"attribute"`
 
 	// H. Plan Handle for execution plan fetching
-	PlanHandle *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
+	PlanHandle       *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
+	ExecutionPlanXML *string  `db:"execution_plan_xml" metric_name:"execution_plan_xml" source_type:"attribute"`
 
 	// I. Blocking Details
 	BlockingSessionID  *string `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
