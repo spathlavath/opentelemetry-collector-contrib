@@ -18,7 +18,8 @@ type OracleClient interface {
 	Ping(ctx context.Context) error
 
 	// Execution plan queries
-	QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error)
+	// If childNumber is -1, fetches all child numbers for the SQL_ID. If >= 0, fetches only that specific child number.
+	QueryExecutionPlanRows(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error)
 
 	// Slow queries
 	QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error)
@@ -26,11 +27,9 @@ type OracleClient interface {
 	// Blocking queries
 	QueryBlockingQueries(ctx context.Context, countThreshold int) ([]models.BlockingQuery, error)
 
-	// Wait events
-	QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error)
-
-	// Active session details
-	QueryActiveSessionDetails(ctx context.Context, sqlIDs string) ([]models.ActiveSession, error)
+	// Wait events - with optional SQL ID filtering
+	// If sqlIDs is empty, returns all wait events. If sqlIDs is provided, filters by those specific SQL IDs.
+	QueryWaitEvents(ctx context.Context, countThreshold int, sqlIDs string) ([]models.WaitEvent, error)
 
 	// Connection metrics - simple counts
 	QueryTotalSessions(ctx context.Context) (int64, error)

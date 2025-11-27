@@ -38,8 +38,9 @@ func (c *SQLClient) Ping(ctx context.Context) error {
 }
 
 // QueryExecutionPlanRows executes the execution plan query and returns raw rows without hierarchical transformation.
-func (c *SQLClient) QueryExecutionPlanRows(ctx context.Context, sqlIDs string) ([]models.ExecutionPlanRow, error) {
-	query := queries.GetExecutionPlanQuery(sqlIDs)
+// If childNumber is -1, fetches all child numbers for the SQL_ID. If >= 0, fetches only that specific child number.
+func (c *SQLClient) QueryExecutionPlanRows(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error) {
+	query := queries.GetExecutionPlanQuery(sqlID, childNumber)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -178,9 +179,10 @@ func (c *SQLClient) QueryBlockingQueries(ctx context.Context, countThreshold int
 	return results, nil
 }
 
-// QueryWaitEvents executes the wait events query.
-func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error) {
-	query := queries.GetWaitEventQueriesSQL(countThreshold)
+// QueryWaitEvents executes the wait events query with optional SQL ID filtering.
+// If sqlIDs is empty, returns all wait events. If sqlIDs is provided, filters by those specific SQL IDs.
+func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int, sqlIDs string) ([]models.WaitEvent, error) {
+	query := queries.GetWaitEventQueriesSQL(countThreshold, sqlIDs)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -197,8 +199,10 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 			&waitEvent.CollectionTimestamp,
 			&waitEvent.Username,
 			&waitEvent.SID,
+			&waitEvent.Serial,
 			&waitEvent.Status,
 			&waitEvent.QueryID,
+			&waitEvent.SQLChildNumber,
 			&waitEvent.WaitCategory,
 			&waitEvent.WaitEventName,
 			&waitEvent.CurrentWaitSeconds,
@@ -225,49 +229,6 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]
 		}
 
 		results = append(results, waitEvent)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return results, nil
-}
-
-// QueryActiveSessionDetails executes the active sessions query for given SQL IDs.
-func (c *SQLClient) QueryActiveSessionDetails(ctx context.Context, sqlIDs string) ([]models.ActiveSession, error) {
-	query := queries.GetActiveSessionQueriesSQL(sqlIDs)
-
-	rows, err := c.db.QueryContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var results []models.ActiveSession
-
-	for rows.Next() {
-		var session models.ActiveSession
-
-		err := rows.Scan(
-			&session.CollectionTimestamp,
-			&session.Username,
-			&session.SID,
-			&session.Serial,
-			&session.QueryID,
-			&session.SQLChildNumber,
-			&session.SQLExecStart,
-			&session.SQLExecID,
-			&session.SecondsInWait,
-			&session.WaitCategory,
-			&session.TimeRemainingSeconds,
-			&session.Machine,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		results = append(results, session)
 	}
 
 	if err = rows.Err(); err != nil {
