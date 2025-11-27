@@ -145,7 +145,7 @@ exporters:
     # Headers for New Relic authentication
     headers:
       # New Relic License Key - UPDATE WITH YOUR KEY
-      api-key: "5848a0c9c053a43ff9c2cc5af33cfe60FFFFNRAL"
+      api-key: ""
 
     # TLS configuration for HTTPS
     tls:
