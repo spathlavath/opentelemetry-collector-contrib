@@ -36,10 +36,12 @@ type sqlServerScraper struct {
 	failoverClusterScraper        *scrapers.FailoverClusterScraper
 	databasePrincipalsScraper     *scrapers.DatabasePrincipalsScraper
 	databaseRoleMembershipScraper *scrapers.DatabaseRoleMembershipScraper
-	waitTimeScraper               *scrapers.WaitTimeScraper // Add this line
-	securityScraper               *scrapers.SecurityScraper // Security metrics scraper
-	lockScraper                   *scrapers.LockScraper     // Lock analysis metrics scraper
-	engineEdition                 int                       // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
+	waitTimeScraper               *scrapers.WaitTimeScraper         // Add this line
+	securityScraper               *scrapers.SecurityScraper         // Security metrics scraper
+	lockScraper                   *scrapers.LockScraper             // Lock analysis metrics scraper
+	threadPoolHealthScraper       *scrapers.ThreadPoolHealthScraper // Thread pool health monitoring
+	tempdbContentionScraper       *scrapers.TempDBContentionScraper // TempDB contention monitoring
+	engineEdition                 int                               // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
 }
 
 // newSqlServerScraper creates a new SQL Server scraper with structured approach
@@ -122,6 +124,12 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 
 	// Initialize lock scraper for lock analysis metrics
 	s.lockScraper = scrapers.NewLockScraper(s.connection, s.logger, s.engineEdition)
+
+	// Initialize thread pool health scraper for thread pool monitoring
+	s.threadPoolHealthScraper = scrapers.NewThreadPoolHealthScraper(s.connection, s.logger)
+
+	// Initialize TempDB contention scraper for TempDB monitoring
+	s.tempdbContentionScraper = scrapers.NewTempDBContentionScraper(s.connection, s.logger)
 
 	s.logger.Info("Successfully connected to SQL Server",
 		zap.String("hostname", s.config.Hostname),
@@ -1055,7 +1063,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	} else {
 		s.logger.Debug("Instance comprehensive statistics collection is disabled")
 	}
-		
+
 	// Scrape enhanced instance metrics (new performance monitoring capabilities)
 	s.logger.Debug("Checking enhanced instance metrics configuration",
 		zap.Bool("enable_instance_target_memory_metrics", s.config.EnableInstanceTargetMemoryMetrics),
@@ -1672,6 +1680,38 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		}
 	}
 
+	// Scrape thread pool health metrics if enabled
+	if s.config.EnableThreadPoolHealthMetrics {
+		s.logger.Debug("Starting thread pool health metrics scraping")
+		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
+		defer cancel()
+		if err := s.threadPoolHealthScraper.ScrapeThreadPoolHealthMetrics(scrapeCtx, scopeMetrics); err != nil {
+			s.logger.Error("Failed to scrape thread pool health metrics",
+				zap.Error(err),
+				zap.Duration("timeout", s.config.Timeout))
+			scrapeErrors = append(scrapeErrors, err)
+			// Don't return here - continue with other metrics
+		} else {
+			s.logger.Debug("Successfully scraped thread pool health metrics")
+		}
+	}
+
+	// Scrape TempDB contention metrics if enabled
+	if s.config.EnableTempDBContentionMetrics {
+		s.logger.Debug("Starting TempDB contention metrics scraping")
+		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
+		defer cancel()
+		if err := s.tempdbContentionScraper.ScrapeTempDBContentionMetrics(scrapeCtx, scopeMetrics); err != nil {
+			s.logger.Error("Failed to scrape TempDB contention metrics",
+				zap.Error(err),
+				zap.Duration("timeout", s.config.Timeout))
+			scrapeErrors = append(scrapeErrors, err)
+			// Don't return here - continue with other metrics
+		} else {
+			s.logger.Debug("Successfully scraped TempDB contention metrics")
+		}
+	}
+
 	// Log summary of scraping results
 	if len(scrapeErrors) > 0 {
 		s.logger.Warn("Completed scraping with errors",
@@ -1689,7 +1729,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 }
 
 // addSystemInformationAsResourceAttributes collects system/host information and adds it as resource attributes
-// This ensures that all metrics sent by the scraper include comprehensive host context  
+// This ensures that all metrics sent by the scraper include comprehensive host context
 func (s *sqlServerScraper) addSystemInformationAsResourceAttributes(ctx context.Context, attrs pcommon.Map) error {
 	// Collect system information using the main scraper
 	systemInfo, err := s.CollectSystemInformation(ctx)
