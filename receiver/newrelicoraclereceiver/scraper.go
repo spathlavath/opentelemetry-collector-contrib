@@ -249,7 +249,10 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		return fmt.Errorf("failed to create blocking scraper: %w", err)
 	}
 
-	// Initialize wait events scraper
+	// Initialize child cursors scraper (fetches V$SQL child cursors)
+	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+
+	// Initialize wait events scraper (uses child cursors for execution plan identifiers)
 	s.waitEventsScraper = scrapers.NewWaitEventsScraper(
 		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
@@ -257,9 +260,6 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 
 	// Initialize lock scraper
 	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
-
-	// Initialize child cursors scraper
-	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
 	return nil
 }
