@@ -414,6 +414,20 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		return attrs
 	}
 
+	// Create attributes WITH timestamps - ONLY for primary metric (avg_elapsed_time_ms)
+	// This enables time-based filtering on the most commonly queried performance metric
+	createSafeAttributesWithTimestamps := func() pcommon.Map {
+		attrs := createSafeAttributes()
+		// Add ISO 8601 timestamp strings (not Unix epoch numbers)
+		if result.CollectionTimestamp != nil {
+			attrs.PutStr("collection_timestamp", *result.CollectionTimestamp)
+		}
+		if result.LastExecutionTimestamp != nil {
+			attrs.PutStr("last_execution_timestamp", *result.LastExecutionTimestamp)
+		}
+		return attrs
+	}
+
 	// Create detailed attributes for logging/debugging (not used in metrics)
 	logAttributes := func() []zap.Field {
 		var fields []zap.Field
@@ -517,7 +531,8 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		dataPoint.SetTimestamp(timestamp)
 		dataPoint.SetStartTimestamp(s.startTime)
 		dataPoint.SetDoubleValue(*result.AvgElapsedTimeMS)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		// Use timestamp attributes for this primary metric only
+		createSafeAttributesWithTimestamps().CopyTo(dataPoint.Attributes())
 	}
 
 	// Create interval_avg_elapsed_time_ms metric (delta) - CARDINALITY SAFE
@@ -599,58 +614,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		}
 
 		attrs.CopyTo(dataPoint.Attributes())
-	}
-
-	// Create collection_timestamp metric - CARDINALITY SAFE (timestamp as Unix epoch seconds)
-	if result.CollectionTimestamp != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.collection_timestamp")
-		metric.SetDescription("Collection timestamp for slow query (Unix epoch seconds)")
-		metric.SetUnit("s")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-
-		// Parse the timestamp string and convert to Unix epoch seconds (cardinality-safe)
-		if parsedTime, err := time.Parse(time.RFC3339, *result.CollectionTimestamp); err == nil {
-			dataPoint.SetIntValue(parsedTime.Unix())
-		} else if parsedTime, err := time.Parse("2006-01-02T15:04:05", *result.CollectionTimestamp); err == nil {
-			dataPoint.SetIntValue(parsedTime.Unix())
-		} else if parsedTime, err := time.Parse("2006-01-02 15:04:05", *result.CollectionTimestamp); err == nil {
-			dataPoint.SetIntValue(parsedTime.Unix())
-		} else {
-			// Fallback: use current time if parsing fails
-			dataPoint.SetIntValue(time.Now().Unix())
-		}
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
-	}
-
-	// Create last_execution_timestamp metric - CARDINALITY SAFE (timestamp as Unix epoch seconds)
-	if result.LastExecutionTimestamp != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.last_execution_timestamp")
-		metric.SetDescription("Last execution timestamp for slow query (Unix epoch seconds)")
-		metric.SetUnit("s")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-
-		// Parse the timestamp string and convert to Unix epoch seconds (cardinality-safe)
-		if parsedTime, err := time.Parse(time.RFC3339, *result.LastExecutionTimestamp); err == nil {
-			dataPoint.SetIntValue(parsedTime.Unix())
-		} else if parsedTime, err := time.Parse("2006-01-02T15:04:05", *result.LastExecutionTimestamp); err == nil {
-			dataPoint.SetIntValue(parsedTime.Unix())
-		} else if parsedTime, err := time.Parse("2006-01-02 15:04:05", *result.LastExecutionTimestamp); err == nil {
-			dataPoint.SetIntValue(parsedTime.Unix())
-		} else {
-			// Fallback: use current time if parsing fails
-			dataPoint.SetIntValue(time.Now().Unix())
-		}
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
 	}
 
 	// ========================================

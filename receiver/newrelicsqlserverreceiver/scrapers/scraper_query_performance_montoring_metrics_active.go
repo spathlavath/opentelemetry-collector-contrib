@@ -400,10 +400,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 
 // addActiveQueryAttributes adds all attributes from an active running query to a data point
 func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, result models.ActiveRunningQuery, executionPlanXML string) {
-	// Add execution plan XML if available
-	if executionPlanXML != "" {
-		attrs.PutStr("execution_plan_xml", executionPlanXML)
-	}
+	// NOTE: execution_plan_xml is NOT added as a metric attribute to avoid large data payloads
+	// Execution plans are sent as parsed OTLP logs with individual operators
+	// Query: FROM Log WHERE event.name = 'sqlserver.execution_plan_operator'
 
 	// Session details
 	if result.CurrentSessionID != nil {

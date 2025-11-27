@@ -58,6 +58,10 @@ type Config struct {
 	EnableLockResourceMetrics bool `mapstructure:"enable_lock_resource_metrics"` // Lock resource analysis (what's being locked)
 	EnableLockModeMetrics     bool `mapstructure:"enable_lock_mode_metrics"`     // Lock mode analysis (how it's locked)
 
+	// Thread Pool and TempDB Health Metrics - System health monitoring
+	EnableThreadPoolHealthMetrics bool `mapstructure:"enable_thread_pool_health_metrics"` // Thread pool health and worker thread exhaustion
+	EnableTempDBContentionMetrics bool `mapstructure:"enable_tempdb_contention_metrics"`  // TempDB page latch contention monitoring
+
 	// Wait Time Metrics - Extensions
 	EnableLatchWaitTimeMetrics bool `mapstructure:"enable_latch_wait_time_metrics"` // Latch-specific wait time metrics
 
@@ -194,6 +198,10 @@ func DefaultConfig() component.Config {
 		// Default lock analysis metrics (enabled by default)
 		EnableLockResourceMetrics: true,
 		EnableLockModeMetrics:     true,
+
+		// Default thread pool and TempDB health metrics (enabled by default)
+		EnableThreadPoolHealthMetrics: true,
+		EnableTempDBContentionMetrics: true,
 
 		// Default wait time metrics extensions
 		EnableLatchWaitTimeMetrics: true,
