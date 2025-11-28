@@ -183,27 +183,20 @@ attributes:
     description: SQL execution identifier
     type: int
 
-  blocking_user:
-    description: Username of the blocking session
+  final_blocker_user:
+    description: Username of the final blocking session (root cause)
     type: string
-  blocked_user:
-    description: Username of the blocked session
+  final_blocker_sid:
+    description: Session ID of the final blocking session (root cause)
     type: string
-
-  blocking_sid:
-    description: Session ID of the blocking session
+  final_blocker_serial:
+    description: Serial number of the final blocking session (root cause)
     type: string
-  blocked_serial:
-    description: Serial number of the blocked session
+  final_blocker_query_id:
+    description: SQL query ID of the final blocking session's query
     type: string
-  blocking_serial:
-    description: Serial number of the blocking session
-    type: string
-  blocking_query_text:
-    description: SQL query text of the blocking query
-    type: string
-  blocking_query_id:
-    description: SQL query ID of the blocking query
+  final_blocker_query_text:
+    description: SQL query text of the final blocking session's query
     type: string
 
   db.instance.name:
@@ -3757,18 +3750,19 @@ metrics:
     unit: s
     attributes:
       - collection_timestamp
-      - instance.id
-      - blocked_user
-      - blocking_user
-      - query_id
-      - session_id
-      - blocking_sid
-      - blocked_serial
-      - blocking_serial
-      - blocking_query_text
-      - blocking_query_id
-      - sql_exec_id
       - database_name
+      - user_name
+      - session_id
+      - session_serial
+      - query_id
+      - sql_child_number
+      - sql_exec_id
+      - sql_exec_start
+      - final_blocker_user
+      - final_blocker_sid
+      - final_blocker_serial
+      - final_blocker_query_id
+      - final_blocker_query_text
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.total_wait_time_ms:
@@ -3842,6 +3836,7 @@ metrics:
     unit: s
     attributes:
       - collection_timestamp
+      - database_name
       - user_name
       - session_id
       - session_serial
@@ -3879,6 +3874,7 @@ metrics:
     unit: s
     attributes:
       - collection_timestamp
+      - database_name
       - session_id
       - query_id
       - sql_child_number

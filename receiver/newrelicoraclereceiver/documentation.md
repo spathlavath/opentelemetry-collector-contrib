@@ -76,18 +76,19 @@ Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is n
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| blocked_user | Username of the blocked session | Any Str | false |
-| blocking_user | Username of the blocking session | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| blocking_sid | Session ID of the blocking session | Any Str | false |
-| blocked_serial | Serial number of the blocked session | Any Str | false |
-| blocking_serial | Serial number of the blocking session | Any Str | false |
-| blocking_query_text | SQL query text of the blocking query | Any Str | false |
-| blocking_query_id | SQL query ID of the blocking query | Any Str | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
 | database_name | Oracle database name | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| final_blocker_user | Username of the final blocking session (root cause) | Any Str | false |
+| final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | false |
+| final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |
+| final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | false |
+| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | false |
 
 ### newrelicoracledb.child_cursors.buffer_gets
 
@@ -5022,6 +5023,7 @@ Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_clas
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
@@ -5065,6 +5067,7 @@ Useful for identifying long-running operations and predicting when they will com
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | sql_child_number | SQL child cursor number | Any Int | false |

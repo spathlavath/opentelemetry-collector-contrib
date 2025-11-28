@@ -95,6 +95,7 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	}
 
 	collectionTimestamp := event.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
+	dbName := event.GetDatabaseName()
 	username := event.GetUsername()
 	sid := strconv.FormatInt(event.GetSID(), 10)
 	serial := event.GetSerial()
@@ -125,6 +126,7 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		now,
 		float64(event.GetCurrentWaitSeconds()),
 		collectionTimestamp,
+		dbName,
 		username,
 		sid,
 		serial,
@@ -157,6 +159,7 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 			now,
 			event.GetTimeRemainingSeconds(),
 			collectionTimestamp,
+			dbName,
 			sid,
 			qID,
 			sqlChildNumber,
@@ -181,8 +184,10 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	blockedUser := event.GetUsername()
 	queryID := event.GetQueryID()
 	sessionID := strconv.FormatInt(event.GetSID(), 10)
-	blockedSerial := strconv.FormatInt(event.GetSerial(), 10)
+	blockedSerial := event.GetSerial()
+	sqlChildNumber := event.GetSQLChildNumber()
 	sqlExecID := event.GetSQLExecID()
+	sqlExecStart := event.GetSQLExecStart().Format("2006-01-02 15:04:05")
 
 	// Blocking session information
 	finalBlockerSID := strconv.FormatInt(event.GetFinalBlockerSID(), 10)
@@ -195,18 +200,19 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		now,
 		blockedWaitSec,
 		collectionTimestamp,
-		s.instanceName,
-		blockedUser,
-		finalBlockerUser,
-		queryID,
-		sessionID,
-		finalBlockerSID,
-		blockedSerial,
-		finalBlockerSerial,
-		finalBlockerQueryText,
-		finalBlockerQueryID,
-		sqlExecID, // int64
 		dbName,
+		blockedUser,
+		sessionID,
+		blockedSerial,
+		queryID,
+		sqlChildNumber,
+		sqlExecID,
+		sqlExecStart,
+		finalBlockerUser,
+		finalBlockerSID,
+		finalBlockerSerial,
+		finalBlockerQueryID,
+		finalBlockerQueryText,
 	)
 }
 
