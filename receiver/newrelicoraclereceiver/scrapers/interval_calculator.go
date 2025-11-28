@@ -171,10 +171,11 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		}
 
 		// For first scrape, use historical average as interval average
+		// Use currentExecCount as interval count since this represents all executions since plan cache
 		// Caller will filter by threshold
 		return &OracleIntervalMetrics{
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
-			IntervalExecutionCount:     currentExecCount,
+			IntervalExecutionCount:     currentExecCount, // All executions since plan cache
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalExecutionCount:   currentExecCount,
@@ -216,10 +217,11 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	// Handle plan cache reset (execution count decreased) OR stats corruption (negative delta elapsed)
 	if deltaExecCount < 0 || deltaElapsedMs < 0 {
 		if deltaExecCount < 0 {
-			oic.logger.Warn("Plan cache reset detected - execution count decreased",
+			oic.logger.Warn("Plan cache reset detected - execution count decreased, cannot calculate valid interval delta",
 				zap.String("query_id", queryID),
 				zap.Int64("current_exec_count", currentExecCount),
-				zap.Int64("prev_exec_count", state.PrevExecutionCount))
+				zap.Int64("prev_exec_count", state.PrevExecutionCount),
+				zap.Int64("delta_exec_count", deltaExecCount))
 		}
 		if deltaElapsedMs < 0 {
 			oic.logger.Warn("Negative delta elapsed time detected - possible stats corruption",
@@ -237,9 +239,12 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 			LastSeenTimestamp:      now,
 		}
 
+		// After cache reset, we cannot calculate a valid interval delta
+		// Use historical average but set interval count to current count (all execs since reset)
+		// Alternative: Could skip emitting by setting HasNewExecutions: false
 		return &OracleIntervalMetrics{
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
-			IntervalExecutionCount:     currentExecCount,
+			IntervalExecutionCount:     currentExecCount, // All executions since cache reset
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalExecutionCount:   currentExecCount,

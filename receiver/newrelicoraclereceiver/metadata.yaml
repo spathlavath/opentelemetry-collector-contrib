@@ -3626,7 +3626,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.interval_execution_count:
-    description: Number of executions in the last polling interval (delta metric)
+    description: Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
     enabled: true
     gauge:
       value_type: double
