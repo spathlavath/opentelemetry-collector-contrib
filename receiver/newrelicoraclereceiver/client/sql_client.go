@@ -110,6 +110,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 		var slowQuery models.SlowQuery
 
 		err := rows.Scan(
+			&slowQuery.CollectionTimestamp,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
