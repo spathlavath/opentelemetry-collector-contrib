@@ -92,8 +92,11 @@ func (c *SQLClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string
 }
 
 // QuerySlowQueries executes the slow queries query.
-func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
-	query := queries.GetSlowQueriesSQL(responseTimeThreshold, countThreshold)
+// intervalSeconds: Time window to fetch queries that ran in the last N seconds
+// responseTimeThreshold: Threshold filtering done in Go after delta calculation (not used in SQL)
+// countThreshold: TOP N selection done in Go after delta calculation (not used in SQL)
+func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
+	query := queries.GetSlowQueriesSQL(intervalSeconds)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -120,6 +123,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold,
 			&slowQuery.AvgRowsExamined,
 			&slowQuery.AvgLockTimeMs,
 			&slowQuery.LastActiveTime,
+			&slowQuery.TotalElapsedTimeMS,
 		)
 		if err != nil {
 			return nil, err

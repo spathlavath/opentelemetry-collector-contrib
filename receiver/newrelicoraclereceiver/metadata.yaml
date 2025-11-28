@@ -3612,6 +3612,30 @@ metrics:
       - user_name
       - last_active_time
 
+  # Interval-based (delta) metrics - showing what happened in the LAST polling interval
+  # These metrics provide real-time visibility into query performance changes
+  newrelicoracledb.slow_queries.interval_avg_elapsed_time:
+    description: Average elapsed time per execution in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - database_name
+      - query_id
+      - user_name
+
+  newrelicoracledb.slow_queries.interval_execution_count:
+    description: Number of executions in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{executions}"
+    attributes:
+      - database_name
+      - query_id
+      - user_name
+
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
     description: Average CPU time per execution for this child cursor (in microseconds)

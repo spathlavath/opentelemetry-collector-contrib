@@ -145,7 +145,7 @@ func (m *MockClient) QueryExecutionPlanForChild(ctx context.Context, sqlID strin
 	return []models.ExecutionPlanRow{}, nil
 }
 
-func (m *MockClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
+func (m *MockClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}

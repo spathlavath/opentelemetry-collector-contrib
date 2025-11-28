@@ -30,6 +30,12 @@ const (
 	defaultQueryMonitoringResponseTimeThreshold = queries.DefaultQueryMonitoringResponseTimeThreshold
 	defaultQueryMonitoringCountThreshold        = queries.DefaultQueryMonitoringCountThreshold
 
+	// Interval Calculator defaults
+	defaultEnableIntervalBasedAveraging      = true // Enable by default for better slow query detection
+	defaultIntervalCalculatorCacheTTLMinutes = 10   // 10 minutes cache TTL
+	// Note: QueryMonitoringIntervalSeconds default is set dynamically based on collection_interval
+	// in SetDefaults() to ensure it's always >= collection_interval
+
 	// Validation ranges
 	minCollectionInterval                   = 10 * time.Second
 	maxCollectionInterval                   = 3600 * time.Second
@@ -80,6 +86,11 @@ type Config struct {
 	EnableQueryMonitoring                bool `mapstructure:"enable_query_monitoring"`
 	QueryMonitoringResponseTimeThreshold int  `mapstructure:"query_monitoring_response_time_threshold"`
 	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
+	QueryMonitoringIntervalSeconds       int  `mapstructure:"query_monitoring_interval_seconds"`
+
+	// Interval Calculator Configuration
+	EnableIntervalBasedAveraging       bool `mapstructure:"enable_interval_based_averaging"`
+	IntervalCalculatorCacheTTLMinutes  int  `mapstructure:"interval_calculator_cache_ttl_minutes"`
 
 	// Tablespace Filtering Configuration
 	TablespaceFilter TablespaceFilterConfig `mapstructure:"tablespace_filter"`
@@ -107,6 +118,30 @@ func (c *Config) SetDefaults() {
 	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
 		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 		c.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
+	}
+
+	// Set QueryMonitoringIntervalSeconds default based on collection_interval
+	// IMPORTANT: This should be >= collection_interval to avoid missing queries between scrapes
+	// Default: Use collection_interval converted to seconds (rounded up)
+	if c.QueryMonitoringIntervalSeconds <= 0 {
+		collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
+		if collectionIntervalSeconds < 1 {
+			collectionIntervalSeconds = 10 // Fallback to 10 seconds minimum
+		}
+		c.QueryMonitoringIntervalSeconds = collectionIntervalSeconds
+	} else {
+		// User specified a value - ensure it's at least as long as collection_interval
+		collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
+		if c.QueryMonitoringIntervalSeconds < collectionIntervalSeconds {
+			// Log a warning would be nice here, but we don't have logger in config
+			// The value will be adjusted to match collection_interval
+			c.QueryMonitoringIntervalSeconds = collectionIntervalSeconds
+		}
+	}
+
+	// Set Interval Calculator defaults if not set
+	if c.IntervalCalculatorCacheTTLMinutes <= 0 {
+		c.IntervalCalculatorCacheTTLMinutes = defaultIntervalCalculatorCacheTTLMinutes
 	}
 }
 
@@ -273,6 +308,18 @@ func (c Config) validateQueryPerformanceMonitoring() error {
 
 	if c.QueryMonitoringCountThreshold < 0 {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_count_threshold cannot be negative: got %d", c.QueryMonitoringCountThreshold))
+	}
+
+	if c.QueryMonitoringIntervalSeconds < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_interval_seconds cannot be negative: got %d", c.QueryMonitoringIntervalSeconds))
+	}
+
+	// Validate that interval seconds is >= collection interval (after SetDefaults has run)
+	collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
+	if c.QueryMonitoringIntervalSeconds > 0 && c.QueryMonitoringIntervalSeconds < collectionIntervalSeconds {
+		allErrs = multierr.Append(allErrs, fmt.Errorf(
+			"query_monitoring_interval_seconds (%d) should be >= collection_interval (%d seconds) to avoid missing queries between scrapes",
+			c.QueryMonitoringIntervalSeconds, collectionIntervalSeconds))
 	}
 
 	return allErrs

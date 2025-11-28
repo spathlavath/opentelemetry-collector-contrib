@@ -229,11 +229,14 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 
 // initializeQPMScrapers initializes Query Performance Monitoring scrapers
 func (s *newRelicOracleScraper) initializeQPMScrapers() error {
-	// Initialize slow queries scraper
+	// Initialize slow queries scraper with interval calculator configuration
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
 		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
+		s.config.QueryMonitoringIntervalSeconds,
+		s.config.EnableIntervalBasedAveraging,
+		s.config.IntervalCalculatorCacheTTLMinutes,
 	)
 
 	// Initialize execution plan scraper (uses LogsBuilder for log events)
@@ -396,7 +399,7 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 	}
 	tempMb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), tempSettings)
 
-	// Initialize slow queries scraper
+	// Initialize slow queries scraper with interval calculator configuration
 	slowQueriesScraper := scrapers.NewSlowQueriesScraper(
 		s.client,
 		tempMb,
@@ -405,6 +408,9 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		metadata.DefaultMetricsBuilderConfig(),
 		s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
+		s.config.QueryMonitoringIntervalSeconds,
+		s.config.EnableIntervalBasedAveraging,
+		s.config.IntervalCalculatorCacheTTLMinutes,
 	)
 	s.slowQueriesScraper = slowQueriesScraper
 

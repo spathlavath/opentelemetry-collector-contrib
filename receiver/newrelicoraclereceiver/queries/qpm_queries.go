@@ -5,8 +5,19 @@ package queries
 
 import "fmt"
 
-// GetSlowQueriesSQL returns SQL for slow queries with configurable response time threshold and row limit
-func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
+// GetSlowQueriesSQL returns SQL for slow queries with configurable time window
+// Returns total_elapsed_time_ms for delta calculation in addition to avg_elapsed_time_ms
+//
+// IMPORTANT: TOP N filtering and threshold filtering are applied in Go code AFTER delta calculation
+// This ensures we get enough candidates for interval-based (delta) averaging
+//
+// Parameters:
+// - intervalSeconds: Time window to fetch queries (e.g., 60 = last 60 seconds)
+//
+// Note: This function signature previously accepted responseTimeThreshold and rowLimit parameters,
+// but those are no longer used in the SQL query. Filtering and TOP N selection are now done in Go
+// after delta calculation for accurate results.
+func GetSlowQueriesSQL(intervalSeconds int) string {
 	return fmt.Sprintf(`
 		SELECT
 			d.name AS database_name,
@@ -21,7 +32,8 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms,
 			sa.buffer_gets / DECODE(sa.executions, 0, 1, sa.executions) AS rows_examined,
 			sa.concurrency_wait_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_lock_time_ms,
-			sa.last_active_time AS last_active_time_ms
+			sa.last_active_time AS last_active_time_ms,
+			sa.elapsed_time / 1000 AS total_elapsed_time_ms
 		FROM
 			v$sqlarea sa
 		INNER JOIN
@@ -36,11 +48,11 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
 			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER')
-			AND sa.last_active_time >= TRUNC(SYSDATE)
-			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
+			-- KEY FILTER: Only fetch queries that ran in the last N seconds (interval window)
+			-- This is critical for delta calculation to work correctly
+			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
 		ORDER BY
-			avg_elapsed_time_ms DESC
-		FETCH FIRST %d ROWS ONLY`, responseTimeThreshold, rowLimit)
+			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) DESC`, intervalSeconds)
 }
 
 // GetBlockingQueriesSQL returns SQL for blocking queries with configurable row limit

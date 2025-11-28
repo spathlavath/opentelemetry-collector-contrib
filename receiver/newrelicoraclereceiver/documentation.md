@@ -2598,6 +2598,38 @@ Number of executions for slow queries
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 
+### newrelicoracledb.slow_queries.interval_avg_elapsed_time
+
+Average elapsed time per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_execution_count
+
+Number of executions in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
 ### newrelicoracledb.slow_queries.query_details
 
 Slow Query Details
