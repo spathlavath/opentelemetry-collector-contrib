@@ -46,12 +46,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbChildCursorsInvalidations: metricInfo{
 		Name: "newrelicoracledb.child_cursors.invalidations",
 	},
-	NewrelicoracledbChildCursorsLoads: metricInfo{
-		Name: "newrelicoracledb.child_cursors.loads",
-	},
-	NewrelicoracledbChildCursorsParseCalls: metricInfo{
-		Name: "newrelicoracledb.child_cursors.parse_calls",
-	},
 	NewrelicoracledbChildCursorsUserIoWaitTime: metricInfo{
 		Name: "newrelicoracledb.child_cursors.user_io_wait_time",
 	},
@@ -1005,8 +999,6 @@ type metricsInfo struct {
 	NewrelicoracledbChildCursorsElapsedTime                            metricInfo
 	NewrelicoracledbChildCursorsExecutions                             metricInfo
 	NewrelicoracledbChildCursorsInvalidations                          metricInfo
-	NewrelicoracledbChildCursorsLoads                                  metricInfo
-	NewrelicoracledbChildCursorsParseCalls                             metricInfo
 	NewrelicoracledbChildCursorsUserIoWaitTime                         metricInfo
 	NewrelicoracledbConnectionActiveSessions                           metricInfo
 	NewrelicoracledbConnectionBlockingSessions                         metricInfo
@@ -1554,7 +1546,7 @@ type metricNewrelicoracledbChildCursorsBufferGets struct {
 // init fills newrelicoracledb.child_cursors.buffer_gets metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsBufferGets) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.buffer_gets")
-	m.data.SetDescription("Number of buffer gets performed by this child cursor")
+	m.data.SetDescription("Average number of buffer gets per execution for this child cursor")
 	m.data.SetUnit("{gets}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1607,7 +1599,7 @@ type metricNewrelicoracledbChildCursorsCPUTime struct {
 // init fills newrelicoracledb.child_cursors.cpu_time metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsCPUTime) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.cpu_time")
-	m.data.SetDescription("CPU time consumed by this child cursor (in microseconds)")
+	m.data.SetDescription("Average CPU time per execution for this child cursor (in microseconds)")
 	m.data.SetUnit("us")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1715,7 +1707,7 @@ type metricNewrelicoracledbChildCursorsDiskReads struct {
 // init fills newrelicoracledb.child_cursors.disk_reads metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsDiskReads) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.disk_reads")
-	m.data.SetDescription("Number of disk reads performed by this child cursor")
+	m.data.SetDescription("Average number of disk reads per execution for this child cursor")
 	m.data.SetUnit("{reads}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1768,7 +1760,7 @@ type metricNewrelicoracledbChildCursorsElapsedTime struct {
 // init fills newrelicoracledb.child_cursors.elapsed_time metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsElapsedTime) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.elapsed_time")
-	m.data.SetDescription("Elapsed time for this child cursor (in microseconds)")
+	m.data.SetDescription("Average elapsed time per execution for this child cursor (in microseconds)")
 	m.data.SetUnit("us")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1821,7 +1813,7 @@ type metricNewrelicoracledbChildCursorsExecutions struct {
 // init fills newrelicoracledb.child_cursors.executions metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsExecutions) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.executions")
-	m.data.SetDescription("Number of executions of this child cursor")
+	m.data.SetDescription("Total number of executions of this child cursor")
 	m.data.SetUnit("{executions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1918,112 +1910,6 @@ func newMetricNewrelicoracledbChildCursorsInvalidations(cfg MetricConfig) metric
 	return m
 }
 
-type metricNewrelicoracledbChildCursorsLoads struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.child_cursors.loads metric with initial data.
-func (m *metricNewrelicoracledbChildCursorsLoads) init() {
-	m.data.SetName("newrelicoracledb.child_cursors.loads")
-	m.data.SetDescription("Number of times this child cursor was loaded into the library cache")
-	m.data.SetUnit("{loads}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbChildCursorsLoads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, childNumberAttributeValue int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutInt("child_number", childNumberAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbChildCursorsLoads) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbChildCursorsLoads) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbChildCursorsLoads(cfg MetricConfig) metricNewrelicoracledbChildCursorsLoads {
-	m := metricNewrelicoracledbChildCursorsLoads{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbChildCursorsParseCalls struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.child_cursors.parse_calls metric with initial data.
-func (m *metricNewrelicoracledbChildCursorsParseCalls) init() {
-	m.data.SetName("newrelicoracledb.child_cursors.parse_calls")
-	m.data.SetDescription("Number of parse calls for this child cursor")
-	m.data.SetUnit("{calls}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbChildCursorsParseCalls) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, childNumberAttributeValue int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutInt("child_number", childNumberAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbChildCursorsParseCalls) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbChildCursorsParseCalls) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbChildCursorsParseCalls(cfg MetricConfig) metricNewrelicoracledbChildCursorsParseCalls {
-	m := metricNewrelicoracledbChildCursorsParseCalls{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbChildCursorsUserIoWaitTime struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2033,7 +1919,7 @@ type metricNewrelicoracledbChildCursorsUserIoWaitTime struct {
 // init fills newrelicoracledb.child_cursors.user_io_wait_time metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsUserIoWaitTime) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.user_io_wait_time")
-	m.data.SetDescription("User I/O wait time for this child cursor (in microseconds)")
+	m.data.SetDescription("Average user I/O wait time per execution for this child cursor (in microseconds)")
 	m.data.SetUnit("us")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18449,8 +18335,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbChildCursorsElapsedTime                            metricNewrelicoracledbChildCursorsElapsedTime
 	metricNewrelicoracledbChildCursorsExecutions                             metricNewrelicoracledbChildCursorsExecutions
 	metricNewrelicoracledbChildCursorsInvalidations                          metricNewrelicoracledbChildCursorsInvalidations
-	metricNewrelicoracledbChildCursorsLoads                                  metricNewrelicoracledbChildCursorsLoads
-	metricNewrelicoracledbChildCursorsParseCalls                             metricNewrelicoracledbChildCursorsParseCalls
 	metricNewrelicoracledbChildCursorsUserIoWaitTime                         metricNewrelicoracledbChildCursorsUserIoWaitTime
 	metricNewrelicoracledbConnectionActiveSessions                           metricNewrelicoracledbConnectionActiveSessions
 	metricNewrelicoracledbConnectionBlockingSessions                         metricNewrelicoracledbConnectionBlockingSessions
@@ -18800,8 +18684,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbChildCursorsElapsedTime:                            newMetricNewrelicoracledbChildCursorsElapsedTime(mbc.Metrics.NewrelicoracledbChildCursorsElapsedTime),
 		metricNewrelicoracledbChildCursorsExecutions:                             newMetricNewrelicoracledbChildCursorsExecutions(mbc.Metrics.NewrelicoracledbChildCursorsExecutions),
 		metricNewrelicoracledbChildCursorsInvalidations:                          newMetricNewrelicoracledbChildCursorsInvalidations(mbc.Metrics.NewrelicoracledbChildCursorsInvalidations),
-		metricNewrelicoracledbChildCursorsLoads:                                  newMetricNewrelicoracledbChildCursorsLoads(mbc.Metrics.NewrelicoracledbChildCursorsLoads),
-		metricNewrelicoracledbChildCursorsParseCalls:                             newMetricNewrelicoracledbChildCursorsParseCalls(mbc.Metrics.NewrelicoracledbChildCursorsParseCalls),
 		metricNewrelicoracledbChildCursorsUserIoWaitTime:                         newMetricNewrelicoracledbChildCursorsUserIoWaitTime(mbc.Metrics.NewrelicoracledbChildCursorsUserIoWaitTime),
 		metricNewrelicoracledbConnectionActiveSessions:                           newMetricNewrelicoracledbConnectionActiveSessions(mbc.Metrics.NewrelicoracledbConnectionActiveSessions),
 		metricNewrelicoracledbConnectionBlockingSessions:                         newMetricNewrelicoracledbConnectionBlockingSessions(mbc.Metrics.NewrelicoracledbConnectionBlockingSessions),
@@ -19210,8 +19092,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbChildCursorsElapsedTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbChildCursorsExecutions.emit(ils.Metrics())
 	mb.metricNewrelicoracledbChildCursorsInvalidations.emit(ils.Metrics())
-	mb.metricNewrelicoracledbChildCursorsLoads.emit(ils.Metrics())
-	mb.metricNewrelicoracledbChildCursorsParseCalls.emit(ils.Metrics())
 	mb.metricNewrelicoracledbChildCursorsUserIoWaitTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionActiveSessions.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionBlockingSessions.emit(ils.Metrics())
@@ -19609,16 +19489,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbChildCursorsExecutionsDataPoint(
 // RecordNewrelicoracledbChildCursorsInvalidationsDataPoint adds a data point to newrelicoracledb.child_cursors.invalidations metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, childNumberAttributeValue int64) {
 	mb.metricNewrelicoracledbChildCursorsInvalidations.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, childNumberAttributeValue)
-}
-
-// RecordNewrelicoracledbChildCursorsLoadsDataPoint adds a data point to newrelicoracledb.child_cursors.loads metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbChildCursorsLoadsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, childNumberAttributeValue int64) {
-	mb.metricNewrelicoracledbChildCursorsLoads.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, childNumberAttributeValue)
-}
-
-// RecordNewrelicoracledbChildCursorsParseCallsDataPoint adds a data point to newrelicoracledb.child_cursors.parse_calls metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbChildCursorsParseCallsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, childNumberAttributeValue int64) {
-	mb.metricNewrelicoracledbChildCursorsParseCalls.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, childNumberAttributeValue)
 }
 
 // RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint adds a data point to newrelicoracledb.child_cursors.user_io_wait_time metric.

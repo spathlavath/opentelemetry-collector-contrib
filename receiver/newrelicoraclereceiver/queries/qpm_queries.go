@@ -121,6 +121,7 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 }
 
 // GetChildCursorsQuery returns SQL to get top N child cursors for a given SQL_ID from V$SQL
+// Returns average metrics per execution to normalize performance data
 // Ordered by most recent load time to get the latest child cursor versions
 func GetChildCursorsQuery(sqlID string, childLimit int) string {
 	return fmt.Sprintf(`
@@ -128,14 +129,12 @@ func GetChildCursorsQuery(sqlID string, childLimit int) string {
 			d.name AS database_name,
 			s.sql_id,
 			s.child_number,
-			s.cpu_time,
-			s.elapsed_time,
-			s.user_io_wait_time,
+			CASE WHEN s.executions > 0 THEN s.cpu_time / s.executions ELSE 0 END AS avg_cpu_time_us,
+			CASE WHEN s.executions > 0 THEN s.elapsed_time / s.executions ELSE 0 END AS avg_elapsed_time_us,
+			CASE WHEN s.executions > 0 THEN s.user_io_wait_time / s.executions ELSE 0 END AS avg_io_wait_time_us,
+			CASE WHEN s.executions > 0 THEN s.disk_reads / s.executions ELSE 0 END AS avg_disk_reads,
+			CASE WHEN s.executions > 0 THEN s.buffer_gets / s.executions ELSE 0 END AS avg_buffer_gets,
 			s.executions,
-			s.disk_reads,
-			s.buffer_gets,
-			s.loads,
-			s.parse_calls,
 			s.invalidations,
 			s.first_load_time,
 			s.last_load_time

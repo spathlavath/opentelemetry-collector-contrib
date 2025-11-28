@@ -7,19 +7,17 @@ import (
 	"database/sql"
 )
 
-// ChildCursor represents a child cursor from V$SQL with execution statistics
+// ChildCursor represents a child cursor from V$SQL with average execution statistics
 type ChildCursor struct {
 	DatabaseName   sql.NullString
 	SQLID          sql.NullString
 	ChildNumber    sql.NullInt64
-	CPUTime        sql.NullInt64
-	ElapsedTime    sql.NullInt64
-	UserIOWaitTime sql.NullInt64
-	Executions     sql.NullInt64
-	DiskReads      sql.NullInt64
-	BufferGets     sql.NullInt64
-	Loads          sql.NullInt64
-	ParseCalls     sql.NullInt64
+	CPUTime        sql.NullInt64 // Average CPU time per execution (microseconds)
+	ElapsedTime    sql.NullInt64 // Average elapsed time per execution (microseconds)
+	UserIOWaitTime sql.NullInt64 // Average I/O wait time per execution (microseconds)
+	DiskReads      sql.NullInt64 // Average disk reads per execution
+	BufferGets     sql.NullInt64 // Average buffer gets per execution
+	Executions     sql.NullInt64 // Total number of executions
 	Invalidations  sql.NullInt64
 	FirstLoadTime  sql.NullString
 	LastLoadTime   sql.NullString
@@ -93,22 +91,6 @@ func (cc *ChildCursor) GetDiskReads() int64 {
 func (cc *ChildCursor) GetBufferGets() int64 {
 	if cc.BufferGets.Valid {
 		return cc.BufferGets.Int64
-	}
-	return 0
-}
-
-// GetLoads returns the number of loads as int64, 0 if null
-func (cc *ChildCursor) GetLoads() int64 {
-	if cc.Loads.Valid {
-		return cc.Loads.Int64
-	}
-	return 0
-}
-
-// GetParseCalls returns the number of parse calls as int64, 0 if null
-func (cc *ChildCursor) GetParseCalls() int64 {
-	if cc.ParseCalls.Valid {
-		return cc.ParseCalls.Int64
 	}
 	return 0
 }

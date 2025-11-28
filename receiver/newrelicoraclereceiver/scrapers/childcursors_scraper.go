@@ -154,28 +154,6 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		)
 	}
 
-	// Record loads
-	if s.metricsBuilderConfig.Metrics.NewrelicoracledbChildCursorsLoads.Enabled {
-		s.mb.RecordNewrelicoracledbChildCursorsLoadsDataPoint(
-			now,
-			cursor.GetLoads(),
-			databaseName,
-			sqlID,
-			childNumber,
-		)
-	}
-
-	// Record parse calls
-	if s.metricsBuilderConfig.Metrics.NewrelicoracledbChildCursorsParseCalls.Enabled {
-		s.mb.RecordNewrelicoracledbChildCursorsParseCallsDataPoint(
-			now,
-			cursor.GetParseCalls(),
-			databaseName,
-			sqlID,
-			childNumber,
-		)
-	}
-
 	// Record invalidations
 	if s.metricsBuilderConfig.Metrics.NewrelicoracledbChildCursorsInvalidations.Enabled {
 		s.mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(

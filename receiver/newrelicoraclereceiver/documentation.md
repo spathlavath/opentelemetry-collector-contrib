@@ -85,7 +85,7 @@ Wait time in seconds for blocked queries
 
 ### newrelicoracledb.child_cursors.buffer_gets
 
-Number of buffer gets performed by this child cursor
+Average number of buffer gets per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -101,7 +101,7 @@ Number of buffer gets performed by this child cursor
 
 ### newrelicoracledb.child_cursors.cpu_time
 
-CPU time consumed by this child cursor (in microseconds)
+Average CPU time per execution for this child cursor (in microseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -135,7 +135,7 @@ Child cursor details including load times
 
 ### newrelicoracledb.child_cursors.disk_reads
 
-Number of disk reads performed by this child cursor
+Average number of disk reads per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -151,7 +151,7 @@ Number of disk reads performed by this child cursor
 
 ### newrelicoracledb.child_cursors.elapsed_time
 
-Elapsed time for this child cursor (in microseconds)
+Average elapsed time per execution for this child cursor (in microseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -167,7 +167,7 @@ Elapsed time for this child cursor (in microseconds)
 
 ### newrelicoracledb.child_cursors.executions
 
-Number of executions of this child cursor
+Total number of executions of this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -197,41 +197,9 @@ Number of times this child cursor was invalidated
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 
-### newrelicoracledb.child_cursors.loads
-
-Number of times this child cursor was loaded into the library cache
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {loads} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-
-### newrelicoracledb.child_cursors.parse_calls
-
-Number of parse calls for this child cursor
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {calls} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-
 ### newrelicoracledb.child_cursors.user_io_wait_time
 
-User I/O wait time for this child cursor (in microseconds)
+Average user I/O wait time per execution for this child cursor (in microseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |

@@ -23,10 +23,6 @@ all_set:
       enabled: true
     newrelicoracledb.child_cursors.invalidations:
       enabled: true
-    newrelicoracledb.child_cursors.loads:
-      enabled: true
-    newrelicoracledb.child_cursors.parse_calls:
-      enabled: true
     newrelicoracledb.child_cursors.user_io_wait_time:
       enabled: true
     newrelicoracledb.connection.active_sessions:
@@ -684,10 +680,6 @@ none_set:
     newrelicoracledb.child_cursors.executions:
       enabled: false
     newrelicoracledb.child_cursors.invalidations:
-      enabled: false
-    newrelicoracledb.child_cursors.loads:
-      enabled: false
-    newrelicoracledb.child_cursors.parse_calls:
       enabled: false
     newrelicoracledb.child_cursors.user_io_wait_time:
       enabled: false

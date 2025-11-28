@@ -3612,9 +3612,9 @@ metrics:
       - user_name
       - last_active_time
 
-  # Child Cursor Metrics (from V$SQL)
+  # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
-    description: CPU time consumed by this child cursor (in microseconds)
+    description: Average CPU time per execution for this child cursor (in microseconds)
     enabled: true
     gauge:
       value_type: int
@@ -3625,7 +3625,7 @@ metrics:
       - child_number
 
   newrelicoracledb.child_cursors.elapsed_time:
-    description: Elapsed time for this child cursor (in microseconds)
+    description: Average elapsed time per execution for this child cursor (in microseconds)
     enabled: true
     gauge:
       value_type: int
@@ -3636,7 +3636,7 @@ metrics:
       - child_number
 
   newrelicoracledb.child_cursors.user_io_wait_time:
-    description: User I/O wait time for this child cursor (in microseconds)
+    description: Average user I/O wait time per execution for this child cursor (in microseconds)
     enabled: true
     gauge:
       value_type: int
@@ -3646,19 +3646,8 @@ metrics:
       - query_id
       - child_number
 
-  newrelicoracledb.child_cursors.executions:
-    description: Number of executions of this child cursor
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{executions}"
-    attributes:
-      - database_name
-      - query_id
-      - child_number
-
   newrelicoracledb.child_cursors.disk_reads:
-    description: Number of disk reads performed by this child cursor
+    description: Average number of disk reads per execution for this child cursor
     enabled: true
     gauge:
       value_type: int
@@ -3669,7 +3658,7 @@ metrics:
       - child_number
 
   newrelicoracledb.child_cursors.buffer_gets:
-    description: Number of buffer gets performed by this child cursor
+    description: Average number of buffer gets per execution for this child cursor
     enabled: true
     gauge:
       value_type: int
@@ -3679,23 +3668,12 @@ metrics:
       - query_id
       - child_number
 
-  newrelicoracledb.child_cursors.loads:
-    description: Number of times this child cursor was loaded into the library cache
+  newrelicoracledb.child_cursors.executions:
+    description: Total number of executions of this child cursor
     enabled: true
     gauge:
       value_type: int
-    unit: "{loads}"
-    attributes:
-      - database_name
-      - query_id
-      - child_number
-
-  newrelicoracledb.child_cursors.parse_calls:
-    description: Number of parse calls for this child cursor
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{calls}"
+    unit: "{executions}"
     attributes:
       - database_name
       - query_id

@@ -39,8 +39,6 @@ type MetricsConfig struct {
 	NewrelicoracledbChildCursorsElapsedTime                            MetricConfig `mapstructure:"newrelicoracledb.child_cursors.elapsed_time"`
 	NewrelicoracledbChildCursorsExecutions                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.executions"`
 	NewrelicoracledbChildCursorsInvalidations                          MetricConfig `mapstructure:"newrelicoracledb.child_cursors.invalidations"`
-	NewrelicoracledbChildCursorsLoads                                  MetricConfig `mapstructure:"newrelicoracledb.child_cursors.loads"`
-	NewrelicoracledbChildCursorsParseCalls                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.parse_calls"`
 	NewrelicoracledbChildCursorsUserIoWaitTime                         MetricConfig `mapstructure:"newrelicoracledb.child_cursors.user_io_wait_time"`
 	NewrelicoracledbConnectionActiveSessions                           MetricConfig `mapstructure:"newrelicoracledb.connection.active_sessions"`
 	NewrelicoracledbConnectionBlockingSessions                         MetricConfig `mapstructure:"newrelicoracledb.connection.blocking_sessions"`
@@ -389,12 +387,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsInvalidations: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbChildCursorsLoads: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbChildCursorsParseCalls: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsUserIoWaitTime: MetricConfig{

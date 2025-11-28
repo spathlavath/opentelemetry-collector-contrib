@@ -114,14 +114,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsLoadsDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsParseCallsDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
@@ -1507,7 +1499,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of buffer gets performed by this child cursor", ms.At(i).Description())
+					assert.Equal(t, "Average number of buffer gets per execution for this child cursor", ms.At(i).Description())
 					assert.Equal(t, "{gets}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -1528,7 +1520,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.cpu_time"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "CPU time consumed by this child cursor (in microseconds)", ms.At(i).Description())
+					assert.Equal(t, "Average CPU time per execution for this child cursor (in microseconds)", ms.At(i).Description())
 					assert.Equal(t, "us", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -1576,7 +1568,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.disk_reads"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of disk reads performed by this child cursor", ms.At(i).Description())
+					assert.Equal(t, "Average number of disk reads per execution for this child cursor", ms.At(i).Description())
 					assert.Equal(t, "{reads}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -1597,7 +1589,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.elapsed_time"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Elapsed time for this child cursor (in microseconds)", ms.At(i).Description())
+					assert.Equal(t, "Average elapsed time per execution for this child cursor (in microseconds)", ms.At(i).Description())
 					assert.Equal(t, "us", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -1618,7 +1610,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.executions"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of executions of this child cursor", ms.At(i).Description())
+					assert.Equal(t, "Total number of executions of this child cursor", ms.At(i).Description())
 					assert.Equal(t, "{executions}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -1655,54 +1647,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
-				case "newrelicoracledb.child_cursors.loads":
-					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.loads"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.loads")
-					validatedMetrics["newrelicoracledb.child_cursors.loads"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of times this child cursor was loaded into the library cache", ms.At(i).Description())
-					assert.Equal(t, "{loads}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("child_number")
-					assert.True(t, ok)
-					assert.EqualValues(t, 12, attrVal.Int())
-				case "newrelicoracledb.child_cursors.parse_calls":
-					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.parse_calls"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.parse_calls")
-					validatedMetrics["newrelicoracledb.child_cursors.parse_calls"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of parse calls for this child cursor", ms.At(i).Description())
-					assert.Equal(t, "{calls}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("child_number")
-					assert.True(t, ok)
-					assert.EqualValues(t, 12, attrVal.Int())
 				case "newrelicoracledb.child_cursors.user_io_wait_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.user_io_wait_time"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.user_io_wait_time")
 					validatedMetrics["newrelicoracledb.child_cursors.user_io_wait_time"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "User I/O wait time for this child cursor (in microseconds)", ms.At(i).Description())
+					assert.Equal(t, "Average user I/O wait time per execution for this child cursor (in microseconds)", ms.At(i).Description())
 					assert.Equal(t, "us", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
