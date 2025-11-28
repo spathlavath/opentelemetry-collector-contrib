@@ -3641,7 +3641,7 @@ metrics:
     description: Average CPU time per execution for this child cursor (in microseconds)
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: us
     attributes:
       - database_name
@@ -3652,7 +3652,7 @@ metrics:
     description: Average elapsed time per execution for this child cursor (in microseconds)
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: us
     attributes:
       - database_name
@@ -3663,7 +3663,7 @@ metrics:
     description: Average user I/O wait time per execution for this child cursor (in microseconds)
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: us
     attributes:
       - database_name
@@ -3674,7 +3674,7 @@ metrics:
     description: Average number of disk reads per execution for this child cursor
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: "{reads}"
     attributes:
       - database_name
@@ -3685,7 +3685,7 @@ metrics:
     description: Average number of buffer gets per execution for this child cursor
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: "{gets}"
     attributes:
       - database_name

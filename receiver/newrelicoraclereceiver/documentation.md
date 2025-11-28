@@ -89,7 +89,7 @@ Average number of buffer gets per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {gets} | Gauge | Int |
+| {gets} | Gauge | Double |
 
 #### Attributes
 
@@ -105,7 +105,7 @@ Average CPU time per execution for this child cursor (in microseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Int |
+| us | Gauge | Double |
 
 #### Attributes
 
@@ -139,7 +139,7 @@ Average number of disk reads per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {reads} | Gauge | Int |
+| {reads} | Gauge | Double |
 
 #### Attributes
 
@@ -155,7 +155,7 @@ Average elapsed time per execution for this child cursor (in microseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Int |
+| us | Gauge | Double |
 
 #### Attributes
 
@@ -203,7 +203,7 @@ Average user I/O wait time per execution for this child cursor (in microseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Int |
+| us | Gauge | Double |
 
 #### Attributes
 

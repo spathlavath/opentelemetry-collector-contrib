@@ -61,7 +61,6 @@ func (e *eventNewrelicoracledbExecutionPlan) recordEvent(ctx context.Context, ti
 	// not a parameter. New Relic uses this attribute to route logs to Custom Events table.
 	// If mdatagen removes this line, it must be manually re-added after generation.
 	dp.Attributes().PutStr("newrelic.event.type", "OracleExecutionPlan")
-
 }
 
 // emit appends recorded event data to a events slice and prepares it for recording another set of log records.

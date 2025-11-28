@@ -12,12 +12,12 @@ type ChildCursor struct {
 	DatabaseName   sql.NullString
 	SQLID          sql.NullString
 	ChildNumber    sql.NullInt64
-	CPUTime        sql.NullInt64 // Average CPU time per execution (microseconds)
-	ElapsedTime    sql.NullInt64 // Average elapsed time per execution (microseconds)
-	UserIOWaitTime sql.NullInt64 // Average I/O wait time per execution (microseconds)
-	DiskReads      sql.NullInt64 // Average disk reads per execution
-	BufferGets     sql.NullInt64 // Average buffer gets per execution
-	Executions     sql.NullInt64 // Total number of executions
+	CPUTime        sql.NullFloat64 // Average CPU time per execution (microseconds) - can have decimals
+	ElapsedTime    sql.NullFloat64 // Average elapsed time per execution (microseconds) - can have decimals
+	UserIOWaitTime sql.NullFloat64 // Average I/O wait time per execution (microseconds) - can have decimals
+	DiskReads      sql.NullFloat64 // Average disk reads per execution - can have decimals
+	BufferGets     sql.NullFloat64 // Average buffer gets per execution - can have decimals
+	Executions     sql.NullInt64   // Total number of executions
 	Invalidations  sql.NullInt64
 	FirstLoadTime  sql.NullString
 	LastLoadTime   sql.NullString
@@ -47,26 +47,26 @@ func (cc *ChildCursor) GetChildNumber() int64 {
 	return 0
 }
 
-// GetCPUTime returns the CPU time in microseconds as int64, 0 if null
-func (cc *ChildCursor) GetCPUTime() int64 {
+// GetCPUTime returns the CPU time in microseconds as float64, 0 if null
+func (cc *ChildCursor) GetCPUTime() float64 {
 	if cc.CPUTime.Valid {
-		return cc.CPUTime.Int64
+		return cc.CPUTime.Float64
 	}
 	return 0
 }
 
-// GetElapsedTime returns the elapsed time in microseconds as int64, 0 if null
-func (cc *ChildCursor) GetElapsedTime() int64 {
+// GetElapsedTime returns the elapsed time in microseconds as float64, 0 if null
+func (cc *ChildCursor) GetElapsedTime() float64 {
 	if cc.ElapsedTime.Valid {
-		return cc.ElapsedTime.Int64
+		return cc.ElapsedTime.Float64
 	}
 	return 0
 }
 
-// GetUserIOWaitTime returns the user IO wait time in microseconds as int64, 0 if null
-func (cc *ChildCursor) GetUserIOWaitTime() int64 {
+// GetUserIOWaitTime returns the user IO wait time in microseconds as float64, 0 if null
+func (cc *ChildCursor) GetUserIOWaitTime() float64 {
 	if cc.UserIOWaitTime.Valid {
-		return cc.UserIOWaitTime.Int64
+		return cc.UserIOWaitTime.Float64
 	}
 	return 0
 }
@@ -79,18 +79,18 @@ func (cc *ChildCursor) GetExecutions() int64 {
 	return 0
 }
 
-// GetDiskReads returns the number of disk reads as int64, 0 if null
-func (cc *ChildCursor) GetDiskReads() int64 {
+// GetDiskReads returns the number of disk reads as float64, 0 if null
+func (cc *ChildCursor) GetDiskReads() float64 {
 	if cc.DiskReads.Valid {
-		return cc.DiskReads.Int64
+		return cc.DiskReads.Float64
 	}
 	return 0
 }
 
-// GetBufferGets returns the number of buffer gets as int64, 0 if null
-func (cc *ChildCursor) GetBufferGets() int64 {
+// GetBufferGets returns the number of buffer gets as float64, 0 if null
+func (cc *ChildCursor) GetBufferGets() float64 {
 	if cc.BufferGets.Valid {
-		return cc.BufferGets.Int64
+		return cc.BufferGets.Float64
 	}
 	return 0
 }
