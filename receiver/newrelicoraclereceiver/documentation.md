@@ -101,22 +101,24 @@ Average number of buffer gets per execution for this child cursor
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 
 ### newrelicoracledb.child_cursors.cpu_time
 
-Average CPU time per execution for this child cursor (in microseconds)
+Average CPU time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Double |
+| ms | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -133,6 +135,7 @@ Child cursor details including load times
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -151,22 +154,24 @@ Average number of disk reads per execution for this child cursor
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 
 ### newrelicoracledb.child_cursors.elapsed_time
 
-Average elapsed time per execution for this child cursor (in microseconds)
+Average elapsed time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Double |
+| ms | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -183,6 +188,7 @@ Total number of executions of this child cursor
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -199,22 +205,24 @@ Number of times this child cursor was invalidated
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 
 ### newrelicoracledb.child_cursors.user_io_wait_time
 
-Average user I/O wait time per execution for this child cursor (in microseconds)
+Average user I/O wait time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Double |
+| ms | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |

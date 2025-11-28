@@ -3647,34 +3647,37 @@ metrics:
 
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
-    description: Average CPU time per execution for this child cursor (in microseconds)
+    description: Average CPU time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
       value_type: double
-    unit: us
+    unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
 
   newrelicoracledb.child_cursors.elapsed_time:
-    description: Average elapsed time per execution for this child cursor (in microseconds)
+    description: Average elapsed time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
       value_type: double
-    unit: us
+    unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
 
   newrelicoracledb.child_cursors.user_io_wait_time:
-    description: Average user I/O wait time per execution for this child cursor (in microseconds)
+    description: Average user I/O wait time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
       value_type: double
-    unit: us
+    unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3686,6 +3689,7 @@ metrics:
       value_type: double
     unit: "{reads}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3697,6 +3701,7 @@ metrics:
       value_type: double
     unit: "{gets}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3708,6 +3713,7 @@ metrics:
       value_type: int
     unit: "{executions}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3719,6 +3725,7 @@ metrics:
       value_type: int
     unit: "{invalidations}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3730,6 +3737,7 @@ metrics:
       value_type: int
     unit: "{count}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number

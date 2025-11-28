@@ -106,6 +106,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsWithCache(ctx context.Context, c
 
 // recordChildCursorMetrics records all metrics for a single child cursor
 func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cursor *models.ChildCursor) {
+	collectionTimestamp := cursor.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
 	sqlID := cursor.GetSQLID()
 	childNumber := cursor.GetChildNumber()
 	databaseName := cursor.GetDatabaseName()
@@ -115,6 +116,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(
 			now,
 			cursor.GetCPUTime(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -126,6 +128,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(
 			now,
 			cursor.GetElapsedTime(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -137,6 +140,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(
 			now,
 			cursor.GetUserIOWaitTime(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -148,6 +152,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(
 			now,
 			cursor.GetExecutions(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -159,6 +164,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(
 			now,
 			cursor.GetDiskReads(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -170,6 +176,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(
 			now,
 			cursor.GetBufferGets(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -181,6 +188,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(
 			now,
 			cursor.GetInvalidations(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -192,6 +200,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(
 			now,
 			1, // count of 1 for each child cursor
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,

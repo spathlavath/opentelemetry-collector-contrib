@@ -159,14 +159,15 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 		var childCursor models.ChildCursor
 
 		err := rows.Scan(
+			&childCursor.CollectionTimestamp,
 			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
-			&childCursor.CPUTime,
-			&childCursor.ElapsedTime,
-			&childCursor.UserIOWaitTime,
-			&childCursor.DiskReads,
-			&childCursor.BufferGets,
+			&childCursor.AvgCPUTimeMs,
+			&childCursor.AvgElapsedTimeMs,
+			&childCursor.AvgIOWaitTimeMs,
+			&childCursor.AvgDiskReads,
+			&childCursor.AvgBufferGets,
 			&childCursor.Executions,
 			&childCursor.Invalidations,
 			&childCursor.FirstLoadTime,

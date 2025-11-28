@@ -5,22 +5,32 @@ package models
 
 import (
 	"database/sql"
+	"time"
 )
 
 // ChildCursor represents a child cursor from V$SQL with average execution statistics
 type ChildCursor struct {
-	DatabaseName   sql.NullString
-	SQLID          sql.NullString
-	ChildNumber    sql.NullInt64
-	CPUTime        sql.NullFloat64 // Average CPU time per execution (microseconds) - can have decimals
-	ElapsedTime    sql.NullFloat64 // Average elapsed time per execution (microseconds) - can have decimals
-	UserIOWaitTime sql.NullFloat64 // Average I/O wait time per execution (microseconds) - can have decimals
-	DiskReads      sql.NullFloat64 // Average disk reads per execution - can have decimals
-	BufferGets     sql.NullFloat64 // Average buffer gets per execution - can have decimals
-	Executions     sql.NullInt64   // Total number of executions
-	Invalidations  sql.NullInt64
-	FirstLoadTime  sql.NullString
-	LastLoadTime   sql.NullString
+	CollectionTimestamp sql.NullTime
+	DatabaseName        sql.NullString
+	SQLID               sql.NullString
+	ChildNumber         sql.NullInt64
+	AvgCPUTimeMs        sql.NullFloat64 // Average CPU time per execution (milliseconds) - can have decimals
+	AvgElapsedTimeMs    sql.NullFloat64 // Average elapsed time per execution (milliseconds) - can have decimals
+	AvgIOWaitTimeMs     sql.NullFloat64 // Average I/O wait time per execution (milliseconds) - can have decimals
+	AvgDiskReads        sql.NullFloat64 // Average disk reads per execution - can have decimals
+	AvgBufferGets       sql.NullFloat64 // Average buffer gets per execution - can have decimals
+	Executions          sql.NullInt64   // Total number of executions
+	Invalidations       sql.NullInt64
+	FirstLoadTime       sql.NullString
+	LastLoadTime        sql.NullString
+}
+
+// GetCollectionTimestamp returns the collection timestamp as time.Time
+func (cc *ChildCursor) GetCollectionTimestamp() time.Time {
+	if cc.CollectionTimestamp.Valid {
+		return cc.CollectionTimestamp.Time
+	}
+	return time.Time{}
 }
 
 // GetDatabaseName returns the database name as a string, empty if null
@@ -47,26 +57,26 @@ func (cc *ChildCursor) GetChildNumber() int64 {
 	return 0
 }
 
-// GetCPUTime returns the CPU time in microseconds as float64, 0 if null
+// GetCPUTime returns the average CPU time in milliseconds as float64, 0 if null
 func (cc *ChildCursor) GetCPUTime() float64 {
-	if cc.CPUTime.Valid {
-		return cc.CPUTime.Float64
+	if cc.AvgCPUTimeMs.Valid {
+		return cc.AvgCPUTimeMs.Float64
 	}
 	return 0
 }
 
-// GetElapsedTime returns the elapsed time in microseconds as float64, 0 if null
+// GetElapsedTime returns the average elapsed time in milliseconds as float64, 0 if null
 func (cc *ChildCursor) GetElapsedTime() float64 {
-	if cc.ElapsedTime.Valid {
-		return cc.ElapsedTime.Float64
+	if cc.AvgElapsedTimeMs.Valid {
+		return cc.AvgElapsedTimeMs.Float64
 	}
 	return 0
 }
 
-// GetUserIOWaitTime returns the user IO wait time in microseconds as float64, 0 if null
+// GetUserIOWaitTime returns the average user IO wait time in milliseconds as float64, 0 if null
 func (cc *ChildCursor) GetUserIOWaitTime() float64 {
-	if cc.UserIOWaitTime.Valid {
-		return cc.UserIOWaitTime.Float64
+	if cc.AvgIOWaitTimeMs.Valid {
+		return cc.AvgIOWaitTimeMs.Float64
 	}
 	return 0
 }
@@ -79,18 +89,18 @@ func (cc *ChildCursor) GetExecutions() int64 {
 	return 0
 }
 
-// GetDiskReads returns the number of disk reads as float64, 0 if null
+// GetDiskReads returns the average number of disk reads as float64, 0 if null
 func (cc *ChildCursor) GetDiskReads() float64 {
-	if cc.DiskReads.Valid {
-		return cc.DiskReads.Float64
+	if cc.AvgDiskReads.Valid {
+		return cc.AvgDiskReads.Float64
 	}
 	return 0
 }
 
-// GetBufferGets returns the number of buffer gets as float64, 0 if null
+// GetBufferGets returns the average number of buffer gets as float64, 0 if null
 func (cc *ChildCursor) GetBufferGets() float64 {
-	if cc.BufferGets.Valid {
-		return cc.BufferGets.Float64
+	if cc.AvgBufferGets.Valid {
+		return cc.AvgBufferGets.Float64
 	}
 	return 0
 }
