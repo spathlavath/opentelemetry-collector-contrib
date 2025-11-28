@@ -299,6 +299,11 @@ func (c Config) validateScraperConfig() error {
 // validateQueryPerformanceMonitoring validates Query Performance Monitoring configuration
 // Note: Range validation is handled in SetDefaults() with auto-correction
 func (c Config) validateQueryPerformanceMonitoring() error {
+	// Only validate QPM settings if query monitoring is enabled
+	if !c.EnableQueryMonitoring {
+		return nil
+	}
+
 	var allErrs error
 
 	// Only validate for negative values since SetDefaults() handles range correction
@@ -314,13 +319,9 @@ func (c Config) validateQueryPerformanceMonitoring() error {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_interval_seconds cannot be negative: got %d", c.QueryMonitoringIntervalSeconds))
 	}
 
-	// Validate that interval seconds is >= collection interval (after SetDefaults has run)
-	collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
-	if c.QueryMonitoringIntervalSeconds > 0 && c.QueryMonitoringIntervalSeconds < collectionIntervalSeconds {
-		allErrs = multierr.Append(allErrs, fmt.Errorf(
-			"query_monitoring_interval_seconds (%d) should be >= collection_interval (%d seconds) to avoid missing queries between scrapes",
-			c.QueryMonitoringIntervalSeconds, collectionIntervalSeconds))
-	}
+	// Note: We don't validate that interval_seconds >= collection_interval here because
+	// SetDefaults() already auto-corrects this at lines 126-140. The validation would fail
+	// because Validate() uses a value receiver and sees the uncorrected value.
 
 	return allErrs
 }
