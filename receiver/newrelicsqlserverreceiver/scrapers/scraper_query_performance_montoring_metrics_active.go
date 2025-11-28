@@ -744,7 +744,7 @@ func (s *QueryPerformanceScraper) createActiveQueryExecutionPlanNodeLog(node *mo
 
 	// Correlation identifiers (for linking with active query metrics)
 	if activeQuery.QueryID != nil && !activeQuery.QueryID.IsEmpty() {
-		attrs.PutStr("query_hash", activeQuery.QueryID.String())
+		attrs.PutStr("query_id", activeQuery.QueryID.String())
 	}
 	attrs.PutStr("plan_handle", node.PlanHandle)
 	if activeQuery.CurrentSessionID != nil {
