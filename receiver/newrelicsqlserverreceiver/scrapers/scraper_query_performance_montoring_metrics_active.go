@@ -738,18 +738,23 @@ func (s *QueryPerformanceScraper) createActiveQueryExecutionPlanNodeLog(node *mo
 	attrs := logRecord.Attributes()
 
 	// IMPORTANT: Signal New Relic to ingest this as a Custom Event instead of a Log
-	// This allows querying via: SELECT * FROM SqlServerExecutionPlanOperator
+	// This allows querying via: SELECT * FROM SqlServerActiveQueryExecutionPlan
 	// Reference: https://docs.newrelic.com/docs/more-integrations/open-source-telemetry-integrations/opentelemetry/best-practices/opentelemetry-best-practices-logs/
-	attrs.PutStr("newrelic.event.type", "SqlServerExecutionPlanOperator")
+	attrs.PutStr("newrelic.event.type", "SqlServerActiveQueryExecutionPlan")
 
-	// Correlation keys
-	attrs.PutStr("query_id", node.QueryID)
+	// Correlation identifiers (for linking with active query metrics)
+	if activeQuery.QueryID != nil && !activeQuery.QueryID.IsEmpty() {
+		attrs.PutStr("query_hash", activeQuery.QueryID.String())
+	}
 	attrs.PutStr("plan_handle", node.PlanHandle)
 	if activeQuery.CurrentSessionID != nil {
 		attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
 	}
 	if activeQuery.RequestID != nil {
 		attrs.PutInt("request_id", *activeQuery.RequestID)
+	}
+	if activeQuery.RequestStartTime != nil {
+		attrs.PutStr("start_time", *activeQuery.RequestStartTime)
 	}
 	if activeQuery.DatabaseName != nil {
 		attrs.PutStr("database_name", *activeQuery.DatabaseName)
@@ -787,13 +792,13 @@ func (s *QueryPerformanceScraper) createActiveQueryExecutionPlanNodeLog(node *mo
 	attrs.PutDouble("total_subtree_cost", node.TotalSubtreeCost)
 	attrs.PutDouble("estimated_operator_cost", node.EstimatedOperatorCost)
 
-	// Execution details
+	// Execution details (from XML)
 	attrs.PutStr("estimated_execution_mode", node.EstimatedExecutionMode)
 	attrs.PutInt("granted_memory_kb", node.GrantedMemoryKb)
 	attrs.PutBool("spill_occurred", node.SpillOccurred)
 	attrs.PutBool("no_join_predicate", node.NoJoinPredicate)
 
-	// Performance metrics
+	// Performance metrics (from XML)
 	attrs.PutDouble("total_worker_time", node.TotalWorkerTime)
 	attrs.PutDouble("total_elapsed_time", node.TotalElapsedTime)
 	attrs.PutInt("total_logical_reads", node.TotalLogicalReads)
@@ -801,133 +806,9 @@ func (s *QueryPerformanceScraper) createActiveQueryExecutionPlanNodeLog(node *mo
 	attrs.PutInt("execution_count", node.ExecutionCount)
 	attrs.PutDouble("avg_elapsed_time_ms", node.AvgElapsedTimeMs)
 
-	// Timestamps (all in RFC3339 format: "2025-11-24T13:44:01Z")
-	// Note: collection_timestamp is only included in active query metrics for wait time analysis
+	// Timestamps (from XML)
 	if node.LastExecutionTime != "" {
 		attrs.PutStr("last_execution_time", node.LastExecutionTime)
-	}
-	if activeQuery.RequestStartTime != nil {
-		attrs.PutStr("request_start_time", *activeQuery.RequestStartTime)
-	}
-
-	// Active query context (with decoded wait information)
-	if activeQuery.WaitType != nil {
-		waitType := *activeQuery.WaitType
-		attrs.PutStr("wait_type", waitType)
-		attrs.PutStr("wait_type_description", helpers.DecodeWaitType(waitType))
-		attrs.PutStr("wait_type_category", helpers.GetWaitTypeCategory(waitType))
-	}
-	if activeQuery.WaitResource != nil {
-		waitResource := *activeQuery.WaitResource
-		attrs.PutStr("wait_resource", waitResource)
-		// Add SQL Server's decoded wait resource (with database/table/index names)
-		if activeQuery.WaitResourceDecoded != nil {
-			attrs.PutStr("wait_resource_decoded", *activeQuery.WaitResourceDecoded)
-		}
-		// Add Go helper's parsed resource type and description (with enrichment if enabled)
-		resourceType, resourceDesc := helpers.DecodeWaitResourceWithMetadata(waitResource, s.metadataCache)
-		attrs.PutStr("wait_resource_type", resourceType)
-		attrs.PutStr("wait_resource_description", resourceDesc)
-	}
-	if activeQuery.RequestStatus != nil {
-		attrs.PutStr("request_status", *activeQuery.RequestStatus)
-	}
-	if activeQuery.LoginName != nil {
-		attrs.PutStr("login_name", *activeQuery.LoginName)
-	}
-	if activeQuery.HostName != nil {
-		attrs.PutStr("host_name", *activeQuery.HostName)
-	}
-	if activeQuery.ProgramName != nil {
-		attrs.PutStr("program_name", *activeQuery.ProgramName)
-	}
-	if activeQuery.RequestCommand != nil {
-		attrs.PutStr("request_command", *activeQuery.RequestCommand)
-	}
-
-	// Add blocking information for execution plan correlation (LINKING FIX: Now int64)
-	if activeQuery.BlockingSessionID != nil {
-		attrs.PutInt("blocking_session_id", *activeQuery.BlockingSessionID)
-	}
-	if activeQuery.BlockerLoginName != nil {
-		attrs.PutStr("blocker_login_name", *activeQuery.BlockerLoginName)
-	}
-	if activeQuery.BlockerHostName != nil {
-		attrs.PutStr("blocker_host_name", *activeQuery.BlockerHostName)
-	}
-	if activeQuery.BlockerProgramName != nil {
-		attrs.PutStr("blocker_program_name", *activeQuery.BlockerProgramName)
-	}
-
-	// Add query performance metrics from active query context
-	if activeQuery.CPUTimeMs != nil {
-		attrs.PutInt("query_cpu_time_ms", *activeQuery.CPUTimeMs)
-	}
-	if activeQuery.TotalElapsedTimeMs != nil {
-		attrs.PutInt("query_total_elapsed_time_ms", *activeQuery.TotalElapsedTimeMs)
-	}
-	if activeQuery.LogicalReads != nil {
-		attrs.PutInt("query_logical_reads", *activeQuery.LogicalReads)
-	}
-	if activeQuery.Reads != nil {
-		attrs.PutInt("query_reads", *activeQuery.Reads)
-	}
-	if activeQuery.Writes != nil {
-		attrs.PutInt("query_writes", *activeQuery.Writes)
-	}
-	if activeQuery.RowCount != nil {
-		attrs.PutInt("query_row_count", *activeQuery.RowCount)
-	}
-	if activeQuery.GrantedQueryMemoryPages != nil {
-		attrs.PutInt("query_granted_memory_pages", *activeQuery.GrantedQueryMemoryPages)
-	}
-
-	// Add transaction and isolation level information
-	if activeQuery.TransactionID != nil {
-		attrs.PutInt("transaction_id", *activeQuery.TransactionID)
-	}
-	if activeQuery.OpenTransactionCount != nil {
-		attrs.PutInt("open_transaction_count", *activeQuery.OpenTransactionCount)
-	}
-	if activeQuery.TransactionIsolationLevel != nil {
-		attrs.PutInt("transaction_isolation_level", *activeQuery.TransactionIsolationLevel)
-	}
-
-	// Add parallel query information
-	if activeQuery.ParallelWorkerCount != nil {
-		attrs.PutInt("parallel_worker_count", *activeQuery.ParallelWorkerCount)
-	}
-	if activeQuery.DegreeOfParallelism != nil {
-		attrs.PutInt("degree_of_parallelism", *activeQuery.DegreeOfParallelism)
-	}
-
-	// Add session context
-	if activeQuery.SessionStatus != nil {
-		attrs.PutStr("session_status", *activeQuery.SessionStatus)
-	}
-	if activeQuery.ClientInterfaceName != nil {
-		attrs.PutStr("client_interface_name", *activeQuery.ClientInterfaceName)
-	}
-
-	// Add wait information
-	if activeQuery.LastWaitType != nil {
-		attrs.PutStr("last_wait_type", *activeQuery.LastWaitType)
-	}
-	if activeQuery.WaitTimeS != nil {
-		attrs.PutDouble("wait_time_seconds", *activeQuery.WaitTimeS)
-	}
-
-	// Add query texts
-	if activeQuery.QueryStatementText != nil {
-		attrs.PutStr("query_statement_text", helpers.AnonymizeQueryText(*activeQuery.QueryStatementText))
-	}
-	if activeQuery.BlockingQueryStatementText != nil {
-		attrs.PutStr("blocking_query_statement_text", helpers.AnonymizeQueryText(*activeQuery.BlockingQueryStatementText))
-	}
-
-	// Add collection timestamp
-	if activeQuery.CollectionTimestamp != nil {
-		attrs.PutStr("collection_timestamp", *activeQuery.CollectionTimestamp)
 	}
 }
 

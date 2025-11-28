@@ -281,7 +281,7 @@ func DefaultConfig() component.Config {
 
 		// Default query monitoring settings
 		EnableQueryMonitoring:                true,
-		QueryMonitoringResponseTimeThreshold: 1,
+		QueryMonitoringResponseTimeThreshold: 0, // 0 = capture all queries (no threshold)
 		QueryMonitoringCountThreshold:        20,
 		QueryMonitoringFetchInterval:         15,
 		QueryMonitoringTextTruncateLimit:     4094, // Default text truncate limit (4KB - 2 bytes for null terminator)
@@ -333,8 +333,8 @@ func (cfg *Config) Validate() error {
 	}
 
 	if cfg.EnableQueryMonitoring {
-		if cfg.QueryMonitoringResponseTimeThreshold <= 0 {
-			return errors.New("query_monitoring_response_time_threshold must be positive when query monitoring is enabled")
+		if cfg.QueryMonitoringResponseTimeThreshold < 0 {
+			return errors.New("query_monitoring_response_time_threshold must be >= 0 when query monitoring is enabled (0 = no threshold)")
 		}
 		if cfg.QueryMonitoringCountThreshold <= 0 {
 			return errors.New("query_monitoring_count_threshold must be positive when query monitoring is enabled")

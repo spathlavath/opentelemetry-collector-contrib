@@ -423,11 +423,7 @@ SELECT
     s.last_dop,
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
 FROM
-    StatementDetails s
--- NOTE: Threshold filtering removed from SQL - will be applied in Go code on delta metrics
--- This ensures we calculate delta for all recent queries, then filter by interval average
-ORDER BY
-    s.last_execution_time DESC;`
+    StatementDetails s`
 
 const BlockingSessionsQuery = `
 DECLARE @Limit INT = %d; -- Define the limit for the number of rows returned
