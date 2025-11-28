@@ -29,11 +29,9 @@ type OracleClient interface {
 	// Child cursors (V$SQL)
 	QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error)
 
-	// Blocking queries
-	QueryBlockingQueries(ctx context.Context, countThreshold int) ([]models.BlockingQuery, error)
-
-	// Wait events
-	QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error)
+	// Combined wait events with blocking information
+	// This replaces the separate QueryBlockingQueries and QueryWaitEvents methods
+	QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error)
 
 	// Connection metrics - simple counts
 	QueryTotalSessions(ctx context.Context) (int64, error)

@@ -29,6 +29,7 @@ const (
 	defaultEnableQueryMonitoring                = false
 	defaultQueryMonitoringResponseTimeThreshold = queries.DefaultQueryMonitoringResponseTimeThreshold
 	defaultQueryMonitoringCountThreshold        = queries.DefaultQueryMonitoringCountThreshold
+	defaultChildCursorsPerSQLID                 = 5 // Default to 5 (optimized flow with wait events covers edge cases)
 
 	// Interval Calculator defaults
 	defaultEnableIntervalBasedAveraging      = true // Enable by default for better slow query detection
@@ -47,6 +48,8 @@ const (
 	maxQueryMonitoringResponseTimeThreshold = queries.MaxQueryMonitoringResponseTimeThreshold
 	minQueryMonitoringCountThreshold        = queries.MinQueryMonitoringCountThreshold
 	maxQueryMonitoringCountThreshold        = queries.MaxQueryMonitoringCountThreshold
+	minChildCursorsPerSQLID                 = 3  // Minimum child cursors to fetch per SQL_ID
+	maxChildCursorsPerSQLID                 = 20 // Maximum child cursors to fetch per SQL_ID
 )
 
 var (
@@ -63,6 +66,7 @@ var (
 	errInvalidService                          = errors.New("service name cannot contain special characters")
 	errInvalidQueryMonitoringResponseThreshold = errors.New("query_monitoring_response_time_threshold must be between 1ms and 5000ms")
 	errInvalidQueryMonitoringCountThreshold    = errors.New("query_monitoring_count_threshold must be between 10 and 50")
+	errInvalidChildCursorsPerSQLID             = errors.New("child_cursors_per_sql_id must be between 3 and 20")
 )
 
 // TablespaceFilterConfig defines tablespace filtering options
@@ -87,6 +91,7 @@ type Config struct {
 	QueryMonitoringResponseTimeThreshold int  `mapstructure:"query_monitoring_response_time_threshold"`
 	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
 	QueryMonitoringIntervalSeconds       int  `mapstructure:"query_monitoring_interval_seconds"`
+	ChildCursorsPerSQLID                 int  `mapstructure:"child_cursors_per_sql_id"`
 
 	// Interval Calculator Configuration
 	EnableIntervalBasedAveraging       bool `mapstructure:"enable_interval_based_averaging"`
@@ -118,6 +123,10 @@ func (c *Config) SetDefaults() {
 	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
 		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 		c.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
+	}
+	if c.ChildCursorsPerSQLID == 0 || c.ChildCursorsPerSQLID < minChildCursorsPerSQLID ||
+		c.ChildCursorsPerSQLID > maxChildCursorsPerSQLID {
+		c.ChildCursorsPerSQLID = defaultChildCursorsPerSQLID
 	}
 
 	// Set QueryMonitoringIntervalSeconds default based on collection_interval
@@ -317,6 +326,10 @@ func (c Config) validateQueryPerformanceMonitoring() error {
 
 	if c.QueryMonitoringIntervalSeconds < 0 {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_interval_seconds cannot be negative: got %d", c.QueryMonitoringIntervalSeconds))
+	}
+
+	if c.ChildCursorsPerSQLID < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("child_cursors_per_sql_id cannot be negative: got %d", c.ChildCursorsPerSQLID))
 	}
 
 	// Note: We don't validate that interval_seconds >= collection_interval here because

@@ -57,12 +57,11 @@ type newRelicOracleScraper struct {
 	databaseInfoScraper *scrapers.DatabaseInfoScraper
 
 	// Query Performance Monitoring (QPM) scrapers
-	slowQueriesScraper   *scrapers.SlowQueriesScraper
-	executionPlanScraper *scrapers.ExecutionPlanScraper
-	blockingScraper      *scrapers.BlockingScraper
-	waitEventsScraper    *scrapers.WaitEventsScraper
-	lockScraper          *scrapers.LockScraper
-	childCursorsScraper  *scrapers.ChildCursorsScraper
+	slowQueriesScraper         *scrapers.SlowQueriesScraper
+	executionPlanScraper       *scrapers.ExecutionPlanScraper
+	waitEventBlockingScraper   *scrapers.WaitEventBlockingScraper
+	lockScraper                *scrapers.LockScraper
+	childCursorsScraper        *scrapers.ChildCursorsScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -242,24 +241,18 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	// Initialize execution plan scraper (uses LogsBuilder for log events)
 	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
 
-	// Initialize blocking scraper
+	// Initialize combined wait events and blocking scraper (replaces separate BlockingScraper and WaitEventsScraper)
 	var err error
-	s.blockingScraper, err = scrapers.NewBlockingScraper(
+	s.waitEventBlockingScraper, err = scrapers.NewWaitEventBlockingScraper(
 		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
 	)
 	if err != nil {
-		return fmt.Errorf("failed to create blocking scraper: %w", err)
+		return fmt.Errorf("failed to create wait event blocking scraper: %w", err)
 	}
 
 	// Initialize child cursors scraper (fetches V$SQL child cursors)
 	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	// Initialize wait events scraper (uses child cursors for execution plan identifiers)
-	s.waitEventsScraper = scrapers.NewWaitEventsScraper(
-		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
-		s.config.QueryMonitoringCountThreshold,
-	)
 
 	// Initialize lock scraper
 	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
@@ -340,15 +333,16 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 	// Scrape execution plans (which now emits logs)
 	s.logger.Debug("Starting execution plan scraper for logs", zap.Strings("query_ids", queryIDs))
 
-	// Safety check: ensure waitEventsScraper is initialized
-	if s.waitEventsScraper == nil {
-		err := fmt.Errorf("waitEventsScraper is not initialized")
+	// Safety check: ensure waitEventBlockingScraper is initialized
+	if s.waitEventBlockingScraper == nil {
+		err := fmt.Errorf("waitEventBlockingScraper is not initialized")
 		s.logger.Error("Cannot get SQL identifiers for execution plans", zap.Error(err))
 		return logs, err
 	}
 
-	// Get SQL identifiers from V$SQL child cursors + wait events
-	sqlIdentifiers, err := s.waitEventsScraper.GetSQLIdentifiersForExecutionPlans(scrapeCtx, queryIDs, 5)
+	// Get SQL identifiers from V$SQL child cursors + wait events (optimized method)
+	// We only need the identifiers for execution plans in logs, don't need metrics
+	_, _, sqlIdentifiers, err := s.waitEventBlockingScraper.GetChildCursorsWithMetrics(scrapeCtx, queryIDs, s.config.ChildCursorsPerSQLID)
 	if err != nil {
 		s.logger.Warn("Failed to get SQL identifiers for execution plan logs", zap.Error(err))
 		return logs, err
@@ -424,8 +418,8 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 	)
 	s.executionPlanScraper = executionPlanScraper
 
-	// Initialize wait events scraper (needed for execution plan SQL identifier fetching)
-	waitEventsScraper := scrapers.NewWaitEventsScraper(
+	// Initialize combined wait events and blocking scraper (needed for execution plan SQL identifier fetching)
+	waitEventBlockingScraper, err := scrapers.NewWaitEventBlockingScraper(
 		s.client,
 		tempMb,
 		s.logger,
@@ -433,7 +427,10 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		metadata.DefaultMetricsBuilderConfig(),
 		s.config.QueryMonitoringCountThreshold,
 	)
-	s.waitEventsScraper = waitEventsScraper
+	if err != nil {
+		return fmt.Errorf("failed to create wait event blocking scraper for logs: %w", err)
+	}
+	s.waitEventBlockingScraper = waitEventBlockingScraper
 
 	return nil
 }
@@ -450,14 +447,19 @@ func (s *newRelicOracleScraper) createScrapeContext(ctx context.Context) context
 }
 
 // executeQPMScrapers executes Query Performance Monitoring scrapers sequentially
+// Flow:
+// 1. Slow queries scraper → get query IDs
+// 2. Wait events & blocking scraper → capture current wait states
+// 3. Child cursors scraper → fetch latest child cursor metrics (after wait events)
+// 4. Execution plan scraper → fetch plans for identified SQL identifiers
 func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan chan<- error) {
 	if !s.config.EnableQueryMonitoring {
 		s.logger.Debug("Query Performance Monitoring disabled, skipping QPM scrapers")
 		return
 	}
 
-	// Execute slow queries scraper to get query IDs
-	s.logger.Debug("Starting slow queries scraper to get query IDs (QPM enabled)")
+	// STEP 1: Execute slow queries scraper to get query IDs
+	s.logger.Debug("Step 1: Starting slow queries scraper")
 	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
 
 	s.logger.Info("Slow queries scraper completed",
@@ -465,53 +467,73 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 		zap.Strings("query_ids", queryIDs),
 		zap.Int("slow_query_errors", len(slowQueryErrs)))
 
-	// Collect slow query errors
 	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
 
-	// Execute execution plan scraper with query IDs
+	// STEP 2: Execute wait events & blocking scraper
+	// This captures current wait states and blocking information
+	// Must run BEFORE child cursors to ensure we get latest active child numbers
+	s.logger.Debug("Step 2: Starting wait events & blocking scraper")
+	waitEventErrs := s.waitEventBlockingScraper.ScrapeWaitEventsAndBlocking(ctx)
+
+	s.logger.Info("Wait events & blocking scraper completed",
+		zap.Int("errors", len(waitEventErrs)))
+
+	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
+
+	// STEP 3 & 4: Execute child cursors and execution plans with query IDs
 	if len(queryIDs) > 0 {
-		s.executeExecutionPlanScraper(ctx, errChan, queryIDs)
+		s.executeChildCursorsAndExecutionPlans(ctx, errChan, queryIDs)
 	} else {
-		s.logger.Debug("No query IDs available for execution plan scraping")
+		s.logger.Debug("No query IDs available for child cursor and execution plan scraping")
 	}
 }
 
-// executeExecutionPlanScraper executes the execution plan scraper with given query IDs
-// Flow: Slow Query IDs → V$SQL top 5 child cursors → Check wait events for new child numbers → Merge → Execution plans
-func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context, errChan chan<- error, queryIDs []string) {
+// executeChildCursorsAndExecutionPlans executes child cursor and execution plan scrapers with given query IDs
+// Flow:
+// 1. Slow Query IDs → V$SQL top 5 child cursors
+// 2. Check wait events for NEW child numbers not in V$SQL top N
+// 3. Merge both lists to get complete SQL identifiers
+// 4. Scrape child cursor metrics for ALL identified SQL_IDs (including new ones from wait events)
+// 5. Fetch execution plans for merged SQL identifiers
+func (s *newRelicOracleScraper) executeChildCursorsAndExecutionPlans(ctx context.Context, errChan chan<- error, queryIDs []string) {
 	s.logger.Debug("Starting execution plan scraper with query IDs", zap.Strings("query_ids", queryIDs))
 
-	// Safety check: ensure waitEventsScraper is initialized
-	if s.waitEventsScraper == nil {
-		err := fmt.Errorf("waitEventsScraper is not initialized")
+	// Safety check: ensure waitEventBlockingScraper is initialized
+	if s.waitEventBlockingScraper == nil {
+		err := fmt.Errorf("waitEventBlockingScraper is not initialized")
 		s.logger.Error("Cannot get SQL identifiers for execution plans", zap.Error(err))
 		s.sendErrorsToChannel(errChan, []error{err}, "execution plan - scraper not initialized")
 		return
 	}
 
-	// Get SQL identifiers (SQL_ID, CHILD_NUMBER) for execution plan fetching
-	// 1. Fetch top 5 child cursors per SQL_ID from V$SQL
-	// 2. Check wait events for any NEW child numbers not in V$SQL results
-	// 3. Merge both lists
-	sqlIdentifiers, err := s.waitEventsScraper.GetSQLIdentifiersForExecutionPlans(ctx, queryIDs, 5)
+	// OPTIMIZED FLOW: Get child cursors WITH metrics and SQL identifiers in ONE call
+	// This avoids duplicate V$SQL queries
+	// Returns:
+	// 1. cachedChildCursors: Full child cursor objects with metrics from V$SQL top N
+	// 2. newIdentifiers: NEW child numbers found in wait events (not in V$SQL top N)
+	// 3. allSQLIdentifiers: Merged list for execution plans
+	cachedChildCursors, newIdentifiers, allSQLIdentifiers, err := s.waitEventBlockingScraper.GetChildCursorsWithMetrics(ctx, queryIDs, s.config.ChildCursorsPerSQLID)
 	if err != nil {
-		s.logger.Warn("Failed to get SQL identifiers for execution plans", zap.Error(err))
-		s.sendErrorsToChannel(errChan, []error{err}, "execution plan - get identifiers")
+		s.logger.Warn("Failed to get child cursors and SQL identifiers", zap.Error(err))
+		s.sendErrorsToChannel(errChan, []error{err}, "execution plan - get child cursors")
 		return
 	}
 
-	if len(sqlIdentifiers) == 0 {
+	if len(allSQLIdentifiers) == 0 {
 		s.logger.Info("No SQL identifiers found for execution plans",
 			zap.Int("slow_query_ids_checked", len(queryIDs)))
 		return
 	}
 
-	s.logger.Info("Fetching execution plans and child cursor metrics",
-		zap.Int("sql_identifiers", len(sqlIdentifiers)),
+	s.logger.Info("Fetching child cursor metrics and execution plans",
+		zap.Int("cached_child_cursors", len(cachedChildCursors)),
+		zap.Int("new_identifiers_from_wait_events", len(newIdentifiers)),
+		zap.Int("total_sql_identifiers", len(allSQLIdentifiers)),
 		zap.Int("slow_query_ids", len(queryIDs)))
 
-	// Scrape child cursor metrics for the slow queries
-	childCursorErrs := s.childCursorsScraper.ScrapeChildCursors(ctx, queryIDs, 5)
+	// OPTIMIZED: Scrape child cursor metrics using cached data
+	// Only queries V$SQL for NEW child numbers found in wait events
+	childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsWithCache(ctx, cachedChildCursors, newIdentifiers, s.config.ChildCursorsPerSQLID)
 	if len(childCursorErrs) > 0 {
 		s.logger.Warn("Errors occurred while scraping child cursor metrics",
 			zap.Int("error_count", len(childCursorErrs)))
@@ -519,10 +541,10 @@ func (s *newRelicOracleScraper) executeExecutionPlanScraper(ctx context.Context,
 	}
 
 	// Fetch execution plans for the merged SQL identifiers
-	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
+	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, allSQLIdentifiers)
 
 	s.logger.Info("Execution plan scraper completed",
-		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+		zap.Int("sql_identifiers_processed", len(allSQLIdentifiers)),
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
 	s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plan")
@@ -554,13 +576,9 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 		s.databaseInfoScraper.ScrapeDatabaseRole,
 	}
 
-	// Add QPM scrapers if enabled
-	if s.config.EnableQueryMonitoring {
-		scraperFuncs = append(scraperFuncs,
-			s.blockingScraper.ScrapeBlockingQueries,
-			s.waitEventsScraper.ScrapeWaitEvents,
-		)
-	}
+	// Note: Wait events & blocking scraper removed from parallel execution
+	// It now runs sequentially in executeQPMScrapers() BEFORE child cursors
+	// This ensures we capture latest active child numbers before fetching metrics
 
 	// Add lock scraper (always enabled for lock monitoring)
 	scraperFuncs = append(scraperFuncs,

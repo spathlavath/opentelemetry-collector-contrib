@@ -167,6 +167,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			continue
 		}
 
+		collectionTimestamp := slowQuery.GetCollectionTimestamp()
 		dbName := slowQuery.GetDatabaseName()
 		qID := slowQuery.GetQueryID()
 		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
@@ -174,7 +175,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		schName := slowQuery.GetSchemaName()
 		lastActiveTime := slowQuery.GetLastActiveTime()
 
-		s.recordMetrics(now, &slowQuery, dbName, qID, qText, userName, schName, lastActiveTime)
+		s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime)
 
 		if slowQuery.QueryID.Valid {
 			queryIDs = append(queryIDs, slowQuery.QueryID.String)
@@ -190,11 +191,12 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	return queryIDs, scrapeErrors
 }
 
-func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, dbName, qID, qText, userName, schName, lastActiveTime string) {
+func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime string) {
 	if slowQuery.ExecutionCount.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 			now,
 			float64(slowQuery.ExecutionCount.Int64),
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -205,6 +207,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
 			now,
 			slowQuery.AvgCPUTimeMs.Float64,
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -215,6 +218,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
 			now,
 			slowQuery.AvgDiskReads.Float64,
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -225,6 +229,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(
 			now,
 			slowQuery.AvgDiskWrites.Float64,
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -235,6 +240,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 	s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
 		now,
 		slowQuery.AvgElapsedTimeMs.Float64,
+		collectionTimestamp,
 		dbName,
 		qID,
 		userName,
@@ -245,6 +251,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(
 			now,
 			*slowQuery.IntervalAvgElapsedTimeMS,
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -256,6 +263,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(
 			now,
 			float64(*slowQuery.IntervalExecutionCount),
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -266,6 +274,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(
 			now,
 			slowQuery.AvgRowsExamined.Float64,
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -276,6 +285,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(
 			now,
 			slowQuery.AvgLockTimeMs.Float64,
+			collectionTimestamp,
 			dbName,
 			qID,
 			userName,
@@ -285,6 +295,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 	s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 		now,
 		1,
+		collectionTimestamp,
 		dbName,
 		qID,
 		qText,

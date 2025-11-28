@@ -19,6 +19,9 @@ resource_attributes:
     type: string
 
 attributes:
+  collection_timestamp:
+    description: Timestamp when the query metrics were collected from Oracle
+    type: string
   database_name:
     description: Oracle database name
     type: string
@@ -27,7 +30,7 @@ attributes:
     type: string
   query_text:
     description: SQL query text
-    type: string  
+    type: string
   schema_name:
     description: Schema name where the query is executed
     type: string
@@ -168,10 +171,6 @@ attributes:
     type: string
   wait_p3:
     description: Wait event parameter 3 value
-    type: string
-  
-  collection_timestamp:
-    description: Timestamp when the metric data was collected from Oracle
     type: string
 
   session_serial:
@@ -3528,6 +3527,7 @@ metrics:
       value_type: double
     unit: "{executions}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3539,6 +3539,7 @@ metrics:
       value_type: double
     unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3550,6 +3551,7 @@ metrics:
       value_type: double
     unit: "{reads}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3561,9 +3563,10 @@ metrics:
       value_type: double
     unit: "{writes}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
-      - user_name    
+      - user_name
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
@@ -3572,6 +3575,7 @@ metrics:
       value_type: double
     unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3583,6 +3587,7 @@ metrics:
       value_type: double
     unit: "{rows}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3594,6 +3599,7 @@ metrics:
       value_type: double
     unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3605,6 +3611,7 @@ metrics:
       value_type: int
     unit: "{count}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - query_text
@@ -3621,6 +3628,7 @@ metrics:
       value_type: double
     unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3632,6 +3640,7 @@ metrics:
       value_type: double
     unit: "{executions}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3729,6 +3738,11 @@ metrics:
 
   newrelicoracledb.blocking_queries.wait_time:
     description: Wait time in seconds for blocked queries
+    extended_documentation: |
+      Shows how long a session has been waiting due to blocking by another session.
+      Collected alongside wait events in a single optimized query from v$session.
+      Includes information about the final blocking session (root cause) and its query.
+      Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
     enabled: true
     gauge:
       value_type: double
@@ -3809,6 +3823,11 @@ metrics:
 
   newrelicoracledb.wait_events.current_wait_seconds:
     description: Current wait time in seconds for active wait events
+    extended_documentation: |
+      Captures how long active sessions have been waiting on various database resources.
+      Collected alongside blocking information in a single optimized query from v$session.
+      Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
+      Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', SECONDS_IN_WAIT>0).
     enabled: true
     gauge:
       value_type: double
@@ -3842,6 +3861,10 @@ metrics:
 
   newrelicoracledb.wait_events.time_remaining:
     description: Time remaining for the wait event operation in seconds
+    extended_documentation: |
+      Estimated time remaining for the current wait operation to complete.
+      Collected alongside wait events and blocking information in a single query.
+      Useful for identifying long-running operations and predicting when they will complete.
     enabled: true
     gauge:
       value_type: double
