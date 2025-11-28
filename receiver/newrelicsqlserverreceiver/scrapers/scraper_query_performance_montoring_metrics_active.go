@@ -118,8 +118,8 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		// Fetch and parse execution plan for active queries with plan_handle
 		var executionPlanXML string
 
-		// NEW: Fetch top 5 most recently used plan_handles for this query_hash
-		// This provides historical execution plans for performance analysis
+		// NEW: Fetch top 5 most recently used plan_handles for this query_hash with aggregated stats
+		// This provides historical execution plan analysis for performance troubleshooting
 		if result.QueryID != nil && !result.QueryID.IsEmpty() {
 			top5PlanHandles, err := s.fetchTop5PlanHandlesForActiveQuery(ctx, result)
 			if err != nil {
@@ -127,62 +127,17 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 					zap.Error(err),
 					zap.Any("session_id", result.CurrentSessionID))
 			} else if len(top5PlanHandles) > 0 {
-				// Emit top-level execution plan details as custom events
-				s.emitExecutionPlanTopLevelDetailsAsCustomEvents(ctx, result, top5PlanHandles, logs)
+				// Emit aggregated execution plan stats as metrics
+				s.emitAggregatedExecutionPlanAsMetrics(ctx, result, top5PlanHandles, scopeMetrics)
 
-				s.logger.Info("Successfully fetched and emitted top 5 execution plans as custom events",
+				s.logger.Info("Successfully fetched and emitted top 5 aggregated execution plans as metrics",
 					zap.Any("session_id", result.CurrentSessionID),
 					zap.Int("plan_count", len(top5PlanHandles)))
 			}
 		}
 
-		// OLD: Fetch current execution plan for detailed node-level analysis (keep for backward compatibility)
-		// Only fetch execution plan if plan_handle is available (active executing queries)
-		if result.PlanHandle != nil && !result.PlanHandle.IsEmpty() {
-			planXML, err := s.fetchExecutionPlanForActiveQuery(ctx, result)
-			if err != nil {
-				s.logger.Warn("Failed to fetch execution plan for active query",
-					zap.Error(err),
-					zap.Any("session_id", result.CurrentSessionID))
-			} else if planXML != "" {
-				executionPlanXML = planXML
-				s.logger.Debug("Successfully fetched execution plan XML for active query",
-					zap.Any("session_id", result.CurrentSessionID),
-					zap.Int("xml_length", len(executionPlanXML)))
-
-				// Parse XML and emit as OTLP logs
-				queryID := ""
-				if result.QueryID != nil {
-					queryID = result.QueryID.String()
-				}
-				planHandle := result.PlanHandle.String()
-
-				planAnalysis, err := models.ParseExecutionPlanXML(planXML, queryID, planHandle)
-				if err != nil {
-					s.logger.Warn("Failed to parse execution plan XML for active query",
-						zap.Error(err),
-						zap.Any("session_id", result.CurrentSessionID),
-						zap.String("query_id", queryID))
-				} else if planAnalysis != nil {
-					// Set additional metadata
-					planAnalysis.CollectionTime = time.Now().UTC().Format(time.RFC3339)
-					if result.QueryStatementText != nil {
-						planAnalysis.SQLText = helpers.AnonymizeQueryText(*result.QueryStatementText)
-					}
-
-					// Emit execution plan operators as OTLP logs (for detailed analysis)
-					s.emitActiveQueryExecutionPlanLogs(planAnalysis, result, logs)
-
-					// NEW: Emit execution plan SUMMARY as custom metrics (Item #5)
-					s.emitActiveQueryExecutionPlanMetrics(planAnalysis, result, scopeMetrics)
-
-					s.logger.Info("Successfully parsed and emitted execution plan logs + metrics for active query",
-						zap.Any("session_id", result.CurrentSessionID),
-						zap.String("query_id", queryID),
-						zap.Int("operator_count", len(planAnalysis.Nodes)))
-				}
-			}
-		}
+		// REMOVED (2025-11-28): Old execution plan XML parsing and node-level emission
+		// This has been replaced with aggregated stats from dm_exec_query_stats (see lines 121-137 above)
 
 		// Process active query metrics with execution plan
 		if err := s.processActiveRunningQueryMetricsWithPlan(result, scopeMetrics, i, executionPlanXML); err != nil {
@@ -684,228 +639,11 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanForActiveQuery(ctx context.C
 	return executionPlanXML, nil
 }
 
-// emitActiveQueryExecutionPlanLogs emits execution plan operators as OTLP log records for active queries
-// Each operator becomes a separate log event with proper correlation (query_id, session_id, request_id)
-func (s *QueryPerformanceScraper) emitActiveQueryExecutionPlanLogs(planAnalysis *models.ExecutionPlanAnalysis, activeQuery models.ActiveRunningQuery, logs plog.Logs) {
-	if planAnalysis == nil || len(planAnalysis.Nodes) == 0 {
-		return
-	}
-
-	// Create resource logs
-	resourceLogs := logs.ResourceLogs().AppendEmpty()
-
-	// Add resource attributes for correlation
-	resourceAttrs := resourceLogs.Resource().Attributes()
-	if activeQuery.DatabaseName != nil {
-		resourceAttrs.PutStr("db.name", *activeQuery.DatabaseName)
-	}
-	if activeQuery.LoginName != nil {
-		resourceAttrs.PutStr("db.user", *activeQuery.LoginName)
-	}
-
-	// Create scope logs
-	scopeLogs := resourceLogs.ScopeLogs().AppendEmpty()
-	scopeLogs.Scope().SetName("newrelicsqlserverreceiver")
-	scopeLogs.Scope().SetVersion("1.0.0")
-
-	timestamp := pcommon.NewTimestampFromTime(time.Now())
-
-	// Emit a log record for each execution plan operator
-	for i := range planAnalysis.Nodes {
-		node := &planAnalysis.Nodes[i]
-		s.createActiveQueryExecutionPlanNodeLog(node, activeQuery, scopeLogs, timestamp)
-	}
-
-	s.logger.Debug("Emitted execution plan logs for active query",
-		zap.String("query_id", planAnalysis.QueryID),
-		zap.Int("operator_count", len(planAnalysis.Nodes)),
-		zap.Any("session_id", activeQuery.CurrentSessionID))
-}
-
-// createActiveQueryExecutionPlanNodeLog creates a single OTLP log record for an execution plan operator from active query
-func (s *QueryPerformanceScraper) createActiveQueryExecutionPlanNodeLog(node *models.ExecutionPlanNode, activeQuery models.ActiveRunningQuery, scopeLogs plog.ScopeLogs, timestamp pcommon.Timestamp) {
-	logRecord := scopeLogs.LogRecords().AppendEmpty()
-	logRecord.SetTimestamp(timestamp)
-	logRecord.SetObservedTimestamp(timestamp)
-	logRecord.SetSeverityNumber(plog.SeverityNumberInfo)
-	logRecord.SetSeverityText("INFO")
-
-	// Set event name for proper log ingestion in New Relic
-	logRecord.Body().SetStr(fmt.Sprintf("Execution Plan Node: %s (NodeID=%d, Parent=%d, Type=%s)",
-		node.PhysicalOp, node.NodeID, node.ParentNodeID, node.InputType))
-
-	// Set all attributes for the execution plan operator
-	attrs := logRecord.Attributes()
-
-	// IMPORTANT: Signal New Relic to ingest this as a Custom Event instead of a Log
-	// This allows querying via: SELECT * FROM SqlServerActiveQueryExecutionPlan
-	// Reference: https://docs.newrelic.com/docs/more-integrations/open-source-telemetry-integrations/opentelemetry/best-practices/opentelemetry-best-practices-logs/
-	attrs.PutStr("newrelic.event.type", "SqlServerActiveQueryExecutionPlan")
-
-	// Correlation identifiers (for linking with active query metrics)
-	if activeQuery.QueryID != nil && !activeQuery.QueryID.IsEmpty() {
-		attrs.PutStr("query_id", activeQuery.QueryID.String())
-	}
-	attrs.PutStr("plan_handle", node.PlanHandle)
-	if activeQuery.CurrentSessionID != nil {
-		attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
-	}
-	if activeQuery.RequestID != nil {
-		attrs.PutInt("request_id", *activeQuery.RequestID)
-	}
-	if activeQuery.RequestStartTime != nil {
-		attrs.PutStr("start_time", *activeQuery.RequestStartTime)
-	}
-	if activeQuery.DatabaseName != nil {
-		attrs.PutStr("database_name", *activeQuery.DatabaseName)
-	}
-
-	// Node structure
-	attrs.PutInt("node_id", int64(node.NodeID))
-	attrs.PutInt("parent_node_id", int64(node.ParentNodeID))
-	attrs.PutStr("input_type", node.InputType)
-
-	// Operator information
-	attrs.PutStr("physical_op", node.PhysicalOp)
-	attrs.PutStr("logical_op", node.LogicalOp)
-	attrs.PutStr("sql_text", node.SQLText)
-
-	// Object information (for Index Scan/Seek operators)
-	if node.SchemaName != "" {
-		attrs.PutStr("schema_name", node.SchemaName)
-	}
-	if node.TableName != "" {
-		attrs.PutStr("table_name", node.TableName)
-	}
-	if node.IndexName != "" {
-		attrs.PutStr("index_name", node.IndexName)
-	}
-	if node.ReferencedColumns != "" {
-		attrs.PutStr("referenced_columns", node.ReferencedColumns)
-	}
-
-	// Cost estimates
-	attrs.PutDouble("estimate_rows", node.EstimateRows)
-	attrs.PutDouble("estimate_io", node.EstimateIO)
-	attrs.PutDouble("estimate_cpu", node.EstimateCPU)
-	attrs.PutDouble("avg_row_size", node.AvgRowSize)
-	attrs.PutDouble("total_subtree_cost", node.TotalSubtreeCost)
-	attrs.PutDouble("estimated_operator_cost", node.EstimatedOperatorCost)
-
-	// Execution details (from XML)
-	attrs.PutStr("estimated_execution_mode", node.EstimatedExecutionMode)
-	attrs.PutInt("granted_memory_kb", node.GrantedMemoryKb)
-	attrs.PutBool("spill_occurred", node.SpillOccurred)
-	attrs.PutBool("no_join_predicate", node.NoJoinPredicate)
-
-	// Performance metrics (from XML)
-	attrs.PutDouble("total_worker_time", node.TotalWorkerTime)
-	attrs.PutDouble("total_elapsed_time", node.TotalElapsedTime)
-	attrs.PutInt("total_logical_reads", node.TotalLogicalReads)
-	attrs.PutInt("total_logical_writes", node.TotalLogicalWrites)
-	attrs.PutInt("execution_count", node.ExecutionCount)
-	attrs.PutDouble("avg_elapsed_time_ms", node.AvgElapsedTimeMs)
-
-	// Timestamps (from XML)
-	if node.LastExecutionTime != "" {
-		attrs.PutStr("last_execution_time", node.LastExecutionTime)
-	}
-}
-
-// emitActiveQueryExecutionPlanMetrics emits execution plan SUMMARY as custom metrics
-// This implements Item #5: Convert execution plans from logs to metrics
-// Strategy: Emit high-level summary metrics (total cost, operator count, key statistics)
-// Detailed operator-level data remains in logs for deep-dive analysis
-func (s *QueryPerformanceScraper) emitActiveQueryExecutionPlanMetrics(planAnalysis *models.ExecutionPlanAnalysis, activeQuery models.ActiveRunningQuery, scopeMetrics pmetric.ScopeMetrics) {
-	if planAnalysis == nil || len(planAnalysis.Nodes) == 0 {
-		return
-	}
-
-	timestamp := pcommon.NewTimestampFromTime(time.Now())
-
-	// Create common attributes for all execution plan metrics
-	createPlanAttributes := func() pcommon.Map {
-		attrs := pcommon.NewMap()
-
-		// Correlation keys
-		attrs.PutStr("query_id", planAnalysis.QueryID)
-		attrs.PutStr("plan_handle", planAnalysis.PlanHandle)
-		if activeQuery.CurrentSessionID != nil {
-			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
-		}
-		if activeQuery.DatabaseName != nil {
-			attrs.PutStr("database_name", *activeQuery.DatabaseName)
-		}
-		if activeQuery.CollectionTimestamp != nil {
-			attrs.PutStr("collection_timestamp", *activeQuery.CollectionTimestamp)
-		}
-
-		return attrs
-	}
-
-	// Metric 1: Execution Plan Total Cost
-	if planAnalysis.TotalCost > 0 {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.execution_plan.total_cost")
-		metric.SetDescription("Total estimated cost of the execution plan")
-		metric.SetUnit("{cost}")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(planAnalysis.TotalCost)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 2: Execution Plan Operator Count
-	metric := scopeMetrics.Metrics().AppendEmpty()
-	metric.SetName("sqlserver.execution_plan.operator_count")
-	metric.SetDescription("Number of operators in the execution plan")
-	metric.SetUnit("{operators}")
-
-	gauge := metric.SetEmptyGauge()
-	dp := gauge.DataPoints().AppendEmpty()
-	dp.SetTimestamp(timestamp)
-	dp.SetIntValue(int64(len(planAnalysis.Nodes)))
-	createPlanAttributes().CopyTo(dp.Attributes())
-
-	// Metric 3: Compile Time (stored as timestamp string - add as attribute, not metric)
-	// CompileTime is a string timestamp, not a duration value
-
-	// Metric 4: Compile CPU
-	if planAnalysis.CompileCPU > 0 {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.execution_plan.compile_cpu_ms")
-		metric.SetDescription("CPU time used to compile the execution plan")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(planAnalysis.CompileCPU)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 5: Compile Memory
-	if planAnalysis.CompileMemory > 0 {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.execution_plan.compile_memory_kb")
-		metric.SetDescription("Memory used to compile the execution plan")
-		metric.SetUnit("KB")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(planAnalysis.CompileMemory)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	s.logger.Debug("Emitted execution plan summary metrics for active query",
-		zap.String("query_id", planAnalysis.QueryID),
-		zap.String("plan_handle", planAnalysis.PlanHandle),
-		zap.Int("operator_count", len(planAnalysis.Nodes)),
-		zap.Float64("total_cost", planAnalysis.TotalCost))
-}
+// REMOVED (2025-11-28): Old execution plan functions that created node-level custom events
+// - emitActiveQueryExecutionPlanLogs() - created one SqlServerActiveQueryExecutionPlan event per operator node
+// - createActiveQueryExecutionPlanNodeLog() - helper function for node-level events
+// - emitActiveQueryExecutionPlanMetrics() - created summary metrics from parsed XML
+// These have been replaced with aggregated stats approach using dm_exec_query_stats
 
 // fetchTop5PlanHandlesForActiveQuery fetches the top 5 most recently used plan_handles
 // for the query_hash of the currently active query from dm_exec_query_stats
@@ -939,167 +677,192 @@ func (s *QueryPerformanceScraper) fetchTop5PlanHandlesForActiveQuery(ctx context
 	return results, nil
 }
 
-// emitExecutionPlanTopLevelDetailsAsCustomEvents emits execution plan top-level details as custom events
-// This is the new implementation using newrelic.event.type instead of logs
-// Each plan becomes a separate custom event: SqlServerExecutionPlanTopLevel
-func (s *QueryPerformanceScraper) emitExecutionPlanTopLevelDetailsAsCustomEvents(ctx context.Context, activeQuery models.ActiveRunningQuery, planHandleResults []models.PlanHandleResult, logs plog.Logs) {
+// emitAggregatedExecutionPlanAsMetrics emits aggregated execution plan statistics as metrics
+// Emits metrics for each plan_handle with aggregated stats from dm_exec_query_stats
+// Each plan_handle for the query_hash becomes separate metric data points with attributes
+func (s *QueryPerformanceScraper) emitAggregatedExecutionPlanAsMetrics(ctx context.Context, activeQuery models.ActiveRunningQuery, planHandleResults []models.PlanHandleResult, scopeMetrics pmetric.ScopeMetrics) {
 	if len(planHandleResults) == 0 {
 		return
 	}
 
-	// Create resource logs
-	resourceLogs := logs.ResourceLogs().AppendEmpty()
-
-	// Add resource attributes for correlation
-	resourceAttrs := resourceLogs.Resource().Attributes()
-	if activeQuery.DatabaseName != nil {
-		resourceAttrs.PutStr("db.name", *activeQuery.DatabaseName)
-	}
-	if activeQuery.LoginName != nil {
-		resourceAttrs.PutStr("db.user", *activeQuery.LoginName)
-	}
-
-	// Create scope logs
-	scopeLogs := resourceLogs.ScopeLogs().AppendEmpty()
-	scopeLogs.Scope().SetName("newrelicsqlserverreceiver")
-	scopeLogs.Scope().SetVersion("1.0.0")
-
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Process each plan_handle
-	for i, planResult := range planHandleResults {
-		if planResult.ExecutionPlanXML == nil || *planResult.ExecutionPlanXML == "" {
-			s.logger.Debug("Skipping plan_handle with no execution plan XML",
-				zap.Int("index", i),
-				zap.Any("plan_handle", planResult.PlanHandle))
-			continue
-		}
-
-		// Parse top-level details (lightweight parsing)
-		queryID := ""
-		if activeQuery.QueryID != nil {
-			queryID = activeQuery.QueryID.String()
-		}
-		planHandle := ""
-		if planResult.PlanHandle != nil {
-			planHandle = planResult.PlanHandle.String()
-		}
-
-		topLevelDetails, err := models.ParseExecutionPlanTopLevelDetails(*planResult.ExecutionPlanXML, queryID, planHandle, &planResult)
-		if err != nil {
-			s.logger.Warn("Failed to parse execution plan top-level details",
-				zap.Error(err),
-				zap.Int("index", i),
-				zap.String("plan_handle", planHandle))
-			continue
-		}
-
-		// Emit as custom event
-		s.createExecutionPlanTopLevelCustomEvent(topLevelDetails, activeQuery, scopeLogs, timestamp, i)
+	// Process each plan_handle and emit as metrics
+	for _, planResult := range planHandleResults {
+		// Create aggregated metrics for this plan_handle with stats from dm_exec_query_stats
+		s.createAggregatedExecutionPlanMetrics(planResult, activeQuery, scopeMetrics, timestamp)
 	}
 
-	s.logger.Info("Emitted execution plan top-level details as custom events",
+	s.logger.Info("Emitted aggregated execution plan stats as metrics",
 		zap.Any("session_id", activeQuery.CurrentSessionID),
 		zap.Int("plan_count", len(planHandleResults)))
 }
 
-// createExecutionPlanTopLevelCustomEvent creates a single custom event for execution plan top-level details
-// Uses newrelic.event.type attribute to create SqlServerExecutionPlanTopLevel custom event
-func (s *QueryPerformanceScraper) createExecutionPlanTopLevelCustomEvent(topLevel *models.ExecutionPlanTopLevelDetails, activeQuery models.ActiveRunningQuery, scopeLogs plog.ScopeLogs, timestamp pcommon.Timestamp, index int) {
-	logRecord := scopeLogs.LogRecords().AppendEmpty()
-	logRecord.SetTimestamp(timestamp)
-	logRecord.SetObservedTimestamp(timestamp)
-	logRecord.SetSeverityNumber(plog.SeverityNumberInfo)
-	logRecord.SetSeverityText("INFO")
+// createAggregatedExecutionPlanMetrics creates metrics for aggregated execution plan statistics
+// Emits metrics with plan_handle, query_hash, and query_plan_hash as attributes
+// This provides historical performance data for the active query's plan_handle
+func (s *QueryPerformanceScraper) createAggregatedExecutionPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, scopeMetrics pmetric.ScopeMetrics, timestamp pcommon.Timestamp) {
+	// Helper function to create common attributes for all metrics
+	createPlanAttributes := func() pcommon.Map {
+		attrs := pcommon.NewMap()
 
-	// Set body with meaningful description
-	logRecord.Body().SetStr(fmt.Sprintf("Execution Plan Top-Level: Plan #%d for Query %s (Cost: %.2f, Operators: %d)",
-		index+1, topLevel.QueryID, topLevel.EstimatedTotalCost, topLevel.TotalOperators))
+		// Correlation keys
+		if activeQuery.QueryID != nil {
+			attrs.PutStr("query_hash", activeQuery.QueryID.String())
+		}
+		if planResult.PlanHandle != nil {
+			attrs.PutStr("plan_handle", planResult.PlanHandle.String())
+		}
+		if planResult.QueryPlanHash != nil {
+			attrs.PutStr("query_plan_hash", planResult.QueryPlanHash.String())
+		}
+		if activeQuery.CurrentSessionID != nil {
+			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
+		}
+		if activeQuery.RequestID != nil {
+			attrs.PutInt("request_id", *activeQuery.RequestID)
+		}
+		if activeQuery.DatabaseName != nil {
+			attrs.PutStr("database_name", *activeQuery.DatabaseName)
+		}
+		if planResult.LastExecutionTime != nil {
+			attrs.PutStr("last_execution_time", *planResult.LastExecutionTime)
+		}
+		if planResult.CreationTime != nil {
+			attrs.PutStr("creation_time", *planResult.CreationTime)
+		}
 
-	// Set all attributes
-	attrs := logRecord.Attributes()
-
-	// CRITICAL: Signal New Relic to ingest this as a Custom Event
-	// Allows querying via: SELECT * FROM SqlServerExecutionPlanTopLevel
-	attrs.PutStr("newrelic.event.type", "SqlServerExecutionPlanTopLevel")
-
-	// Correlation keys
-	attrs.PutStr("query_id", topLevel.QueryID)
-	attrs.PutStr("plan_handle", topLevel.PlanHandle)
-	attrs.PutStr("query_plan_hash", topLevel.QueryPlanHash)
-	if activeQuery.CurrentSessionID != nil {
-		attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
-	}
-	if activeQuery.RequestID != nil {
-		attrs.PutInt("request_id", *activeQuery.RequestID)
-	}
-	if activeQuery.DatabaseName != nil {
-		attrs.PutStr("database_name", *activeQuery.DatabaseName)
-	}
-
-	// SQL Query Information
-	attrs.PutStr("sql_text", topLevel.SQLText)
-
-	// Top-Level Plan Costs
-	attrs.PutDouble("total_subtree_cost", topLevel.TotalSubtreeCost)
-	attrs.PutDouble("statement_subtree_cost", topLevel.StatementSubTreeCost)
-	attrs.PutDouble("estimated_total_cost", topLevel.EstimatedTotalCost)
-
-	// Compilation Details
-	attrs.PutStr("compile_time", topLevel.CompileTime)
-	attrs.PutInt("compile_cpu", topLevel.CompileCPU)
-	attrs.PutInt("compile_memory", topLevel.CompileMemory)
-	attrs.PutInt("cached_plan_size", topLevel.CachedPlanSize)
-
-	// Optimizer Details
-	attrs.PutStr("statement_optm_level", topLevel.StatementOptmLevel)
-	if topLevel.StatementOptmEarlyAbortReason != "" {
-		attrs.PutStr("statement_optm_early_abort_reason", topLevel.StatementOptmEarlyAbortReason)
+		return attrs
 	}
 
-	// Execution Counts and Timing
-	attrs.PutInt("execution_count", topLevel.ExecutionCount)
-	attrs.PutDouble("avg_elapsed_time_ms", topLevel.AvgElapsedTimeMs)
-	attrs.PutDouble("avg_worker_time_ms", topLevel.AvgWorkerTimeMs)
-	attrs.PutStr("last_execution_time", topLevel.LastExecutionTime)
-	attrs.PutStr("creation_time", topLevel.CreationTime)
+	// Metric 1: Execution Count (from dm_exec_query_stats)
+	if planResult.ExecutionCount != nil {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.execution_count")
+		metric.SetDescription("Number of times this execution plan was executed")
+		metric.SetUnit("{executions}")
 
-	// Resource Estimates
-	attrs.PutDouble("estimate_rows", topLevel.EstimateRows)
-	attrs.PutDouble("estimate_io", topLevel.EstimateIO)
-	attrs.PutDouble("estimate_cpu", topLevel.EstimateCPU)
-	attrs.PutInt("avg_row_size", topLevel.AvgRowSize)
-
-	// Plan Details
-	attrs.PutInt("degree_of_parallelism", topLevel.DegreeOfParallelism)
-	attrs.PutInt("memory_grant", topLevel.MemoryGrant)
-	attrs.PutInt("cached_plan_size_64", topLevel.CachedPlanSize64)
-
-	// Missing Index Information
-	attrs.PutInt("missing_index_count", int64(topLevel.MissingIndexCount))
-	attrs.PutDouble("missing_index_impact", topLevel.MissingIndexImpact)
-
-	// Warnings
-	attrs.PutBool("no_join_predicate", topLevel.NoJoinPredicate)
-	attrs.PutInt("columns_with_no_statistics", int64(topLevel.ColumnsWithNoStatistics))
-	attrs.PutInt("unmatched_indexes", int64(topLevel.UnmatchedIndexes))
-
-	// Operator Summary
-	attrs.PutInt("total_operators", int64(topLevel.TotalOperators))
-	attrs.PutInt("scans_count", int64(topLevel.ScansCount))
-	attrs.PutInt("seeks_count", int64(topLevel.SeeksCount))
-
-	// Timestamps
-	attrs.PutStr("collection_timestamp", topLevel.CollectionTimestamp)
-
-	// Additional context from active query
-	if activeQuery.WaitType != nil {
-		attrs.PutStr("active_wait_type", *activeQuery.WaitType)
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetIntValue(*planResult.ExecutionCount)
+		createPlanAttributes().CopyTo(dp.Attributes())
 	}
+
+	// Metric 2: Total Elapsed Time (from dm_exec_query_stats)
+	if planResult.TotalElapsedTimeMs != nil {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.total_elapsed_time_ms")
+		metric.SetDescription("Total elapsed time across all executions of this plan")
+		metric.SetUnit("ms")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetDoubleValue(*planResult.TotalElapsedTimeMs)
+		createPlanAttributes().CopyTo(dp.Attributes())
+	}
+
+	// Metric 3: Average Elapsed Time (from dm_exec_query_stats)
+	if planResult.AvgElapsedTimeMs != nil {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.avg_elapsed_time_ms")
+		metric.SetDescription("Average elapsed time per execution of this plan")
+		metric.SetUnit("ms")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetDoubleValue(*planResult.AvgElapsedTimeMs)
+		createPlanAttributes().CopyTo(dp.Attributes())
+	}
+
+	// Metric 4: Total Worker Time (from dm_exec_query_stats)
+	if planResult.TotalWorkerTimeMs != nil {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.total_worker_time_ms")
+		metric.SetDescription("Total CPU time across all executions of this plan")
+		metric.SetUnit("ms")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetDoubleValue(*planResult.TotalWorkerTimeMs)
+		createPlanAttributes().CopyTo(dp.Attributes())
+	}
+
+	// Metric 5: Average Worker Time (from dm_exec_query_stats)
+	if planResult.AvgWorkerTimeMs != nil {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.avg_worker_time_ms")
+		metric.SetDescription("Average CPU time per execution of this plan")
+		metric.SetUnit("ms")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetDoubleValue(*planResult.AvgWorkerTimeMs)
+		createPlanAttributes().CopyTo(dp.Attributes())
+	}
+
+	// Metric 6: Current Wait Time (from active query)
 	if activeQuery.WaitTimeS != nil {
-		attrs.PutDouble("active_wait_time_s", *activeQuery.WaitTimeS)
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.current_wait_time_s")
+		metric.SetDescription("Current wait time for active query using this plan")
+		metric.SetUnit("s")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetDoubleValue(*activeQuery.WaitTimeS)
+		attrs := createPlanAttributes()
+		if activeQuery.WaitType != nil {
+			attrs.PutStr("current_wait_type", *activeQuery.WaitType)
+		}
+		attrs.CopyTo(dp.Attributes())
 	}
+
+	// Metric 7: Current Elapsed Time (from active query)
 	if activeQuery.TotalElapsedTimeMs != nil {
-		attrs.PutInt("active_elapsed_time_ms", *activeQuery.TotalElapsedTimeMs)
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.current_elapsed_time_ms")
+		metric.SetDescription("Current elapsed time for active query using this plan")
+		metric.SetUnit("ms")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetIntValue(*activeQuery.TotalElapsedTimeMs)
+		createPlanAttributes().CopyTo(dp.Attributes())
+	}
+
+	// Metric 8: Current CPU Time (from active query)
+	if activeQuery.CPUTimeMs != nil {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.current_cpu_time_ms")
+		metric.SetDescription("Current CPU time for active query using this plan")
+		metric.SetUnit("ms")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		dp.SetIntValue(*activeQuery.CPUTimeMs)
+		createPlanAttributes().CopyTo(dp.Attributes())
+	}
+
+	// Metric 9: Current Granted Memory (from active query)
+	if activeQuery.GrantedQueryMemoryPages != nil {
+		metric := scopeMetrics.Metrics().AppendEmpty()
+		metric.SetName("sqlserver.plan.current_granted_memory_kb")
+		metric.SetDescription("Current granted memory for active query using this plan")
+		metric.SetUnit("KB")
+
+		gauge := metric.SetEmptyGauge()
+		dp := gauge.DataPoints().AppendEmpty()
+		dp.SetTimestamp(timestamp)
+		// Convert pages to KB (1 page = 8KB in SQL Server)
+		dp.SetIntValue(*activeQuery.GrantedQueryMemoryPages * 8)
+		createPlanAttributes().CopyTo(dp.Attributes())
 	}
 }

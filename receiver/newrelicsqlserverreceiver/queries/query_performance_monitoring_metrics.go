@@ -825,8 +825,7 @@ WHERE
     AND qs.plan_handle IS NOT NULL
     AND qp.query_plan IS NOT NULL
 ORDER BY
-    qs.last_execution_time DESC,
-    qs.execution_count DESC
+    qs.last_execution_time DESC
 OPTION (RECOMPILE);`
 
 // ExecutionPlanTopLevelDetailsQuery retrieves top-level execution plan details from XML
