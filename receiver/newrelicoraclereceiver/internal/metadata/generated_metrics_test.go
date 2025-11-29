@@ -68,15 +68,12 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount := 0
 			allMetricsCount := 0
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(ts, 1, "db.instance.name-val", "diskgroup.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbAsmDiskgroupOfflineDisksDataPoint(ts, 1, "db.instance.name-val", "diskgroup.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(ts, 1, "db.instance.name-val", "diskgroup.name-val")
 
@@ -236,11 +233,9 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbConnectionWaitEventsDataPoint(ts, 1, "db.instance.name-val", "session.id-val", "username-val", "wait.event-val", "wait.state-val", "wait.class-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbContainerRestrictedDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "container.name-val", "restricted.status-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbContainerStatusDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "container.name-val", "open.mode-val")
 
@@ -300,15 +295,12 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbHostingInfoDataPoint(ts, 1, "db.instance.name-val", "cloud.provider-val", "cloud.platform-val", "deployment.environment-val", "host.arch-val", "platform.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbLockedAccountsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbLocksBlockedSessionsDataPoint(ts, 1, "db.instance.name-val", "lock.type-val", "object.type-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbLocksCountDataPoint(ts, 1, "db.instance.name-val", "lock.type-val", "lock.mode-val")
 
@@ -344,35 +336,27 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbCPUTimeRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
@@ -380,167 +364,126 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbCurrentLogonsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbLogonsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbOpenModeDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "pdb.name-val", "open.mode-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbSessionCountDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "pdb.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
@@ -548,67 +491,51 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbPdbWaitTimeRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceActiveStateDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "rac.instance.name-val", "host.name.rac-val", "active.state-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceArchiverStartedDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "rac.instance.name-val", "host.name.rac-val", "archiver.status-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceDatabaseStatusDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "rac.instance.name-val", "host.name.rac-val", "database.status-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceLoginsAllowedDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "rac.instance.name-val", "host.name.rac-val", "logins.status-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceStatusDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "rac.instance.name-val", "host.name.rac-val", "instance.status-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceUptimeSecondsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "rac.instance.name-val", "host.name.rac-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(ts, 1, "db.instance.name-val", "rac.instance.name-val", "host.name.rac-val", "oracle.version-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "clb.goal-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts, 1, "db.instance.name-val", "service.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "failover.method-val", "failover.type-val", "service.goal-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceFailoverRetriesDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceInstanceIDDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "network.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacTotalWaitsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "wait.event-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacWaitTimeDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "wait.event-val")
 
@@ -1328,15 +1255,12 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(ts, 1, "db.instance.name-val", "tablespace.name-val")
 
@@ -4703,7 +4627,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.slow_queries.interval_execution_count"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of executions in the last polling interval (delta metric)", ms.At(i).Description())
+					assert.Equal(t, "Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.", ms.At(i).Description())
 					assert.Equal(t, "{executions}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())

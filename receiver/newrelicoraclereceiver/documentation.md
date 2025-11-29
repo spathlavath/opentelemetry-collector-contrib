@@ -12,51 +12,6 @@ metrics:
     enabled: false
 ```
 
-### newrelicoracledb.asm.diskgroup.free_mb
-
-Available free space in the ASM disk group in MB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MB | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| diskgroup.name | ASM disk group name | Any Str | false |
-
-### newrelicoracledb.asm.diskgroup.offline_disks
-
-Number of offline disks in the ASM disk group
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {disks} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| diskgroup.name | ASM disk group name | Any Str | false |
-
-### newrelicoracledb.asm.diskgroup.total_mb
-
-Total capacity of the ASM disk group in MB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MB | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| diskgroup.name | ASM disk group name | Any Str | false |
-
 ### newrelicoracledb.blocking_queries.wait_time
 
 Wait time in seconds for blocked queries
@@ -670,40 +625,6 @@ Current wait events and wait time
 | wait.state | Oracle wait event state | Any Str | false |
 | wait.class | Oracle wait event class | Any Str | false |
 
-### newrelicoracledb.container.restricted
-
-Oracle container restricted status (1=YES, 0=NO)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| container.name | Oracle container name | Any Str | false |
-| restricted.status | Oracle container restricted status (YES, NO) | Any Str | false |
-
-### newrelicoracledb.container.status
-
-Oracle container status (1=READ WRITE, 0=other)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| container.name | Oracle container name | Any Str | false |
-| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
-
 ### newrelicoracledb.database.info
 
 Database version and configuration information
@@ -937,53 +858,6 @@ Provides information about the hosting environment including cloud provider, pla
 | host.arch | The CPU architecture the host system is running on | Any Str | false |
 | platform.name | Operating system platform name | Any Str | false |
 
-### newrelicoracledb.locked_accounts
-
-Count of locked user accounts in the database
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.locks.blocked_sessions
-
-Number of sessions blocked by locks
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| object.type | Oracle object type (TABLE, INDEX, etc.) | Any Str | false |
-
-### newrelicoracledb.locks.count
-
-Number of locks by type and mode
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {locks} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| lock.mode | Oracle lock mode (Exclusive, Share, etc.) | Any Str | false |
-
 ### newrelicoracledb.long_running_queries
 
 Number of long running queries (active sessions running for more than 60 seconds)
@@ -1104,747 +978,9 @@ Total SGA UGA memory in bytes (session uga memory max)
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.pdb.active_parallel_sessions
-
-Number of active parallel sessions in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.active_serial_sessions
-
-Number of active serial sessions in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.average_active_sessions
-
-Average number of active sessions in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.background_cpu_usage_per_second
-
-Background CPU usage per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.background_time_per_second
-
-Background time per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.block_changes_per_second
-
-DB block changes per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.block_changes_per_transaction
-
-DB block changes per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.cpu_time_ratio
-
-Database CPU time ratio in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.pdb.cpu_usage_per_second
 
 CPU usage per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.cpu_usage_per_transaction
-
-CPU usage per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.current_logons
-
-Current number of logons in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.current_open_cursors
-
-Current number of open cursors in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.db_physical_read_bytes_per_second
-
-Physical read bytes per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.db_physical_reads_per_second
-
-Physical reads per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.db_physical_write_bytes_per_second
-
-Physical write bytes per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.db_physical_writes_per_second
-
-Physical writes per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.execute_without_parse_ratio
-
-Execute without parse ratio in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.executions_per_second
-
-Executions per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.executions_per_transaction
-
-Executions per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.hard_parse_count_per_second
-
-Hard parse count per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.hard_parse_count_per_transaction
-
-Hard parse count per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.logical_reads_per_second
-
-Logical reads per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.logical_reads_per_transaction
-
-Logical reads per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.logons_per_second
-
-Logons per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.logons_per_transaction
-
-Logons per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.network_traffic_byte_per_second
-
-Network traffic volume per second in bytes in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.open_cursors_per_second
-
-Open cursors per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.open_cursors_per_transaction
-
-Open cursors per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.open_mode
-
-Oracle PDB open mode (1=READ WRITE, 0=other)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| pdb.name | Oracle Pluggable Database name | Any Str | false |
-| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
-
-### newrelicoracledb.pdb.parse_failure_count_per_second
-
-Parse failure count per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.physical_read_bytes_per_second
-
-Physical read total bytes per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.physical_reads_per_transaction
-
-Physical reads per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.physical_write_bytes_per_second
-
-Physical write total bytes per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.physical_writes_per_transaction
-
-Physical writes per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.redo_generated_bytes_per_second
-
-Redo generated per second in bytes in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.redo_generated_bytes_per_transaction
-
-Redo generated per transaction in bytes in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.response_time_per_transaction
-
-Response time per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.session_count
-
-Session count in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.soft_parse_ratio
-
-Soft parse ratio in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.sql_service_response_time
-
-SQL service response time in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.total_parse_count_per_second
-
-Total parse count per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.total_parse_count_per_transaction
-
-Total parse count per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.total_size_bytes
-
-Total size of PDB in bytes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| pdb.name | Oracle Pluggable Database name | Any Str | false |
-
-### newrelicoracledb.pdb.transactions_per_second
-
-User transactions per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.user_calls_per_second
-
-User calls per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.user_calls_per_transaction
-
-User calls per transaction in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.user_commits_per_second
-
-User commits per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.user_commits_percentage
-
-User commits percentage in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.user_rollbacks_per_second
-
-User rollbacks per second in PDB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.pdb.user_rollbacks_percentage
-
-User rollbacks percentage in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1871,275 +1007,6 @@ Database wait time ratio in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.rac.instance.active_state
-
-Instance active state indicator (1=NORMAL, 0=other)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| active.state | Oracle instance active state (NORMAL, QUIESCING, etc.) | Any Str | false |
-
-### newrelicoracledb.rac.instance.archiver_started
-
-Archiver status indicator (1=STARTED, 0=STOPPED)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| archiver.status | Oracle archiver status (STARTED, STOPPED) | Any Str | false |
-
-### newrelicoracledb.rac.instance.database_status
-
-Database status indicator (1=ACTIVE, 0=other)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| database.status | Oracle database status (ACTIVE, SUSPENDED, etc.) | Any Str | false |
-
-### newrelicoracledb.rac.instance.logins_allowed
-
-Instance login status indicator (1=ALLOWED, 0=RESTRICTED)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| logins.status | Oracle instance login status (ALLOWED, RESTRICTED) | Any Str | false |
-
-### newrelicoracledb.rac.instance.status
-
-RAC instance status (1=OPEN, 0=other)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| instance.status | Oracle RAC instance status | Any Str | false |
-
-### newrelicoracledb.rac.instance.uptime_seconds
-
-Instance uptime in seconds since startup
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-
-### newrelicoracledb.rac.instance.version_info
-
-Oracle database version information (always 1, version in attributes)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| oracle.version | Oracle database version | Any Str | false |
-
-### newrelicoracledb.rac.service.clb_config
-
-Connection load balancing configuration (always 1, config in attributes)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| clb.goal | Oracle service connection load balancing goal | Any Str | false |
-
-### newrelicoracledb.rac.service.creation_age_days
-
-Service age in days since creation
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| d | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-
-### newrelicoracledb.rac.service.failover_config
-
-Service failover configuration indicator (always 1, config in attributes)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| failover.method | Oracle service failover method | Any Str | false |
-| failover.type | Oracle service failover type | Any Str | false |
-| service.goal | Oracle service goal (THROUGHPUT, SERVICE_TIME, etc.) | Any Str | false |
-
-### newrelicoracledb.rac.service.failover_delay_seconds
-
-Failover delay in seconds configured for the service
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.rac.service.failover_retries
-
-Number of failover retries configured for the service
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {retries} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.rac.service.instance_id
-
-Instance ID where the service is currently running
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.rac.service.network_config
-
-Service network configuration (always 1, config in attributes)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| network.name | Oracle service network name | Any Str | false |
-
-### newrelicoracledb.rac.total_waits
-
-Total number of cluster wait events
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {waits} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| wait.event | Oracle wait event name | Any Str | false |
-
-### newrelicoracledb.rac.wait_time
-
-Rate of cluster wait time in microseconds per second
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| us/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| wait.event | Oracle wait event name | Any Str | false |
 
 ### newrelicoracledb.redo_log_parallel_write_waits
 
@@ -2616,7 +1483,7 @@ Average elapsed time per execution in the last polling interval (delta metric)
 
 ### newrelicoracledb.slow_queries.interval_execution_count
 
-Number of executions in the last polling interval (delta metric)
+Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4841,51 +3708,6 @@ Whether the tablespace is offline (1) or online (0)
 | db.instance.name | Oracle database instance name | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
-### newrelicoracledb.tablespace.offline_cdb_datafiles
-
-Count of offline CDB datafiles by tablespace
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-
-### newrelicoracledb.tablespace.offline_pdb_datafiles
-
-Count of offline PDB datafiles by tablespace
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-
-### newrelicoracledb.tablespace.pdb_non_write_mode
-
-Count of PDB datafiles in non-write mode by tablespace
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-
 ### newrelicoracledb.tablespace.space_consumed_bytes
 
 Total bytes consumed by the tablespace
@@ -5035,6 +3857,1194 @@ Time remaining for the wait event operation in seconds
 | sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+
+## Optional Metrics
+
+The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: true
+```
+
+### newrelicoracledb.asm.diskgroup.free_mb
+
+Available free space in the ASM disk group in MB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| MB | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
+
+### newrelicoracledb.asm.diskgroup.offline_disks
+
+Number of offline disks in the ASM disk group
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {disks} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
+
+### newrelicoracledb.asm.diskgroup.total_mb
+
+Total capacity of the ASM disk group in MB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| MB | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
+
+### newrelicoracledb.container.restricted
+
+Oracle container restricted status (1=YES, 0=NO)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| container.name | Oracle container name | Any Str | false |
+| restricted.status | Oracle container restricted status (YES, NO) | Any Str | false |
+
+### newrelicoracledb.container.status
+
+Oracle container status (1=READ WRITE, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| container.name | Oracle container name | Any Str | false |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
+
+### newrelicoracledb.locked_accounts
+
+Count of locked user accounts in the database
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.locks.blocked_sessions
+
+Number of sessions blocked by locks
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
+| object.type | Oracle object type (TABLE, INDEX, etc.) | Any Str | false |
+
+### newrelicoracledb.locks.count
+
+Number of locks by type and mode
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {locks} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
+| lock.mode | Oracle lock mode (Exclusive, Share, etc.) | Any Str | false |
+
+### newrelicoracledb.pdb.active_parallel_sessions
+
+Number of active parallel sessions in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.active_serial_sessions
+
+Number of active serial sessions in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.average_active_sessions
+
+Average number of active sessions in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.background_cpu_usage_per_second
+
+Background CPU usage per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.background_time_per_second
+
+Background time per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.block_changes_per_second
+
+DB block changes per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.block_changes_per_transaction
+
+DB block changes per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.cpu_time_ratio
+
+Database CPU time ratio in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.cpu_usage_per_transaction
+
+CPU usage per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.current_logons
+
+Current number of logons in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.current_open_cursors
+
+Current number of open cursors in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.db_physical_read_bytes_per_second
+
+Physical read bytes per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.db_physical_reads_per_second
+
+Physical reads per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.db_physical_write_bytes_per_second
+
+Physical write bytes per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.db_physical_writes_per_second
+
+Physical writes per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.execute_without_parse_ratio
+
+Execute without parse ratio in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.executions_per_second
+
+Executions per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.executions_per_transaction
+
+Executions per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.hard_parse_count_per_second
+
+Hard parse count per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.hard_parse_count_per_transaction
+
+Hard parse count per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.logical_reads_per_second
+
+Logical reads per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.logical_reads_per_transaction
+
+Logical reads per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.logons_per_second
+
+Logons per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.logons_per_transaction
+
+Logons per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.network_traffic_byte_per_second
+
+Network traffic volume per second in bytes in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.open_cursors_per_second
+
+Open cursors per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.open_cursors_per_transaction
+
+Open cursors per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.open_mode
+
+Oracle PDB open mode (1=READ WRITE, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
+
+### newrelicoracledb.pdb.parse_failure_count_per_second
+
+Parse failure count per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.physical_read_bytes_per_second
+
+Physical read total bytes per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.physical_reads_per_transaction
+
+Physical reads per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.physical_write_bytes_per_second
+
+Physical write total bytes per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.physical_writes_per_transaction
+
+Physical writes per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.redo_generated_bytes_per_second
+
+Redo generated per second in bytes in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.redo_generated_bytes_per_transaction
+
+Redo generated per transaction in bytes in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.response_time_per_transaction
+
+Response time per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.session_count
+
+Session count in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.soft_parse_ratio
+
+Soft parse ratio in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.sql_service_response_time
+
+SQL service response time in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.total_parse_count_per_second
+
+Total parse count per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.total_parse_count_per_transaction
+
+Total parse count per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.total_size_bytes
+
+Total size of PDB in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
+
+### newrelicoracledb.pdb.transactions_per_second
+
+User transactions per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.user_calls_per_second
+
+User calls per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.user_calls_per_transaction
+
+User calls per transaction in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.user_commits_per_second
+
+User commits per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.user_commits_percentage
+
+User commits percentage in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.user_rollbacks_per_second
+
+User rollbacks per second in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.pdb.user_rollbacks_percentage
+
+User rollbacks percentage in PDB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.rac.instance.active_state
+
+Instance active state indicator (1=NORMAL, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| active.state | Oracle instance active state (NORMAL, QUIESCING, etc.) | Any Str | false |
+
+### newrelicoracledb.rac.instance.archiver_started
+
+Archiver status indicator (1=STARTED, 0=STOPPED)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| archiver.status | Oracle archiver status (STARTED, STOPPED) | Any Str | false |
+
+### newrelicoracledb.rac.instance.database_status
+
+Database status indicator (1=ACTIVE, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| database.status | Oracle database status (ACTIVE, SUSPENDED, etc.) | Any Str | false |
+
+### newrelicoracledb.rac.instance.logins_allowed
+
+Instance login status indicator (1=ALLOWED, 0=RESTRICTED)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| logins.status | Oracle instance login status (ALLOWED, RESTRICTED) | Any Str | false |
+
+### newrelicoracledb.rac.instance.status
+
+RAC instance status (1=OPEN, 0=other)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| instance.status | Oracle RAC instance status | Any Str | false |
+
+### newrelicoracledb.rac.instance.uptime_seconds
+
+Instance uptime in seconds since startup
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+
+### newrelicoracledb.rac.instance.version_info
+
+Oracle database version information (always 1, version in attributes)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| oracle.version | Oracle database version | Any Str | false |
+
+### newrelicoracledb.rac.service.clb_config
+
+Connection load balancing configuration (always 1, config in attributes)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| clb.goal | Oracle service connection load balancing goal | Any Str | false |
+
+### newrelicoracledb.rac.service.creation_age_days
+
+Service age in days since creation
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| d | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+
+### newrelicoracledb.rac.service.failover_config
+
+Service failover configuration indicator (always 1, config in attributes)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| failover.method | Oracle service failover method | Any Str | false |
+| failover.type | Oracle service failover type | Any Str | false |
+| service.goal | Oracle service goal (THROUGHPUT, SERVICE_TIME, etc.) | Any Str | false |
+
+### newrelicoracledb.rac.service.failover_delay_seconds
+
+Failover delay in seconds configured for the service
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.rac.service.failover_retries
+
+Number of failover retries configured for the service
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {retries} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.rac.service.instance_id
+
+Instance ID where the service is currently running
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.rac.service.network_config
+
+Service network configuration (always 1, config in attributes)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| network.name | Oracle service network name | Any Str | false |
+
+### newrelicoracledb.rac.total_waits
+
+Total number of cluster wait events
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {waits} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
+
+### newrelicoracledb.rac.wait_time
+
+Rate of cluster wait time in microseconds per second
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| us/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
+
+### newrelicoracledb.tablespace.offline_cdb_datafiles
+
+Count of offline CDB datafiles by tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+
+### newrelicoracledb.tablespace.offline_pdb_datafiles
+
+Count of offline PDB datafiles by tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+
+### newrelicoracledb.tablespace.pdb_non_write_mode
+
+Count of PDB datafiles in non-write mode by tablespace
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ## Default Events
 

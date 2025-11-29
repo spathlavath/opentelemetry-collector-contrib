@@ -497,7 +497,7 @@ metrics:
 
   newrelicoracledb.tablespace.offline_cdb_datafiles:
     description: Count of offline CDB datafiles by tablespace
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "1"
@@ -1247,7 +1247,7 @@ metrics:
 
   newrelicoracledb.pdb.sql_service_response_time:
     description: SQL service response time in PDB
-    enabled: falsefalse
+    enabled: false
     gauge:
       value_type: double
     unit: "s"
@@ -3329,7 +3329,7 @@ metrics:
   # RAC-specific metrics for Feature 2: Cluster Wait Events
   newrelicoracledb.rac.wait_time:
     description: Rate of cluster wait time in microseconds per second
-    enabled: true
+    enabled: false
     gauge:
       value_type: double
     unit: "us/s"
@@ -3340,7 +3340,7 @@ metrics:
 
   newrelicoracledb.rac.total_waits:
     description: Total number of cluster wait events
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "{waits}"

@@ -10132,7 +10132,7 @@ type metricNewrelicoracledbSlowQueriesIntervalExecutionCount struct {
 // init fills newrelicoracledb.slow_queries.interval_execution_count metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesIntervalExecutionCount) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.interval_execution_count")
-	m.data.SetDescription("Number of executions in the last polling interval (delta metric)")
+	m.data.SetDescription("Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.")
 	m.data.SetUnit("{executions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
