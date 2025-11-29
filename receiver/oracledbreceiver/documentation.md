@@ -20,46 +20,6 @@ Cumulative CPU time, in seconds
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | s | Sum | Double | Cumulative | true |
 
-### oracledb.dml_locks.limit
-
-Maximum limit of active DML (Data Manipulation Language) locks, -1 if unlimited.
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {locks} | Gauge | Int |
-
-### oracledb.dml_locks.usage
-
-Current count of active DML (Data Manipulation Language) locks.
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {locks} | Gauge | Int |
-
-### oracledb.enqueue_deadlocks
-
-Total number of deadlocks between table or row locks in different sessions.
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {deadlocks} | Sum | Int | Cumulative | true |
-
-### oracledb.enqueue_locks.limit
-
-Maximum limit of active enqueue locks, -1 if unlimited.
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {locks} | Gauge | Int |
-
-### oracledb.enqueue_locks.usage
-
-Current count of active enqueue locks.
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {locks} | Gauge | Int |
-
 ### oracledb.enqueue_resources.limit
 
 Maximum limit of active enqueue resources, -1 if unlimited.
@@ -75,14 +35,6 @@ Current count of active enqueue resources.
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {resources} | Gauge | Int |
-
-### oracledb.exchange_deadlocks
-
-Number of times that a process detected a potential deadlock when exchanging two buffers and raised an internal, restartable error. Index scans are the only operations that perform exchanges.
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {deadlocks} | Sum | Int | Cumulative | true |
 
 ### oracledb.executions
 
@@ -265,6 +217,22 @@ Number of DDL statements that were executed in parallel
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {statements} | Sum | Int | Cumulative | true |
 
+### oracledb.dml_locks.limit
+
+Maximum limit of active DML (Data Manipulation Language) locks, -1 if unlimited.
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {locks} | Gauge | Int |
+
+### oracledb.dml_locks.usage
+
+Current count of active DML (Data Manipulation Language) locks.
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {locks} | Gauge | Int |
+
 ### oracledb.dml_statements_parallelized
 
 Number of DML statements that were executed in parallel
@@ -272,6 +240,38 @@ Number of DML statements that were executed in parallel
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {statements} | Sum | Int | Cumulative | true |
+
+### oracledb.enqueue_deadlocks
+
+Total number of deadlocks between table or row locks in different sessions.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {deadlocks} | Sum | Int | Cumulative | true |
+
+### oracledb.enqueue_locks.limit
+
+Maximum limit of active enqueue locks, -1 if unlimited.
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {locks} | Gauge | Int |
+
+### oracledb.enqueue_locks.usage
+
+Current count of active enqueue locks.
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {locks} | Gauge | Int |
+
+### oracledb.exchange_deadlocks
+
+Number of times that a process detected a potential deadlock when exchanging two buffers and raised an internal, restartable error. Index scans are the only operations that perform exchanges.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {deadlocks} | Sum | Int | Cumulative | true |
 
 ### oracledb.logons
 

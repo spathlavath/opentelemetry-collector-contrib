@@ -234,7 +234,7 @@ metrics:
   oracledb.enqueue_deadlocks:
     description: Total number of deadlocks between table or row locks in different
       sessions.
-    enabled: true
+    enabled: false
     sum:
       aggregation_temporality: cumulative
       monotonic: true
@@ -245,7 +245,7 @@ metrics:
     description: Number of times that a process detected a potential deadlock when
       exchanging two buffers and raised an internal, restartable error. Index scans
       are the only operations that perform exchanges.
-    enabled: true
+    enabled: false
     sum:
       aggregation_temporality: cumulative
       monotonic: true
@@ -405,28 +405,28 @@ metrics:
     unit: "{sessions}"
   oracledb.enqueue_locks.usage:
     description: Current count of active enqueue locks.
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
       input_type: string
     unit: "{locks}"
   oracledb.enqueue_locks.limit:
     description: Maximum limit of active enqueue locks, -1 if unlimited.
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
       input_type: string
     unit: "{locks}"
   oracledb.dml_locks.usage:
     description: Current count of active DML (Data Manipulation Language) locks.
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
       input_type: string
     unit: "{locks}"
   oracledb.dml_locks.limit:
     description: Maximum limit of active DML (Data Manipulation Language) locks, -1 if unlimited.
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
       input_type: string

@@ -87,22 +87,22 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: false,
 		},
 		OracledbDmlLocksLimit: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		OracledbDmlLocksUsage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		OracledbDmlStatementsParallelized: MetricConfig{
 			Enabled: false,
 		},
 		OracledbEnqueueDeadlocks: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		OracledbEnqueueLocksLimit: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		OracledbEnqueueLocksUsage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		OracledbEnqueueResourcesLimit: MetricConfig{
 			Enabled: true,
@@ -111,7 +111,7 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		OracledbExchangeDeadlocks: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		OracledbExecutions: MetricConfig{
 			Enabled: true,
