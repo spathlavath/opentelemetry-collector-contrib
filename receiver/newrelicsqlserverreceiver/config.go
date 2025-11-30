@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"strconv"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -383,47 +382,58 @@ func (cfg *Config) IsAzureADAuth() bool {
 
 // CreateConnectionURL creates a connection string for SQL Server authentication
 func (cfg *Config) CreateConnectionURL(dbName string) string {
-	connectionURL := &url.URL{
-		Scheme: "sqlserver",
-		User:   url.UserPassword(cfg.Username, cfg.Password),
-		Host:   cfg.Hostname,
-	}
+	// Use ADO.NET connection string format instead of URL format
+	// This avoids URL encoding issues with special characters in passwords
+	connStr := fmt.Sprintf("server=%s", cfg.Hostname)
 
-	// If port is present use port, if not use instance
+	// Add port or instance
 	if cfg.Port != "" {
-		connectionURL.Host = fmt.Sprintf("%s:%s", connectionURL.Host, cfg.Port)
-	} else {
-		connectionURL.Path = cfg.Instance
+		connStr += fmt.Sprintf(";port=%s", cfg.Port)
+	} else if cfg.Instance != "" {
+		connStr += fmt.Sprintf("\\%s", cfg.Instance)
 	}
 
-	// Format query parameters
-	query := url.Values{}
-	query.Add("dial timeout", fmt.Sprintf("%.0f", cfg.Timeout.Seconds()))
-	query.Add("connection timeout", fmt.Sprintf("%.0f", cfg.Timeout.Seconds()))
+	// Add authentication
+	if cfg.Username != "" && cfg.Password != "" {
+		connStr += fmt.Sprintf(";user id=%s;password=%s", cfg.Username, cfg.Password)
+	}
 
+	// Add database
 	if dbName != "" {
-		query.Add("database", dbName)
+		connStr += fmt.Sprintf(";database=%s", dbName)
+	} else {
+		connStr += ";database=master"
 	}
 
+	// Add timeouts
+	connStr += fmt.Sprintf(";dial timeout=%.0f;connection timeout=%.0f",
+		cfg.Timeout.Seconds(), cfg.Timeout.Seconds())
+
+	// Add SSL settings
+	if cfg.EnableSSL {
+		connStr += ";encrypt=true"
+		if cfg.TrustServerCertificate {
+			connStr += ";TrustServerCertificate=true"
+		}
+		if !cfg.TrustServerCertificate && cfg.CertificateLocation != "" {
+			connStr += fmt.Sprintf(";certificate=%s", cfg.CertificateLocation)
+		}
+	} else {
+		// Explicitly disable encryption when SSL is not enabled
+		connStr += ";encrypt=disable"
+	}
+
+	// Add extra connection args
 	if cfg.ExtraConnectionURLArgs != "" {
 		extraArgsMap, err := url.ParseQuery(cfg.ExtraConnectionURLArgs)
 		if err == nil {
 			for k, v := range extraArgsMap {
-				query.Add(k, v[0])
+				connStr += fmt.Sprintf(";%s=%s", k, v[0])
 			}
 		}
 	}
 
-	if cfg.EnableSSL {
-		query.Add("encrypt", "true")
-		query.Add("TrustServerCertificate", strconv.FormatBool(cfg.TrustServerCertificate))
-		if !cfg.TrustServerCertificate && cfg.CertificateLocation != "" {
-			query.Add("certificate", cfg.CertificateLocation)
-		}
-	}
-
-	connectionURL.RawQuery = query.Encode()
-	return connectionURL.String()
+	return connStr
 }
 
 // CreateAzureADConnectionURL creates a connection string for Azure AD authentication

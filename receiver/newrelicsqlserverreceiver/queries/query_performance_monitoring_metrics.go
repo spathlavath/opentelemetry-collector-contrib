@@ -447,6 +447,48 @@ WITH blocking_info AS (
         -- RCA Enhancement: Lock resource details (WHAT is being locked)
         req.wait_resource AS wait_resource,
 
+        -- Decode wait resource object name
+        CASE
+            WHEN req.wait_resource LIKE 'OBJECT:%%' THEN
+                OBJECT_NAME(
+                    TRY_CAST(
+                        SUBSTRING(
+                            req.wait_resource,
+                            CHARINDEX(':', req.wait_resource, 8) + 1,
+                            CHARINDEX(':', req.wait_resource, CHARINDEX(':', req.wait_resource, 8) + 1) -
+                            CHARINDEX(':', req.wait_resource, 8) - 1
+                        ) AS INT
+                    ),
+                    req.database_id
+                )
+            ELSE NULL
+        END AS wait_resource_object_name,
+
+        -- Decode wait resource database name
+        CASE
+            WHEN req.wait_resource LIKE 'KEY:%%' OR
+                 req.wait_resource LIKE 'PAGE:%%' OR
+                 req.wait_resource LIKE 'RID:%%' OR
+                 req.wait_resource LIKE 'OBJECT:%%' OR
+                 req.wait_resource LIKE 'DATABASE:%%' OR
+                 req.wait_resource LIKE 'FILE:%%' OR
+                 req.wait_resource LIKE 'EXTENT:%%' THEN
+                DB_NAME(
+                    TRY_CAST(
+                        SUBSTRING(
+                            req.wait_resource,
+                            PATINDEX('%[0-9]%', req.wait_resource),
+                            CASE
+                                WHEN CHARINDEX(':', req.wait_resource, PATINDEX('%[0-9]%', req.wait_resource)) > 0
+                                THEN CHARINDEX(':', req.wait_resource, PATINDEX('%[0-9]%', req.wait_resource)) - PATINDEX('%[0-9]%', req.wait_resource)
+                                ELSE LEN(req.wait_resource)
+                            END
+                        ) AS INT
+                    )
+                )
+            ELSE NULL
+        END AS wait_resource_database_name,
+
         -- RCA Enhancement: Blocked query performance impact
         req.total_elapsed_time AS blocked_total_elapsed_ms,
         req.cpu_time AS blocked_cpu_time_ms,
@@ -586,6 +628,7 @@ WHERE qp.query_plan IS NOT NULL;`
 const ActiveRunningQueriesQuery = `
 DECLARE @Limit INT = %d; -- Set the maximum number of rows to return
 DECLARE @TextTruncateLimit INT = %d; -- Set the maximum length for query text
+DECLARE @ElapsedTimeThresholdMs INT = %d; -- Minimum elapsed time threshold in milliseconds
 
 SELECT TOP (@Limit)
     -- A. CURRENT SESSION DETAILS
@@ -608,16 +651,61 @@ SELECT TOP (@Limit)
     -- Using full text to avoid SUBSTRING calculation errors when offsets are invalid
     LEFT(st_wait.text, @TextTruncateLimit) AS query_statement_text,
 
+    -- B3. QUERY CONTEXT - Schema and Object Name (for stored procedures)
+    -- Use query plan's objectid (qp_wait.objectid) not SQL text's objectid (st_wait.objectid)
+    -- When stored procedures execute, sql_text shows the statement inside the procedure (NULL objectid)
+    -- but query_plan contains the actual stored procedure's objectid
+    OBJECT_SCHEMA_NAME(qp_wait.objectid, qp_wait.dbid) AS schema_name,
+    OBJECT_NAME(qp_wait.objectid, qp_wait.dbid) AS object_name,
+
     -- C. WAIT DETAILS
     r_wait.wait_type AS wait_type,
     r_wait.wait_time / 1000.0 AS wait_time_s,
     r_wait.wait_resource AS wait_resource,
     r_wait.last_wait_type AS last_wait_type,
 
-    -- OPTIMIZED: Removed wait_resource_decoded - causes 300-400% overhead
-    -- Complex SUBSTRING operations and correlated subqueries for each row
-    -- If needed, implement lightweight decoding in Go code for display purposes only
-    -- Raw wait_resource provides all info: "KEY: 5:72057594041597952 (abc123)" etc.
+    -- C2. WAIT RESOURCE DECODED (Lightweight - only resolve what's guaranteed to work)
+    -- Extracts object name for OBJECT locks using fast built-in OBJECT_NAME function
+    CASE
+        WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
+            OBJECT_NAME(
+                TRY_CAST(
+                    SUBSTRING(
+                        r_wait.wait_resource,
+                        CHARINDEX(':', r_wait.wait_resource, 8) + 1,
+                        CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) -
+                        CHARINDEX(':', r_wait.wait_resource, 8) - 1
+                    ) AS INT
+                ),
+                r_wait.database_id
+            )
+        ELSE NULL
+    END AS wait_resource_object_name,
+
+    -- Extract database name for wait resources that contain database_id
+    CASE
+        WHEN r_wait.wait_resource LIKE 'KEY:%%' OR
+             r_wait.wait_resource LIKE 'PAGE:%%' OR
+             r_wait.wait_resource LIKE 'RID:%%' OR
+             r_wait.wait_resource LIKE 'OBJECT:%%' OR
+             r_wait.wait_resource LIKE 'DATABASE:%%' OR
+             r_wait.wait_resource LIKE 'FILE:%%' OR
+             r_wait.wait_resource LIKE 'EXTENT:%%' THEN
+            DB_NAME(
+                TRY_CAST(
+                    SUBSTRING(
+                        r_wait.wait_resource,
+                        PATINDEX('%[0-9]%', r_wait.wait_resource),
+                        CASE
+                            WHEN CHARINDEX(':', r_wait.wait_resource, PATINDEX('%[0-9]%', r_wait.wait_resource)) > 0
+                            THEN CHARINDEX(':', r_wait.wait_resource, PATINDEX('%[0-9]%', r_wait.wait_resource)) - PATINDEX('%[0-9]%', r_wait.wait_resource)
+                            ELSE LEN(r_wait.wait_resource)
+                        END
+                    ) AS INT
+                )
+            )
+        ELSE NULL
+    END AS wait_resource_database_name,
 
     -- D. PERFORMANCE/EXECUTION METRICS
     r_wait.cpu_time AS cpu_time_ms,
@@ -690,9 +778,11 @@ WHERE
     r_wait.session_id > 50
     AND r_wait.database_id > 4
     AND r_wait.wait_type IS NOT NULL
+    AND r_wait.plan_handle IS NOT NULL  -- Required for execution plan retrieval
     AND r_wait.query_hash IS NOT NULL  -- Filter out queries without query_hash (PREEMPTIVE waits, system queries)
+    AND r_wait.total_elapsed_time >= @ElapsedTimeThresholdMs  -- Filter by elapsed time threshold
 ORDER BY
-    r_wait.wait_time DESC
+    r_wait.total_elapsed_time DESC  -- Sort by slowest executions first (not wait_time)
 OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values`
 
 // LockedObjectsBySessionQuery retrieves detailed information about objects locked by a specific session
@@ -742,10 +832,8 @@ SELECT
     r.plan_handle,
     LEFT(st.text, @TextTruncateLimit) AS query_text,
     DB_NAME(r.database_id) AS database_name,
-    COALESCE(
-        OBJECT_SCHEMA_NAME(st.objectid, r.database_id),
-        'N/A'
-    ) AS schema_name,
+    OBJECT_SCHEMA_NAME(st.objectid, r.database_id) AS schema_name,
+    OBJECT_NAME(st.objectid, r.database_id) AS object_name,
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(r.start_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_timestamp,
     -- Use 1 as execution count (this is the current running execution)
     CAST(1 AS BIGINT) AS execution_count,
@@ -802,21 +890,41 @@ OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values`
 // for a specific query_hash (query_id) from dm_exec_query_stats
 // This provides historical execution plans for the currently active query
 // Parameters: query_hash (hex string), top N (default 5)
+// NOTE: Must return the same fields as Top5PlanHandlesForSlowQueryQuery for consistency
 const Top5PlanHandlesForActiveQueryQuery = `
 DECLARE @QueryHash BINARY(8) = %s;
 DECLARE @TopN INT = 5;
 
 SELECT TOP (@TopN)
     qs.plan_handle,
-    qs.query_hash,
+    qs.query_hash AS query_id,
     qs.query_plan_hash,
-    qs.last_execution_time,
+    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_time,
+    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
     qs.execution_count,
     qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
-    qs.total_worker_time / 1000.0 AS total_worker_time_ms,
     (qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
+    qs.min_elapsed_time / 1000.0 AS min_elapsed_time_ms,
+    qs.max_elapsed_time / 1000.0 AS max_elapsed_time_ms,
+    qs.last_elapsed_time / 1000.0 AS last_elapsed_time_ms,
+    qs.total_worker_time / 1000.0 AS total_worker_time_ms,
     (qs.total_worker_time / qs.execution_count) / 1000.0 AS avg_worker_time_ms,
-    qs.creation_time,
+    qs.total_logical_reads,
+    qs.total_logical_writes,
+    qs.total_physical_reads,
+    (qs.total_logical_reads / qs.execution_count) AS avg_logical_reads,
+    (qs.total_logical_writes / qs.execution_count) AS avg_logical_writes,
+    (qs.total_physical_reads / qs.execution_count) AS avg_physical_reads,
+    (qs.total_rows / qs.execution_count) AS avg_rows,
+    qs.last_grant_kb,
+    qs.last_used_grant_kb,
+    qs.min_grant_kb,
+    qs.max_grant_kb,
+    qs.last_spills,
+    qs.max_spills,
+    qs.last_dop,
+    qs.min_dop,
+    qs.max_dop,
     CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
 FROM sys.dm_exec_query_stats qs
 CROSS APPLY sys.dm_exec_query_plan(qs.plan_handle) AS qp
@@ -826,6 +934,52 @@ WHERE
     AND qp.query_plan IS NOT NULL
 ORDER BY
     qs.last_execution_time DESC
+OPTION (RECOMPILE);`
+
+// Top5PlanHandlesForSlowQueryQuery retrieves the top 5 most recently used plan_handles
+// for a specific query_hash (query_id) from dm_exec_query_stats
+// This query is used for SLOW QUERIES (not tied to active executions)
+// Returns historical statistics for each plan_handle independent of current active queries
+// Parameters: query_hash (hex string)
+// Ordered by: last_execution_time DESC (most recently executed plans first)
+const Top5PlanHandlesForSlowQueryQuery = `
+DECLARE @QueryHash BINARY(8) = %s;
+DECLARE @TopN INT = 5;
+
+SELECT TOP (@TopN)
+    qs.plan_handle,
+    qs.query_hash AS query_id,
+    qs.query_plan_hash,
+    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_time,
+    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
+    qs.execution_count,
+    qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
+    (qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
+    qs.min_elapsed_time / 1000.0 AS min_elapsed_time_ms,
+    qs.max_elapsed_time / 1000.0 AS max_elapsed_time_ms,
+    qs.last_elapsed_time / 1000.0 AS last_elapsed_time_ms,
+    qs.total_worker_time / 1000.0 AS total_worker_time_ms,
+    (qs.total_worker_time / qs.execution_count) / 1000.0 AS avg_worker_time_ms,
+    qs.total_logical_reads,
+    qs.total_logical_writes,
+    qs.total_physical_reads,
+    (qs.total_logical_reads / qs.execution_count) AS avg_logical_reads,
+    (qs.total_logical_writes / qs.execution_count) AS avg_logical_writes,
+    (qs.total_physical_reads / qs.execution_count) AS avg_physical_reads,
+    (qs.total_rows / qs.execution_count) AS avg_rows,
+    qs.last_grant_kb,
+    qs.last_used_grant_kb,
+    qs.min_grant_kb,
+    qs.max_grant_kb,
+    qs.last_spills,
+    qs.max_spills,
+    qs.last_dop,
+    qs.min_dop,
+    qs.max_dop
+FROM sys.dm_exec_query_stats qs
+WHERE qs.query_hash = @QueryHash
+  AND qs.plan_handle IS NOT NULL
+ORDER BY qs.last_execution_time DESC
 OPTION (RECOMPILE);`
 
 // ExecutionPlanTopLevelDetailsQuery retrieves top-level execution plan details from XML

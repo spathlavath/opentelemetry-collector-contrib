@@ -15,105 +15,7 @@ func DecodeWaitType(waitType string) string {
 		return "Not Waiting"
 	}
 
-	waitTypeMap := map[string]string{
-		// Parallelism waits
-		"CXPACKET":        "Parallel Query - Thread Synchronization",
-		"CXSYNC_PORT":     "Parallel Query - Thread Coordination",
-		"CXSYNC_CONSUMER": "Parallel Query - Consumer Thread Wait",
-		"CXCONSUMER":      "Parallel Query - Consumer Wait",
-		"EXECSYNC":        "Parallel Query - Execution Sync",
-		"EXCHANGE":        "Parallel Query - Data Exchange",
-
-		// Disk I/O waits
-		"PAGEIOLATCH_SH":      "Disk I/O - Reading Data Page (Shared)",
-		"PAGEIOLATCH_EX":      "Disk I/O - Writing Data Page (Exclusive)",
-		"PAGEIOLATCH_UP":      "Disk I/O - Updating Data Page",
-		"PAGEIOLATCH_KP":      "Disk I/O - Keep Page",
-		"PAGEIOLATCH_DT":      "Disk I/O - Destroy Page",
-		"PAGEIOLATCH_NL":      "Disk I/O - No Latch",
-		"WRITELOG":            "Transaction Log - Writing to Disk",
-		"LOGBUFFER":           "Transaction Log - Buffer Wait",
-		"LOGMGR_FLUSH":        "Transaction Log - Flush Wait",
-		"IO_COMPLETION":       "Disk I/O - Completion Wait",
-		"ASYNC_IO_COMPLETION": "Disk I/O - Async Completion",
-
-		// Lock waits
-		"LCK_M_X":      "Lock - Exclusive Lock Contention",
-		"LCK_M_S":      "Lock - Shared Lock Contention",
-		"LCK_M_U":      "Lock - Update Lock Contention",
-		"LCK_M_IX":     "Lock - Intent Exclusive",
-		"LCK_M_IS":     "Lock - Intent Shared",
-		"LCK_M_IU":     "Lock - Intent Update",
-		"LCK_M_SIX":    "Lock - Shared Intent Exclusive",
-		"LCK_M_SIU":    "Lock - Shared Intent Update",
-		"LCK_M_UIX":    "Lock - Update Intent Exclusive",
-		"LCK_M_BU":     "Lock - Bulk Update",
-		"LCK_M_RS_S":   "Lock - Range Shared-Shared",
-		"LCK_M_RS_U":   "Lock - Range Shared-Update",
-		"LCK_M_RX_S":   "Lock - Range Exclusive-Shared",
-		"LCK_M_RX_U":   "Lock - Range Exclusive-Update",
-		"LCK_M_RX_X":   "Lock - Range Exclusive-Exclusive",
-		"LCK_M_RIn_NL": "Lock - Range Insert Null",
-		"LCK_M_RIn_S":  "Lock - Range Insert Shared",
-		"LCK_M_RIn_U":  "Lock - Range Insert Update",
-		"LCK_M_RIn_X":  "Lock - Range Insert Exclusive",
-
-		// Memory waits
-		"RESOURCE_SEMAPHORE":                              "Memory - Waiting for Memory Grant",
-		"RESOURCE_SEMAPHORE_QUERY_COMPILE":                "Memory - Query Compilation Memory",
-		"CMEMTHREAD":                                      "Memory - Thread Memory Wait",
-		"PWAIT_RESOURCE_SEMAPHORE_FT_PARALLEL_QUERY_SYNC": "Memory - Full-Text Query Sync",
-
-		// Network waits
-		"ASYNC_NETWORK_IO":   "Network - Client Not Consuming Results",
-		"NETWORKIO":          "Network - General Network I/O",
-		"NET_WAITFOR_PACKET": "Network - Waiting for Packet",
-
-		// CPU waits
-		"SOS_SCHEDULER_YIELD":   "CPU - High CPU Pressure (Thread Yield)",
-		"THREADPOOL":            "CPU - Thread Pool Starvation",
-		"SQLTRACE_WAIT_ENTRIES": "CPU - SQL Trace Wait",
-
-		// Latch waits (in-memory)
-		"PAGELATCH_SH": "Latch - Shared Page Latch (In-Memory Buffer Contention)",
-		"PAGELATCH_EX": "Latch - Exclusive Page Latch (In-Memory Buffer Contention)",
-		"PAGELATCH_UP": "Latch - Update Page Latch (In-Memory Buffer Contention)",
-		"LATCH_EX":     "Latch - Exclusive Latch Wait",
-		"LATCH_SH":     "Latch - Shared Latch Wait",
-		"LATCH_UP":     "Latch - Update Latch Wait",
-		"LATCH_KP":     "Latch - Keep Latch Wait",
-		"LATCH_DT":     "Latch - Destroy Latch Wait",
-
-		// Transaction waits
-		"DTC":               "Transaction - Distributed Transaction Wait",
-		"XACTLOCKINFO":      "Transaction - Lock Info Wait",
-		"TRANSACTION_MUTEX": "Transaction - Mutex Wait",
-
-		// Backup/Restore waits
-		"BACKUP":                            "Backup - Backup Operation Wait",
-		"BACKUPBUFFER":                      "Backup - Buffer Wait",
-		"BACKUPIO":                          "Backup - I/O Wait",
-		"RESTORE_FILEHANDLECACHE_ENTRYLOCK": "Restore - File Handle Cache",
-
-		// PREEMPTIVE waits (OS operations)
-		"PREEMPTIVE_OS_QUERYREGISTRY":     "OS Call - Registry Query",
-		"PREEMPTIVE_OS_FILEOPS":           "OS Call - File Operations",
-		"PREEMPTIVE_OS_LIBRARYOPS":        "OS Call - Library Operations",
-		"PREEMPTIVE_OS_CRYPTOPS":          "OS Call - Cryptographic Operations",
-		"PREEMPTIVE_OS_AUTHENTICATIONOPS": "OS Call - Authentication",
-		"PREEMPTIVE_OS_GENERICOPS":        "OS Call - Generic Operations",
-
-		// Availability Group waits
-		"HADR_SYNC_COMMIT":            "AlwaysOn - Sync Commit Wait",
-		"HADR_SYNCHRONIZING_THROTTLE": "AlwaysOn - Synchronizing Throttle",
-		"HADR_LOGCAPTURE_WAIT":        "AlwaysOn - Log Capture Wait",
-
-		// Other common waits
-		"SLEEP_TASK":             "Sleep - Intentional Wait (e.g., WAITFOR)",
-		"SLEEP_BPOOL_STEAL":      "Sleep - Buffer Pool Steal",
-		"DBMIRROR_EVENTS_QUEUE":  "Database Mirroring - Event Queue",
-		"BROKER_RECEIVE_WAITFOR": "Service Broker - Receive Wait",
-	}
+	waitTypeMap := getSQLServerWaitTypeMap()
 
 	if description, exists := waitTypeMap[waitType]; exists {
 		return description
@@ -175,16 +77,11 @@ func GetWaitTypeCategory(waitType string) string {
 
 // DecodeWaitResource parses and returns human-readable wait resource information
 // Based on sys.dm_tran_locks resource_description format
+// DecodeWaitResource parses wait_resource and returns resource type and description
+// Only decodes table names when OBJECT identifier is available
 func DecodeWaitResource(waitResource string) (resourceType string, description string) {
-	return DecodeWaitResourceWithMetadata(waitResource, nil)
-}
-
-// DecodeWaitResourceWithMetadata parses wait_resource with optional metadata enrichment
-// If metadataCache is nil, returns basic ID-based descriptions
-// If metadataCache is provided, enriches with database/object/file names
-func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *MetadataCache) (resourceType string, description string) {
 	if waitResource == "" {
-		return "N/A", "Not Applicable"
+		return "", ""
 	}
 
 	// KEY: <database_id>:<hobt_id> (<hash_value>)
@@ -194,15 +91,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 		dbID := matches[1]
 		hobtID := matches[2]
 		hashValue := matches[3]
-
-		// Basic description with IDs
 		desc := fmt.Sprintf("Database ID: %s | HOBT: %s | Key Hash: %s", dbID, hobtID, hashValue)
-
-		// Enrich with metadata if available
-		if metadataCache != nil {
-			desc = enrichKeyLock(dbID, hobtID, hashValue, metadataCache)
-		}
-
 		return "Key Lock", desc
 	}
 
@@ -213,12 +102,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 		dbID := matches[1]
 		fileID := matches[2]
 		pageID := matches[3]
-
 		desc := fmt.Sprintf("Database ID: %s | File: %s | Page: %s", dbID, fileID, pageID)
-		if metadataCache != nil {
-			desc = enrichPageLock(dbID, fileID, pageID, metadataCache)
-		}
-
 		return "Page Lock", desc
 	}
 
@@ -230,12 +114,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 		fileID := matches[2]
 		pageID := matches[3]
 		rowSlot := matches[4]
-
 		desc := fmt.Sprintf("Database ID: %s | File: %s | Page: %s | Row: %s", dbID, fileID, pageID, rowSlot)
-		if metadataCache != nil {
-			desc = enrichRIDLock(dbID, fileID, pageID, rowSlot, metadataCache)
-		}
-
 		return "Row Lock", desc
 	}
 
@@ -246,12 +125,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 		dbID := matches[1]
 		objectID := matches[2]
 		partition := matches[3]
-
 		desc := fmt.Sprintf("Database ID: %s | Object ID: %s | Partition: %s", dbID, objectID, partition)
-		if metadataCache != nil {
-			desc = enrichObjectLock(dbID, objectID, partition, metadataCache)
-		}
-
 		return "Object Lock", desc
 	}
 
@@ -260,12 +134,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 	databasePattern := regexp.MustCompile(`^DATABASE:\s*(\d+)`)
 	if matches := databasePattern.FindStringSubmatch(waitResource); matches != nil {
 		dbID := matches[1]
-
 		desc := fmt.Sprintf("Database ID: %s", dbID)
-		if metadataCache != nil {
-			desc = enrichDatabaseLock(dbID, metadataCache)
-		}
-
 		return "Database Lock", desc
 	}
 
@@ -275,12 +144,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 	if matches := filePattern.FindStringSubmatch(waitResource); matches != nil {
 		dbID := matches[1]
 		fileID := matches[2]
-
 		desc := fmt.Sprintf("Database ID: %s | File: %s", dbID, fileID)
-		if metadataCache != nil {
-			desc = enrichFileLock(dbID, fileID, metadataCache)
-		}
-
 		return "File Lock", desc
 	}
 
@@ -291,12 +155,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 		dbID := matches[1]
 		fileID := matches[2]
 		pageID := matches[3]
-
 		desc := fmt.Sprintf("Database ID: %s | File: %s | First Page: %s", dbID, fileID, pageID)
-		if metadataCache != nil {
-			desc = enrichExtentLock(dbID, fileID, pageID, metadataCache)
-		}
-
 		return "Extent Lock", desc
 	}
 
@@ -305,12 +164,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 	hobtPattern := regexp.MustCompile(`^HOBT:\s*(\d+)`)
 	if matches := hobtPattern.FindStringSubmatch(waitResource); matches != nil {
 		hobtID := matches[1]
-
 		desc := fmt.Sprintf("HOBT ID: %s", hobtID)
-		if metadataCache != nil {
-			desc = enrichHOBTLock(hobtID, metadataCache)
-		}
-
 		return "Heap/B-Tree Lock", desc
 	}
 
@@ -351,12 +205,7 @@ func DecodeWaitResourceWithMetadata(waitResource string, metadataCache *Metadata
 	allocationUnitPattern := regexp.MustCompile(`^ALLOCATION_UNIT:\s*(\d+)`)
 	if matches := allocationUnitPattern.FindStringSubmatch(waitResource); matches != nil {
 		auID := matches[1]
-
 		desc := fmt.Sprintf("Allocation Unit ID: %s", auID)
-		if metadataCache != nil {
-			desc = enrichAllocationUnitLock(auID, metadataCache)
-		}
-
 		return "Allocation Unit Lock", desc
 	}
 
@@ -400,166 +249,5 @@ func getMetadataClassName(classID string) string {
 	if name, ok := metadataClasses[classID]; ok {
 		return name
 	}
-	return "UNKNOWN"
-}
-
-// Enrichment helper functions
-
-func enrichKeyLock(dbID, hobtID, hashValue string, mc *MetadataCache) string {
-	// Parse IDs
-	dbIDInt := mustAtoi(dbID)
-	hobtIDInt64 := mustAtoi64(hobtID)
-
-	// Look up database name
-	dbName, ok := mc.GetDatabaseName(dbIDInt)
-	if !ok {
-		dbName = fmt.Sprintf("DB_%s", dbID)
-	}
-
-	// Look up HOBT metadata (table/index info)
-	hobtMeta, ok := mc.GetHOBTMetadata(hobtIDInt64)
-	if ok {
-		return fmt.Sprintf("[%s].[%s].[%s] (%s) | Key Hash: %s",
-			dbName, hobtMeta.SchemaName, hobtMeta.ObjectName, hobtMeta.IndexName, hashValue)
-	}
-
-	// Fallback to IDs if metadata not found
-	return fmt.Sprintf("[%s] | HOBT: %s | Key Hash: %s", dbName, hobtID, hashValue)
-}
-
-func enrichPageLock(dbID, fileID, pageID string, mc *MetadataCache) string {
-	dbIDInt := mustAtoi(dbID)
-	fileIDInt := mustAtoi(fileID)
-
-	dbName, ok := mc.GetDatabaseName(dbIDInt)
-	if !ok {
-		dbName = fmt.Sprintf("DB_%s", dbID)
-	}
-
-	fileName, ok := mc.GetFileName(dbIDInt, fileIDInt)
-	if ok {
-		return fmt.Sprintf("[%s].[%s] | Page: %s", dbName, fileName, pageID)
-	}
-
-	return fmt.Sprintf("[%s] | File ID: %s | Page: %s", dbName, fileID, pageID)
-}
-
-func enrichRIDLock(dbID, fileID, pageID, rowSlot string, mc *MetadataCache) string {
-	dbIDInt := mustAtoi(dbID)
-	fileIDInt := mustAtoi(fileID)
-
-	dbName, ok := mc.GetDatabaseName(dbIDInt)
-	if !ok {
-		dbName = fmt.Sprintf("DB_%s", dbID)
-	}
-
-	fileName, ok := mc.GetFileName(dbIDInt, fileIDInt)
-	if ok {
-		return fmt.Sprintf("[%s].[%s] | Page: %s | Row: %s", dbName, fileName, pageID, rowSlot)
-	}
-
-	return fmt.Sprintf("[%s] | File ID: %s | Page: %s | Row: %s", dbName, fileID, pageID, rowSlot)
-}
-
-func enrichObjectLock(dbID, objectID, partition string, mc *MetadataCache) string {
-	dbIDInt := mustAtoi(dbID)
-	objectIDInt := mustAtoi(objectID)
-
-	dbName, ok := mc.GetDatabaseName(dbIDInt)
-	if !ok {
-		dbName = fmt.Sprintf("DB_%s", dbID)
-	}
-
-	objectMeta, ok := mc.GetObjectMetadata(objectIDInt)
-	if ok {
-		if partition == "0" {
-			return fmt.Sprintf("[%s].[%s].[%s]", dbName, objectMeta.SchemaName, objectMeta.ObjectName)
-		}
-		return fmt.Sprintf("[%s].[%s].[%s] | Partition: %s", dbName, objectMeta.SchemaName, objectMeta.ObjectName, partition)
-	}
-
-	return fmt.Sprintf("[%s] | Object ID: %s | Partition: %s", dbName, objectID, partition)
-}
-
-func enrichDatabaseLock(dbID string, mc *MetadataCache) string {
-	dbIDInt := mustAtoi(dbID)
-
-	dbName, ok := mc.GetDatabaseName(dbIDInt)
-	if ok {
-		return fmt.Sprintf("[%s]", dbName)
-	}
-
-	return fmt.Sprintf("Database ID: %s", dbID)
-}
-
-func enrichFileLock(dbID, fileID string, mc *MetadataCache) string {
-	dbIDInt := mustAtoi(dbID)
-	fileIDInt := mustAtoi(fileID)
-
-	dbName, ok := mc.GetDatabaseName(dbIDInt)
-	if !ok {
-		dbName = fmt.Sprintf("DB_%s", dbID)
-	}
-
-	fileName, ok := mc.GetFileName(dbIDInt, fileIDInt)
-	if ok {
-		return fmt.Sprintf("[%s].[%s]", dbName, fileName)
-	}
-
-	return fmt.Sprintf("[%s] | File ID: %s", dbName, fileID)
-}
-
-func enrichExtentLock(dbID, fileID, pageID string, mc *MetadataCache) string {
-	dbIDInt := mustAtoi(dbID)
-	fileIDInt := mustAtoi(fileID)
-
-	dbName, ok := mc.GetDatabaseName(dbIDInt)
-	if !ok {
-		dbName = fmt.Sprintf("DB_%s", dbID)
-	}
-
-	fileName, ok := mc.GetFileName(dbIDInt, fileIDInt)
-	if ok {
-		return fmt.Sprintf("[%s].[%s] | First Page: %s", dbName, fileName, pageID)
-	}
-
-	return fmt.Sprintf("[%s] | File ID: %s | First Page: %s", dbName, fileID, pageID)
-}
-
-func enrichHOBTLock(hobtID string, mc *MetadataCache) string {
-	hobtIDInt64 := mustAtoi64(hobtID)
-
-	hobtMeta, ok := mc.GetHOBTMetadata(hobtIDInt64)
-	if ok {
-		return fmt.Sprintf("[%s].[%s].[%s] (%s %s)",
-			hobtMeta.DatabaseName, hobtMeta.SchemaName, hobtMeta.ObjectName,
-			hobtMeta.IndexType, hobtMeta.IndexName)
-	}
-
-	return fmt.Sprintf("HOBT ID: %s", hobtID)
-}
-
-func enrichAllocationUnitLock(auID string, mc *MetadataCache) string {
-	auIDInt64 := mustAtoi64(auID)
-
-	desc, ok := mc.GetAllocationUnitDescription(auIDInt64)
-	if ok {
-		return fmt.Sprintf("Allocation Unit: %s", desc)
-	}
-
-	return fmt.Sprintf("Allocation Unit ID: %s", auID)
-}
-
-// Helper functions for string to int conversion (with error suppression)
-
-func mustAtoi(s string) int {
-	val := 0
-	fmt.Sscanf(s, "%d", &val)
-	return val
-}
-
-func mustAtoi64(s string) int64 {
-	var val int64
-	fmt.Sscanf(s, "%d", &val)
-	return val
+	return ""
 }

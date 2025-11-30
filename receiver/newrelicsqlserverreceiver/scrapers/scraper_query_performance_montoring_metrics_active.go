@@ -5,7 +5,9 @@ package scrapers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -21,30 +23,38 @@ import (
 // ScrapeActiveRunningQueriesMetrics collects currently executing queries with wait and blocking details
 // This scraper captures real-time query execution state from sys.dm_exec_requests
 // If a plan_handle is available, it fetches, parses, and emits execution plan as OTLP logs
-// Filters queries by:
-//   - elapsedTimeThreshold: minimum elapsed time in milliseconds (0 = capture all)
-//   - Must have valid wait_type (not null)
-//   - Must have valid plan_handle (not null and not empty)
-func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int) error {
-	// Refresh metadata cache if needed (auto-throttled by refresh interval)
-	if s.metadataCache != nil {
-		if err := s.metadataCache.Refresh(ctx); err != nil {
-			s.logger.Warn("Failed to refresh metadata cache", zap.Error(err))
-			// Continue with stale cache data
-		}
+// SQL-level filters (applied in WHERE clause):
+//   - slowQueryIDs: filter to only queries matching slow query query_hash values (correlation)
+//   - elapsedTimeThreshold: minimum elapsed time in milliseconds (filtered in SQL)
+//   - Must have valid wait_type (filtered in SQL)
+//   - Must have valid plan_handle (filtered in SQL)
+//   - Must have valid query_hash (filtered in SQL)
+//
+// Results are sorted by total_elapsed_time DESC (slowest first) and limited to Top N
+// Returns the active queries for further processing (e.g., fetching top 5 plan handles per active query)
+func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
+	// Early return if no slow queries to correlate with
+	if len(slowQueryIDs) == 0 {
+		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
+		return nil, nil
 	}
 
-	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit)
+	// Build query_id IN clause for SQL filtering
+	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
 
-	s.logger.Debug("Executing active running queries metrics collection",
+	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit, elapsedTimeThreshold) + " " + queryIDFilter
+
+	s.logger.Debug("Executing active running queries metrics collection (filtered by slow query IDs)",
 		zap.String("query", queries.TruncateQuery(query, 100)),
 		zap.Int("limit", limit),
 		zap.Int("text_truncate_limit", textTruncateLimit),
-		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
+		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold),
+		zap.Int("slow_query_id_count", len(slowQueryIDs)),
+		zap.String("slow_query_ids_preview", queries.TruncateQuery(strings.Join(slowQueryIDs, ","), 100)))
 
 	var results []models.ActiveRunningQuery
 	if err := s.connection.Query(ctx, &results, query); err != nil {
-		return fmt.Errorf("failed to execute active running queries metrics query: %w", err)
+		return nil, fmt.Errorf("failed to execute active running queries metrics query: %w", err)
 	}
 
 	s.logger.Debug("Active running queries metrics fetched", zap.Int("result_count", len(results)))
@@ -55,35 +65,36 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 	// Log each query result from SQL Server
 	for i, result := range results {
-		// FILTERING CRITERIA:
-		// 1. Elapsed time must meet threshold (if threshold > 0)
-		// 2. Must have valid wait_type (not null)
-		// 3. Must have valid plan_handle (not null and not empty)
+		// SQL-LEVEL FILTERING: Most filters already applied in SQL WHERE clause
+		// - elapsed_time >= threshold
+		// - wait_type IS NOT NULL
+		// - plan_handle IS NOT NULL
+		// - query_hash IS NOT NULL
+		//
+		// Go-level checks below are defensive (should not trigger if SQL is correct)
 
-		// Check elapsed time threshold (skip very short queries if threshold > 0)
-		if elapsedTimeThreshold > 0 && result.TotalElapsedTimeMs != nil && *result.TotalElapsedTimeMs < int64(elapsedTimeThreshold) {
-			filteredCount++
-			s.logger.Debug("Filtering active query: below elapsed time threshold",
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.Int64("elapsed_time_ms", *result.TotalElapsedTimeMs),
-				zap.Int("threshold_ms", elapsedTimeThreshold))
-			continue
-		}
-
-		// Check for valid wait_type (skip queries with no wait information)
+		// Defensive check: wait_type should never be null (filtered in SQL)
 		if result.WaitType == nil || *result.WaitType == "" {
 			filteredCount++
-			s.logger.Debug("Filtering active query: no wait_type",
+			s.logger.Warn("Active query has NULL/empty wait_type despite SQL filter (should not happen)",
 				zap.Any("session_id", result.CurrentSessionID))
 			continue
 		}
 
-		// Check for valid plan_handle (skip queries without execution plans)
+		// Defensive check: plan_handle should never be null (filtered in SQL)
 		if result.PlanHandle == nil || result.PlanHandle.IsEmpty() {
 			filteredCount++
-			s.logger.Debug("Filtering active query: no plan_handle",
+			s.logger.Warn("Active query has NULL/empty plan_handle despite SQL filter (should not happen)",
 				zap.Any("session_id", result.CurrentSessionID),
 				zap.Any("query_id", result.QueryID))
+			continue
+		}
+
+		// Defensive check: query_id should never be null (filtered in SQL)
+		if result.QueryID == nil || result.QueryID.IsEmpty() {
+			filteredCount++
+			s.logger.Warn("Active query has NULL/empty query_id despite SQL filter (should not happen)",
+				zap.Any("session_id", result.CurrentSessionID))
 			continue
 		}
 
@@ -115,33 +126,43 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 				return "N/A"
 			}()))
 
-		// Fetch and parse execution plan for active queries with plan_handle
+		// Fetch execution plan XML for logs endpoint ONLY
+		// For metrics endpoint: We use aggregate plan stats from slow query scraper (dm_exec_query_stats)
+		// For logs endpoint: We fetch detailed XML execution plan for operator-level analysis
 		var executionPlanXML string
+		shouldFetchXML := logs.ResourceLogs().Len() >= 0 // Check if logs collection is active (not nil)
 
-		// NEW: Fetch top 5 most recently used plan_handles for this query_hash with aggregated stats
-		// This provides historical execution plan analysis for performance troubleshooting
-		if result.QueryID != nil && !result.QueryID.IsEmpty() {
-			top5PlanHandles, err := s.fetchTop5PlanHandlesForActiveQuery(ctx, result)
+		if shouldFetchXML && result.PlanHandle != nil && !result.PlanHandle.IsEmpty() {
+			s.logger.Debug("Fetching execution plan XML for active query (logs endpoint)",
+				zap.Any("session_id", result.CurrentSessionID),
+				zap.String("plan_handle", result.PlanHandle.String()))
+
+			planXML, err := s.fetchExecutionPlanXML(ctx, result.PlanHandle)
 			if err != nil {
-				s.logger.Warn("Failed to fetch top 5 plan_handles for active query",
+				s.logger.Warn("Failed to fetch execution plan XML for active query",
 					zap.Error(err),
-					zap.Any("session_id", result.CurrentSessionID))
-			} else if len(top5PlanHandles) > 0 {
-				// Emit aggregated execution plan stats as metrics
-				s.emitAggregatedExecutionPlanAsMetrics(ctx, result, top5PlanHandles, scopeMetrics)
-
-				s.logger.Info("Successfully fetched and emitted top 5 aggregated execution plans as metrics",
 					zap.Any("session_id", result.CurrentSessionID),
-					zap.Int("plan_count", len(top5PlanHandles)))
+					zap.String("plan_handle", result.PlanHandle.String()))
+			} else if planXML != "" {
+				executionPlanXML = planXML
+				s.logger.Debug("Successfully fetched execution plan XML",
+					zap.Any("session_id", result.CurrentSessionID),
+					zap.Int("xml_length", len(planXML)))
 			}
 		}
-
-		// REMOVED (2025-11-28): Old execution plan XML parsing and node-level emission
-		// This has been replaced with aggregated stats from dm_exec_query_stats (see lines 121-137 above)
 
 		// Process active query metrics with execution plan
 		if err := s.processActiveRunningQueryMetricsWithPlan(result, scopeMetrics, i, executionPlanXML); err != nil {
 			s.logger.Error("Failed to process active running query metric", zap.Error(err), zap.Int("index", i))
+		}
+
+		// If we have execution plan XML, parse and emit as logs
+		if executionPlanXML != "" && shouldFetchXML {
+			if err := s.parseAndEmitExecutionPlanAsLogs(ctx, result, executionPlanXML, logs); err != nil {
+				s.logger.Error("Failed to parse and emit execution plan as logs",
+					zap.Error(err),
+					zap.Any("session_id", result.CurrentSessionID))
+			}
 		}
 	}
 
@@ -152,7 +173,8 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		zap.Int("processed", processedCount),
 		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
 
-	return nil
+	// Return the active queries for further processing (e.g., fetching top 5 plan handles)
+	return results, nil
 }
 
 // processActiveRunningQueryMetricsWithPlan processes and emits metrics for a single active running query
@@ -401,12 +423,17 @@ func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, re
 	if result.WaitResource != nil {
 		waitResource := *result.WaitResource
 		attrs.PutStr("wait_resource", waitResource)
-		// Add SQL Server's decoded wait resource (with database/table/index names)
-		if result.WaitResourceDecoded != nil {
-			attrs.PutStr("wait_resource_decoded", *result.WaitResourceDecoded)
+
+		// Add SQL Server's decoded wait resource names (from SQL query)
+		if result.WaitResourceObjectName != nil {
+			attrs.PutStr("wait_resource_object_name", *result.WaitResourceObjectName)
 		}
-		// Add Go helper's parsed resource type and description (with enrichment if enabled)
-		resourceType, resourceDesc := helpers.DecodeWaitResourceWithMetadata(waitResource, s.metadataCache)
+		if result.WaitResourceDatabaseName != nil {
+			attrs.PutStr("wait_resource_database_name", *result.WaitResourceDatabaseName)
+		}
+
+		// Add Go helper's parsed resource type and description
+		resourceType, resourceDesc := helpers.DecodeWaitResource(waitResource)
 		attrs.PutStr("wait_resource_type", resourceType)
 		attrs.PutStr("wait_resource_description", resourceDesc)
 	}
@@ -639,230 +666,183 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanForActiveQuery(ctx context.C
 	return executionPlanXML, nil
 }
 
+// fetchExecutionPlanXML fetches the execution plan XML for a given plan_handle
+// Simple wrapper for use by logs endpoint
+func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, planHandle *models.QueryID) (string, error) {
+	if planHandle == nil || planHandle.IsEmpty() {
+		return "", nil
+	}
+
+	planHandleHex := planHandle.String()
+	query := fmt.Sprintf(queries.ActiveQueryExecutionPlanQuery, planHandleHex)
+
+	s.logger.Debug("Fetching execution plan XML",
+		zap.String("plan_handle", planHandleHex))
+
+	var results []struct {
+		ExecutionPlanXML *string `db:"execution_plan_xml"`
+	}
+
+	if err := s.connection.Query(ctx, &results, query); err != nil {
+		return "", fmt.Errorf("failed to fetch execution plan: %w", err)
+	}
+
+	if len(results) == 0 || results[0].ExecutionPlanXML == nil {
+		return "", nil
+	}
+
+	return *results[0].ExecutionPlanXML, nil
+}
+
+// parseAndEmitExecutionPlanAsLogs parses execution plan XML and emits as OTLP logs
+// Converts XML execution plan to JSON format for New Relic custom events
+func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
+	ctx context.Context,
+	activeQuery models.ActiveRunningQuery,
+	executionPlanXML string,
+	logs plog.Logs,
+) error {
+	// Build execution plan analysis with metadata
+	var queryID string
+	if activeQuery.QueryID != nil {
+		queryID = activeQuery.QueryID.String()
+	}
+	var planHandle string
+	if activeQuery.PlanHandle != nil {
+		planHandle = activeQuery.PlanHandle.String()
+	}
+
+	// Parse the XML execution plan
+	analysis, err := models.ParseExecutionPlanXML(executionPlanXML, queryID, planHandle)
+	if err != nil {
+		return fmt.Errorf("failed to parse execution plan XML: %w", err)
+	}
+
+	// Emit as OTLP logs
+	resourceLogs := logs.ResourceLogs().AppendEmpty()
+	scopeLogs := resourceLogs.ScopeLogs().AppendEmpty()
+
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+
+	// Emit one log record per operator node
+	for _, node := range analysis.Nodes {
+		logRecord := scopeLogs.LogRecords().AppendEmpty()
+		logRecord.SetTimestamp(timestamp)
+		logRecord.SetObservedTimestamp(timestamp)
+
+		// Set body as JSON string with ALL fields from ExecutionPlanNode
+		body := map[string]interface{}{
+			"event_type": "SqlServerActiveQueryExecutionPlan",
+
+			// Identifiers
+			"query_id":       node.QueryID,
+			"plan_handle":    node.PlanHandle,
+			"node_id":        node.NodeID,
+			"parent_node_id": node.ParentNodeID,
+
+			// SQL Query Information
+			"sql_text": node.SQLText,
+
+			// Operator Information
+			"physical_op": node.PhysicalOp,
+			"logical_op":  node.LogicalOp,
+			"input_type":  node.InputType,
+
+			// Object Information (for Index Scan/Seek operators)
+			"schema_name":        node.SchemaName,
+			"table_name":         node.TableName,
+			"index_name":         node.IndexName,
+			"referenced_columns": node.ReferencedColumns,
+
+			// Cost Estimates
+			"estimate_rows":           node.EstimateRows,
+			"estimate_io":             node.EstimateIO,
+			"estimate_cpu":            node.EstimateCPU,
+			"avg_row_size":            node.AvgRowSize,
+			"total_subtree_cost":      node.TotalSubtreeCost,
+			"estimated_operator_cost": node.EstimatedOperatorCost,
+
+			// Execution Details
+			"estimated_execution_mode": node.EstimatedExecutionMode,
+			"granted_memory_kb":        node.GrantedMemoryKb,
+			"spill_occurred":           node.SpillOccurred,
+			"no_join_predicate":        node.NoJoinPredicate,
+
+			// Performance Metrics
+			"total_worker_time":    node.TotalWorkerTime,
+			"total_elapsed_time":   node.TotalElapsedTime,
+			"total_logical_reads":  node.TotalLogicalReads,
+			"total_logical_writes": node.TotalLogicalWrites,
+			"execution_count":      node.ExecutionCount,
+			"avg_elapsed_time_ms":  node.AvgElapsedTimeMs,
+
+			// Timestamps
+			"collection_timestamp": node.CollectionTimestamp,
+			"last_execution_time":  node.LastExecutionTime,
+		}
+
+		// Add active query correlation attributes
+		if activeQuery.CurrentSessionID != nil {
+			body["session_id"] = *activeQuery.CurrentSessionID
+		}
+		if activeQuery.RequestID != nil {
+			body["request_id"] = *activeQuery.RequestID
+		}
+		if activeQuery.RequestStartTime != nil {
+			body["start_time"] = *activeQuery.RequestStartTime // Matches NRQL field name
+		}
+		if activeQuery.DatabaseName != nil {
+			body["database_name"] = *activeQuery.DatabaseName
+		}
+
+		// Convert to JSON and set as body
+		bodyJSON, err := json.Marshal(body)
+		if err != nil {
+			s.logger.Warn("Failed to marshal execution plan node to JSON",
+				zap.Error(err),
+				zap.Int("node_id", node.NodeID))
+			continue
+		}
+
+		logRecord.Body().SetStr(string(bodyJSON))
+
+		// Set attributes for filtering and New Relic custom event ingestion
+		attrs := logRecord.Attributes()
+		// IMPORTANT: Signal New Relic to ingest this as a Custom Event instead of a Log
+		// This allows querying via: SELECT * FROM SqlServerActiveQueryExecutionPlan
+		// Reference: https://docs.newrelic.com/docs/more-integrations/open-source-telemetry-integrations/opentelemetry/best-practices/opentelemetry-best-practices-logs/
+		attrs.PutStr("newrelic.event.type", "SqlServerActiveQueryExecutionPlan")
+		attrs.PutStr("query_id", node.QueryID)
+		attrs.PutStr("plan_handle", node.PlanHandle)
+		if activeQuery.CurrentSessionID != nil {
+			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
+		}
+	}
+
+	s.logger.Info("Emitted execution plan as OTLP logs",
+		zap.String("query_id", queryID),
+		zap.String("plan_handle", planHandle),
+		zap.Int("operator_count", len(analysis.Nodes)))
+
+	return nil
+}
+
 // REMOVED (2025-11-28): Old execution plan functions that created node-level custom events
 // - emitActiveQueryExecutionPlanLogs() - created one SqlServerActiveQueryExecutionPlan event per operator node
 // - createActiveQueryExecutionPlanNodeLog() - helper function for node-level events
 // - emitActiveQueryExecutionPlanMetrics() - created summary metrics from parsed XML
 // These have been replaced with aggregated stats approach using dm_exec_query_stats
 
-// fetchTop5PlanHandlesForActiveQuery fetches the top 5 most recently used plan_handles
-// for the query_hash of the currently active query from dm_exec_query_stats
-// This provides historical execution plans for performance analysis
-func (s *QueryPerformanceScraper) fetchTop5PlanHandlesForActiveQuery(ctx context.Context, activeQuery models.ActiveRunningQuery) ([]models.PlanHandleResult, error) {
-	// Check if query_id (query_hash) is available
-	if activeQuery.QueryID == nil || activeQuery.QueryID.IsEmpty() {
-		s.logger.Debug("No query_hash available for active query, skipping top 5 plan_handles fetch",
-			zap.Any("session_id", activeQuery.CurrentSessionID))
-		return nil, nil
-	}
-
-	queryHashHex := activeQuery.QueryID.String()
-	query := fmt.Sprintf(queries.Top5PlanHandlesForActiveQueryQuery, queryHashHex)
-
-	s.logger.Debug("Fetching top 5 plan_handles for active query using query_hash",
-		zap.String("query_hash", queryHashHex),
-		zap.Any("session_id", activeQuery.CurrentSessionID))
-
-	// Execute the query to fetch plan_handles
-	var results []models.PlanHandleResult
-	if err := s.connection.Query(ctx, &results, query); err != nil {
-		return nil, fmt.Errorf("failed to fetch top 5 plan_handles for query_hash: %w", err)
-	}
-
-	s.logger.Debug("Successfully fetched plan_handles for query_hash",
-		zap.String("query_hash", queryHashHex),
-		zap.Int("plan_count", len(results)),
-		zap.Any("session_id", activeQuery.CurrentSessionID))
-
-	return results, nil
-}
-
-// emitAggregatedExecutionPlanAsMetrics emits aggregated execution plan statistics as metrics
-// Emits metrics for each plan_handle with aggregated stats from dm_exec_query_stats
-// Each plan_handle for the query_hash becomes separate metric data points with attributes
-func (s *QueryPerformanceScraper) emitAggregatedExecutionPlanAsMetrics(ctx context.Context, activeQuery models.ActiveRunningQuery, planHandleResults []models.PlanHandleResult, scopeMetrics pmetric.ScopeMetrics) {
-	if len(planHandleResults) == 0 {
-		return
-	}
-
-	timestamp := pcommon.NewTimestampFromTime(time.Now())
-
-	// Process each plan_handle and emit as metrics
-	for _, planResult := range planHandleResults {
-		// Create aggregated metrics for this plan_handle with stats from dm_exec_query_stats
-		s.createAggregatedExecutionPlanMetrics(planResult, activeQuery, scopeMetrics, timestamp)
-	}
-
-	s.logger.Info("Emitted aggregated execution plan stats as metrics",
-		zap.Any("session_id", activeQuery.CurrentSessionID),
-		zap.Int("plan_count", len(planHandleResults)))
-}
-
-// createAggregatedExecutionPlanMetrics creates metrics for aggregated execution plan statistics
-// Emits metrics with plan_handle, query_hash, and query_plan_hash as attributes
-// This provides historical performance data for the active query's plan_handle
-func (s *QueryPerformanceScraper) createAggregatedExecutionPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, scopeMetrics pmetric.ScopeMetrics, timestamp pcommon.Timestamp) {
-	// Helper function to create common attributes for all metrics
-	createPlanAttributes := func() pcommon.Map {
-		attrs := pcommon.NewMap()
-
-		// Correlation keys
-		if activeQuery.QueryID != nil {
-			attrs.PutStr("query_hash", activeQuery.QueryID.String())
-		}
-		if planResult.PlanHandle != nil {
-			attrs.PutStr("plan_handle", planResult.PlanHandle.String())
-		}
-		if planResult.QueryPlanHash != nil {
-			attrs.PutStr("query_plan_hash", planResult.QueryPlanHash.String())
-		}
-		if activeQuery.CurrentSessionID != nil {
-			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
-		}
-		if activeQuery.RequestID != nil {
-			attrs.PutInt("request_id", *activeQuery.RequestID)
-		}
-		if activeQuery.DatabaseName != nil {
-			attrs.PutStr("database_name", *activeQuery.DatabaseName)
-		}
-		if planResult.LastExecutionTime != nil {
-			attrs.PutStr("last_execution_time", *planResult.LastExecutionTime)
-		}
-		if planResult.CreationTime != nil {
-			attrs.PutStr("creation_time", *planResult.CreationTime)
-		}
-
-		return attrs
-	}
-
-	// Metric 1: Execution Count (from dm_exec_query_stats)
-	if planResult.ExecutionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.execution_count")
-		metric.SetDescription("Number of times this execution plan was executed")
-		metric.SetUnit("{executions}")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(*planResult.ExecutionCount)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 2: Total Elapsed Time (from dm_exec_query_stats)
-	if planResult.TotalElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.total_elapsed_time_ms")
-		metric.SetDescription("Total elapsed time across all executions of this plan")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.TotalElapsedTimeMs)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 3: Average Elapsed Time (from dm_exec_query_stats)
-	if planResult.AvgElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.avg_elapsed_time_ms")
-		metric.SetDescription("Average elapsed time per execution of this plan")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.AvgElapsedTimeMs)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 4: Total Worker Time (from dm_exec_query_stats)
-	if planResult.TotalWorkerTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.total_worker_time_ms")
-		metric.SetDescription("Total CPU time across all executions of this plan")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.TotalWorkerTimeMs)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 5: Average Worker Time (from dm_exec_query_stats)
-	if planResult.AvgWorkerTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.avg_worker_time_ms")
-		metric.SetDescription("Average CPU time per execution of this plan")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.AvgWorkerTimeMs)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 6: Current Wait Time (from active query)
-	if activeQuery.WaitTimeS != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.current_wait_time_s")
-		metric.SetDescription("Current wait time for active query using this plan")
-		metric.SetUnit("s")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*activeQuery.WaitTimeS)
-		attrs := createPlanAttributes()
-		if activeQuery.WaitType != nil {
-			attrs.PutStr("current_wait_type", *activeQuery.WaitType)
-		}
-		attrs.CopyTo(dp.Attributes())
-	}
-
-	// Metric 7: Current Elapsed Time (from active query)
-	if activeQuery.TotalElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.current_elapsed_time_ms")
-		metric.SetDescription("Current elapsed time for active query using this plan")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(*activeQuery.TotalElapsedTimeMs)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 8: Current CPU Time (from active query)
-	if activeQuery.CPUTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.current_cpu_time_ms")
-		metric.SetDescription("Current CPU time for active query using this plan")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(*activeQuery.CPUTimeMs)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-
-	// Metric 9: Current Granted Memory (from active query)
-	if activeQuery.GrantedQueryMemoryPages != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.current_granted_memory_kb")
-		metric.SetDescription("Current granted memory for active query using this plan")
-		metric.SetUnit("KB")
-
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		// Convert pages to KB (1 page = 8KB in SQL Server)
-		dp.SetIntValue(*activeQuery.GrantedQueryMemoryPages * 8)
-		createPlanAttributes().CopyTo(dp.Attributes())
-	}
-}
+// REMOVED: Old execution plan fetching functions for active queries
+// - fetchTop5PlanHandlesForActiveQuery
+// - emitAggregatedExecutionPlanAsMetrics
+// - createAggregatedExecutionPlanMetrics
+//
+// These functions have been replaced by the new approach in scraper_query_performance_montoring_metrics.go:
+// - ScrapeSlowQueryExecutionPlans: Fetches plans for ALL slow queries (not just active ones)
+// - emitSlowQueryPlanMetrics: Emits metrics with clean historical context (no session_id/request_id)
+//
+// Benefits of the new approach:
+// 1. Plans available even when query is NOT currently running
+// 2. No duplicate fetches per active execution (fetched once per unique query_id)
+// 3. Clean historical context without misleading active session attributes

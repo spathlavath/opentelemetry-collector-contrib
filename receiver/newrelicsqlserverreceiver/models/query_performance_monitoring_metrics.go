@@ -120,6 +120,7 @@ type SlowQuery struct {
 	QueryText              *string  `db:"query_text" metric_name:"query_text" source_type:"attribute"`
 	DatabaseName           *string  `db:"database_name" metric_name:"database_name" source_type:"attribute"`
 	SchemaName             *string  `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
+	ObjectName             *string  `db:"object_name" metric_name:"object_name" source_type:"attribute"`
 	LastExecutionTimestamp *string  `db:"last_execution_timestamp" metric_name:"last_execution_timestamp" source_type:"attribute"`
 	ExecutionCount         *int64   `db:"execution_count" metric_name:"execution_count" source_type:"gauge"`
 	AvgCPUTimeMS           *float64 `db:"avg_cpu_time_ms" metric_name:"sqlserver.slowquery.avg_cpu_time_ms" source_type:"gauge"`
@@ -174,7 +175,9 @@ type BlockingSession struct {
 	BlockerProgramName *string `db:"blocker_program_name" metric_name:"sqlserver.blocker.program_name" source_type:"attribute"`
 
 	// RCA Enhancement: Lock resource details (WHAT is being locked)
-	WaitResource *string `db:"wait_resource" metric_name:"sqlserver.blocking.wait_resource" source_type:"attribute"`
+	WaitResource             *string `db:"wait_resource" metric_name:"sqlserver.blocking.wait_resource" source_type:"attribute"`
+	WaitResourceObjectName   *string `db:"wait_resource_object_name" metric_name:"sqlserver.blocking.wait_resource_object_name" source_type:"attribute"`
+	WaitResourceDatabaseName *string `db:"wait_resource_database_name" metric_name:"sqlserver.blocking.wait_resource_database_name" source_type:"attribute"`
 
 	// RCA Enhancement: Blocker activity context (WHAT is blocker doing)
 	BlockerCommandType          *string `db:"blocker_command_type" metric_name:"sqlserver.blocker.command_type" source_type:"attribute"`
@@ -293,6 +296,8 @@ type ActiveRunningQuery struct {
 	CurrentSessionID *int64  `db:"current_session_id" metric_name:"sqlserver.activequery.session_id" source_type:"gauge"`
 	RequestID        *int64  `db:"request_id" metric_name:"request_id" source_type:"attribute"`
 	DatabaseName     *string `db:"database_name" metric_name:"database_name" source_type:"attribute"`
+	SchemaName       *string `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
+	ObjectName       *string `db:"object_name" metric_name:"object_name" source_type:"attribute"`
 	LoginName        *string `db:"login_name" metric_name:"login_name" source_type:"attribute"`
 	HostName         *string `db:"host_name" metric_name:"host_name" source_type:"attribute"`
 	ProgramName      *string `db:"program_name" metric_name:"program_name" source_type:"attribute"`
@@ -305,11 +310,13 @@ type ActiveRunningQuery struct {
 	QueryID *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
 
 	// C. Wait Details
-	WaitType            *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
-	WaitTimeS           *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
-	WaitResource        *string  `db:"wait_resource" metric_name:"wait_resource" source_type:"attribute"`
-	WaitResourceDecoded *string  `db:"wait_resource_decoded" metric_name:"wait_resource_decoded" source_type:"attribute"`
-	LastWaitType        *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
+	WaitType                   *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
+	WaitTimeS                  *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
+	WaitResource               *string  `db:"wait_resource" metric_name:"wait_resource" source_type:"attribute"`
+	WaitResourceDecoded        *string  `db:"wait_resource_decoded" metric_name:"wait_resource_decoded" source_type:"attribute"`
+	WaitResourceObjectName     *string  `db:"wait_resource_object_name" metric_name:"wait_resource_object_name" source_type:"attribute"`
+	WaitResourceDatabaseName   *string  `db:"wait_resource_database_name" metric_name:"wait_resource_database_name" source_type:"attribute"`
+	LastWaitType               *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
 
 	// D. Performance/Execution Metrics
 	CPUTimeMs               *int64  `db:"cpu_time_ms" metric_name:"sqlserver.activequery.cpu_time_ms" source_type:"gauge"`
@@ -380,15 +387,51 @@ type LockedObject struct {
 type PlanHandleResult struct {
 	PlanHandle         *QueryID `db:"plan_handle"`
 	QueryHash          *QueryID `db:"query_hash"`
+	QueryID            *QueryID `db:"query_id"` // Alias for query_hash (used in slow query context)
 	QueryPlanHash      *QueryID `db:"query_plan_hash"`
 	LastExecutionTime  *string  `db:"last_execution_time"`
-	ExecutionCount     *int64   `db:"execution_count"`
-	TotalElapsedTimeMs *float64 `db:"total_elapsed_time_ms"`
-	TotalWorkerTimeMs  *float64 `db:"total_worker_time_ms"`
-	AvgElapsedTimeMs   *float64 `db:"avg_elapsed_time_ms"`
-	AvgWorkerTimeMs    *float64 `db:"avg_worker_time_ms"`
 	CreationTime       *string  `db:"creation_time"`
-	ExecutionPlanXML   *string  `db:"execution_plan_xml"`
+	ExecutionCount     *int64   `db:"execution_count"`
+
+	// Elapsed Time Statistics
+	TotalElapsedTimeMs *float64 `db:"total_elapsed_time_ms"`
+	AvgElapsedTimeMs   *float64 `db:"avg_elapsed_time_ms"`
+	MinElapsedTimeMs   *float64 `db:"min_elapsed_time_ms"`
+	MaxElapsedTimeMs   *float64 `db:"max_elapsed_time_ms"`
+	LastElapsedTimeMs  *float64 `db:"last_elapsed_time_ms"`
+
+	// Worker Time Statistics
+	TotalWorkerTimeMs *float64 `db:"total_worker_time_ms"`
+	AvgWorkerTimeMs   *float64 `db:"avg_worker_time_ms"`
+
+	// I/O Statistics
+	TotalLogicalReads  *int64   `db:"total_logical_reads"`
+	TotalLogicalWrites *int64   `db:"total_logical_writes"`
+	TotalPhysicalReads *int64   `db:"total_physical_reads"`
+	AvgLogicalReads    *float64 `db:"avg_logical_reads"`
+	AvgLogicalWrites   *float64 `db:"avg_logical_writes"`
+	AvgPhysicalReads   *float64 `db:"avg_physical_reads"`
+
+	// Row Statistics
+	AvgRows *float64 `db:"avg_rows"`
+
+	// Memory Grant Statistics
+	LastGrantKB     *float64 `db:"last_grant_kb"`
+	LastUsedGrantKB *float64 `db:"last_used_grant_kb"`
+	MinGrantKB      *float64 `db:"min_grant_kb"`
+	MaxGrantKB      *float64 `db:"max_grant_kb"`
+
+	// Spill Statistics
+	LastSpills *int64 `db:"last_spills"`
+	MaxSpills  *int64 `db:"max_spills"`
+
+	// Parallelism Statistics
+	LastDOP *int64 `db:"last_dop"`
+	MinDOP  *int64 `db:"min_dop"`
+	MaxDOP  *int64 `db:"max_dop"`
+
+	// Execution Plan XML
+	ExecutionPlanXML *string `db:"execution_plan_xml"`
 }
 
 // ExecutionPlanTopLevelDetails represents high-level execution plan details (not node-level)
