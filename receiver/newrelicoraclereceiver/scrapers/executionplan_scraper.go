@@ -36,20 +36,20 @@ func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.Logs
 	}
 }
 
-func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs []string) []error {
+func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIdentifiers []models.SQLIdentifier) []error {
 	var errs []error
 
-	if len(sqlIDs) == 0 {
+	if len(sqlIdentifiers) == 0 {
 		return errs
 	}
 
 	// Create a single timeout context for all queries to prevent excessive total runtime
-	// If processing many SQL IDs, this ensures we don't exceed a reasonable total time
+	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
 	totalTimeout := 30 * time.Second // Adjust based on your needs
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, id := range sqlIDs {
+	for _, identifier := range sqlIdentifiers {
 		// Check if context is already cancelled/timed out before proceeding
 		select {
 		case <-queryCtx.Done():
@@ -59,13 +59,15 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 			// Continue processing
 		}
 
-		planRows, err := s.client.QueryExecutionPlanRows(queryCtx, id)
+		// Query execution plan for specific SQL_ID and CHILD_NUMBER
+		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
-			errs = append(errs, fmt.Errorf("failed to query execution plans for SQL_ID %s: %w", id, err))
-			continue // Skip this SQL ID but continue processing others
+			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
+			continue // Skip this identifier but continue processing others
 		}
 		s.logger.Debug("Retrieved execution plan rows",
-			zap.String("sql_id", id),
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber),
 			zap.Int("count", len(planRows)))
 
 		successCount := 0
@@ -85,7 +87,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIDs 
 		}
 
 		s.logger.Debug("Scraped execution plan rows",
-			zap.String("sql_id", id),
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber),
 			zap.Int("total", len(planRows)),
 			zap.Int("success", successCount),
 			zap.Int("failed", len(errs)))

@@ -29,6 +29,13 @@ const (
 	defaultEnableQueryMonitoring                = false
 	defaultQueryMonitoringResponseTimeThreshold = queries.DefaultQueryMonitoringResponseTimeThreshold
 	defaultQueryMonitoringCountThreshold        = queries.DefaultQueryMonitoringCountThreshold
+	defaultChildCursorsPerSQLID                 = 5 // Default to 5 (optimized flow with wait events covers edge cases)
+
+	// Interval Calculator defaults
+	defaultEnableIntervalBasedAveraging      = true // Enable by default for better slow query detection
+	defaultIntervalCalculatorCacheTTLMinutes = 10   // 10 minutes cache TTL
+	// Note: QueryMonitoringIntervalSeconds default is set dynamically based on collection_interval
+	// in SetDefaults() to ensure it's always >= collection_interval
 
 	// Validation ranges
 	minCollectionInterval                   = 10 * time.Second
@@ -41,6 +48,8 @@ const (
 	maxQueryMonitoringResponseTimeThreshold = queries.MaxQueryMonitoringResponseTimeThreshold
 	minQueryMonitoringCountThreshold        = queries.MinQueryMonitoringCountThreshold
 	maxQueryMonitoringCountThreshold        = queries.MaxQueryMonitoringCountThreshold
+	minChildCursorsPerSQLID                 = 3  // Minimum child cursors to fetch per SQL_ID
+	maxChildCursorsPerSQLID                 = 20 // Maximum child cursors to fetch per SQL_ID
 )
 
 var (
@@ -57,6 +66,7 @@ var (
 	errInvalidService                          = errors.New("service name cannot contain special characters")
 	errInvalidQueryMonitoringResponseThreshold = errors.New("query_monitoring_response_time_threshold must be between 1ms and 5000ms")
 	errInvalidQueryMonitoringCountThreshold    = errors.New("query_monitoring_count_threshold must be between 10 and 50")
+	errInvalidChildCursorsPerSQLID             = errors.New("child_cursors_per_sql_id must be between 3 and 20")
 )
 
 // TablespaceFilterConfig defines tablespace filtering options
@@ -80,6 +90,12 @@ type Config struct {
 	EnableQueryMonitoring                bool `mapstructure:"enable_query_monitoring"`
 	QueryMonitoringResponseTimeThreshold int  `mapstructure:"query_monitoring_response_time_threshold"`
 	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
+	QueryMonitoringIntervalSeconds       int  `mapstructure:"query_monitoring_interval_seconds"`
+	ChildCursorsPerSQLID                 int  `mapstructure:"child_cursors_per_sql_id"`
+
+	// Interval Calculator Configuration
+	EnableIntervalBasedAveraging       bool `mapstructure:"enable_interval_based_averaging"`
+	IntervalCalculatorCacheTTLMinutes  int  `mapstructure:"interval_calculator_cache_ttl_minutes"`
 
 	// Tablespace Filtering Configuration
 	TablespaceFilter TablespaceFilterConfig `mapstructure:"tablespace_filter"`
@@ -107,6 +123,34 @@ func (c *Config) SetDefaults() {
 	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
 		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 		c.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
+	}
+	if c.ChildCursorsPerSQLID == 0 || c.ChildCursorsPerSQLID < minChildCursorsPerSQLID ||
+		c.ChildCursorsPerSQLID > maxChildCursorsPerSQLID {
+		c.ChildCursorsPerSQLID = defaultChildCursorsPerSQLID
+	}
+
+	// Set QueryMonitoringIntervalSeconds default based on collection_interval
+	// IMPORTANT: This should be >= collection_interval to avoid missing queries between scrapes
+	// Default: Use collection_interval converted to seconds (rounded up)
+	if c.QueryMonitoringIntervalSeconds <= 0 {
+		collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
+		if collectionIntervalSeconds < 1 {
+			collectionIntervalSeconds = 10 // Fallback to 10 seconds minimum
+		}
+		c.QueryMonitoringIntervalSeconds = collectionIntervalSeconds
+	} else {
+		// User specified a value - ensure it's at least as long as collection_interval
+		collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
+		if c.QueryMonitoringIntervalSeconds < collectionIntervalSeconds {
+			// Log a warning would be nice here, but we don't have logger in config
+			// The value will be adjusted to match collection_interval
+			c.QueryMonitoringIntervalSeconds = collectionIntervalSeconds
+		}
+	}
+
+	// Set Interval Calculator defaults if not set
+	if c.IntervalCalculatorCacheTTLMinutes <= 0 {
+		c.IntervalCalculatorCacheTTLMinutes = defaultIntervalCalculatorCacheTTLMinutes
 	}
 }
 
@@ -264,6 +308,11 @@ func (c Config) validateScraperConfig() error {
 // validateQueryPerformanceMonitoring validates Query Performance Monitoring configuration
 // Note: Range validation is handled in SetDefaults() with auto-correction
 func (c Config) validateQueryPerformanceMonitoring() error {
+	// Only validate QPM settings if query monitoring is enabled
+	if !c.EnableQueryMonitoring {
+		return nil
+	}
+
 	var allErrs error
 
 	// Only validate for negative values since SetDefaults() handles range correction
@@ -274,6 +323,18 @@ func (c Config) validateQueryPerformanceMonitoring() error {
 	if c.QueryMonitoringCountThreshold < 0 {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_count_threshold cannot be negative: got %d", c.QueryMonitoringCountThreshold))
 	}
+
+	if c.QueryMonitoringIntervalSeconds < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_interval_seconds cannot be negative: got %d", c.QueryMonitoringIntervalSeconds))
+	}
+
+	if c.ChildCursorsPerSQLID < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("child_cursors_per_sql_id cannot be negative: got %d", c.ChildCursorsPerSQLID))
+	}
+
+	// Note: We don't validate that interval_seconds >= collection_interval here because
+	// SetDefaults() already auto-corrects this at lines 126-140. The validation would fail
+	// because Validate() uses a value receiver and sees the uncorrected value.
 
 	return allErrs
 }

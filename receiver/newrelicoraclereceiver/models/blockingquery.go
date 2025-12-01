@@ -7,19 +7,19 @@ import (
 
 // BlockingQuery represents a blocking query record from Oracle V$SESSION views
 type BlockingQuery struct {
-	CollectionTimestamp sql.NullTime	
-	SessionID         sql.NullInt64
-	BlockedSerial     sql.NullInt64
-	BlockedUser       sql.NullString
-	BlockedWaitSec    sql.NullFloat64
-	QueryID           sql.NullString
-	SQLExecID         sql.NullInt64
-	BlockingQueryText sql.NullString
-	BlockingSID       sql.NullInt64
-	BlockingSerial    sql.NullInt64
-	BlockingUser      sql.NullString
-	BlockingQueryID   sql.NullString
-	DatabaseName      sql.NullString
+	CollectionTimestamp sql.NullTime
+	SessionID           sql.NullInt64
+	BlockedSerial       sql.NullInt64
+	BlockedUser         sql.NullString
+	BlockedWaitSec      sql.NullFloat64
+	QueryID             sql.NullString
+	SQLExecID           sql.NullInt64
+	BlockingQueryText   sql.NullString
+	BlockingSID         sql.NullInt64
+	BlockingSerial      sql.NullInt64
+	BlockingUser        sql.NullString
+	BlockingQueryID     sql.NullString
+	DatabaseName        sql.NullString
 }
 
 // GetBlockedUser returns the blocked user as a string, empty if null

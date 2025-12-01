@@ -28,12 +28,18 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicoracledb metrics.
 type MetricsConfig struct {
-	NewrelicoracledbActiveSessionsSecondsInWait                        MetricConfig `mapstructure:"newrelicoracledb.active_sessions.seconds_in_wait"`
-	NewrelicoracledbActiveSessionsTimeRemaining                        MetricConfig `mapstructure:"newrelicoracledb.active_sessions.time_remaining"`
 	NewrelicoracledbAsmDiskgroupFreeMb                                 MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.free_mb"`
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
 	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
 	NewrelicoracledbBlockingQueriesWaitTime                            MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time"`
+	NewrelicoracledbChildCursorsBufferGets                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.buffer_gets"`
+	NewrelicoracledbChildCursorsCPUTime                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.cpu_time"`
+	NewrelicoracledbChildCursorsDetails                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.details"`
+	NewrelicoracledbChildCursorsDiskReads                              MetricConfig `mapstructure:"newrelicoracledb.child_cursors.disk_reads"`
+	NewrelicoracledbChildCursorsElapsedTime                            MetricConfig `mapstructure:"newrelicoracledb.child_cursors.elapsed_time"`
+	NewrelicoracledbChildCursorsExecutions                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.executions"`
+	NewrelicoracledbChildCursorsInvalidations                          MetricConfig `mapstructure:"newrelicoracledb.child_cursors.invalidations"`
+	NewrelicoracledbChildCursorsUserIoWaitTime                         MetricConfig `mapstructure:"newrelicoracledb.child_cursors.user_io_wait_time"`
 	NewrelicoracledbConnectionActiveSessions                           MetricConfig `mapstructure:"newrelicoracledb.connection.active_sessions"`
 	NewrelicoracledbConnectionBlockingSessions                         MetricConfig `mapstructure:"newrelicoracledb.connection.blocking_sessions"`
 	NewrelicoracledbConnectionBytesReceived                            MetricConfig `mapstructure:"newrelicoracledb.connection.bytes_received"`
@@ -188,6 +194,8 @@ type MetricsConfig struct {
 	NewrelicoracledbSlowQueriesAvgLockTime                             MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_lock_time"`
 	NewrelicoracledbSlowQueriesAvgRowsExamined                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_rows_examined"`
 	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
+	NewrelicoracledbSlowQueriesIntervalAvgElapsedTime                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_elapsed_time"`
+	NewrelicoracledbSlowQueriesIntervalExecutionCount                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_execution_count"`
 	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
 	NewrelicoracledbSortsDisk                                          MetricConfig `mapstructure:"newrelicoracledb.sorts_disk"`
 	NewrelicoracledbSortsMemory                                        MetricConfig `mapstructure:"newrelicoracledb.sorts_memory"`
@@ -350,12 +358,6 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		NewrelicoracledbActiveSessionsSecondsInWait: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbActiveSessionsTimeRemaining: MetricConfig{
-			Enabled: true,
-		},
 		NewrelicoracledbAsmDiskgroupFreeMb: MetricConfig{
 			Enabled: true,
 		},
@@ -366,6 +368,30 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbBlockingQueriesWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsBufferGets: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsDetails: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsExecutions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsInvalidations: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbChildCursorsUserIoWaitTime: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbConnectionActiveSessions: MetricConfig{
@@ -828,6 +854,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalAvgElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalExecutionCount: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesQueryDetails: MetricConfig{

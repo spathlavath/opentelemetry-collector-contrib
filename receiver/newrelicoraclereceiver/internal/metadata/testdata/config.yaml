@@ -1,10 +1,6 @@
 default:
 all_set:
   metrics:
-    newrelicoracledb.active_sessions.seconds_in_wait:
-      enabled: true
-    newrelicoracledb.active_sessions.time_remaining:
-      enabled: true
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: true
     newrelicoracledb.asm.diskgroup.offline_disks:
@@ -12,6 +8,22 @@ all_set:
     newrelicoracledb.asm.diskgroup.total_mb:
       enabled: true
     newrelicoracledb.blocking_queries.wait_time:
+      enabled: true
+    newrelicoracledb.child_cursors.buffer_gets:
+      enabled: true
+    newrelicoracledb.child_cursors.cpu_time:
+      enabled: true
+    newrelicoracledb.child_cursors.details:
+      enabled: true
+    newrelicoracledb.child_cursors.disk_reads:
+      enabled: true
+    newrelicoracledb.child_cursors.elapsed_time:
+      enabled: true
+    newrelicoracledb.child_cursors.executions:
+      enabled: true
+    newrelicoracledb.child_cursors.invalidations:
+      enabled: true
+    newrelicoracledb.child_cursors.user_io_wait_time:
       enabled: true
     newrelicoracledb.connection.active_sessions:
       enabled: true
@@ -320,6 +332,10 @@ all_set:
     newrelicoracledb.slow_queries.avg_rows_examined:
       enabled: true
     newrelicoracledb.slow_queries.execution_count:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_avg_elapsed_time:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_execution_count:
       enabled: true
     newrelicoracledb.slow_queries.query_details:
       enabled: true
@@ -647,10 +663,6 @@ all_set:
       enabled: true
 none_set:
   metrics:
-    newrelicoracledb.active_sessions.seconds_in_wait:
-      enabled: false
-    newrelicoracledb.active_sessions.time_remaining:
-      enabled: false
     newrelicoracledb.asm.diskgroup.free_mb:
       enabled: false
     newrelicoracledb.asm.diskgroup.offline_disks:
@@ -658,6 +670,22 @@ none_set:
     newrelicoracledb.asm.diskgroup.total_mb:
       enabled: false
     newrelicoracledb.blocking_queries.wait_time:
+      enabled: false
+    newrelicoracledb.child_cursors.buffer_gets:
+      enabled: false
+    newrelicoracledb.child_cursors.cpu_time:
+      enabled: false
+    newrelicoracledb.child_cursors.details:
+      enabled: false
+    newrelicoracledb.child_cursors.disk_reads:
+      enabled: false
+    newrelicoracledb.child_cursors.elapsed_time:
+      enabled: false
+    newrelicoracledb.child_cursors.executions:
+      enabled: false
+    newrelicoracledb.child_cursors.invalidations:
+      enabled: false
+    newrelicoracledb.child_cursors.user_io_wait_time:
       enabled: false
     newrelicoracledb.connection.active_sessions:
       enabled: false
@@ -966,6 +994,10 @@ none_set:
     newrelicoracledb.slow_queries.avg_rows_examined:
       enabled: false
     newrelicoracledb.slow_queries.execution_count:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_avg_elapsed_time:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_execution_count:
       enabled: false
     newrelicoracledb.slow_queries.query_details:
       enabled: false
