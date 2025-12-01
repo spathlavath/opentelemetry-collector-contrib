@@ -230,44 +230,97 @@ func (mc *MetadataCache) refreshFiles(ctx context.Context) error {
 }
 
 func (mc *MetadataCache) refreshHOBTs(ctx context.Context) error {
-	query := `
-		SELECT
-			p.hobt_id,
-			DB_NAME() AS database_name,
-			SCHEMA_NAME(o.schema_id) AS schema_name,
-			o.name AS object_name,
-			i.name AS index_name,
-			i.type_desc AS index_type
-		FROM sys.partitions p
-		JOIN sys.objects o ON p.object_id = o.object_id
-		LEFT JOIN sys.indexes i ON p.object_id = i.object_id AND p.index_id = i.index_id
-		WHERE p.hobt_id > 0
+	// First, get list of all accessible databases (excluding system databases we can't query)
+	dbQuery := `
+		SELECT name
+		FROM sys.databases
+		WHERE state_desc = 'ONLINE'
+			AND database_id > 4  -- Skip system databases (master, tempdb, model, msdb)
+			AND HAS_DBACCESS(name) = 1  -- Only databases we have access to
 	`
 
-	rows, err := mc.db.QueryContext(ctx, query)
+	dbRows, err := mc.db.QueryContext(ctx, dbQuery)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get database list: %w", err)
 	}
-	defer rows.Close()
+	defer dbRows.Close()
 
+	var databases []string
+	for dbRows.Next() {
+		var dbName string
+		if err := dbRows.Scan(&dbName); err != nil {
+			return fmt.Errorf("failed to scan database name: %w", err)
+		}
+		databases = append(databases, dbName)
+	}
+	if err := dbRows.Err(); err != nil {
+		return fmt.Errorf("error iterating database list: %w", err)
+	}
+
+	// Now iterate through each database and collect HOBT metadata
 	newHOBTs := make(map[int64]HOBTMetadata)
-	for rows.Next() {
-		var hobtID int64
-		var meta HOBTMetadata
-		var indexName sql.NullString
-		if err := rows.Scan(&hobtID, &meta.DatabaseName, &meta.SchemaName, &meta.ObjectName, &indexName, &meta.IndexType); err != nil {
-			return err
+
+	for _, dbName := range databases {
+		// Use dynamic SQL to query each database
+		// Note: We use QUOTENAME to prevent SQL injection
+		// Use [database].sys.schemas for schema_name to avoid context issues with SCHEMA_NAME()
+		query := fmt.Sprintf(`
+			SELECT
+				p.hobt_id,
+				'%s' AS database_name,
+				s.name AS schema_name,
+				o.name AS object_name,
+				i.name AS index_name,
+				i.type_desc AS index_type
+			FROM [%s].sys.partitions p
+			JOIN [%s].sys.objects o ON p.object_id = o.object_id
+			LEFT JOIN [%s].sys.schemas s ON o.schema_id = s.schema_id
+			LEFT JOIN [%s].sys.indexes i ON p.object_id = i.object_id AND p.index_id = i.index_id
+			WHERE p.hobt_id > 0
+		`, dbName, dbName, dbName, dbName, dbName)
+
+		rows, err := mc.db.QueryContext(ctx, query)
+		if err != nil {
+			// Log error but continue with other databases
+			fmt.Printf("Warning: failed to query HOBTs from database %s: %v\n", dbName, err)
+			continue
 		}
-		if indexName.Valid {
-			meta.IndexName = indexName.String
-		} else {
-			meta.IndexName = "HEAP"
+
+		for rows.Next() {
+			var hobtID int64
+			var meta HOBTMetadata
+			var schemaName, objectName, indexType sql.NullString
+			var indexName sql.NullString
+			if err := rows.Scan(&hobtID, &meta.DatabaseName, &schemaName, &objectName, &indexName, &indexType); err != nil {
+				rows.Close()
+				return fmt.Errorf("failed to scan HOBT metadata from %s: %w", dbName, err)
+			}
+			// Handle NULL values
+			if schemaName.Valid {
+				meta.SchemaName = schemaName.String
+			}
+			if objectName.Valid {
+				meta.ObjectName = objectName.String
+			}
+			if indexName.Valid {
+				meta.IndexName = indexName.String
+			} else {
+				meta.IndexName = "HEAP"
+			}
+			if indexType.Valid {
+				meta.IndexType = indexType.String
+			}
+			newHOBTs[hobtID] = meta
 		}
-		newHOBTs[hobtID] = meta
+		rows.Close()
+
+		if err := rows.Err(); err != nil {
+			return fmt.Errorf("error iterating HOBT rows from %s: %w", dbName, err)
+		}
 	}
 
 	mc.hobts = newHOBTs
-	return rows.Err()
+	return nil
 }
 
 func (mc *MetadataCache) refreshPartitions(ctx context.Context) error {
@@ -303,7 +356,7 @@ func (mc *MetadataCache) refreshAllocationUnits(ctx context.Context) error {
 	query := `
 		SELECT
 			au.allocation_unit_id,
-			SCHEMA_NAME(o.schema_id) + '.' + o.name + ' (' + au.type_desc + ')' AS description
+			SCHEMA_NAME(o.schema_id) COLLATE DATABASE_DEFAULT + '.' + o.name COLLATE DATABASE_DEFAULT + ' (' + au.type_desc COLLATE DATABASE_DEFAULT + ')' AS description
 		FROM sys.allocation_units au
 		JOIN sys.partitions p ON au.container_id = p.partition_id
 		JOIN sys.objects o ON p.object_id = o.object_id

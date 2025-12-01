@@ -251,3 +251,31 @@ func getMetadataClassName(classID string) string {
 	}
 	return ""
 }
+
+// ParseHOBTIDFromWaitResource extracts the HOBT ID from a KEY lock wait_resource string
+// KEY wait_resource format: "KEY: <db_id>:<hobt_id> (<key_hash>)"
+// Example: "KEY: 5:72057594042908672 (e5e11ab44f5d)"
+// Returns 0 if parsing fails or format is invalid
+func ParseHOBTIDFromWaitResource(waitResource string) int64 {
+	if !strings.HasPrefix(waitResource, "KEY:") {
+		return 0
+	}
+
+	// Use regex to extract HOBT ID: "KEY: <db_id>:<hobt_id> ("
+	// Pattern: KEY: \d+:(\d+) \(
+	keyRegex := regexp.MustCompile(`KEY:\s*\d+:(\d+)\s*\(`)
+	matches := keyRegex.FindStringSubmatch(waitResource)
+
+	if len(matches) < 2 {
+		return 0
+	}
+
+	// Parse HOBT ID from captured group
+	var hobtID int64
+	_, err := fmt.Sscanf(matches[1], "%d", &hobtID)
+	if err != nil {
+		return 0
+	}
+
+	return hobtID
+}

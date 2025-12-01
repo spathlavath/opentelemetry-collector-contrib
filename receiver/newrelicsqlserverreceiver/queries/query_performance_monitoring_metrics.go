@@ -673,8 +673,11 @@ SELECT TOP (@Limit)
                     SUBSTRING(
                         r_wait.wait_resource,
                         CHARINDEX(':', r_wait.wait_resource, 8) + 1,
-                        CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) -
-                        CHARINDEX(':', r_wait.wait_resource, 8) - 1
+                        CASE
+                            WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
+                            THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
+                            ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
+                        END
                     ) AS INT
                 ),
                 r_wait.database_id
@@ -756,7 +759,18 @@ SELECT TOP (@Limit)
     END AS blocking_query_statement_text,
 
     -- K. EXECUTION PLAN XML
-    CAST(qp_wait.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
+    CAST(qp_wait.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml,
+
+    -- L. ENHANCED WAIT RESOURCE DECODING (OBJECT locks - table-level locks)
+    SCHEMA_NAME(obj_lock.schema_id) AS wait_resource_schema_name_object,
+    obj_lock.type_desc AS wait_resource_object_type,
+
+    -- M. ENHANCED WAIT RESOURCE DECODING (INDEX locks - KEY locks, row-level locks)
+    -- Cannot reliably decode KEY locks across databases without dynamic SQL
+    NULL AS wait_resource_schema_name_index,
+    NULL AS wait_resource_table_name_index,
+    NULL AS wait_resource_index_name,
+    NULL AS wait_resource_index_type
 
 FROM
     sys.dm_exec_requests AS r_wait
@@ -774,6 +788,33 @@ OUTER APPLY
     sys.dm_exec_sql_text(r_blocker.sql_handle) AS st_blocker
 OUTER APPLY
     sys.dm_exec_input_buffer(r_wait.blocking_session_id, NULL) AS ib_blocker
+
+-- Enhanced wait resource decoding: OBJECT locks (table-level locks)
+-- Format: "OBJECT: <database_id>:<object_id>:<lock_type>"
+LEFT JOIN sys.objects obj_lock ON
+    r_wait.wait_resource LIKE 'OBJECT:%%'
+    AND CHARINDEX(':', r_wait.wait_resource, 8) > 0  -- Safety: Ensure 2nd colon exists
+    AND CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0  -- Safety: Ensure 3rd colon exists
+    AND TRY_CAST(
+        SUBSTRING(
+            r_wait.wait_resource,
+            CHARINDEX(':', r_wait.wait_resource, 8) + 1,
+            CASE
+                WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
+                THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
+                ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
+            END
+        ) AS INT
+    ) = obj_lock.object_id
+    AND r_wait.database_id = DB_ID(DB_NAME(r_wait.database_id))
+
+-- Enhanced wait resource decoding: INDEX locks (KEY locks - row-level locks)
+-- Note: Cannot reliably resolve INDEX/KEY locks across databases without dynamic SQL
+-- KEY lock format: "KEY: database_id:hobt_id (key_hash)"
+-- We can only extract database_id and hobt_id, but cannot JOIN to sys.partitions cross-database
+-- So we'll leave these as NULL for now (schema_name, table_name, index_name, index_type)
+-- The wait_resource_description already shows the parsed HOBT and database info
+
 WHERE
     r_wait.session_id > 50
     AND r_wait.database_id > 4

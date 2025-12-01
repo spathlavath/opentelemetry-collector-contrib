@@ -86,6 +86,7 @@ type QueryPerformanceScraper struct {
 	logConsumer         plog.Logs                     // For emitting execution plan logs
 	slowQuerySmoother   *SlowQuerySmoother            // EWMA-based smoothing algorithm for slow queries
 	intervalCalculator  *SimplifiedIntervalCalculator // Simplified delta-based interval calculator
+	metadataCache       *helpers.MetadataCache        // Metadata cache for wait resource enrichment
 }
 
 // NewQueryPerformanceScraper creates a new query performance scraper with smoothing and interval calculator configuration
@@ -99,6 +100,7 @@ func NewQueryPerformanceScraper(
 	maxAgeMinutes int,
 	intervalCalcEnabled bool,
 	intervalCalcCacheTTLMinutes int,
+	metadataCache *helpers.MetadataCache,
 ) *QueryPerformanceScraper {
 	var smoother *SlowQuerySmoother
 	var intervalCalc *SimplifiedIntervalCalculator
@@ -134,6 +136,7 @@ func NewQueryPerformanceScraper(
 		executionPlanLogger: models.NewExecutionPlanLogger(),
 		slowQuerySmoother:   smoother,
 		intervalCalculator:  intervalCalc,
+		metadataCache:       metadataCache,
 	}
 }
 

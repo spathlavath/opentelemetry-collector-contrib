@@ -41,6 +41,7 @@ type sqlServerScraper struct {
 	lockScraper                   *scrapers.LockScraper             // Lock analysis metrics scraper
 	threadPoolHealthScraper       *scrapers.ThreadPoolHealthScraper // Thread pool health monitoring
 	tempdbContentionScraper       *scrapers.TempDBContentionScraper // TempDB contention monitoring
+	metadataCache                 *helpers.MetadataCache            // Metadata cache for wait resource enrichment
 	engineEdition                 int                               // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
 }
 
@@ -82,6 +83,31 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
 	}
 
+	// Initialize metadata cache for wait resource enrichment if enabled
+	if s.config.EnableWaitResourceEnrichment {
+		refreshInterval := time.Duration(s.config.WaitResourceMetadataRefreshMinutes) * time.Minute
+		s.metadataCache = helpers.NewMetadataCache(s.connection.Connection.DB, refreshInterval)
+
+		// Perform initial cache refresh
+		s.logger.Info("Initializing metadata cache for wait resource enrichment",
+			zap.Int("refresh_interval_minutes", s.config.WaitResourceMetadataRefreshMinutes))
+
+		if err := s.metadataCache.Refresh(ctx); err != nil {
+			s.logger.Warn("Failed to perform initial metadata cache refresh",
+				zap.Error(err))
+			// Continue - cache will retry on next scrape
+		} else {
+			stats := s.metadataCache.GetCacheStats()
+			s.logger.Info("Metadata cache initialized successfully",
+				zap.Int("databases", stats["databases"]),
+				zap.Int("objects", stats["objects"]),
+				zap.Int("hobts", stats["hobts"]),
+				zap.Int("partitions", stats["partitions"]))
+		}
+	} else {
+		s.logger.Info("Wait resource enrichment disabled, skipping metadata cache initialization")
+	}
+
 	// Initialize instance scraper with engine edition for engine-specific queries
 	// Create instance scraper for instance-level metrics
 	instanceConfig := scrapers.InstanceConfig{
@@ -121,6 +147,7 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 		s.config.SlowQuerySmoothingMaxAgeMinutes,
 		s.config.EnableIntervalBasedAveraging,
 		s.config.IntervalCalculatorCacheTTLMinutes,
+		s.metadataCache,
 	)
 	// s.slowQueryScraper = scrapers.NewSlowQueryScraper(s.logger, s.connection)
 
@@ -439,6 +466,15 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	} else {
 		s.logger.Error("No database connection available for scraping")
 		return metrics, fmt.Errorf("no database connection available")
+	}
+
+	// Refresh metadata cache if enabled and needed (respects refresh interval)
+	if s.config.EnableWaitResourceEnrichment && s.metadataCache != nil {
+		if err := s.metadataCache.Refresh(ctx); err != nil {
+			s.logger.Warn("Failed to refresh metadata cache",
+				zap.Error(err))
+			// Continue scraping - stale cache is better than no data
+		}
 	}
 
 	// Scrape database-level buffer pool metrics (bufferpool.sizePerDatabaseInBytes)

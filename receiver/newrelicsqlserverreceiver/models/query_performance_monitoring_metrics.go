@@ -318,6 +318,16 @@ type ActiveRunningQuery struct {
 	WaitResourceDatabaseName   *string  `db:"wait_resource_database_name" metric_name:"wait_resource_database_name" source_type:"attribute"`
 	LastWaitType               *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
 
+	// C2. Enhanced Wait Resource Decoding (OBJECT locks - table-level locks)
+	WaitResourceSchemaNameObject *string `db:"wait_resource_schema_name_object" metric_name:"wait_resource_schema_name_object" source_type:"attribute"`
+	WaitResourceObjectType       *string `db:"wait_resource_object_type" metric_name:"wait_resource_object_type" source_type:"attribute"`
+
+	// C3. Enhanced Wait Resource Decoding (INDEX locks - KEY locks, row-level locks)
+	WaitResourceSchemaNameIndex *string `db:"wait_resource_schema_name_index" metric_name:"wait_resource_schema_name_index" source_type:"attribute"`
+	WaitResourceTableNameIndex  *string `db:"wait_resource_table_name_index" metric_name:"wait_resource_table_name_index" source_type:"attribute"`
+	WaitResourceIndexName       *string `db:"wait_resource_index_name" metric_name:"wait_resource_index_name" source_type:"attribute"`
+	WaitResourceIndexType       *string `db:"wait_resource_index_type" metric_name:"wait_resource_index_type" source_type:"attribute"`
+
 	// D. Performance/Execution Metrics
 	CPUTimeMs               *int64  `db:"cpu_time_ms" metric_name:"sqlserver.activequery.cpu_time_ms" source_type:"gauge"`
 	TotalElapsedTimeMs      *int64  `db:"total_elapsed_time_ms" metric_name:"sqlserver.activequery.elapsed_time_ms" source_type:"gauge"`

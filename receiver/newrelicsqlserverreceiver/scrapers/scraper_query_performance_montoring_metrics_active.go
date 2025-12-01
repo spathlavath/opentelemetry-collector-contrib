@@ -5,7 +5,6 @@ package scrapers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -432,10 +431,75 @@ func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, re
 			attrs.PutStr("wait_resource_database_name", *result.WaitResourceDatabaseName)
 		}
 
-		// Add Go helper's parsed resource type and description
+		// Add Go helper's parsed resource type and base description
 		resourceType, resourceDesc := helpers.DecodeWaitResource(waitResource)
 		attrs.PutStr("wait_resource_type", resourceType)
-		attrs.PutStr("wait_resource_description", resourceDesc)
+
+		// Build enhanced wait_resource_description based on lock type
+		enhancedDesc := resourceDesc // Start with base description
+
+		// Enhanced wait resource decoding from SQL joins
+		// For OBJECT locks (table-level locks)
+		if result.WaitResourceSchemaNameObject != nil && result.WaitResourceObjectName != nil {
+			attrs.PutStr("wait_resource_schema_name", *result.WaitResourceSchemaNameObject)
+			attrs.PutStr("wait_resource_table_name", *result.WaitResourceObjectName)
+
+			// Build enhanced description: "Database: X | Schema: Y | Table: Z | Type: USER_TABLE"
+			dbName := ""
+			if result.WaitResourceDatabaseName != nil {
+				dbName = *result.WaitResourceDatabaseName
+			}
+			objectType := ""
+			if result.WaitResourceObjectType != nil {
+				attrs.PutStr("wait_resource_object_type", *result.WaitResourceObjectType)
+				objectType = *result.WaitResourceObjectType
+			}
+
+			enhancedDesc = fmt.Sprintf("Database: %s | Schema: %s | Table: %s | Type: %s",
+				dbName, *result.WaitResourceSchemaNameObject, *result.WaitResourceObjectName, objectType)
+		}
+
+		// For INDEX locks (KEY locks - row-level locks)
+		// Parse HOBT ID from wait_resource and look up in MetadataCache
+		if resourceType == "Key Lock" && s.metadataCache != nil {
+			// KEY wait_resource format: "KEY: <db_id>:<hobt_id> (<key_hash>)"
+			// Example: "KEY: 5:72057594042908672 (e5e11ab44f5d)"
+			hobtID := helpers.ParseHOBTIDFromWaitResource(waitResource)
+			s.logger.Debug("Parsing KEY lock wait_resource",
+				zap.String("wait_resource", waitResource),
+				zap.Int64("parsed_hobt_id", hobtID))
+			if hobtID > 0 {
+				if hobtMetadata, ok := s.metadataCache.GetHOBTMetadata(hobtID); ok {
+					s.logger.Debug("Found HOBT metadata in cache",
+						zap.Int64("hobt_id", hobtID),
+						zap.String("database", hobtMetadata.DatabaseName),
+						zap.String("schema", hobtMetadata.SchemaName),
+						zap.String("table", hobtMetadata.ObjectName),
+						zap.String("index", hobtMetadata.IndexName))
+					// Add attributes from MetadataCache lookup
+					attrs.PutStr("wait_resource_schema_name", hobtMetadata.SchemaName)
+					attrs.PutStr("wait_resource_table_name", hobtMetadata.ObjectName)
+					attrs.PutStr("wait_resource_index_name", hobtMetadata.IndexName)
+					attrs.PutStr("wait_resource_index_type", hobtMetadata.IndexType)
+
+					// Build enhanced description using cached metadata
+					dbName := hobtMetadata.DatabaseName
+					if result.WaitResourceDatabaseName != nil {
+						dbName = *result.WaitResourceDatabaseName // Prefer real-time database name if available
+					}
+
+					enhancedDesc = fmt.Sprintf("Database: %s | Schema: %s | Table: %s | Index: %s (%s)",
+						dbName, hobtMetadata.SchemaName, hobtMetadata.ObjectName, hobtMetadata.IndexName, hobtMetadata.IndexType)
+				} else {
+					s.logger.Debug("HOBT ID not found in metadata cache",
+						zap.Int64("hobt_id", hobtID),
+						zap.String("wait_resource", waitResource))
+				}
+			}
+		}
+
+		// Set the final enhanced description
+		attrs.PutStr("wait_resource_description", enhancedDesc)
 	}
 	if result.LastWaitType != nil {
 		lastWaitType := *result.LastWaitType
@@ -695,7 +759,7 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, pla
 }
 
 // parseAndEmitExecutionPlanAsLogs parses execution plan XML and emits as OTLP logs
-// Converts XML execution plan to JSON format for New Relic custom events
+// Converts XML execution plan to custom events using attributes (not JSON body)
 func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
 	ctx context.Context,
 	activeQuery models.ActiveRunningQuery,
@@ -724,102 +788,94 @@ func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
 
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Emit one log record per operator node
-	for _, node := range analysis.Nodes {
+	// Emit one log record per operator node using ATTRIBUTES (not JSON body)
+	for i := range analysis.Nodes {
+		node := &analysis.Nodes[i]
 		logRecord := scopeLogs.LogRecords().AppendEmpty()
 		logRecord.SetTimestamp(timestamp)
 		logRecord.SetObservedTimestamp(timestamp)
+		logRecord.SetSeverityNumber(plog.SeverityNumberInfo)
+		logRecord.SetSeverityText("INFO")
 
-		// Set body as JSON string with ALL fields from ExecutionPlanNode
-		body := map[string]interface{}{
-			"event_type": "SqlServerActiveQueryExecutionPlan",
+		// Set body as simple string (not JSON)
+		logRecord.Body().SetStr(fmt.Sprintf("Execution Plan Node: %s (NodeID=%d, Parent=%d)",
+			node.PhysicalOp, node.NodeID, node.ParentNodeID))
 
-			// Identifiers
-			"query_id":       node.QueryID,
-			"plan_handle":    node.PlanHandle,
-			"node_id":        node.NodeID,
-			"parent_node_id": node.ParentNodeID,
-
-			// SQL Query Information
-			"sql_text": node.SQLText,
-
-			// Operator Information
-			"physical_op": node.PhysicalOp,
-			"logical_op":  node.LogicalOp,
-			"input_type":  node.InputType,
-
-			// Object Information (for Index Scan/Seek operators)
-			"schema_name":        node.SchemaName,
-			"table_name":         node.TableName,
-			"index_name":         node.IndexName,
-			"referenced_columns": node.ReferencedColumns,
-
-			// Cost Estimates
-			"estimate_rows":           node.EstimateRows,
-			"estimate_io":             node.EstimateIO,
-			"estimate_cpu":            node.EstimateCPU,
-			"avg_row_size":            node.AvgRowSize,
-			"total_subtree_cost":      node.TotalSubtreeCost,
-			"estimated_operator_cost": node.EstimatedOperatorCost,
-
-			// Execution Details
-			"estimated_execution_mode": node.EstimatedExecutionMode,
-			"granted_memory_kb":        node.GrantedMemoryKb,
-			"spill_occurred":           node.SpillOccurred,
-			"no_join_predicate":        node.NoJoinPredicate,
-
-			// Performance Metrics
-			"total_worker_time":    node.TotalWorkerTime,
-			"total_elapsed_time":   node.TotalElapsedTime,
-			"total_logical_reads":  node.TotalLogicalReads,
-			"total_logical_writes": node.TotalLogicalWrites,
-			"execution_count":      node.ExecutionCount,
-			"avg_elapsed_time_ms":  node.AvgElapsedTimeMs,
-
-			// Timestamps
-			"collection_timestamp": node.CollectionTimestamp,
-			"last_execution_time":  node.LastExecutionTime,
-		}
-
-		// Add active query correlation attributes
-		if activeQuery.CurrentSessionID != nil {
-			body["session_id"] = *activeQuery.CurrentSessionID
-		}
-		if activeQuery.RequestID != nil {
-			body["request_id"] = *activeQuery.RequestID
-		}
-		if activeQuery.RequestStartTime != nil {
-			body["start_time"] = *activeQuery.RequestStartTime // Matches NRQL field name
-		}
-		if activeQuery.DatabaseName != nil {
-			body["database_name"] = *activeQuery.DatabaseName
-		}
-
-		// Convert to JSON and set as body
-		bodyJSON, err := json.Marshal(body)
-		if err != nil {
-			s.logger.Warn("Failed to marshal execution plan node to JSON",
-				zap.Error(err),
-				zap.Int("node_id", node.NodeID))
-			continue
-		}
-
-		logRecord.Body().SetStr(string(bodyJSON))
-
-		// Set attributes for filtering and New Relic custom event ingestion
+		// Set ALL fields as ATTRIBUTES (this is what makes it a proper custom event)
 		attrs := logRecord.Attributes()
-		// IMPORTANT: Signal New Relic to ingest this as a Custom Event instead of a Log
-		// This allows querying via: SELECT * FROM SqlServerActiveQueryExecutionPlan
-		// Reference: https://docs.newrelic.com/docs/more-integrations/open-source-telemetry-integrations/opentelemetry/best-practices/opentelemetry-best-practices-logs/
+
+		// IMPORTANT: Signal New Relic to ingest this as a Custom Event
 		attrs.PutStr("newrelic.event.type", "SqlServerActiveQueryExecutionPlan")
+
+		// Correlation keys
 		attrs.PutStr("query_id", node.QueryID)
 		attrs.PutStr("plan_handle", node.PlanHandle)
 		if activeQuery.CurrentSessionID != nil {
 			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
 		}
+		if activeQuery.RequestID != nil {
+			attrs.PutInt("request_id", *activeQuery.RequestID)
+		}
+		if activeQuery.DatabaseName != nil {
+			attrs.PutStr("database_name", *activeQuery.DatabaseName)
+		}
+		if activeQuery.RequestStartTime != nil {
+			attrs.PutStr("start_time", *activeQuery.RequestStartTime)
+		}
+
+		// Node structure
+		attrs.PutInt("node_id", int64(node.NodeID))
+		attrs.PutInt("parent_node_id", int64(node.ParentNodeID))
+		attrs.PutStr("input_type", node.InputType)
+
+		// Operator information
+		attrs.PutStr("physical_op", node.PhysicalOp)
+		attrs.PutStr("logical_op", node.LogicalOp)
+		attrs.PutStr("sql_text", node.SQLText)
+
+		// Object information (for Index Scan/Seek operators)
+		if node.SchemaName != "" {
+			attrs.PutStr("schema_name", node.SchemaName)
+		}
+		if node.TableName != "" {
+			attrs.PutStr("table_name", node.TableName)
+		}
+		if node.IndexName != "" {
+			attrs.PutStr("index_name", node.IndexName)
+		}
+		if node.ReferencedColumns != "" {
+			attrs.PutStr("referenced_columns", node.ReferencedColumns)
+		}
+
+		// Cost estimates
+		attrs.PutDouble("estimate_rows", node.EstimateRows)
+		attrs.PutDouble("estimate_io", node.EstimateIO)
+		attrs.PutDouble("estimate_cpu", node.EstimateCPU)
+		attrs.PutDouble("avg_row_size", node.AvgRowSize)
+		attrs.PutDouble("total_subtree_cost", node.TotalSubtreeCost)
+		attrs.PutDouble("estimated_operator_cost", node.EstimatedOperatorCost)
+
+		// Execution details
+		attrs.PutStr("estimated_execution_mode", node.EstimatedExecutionMode)
+		attrs.PutInt("granted_memory_kb", node.GrantedMemoryKb)
+		attrs.PutBool("spill_occurred", node.SpillOccurred)
+		attrs.PutBool("no_join_predicate", node.NoJoinPredicate)
+
+		// Performance metrics
+		attrs.PutDouble("total_worker_time", node.TotalWorkerTime)
+		attrs.PutDouble("total_elapsed_time", node.TotalElapsedTime)
+		attrs.PutInt("total_logical_reads", node.TotalLogicalReads)
+		attrs.PutInt("total_logical_writes", node.TotalLogicalWrites)
+		attrs.PutInt("execution_count", node.ExecutionCount)
+		attrs.PutDouble("avg_elapsed_time_ms", node.AvgElapsedTimeMs)
+
+		// Timestamps
+		if node.LastExecutionTime != "" {
+			attrs.PutStr("last_execution_time", node.LastExecutionTime)
+		}
 	}
 
-	s.logger.Info("Emitted execution plan as OTLP logs",
+	s.logger.Info("Emitted execution plan as OTLP logs with attributes",
 		zap.String("query_id", queryID),
 		zap.String("plan_handle", planHandle),
 		zap.Int("operator_count", len(analysis.Nodes)))
