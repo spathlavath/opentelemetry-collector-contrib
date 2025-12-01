@@ -82,39 +82,39 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "instance.id-val", "blocked_user-val", "blocking_user-val", "query_id-val", "session_id-val", "blocking_sid-val", "blocked_serial-val", "blocking_serial-val", "blocking_query_text-val", "blocking_query_id-val", 11, "database_name-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, 11, "sql_exec_start-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", 12, "first_load_time-val", "last_load_time-val")
+			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "first_load_time-val", "last_load_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(ts, 1, "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -706,35 +706,43 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
+			mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1358,11 +1366,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "user_name-val", "session_id-val", 14, "session_status-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "wait_p1text-val", "wait_p1-val", "wait_p2text-val", "wait_p2-val", "wait_p3text-val", "wait_p3-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(ts, 1, "collection_timestamp-val", "session_id-val", "query_id-val", 16, 11, "sql_exec_start-val")
+			mb.RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "session_id-val", "query_id-val", 16, 11, "sql_exec_start-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -1458,42 +1466,45 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocked_user")
-					assert.True(t, ok)
-					assert.Equal(t, "blocked_user-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_user")
-					assert.True(t, ok)
-					assert.Equal(t, "blocking_user-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session_id")
-					assert.True(t, ok)
-					assert.Equal(t, "session_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_sid")
-					assert.True(t, ok)
-					assert.Equal(t, "blocking_sid-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocked_serial")
-					assert.True(t, ok)
-					assert.Equal(t, "blocked_serial-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_serial")
-					assert.True(t, ok)
-					assert.Equal(t, "blocking_serial-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "blocking_query_text-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "blocking_query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("sql_exec_id")
-					assert.True(t, ok)
-					assert.EqualValues(t, 11, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("session_id")
+					assert.True(t, ok)
+					assert.Equal(t, "session_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("session_serial")
+					assert.True(t, ok)
+					assert.EqualValues(t, 14, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("sql_child_number")
+					assert.True(t, ok)
+					assert.EqualValues(t, 16, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("sql_exec_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 11, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("sql_exec_start")
+					assert.True(t, ok)
+					assert.Equal(t, "sql_exec_start-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("final_blocker_user")
+					assert.True(t, ok)
+					assert.Equal(t, "final_blocker_user-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("final_blocker_sid")
+					assert.True(t, ok)
+					assert.Equal(t, "final_blocker_sid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("final_blocker_serial")
+					assert.True(t, ok)
+					assert.Equal(t, "final_blocker_serial-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("final_blocker_query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "final_blocker_query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("final_blocker_query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "final_blocker_query_text-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.buffer_gets":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.buffer_gets")
 					validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"] = true
@@ -1504,9 +1515,12 @@ func TestMetricsBuilder(t *testing.T) {
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -1520,14 +1534,17 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.cpu_time"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Average CPU time per execution for this child cursor (in microseconds)", ms.At(i).Description())
-					assert.Equal(t, "us", ms.At(i).Unit())
+					assert.Equal(t, "Average CPU time per execution for this child cursor (in milliseconds)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -1548,7 +1565,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -1573,9 +1593,12 @@ func TestMetricsBuilder(t *testing.T) {
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -1589,14 +1612,17 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.elapsed_time"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Average elapsed time per execution for this child cursor (in microseconds)", ms.At(i).Description())
-					assert.Equal(t, "us", ms.At(i).Unit())
+					assert.Equal(t, "Average elapsed time per execution for this child cursor (in milliseconds)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -1617,7 +1643,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -1638,7 +1667,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -1652,14 +1684,17 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.child_cursors.user_io_wait_time"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Average user I/O wait time per execution for this child cursor (in microseconds)", ms.At(i).Description())
-					assert.Equal(t, "us", ms.At(i).Unit())
+					assert.Equal(t, "Average user I/O wait time per execution for this child cursor (in milliseconds)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4534,7 +4569,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4555,7 +4593,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4576,7 +4617,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4597,7 +4641,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4618,7 +4665,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4639,7 +4689,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4660,7 +4713,58 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.interval_avg_elapsed_time":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.interval_avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.interval_avg_elapsed_time")
+					validatedMetrics["newrelicoracledb.slow_queries.interval_avg_elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average elapsed time per execution in the last polling interval (delta metric)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+				case "newrelicoracledb.slow_queries.interval_execution_count":
+					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.interval_execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.interval_execution_count")
+					validatedMetrics["newrelicoracledb.slow_queries.interval_execution_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.", ms.At(i).Description())
+					assert.Equal(t, "{executions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -4681,7 +4785,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_id")
@@ -7519,6 +7626,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
@@ -7606,6 +7716,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("session_id")
 					assert.True(t, ok)
 					assert.Equal(t, "session_id-val", attrVal.Str())

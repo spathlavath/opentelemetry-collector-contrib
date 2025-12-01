@@ -35,48 +35,70 @@ func NewChildCursorsScraper(oracleClient client.OracleClient, mb *metadata.Metri
 	}
 }
 
-// ScrapeChildCursors collects metrics for child cursors for given SQL IDs
-func (s *ChildCursorsScraper) ScrapeChildCursors(ctx context.Context, sqlIDs []string, childLimit int) []error {
+// ScrapeChildCursorsWithCache collects metrics for pre-fetched child cursors and additional new identifiers
+// This optimized method avoids re-querying V$SQL for child cursors already fetched
+// Parameters:
+//   - cachedChildCursors: Child cursors already fetched from V$SQL (to avoid duplicate queries)
+//   - newIdentifiers: New SQL identifiers found in wait events (need to be queried)
+//   - childLimit: Limit for querying new identifiers
+func (s *ChildCursorsScraper) ScrapeChildCursorsWithCache(ctx context.Context, cachedChildCursors []models.ChildCursor, newIdentifiers []models.SQLIdentifier, childLimit int) []error {
 	var errs []error
 
-	if len(sqlIDs) == 0 {
-		return errs
-	}
-
-	s.logger.Debug("Starting child cursors scrape",
-		zap.Int("sql_ids", len(sqlIDs)),
+	s.logger.Debug("Starting cached child cursors scrape",
+		zap.Int("cached_cursors", len(cachedChildCursors)),
+		zap.Int("new_identifiers", len(newIdentifiers)),
 		zap.Int("child_limit", childLimit))
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricsEmitted := 0
 
-	for _, sqlID := range sqlIDs {
-		childCursors, err := s.client.QueryChildCursors(ctx, sqlID, childLimit)
-		if err != nil {
-			s.logger.Warn("Failed to fetch child cursors for SQL_ID",
-				zap.String("sql_id", sqlID),
-				zap.Error(err))
-			errs = append(errs, err)
+	// STEP 1: Record metrics for cached child cursors (from V$SQL top N)
+	for _, cursor := range cachedChildCursors {
+		if !cursor.HasValidIdentifier() {
 			continue
 		}
 
-		if len(childCursors) == 0 {
-			s.logger.Debug("No child cursors found for SQL_ID", zap.String("sql_id", sqlID))
-			continue
-		}
+		s.recordChildCursorMetrics(now, &cursor)
+		metricsEmitted++
+	}
 
-		for _, cursor := range childCursors {
-			if !cursor.HasValidIdentifier() {
+	s.logger.Debug("Cached child cursor metrics emitted",
+		zap.Int("metrics_emitted", metricsEmitted))
+
+	// STEP 2: Query V$SQL ONLY for NEW child numbers found in wait events
+	if len(newIdentifiers) > 0 {
+		newMetricsEmitted := 0
+		for _, identifier := range newIdentifiers {
+			// Query this specific (SQL_ID, CHILD_NUMBER) pair
+			childCursors, err := s.client.QueryChildCursors(ctx, identifier.SQLID, childLimit)
+			if err != nil {
+				s.logger.Warn("Failed to fetch new child cursor from V$SQL",
+					zap.String("sql_id", identifier.SQLID),
+					zap.Int64("child_number", identifier.ChildNumber),
+					zap.Error(err))
+				errs = append(errs, err)
 				continue
 			}
 
-			s.recordChildCursorMetrics(now, &cursor)
-			metricsEmitted++
+			// Find the specific child cursor matching the identifier
+			for _, cursor := range childCursors {
+				if cursor.GetSQLID() == identifier.SQLID && cursor.GetChildNumber() == identifier.ChildNumber {
+					if cursor.HasValidIdentifier() {
+						s.recordChildCursorMetrics(now, &cursor)
+						metricsEmitted++
+						newMetricsEmitted++
+					}
+					break
+				}
+			}
 		}
+
+		s.logger.Debug("New child cursor metrics emitted",
+			zap.Int("new_metrics_emitted", newMetricsEmitted))
 	}
 
-	s.logger.Debug("Child cursors scrape completed",
-		zap.Int("metrics_emitted", metricsEmitted),
+	s.logger.Debug("Child cursors scrape with cache completed",
+		zap.Int("total_metrics_emitted", metricsEmitted),
 		zap.Int("errors", len(errs)))
 
 	return errs
@@ -84,6 +106,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursors(ctx context.Context, sqlIDs []s
 
 // recordChildCursorMetrics records all metrics for a single child cursor
 func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cursor *models.ChildCursor) {
+	collectionTimestamp := cursor.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
 	sqlID := cursor.GetSQLID()
 	childNumber := cursor.GetChildNumber()
 	databaseName := cursor.GetDatabaseName()
@@ -93,6 +116,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(
 			now,
 			cursor.GetCPUTime(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -104,6 +128,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(
 			now,
 			cursor.GetElapsedTime(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -115,6 +140,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(
 			now,
 			cursor.GetUserIOWaitTime(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -126,6 +152,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(
 			now,
 			cursor.GetExecutions(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -137,6 +164,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(
 			now,
 			cursor.GetDiskReads(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -148,6 +176,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(
 			now,
 			cursor.GetBufferGets(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -159,6 +188,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(
 			now,
 			cursor.GetInvalidations(),
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,
@@ -170,6 +200,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 		s.mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(
 			now,
 			1, // count of 1 for each child cursor
+			collectionTimestamp,
 			databaseName,
 			sqlID,
 			childNumber,

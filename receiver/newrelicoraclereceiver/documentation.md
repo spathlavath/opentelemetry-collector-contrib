@@ -61,6 +61,12 @@ Total capacity of the ASM disk group in MB
 
 Wait time in seconds for blocked queries
 
+Shows how long a session has been waiting due to blocking by another session.
+Collected alongside wait events in a single optimized query from v$session.
+Includes information about the final blocking session (root cause) and its query.
+Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
+
+
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | s | Gauge | Double |
@@ -69,19 +75,20 @@ Wait time in seconds for blocked queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-| blocked_user | Username of the blocked session | Any Str | false |
-| blocking_user | Username of the blocking session | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| blocking_sid | Session ID of the blocking session | Any Str | false |
-| blocked_serial | Serial number of the blocked session | Any Str | false |
-| blocking_serial | Serial number of the blocking session | Any Str | false |
-| blocking_query_text | SQL query text of the blocking query | Any Str | false |
-| blocking_query_id | SQL query ID of the blocking query | Any Str | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| final_blocker_user | Username of the final blocking session (root cause) | Any Str | false |
+| final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | false |
+| final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |
+| final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | false |
+| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | false |
 
 ### newrelicoracledb.child_cursors.buffer_gets
 
@@ -89,28 +96,30 @@ Average number of buffer gets per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {gets} | Gauge | Int |
+| {gets} | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 
 ### newrelicoracledb.child_cursors.cpu_time
 
-Average CPU time per execution for this child cursor (in microseconds)
+Average CPU time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Int |
+| ms | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -127,6 +136,7 @@ Child cursor details including load times
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -139,28 +149,30 @@ Average number of disk reads per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {reads} | Gauge | Int |
+| {reads} | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 
 ### newrelicoracledb.child_cursors.elapsed_time
 
-Average elapsed time per execution for this child cursor (in microseconds)
+Average elapsed time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Int |
+| ms | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -177,6 +189,7 @@ Total number of executions of this child cursor
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -193,22 +206,24 @@ Number of times this child cursor was invalidated
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
 
 ### newrelicoracledb.child_cursors.user_io_wait_time
 
-Average user I/O wait time per execution for this child cursor (in microseconds)
+Average user I/O wait time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| us | Gauge | Int |
+| ms | Gauge | Double |
 
 #### Attributes
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -2498,6 +2513,7 @@ Average CPU time per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
@@ -2514,6 +2530,7 @@ Average disk reads per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
@@ -2530,6 +2547,7 @@ Average disk writes per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
@@ -2546,6 +2564,7 @@ Average elapsed time per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
@@ -2562,6 +2581,7 @@ Average lock/concurrency wait time per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
@@ -2578,6 +2598,7 @@ Average rows examined per execution for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
@@ -2594,6 +2615,41 @@ Number of executions for slow queries
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_avg_elapsed_time
+
+Average elapsed time per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_execution_count
+
+Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
@@ -2610,6 +2666,7 @@ Slow Query Details
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | query_text | SQL query text | Any Str | false |
@@ -4951,6 +5008,12 @@ Used percentage of tablespace
 
 Current wait time in seconds for active wait events
 
+Captures how long active sessions have been waiting on various database resources.
+Collected alongside blocking information in a single optimized query from v$session.
+Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
+Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', SECONDS_IN_WAIT>0).
+
+
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | s | Gauge | Double |
@@ -4959,7 +5022,8 @@ Current wait time in seconds for active wait events
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
@@ -4989,6 +5053,11 @@ Current wait time in seconds for active wait events
 
 Time remaining for the wait event operation in seconds
 
+Estimated time remaining for the current wait operation to complete.
+Collected alongside wait events and blocking information in a single query.
+Useful for identifying long-running operations and predicting when they will complete.
+
+
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | s | Gauge | Double |
@@ -4997,7 +5066,8 @@ Time remaining for the wait event operation in seconds
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the metric data was collected from Oracle | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | sql_child_number | SQL child cursor number | Any Int | false |

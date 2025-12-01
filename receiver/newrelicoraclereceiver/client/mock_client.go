@@ -11,10 +11,9 @@ import (
 
 // MockClient is a mock implementation of OracleClient for testing.
 type MockClient struct {
-	SlowQueries     []models.SlowQuery
-	ChildCursors    []models.ChildCursor
-	BlockingQueries []models.BlockingQuery
-	WaitEvents      []models.WaitEvent
+	SlowQueries              []models.SlowQuery
+	ChildCursors             []models.ChildCursor
+	WaitEventsWithBlocking   []models.WaitEventWithBlocking
 
 	// Connection metrics
 	TotalSessions      int64
@@ -117,9 +116,8 @@ type MockClient struct {
 // NewMockClient creates a new mock client for testing.
 func NewMockClient() *MockClient {
 	return &MockClient{
-		SlowQueries:     []models.SlowQuery{},
-		BlockingQueries: []models.BlockingQuery{},
-		WaitEvents:      []models.WaitEvent{},
+		SlowQueries:            []models.SlowQuery{},
+		WaitEventsWithBlocking: []models.WaitEventWithBlocking{},
 	}
 }
 
@@ -145,7 +143,7 @@ func (m *MockClient) QueryExecutionPlanForChild(ctx context.Context, sqlID strin
 	return []models.ExecutionPlanRow{}, nil
 }
 
-func (m *MockClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
+func (m *MockClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -159,18 +157,11 @@ func (m *MockClient) QueryChildCursors(ctx context.Context, sqlID string, childL
 	return m.ChildCursors, nil
 }
 
-func (m *MockClient) QueryBlockingQueries(ctx context.Context, countThreshold int) ([]models.BlockingQuery, error) {
+func (m *MockClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
-	return m.BlockingQueries, nil
-}
-
-func (m *MockClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.WaitEvents, nil
+	return m.WaitEventsWithBlocking, nil
 }
 
 func (m *MockClient) QueryTotalSessions(ctx context.Context) (int64, error) {

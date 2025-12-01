@@ -21,16 +21,17 @@ type OracleClient interface {
 	QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error)
 
 	// Slow queries
-	QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error)
+	// intervalSeconds: Time window to fetch queries (e.g., 60 = last 60 seconds)
+	// responseTimeThreshold: Threshold filtering done in Go after delta calculation
+	// countThreshold: TOP N selection done in Go after delta calculation
+	QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error)
 
 	// Child cursors (V$SQL)
 	QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error)
 
-	// Blocking queries
-	QueryBlockingQueries(ctx context.Context, countThreshold int) ([]models.BlockingQuery, error)
-
-	// Wait events
-	QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error)
+	// Combined wait events with blocking information
+	// This replaces the separate QueryBlockingQueries and QueryWaitEvents methods
+	QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error)
 
 	// Connection metrics - simple counts
 	QueryTotalSessions(ctx context.Context) (int64, error)

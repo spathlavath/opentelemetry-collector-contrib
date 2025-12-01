@@ -5,10 +5,22 @@ package queries
 
 import "fmt"
 
-// GetSlowQueriesSQL returns SQL for slow queries with configurable response time threshold and row limit
-func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
+// GetSlowQueriesSQL returns SQL for slow queries with configurable time window
+// Returns total_elapsed_time_ms for delta calculation in addition to avg_elapsed_time_ms
+//
+// IMPORTANT: TOP N filtering and threshold filtering are applied in Go code AFTER delta calculation
+// This ensures we get enough candidates for interval-based (delta) averaging
+//
+// Parameters:
+// - intervalSeconds: Time window to fetch queries (e.g., 60 = last 60 seconds)
+//
+// Note: This function signature previously accepted responseTimeThreshold and rowLimit parameters,
+// but those are no longer used in the SQL query. Filtering and TOP N selection are now done in Go
+// after delta calculation for accurate results.
+func GetSlowQueriesSQL(intervalSeconds int) string {
 	return fmt.Sprintf(`
 		SELECT
+			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
 			d.name AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
@@ -21,7 +33,8 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms,
 			sa.buffer_gets / DECODE(sa.executions, 0, 1, sa.executions) AS rows_examined,
 			sa.concurrency_wait_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_lock_time_ms,
-			sa.last_active_time AS last_active_time_ms
+			sa.last_active_time AS last_active_time_ms,
+			sa.elapsed_time / 1000 AS total_elapsed_time_ms
 		FROM
 			v$sqlarea sa
 		INNER JOIN
@@ -36,51 +49,24 @@ func GetSlowQueriesSQL(responseTimeThreshold, rowLimit int) string {
 			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
 			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER')
-			AND sa.last_active_time >= TRUNC(SYSDATE)
-			AND sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 >= %d
+			-- KEY FILTER: Only fetch queries that ran in the last N seconds (interval window)
+			-- This is critical for delta calculation to work correctly
+			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
 		ORDER BY
-			avg_elapsed_time_ms DESC
-		FETCH FIRST %d ROWS ONLY`, responseTimeThreshold, rowLimit)
+			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) DESC`, intervalSeconds)
 }
 
-// GetBlockingQueriesSQL returns SQL for blocking queries with configurable row limit
-func GetBlockingQueriesSQL(rowLimit int) string {
-	return fmt.Sprintf(`
-		SELECT
-			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,			
-			blocked.sid AS session_id,
-			blocked.serial# AS blocked_serial,
-			blocked.username AS blocked_user,
-			blocked.seconds_in_wait AS blocked_wait_sec,
-			blocked.sql_id AS query_id,
-			blocked.sql_exec_id AS sql_exec_id,
-			blocking_sql.sql_text AS blocking_query_text,
-			blocking.sid AS blocking_sid,
-			blocking.serial# AS blocking_serial,
-			blocking.username AS blocking_user,
-			blocking.sql_id AS blocking_query_id,
-			d.name AS database_name
-		FROM
-			v$session blocked
-		JOIN
-			v$session blocking ON blocked.blocking_session = blocking.sid
-		LEFT JOIN
-			v$sql blocking_sql ON blocking.sql_id = blocking_sql.sql_id
-		CROSS JOIN
-			v$database d
-		WHERE
-			blocked.blocking_session IS NOT NULL
-			AND blocked.seconds_in_wait > 0
-		ORDER BY
-			blocked.seconds_in_wait DESC
-		FETCH FIRST %d ROWS ONLY`, rowLimit)
-}
-
-// GetWaitEventQueriesSQL returns SQL for wait event queries with configurable row limit
-func GetWaitEventQueriesSQL(rowLimit int) string {
+// GetWaitEventsAndBlockingSQL returns SQL for wait events with optional blocking information
+// This combines both wait events and blocking queries into a single query to reduce overhead
+// High cardinality mitigation:
+// - FETCH FIRST limits total rows returned to configured rowLimit
+// - Filters active sessions with actual waits (status='ACTIVE', wait_class<>'Idle', seconds_in_wait>0)
+// - Orders by wait time to get most impactful sessions first
+func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
+			d.name AS database_name,
 			s.username,
 			s.sid,
 			s.serial#,
@@ -106,11 +92,27 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 			s.p2text,
 			s.p2,
 			s.p3text,
-			s.p3
+			s.p3,
+			-- Blocking session context (for blocked sessions)
+			s.BLOCKING_SESSION_STATUS,
+			s.BLOCKING_SESSION AS immediate_blocker_sid,
+			s.FINAL_BLOCKING_SESSION_STATUS,
+			s.FINAL_BLOCKING_SESSION AS final_blocker_sid,
+			-- Final blocker's details (from joined v$session)
+			final_blocker.username AS final_blocker_user,
+			final_blocker.serial# AS final_blocker_serial,
+			final_blocker.sql_id AS final_blocker_query_id,
+			final_blocker_sql.sql_text AS final_blocker_query_text
 		FROM
 			v$session s
 		LEFT JOIN
 			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID
+		LEFT JOIN
+			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
+		LEFT JOIN
+			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
+		CROSS JOIN
+			v$database d
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
@@ -122,16 +124,18 @@ func GetWaitEventQueriesSQL(rowLimit int) string {
 
 // GetChildCursorsQuery returns SQL to get top N child cursors for a given SQL_ID from V$SQL
 // Returns average metrics per execution to normalize performance data
+// Time metrics are converted from microseconds to milliseconds for better readability
 // Ordered by most recent load time to get the latest child cursor versions
 func GetChildCursorsQuery(sqlID string, childLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
+			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
 			d.name AS database_name,
 			s.sql_id,
 			s.child_number,
-			CASE WHEN s.executions > 0 THEN s.cpu_time / s.executions ELSE 0 END AS avg_cpu_time_us,
-			CASE WHEN s.executions > 0 THEN s.elapsed_time / s.executions ELSE 0 END AS avg_elapsed_time_us,
-			CASE WHEN s.executions > 0 THEN s.user_io_wait_time / s.executions ELSE 0 END AS avg_io_wait_time_us,
+			CASE WHEN s.executions > 0 THEN (s.cpu_time / s.executions) / 1000 ELSE 0 END AS avg_cpu_time_ms,
+			CASE WHEN s.executions > 0 THEN (s.elapsed_time / s.executions) / 1000 ELSE 0 END AS avg_elapsed_time_ms,
+			CASE WHEN s.executions > 0 THEN (s.user_io_wait_time / s.executions) / 1000 ELSE 0 END AS avg_io_wait_time_ms,
 			CASE WHEN s.executions > 0 THEN s.disk_reads / s.executions ELSE 0 END AS avg_disk_reads,
 			CASE WHEN s.executions > 0 THEN s.buffer_gets / s.executions ELSE 0 END AS avg_buffer_gets,
 			s.executions,

@@ -92,8 +92,11 @@ func (c *SQLClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string
 }
 
 // QuerySlowQueries executes the slow queries query.
-func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
-	query := queries.GetSlowQueriesSQL(responseTimeThreshold, countThreshold)
+// intervalSeconds: Time window to fetch queries that ran in the last N seconds
+// responseTimeThreshold: Threshold filtering done in Go after delta calculation (not used in SQL)
+// countThreshold: TOP N selection done in Go after delta calculation (not used in SQL)
+func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
+	query := queries.GetSlowQueriesSQL(intervalSeconds)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -107,6 +110,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold,
 		var slowQuery models.SlowQuery
 
 		err := rows.Scan(
+			&slowQuery.CollectionTimestamp,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
@@ -120,6 +124,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, responseTimeThreshold,
 			&slowQuery.AvgRowsExamined,
 			&slowQuery.AvgLockTimeMs,
 			&slowQuery.LastActiveTime,
+			&slowQuery.TotalElapsedTimeMS,
 		)
 		if err != nil {
 			return nil, err
@@ -155,14 +160,15 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 		var childCursor models.ChildCursor
 
 		err := rows.Scan(
+			&childCursor.CollectionTimestamp,
 			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
-			&childCursor.CPUTime,
-			&childCursor.ElapsedTime,
-			&childCursor.UserIOWaitTime,
-			&childCursor.DiskReads,
-			&childCursor.BufferGets,
+			&childCursor.AvgCPUTimeMs,
+			&childCursor.AvgElapsedTimeMs,
+			&childCursor.AvgIOWaitTimeMs,
+			&childCursor.AvgDiskReads,
+			&childCursor.AvgBufferGets,
 			&childCursor.Executions,
 			&childCursor.Invalidations,
 			&childCursor.FirstLoadTime,
@@ -182,9 +188,10 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 	return results, nil
 }
 
-// QueryBlockingQueries executes the blocking queries query.
-func (c *SQLClient) QueryBlockingQueries(ctx context.Context, countThreshold int) ([]models.BlockingQuery, error) {
-	query := queries.GetBlockingQueriesSQL(countThreshold)
+// QueryWaitEventsWithBlocking executes the combined wait events with blocking information query.
+// This replaces the separate QueryBlockingQueries and QueryWaitEvents methods.
+func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error) {
+	query := queries.GetWaitEventsAndBlockingSQL(countThreshold)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -192,89 +199,90 @@ func (c *SQLClient) QueryBlockingQueries(ctx context.Context, countThreshold int
 	}
 	defer rows.Close()
 
-	var results []models.BlockingQuery
+	var results []models.WaitEventWithBlocking
 
 	for rows.Next() {
-		var blockingQuery models.BlockingQuery
+		var w models.WaitEventWithBlocking
 
 		err := rows.Scan(
-			&blockingQuery.CollectionTimestamp,
-			&blockingQuery.SessionID,
-			&blockingQuery.BlockedSerial,
-			&blockingQuery.BlockedUser,
-			&blockingQuery.BlockedWaitSec,
-			&blockingQuery.QueryID,
-			&blockingQuery.SQLExecID,
-			&blockingQuery.BlockingQueryText,
-			&blockingQuery.BlockingSID,
-			&blockingQuery.BlockingSerial,
-			&blockingQuery.BlockingUser,
-			&blockingQuery.BlockingQueryID,
-			&blockingQuery.DatabaseName,
+			// 1. COLLECTION_TIMESTAMP
+			&w.CollectionTimestamp,
+			// 2. database_name
+			&w.DatabaseName,
+			// 3. username
+			&w.Username,
+			// 4. sid
+			&w.SID,
+			// 5. serial#
+			&w.Serial,
+			// 6. status
+			&w.Status,
+			// 7. sql_id
+			&w.SQLID,
+			// 8. SQL_CHILD_NUMBER
+			&w.SQLChildNumber,
+			// 9. wait_class
+			&w.WaitClass,
+			// 10. event
+			&w.Event,
+			// 11. SECONDS_IN_WAIT
+			&w.SecondsInWait,
+			// 12. time_remaining_seconds
+			&w.TimeRemainingSeconds,
+			// 13. SQL_EXEC_START
+			&w.SQLExecStart,
+			// 14. SQL_EXEC_ID
+			&w.SQLExecID,
+			// 15. PROGRAM
+			&w.Program,
+			// 16. MACHINE
+			&w.Machine,
+			// 17. ROW_WAIT_OBJ#
+			&w.RowWaitObj,
+			// 18. OWNER
+			&w.Owner,
+			// 19. OBJECT_NAME
+			&w.ObjectName,
+			// 20. OBJECT_TYPE
+			&w.ObjectType,
+			// 21. ROW_WAIT_FILE#
+			&w.RowWaitFile,
+			// 22. ROW_WAIT_BLOCK#
+			&w.RowWaitBlock,
+			// 23. p1text
+			&w.P1Text,
+			// 24. p1
+			&w.P1,
+			// 25. p2text
+			&w.P2Text,
+			// 26. p2
+			&w.P2,
+			// 27. p3text
+			&w.P3Text,
+			// 28. p3
+			&w.P3,
+			// 29. BLOCKING_SESSION_STATUS
+			&w.BlockingSessionStatus,
+			// 30. immediate_blocker_sid
+			&w.ImmediateBlockerSID,
+			// 31. FINAL_BLOCKING_SESSION_STATUS
+			&w.FinalBlockingSessionStatus,
+			// 32. final_blocker_sid
+			&w.FinalBlockerSID,
+			// 33. final_blocker_user
+			&w.FinalBlockerUser,
+			// 34. final_blocker_serial
+			&w.FinalBlockerSerial,
+			// 35. final_blocker_query_id
+			&w.FinalBlockerQueryID,
+			// 36. final_blocker_query_text
+			&w.FinalBlockerQueryText,
 		)
 		if err != nil {
 			return nil, err
 		}
 
-		results = append(results, blockingQuery)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return results, nil
-}
-
-// QueryWaitEvents executes the wait events query.
-func (c *SQLClient) QueryWaitEvents(ctx context.Context, countThreshold int) ([]models.WaitEvent, error) {
-	query := queries.GetWaitEventQueriesSQL(countThreshold)
-
-	rows, err := c.db.QueryContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var results []models.WaitEvent
-
-	for rows.Next() {
-		var waitEvent models.WaitEvent
-
-		err := rows.Scan(
-			&waitEvent.CollectionTimestamp,
-			&waitEvent.Username,
-			&waitEvent.SID,
-			&waitEvent.Serial,
-			&waitEvent.Status,
-			&waitEvent.QueryID,
-			&waitEvent.SQLChildNumber,
-			&waitEvent.WaitCategory,
-			&waitEvent.WaitEventName,
-			&waitEvent.CurrentWaitSeconds,
-			&waitEvent.TimeRemainingSeconds,
-			&waitEvent.SQLExecStart,
-			&waitEvent.SQLExecID,
-			&waitEvent.Program,
-			&waitEvent.Machine,
-			&waitEvent.LockedObjectID,
-			&waitEvent.ObjectOwner,
-			&waitEvent.ObjectNameWaitedOn,
-			&waitEvent.ObjectTypeWaitedOn,
-			&waitEvent.LockedFileID,
-			&waitEvent.LockedBlockID,
-			&waitEvent.P1Text,
-			&waitEvent.P1,
-			&waitEvent.P2Text,
-			&waitEvent.P2,
-			&waitEvent.P3Text,
-			&waitEvent.P3,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		results = append(results, waitEvent)
+		results = append(results, w)
 	}
 
 	if err = rows.Err(); err != nil {

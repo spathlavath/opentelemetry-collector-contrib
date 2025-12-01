@@ -4,20 +4,36 @@ import "database/sql"
 
 // SlowQuery represents a slow query record from Oracle V$SQL view
 type SlowQuery struct {
-	DatabaseName     sql.NullString
-	QueryID          sql.NullString
-	SchemaName       sql.NullString
-	UserName         sql.NullString // NEW: The user who parsed the statement
-	ExecutionCount   sql.NullInt64
-	QueryText        sql.NullString
-	AvgCPUTimeMs     sql.NullFloat64
-	AvgDiskReads     sql.NullFloat64
-	AvgDiskWrites    sql.NullFloat64
-	AvgElapsedTimeMs sql.NullFloat64
-	AvgRowsExamined  sql.NullFloat64
-	AvgLockTimeMs    sql.NullFloat64
-	LastActiveTime   sql.NullString
-	HasFullTableScan sql.NullString
+	CollectionTimestamp sql.NullString  // Timestamp when query was collected from Oracle
+	DatabaseName        sql.NullString
+	QueryID             sql.NullString
+	SchemaName          sql.NullString
+	UserName            sql.NullString // NEW: The user who parsed the statement
+	ExecutionCount      sql.NullInt64
+	QueryText           sql.NullString
+	AvgCPUTimeMs        sql.NullFloat64
+	AvgDiskReads        sql.NullFloat64
+	AvgDiskWrites       sql.NullFloat64
+	AvgElapsedTimeMs    sql.NullFloat64
+	AvgRowsExamined     sql.NullFloat64
+	AvgLockTimeMs       sql.NullFloat64
+	LastActiveTime      sql.NullString
+	HasFullTableScan    sql.NullString
+	TotalElapsedTimeMS  sql.NullFloat64 // Used for precise delta calculation only
+
+	// Interval-based delta metrics (calculated in-memory, not from DB)
+	// These are populated by the OracleIntervalCalculator
+	// NOTE: Only elapsed time has delta calculation, CPU uses historical average from DB
+	IntervalAvgElapsedTimeMS *float64 // Average elapsed time in the last interval (milliseconds)
+	IntervalExecutionCount   *int64   // Number of executions in the last interval
+}
+
+// GetCollectionTimestamp returns the collection timestamp as a string, empty if null
+func (sq *SlowQuery) GetCollectionTimestamp() string {
+	if sq.CollectionTimestamp.Valid {
+		return sq.CollectionTimestamp.String
+	}
+	return ""
 }
 
 // GetDatabaseName returns the database name as a string, empty if null

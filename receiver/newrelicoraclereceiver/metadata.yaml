@@ -19,6 +19,9 @@ resource_attributes:
     type: string
 
 attributes:
+  collection_timestamp:
+    description: Timestamp when the query metrics were collected from Oracle
+    type: string
   database_name:
     description: Oracle database name
     type: string
@@ -27,7 +30,7 @@ attributes:
     type: string
   query_text:
     description: SQL query text
-    type: string  
+    type: string
   schema_name:
     description: Schema name where the query is executed
     type: string
@@ -169,10 +172,6 @@ attributes:
   wait_p3:
     description: Wait event parameter 3 value
     type: string
-  
-  collection_timestamp:
-    description: Timestamp when the metric data was collected from Oracle
-    type: string
 
   session_serial:
     description: Oracle session serial number
@@ -184,27 +183,20 @@ attributes:
     description: SQL execution identifier
     type: int
 
-  blocking_user:
-    description: Username of the blocking session
+  final_blocker_user:
+    description: Username of the final blocking session (root cause)
     type: string
-  blocked_user:
-    description: Username of the blocked session
+  final_blocker_sid:
+    description: Session ID of the final blocking session (root cause)
     type: string
-
-  blocking_sid:
-    description: Session ID of the blocking session
+  final_blocker_serial:
+    description: Serial number of the final blocking session (root cause)
     type: string
-  blocked_serial:
-    description: Serial number of the blocked session
+  final_blocker_query_id:
+    description: SQL query ID of the final blocking session's query
     type: string
-  blocking_serial:
-    description: Serial number of the blocking session
-    type: string
-  blocking_query_text:
-    description: SQL query text of the blocking query
-    type: string
-  blocking_query_id:
-    description: SQL query ID of the blocking query
+  final_blocker_query_text:
+    description: SQL query text of the final blocking session's query
     type: string
 
   db.instance.name:
@@ -3528,6 +3520,7 @@ metrics:
       value_type: double
     unit: "{executions}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3539,6 +3532,7 @@ metrics:
       value_type: double
     unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3550,6 +3544,7 @@ metrics:
       value_type: double
     unit: "{reads}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3561,9 +3556,10 @@ metrics:
       value_type: double
     unit: "{writes}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
-      - user_name    
+      - user_name
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
@@ -3572,6 +3568,7 @@ metrics:
       value_type: double
     unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3583,6 +3580,7 @@ metrics:
       value_type: double
     unit: "{rows}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3594,6 +3592,7 @@ metrics:
       value_type: double
     unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - user_name
@@ -3605,6 +3604,7 @@ metrics:
       value_type: int
     unit: "{count}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - query_text
@@ -3612,36 +3612,65 @@ metrics:
       - user_name
       - last_active_time
 
-  # Child Cursor Metrics (from V$SQL) - Average values per execution
-  newrelicoracledb.child_cursors.cpu_time:
-    description: Average CPU time per execution for this child cursor (in microseconds)
+  # Interval-based (delta) metrics - showing what happened in the LAST polling interval
+  # These metrics provide real-time visibility into query performance changes
+  newrelicoracledb.slow_queries.interval_avg_elapsed_time:
+    description: Average elapsed time per execution in the last polling interval (delta metric)
     enabled: true
     gauge:
-      value_type: int
-    unit: us
+      value_type: double
+    unit: ms
     attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+
+  newrelicoracledb.slow_queries.interval_execution_count:
+    description: Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{executions}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+
+  # Child Cursor Metrics (from V$SQL) - Average values per execution
+  newrelicoracledb.child_cursors.cpu_time:
+    description: Average CPU time per execution for this child cursor (in milliseconds)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
 
   newrelicoracledb.child_cursors.elapsed_time:
-    description: Average elapsed time per execution for this child cursor (in microseconds)
+    description: Average elapsed time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
-      value_type: int
-    unit: us
+      value_type: double
+    unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
 
   newrelicoracledb.child_cursors.user_io_wait_time:
-    description: Average user I/O wait time per execution for this child cursor (in microseconds)
+    description: Average user I/O wait time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
-      value_type: int
-    unit: us
+      value_type: double
+    unit: ms
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3650,9 +3679,10 @@ metrics:
     description: Average number of disk reads per execution for this child cursor
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: "{reads}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3661,9 +3691,10 @@ metrics:
     description: Average number of buffer gets per execution for this child cursor
     enabled: true
     gauge:
-      value_type: int
+      value_type: double
     unit: "{gets}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3675,6 +3706,7 @@ metrics:
       value_type: int
     unit: "{executions}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3686,6 +3718,7 @@ metrics:
       value_type: int
     unit: "{invalidations}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3697,6 +3730,7 @@ metrics:
       value_type: int
     unit: "{count}"
     attributes:
+      - collection_timestamp
       - database_name
       - query_id
       - child_number
@@ -3705,24 +3739,30 @@ metrics:
 
   newrelicoracledb.blocking_queries.wait_time:
     description: Wait time in seconds for blocked queries
+    extended_documentation: |
+      Shows how long a session has been waiting due to blocking by another session.
+      Collected alongside wait events in a single optimized query from v$session.
+      Includes information about the final blocking session (root cause) and its query.
+      Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
     enabled: true
     gauge:
       value_type: double
     unit: s
     attributes:
       - collection_timestamp
-      - instance.id
-      - blocked_user
-      - blocking_user
-      - query_id
-      - session_id
-      - blocking_sid
-      - blocked_serial
-      - blocking_serial
-      - blocking_query_text
-      - blocking_query_id
-      - sql_exec_id
       - database_name
+      - user_name
+      - session_id
+      - session_serial
+      - query_id
+      - sql_child_number
+      - sql_exec_id
+      - sql_exec_start
+      - final_blocker_user
+      - final_blocker_sid
+      - final_blocker_serial
+      - final_blocker_query_id
+      - final_blocker_query_text
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.total_wait_time_ms:
@@ -3785,12 +3825,18 @@ metrics:
 
   newrelicoracledb.wait_events.current_wait_seconds:
     description: Current wait time in seconds for active wait events
+    extended_documentation: |
+      Captures how long active sessions have been waiting on various database resources.
+      Collected alongside blocking information in a single optimized query from v$session.
+      Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
+      Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', SECONDS_IN_WAIT>0).
     enabled: true
     gauge:
       value_type: double
     unit: s
     attributes:
       - collection_timestamp
+      - database_name
       - user_name
       - session_id
       - session_serial
@@ -3818,12 +3864,17 @@ metrics:
 
   newrelicoracledb.wait_events.time_remaining:
     description: Time remaining for the wait event operation in seconds
+    extended_documentation: |
+      Estimated time remaining for the current wait operation to complete.
+      Collected alongside wait events and blocking information in a single query.
+      Useful for identifying long-running operations and predicting when they will complete.
     enabled: true
     gauge:
       value_type: double
     unit: s
     attributes:
       - collection_timestamp
+      - database_name
       - session_id
       - query_id
       - sql_child_number
