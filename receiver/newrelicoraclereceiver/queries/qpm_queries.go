@@ -60,7 +60,7 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 // This combines both wait events and blocking queries into a single query to reduce overhead
 // High cardinality mitigation:
 // - FETCH FIRST limits total rows returned to configured rowLimit
-// - Filters active sessions with actual waits (status='ACTIVE', wait_class<>'Idle', seconds_in_wait>0)
+// - Filters active sessions with actual waits (status='ACTIVE', wait_class<>'Idle', wait_time_micro>0)
 // - Orders by wait time to get most impactful sessions first
 func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 	return fmt.Sprintf(`
@@ -75,8 +75,14 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			s.SQL_CHILD_NUMBER,
 			s.wait_class,
 			s.event,
-			s.SECONDS_IN_WAIT,
-			s.TIME_REMAINING_MICRO / 1000000.0 AS time_remaining_seconds,
+			-- Current wait time in milliseconds (high precision)
+			ROUND(s.WAIT_TIME_MICRO / 1000, 2) AS wait_time_ms,
+			-- Time since last wait (useful to see how long it has been ON CPU)
+			ROUND(s.TIME_SINCE_LAST_WAIT_MICRO / 1000, 2) AS time_since_last_wait_ms,
+			CASE 
+				WHEN s.TIME_REMAINING_MICRO = -1 THEN NULL -- Returns NULL for indefinite waits
+				ELSE ROUND(s.TIME_REMAINING_MICRO / 1000, 2) 
+			END AS time_remaining_ms,
 			s.SQL_EXEC_START,
 			s.SQL_EXEC_ID,
 			s.PROGRAM,
@@ -116,9 +122,10 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
-			AND s.SECONDS_IN_WAIT > 0
+			AND s.WAIT_TIME_MICRO > 0
+			AND s.state = 'WAITING'
 		ORDER BY
-			s.SECONDS_IN_WAIT DESC
+			s.WAIT_TIME_MICRO DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 

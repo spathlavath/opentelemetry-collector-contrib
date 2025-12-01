@@ -121,10 +121,10 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	p3Text := event.GetP3Text()
 	p3 := strconv.FormatInt(event.GetP3(), 10)
 
-	// Record current_wait_seconds metric
-	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitSecondsDataPoint(
+	// Record current_wait_time_ms metric
+	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(
 		now,
-		float64(event.GetCurrentWaitSeconds()),
+		event.GetCurrentWaitMs(),
 		collectionTimestamp,
 		dbName,
 		username,
@@ -153,11 +153,26 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		p3,
 	)
 
-	// Record time_remaining metric with reduced attributes to avoid high cardinality
-	if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeRemaining.Enabled {
-		s.mb.RecordNewrelicoracledbWaitEventsTimeRemainingDataPoint(
+	// Record time_remaining_ms metric with reduced attributes to avoid high cardinality
+	if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeRemainingMs.Enabled {
+		s.mb.RecordNewrelicoracledbWaitEventsTimeRemainingMsDataPoint(
 			now,
-			event.GetTimeRemainingSeconds(),
+			event.GetTimeRemainingMs(),
+			collectionTimestamp,
+			dbName,
+			sid,
+			qID,
+			sqlChildNumber,
+			sqlExecID,
+			sqlExecStart,
+		)
+	}
+
+	// Record time_since_last_wait_ms metric to track ON CPU time
+	if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeSinceLastWaitMs.Enabled {
+		s.mb.RecordNewrelicoracledbWaitEventsTimeSinceLastWaitMsDataPoint(
+			now,
+			event.GetTimeSinceLastWaitMs(),
 			collectionTimestamp,
 			dbName,
 			sid,
@@ -171,11 +186,11 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 
 // recordBlockingMetrics records blocking query metrics when a session is blocked
 func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking) {
-	// Calculate blocked wait time in seconds from current_wait_seconds
+	// Calculate blocked wait time in milliseconds from current_wait_time_ms
 	// This represents how long the session has been blocked
-	blockedWaitSec := float64(event.GetCurrentWaitSeconds())
+	blockedWaitMs := event.GetCurrentWaitMs()
 
-	if blockedWaitSec <= 0 {
+	if blockedWaitMs <= 0 {
 		return
 	}
 
@@ -196,9 +211,9 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
 	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
 
-	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeDataPoint(
+	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(
 		now,
-		blockedWaitSec,
+		blockedWaitMs,
 		collectionTimestamp,
 		dbName,
 		blockedUser,

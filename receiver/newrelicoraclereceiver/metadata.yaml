@@ -3737,17 +3737,18 @@ metrics:
       - first_load_time
       - last_load_time
 
-  newrelicoracledb.blocking_queries.wait_time:
-    description: Wait time in seconds for blocked queries
+  newrelicoracledb.blocking_queries.wait_time_ms:
+    description: Wait time in milliseconds for blocked queries
     extended_documentation: |
-      Shows how long a session has been waiting due to blocking by another session.
+      Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
       Collected alongside wait events in a single optimized query from v$session.
       Includes information about the final blocking session (root cause) and its query.
       Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
+      Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
     enabled: true
     gauge:
       value_type: double
-    unit: s
+    unit: ms
     attributes:
       - collection_timestamp
       - database_name
@@ -3823,17 +3824,18 @@ metrics:
       - db.protection_mode
       - db.protection_level
 
-  newrelicoracledb.wait_events.current_wait_seconds:
-    description: Current wait time in seconds for active wait events
+  newrelicoracledb.wait_events.current_wait_time_ms:
+    description: Current wait time in milliseconds for active wait events
     extended_documentation: |
-      Captures how long active sessions have been waiting on various database resources.
+      Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
       Collected alongside blocking information in a single optimized query from v$session.
       Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
-      Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', SECONDS_IN_WAIT>0).
+      Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', state='WAITING', wait_time_micro>0).
+      Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
     enabled: true
     gauge:
       value_type: double
-    unit: s
+    unit: ms
     attributes:
       - collection_timestamp
       - database_name
@@ -3862,16 +3864,18 @@ metrics:
       - wait_p3text
       - wait_p3
 
-  newrelicoracledb.wait_events.time_remaining:
-    description: Time remaining for the wait event operation in seconds
+  newrelicoracledb.wait_events.time_remaining_ms:
+    description: Time remaining for the wait event operation in milliseconds
     extended_documentation: |
-      Estimated time remaining for the current wait operation to complete.
+      Estimated time remaining for the current wait operation to complete in high precision milliseconds.
       Collected alongside wait events and blocking information in a single query.
       Useful for identifying long-running operations and predicting when they will complete.
+      Returns NULL (reported as 0) for indefinite waits (when Oracle returns -1).
+      Source: TIME_REMAINING_MICRO / 1000 (rounded to 2 decimal places).
     enabled: true
     gauge:
       value_type: double
-    unit: s
+    unit: ms
     attributes:
       - collection_timestamp
       - database_name
@@ -3881,7 +3885,28 @@ metrics:
       - sql_exec_id
       - sql_exec_start
 
-  # Disabled old wait events metrics - replaced with current_wait_seconds
+  newrelicoracledb.wait_events.time_since_last_wait_ms:
+    description: Time since last wait in milliseconds (ON CPU time indicator)
+    extended_documentation: |
+      Time elapsed since the session's last wait event in high precision milliseconds.
+      Useful for identifying sessions that are currently ON CPU (high CPU consumers).
+      When this value is high and wait_time_ms is low, the session is actively using CPU rather than waiting.
+      Collected alongside wait events and blocking information in a single query.
+      Source: TIME_SINCE_LAST_WAIT_MICRO / 1000 (rounded to 2 decimal places).
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - session_id
+      - query_id
+      - sql_child_number
+      - sql_exec_id
+      - sql_exec_start
+
+  # Disabled old wait events metrics - replaced with current_wait_time_ms
   # newrelicoracledb.wait_events.avg_wait_time_ms:
   #     description: Average wait time in milliseconds for wait events
   #     enabled: false

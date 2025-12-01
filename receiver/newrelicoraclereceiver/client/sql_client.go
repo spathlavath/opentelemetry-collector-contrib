@@ -225,57 +225,59 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 			&w.WaitClass,
 			// 10. event
 			&w.Event,
-			// 11. SECONDS_IN_WAIT
-			&w.SecondsInWait,
-			// 12. time_remaining_seconds
-			&w.TimeRemainingSeconds,
-			// 13. SQL_EXEC_START
+			// 11. wait_time_ms
+			&w.WaitTimeMs,
+			// 12. time_since_last_wait_ms
+			&w.TimeSinceLastWaitMs,
+			// 13. time_remaining_ms
+			&w.TimeRemainingMs,
+			// 14. SQL_EXEC_START
 			&w.SQLExecStart,
-			// 14. SQL_EXEC_ID
+			// 15. SQL_EXEC_ID
 			&w.SQLExecID,
-			// 15. PROGRAM
+			// 16. PROGRAM
 			&w.Program,
-			// 16. MACHINE
+			// 17. MACHINE
 			&w.Machine,
-			// 17. ROW_WAIT_OBJ#
+			// 18. ROW_WAIT_OBJ#
 			&w.RowWaitObj,
-			// 18. OWNER
+			// 19. OWNER
 			&w.Owner,
-			// 19. OBJECT_NAME
+			// 20. OBJECT_NAME
 			&w.ObjectName,
-			// 20. OBJECT_TYPE
+			// 21. OBJECT_TYPE
 			&w.ObjectType,
-			// 21. ROW_WAIT_FILE#
+			// 22. ROW_WAIT_FILE#
 			&w.RowWaitFile,
-			// 22. ROW_WAIT_BLOCK#
+			// 23. ROW_WAIT_BLOCK#
 			&w.RowWaitBlock,
-			// 23. p1text
+			// 24. p1text
 			&w.P1Text,
-			// 24. p1
+			// 25. p1
 			&w.P1,
-			// 25. p2text
+			// 26. p2text
 			&w.P2Text,
-			// 26. p2
+			// 27. p2
 			&w.P2,
-			// 27. p3text
+			// 28. p3text
 			&w.P3Text,
-			// 28. p3
+			// 29. p3
 			&w.P3,
-			// 29. BLOCKING_SESSION_STATUS
+			// 30. BLOCKING_SESSION_STATUS
 			&w.BlockingSessionStatus,
-			// 30. immediate_blocker_sid
+			// 31. immediate_blocker_sid
 			&w.ImmediateBlockerSID,
-			// 31. FINAL_BLOCKING_SESSION_STATUS
+			// 32. FINAL_BLOCKING_SESSION_STATUS
 			&w.FinalBlockingSessionStatus,
-			// 32. final_blocker_sid
+			// 33. final_blocker_sid
 			&w.FinalBlockerSID,
-			// 33. final_blocker_user
+			// 34. final_blocker_user
 			&w.FinalBlockerUser,
-			// 34. final_blocker_serial
+			// 35. final_blocker_serial
 			&w.FinalBlockerSerial,
-			// 35. final_blocker_query_id
+			// 36. final_blocker_query_id
 			&w.FinalBlockerQueryID,
-			// 36. final_blocker_query_text
+			// 37. final_blocker_query_text
 			&w.FinalBlockerQueryText,
 		)
 		if err != nil {

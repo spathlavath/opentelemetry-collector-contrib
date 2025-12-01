@@ -7,7 +7,7 @@ all_set:
       enabled: true
     newrelicoracledb.asm.diskgroup.total_mb:
       enabled: true
-    newrelicoracledb.blocking_queries.wait_time:
+    newrelicoracledb.blocking_queries.wait_time_ms:
       enabled: true
     newrelicoracledb.child_cursors.buffer_gets:
       enabled: true
@@ -649,9 +649,11 @@ all_set:
       enabled: true
     newrelicoracledb.tablespace.used_percent:
       enabled: true
-    newrelicoracledb.wait_events.current_wait_seconds:
+    newrelicoracledb.wait_events.current_wait_time_ms:
       enabled: true
-    newrelicoracledb.wait_events.time_remaining:
+    newrelicoracledb.wait_events.time_remaining_ms:
+      enabled: true
+    newrelicoracledb.wait_events.time_since_last_wait_ms:
       enabled: true
   events:
     newrelicoracledb.execution_plan:
@@ -669,7 +671,7 @@ none_set:
       enabled: false
     newrelicoracledb.asm.diskgroup.total_mb:
       enabled: false
-    newrelicoracledb.blocking_queries.wait_time:
+    newrelicoracledb.blocking_queries.wait_time_ms:
       enabled: false
     newrelicoracledb.child_cursors.buffer_gets:
       enabled: false
@@ -1311,9 +1313,11 @@ none_set:
       enabled: false
     newrelicoracledb.tablespace.used_percent:
       enabled: false
-    newrelicoracledb.wait_events.current_wait_seconds:
+    newrelicoracledb.wait_events.current_wait_time_ms:
       enabled: false
-    newrelicoracledb.wait_events.time_remaining:
+    newrelicoracledb.wait_events.time_remaining_ms:
+      enabled: false
+    newrelicoracledb.wait_events.time_since_last_wait_ms:
       enabled: false
   events:
     newrelicoracledb.execution_plan:

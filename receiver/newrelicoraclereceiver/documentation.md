@@ -57,19 +57,20 @@ Total capacity of the ASM disk group in MB
 | db.instance.name | Oracle database instance name | Any Str | false |
 | diskgroup.name | ASM disk group name | Any Str | false |
 
-### newrelicoracledb.blocking_queries.wait_time
+### newrelicoracledb.blocking_queries.wait_time_ms
 
-Wait time in seconds for blocked queries
+Wait time in milliseconds for blocked queries
 
-Shows how long a session has been waiting due to blocking by another session.
+Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
 Collected alongside wait events in a single optimized query from v$session.
 Includes information about the final blocking session (root cause) and its query.
 Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
+Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| ms | Gauge | Double |
 
 #### Attributes
 
@@ -5004,19 +5005,20 @@ Used percentage of tablespace
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
-### newrelicoracledb.wait_events.current_wait_seconds
+### newrelicoracledb.wait_events.current_wait_time_ms
 
-Current wait time in seconds for active wait events
+Current wait time in milliseconds for active wait events
 
-Captures how long active sessions have been waiting on various database resources.
+Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
 Collected alongside blocking information in a single optimized query from v$session.
 Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
-Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', SECONDS_IN_WAIT>0).
+Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', state='WAITING', wait_time_micro>0).
+Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| ms | Gauge | Double |
 
 #### Attributes
 
@@ -5049,18 +5051,47 @@ Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_clas
 | wait_p3text | Description of wait event parameter 3 | Any Str | false |
 | wait_p3 | Wait event parameter 3 value | Any Str | false |
 
-### newrelicoracledb.wait_events.time_remaining
+### newrelicoracledb.wait_events.time_remaining_ms
 
-Time remaining for the wait event operation in seconds
+Time remaining for the wait event operation in milliseconds
 
-Estimated time remaining for the current wait operation to complete.
+Estimated time remaining for the current wait operation to complete in high precision milliseconds.
 Collected alongside wait events and blocking information in a single query.
 Useful for identifying long-running operations and predicting when they will complete.
+Returns NULL (reported as 0) for indefinite waits (when Oracle returns -1).
+Source: TIME_REMAINING_MICRO / 1000 (rounded to 2 decimal places).
 
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+
+### newrelicoracledb.wait_events.time_since_last_wait_ms
+
+Time since last wait in milliseconds (ON CPU time indicator)
+
+Time elapsed since the session's last wait event in high precision milliseconds.
+Useful for identifying sessions that are currently ON CPU (high CPU consumers).
+When this value is high and wait_time_ms is low, the session is actively using CPU rather than waiting.
+Collected alongside wait events and blocking information in a single query.
+Source: TIME_SINCE_LAST_WAIT_MICRO / 1000 (rounded to 2 decimal places).
+
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
 
 #### Attributes
 
