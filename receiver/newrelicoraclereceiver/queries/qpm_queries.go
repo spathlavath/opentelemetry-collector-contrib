@@ -48,6 +48,9 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			AND sa.sql_text NOT LIKE '%%V$SQLAREA%%'
 			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
 			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
+			AND sa.sql_text NOT LIKE '%%gv$sqlarea%%'
+			AND sa.sql_text NOT LIKE '%%v$lock%%'
+			AND sa.sql_text NOT LIKE '%%gv$instance%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER')
 			-- KEY FILTER: Only fetch queries that ran in the last N seconds (interval window)
 			-- This is critical for delta calculation to work correctly
