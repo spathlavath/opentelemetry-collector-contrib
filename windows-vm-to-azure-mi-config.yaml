@@ -1,0 +1,229 @@
+# OpenTelemetry Collector Configuration for Windows VM to Azure SQL MI
+# Deploy this configuration ON the Windows VM to connect to Azure SQL MI
+# This solves the network connectivity issue by running collector inside Azure network
+
+# Extensions provide additional functionality
+extensions:
+  # Health check endpoint for monitoring collector health
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  # zPages extension for debugging
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+# Service configuration
+service:
+  # Enable extensions
+  extensions: [health_check, zpages]
+
+  # Define the data pipeline
+  pipelines:
+    # Metrics pipeline: receiver -> processor -> exporter
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [cumulativetodelta, deltatorate, resource, batch]
+      exporters: [otlphttp]
+
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: debug # Debug level for connection troubleshooting
+    metrics:
+      level: none
+
+# Processors transform and enrich the data
+processors:
+  # Convert cumulative counters to delta for rate calculations
+  cumulativetodelta:
+    metrics:
+      - sqlserver.page.operations
+      - sqlserver.page.reads
+      - sqlserver.page.writes
+      - sqlserver.page.splits
+      - sqlserver.user.connections
+      - sqlserver.batch.requests
+      - sqlserver.transaction.log.growths
+      - sqlserver.deadlocks
+      - sqlserver.user.errors
+      - sqlserver.lock.waits
+      - sqlserver.processes.blocked
+      - sqlserver.connections.active
+
+  # Convert deltas to rates (per-second calculations)
+  deltatorate:
+    metrics:
+      - sqlserver.page.operations
+      - sqlserver.page.reads
+      - sqlserver.page.writes
+      - sqlserver.page.splits
+      - sqlserver.user.connections
+      - sqlserver.batch.requests
+      - sqlserver.transaction.log.growths
+      - sqlserver.deadlocks
+      - sqlserver.user.errors
+      - sqlserver.lock.waits
+      - sqlserver.processes.blocked
+      - sqlserver.connections.active
+
+  # Resource processor adds metadata to all telemetry
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "azure-production"
+        action: upsert
+      - key: service.name
+        value: "azure-sql-mi-monitoring"
+        action: upsert
+      - key: sql.instance.type
+        value: "azure-sql-managed-instance"
+        action: upsert
+      - key: collector.deployment
+        value: "windows-vm-bridge"
+        action: upsert
+
+  # Batch processor groups data for efficient transmission
+  batch:
+    timeout: 10s
+    send_batch_size: 512
+    send_batch_max_size: 1000
+
+# Receivers collect telemetry data
+receivers:
+  # New Relic SQL Server Receiver - Azure SQL MI Configuration
+  newrelicsqlserver:
+    # =============================================================================
+    # AZURE SQL MANAGED INSTANCE CONNECTION CONFIGURATION
+    # =============================================================================
+    hostname: "pkudikyala-mi-node1.0a002db0321d.database.windows.net" # Azure SQL MI FQDN
+    port: "1433" # Standard SQL Server port
+    username: "pkudikyala" # Azure SQL authentication username
+    password: "Praveenkudikyala@1991" # Azure SQL authentication password
+    enable_ssl: true # Always true for Azure SQL MI
+    trust_server_certificate: false # Use proper cert validation for Azure
+
+    # =============================================================================
+    # TIMING CONFIGURATION
+    # =============================================================================
+    collection_interval: 30s # Frequent collection for Azure MI monitoring
+    timeout: 60s # Extended timeout for Azure connections
+
+    # =============================================================================
+    # AZURE SQL MI SPECIFIC METRICS (ALL ENABLED)
+    # =============================================================================
+    # All metrics enabled for comprehensive Azure SQL MI monitoring
+
+    # Database Core Metrics
+    enable_buffer_metrics: true
+    enable_database_reserve_metrics: true
+    enable_disk_metrics_in_bytes: true
+    enable_io_metrics: true
+    enable_log_growth_metrics: true
+    enable_page_file_metrics: true
+    enable_page_file_total_metrics: true
+    enable_memory_metrics: true
+    enable_memory_total_metrics: true
+    enable_memory_available_metrics: true
+    enable_memory_utilization_metrics: true
+
+    # System Performance Metrics
+    enable_system_cpu_queue_metrics: true
+    enable_system_memory_pages_metrics: true
+    enable_system_disk_queue_metrics: true
+
+    # CRITICAL: Always On Availability Group Metrics (PRIMARY FOCUS)
+    enable_failover_cluster_replica_metrics: true
+    enable_failover_cluster_replica_state_metrics: true
+    enable_failover_cluster_availability_group_health_metrics: true
+    enable_failover_cluster_availability_group_metrics: true
+    enable_failover_cluster_redo_queue_metrics: true
+
+    # Security and Access Metrics
+    enable_database_principals_details_metrics: true
+    enable_database_role_membership_details_metrics: true
+
+    # Connection Monitoring (Important for Azure SQL MI)
+    enable_user_connection_status_metrics: true
+    enable_user_connection_summary_metrics: true
+    enable_user_connection_utilization_metrics: true
+    enable_user_connection_client_metrics: true
+    enable_user_connection_client_summary: true
+    enable_user_connection_stats_metrics: true
+
+    # =============================================================================
+    # QUERY MONITORING CONFIGURATION (ENHANCED FOR AZURE)
+    # =============================================================================
+    enable_query_monitoring: true
+    query_monitoring_response_time_threshold: 500 # Azure SQL MI optimized threshold
+    query_monitoring_count_threshold: 5
+    query_monitoring_fetch_interval: 10 # Aggressive monitoring for cloud environment
+    query_monitoring_text_truncate_limit: 1024 # Truncate query text to 1024 characters
+
+    # =============================================================================
+    # PERFORMANCE TUNING FOR AZURE
+    # =============================================================================
+    max_concurrent_workers: 8 # Higher concurrency for cloud performance
+
+# Exporters send telemetry data to destinations
+exporters:
+  # New Relic OTLP HTTP Exporter - Staging Environment
+  otlphttp:
+    # New Relic staging OTLP endpoint
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+
+    # Headers for New Relic authentication
+    headers:
+      # New Relic API Key for staging
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+
+    # TLS configuration for HTTPS
+    tls:
+      insecure: false
+      insecure_skip_verify: false
+
+    # Retry configuration for robust delivery
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 30s
+      max_elapsed_time: 300s
+      randomization_factor: 0.5
+
+    # Queue configuration for handling traffic bursts
+    sending_queue:
+      enabled: true
+      num_consumers: 6
+      queue_size: 300
+
+    # Enable gzip compression
+    compression: gzip
+
+    # HTTP request timeout
+    timeout: 30s
+# =============================================================================
+# WINDOWS VM DEPLOYMENT INSTRUCTIONS
+# =============================================================================
+
+# 1. COPY THIS FILE to your Windows VM at: C:\otelcontribcol\config.yaml
+# 2. DOWNLOAD the Windows collector binary to: C:\otelcontribcol\otelcontribcol.exe
+# 3. RUN on Windows VM:
+#    cd C:\otelcontribcol
+#    .\otelcontribcol.exe --config=config.yaml
+
+# NETWORK BENEFITS:
+# ✅ Windows VM has access to Azure Virtual Network
+# ✅ Can reach private Azure SQL MI endpoints
+# ✅ Eliminates "network unreachable" errors
+# ✅ Proper SSL certificate validation
+
+# AZURE SQL MI CONNECTIVITY:
+# ✅ Direct connection to managed instance
+# ✅ Always On Availability Group metrics
+# ✅ Comprehensive failover cluster monitoring
+# ✅ Real-time performance data
+
+# MONITORING FEATURES:
+# ✅ Rate-based metrics (per-second calculations)
+# ✅ Delta conversion for cumulative counters
+# ✅ Enhanced query performance monitoring
+# ✅ Complete security and connection tracking

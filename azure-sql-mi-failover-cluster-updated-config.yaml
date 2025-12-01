@@ -1,0 +1,305 @@
+# OpenTelemetry Collector Configuration for Azure SQL Managed Instance Failover Cluster
+# Updated with Azure SQL MI specific failover cluster queries
+# Optimized for monitoring Always On Availability Groups using fabric replica states
+# Created for: pkudikyala-mi-node1.0a002db0321d.database.windows.net
+# Engine Edition: 8 (Azure SQL Managed Instance)
+
+# Extensions provide additional functionality
+extensions:
+  # Health check endpoint for monitoring collector health
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  # zPages extension for debugging and metrics inspection
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+# Service configuration
+service:
+  # Enable extensions
+  extensions: [health_check, zpages]
+
+  # Define the data pipeline
+  pipelines:
+    # Metrics pipeline: receiver -> processor -> exporter
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [resource, batch]
+      exporters: [otlphttp, debug]
+
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: debug # Debug level for connection troubleshooting
+    metrics:
+      level: none # Disable internal metrics to avoid port conflicts
+
+# Processors transform and enrich the data
+processors:
+  # Resource processor adds metadata to all telemetry
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "azure-production"
+        action: upsert
+      - key: service.name
+        value: "azure-sql-mi-failover-cluster"
+        action: upsert
+      - key: sql.instance.type
+        value: "azure-sql-managed-instance"
+        action: upsert
+      - key: sql.feature
+        value: "always-on-availability-groups"
+        action: upsert
+      - key: collector.deployment
+        value: "macos-to-azure-mi"
+        action: upsert
+      - key: sql.instance.name
+        value: "pkudikyala-mi-node1"
+        action: upsert
+
+  # Batch processor groups data for efficient transmission
+  batch:
+    timeout: 10s
+    send_batch_size: 512
+    send_batch_max_size: 1000
+
+# Receivers collect telemetry data
+receivers:
+  # New Relic SQL Server Receiver - Azure SQL MI Failover Cluster Configuration
+  newrelicsqlserver:
+    # =============================================================================
+    # CONNECTION CONFIGURATION - DIRECT CONNECTION
+    # =============================================================================
+
+    # DIRECT CONNECTION (requires VPN/ExpressRoute to Azure VNet)
+    hostname: "pkudikyala-mi-node1.0a002db0321d.database.windows.net" # Private endpoint
+    port: "1433" # Private endpoint port
+
+    # Authentication
+    username: "pkudikyala" # Azure SQL MI username
+    password: "Praveenkudikyala@1991" # Azure SQL MI password
+
+    # SSL Configuration (required for Azure SQL MI)
+    enable_ssl: true
+    trust_server_certificate: true # Trust server certificate for Azure SQL MI
+
+    # =============================================================================
+    # TIMING CONFIGURATION (OPTIMIZED FOR FAILOVER MONITORING)
+    # =============================================================================
+    collection_interval: 30s # Frequent collection for failover detection
+    timeout: 60s # Extended timeout for Azure connections
+
+    # =============================================================================
+    # AZURE SQL MI OPTIMIZED METRICS (COMPREHENSIVE MONITORING)
+    # =============================================================================
+
+    # Core Database Performance Metrics (Available on Azure SQL MI)
+    enable_buffer_metrics: true # Buffer pool performance
+    enable_database_reserve_metrics: true # Database space allocation
+    enable_disk_metrics_in_bytes: true # Disk usage metrics
+    enable_io_metrics: true # I/O stall time and latency
+    enable_log_growth_metrics: true # Transaction log growth events
+    enable_page_file_metrics: true # Page file availability
+    enable_page_file_total_metrics: true # Total page file metrics
+    enable_memory_metrics: true # Memory usage patterns
+    enable_memory_total_metrics: true # Total memory metrics
+    enable_memory_available_metrics: true # Available memory tracking
+    enable_memory_utilization_metrics: true # Memory utilization percentages
+
+    # Instance-Level Performance Metrics (Available on Azure SQL MI)
+    enable_instance_memory_metrics: true # Instance memory usage
+    enable_instance_comprehensive_stats: true # Comprehensive instance statistics
+    enable_instance_stats: true # Instance performance stats
+    enable_instance_buffer_pool_hit_percent: true # Buffer pool hit ratio
+    enable_instance_process_counts: true # Process and session counts
+    enable_instance_runnable_tasks: true # Runnable task queue
+    enable_instance_disk_metrics: true # Instance disk usage
+    enable_instance_active_connections: true # Active connection counts
+    enable_instance_buffer_pool_size: true # Buffer pool size metrics
+    enable_instance_target_memory_metrics: true # Target memory allocation
+    enable_instance_performance_ratios_metrics: true # Key performance ratios
+    enable_instance_index_metrics: true # Index usage statistics
+    enable_instance_lock_metrics: true # Lock wait statistics
+
+    # Database-Level Detailed Metrics (Available on Azure SQL MI)
+    enable_database_size_metrics: true # Database size and growth
+    enable_database_transaction_log_metrics: true # Transaction log usage
+    enable_database_log_space_usage_metrics: true # Log space utilization
+
+    # Security and Access Monitoring (Available on Azure SQL MI)
+    enable_security_metrics: true # Security event monitoring
+    enable_security_principals_metrics: true # User and login metrics
+    enable_security_role_members_metrics: true # Role membership tracking
+
+    # Wait Time Analysis (Available on Azure SQL MI)
+    enable_latch_wait_time_metrics: true # Latch wait time analysis
+
+    # Lock Monitoring (Available on Azure SQL MI - provides failover insights)
+    enable_lock_resource_metrics: true # Lock resource usage
+    enable_lock_mode_metrics: true # Lock mode statistics
+
+    # *** AZURE SQL MI SPECIFIC FAILOVER CLUSTER METRICS ***
+    # These are now using the updated fabric replica state queries that work with Azure SQL MI
+    enable_failover_cluster_replica_metrics: true # Performance counters (available)
+    enable_failover_cluster_replica_state_metrics: true # NEW: Uses fabric replica states
+    enable_failover_cluster_summary_metrics: true # NEW: Aggregated health metrics
+    enable_failover_cluster_seeding_metrics: true # NEW: Seeding progress tracking
+
+    # Traditional AG queries (disabled as they don't work on Azure SQL MI)
+    enable_failover_cluster_availability_group_health_metrics: false # Standard AG DMV not exposed
+    enable_failover_cluster_availability_group_metrics: false # Standard AG DMV not exposed
+    enable_failover_cluster_redo_queue_metrics: false # Covered by replica state metrics
+
+    # Security and User Management Metrics
+    enable_database_principals_details_metrics: true # User account details
+    enable_database_role_membership_details_metrics: true # Role assignments
+
+    # Connection and Session Monitoring (Important during failovers)
+    enable_user_connection_status_metrics: true # Connection status by state
+    enable_user_connection_summary_metrics: true # Aggregated connection counts
+    enable_user_connection_utilization_metrics: true # Connection pool efficiency
+    enable_user_connection_client_metrics: true # Connections by client/host
+    enable_user_connection_client_summary: true # Client connection summaries
+    enable_user_connection_stats_metrics: true # Statistical connection analysis
+
+    # =============================================================================
+    # QUERY MONITORING (ENHANCED FOR FAILOVER SCENARIOS)
+    # =============================================================================
+    enable_query_monitoring: true # Enable comprehensive query monitoring
+    query_monitoring_response_time_threshold: 500 # Monitor queries > 500ms (failover sensitive)
+    query_monitoring_count_threshold: 5 # Monitor frequently executed queries
+    query_monitoring_fetch_interval: 10 # Aggressive monitoring interval
+    query_monitoring_text_truncate_limit: 1024 # Query text truncation limit
+
+    # =============================================================================
+    # PERFORMANCE TUNING FOR AZURE SQL MI FAILOVER CLUSTER
+    # =============================================================================
+    max_concurrent_workers: 10 # Higher concurrency for comprehensive monitoring
+
+# Exporters send telemetry data to destinations
+exporters:
+  # New Relic OTLP HTTP Exporter - Production Environment
+  otlphttp:
+    # New Relic production OTLP endpoint (fixed from staging)
+    endpoint: "https://otlp.nr-data.net:4318"
+
+    # Headers for New Relic authentication
+    headers:
+      # New Relic API Key for production environment
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+
+    # TLS configuration for HTTPS
+    tls:
+      insecure: false
+      insecure_skip_verify: false
+
+    # Retry configuration for robust delivery
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 30s
+      max_elapsed_time: 300s
+      randomization_factor: 0.5
+
+    # Queue configuration for handling traffic bursts
+    sending_queue:
+      enabled: true
+      num_consumers: 6
+      queue_size: 300
+
+    # Enable gzip compression for better performance
+    compression: gzip
+
+    # HTTP request timeout
+    timeout: 30s
+
+  # Debug exporter for local troubleshooting
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 100
+# =============================================================================
+# AZURE SQL MI CUSTOM FAILOVER CLUSTER METRICS DETAILS
+# =============================================================================
+
+# UPDATED METRICS FROM FABRIC REPLICA STATES:
+# 1. FailoverClusterReplicaStateQuery
+#    - replica_role: REPLICA_ROLE_PRIMARY or LAG_REPLICA_LINK_TYPE_CONTINUOUS_COPY
+#    - endpoint_url: Replication endpoint or partner server
+#    - database_name: Database in availability group
+#    - synchronization_state_desc: SYNCHRONIZED, SYNCHRONIZING, NOT SYNCHRONIZING
+#    - synchronization_health_desc: HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY
+#    - lag_in_seconds: Replication lag for secondaries
+#    - last_commit_time, last_hardened_time, last_redone_time: Transaction timings
+#    - log_send_queue_size, redo_queue_size: Replication queue metrics
+#    - is_suspended: Whether replica is suspended
+
+# 2. FailoverClusterSummaryQuery
+#    - total_replica_count: Total replicas in AG
+#    - healthy_replica_count: Replicas with healthy sync
+#    - primary_replica_count, secondary_replica_count: Role distribution
+#    - synchronized_replica_count: Replicas in sync
+#    - average_lag_seconds, max_lag_seconds: Lag statistics
+#    - total_databases_in_ag: Database count
+#    - unhealthy_databases: Databases with sync issues
+
+# 3. FailoverClusterSeedingQuery
+#    - seeding_mode: AUTOMATIC or MANUAL seeding
+#    - role_desc: Replica role from fabric states
+#    - internal_state_desc: Internal replication state
+#    - transfer_rate_bytes_per_second: Data transfer rate
+#    - copied_size_bytes, database_size_bytes: Seeding progress
+#    - start_time_utc, estimate_time_complete_utc: Timing info
+
+# =============================================================================
+# EXPECTED AZURE SQL MI FAILOVER CLUSTER BEHAVIOR
+# =============================================================================
+
+# NORMAL OPERATION:
+# ✅ 1 Primary replica (REPLICA_ROLE_PRIMARY)
+# ✅ 1+ Secondary replicas (LAG_REPLICA_LINK_TYPE_CONTINUOUS_COPY)
+# ✅ synchronization_state_desc = 'SYNCHRONIZED'
+# ✅ synchronization_health_desc = 'HEALTHY'
+# ✅ lag_in_seconds < 5 (typical for Azure SQL MI)
+
+# FAILOVER INDICATORS:
+# 🔄 Role changes (primary/secondary swap)
+# 📊 Increased lag_in_seconds on secondaries
+# 🚨 synchronization_health_desc != 'HEALTHY'
+# ⚠️ log_send_queue_size or redo_queue_size growing
+
+# SEEDING STATUS:
+# 📦 Active seeding operations show in seeding query
+# 📈 transfer_rate_bytes_per_second > 0 during seeding
+# ⏰ estimate_time_complete_utc indicates completion time
+
+# =============================================================================
+# TESTING AND VERIFICATION
+# =============================================================================
+
+# 1. Network Connectivity Test:
+#    telnet pkudikyala-mi-node1.0a002db0321d.database.windows.net 1433
+
+# 2. SQL Authentication Test:
+#    sqlcmd -S pkudikyala-mi-node1.0a002db0321d.database.windows.net -U pkudikyala -P Praveenkudikyala@1991
+
+# 3. Failover Cluster Query Test:
+#    Run the custom queries in azure_sql_mi_custom_queries.sql to verify data
+
+# 4. Collector Test:
+#    ./bin/otelcontribcol_darwin_arm64 --config=azure-sql-mi-failover-cluster-updated-config.yaml
+
+# 5. Metrics Verification:
+#    Check New Relic dashboard for failover cluster metrics with Azure SQL MI specific data
+
+# SUCCESS INDICATORS:
+# ✅ Collector connects to Azure SQL MI successfully
+# ✅ Fabric replica state metrics collected (primary/secondary roles)
+# ✅ Synchronization status and health metrics available
+# ✅ Replication lag and queue metrics captured
+# ✅ Performance counter metrics (log bytes received, transaction delay)
+# ✅ No errors in collector logs related to unsupported DMVs
+
+# This configuration bridges the gap between standard SQL Server Always On AG
+# monitoring and Azure SQL MI's internally managed AG implementation.

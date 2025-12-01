@@ -1,0 +1,19 @@
+receivers:
+  newrelicsqlserver:
+    # WINDOWS AUTHENTICATION OPTION
+    hostname: "localhost"
+    port: "1433"
+    # Remove username/password for Windows auth
+    # username: "otel_collector"
+    # password: "Admin@1234"
+
+    collection_interval: 60s
+    timeout: 45s
+    enable_ssl: false
+    trust_server_certificate: true
+
+    # All your metric configurations...
+    enable_database_sample_metrics: true
+    enable_instance_memory_metrics: true
+    # ... (copy all from windows-localhost-config.yaml)
+# ... rest of config same as windows-localhost-config.yaml

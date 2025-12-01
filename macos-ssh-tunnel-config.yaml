@@ -1,0 +1,266 @@
+# OpenTelemetry Collector Configuration for macOS via SSH Tunnel
+# Connect to Azure SQL MI private endpoint using SSH tunnel through Azure VM
+# This configuration uses localhost port forwarding via SSH tunnel
+
+# Extensions provide additional functionality
+extensions:
+  # Health check endpoint for monitoring collector health
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  # zPages extension for debugging
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+# Service configuration
+service:
+  # Enable extensions
+  extensions: [health_check, zpages]
+
+  # Define the data pipeline
+  pipelines:
+    # Metrics pipeline: receiver -> processor -> exporter
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [cumulativetodelta, deltatorate, resource, batch]
+      exporters: [otlphttp]
+
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: debug # Debug level for connection troubleshooting
+    metrics:
+      level: none
+
+# Processors transform and enrich the data
+processors:
+  # Convert cumulative counters to delta for rate calculations
+  cumulativetodelta:
+    metrics:
+      - sqlserver.page.operations
+      - sqlserver.page.reads
+      - sqlserver.page.writes
+      - sqlserver.page.splits
+      - sqlserver.user.connections
+      - sqlserver.batch.requests
+      - sqlserver.transaction.log.growths
+      - sqlserver.deadlocks
+      - sqlserver.user.errors
+      - sqlserver.lock.waits
+      - sqlserver.processes.blocked
+      - sqlserver.connections.active
+
+  # Convert deltas to rates (per-second calculations)
+  deltatorate:
+    metrics:
+      - sqlserver.page.operations
+      - sqlserver.page.reads
+      - sqlserver.page.writes
+      - sqlserver.page.splits
+      - sqlserver.user.connections
+      - sqlserver.batch.requests
+      - sqlserver.transaction.log.growths
+      - sqlserver.deadlocks
+      - sqlserver.user.errors
+      - sqlserver.lock.waits
+      - sqlserver.processes.blocked
+      - sqlserver.connections.active
+
+  # Resource processor adds metadata to all telemetry
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "azure-production"
+        action: upsert
+      - key: service.name
+        value: "azure-sql-mi-failover-cluster"
+        action: upsert
+      - key: sql.instance.type
+        value: "azure-sql-managed-instance"
+        action: upsert
+      - key: collector.deployment
+        value: "macos-via-ssh-tunnel"
+        action: upsert
+      - key: connection.type
+        value: "private-endpoint-ssh-tunnel"
+        action: upsert
+
+  # Batch processor groups data for efficient transmission
+  batch:
+    timeout: 10s
+    send_batch_size: 512
+    send_batch_max_size: 1000
+
+# Receivers collect telemetry data
+receivers:
+  # New Relic SQL Server Receiver - via SSH Tunnel Configuration
+  newrelicsqlserver:
+    # =============================================================================
+    # SSH TUNNEL CONFIGURATION
+    # *** TUNNEL MUST BE ESTABLISHED FIRST ***
+    # =============================================================================
+    hostname: "localhost" # Connect via SSH tunnel
+    port: "11433" # Local port forwarded via SSH tunnel
+    username: "pkudikyala" # Azure SQL authentication username
+    password: "Praveenkudikyala@1991" # Azure SQL authentication password
+    enable_ssl: true # Azure SQL MI requires SSL
+    trust_server_certificate: true # Trust cert for tunnel connection
+
+    # =============================================================================
+    # TIMING CONFIGURATION
+    # =============================================================================
+    collection_interval: 30s # Frequent collection for failover cluster monitoring
+    timeout: 60s # Extended timeout for tunnel connections
+
+    # =============================================================================
+    # COMPREHENSIVE METRICS FOR FAILOVER CLUSTER (ALL ENABLED)
+    # =============================================================================
+
+    # Core Database Metrics
+    enable_buffer_metrics: true
+    enable_database_reserve_metrics: true
+    enable_disk_metrics_in_bytes: true
+    enable_io_metrics: true
+    enable_log_growth_metrics: true
+    enable_page_file_metrics: true
+    enable_page_file_total_metrics: true
+    enable_memory_metrics: true
+    enable_memory_total_metrics: true
+    enable_memory_available_metrics: true
+    enable_memory_utilization_metrics: true
+
+    # System Performance Metrics
+    enable_system_cpu_queue_metrics: true
+    enable_system_memory_pages_metrics: true
+    enable_system_disk_queue_metrics: true
+
+    # *** CRITICAL: ALWAYS ON AVAILABILITY GROUP METRICS (PRIMARY FOCUS) ***
+    enable_failover_cluster_replica_metrics: true # Replica performance and sync status
+    enable_failover_cluster_replica_state_metrics: true # Replica state (primary/secondary)
+    enable_failover_cluster_availability_group_health_metrics: true # AG health monitoring
+    enable_failover_cluster_availability_group_metrics: true # AG configuration and status
+    enable_failover_cluster_redo_queue_metrics: true # Redo queue and log send rates
+
+    # Security and Access Metrics
+    enable_database_principals_details_metrics: true
+    enable_database_role_membership_details_metrics: true
+
+    # Connection Monitoring (Important for failover scenarios)
+    enable_user_connection_status_metrics: true
+    enable_user_connection_summary_metrics: true
+    enable_user_connection_utilization_metrics: true
+    enable_user_connection_client_metrics: true
+    enable_user_connection_client_summary: true
+    enable_user_connection_stats_metrics: true
+
+    # =============================================================================
+    # QUERY MONITORING CONFIGURATION (ENHANCED FOR FAILOVER CLUSTER)
+    # =============================================================================
+    enable_query_monitoring: true
+    query_monitoring_response_time_threshold: 500 # Monitor queries > 500ms (failover sensitive)
+    query_monitoring_count_threshold: 5
+    query_monitoring_fetch_interval: 10 # Aggressive monitoring for cluster events
+    query_monitoring_text_truncate_limit: 1024 # Truncate query text to 1024 characters
+
+    # =============================================================================
+    # PERFORMANCE TUNING FOR AZURE FAILOVER CLUSTER
+    # =============================================================================
+    max_concurrent_workers: 8 # Higher concurrency for cluster monitoring
+
+# Exporters send telemetry data to destinations
+exporters:
+  # New Relic OTLP HTTP Exporter - Staging Environment
+  otlphttp:
+    # New Relic staging OTLP endpoint
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+
+    # Headers for New Relic authentication
+    headers:
+      # New Relic API Key for staging
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+
+    # TLS configuration for HTTPS
+    tls:
+      insecure: false
+      insecure_skip_verify: false
+
+    # Retry configuration for robust delivery
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 30s
+      max_elapsed_time: 300s
+      randomization_factor: 0.5
+
+    # Queue configuration for handling traffic bursts
+    sending_queue:
+      enabled: true
+      num_consumers: 6
+      queue_size: 300
+
+    # Enable gzip compression
+    compression: gzip
+
+    # HTTP request timeout
+    timeout: 30s
+# =============================================================================
+# SSH TUNNEL SETUP INSTRUCTIONS
+# =============================================================================
+
+# *** PREREQUISITE: SSH TUNNEL TO AZURE VM WITH ACCESS TO AZURE SQL MI ***
+#
+# You need an Azure VM (like your Windows VM) that can reach the Azure SQL MI
+# private endpoint, and SSH access to that VM.
+#
+# STEP 1: Setup SSH Tunnel (run this command BEFORE starting collector)
+# ssh -L 11433:pkudikyala-mi-node1.0a002db0321d.database.windows.net:1433 username@your-azure-vm-ip
+#
+# Example:
+# ssh -L 11433:pkudikyala-mi-node1.0a002db0321d.database.windows.net:1433 azureuser@20.22.95.123
+#
+# STEP 2: Verify tunnel is working
+# telnet localhost 11433
+#
+# STEP 3: Run collector
+# ./bin/otelcontribcol_darwin_arm64 --config=macos-ssh-tunnel-config.yaml
+
+# =============================================================================
+# SSH TUNNEL COMMAND EXAMPLES
+# =============================================================================
+
+# Option A: Using Azure VM with SSH key
+# ssh -i ~/.ssh/azure_vm_key -L 11433:pkudikyala-mi-node1.0a002db0321d.database.windows.net:1433 azureuser@your-azure-vm-ip
+#
+# Option B: Using Windows VM with SSH (if SSH enabled)
+# ssh -L 11433:pkudikyala-mi-node1.0a002db0321d.database.windows.net:1433 administrator@74.225.24.140
+#
+# Option C: Background tunnel (keeps running)
+# ssh -f -N -L 11433:pkudikyala-mi-node1.0a002db0321d.database.windows.net:1433 username@your-azure-vm-ip
+
+# =============================================================================
+# NETWORK VERIFICATION COMMANDS (RUN AFTER TUNNEL SETUP)
+# =============================================================================
+
+# Test tunnel connectivity:
+# telnet localhost 11433
+#
+# Test SQL connection through tunnel:
+# sqlcmd -S localhost,11433 -U pkudikyala -P Praveenkudikyala@1991
+
+# =============================================================================
+# TROUBLESHOOTING SSH TUNNEL
+# =============================================================================
+
+# Error: "Connection refused" on localhost:11433
+# Solution: SSH tunnel not established or incorrect port forwarding
+#
+# Error: "Permission denied" for SSH
+# Solution: Check SSH keys, user permissions, or VM SSH configuration
+#
+# Error: "Network unreachable" from tunnel
+# Solution: Azure VM cannot reach the SQL MI private endpoint
+#
+# Success Indicators:
+# - SSH tunnel establishes without errors
+# - telnet localhost 11433 connects successfully
+# - Collector connects and collects metrics

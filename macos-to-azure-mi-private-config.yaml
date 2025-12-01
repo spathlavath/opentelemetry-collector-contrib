@@ -1,0 +1,301 @@
+# OpenTelemetry Collector Configuration for macOS to Azure SQL MI Private Endpoint
+# *** REQUIRES VPN CONNECTION TO AZURE VIRTUAL NETWORK ***
+# This configuration connects to Azure SQL MI private endpoint from macOS
+# Prerequisites: Point-to-Site VPN or ExpressRoute connection established
+
+# Extensions provide additional functionality
+extensions:
+  # Health check endpoint for monitoring collector health
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  # zPages extension for debugging
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+# Service configuration
+service:
+  # Enable extensions
+  extensions: [health_check, zpages]
+
+  # Define the data pipeline
+  pipelines:
+    # Metrics pipeline: receiver -> processor -> exporter
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [cumulativetodelta, deltatorate, resource, batch]
+      exporters: [otlphttp]
+
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: debug # Debug level for connection troubleshooting
+    metrics:
+      level: none
+
+# Processors transform and enrich the data
+processors:
+  # Convert cumulative counters to delta for rate calculations
+  cumulativetodelta:
+    metrics:
+      - sqlserver.page.operations
+      - sqlserver.page.reads
+      - sqlserver.page.writes
+      - sqlserver.page.splits
+      - sqlserver.user.connections
+      - sqlserver.batch.requests
+      - sqlserver.transaction.log.growths
+      - sqlserver.deadlocks
+      - sqlserver.user.errors
+      - sqlserver.lock.waits
+      - sqlserver.processes.blocked
+      - sqlserver.connections.active
+
+  # Convert deltas to rates (per-second calculations)
+  deltatorate:
+    metrics:
+      - sqlserver.page.operations
+      - sqlserver.page.reads
+      - sqlserver.page.writes
+      - sqlserver.page.splits
+      - sqlserver.user.connections
+      - sqlserver.batch.requests
+      - sqlserver.transaction.log.growths
+      - sqlserver.deadlocks
+      - sqlserver.user.errors
+      - sqlserver.lock.waits
+      - sqlserver.processes.blocked
+      - sqlserver.connections.active
+
+  # Resource processor adds metadata to all telemetry
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "azure-production"
+        action: upsert
+      - key: service.name
+        value: "azure-sql-mi-failover-cluster"
+        action: upsert
+      - key: sql.instance.type
+        value: "azure-sql-managed-instance"
+        action: upsert
+      - key: collector.deployment
+        value: "macos-via-vpn"
+        action: upsert
+      - key: connection.type
+        value: "private-endpoint"
+        action: upsert
+
+  # Batch processor groups data for efficient transmission
+  batch:
+    timeout: 10s
+    send_batch_size: 512
+    send_batch_max_size: 1000
+
+# Receivers collect telemetry data
+receivers:
+  # New Relic SQL Server Receiver - Azure SQL MI Private Endpoint Configuration
+  newrelicsqlserver:
+    # =============================================================================
+    # AZURE SQL MANAGED INSTANCE PRIVATE ENDPOINT CONFIGURATION
+    # *** REQUIRES VPN CONNECTION TO AZURE VNET ***
+    # =============================================================================
+    hostname: "pkudikyala-mi-node1.0a002db0321d.database.windows.net" # Private endpoint FQDN
+    port: "1433" # Standard SQL Server port for private endpoint
+    username: "pkudikyala" # Azure SQL authentication username
+    password: "Praveenkudikyala@1991" # Azure SQL authentication password
+    enable_ssl: true # Always true for Azure SQL MI
+    trust_server_certificate: false # Use proper cert validation for Azure
+
+    # =============================================================================
+    # TIMING CONFIGURATION
+    # =============================================================================
+    collection_interval: 30s # Frequent collection for failover cluster monitoring
+    timeout: 60s # Extended timeout for Azure connections
+
+    # =============================================================================
+    # COMPREHENSIVE METRICS FOR FAILOVER CLUSTER (ALL ENABLED)
+    # =============================================================================
+
+    # Core Database Metrics
+    enable_buffer_metrics: true
+    enable_database_reserve_metrics: true
+    enable_disk_metrics_in_bytes: true
+    enable_io_metrics: true
+    enable_log_growth_metrics: true
+    enable_page_file_metrics: true
+    enable_page_file_total_metrics: true
+    enable_memory_metrics: true
+    enable_memory_total_metrics: true
+    enable_memory_available_metrics: true
+    enable_memory_utilization_metrics: true
+
+    # System Performance Metrics
+    enable_system_cpu_queue_metrics: true
+    enable_system_memory_pages_metrics: true
+    enable_system_disk_queue_metrics: true
+
+    # *** CRITICAL: ALWAYS ON AVAILABILITY GROUP METRICS (PRIMARY FOCUS) ***
+    enable_failover_cluster_replica_metrics: true # Replica performance and sync status
+    enable_failover_cluster_replica_state_metrics: true # Replica state (primary/secondary)
+    enable_failover_cluster_availability_group_health_metrics: true # AG health monitoring
+    enable_failover_cluster_availability_group_metrics: true # AG configuration and status
+    enable_failover_cluster_redo_queue_metrics: true # Redo queue and log send rates
+
+    # Security and Access Metrics
+    enable_database_principals_details_metrics: true
+    enable_database_role_membership_details_metrics: true
+
+    # Connection Monitoring (Important for failover scenarios)
+    enable_user_connection_status_metrics: true
+    enable_user_connection_summary_metrics: true
+    enable_user_connection_utilization_metrics: true
+    enable_user_connection_client_metrics: true
+    enable_user_connection_client_summary: true
+    enable_user_connection_stats_metrics: true
+
+    # =============================================================================
+    # QUERY MONITORING CONFIGURATION (ENHANCED FOR FAILOVER CLUSTER)
+    # =============================================================================
+    enable_query_monitoring: true
+    query_monitoring_response_time_threshold: 500 # Monitor queries > 500ms (failover sensitive)
+    query_monitoring_count_threshold: 5
+    query_monitoring_fetch_interval: 10 # Aggressive monitoring for cluster events
+    query_monitoring_text_truncate_limit: 1024 # Truncate query text to 1024 characters
+
+    # =============================================================================
+    # PERFORMANCE TUNING FOR AZURE FAILOVER CLUSTER
+    # =============================================================================
+    max_concurrent_workers: 8 # Higher concurrency for cluster monitoring
+
+# Exporters send telemetry data to destinations
+exporters:
+  # New Relic OTLP HTTP Exporter - Staging Environment
+  otlphttp:
+    # New Relic staging OTLP endpoint
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+
+    # Headers for New Relic authentication
+    headers:
+      # New Relic API Key for staging
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+
+    # TLS configuration for HTTPS
+    tls:
+      insecure: false
+      insecure_skip_verify: false
+
+    # Retry configuration for robust delivery
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 30s
+      max_elapsed_time: 300s
+      randomization_factor: 0.5
+
+    # Queue configuration for handling traffic bursts
+    sending_queue:
+      enabled: true
+      num_consumers: 6
+      queue_size: 300
+
+    # Enable gzip compression
+    compression: gzip
+
+    # HTTP request timeout
+    timeout: 30s
+# =============================================================================
+# VPN CONNECTION SETUP INSTRUCTIONS
+# =============================================================================
+
+# *** PREREQUISITE: AZURE POINT-TO-SITE VPN CONNECTION ***
+#
+# This configuration will ONLY work if you have established a VPN connection
+# from your macOS to the Azure Virtual Network containing the SQL MI.
+#
+# Steps to setup Azure Point-to-Site VPN:
+# 1. Go to Azure Portal > Virtual Network Gateway
+# 2. Create VPN Gateway (if not exists)
+# 3. Configure Point-to-Site configuration
+# 4. Download VPN client configuration
+# 5. Install and connect VPN client on macOS
+# 6. Verify connectivity: ping pkudikyala-mi-node1.0a002db0321d.database.windows.net
+# 7. Run this collector configuration
+#
+# Alternative: Azure ExpressRoute or Site-to-Site VPN
+
+# =============================================================================
+# NETWORK VERIFICATION COMMANDS (RUN AFTER VPN CONNECTION)
+# =============================================================================
+
+# Test DNS resolution (should still resolve to 10.0.0.9):
+# nslookup pkudikyala-mi-node1.0a002db0321d.database.windows.net
+#
+# Test network connectivity (should succeed with VPN):
+# telnet pkudikyala-mi-node1.0a002db0321d.database.windows.net 1433
+#
+# Test ping (might work with VPN):
+# ping pkudikyala-mi-node1.0a002db0321d.database.windows.net
+
+# =============================================================================
+# FAILOVER CLUSTER MONITORING FOCUS
+# =============================================================================
+
+# This configuration is specifically optimized for monitoring Azure SQL MI
+# failover clusters with the following key metrics:
+#
+# 🔄 FAILOVER CLUSTER METRICS:
+# - sqlserver.availability_group.replica.state (Primary/Secondary status)
+# - sqlserver.availability_group.replica.sync_state (Synchronization status)
+# - sqlserver.availability_group.redo_queue_size (Log replay queue)
+# - sqlserver.availability_group.log_send_queue_size (Log send queue)
+# - sqlserver.availability_group.replica.recovery_lsn (Recovery point)
+#
+# 📊 PERFORMANCE METRICS:
+# - Per-second rates for all cumulative counters
+# - Real-time connection monitoring
+# - Query performance tracking
+# - I/O and memory utilization
+#
+# 🚨 HEALTH MONITORING:
+# - Replica health status
+# - Synchronization lag
+# - Connection failover events
+# - Database availability status
+
+# =============================================================================
+# DEPLOYMENT INSTRUCTIONS
+# =============================================================================
+
+# 1. ESTABLISH VPN CONNECTION FIRST:
+#    - Setup Azure Point-to-Site VPN
+#    - Connect from macOS to Azure VNet
+#    - Verify private endpoint connectivity
+#
+# 2. RUN CONFIGURATION:
+#    ./bin/otelcontribcol_darwin_arm64 --config=macos-to-azure-mi-private-config.yaml
+#
+# 3. VERIFY METRICS IN NEW RELIC:
+#    - Check for failover cluster metrics
+#    - Verify rate calculations
+#    - Monitor replica status
+#    - Confirm connection health
+
+# =============================================================================
+# TROUBLESHOOTING
+# =============================================================================
+
+# Error: "network is unreachable"
+# Solution: VPN connection is not established or configured correctly
+#
+# Error: "connection refused"
+# Solution: NSG rules might be blocking the connection
+#
+# Error: "authentication failed"
+# Solution: Verify username/password for Azure SQL MI
+#
+# Expected Success:
+# - Collector starts without errors
+# - Connects to Azure SQL MI private endpoint
+# - Collects comprehensive failover cluster metrics
+# - Exports to New Relic staging environment

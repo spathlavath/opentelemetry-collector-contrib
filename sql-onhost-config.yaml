@@ -102,16 +102,16 @@ receivers:
 
   newrelicsqlserver:
     # # Azure Windows VM connection details
-    # hostname: "74.225.24.140"
-    # port: "1433"
-    # # Option 1: Windows domain authentication (if SQL Server is configured for it)
-    # username: "pkudikyala-wind\\pkudikyala" # Windows domain authentication
-    # password: "Pkudikyala@1991"
+    hostname: "74.225.24.140"
+    port: "1433"
+    # Option 1: Windows domain authentication (if SQL Server is configured for it)
+    username: "pkudikyala-wind\\pkudikyala" # Windows domain authentication
+    password: "Pkudikyala@1991"
 
-    hostname: "20.185.235.202" # Your Azure VM Public IP
-    port: "1433" # Standard SQL Server port
-    username: "otel_collector" # Dedicated service account
-    password: "Admin@1234" # Service account password
+    # hostname: "20.185.235.202" # Your Azure VM Public IP
+    # port: "1433" # Standard SQL Server port
+    # username: "otel_collector" # Dedicated service account
+    # password: "Admin@1234" # Service account password
 
     # Option 2: If above fails, try SQL Server authentication (create a SQL login first)
     # username: "sa" # or another SQL Server login
@@ -184,6 +184,11 @@ receivers:
     enable_database_transaction_log_metrics: true
     enable_database_log_space_usage_metrics: true
 
+    # System Performance Metrics (our new metrics)
+    enable_system_cpu_queue_metrics: true
+    enable_system_memory_pages_metrics: true
+    enable_system_disk_queue_metrics: true
+
     # User Connection Metrics (re-enabled with selective configuration)
     enable_user_connection_status_metrics: true
     enable_user_connection_summary_metrics: true # This generates the metrics you need
@@ -210,17 +215,13 @@ receivers:
     query_monitoring_response_time_threshold: 1000 # Monitor queries > 1000ms (1 second)
     query_monitoring_count_threshold: 10 # Monitor queries executed > 10 times
     query_monitoring_fetch_interval: 15 # Fetch query stats every 15 seconds
-    query_monitoring_text_truncate_limit: 1000 # Truncate query text to 1000 characters
-
-    # Concurrency settings
-    max_concurrent_workers: 5
 
 exporters:
   # New Relic OTLP exporter for staging
   otlphttp:
     endpoint: "https://staging-otlp.nr-data.net:4318"
     headers:
-      api-key: ""
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
     compression: gzip
     timeout: 30s
 

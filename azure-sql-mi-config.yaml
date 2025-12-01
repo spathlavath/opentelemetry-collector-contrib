@@ -1,0 +1,122 @@
+receivers:
+  # Azure SQL Managed Instance receiver
+  newrelicsqlserver:
+    # Azure SQL Managed Instance connection details
+    hostname: "pkudikyala-mi-node1.0a002db0321d.database.windows.net"
+    port: "1433"
+
+    # SQL Authentication with your credentials
+    username: "pkudikyala"
+    password: "Praveenkudikyala@1991"
+
+    collection_interval: 60s
+    timeout: 60s # Increased timeout for MI
+
+    # TLS settings for Azure SQL MI
+    enable_ssl: true
+    trust_server_certificate: true # Required for Azure SQL MI
+
+    # Enable available metrics for MI (using correct keys)
+    enable_buffer_metrics: true
+    enable_database_metrics: true
+    enable_memory_metrics: true
+    enable_user_connection_metrics: true
+    enable_security_metrics: true
+    enable_security_principals_metrics: true
+    enable_security_role_members_metrics: true
+    enable_failover_cluster_metrics: true
+    enable_failover_cluster_replica_metrics: true
+    enable_failover_cluster_replica_state_metrics: true
+    enable_failover_cluster_availability_group_health_metrics: true
+    enable_failover_cluster_availability_group_metrics: true
+    enable_failover_cluster_redo_queue_metrics: true
+
+processors:
+  # Convert cumulative metrics to delta for better rate calculations
+  cumulativetodelta:
+    include:
+      match_type: regexp
+      metrics:
+        - "sqlserver\\.wait_stats\\..*"
+        - "sqlserver\\.page_.*"
+        - "sqlserver\\.user_connections\\.authentication\\..*"
+        - "sqlserver\\.batch_requests"
+        - "sqlserver\\.lock_.*"
+        - "sqlserver\\.database\\..*"
+        - "sqlserver\\.buffer\\..*"
+        - "sqlserver\\.access\\..*"
+        - "sqlserver\\.stats\\..*"
+
+  # Convert delta to rate (per second)
+  deltatorate:
+    metrics:
+      - "sqlserver\\.wait_stats\\..*"
+      - "sqlserver\\.page_.*"
+      - "sqlserver\\.user_connections\\.authentication\\..*"
+      - "sqlserver\\.batch_requests"
+      - "sqlserver\\.lock_.*"
+      - "sqlserver\\.database\\..*"
+      - "sqlserver\\.buffer\\..*"
+      - "sqlserver\\.access\\..*"
+      - "sqlserver\\.stats\\..*"
+
+  # Add resource attributes
+  resource:
+    attributes:
+      - key: service.name
+        value: "azure-sql-mi-pkudikyala"
+        action: insert
+      - key: deployment.environment
+        value: "production"
+        action: insert
+      - key: cloud.provider
+        value: "azure"
+        action: insert
+      - key: cloud.service.name
+        value: "sql-mi"
+        action: insert
+      - key: azure.resource.group
+        value: "your-resource-group"
+        action: insert
+
+  # Batch processor for efficiency
+  batch:
+    timeout: 60s
+    send_batch_size: 512
+    send_batch_max_size: 1024
+
+exporters:
+  otlphttp:
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+    headers:
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+    compression: gzip
+    timeout: 30s
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, zpages]
+
+  pipelines:
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [cumulativetodelta, deltatorate, resource, batch]
+      exporters: [otlphttp]
+
+  telemetry:
+    logs:
+      level: "debug" # Change to "info" in production
+
+    metrics:
+      level: "detailed"

@@ -57,14 +57,14 @@ receivers:
   # New Relic SQL Server Receiver for Azure SQL Managed Instance
   newrelicsqlserver:
     # Azure SQL Managed Instance connection configuration
-    # Option 1: Public endpoint (if enabled) - format: managed-instance-name.public.database.windows.net
-    hostname: "pkudikyala-azure-managed-instance.public.e6b1e004d901.database.windows.net" # Public endpoint
-    port: "3342" # Public endpoint port (different from private port 1433)
-    # Option 2: Private endpoint (current) - requires VPN/ExpressRoute
-    # hostname: "pkudikyala-azure-managed-instance.e6b1e004d901.database.windows.net" # Private endpoint
-    # port: "1433" # Private endpoint port
+    # PRIVATE ENDPOINT (requires VPN or tunnel) - current configuration
+    hostname: "pkudikyala-mi-node1.0a002db0321d.database.windows.net" # Private endpoint FQDN
+    port: "1433" # Private endpoint port
+    # PUBLIC ENDPOINT (if available) - uncomment to use instead
+    # hostname: "pkudikyala-azure-managed-instance.public.e6b1e004d901.database.windows.net" # Public endpoint
+    # port: "3342" # Public endpoint port (different from private port 1433)
     username: "pkudikyala" # Azure SQL Managed Instance username (without domain)
-    password: "Integrations_2025" # Azure SQL Managed Instance password
+    password: "Praveenkudikyala@1991" # Azure SQL Managed Instance password
 
     # Collection interval (collect metrics every 30 seconds for testing)
     collection_interval: 30s
@@ -74,7 +74,7 @@ receivers:
 
     # Enable SSL for secure connection (required for Azure SQL Managed Instance)
     enable_ssl: true
-    trust_server_certificate: true
+    trust_server_certificate: false # Use proper certificate validation for Azure
 
     # =============================================================================
     # GRANULAR METRIC CONFIGURATION
@@ -162,6 +162,7 @@ receivers:
     query_monitoring_response_time_threshold: 1000 # Monitor queries > 1000ms (1 second)
     query_monitoring_count_threshold: 10 # Monitor queries executed > 10 times
     query_monitoring_fetch_interval: 15 # Fetch query stats every 15 seconds
+    query_monitoring_text_truncate_limit: 1024 # Truncate query text to 1024 characters
 
     # Concurrency settings
     max_concurrent_workers: 5
@@ -176,7 +177,7 @@ exporters:
     # Headers for New Relic authentication
     headers:
       # New Relic License Key for staging environment
-      api-key: ""
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
 
     # TLS configuration for HTTPS
     tls:

@@ -129,6 +129,7 @@ receivers:
     query_monitoring_response_time_threshold: 1000 # Monitor queries > 1000ms
     query_monitoring_count_threshold: 10 # Monitor queries executed > 10 times
     query_monitoring_fetch_interval: 15 # Fetch query stats every 15 seconds
+    query_monitoring_text_truncate_limit: 1024 # Truncate query text to 1024 characters
 
     # =============================================================================
     # PERFORMANCE TUNING

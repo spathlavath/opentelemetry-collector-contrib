@@ -1,0 +1,172 @@
+receivers:
+  newrelicsqlserver:
+    # AZURE WINDOWS VM HOSTNAME CONNECTION
+    hostname: "pkudikyala-windows-mmsql" # Your Azure Windows VM name
+    port: "1433"
+    username: "otel_collector"
+    password: "Admin@1234"
+    collection_interval: 60s
+    timeout: 45s
+
+    # TLS settings for hostname connections
+    enable_ssl: false
+    trust_server_certificate: true
+
+    # =============================================================================
+    # METRIC CONFIGURATION - Same as your working setup
+    # =============================================================================
+
+    # Core Database Sample Metrics
+    enable_database_sample_metrics: true
+
+    # Instance-level Metrics
+    enable_instance_memory_metrics: true
+    enable_instance_comprehensive_stats: true
+    enable_instance_stats: true
+    enable_instance_buffer_pool_hit_percent: true
+    enable_instance_process_counts: true
+    enable_instance_runnable_tasks: true
+    enable_instance_disk_metrics: true
+    enable_instance_active_connections: true
+    enable_instance_buffer_pool_size: true
+    enable_instance_target_memory_metrics: true
+    enable_instance_performance_ratios_metrics: true
+    enable_instance_index_metrics: true
+    enable_instance_lock_metrics: true
+
+    # Security Metrics
+    enable_security_metrics: true
+    enable_security_principals_metrics: true
+    enable_security_role_members_metrics: true
+
+    # Wait Time Metrics
+    enable_latch_wait_time_metrics: true
+
+    # Database Metrics
+    enable_buffer_metrics: true
+    enable_database_reserve_metrics: true
+    enable_disk_metrics_in_bytes: true
+    enable_io_metrics: true
+    enable_log_growth_metrics: true
+    enable_page_file_metrics: true
+    enable_page_file_total_metrics: true
+    enable_memory_metrics: true
+    enable_memory_total_metrics: true
+    enable_memory_available_metrics: true
+    enable_memory_utilization_metrics: true
+
+    # Database Security Metrics
+    enable_database_principals_details_metrics: true
+    enable_database_principals_summary_metrics: true
+    enable_database_principals_activity_metrics: true
+
+    # Database Role Membership Metrics
+    enable_database_role_membership_details_metrics: true
+    enable_database_role_membership_summary_metrics: true
+    enable_database_role_hierarchy_metrics: true
+    enable_database_role_activity_metrics: true
+    enable_database_role_permission_matrix_metrics: true
+
+    # Database Size and Transaction Log Metrics
+    enable_database_size_metrics: true
+    enable_database_transaction_log_metrics: true
+    enable_database_log_space_usage_metrics: true
+
+    # User Connection Metrics
+    enable_user_connection_status_metrics: true
+    enable_user_connection_summary_metrics: true
+    enable_user_connection_utilization_metrics: true
+    enable_user_connection_client_metrics: false # Keep disabled to avoid timeout
+    enable_user_connection_client_summary: true
+    enable_user_connection_stats_metrics: true
+
+    # Authentication and Failed Login Metrics
+    enable_failed_login_metrics: true
+    enable_failed_login_summary_metrics: true
+
+    # AlwaysOn Failover Cluster Metrics (Your main focus!)
+    enable_failover_cluster_replica_metrics: true
+    enable_failover_cluster_replica_state_metrics: true
+    enable_failover_cluster_availability_group_health_metrics: true
+    enable_failover_cluster_availability_group_metrics: true
+    enable_failover_cluster_redo_queue_metrics: true
+
+    # Query Monitoring Configuration
+    enable_query_monitoring: true
+    query_monitoring_response_time_threshold: 1000
+    query_monitoring_count_threshold: 10
+    query_monitoring_fetch_interval: 15
+    query_monitoring_text_truncate_limit: 1000
+    max_concurrent_workers: 5
+
+exporters:
+  # New Relic OTLP exporter for staging
+  otlphttp:
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+    headers:
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+    compression: gzip
+    timeout: 30s
+
+  # Debug exporter to see what's being sent
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+processors:
+  # Add resource attributes to identify the Windows VM source
+  resource:
+    attributes:
+      - key: service.name
+        value: "pkudikyala-windows-mmsql-monitoring"
+        action: upsert
+      - key: service.version
+        value: "1.0.0"
+        action: upsert
+      - key: deployment.environment
+        value: "staging"
+        action: upsert
+      - key: host.name
+        value: "pkudikyala-windows-mmsql" # Windows VM hostname
+        action: upsert
+      - key: host.ip
+        value: "20.185.235.202" # External IP for identification
+        action: upsert
+      - key: cloud.provider
+        value: "azure"
+        action: upsert
+      - key: cloud.region
+        value: "azure-region" # Add your Azure region if known
+        action: upsert
+      - key: monitoring.type
+        value: "sql-server-hostname"
+        action: upsert
+      - key: collector.location
+        value: "windows-vm-onhost"
+        action: upsert
+      - key: sql.connection.type
+        value: "hostname"
+        action: upsert
+
+  # Batch metrics for efficiency
+  batch:
+    timeout: 5s
+    send_batch_size: 100
+    send_batch_max_size: 1000
+
+service:
+  telemetry:
+    logs:
+      level: debug
+      development: true
+    metrics:
+      level: detailed
+
+  pipelines:
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [resource, batch]
+      exporters: [debug, otlphttp]
+
+  extensions: []

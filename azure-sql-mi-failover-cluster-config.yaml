@@ -1,0 +1,349 @@
+# OpenTelemetry Collector Configuration for Azure SQL Managed Instance Failover Cluster
+# Optimized for monitoring Always On Availability Groups and failover scenarios
+# Created for: pkudikyala-mi-node1.0a002db0321d.database.windows.net
+# Engine Edition: 8 (Azure SQL Managed Instance)
+
+# Extensions provide additional functionality
+extensions:
+  # Health check endpoint for monitoring collector health
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  # zPages extension for debugging and metrics inspection
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+# Service configuration
+service:
+  # Enable extensions
+  extensions: [health_check, zpages]
+
+  # Define the data pipeline
+  pipelines:
+    # Metrics pipeline: receiver -> processor -> exporter
+    metrics:
+      receivers: [newrelicsqlserver]
+      processors: [resource, batch]
+      exporters: [otlphttp, debug]
+
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: debug # Debug level for connection troubleshooting
+    metrics:
+      level: none # Disable internal metrics to avoid port conflicts
+
+# Processors transform and enrich the data
+processors:
+  # Note: Rate processors (cumulativetodelta, deltatorate) removed temporarily
+  # to ensure basic configuration works. Can be added back with correct syntax later.
+
+  # Resource processor adds metadata to all telemetry
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "azure-production"
+        action: upsert
+      - key: service.name
+        value: "azure-sql-mi-failover-cluster"
+        action: upsert
+      - key: sql.instance.type
+        value: "azure-sql-managed-instance"
+        action: upsert
+      - key: sql.feature
+        value: "always-on-availability-groups"
+        action: upsert
+      - key: collector.deployment
+        value: "macos-to-azure-mi"
+        action: upsert
+      - key: sql.instance.name
+        value: "pkudikyala-mi-node1"
+        action: upsert
+
+  # Batch processor groups data for efficient transmission
+  batch:
+    timeout: 10s
+    send_batch_size: 512
+    send_batch_max_size: 1000
+
+# Receivers collect telemetry data
+receivers:
+  # New Relic SQL Server Receiver - Azure SQL MI Failover Cluster Configuration
+  newrelicsqlserver:
+    # =============================================================================
+    # CONNECTION CONFIGURATION - CHOOSE YOUR METHOD
+    # =============================================================================
+
+    # METHOD 1: DIRECT CONNECTION (requires VPN/ExpressRoute to Azure VNet)
+    hostname: "pkudikyala-mi-node1.0a002db0321d.database.windows.net" # Private endpoint
+    port: "1433" # Private endpoint port
+
+    # METHOD 2: SSH TUNNEL CONNECTION (uncomment if using SSH tunnel)
+    # hostname: "localhost" # Via SSH tunnel
+    # port: "11433" # Local forwarded port via SSH tunnel
+
+    # METHOD 3: PUBLIC ENDPOINT (uncomment if public endpoint is enabled)
+    # hostname: "pkudikyala-mi-node1.public.0a002db0321d.database.windows.net" # Public endpoint
+    # port: "3342" # Public endpoint uses different port
+
+    # Authentication
+    username: "pkudikyala" # Azure SQL MI username
+    password: "Praveenkudikyala@1991" # Azure SQL MI password
+
+    # SSL Configuration (required for Azure SQL MI)
+    enable_ssl: true
+    trust_server_certificate: true # Trust server certificate for Azure SQL MI
+
+    # =============================================================================
+    # TIMING CONFIGURATION (OPTIMIZED FOR FAILOVER MONITORING)
+    # =============================================================================
+    collection_interval: 30s # Frequent collection for failover detection
+    timeout: 60s # Extended timeout for Azure connections
+
+    # =============================================================================
+    # AZURE SQL MI OPTIMIZED METRICS (COMPREHENSIVE MONITORING)
+    # =============================================================================
+    # NOTE: Azure SQL MI manages Always On AG internally, so AG-specific DMVs
+    # return empty results. Focus on available performance metrics.
+
+    # Core Database Performance Metrics (Available on Azure SQL MI)
+    enable_buffer_metrics: true # Buffer pool performance
+    enable_database_reserve_metrics: true # Database space allocation
+    enable_disk_metrics_in_bytes: true # Disk usage metrics
+    enable_io_metrics: true # I/O stall time and latency
+    enable_log_growth_metrics: true # Transaction log growth events
+    enable_page_file_metrics: true # Page file availability
+    enable_page_file_total_metrics: true # Total page file metrics
+    enable_memory_metrics: true # Memory usage patterns
+    enable_memory_total_metrics: true # Total memory metrics
+    enable_memory_available_metrics: true # Available memory tracking
+    enable_memory_utilization_metrics: true # Memory utilization percentages
+
+    # Instance-Level Performance Metrics (Available on Azure SQL MI)
+    enable_instance_memory_metrics: true # Instance memory usage
+    enable_instance_comprehensive_stats: true # Comprehensive instance statistics
+    enable_instance_stats: true # Instance performance stats
+    enable_instance_buffer_pool_hit_percent: true # Buffer pool hit ratio
+    enable_instance_process_counts: true # Process and session counts
+    enable_instance_runnable_tasks: true # Runnable task queue
+    enable_instance_disk_metrics: true # Instance disk usage
+    enable_instance_active_connections: true # Active connection counts
+    enable_instance_buffer_pool_size: true # Buffer pool size metrics
+    enable_instance_target_memory_metrics: true # Target memory allocation
+    enable_instance_performance_ratios_metrics: true # Key performance ratios
+    enable_instance_index_metrics: true # Index usage statistics
+    enable_instance_lock_metrics: true # Lock wait statistics
+
+    # Database-Level Detailed Metrics (Available on Azure SQL MI)
+    enable_database_size_metrics: true # Database size and growth
+    enable_database_transaction_log_metrics: true # Transaction log usage
+    enable_database_log_space_usage_metrics: true # Log space utilization
+
+    # Security and Access Monitoring (Available on Azure SQL MI)
+    enable_security_metrics: true # Security event monitoring
+    enable_security_principals_metrics: true # User and login metrics
+    enable_security_role_members_metrics: true # Role membership tracking
+
+    # Wait Time Analysis (Available on Azure SQL MI)
+    enable_latch_wait_time_metrics: true # Latch wait time analysis
+
+    # Lock Monitoring (Available on Azure SQL MI - provides failover insights)
+    enable_lock_resource_metrics: true # Lock resource usage
+    enable_lock_mode_metrics: true # Lock mode statistics
+
+    # System Performance Metrics (Note: These specific system metrics are not available in current receiver version)
+
+    # *** FAILOVER CLUSTER METRICS (LIMITED ON AZURE SQL MI) ***
+    # Azure SQL MI manages Always On AG internally - these may return empty results
+    # but we keep them enabled in case some metrics are available
+    enable_failover_cluster_replica_metrics: true # Performance counters only
+    enable_failover_cluster_replica_state_metrics: false # DMV not exposed on Azure SQL MI
+    enable_failover_cluster_availability_group_health_metrics: false # DMV not exposed on Azure SQL MI
+    enable_failover_cluster_availability_group_metrics: false # DMV not exposed on Azure SQL MI
+    enable_failover_cluster_redo_queue_metrics: false # DMV not exposed on Azure SQL MI
+
+    # Security and User Management Metrics
+    enable_database_principals_details_metrics: true # User account details
+    enable_database_role_membership_details_metrics: true # Role assignments
+
+    # Connection and Session Monitoring (Important during failovers)
+    enable_user_connection_status_metrics: true # Connection status by state
+    enable_user_connection_summary_metrics: true # Aggregated connection counts
+    enable_user_connection_utilization_metrics: true # Connection pool efficiency
+    enable_user_connection_client_metrics: true # Connections by client/host
+    enable_user_connection_client_summary: true # Client connection summaries
+    enable_user_connection_stats_metrics: true # Statistical connection analysis
+
+    # =============================================================================
+    # QUERY MONITORING (ENHANCED FOR FAILOVER SCENARIOS)
+    # =============================================================================
+    enable_query_monitoring: true # Enable comprehensive query monitoring
+    query_monitoring_response_time_threshold: 500 # Monitor queries > 500ms (failover sensitive)
+    query_monitoring_count_threshold: 5 # Monitor frequently executed queries
+    query_monitoring_fetch_interval: 10 # Aggressive monitoring interval
+    query_monitoring_text_truncate_limit: 1024 # Query text truncation limit
+
+    # =============================================================================
+    # PERFORMANCE TUNING FOR AZURE SQL MI FAILOVER CLUSTER
+    # =============================================================================
+    max_concurrent_workers: 10 # Higher concurrency for comprehensive monitoring
+
+# Exporters send telemetry data to destinations
+exporters:
+  # New Relic OTLP HTTP Exporter - Staging Environment
+  otlphttp:
+    # New Relic staging OTLP endpoint
+    endpoint: "https://staging-otlp.nr-data.net:4318"
+
+    # Headers for New Relic authentication
+    headers:
+      # New Relic API Key for staging environment
+      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+
+    # TLS configuration for HTTPS
+    tls:
+      insecure: false
+      insecure_skip_verify: false
+
+    # Retry configuration for robust delivery
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 30s
+      max_elapsed_time: 300s
+      randomization_factor: 0.5
+
+    # Queue configuration for handling traffic bursts
+    sending_queue:
+      enabled: true
+      num_consumers: 6
+      queue_size: 300
+
+    # Enable gzip compression for better performance
+    compression: gzip
+
+    # HTTP request timeout
+    timeout: 30s
+
+  # Debug exporter for local troubleshooting
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 100
+# =============================================================================
+# AZURE SQL MANAGED INSTANCE FAILOVER CLUSTER SETUP GUIDE
+# =============================================================================
+
+# FAILOVER CLUSTER CONTEXT:
+# Your Azure SQL MI appears to be configured as a failover cluster:
+# - Instance: pkudikyala-mi-node1.0a002db0321d.database.windows.net
+# - Private endpoint: 10.0.0.9:1433
+# - Always On Availability Groups enabled
+# - Automatic failover capabilities
+
+# =============================================================================
+# NETWORK CONNECTIVITY OPTIONS (CHOOSE ONE)
+# =============================================================================
+
+# OPTION 1: VPN CONNECTION (RECOMMENDED FOR PRODUCTION)
+# Setup Azure Point-to-Site VPN:
+# 1. Azure Portal → Virtual Network Gateway → Point-to-Site configuration
+# 2. Download VPN client for macOS
+# 3. Connect VPN and verify: ping pkudikyala-mi-node1.0a002db0321d.database.windows.net
+# 4. Run: ./bin/otelcontribcol_darwin_arm64 --config=azure-sql-mi-failover-cluster-config.yaml
+
+# OPTION 2: SSH TUNNEL (QUICK SETUP)
+# If you have SSH access to an Azure VM in the same VNet:
+# 1. Setup tunnel: ssh -L 11433:pkudikyala-mi-node1.0a002db0321d.database.windows.net:1433 user@azure-vm-ip
+# 2. Modify config: hostname: "localhost", port: "11433"
+# 3. Run collector with modified config
+
+# OPTION 3: PUBLIC ENDPOINT (IF AVAILABLE)
+# Check if public endpoint is enabled in Azure Portal:
+# 1. SQL Managed Instance → Networking → Public endpoint
+# 2. If enabled, modify config: hostname: "instance.public.zone.database.windows.net", port: "3342"
+# 3. Configure firewall to allow your IP
+
+# =============================================================================
+# VERIFICATION COMMANDS
+# =============================================================================
+
+# Test DNS resolution:
+# nslookup pkudikyala-mi-node1.0a002db0321d.database.windows.net
+
+# Test network connectivity (after VPN/tunnel):
+# telnet pkudikyala-mi-node1.0a002db0321d.database.windows.net 1433
+
+# Test SQL connectivity:
+# sqlcmd -S pkudikyala-mi-node1.0a002db0321d.database.windows.net -U pkudikyala -P Praveenkudikyala@1991
+
+# =============================================================================
+# EXPECTED FAILOVER CLUSTER METRICS
+# =============================================================================
+
+# AVAILABILITY GROUP METRICS:
+# - sqlserver.availability_group.replica.state (0=Resolving, 1=Online, 2=Error, etc.)
+# - sqlserver.availability_group.replica.role (1=Primary, 2=Secondary)
+# - sqlserver.availability_group.replica.sync_state (0=NotSynchronizing, 1=Synchronizing, 2=Synchronized)
+# - sqlserver.availability_group.redo_queue_size (Log replay queue in KB)
+# - sqlserver.availability_group.log_send_queue_size (Log send queue in KB)
+
+# PERFORMANCE RATE METRICS (per-second calculations):
+# - sqlserver.page.operations_per_sec (Page operations rate)
+# - sqlserver.batch.requests_per_sec (Batch request rate)
+# - sqlserver.user.connections_per_sec (Connection rate)
+# - sqlserver.availability_group.replica.bytes_sent_per_sec (AG replica sync rate)
+
+# HEALTH INDICATORS:
+# - sqlserver.processes.blocked (Blocking process count)
+# - sqlserver.deadlocks_per_sec (Deadlock rate)
+# - sqlserver.user.errors_per_sec (User error rate)
+# - sqlserver.lock.waits_per_sec (Lock wait rate)
+
+# =============================================================================
+# TROUBLESHOOTING GUIDE
+# =============================================================================
+
+# ERROR: "network is unreachable"
+# CAUSE: Cannot reach private endpoint (10.0.0.9)
+# SOLUTION: Setup VPN/tunnel connection to Azure VNet
+
+# ERROR: "connection refused"
+# CAUSE: Port 1433 blocked or NSG rules
+# SOLUTION: Check NSG rules and Azure SQL MI firewall
+
+# ERROR: "authentication failed"
+# CAUSE: Invalid credentials
+# SOLUTION: Verify username/password for Azure SQL MI
+
+# ERROR: "timeout"
+# CAUSE: Network latency or SSL handshake issues
+# SOLUTION: Increase timeout values, check SSL configuration
+
+# SUCCESS INDICATORS:
+# ✅ Collector starts without errors
+# ✅ Connects to Azure SQL MI successfully
+# ✅ Collects Always On AG metrics
+# ✅ Rate processors convert cumulative metrics
+# ✅ Metrics exported to New Relic staging
+
+# =============================================================================
+# DEPLOYMENT INSTRUCTIONS
+# =============================================================================
+
+# STEP 1: Choose connectivity method (VPN, SSH tunnel, or public endpoint)
+# STEP 2: Modify configuration if using tunnel or public endpoint
+# STEP 3: Test network connectivity to Azure SQL MI
+# STEP 4: Run collector:
+#         ./bin/otelcontribcol_darwin_arm64 --config=azure-sql-mi-failover-cluster-config.yaml
+# STEP 5: Verify metrics in New Relic staging dashboard
+# STEP 6: Monitor failover cluster metrics and alerts
+
+# MONITORING FOCUS AREAS:
+# 🔄 Failover Events: Monitor replica role changes and sync state
+# 📊 Performance: Track query response times and throughput
+# 🚨 Health: Monitor blocking processes, deadlocks, and errors
+# 🔗 Connectivity: Track connection counts and client distributions
+# 💾 Resources: Monitor memory, I/O, and disk utilization
+
+# For questions or issues, reference the troubleshooting section above.
