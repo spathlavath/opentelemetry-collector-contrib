@@ -133,9 +133,10 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 				WHEN 'TX' THEN 'TX: Transaction Lock (Contention means Row Lock)'
 				ELSE lock_held.TYPE -- Fallback for other lock types (e.g., CI, UL, etc.)
 			END AS lock_type,
-			locked_object.OWNER AS locked_object_owner,
-			locked_object.OBJECT_NAME AS locked_object_name,
-			locked_object.OBJECT_TYPE AS locked_object_type
+			-- For TX locks, use ROW_WAIT_OBJ# from blocker session; for TM locks use lock ID1
+			COALESCE(locked_object_tm.OWNER, locked_object_tx.OWNER) AS locked_object_owner,
+			COALESCE(locked_object_tm.OBJECT_NAME, locked_object_tx.OBJECT_NAME) AS locked_object_name,
+			COALESCE(locked_object_tm.OBJECT_TYPE, locked_object_tx.OBJECT_TYPE) AS locked_object_type
 		FROM
 			v$session s
 		CROSS JOIN
@@ -151,7 +152,11 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			                 AND lock_held.BLOCK > 0
 			                 AND lock_held.TYPE IN ('TM', 'TX')
 		LEFT JOIN
-			DBA_OBJECTS locked_object ON locked_object.OBJECT_ID = lock_held.ID1
+			DBA_OBJECTS locked_object_tm ON locked_object_tm.OBJECT_ID = lock_held.ID1
+			                              AND lock_held.TYPE = 'TM'
+		LEFT JOIN
+			DBA_OBJECTS locked_object_tx ON locked_object_tx.OBJECT_ID = final_blocker.ROW_WAIT_OBJ#
+			                              AND lock_held.TYPE = 'TX'
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
