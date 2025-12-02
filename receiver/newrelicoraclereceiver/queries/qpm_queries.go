@@ -69,7 +69,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			d.name AS database_name,
+			(SELECT name FROM v$database) AS database_name,
 			s.username,
 			s.sid,
 			s.serial#,
@@ -117,8 +117,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			final_blocker.username AS final_blocker_user,
 			final_blocker.serial# AS final_blocker_serial,
 			final_blocker.sql_id AS final_blocker_query_id,
-			-- Get query text from v$sqlarea or v$sql (whichever has it)
-			COALESCE(final_blocker_sql.sql_text, final_blocker_sql_active.sql_text) AS final_blocker_query_text,
+			final_blocker_sql.sql_text AS final_blocker_query_text,
 			-- Lock information with human-readable descriptions
 			CASE lock_held.LMODE
 				WHEN 6 THEN '6: Exclusive (X) - Blocks ALL access'
@@ -134,36 +133,42 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 				WHEN 'TX' THEN 'TX: Transaction Lock (Contention means Row Lock)'
 				ELSE lock_held.TYPE -- Fallback for other lock types (e.g., CI, UL, etc.)
 			END AS lock_type,
-			-- For TX locks, use ROW_WAIT_OBJ# from waiting session; for TM locks use lock ID1
-			COALESCE(locked_object_tm.OWNER, locked_object_tx.OWNER) AS locked_object_owner,
-			COALESCE(locked_object_tm.OBJECT_NAME, locked_object_tx.OBJECT_NAME) AS locked_object_name,
-			COALESCE(locked_object_tm.OBJECT_TYPE, locked_object_tx.OBJECT_TYPE) AS locked_object_type
+			-- Consolidated DBA_OBJECTS lookup: get locked object info in one place
+			CASE
+				WHEN lock_held.TYPE = 'TM' THEN locked_obj.OWNER
+				WHEN lock_held.TYPE = 'TX' THEN o.OWNER
+				ELSE NULL
+			END AS locked_object_owner,
+			CASE
+				WHEN lock_held.TYPE = 'TM' THEN locked_obj.OBJECT_NAME
+				WHEN lock_held.TYPE = 'TX' THEN o.OBJECT_NAME
+				ELSE NULL
+			END AS locked_object_name,
+			CASE
+				WHEN lock_held.TYPE = 'TM' THEN locked_obj.OBJECT_TYPE
+				WHEN lock_held.TYPE = 'TX' THEN o.OBJECT_TYPE
+				ELSE NULL
+			END AS locked_object_type
 		FROM
 			v$session s
-		CROSS JOIN
-			v$database d
 		LEFT JOIN
-			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID
+			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID AND s.ROW_WAIT_OBJ# >= 0
 		LEFT JOIN
 			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
 		LEFT JOIN
-			-- Try to get blocker's query text from v$sqlarea first (historical), fallback to v$sql (current)
 			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
+		LEFT JOIN (
+			-- Get the most restrictive lock for each blocker session
+			SELECT
+				SID, TYPE, LMODE, ID1,
+				ROW_NUMBER() OVER (PARTITION BY SID ORDER BY LMODE DESC, TYPE DESC) as rn
+			FROM v$lock
+			WHERE BLOCK > 0
+			  AND TYPE IN ('TM', 'TX')
+		) lock_held ON lock_held.SID = final_blocker.sid AND lock_held.rn = 1
 		LEFT JOIN
-			v$sql final_blocker_sql_active ON final_blocker.sql_id = final_blocker_sql_active.sql_id
-			                                AND final_blocker.SQL_CHILD_NUMBER = final_blocker_sql_active.CHILD_NUMBER
-		LEFT JOIN
-			v$lock lock_held ON lock_held.SID = final_blocker.sid
-			                 AND lock_held.BLOCK > 0
-			                 AND lock_held.TYPE IN ('TM', 'TX')
-		LEFT JOIN
-			DBA_OBJECTS locked_object_tm ON locked_object_tm.OBJECT_ID = lock_held.ID1
-			                              AND lock_held.TYPE = 'TM'
-		LEFT JOIN
-			-- For TX locks, get object from the WAITING session (s), not the blocker
-			-- Because the blocker is holding the lock (not waiting), its ROW_WAIT_OBJ# may be invalid
-			DBA_OBJECTS locked_object_tx ON locked_object_tx.OBJECT_ID = s.ROW_WAIT_OBJ#
-			                              AND lock_held.TYPE = 'TX'
+			-- For TM locks, get object info from lock ID1
+			DBA_OBJECTS locked_obj ON lock_held.ID1 = locked_obj.OBJECT_ID AND lock_held.TYPE = 'TM'
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
