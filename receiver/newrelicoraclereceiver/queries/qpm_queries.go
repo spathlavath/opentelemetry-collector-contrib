@@ -117,7 +117,8 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			final_blocker.username AS final_blocker_user,
 			final_blocker.serial# AS final_blocker_serial,
 			final_blocker.sql_id AS final_blocker_query_id,
-			final_blocker_sql.sql_text AS final_blocker_query_text,
+			-- Get query text from v$sqlarea or v$sql (whichever has it)
+			COALESCE(final_blocker_sql.sql_text, final_blocker_sql_active.sql_text) AS final_blocker_query_text,
 			-- Lock information with human-readable descriptions
 			CASE lock_held.LMODE
 				WHEN 6 THEN '6: Exclusive (X) - Blocks ALL access'
@@ -133,7 +134,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 				WHEN 'TX' THEN 'TX: Transaction Lock (Contention means Row Lock)'
 				ELSE lock_held.TYPE -- Fallback for other lock types (e.g., CI, UL, etc.)
 			END AS lock_type,
-			-- For TX locks, use ROW_WAIT_OBJ# from blocker session; for TM locks use lock ID1
+			-- For TX locks, use ROW_WAIT_OBJ# from waiting session; for TM locks use lock ID1
 			COALESCE(locked_object_tm.OWNER, locked_object_tx.OWNER) AS locked_object_owner,
 			COALESCE(locked_object_tm.OBJECT_NAME, locked_object_tx.OBJECT_NAME) AS locked_object_name,
 			COALESCE(locked_object_tm.OBJECT_TYPE, locked_object_tx.OBJECT_TYPE) AS locked_object_type
@@ -146,7 +147,11 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 		LEFT JOIN
 			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
 		LEFT JOIN
+			-- Try to get blocker's query text from v$sqlarea first (historical), fallback to v$sql (current)
 			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
+		LEFT JOIN
+			v$sql final_blocker_sql_active ON final_blocker.sql_id = final_blocker_sql_active.sql_id
+			                                AND final_blocker.SQL_CHILD_NUMBER = final_blocker_sql_active.CHILD_NUMBER
 		LEFT JOIN
 			v$lock lock_held ON lock_held.SID = final_blocker.sid
 			                 AND lock_held.BLOCK > 0
@@ -155,7 +160,9 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			DBA_OBJECTS locked_object_tm ON locked_object_tm.OBJECT_ID = lock_held.ID1
 			                              AND lock_held.TYPE = 'TM'
 		LEFT JOIN
-			DBA_OBJECTS locked_object_tx ON locked_object_tx.OBJECT_ID = final_blocker.ROW_WAIT_OBJ#
+			-- For TX locks, get object from the WAITING session (s), not the blocker
+			-- Because the blocker is holding the lock (not waiting), its ROW_WAIT_OBJ# may be invalid
+			DBA_OBJECTS locked_object_tx ON locked_object_tx.OBJECT_ID = s.ROW_WAIT_OBJ#
 			                              AND lock_held.TYPE = 'TX'
 		WHERE
 			s.status = 'ACTIVE'
