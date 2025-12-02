@@ -78,13 +78,19 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			s.SQL_CHILD_NUMBER,
 			s.wait_class,
 			s.event,
-			-- Current wait time in milliseconds (high precision)
+			-- 1. GENERAL WAIT TIME (Always populated for waiting sessions)
 			ROUND(s.WAIT_TIME_MICRO / 1000, 2) AS wait_time_ms,
-			-- Time since last wait (useful to see how long it has been ON CPU)
+			-- 2. BLOCKED TIME (Specific: Shows wait time ONLY if there is a blocker)
+			CASE
+				WHEN s.BLOCKING_SESSION IS NOT NULL THEN ROUND(s.WAIT_TIME_MICRO / 1000, 2)
+				ELSE NULL
+			END AS blocked_time_ms,
+			-- 3. Time since last wait (useful to see how long it has been ON CPU)
 			ROUND(s.TIME_SINCE_LAST_WAIT_MICRO / 1000, 2) AS time_since_last_wait_ms,
-			CASE 
+			-- 4. Time remaining for operation
+			CASE
 				WHEN s.TIME_REMAINING_MICRO = -1 THEN NULL -- Returns NULL for indefinite waits
-				ELSE ROUND(s.TIME_REMAINING_MICRO / 1000, 2) 
+				ELSE ROUND(s.TIME_REMAINING_MICRO / 1000, 2)
 			END AS time_remaining_ms,
 			s.SQL_EXEC_START,
 			s.SQL_EXEC_ID,

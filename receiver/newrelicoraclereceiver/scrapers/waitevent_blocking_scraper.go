@@ -52,24 +52,59 @@ func NewWaitEventBlockingScraper(oracleClient client.OracleClient, mb *metadata.
 }
 
 // ScrapeWaitEventsAndBlocking collects both wait events and blocking query metrics in a single query
-func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Context) []error {
+// Filters wait events to ONLY show sessions running the provided slow query SQL_IDs
+// Returns unique SQL identifiers (sql_id, child_number) found in those filtered wait events
+func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Context, slowQuerySQLIDs []string) ([]models.SQLIdentifier, []error) {
 	var scrapeErrors []error
 
 	waitEvents, err := s.client.QueryWaitEventsWithBlocking(ctx, s.queryMonitoringCountThreshold)
 	if err != nil {
 		s.logger.Error("Failed to query wait events with blocking information", zap.Error(err))
-		return []error{err}
+		return nil, []error{err}
+	}
+
+	// Create a map of slow query SQL_IDs for fast lookup
+	slowQueryMap := make(map[string]bool, len(slowQuerySQLIDs))
+	for _, sqlID := range slowQuerySQLIDs {
+		slowQueryMap[sqlID] = true
 	}
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 	waitEventMetricCount := 0
 	blockingMetricCount := 0
+	filteredOutCount := 0
+
+	// Track unique (sql_id, child_number) combinations from wait events
+	sqlIdentifiersMap := make(map[string]models.SQLIdentifier)
 
 	for _, event := range waitEvents {
+		eventSQLID := event.GetQueryID()
+
+		// FILTER: Only process wait events for TOP N slow query SQL_IDs
+		if len(slowQuerySQLIDs) > 0 && eventSQLID != "" && !slowQueryMap[eventSQLID] {
+			filteredOutCount++
+			continue
+		}
+
 		// Record wait event metrics
 		if event.IsValidForMetrics() {
 			s.recordWaitEventMetrics(now, &event)
 			waitEventMetricCount++
+
+			// Extract SQL_ID and child_number for child cursor fetching
+			if event.HasValidQueryID() && event.GetSQLChildNumber() >= 0 {
+				sqlID := eventSQLID
+				childNumber := event.GetSQLChildNumber()
+				key := fmt.Sprintf("%s#%d", sqlID, childNumber)
+
+				// Store unique combination
+				if _, exists := sqlIdentifiersMap[key]; !exists {
+					sqlIdentifiersMap[key] = models.SQLIdentifier{
+						SQLID:       sqlID,
+						ChildNumber: childNumber,
+					}
+				}
+			}
 		}
 
 		// Record blocking metrics if this session is blocked
@@ -79,13 +114,22 @@ func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Conte
 		}
 	}
 
+	// Convert map to slice
+	sqlIdentifiers := make([]models.SQLIdentifier, 0, len(sqlIdentifiersMap))
+	for _, identifier := range sqlIdentifiersMap {
+		sqlIdentifiers = append(sqlIdentifiers, identifier)
+	}
+
 	s.logger.Debug("Wait events and blocking scrape completed",
 		zap.Int("total_events", len(waitEvents)),
+		zap.Int("filtered_out", filteredOutCount),
 		zap.Int("wait_metrics", waitEventMetricCount),
 		zap.Int("blocking_metrics", blockingMetricCount),
+		zap.Int("unique_sql_identifiers", len(sqlIdentifiers)),
+		zap.Int("slow_query_filter_count", len(slowQuerySQLIDs)),
 		zap.Int("errors", len(scrapeErrors)))
 
-	return scrapeErrors
+	return sqlIdentifiers, scrapeErrors
 }
 
 // recordWaitEventMetrics records wait event metrics for a session
@@ -186,9 +230,9 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 
 // recordBlockingMetrics records blocking query metrics when a session is blocked
 func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking) {
-	// Calculate blocked wait time in milliseconds from current_wait_time_ms
-	// This represents how long the session has been blocked
-	blockedWaitMs := event.GetCurrentWaitMs()
+	// Get blocked wait time in milliseconds (ONLY populated when there's a blocker)
+	// This is more specific than general wait_time_ms as it's NULL for non-blocking waits
+	blockedWaitMs := event.GetBlockedTimeMs()
 
 	if blockedWaitMs <= 0 {
 		return
@@ -229,156 +273,4 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		finalBlockerQueryID,
 		finalBlockerQueryText,
 	)
-}
-
-
-// getNewIdentifiersFromWaitEvents checks wait events for child numbers NOT in vsqlIdentifiers
-func (s *WaitEventBlockingScraper) getNewIdentifiersFromWaitEvents(ctx context.Context, slowQueryIDs []string, vsqlIdentifiers []models.SQLIdentifier) ([]models.SQLIdentifier, error) {
-	// Build a map of existing (SQL_ID, CHILD_NUMBER) from V$SQL for fast lookup
-	existingMap := make(map[string]bool, len(vsqlIdentifiers))
-	for _, id := range vsqlIdentifiers {
-		key := fmt.Sprintf("%s#%d", id.SQLID, id.ChildNumber)
-		existingMap[key] = true
-	}
-
-	// Build slow query map for filtering
-	slowQueryMap := make(map[string]bool, len(slowQueryIDs))
-	for _, sqlID := range slowQueryIDs {
-		slowQueryMap[sqlID] = true
-	}
-
-	// Fetch all wait events with blocking information
-	waitEvents, err := s.client.QueryWaitEventsWithBlocking(ctx, s.queryMonitoringCountThreshold)
-	if err != nil {
-		return nil, err
-	}
-
-	// Find NEW child numbers in wait events
-	var newIdentifiers []models.SQLIdentifier
-	newChildNumbersFound := 0
-
-	for _, waitEvent := range waitEvents {
-		if !waitEvent.HasValidQueryID() {
-			continue
-		}
-
-		sqlID := waitEvent.GetQueryID()
-
-		// Skip if not a slow query
-		if !slowQueryMap[sqlID] {
-			continue
-		}
-
-		childNum := waitEvent.GetSQLChildNumber()
-		key := fmt.Sprintf("%s#%d", sqlID, childNum)
-
-		// Check if this (SQL_ID, CHILD_NUMBER) is NEW (not in V$SQL results)
-		if !existingMap[key] {
-			newIdentifiers = append(newIdentifiers, models.SQLIdentifier{
-				SQLID:       sqlID,
-				ChildNumber: childNum,
-			})
-			existingMap[key] = true // Mark as added to avoid duplicates
-			newChildNumbersFound++
-		}
-	}
-
-	s.logger.Debug("Found new child numbers in wait events",
-		zap.Int("new_child_numbers", newChildNumbersFound))
-
-	return newIdentifiers, nil
-}
-
-// mergeIdentifiers combines identifiers from V$SQL and wait events, removing duplicates
-func (s *WaitEventBlockingScraper) mergeIdentifiers(vsqlIdentifiers, waitEventIdentifiers []models.SQLIdentifier) []models.SQLIdentifier {
-	// Start with V$SQL identifiers
-	merged := make([]models.SQLIdentifier, 0, len(vsqlIdentifiers)+len(waitEventIdentifiers))
-	merged = append(merged, vsqlIdentifiers...)
-
-	// Add new identifiers from wait events
-	merged = append(merged, waitEventIdentifiers...)
-
-	return merged
-}
-
-// GetChildCursorsWithMetrics fetches child cursors with metrics and SQL identifiers for execution plans
-// This optimized method returns BOTH:
-// 1. Complete ChildCursor objects with metrics (to avoid re-querying V$SQL)
-// 2. SQL identifiers for execution plan fetching
-// Returns: (childCursorsFromVSQL, newChildCursorsFromWaitEvents, allSQLIdentifiers, error)
-func (s *WaitEventBlockingScraper) GetChildCursorsWithMetrics(ctx context.Context, slowQueryIDs []string, childCursorsPerQuery int) ([]models.ChildCursor, []models.SQLIdentifier, []models.SQLIdentifier, error) {
-	if len(slowQueryIDs) == 0 {
-		return []models.ChildCursor{}, []models.SQLIdentifier{}, []models.SQLIdentifier{}, nil
-	}
-
-	s.logger.Debug("Fetching child cursors with metrics and SQL identifiers",
-		zap.Int("slow_query_count", len(slowQueryIDs)),
-		zap.Int("child_cursors_per_query", childCursorsPerQuery))
-
-	// STEP 1: Fetch top N child cursors from V$SQL (with full metrics)
-	childCursorsWithMetrics, vsqlIdentifiers, err := s.getChildCursorsFromVSQL(ctx, slowQueryIDs, childCursorsPerQuery)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
-	// STEP 2: Check wait events for any NEW child numbers not in V$SQL results
-	waitEventIdentifiers, err := s.getNewIdentifiersFromWaitEvents(ctx, slowQueryIDs, vsqlIdentifiers)
-	if err != nil {
-		s.logger.Warn("Failed to fetch identifiers from wait events", zap.Error(err))
-		// Continue with V$SQL results only
-		mergedIdentifiers := vsqlIdentifiers
-		return childCursorsWithMetrics, []models.SQLIdentifier{}, mergedIdentifiers, nil
-	}
-
-	// STEP 3: Merge identifiers (V$SQL + new from wait events)
-	mergedIdentifiers := s.mergeIdentifiers(vsqlIdentifiers, waitEventIdentifiers)
-
-	s.logger.Info("Child cursors and SQL identifiers prepared",
-		zap.Int("child_cursors_from_vsql", len(childCursorsWithMetrics)),
-		zap.Int("identifiers_from_vsql", len(vsqlIdentifiers)),
-		zap.Int("new_identifiers_from_wait_events", len(waitEventIdentifiers)),
-		zap.Int("total_identifiers", len(mergedIdentifiers)))
-
-	return childCursorsWithMetrics, waitEventIdentifiers, mergedIdentifiers, nil
-}
-
-// getChildCursorsFromVSQL fetches child cursors WITH full metrics from V$SQL
-// Returns: (childCursors, identifiers, error)
-func (s *WaitEventBlockingScraper) getChildCursorsFromVSQL(ctx context.Context, slowQueryIDs []string, childCursorsPerQuery int) ([]models.ChildCursor, []models.SQLIdentifier, error) {
-	var allChildCursors []models.ChildCursor
-	var identifiers []models.SQLIdentifier
-
-	for _, sqlID := range slowQueryIDs {
-		childCursors, err := s.client.QueryChildCursors(ctx, sqlID, childCursorsPerQuery)
-		if err != nil {
-			s.logger.Warn("Failed to fetch child cursors for SQL_ID from V$SQL",
-				zap.String("sql_id", sqlID),
-				zap.Error(err))
-			continue
-		}
-
-		// Skip if no child cursors returned
-		if childCursors == nil || len(childCursors) == 0 {
-			s.logger.Debug("No child cursors found for SQL_ID",
-				zap.String("sql_id", sqlID))
-			continue
-		}
-
-		// Collect both full child cursor objects AND identifiers
-		for _, cursor := range childCursors {
-			if cursor.HasValidIdentifier() {
-				allChildCursors = append(allChildCursors, cursor)
-				identifiers = append(identifiers, models.SQLIdentifier{
-					SQLID:       cursor.GetSQLID(),
-					ChildNumber: cursor.GetChildNumber(),
-				})
-			}
-		}
-	}
-
-	s.logger.Debug("Fetched child cursors with metrics from V$SQL",
-		zap.Int("slow_query_ids", len(slowQueryIDs)),
-		zap.Int("total_child_cursors", len(allChildCursors)))
-
-	return allChildCursors, identifiers, nil
 }
