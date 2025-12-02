@@ -664,28 +664,28 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Database log space usage metrics disabled in configuration")
 	}
 
-	// Scrape blocking session metrics if query monitoring is enabled
-	if s.config.EnableQueryMonitoring {
-		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-		defer cancel()
+	// // Scrape blocking session metrics if query monitoring is enabled
+	// if s.config.EnableQueryMonitoring {
+	// 	scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
+	// 	defer cancel()
 
-		// Use config values for blocking session parameters
-		limit := s.config.QueryMonitoringCountThreshold
-		textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit // Use config value
+	// 	// Use config values for blocking session parameters
+	// 	limit := s.config.QueryMonitoringCountThreshold
+	// 	textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit // Use config value
 
-		if err := s.queryPerformanceScraper.ScrapeBlockingSessionMetrics(scrapeCtx, scopeMetrics, limit, textTruncateLimit); err != nil {
-			s.logger.Warn("Failed to scrape blocking session metrics - continuing with other metrics",
-				zap.Error(err),
-				zap.Duration("timeout", s.config.Timeout),
-				zap.Int("limit", limit),
-				zap.Int("text_truncate_limit", textTruncateLimit))
-			// Don't add to scrapeErrors - just warn and continue
-		} else {
-			s.logger.Debug("Successfully scraped blocking session metrics",
-				zap.Int("limit", limit),
-				zap.Int("text_truncate_limit", textTruncateLimit))
-		}
-	}
+	// 	if err := s.queryPerformanceScraper.ScrapeBlockingSessionMetrics(scrapeCtx, scopeMetrics, limit, textTruncateLimit); err != nil {
+	// 		s.logger.Warn("Failed to scrape blocking session metrics - continuing with other metrics",
+	// 			zap.Error(err),
+	// 			zap.Duration("timeout", s.config.Timeout),
+	// 			zap.Int("limit", limit),
+	// 			zap.Int("text_truncate_limit", textTruncateLimit))
+	// 		// Don't add to scrapeErrors - just warn and continue
+	// 	} else {
+	// 		s.logger.Debug("Successfully scraped blocking session metrics",
+	// 			zap.Int("limit", limit),
+	// 			zap.Int("text_truncate_limit", textTruncateLimit))
+	// 	}
+	// }
 
 	// Scrape slow query metrics if query monitoring is enabled
 	// Store query IDs for correlation with active queries

@@ -1,115 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
-// Package models provides data structures for performance monitoring metrics and query results.
-// This file defines the data models used to represent SQL Server performance monitoring data
-// including slow queries, wait statistics, blocking sessions, and execution plan information.
-//
-// Performance Data Structures:
-//
-// 1. Slow Query Information:
-//
-//	type SlowQuery struct {
-//	    QueryText           string        // SQL query text
-//	    QueryHash           string        // Query hash for identification
-//	    PlanHash            string        // Execution plan hash
-//	    ExecutionCount      int64         // Number of executions
-//	    TotalElapsedTime    time.Duration // Total elapsed time
-//	    AvgElapsedTime      time.Duration // Average elapsed time per execution
-//	    TotalCPUTime        time.Duration // Total CPU time consumed
-//	    AvgCPUTime          time.Duration // Average CPU time per execution
-//	    TotalLogicalReads   int64         // Total logical read operations
-//	    AvgLogicalReads     int64         // Average logical reads per execution
-//	    TotalPhysicalReads  int64         // Total physical read operations
-//	    AvgPhysicalReads    int64         // Average physical reads per execution
-//	    TotalWrites         int64         // Total write operations
-//	    AvgWrites           int64         // Average writes per execution
-//	    CompileTime         time.Duration // Time spent compiling the query
-//	    RecompileCount      int64         // Number of recompiles
-//	    LastExecutionTime   time.Time     // Timestamp of last execution
-//	    CreationTime        time.Time     // Timestamp when plan was created
-//	}
-//
-// 2. Wait Statistics Information:
-//
-//	type WaitStatistic struct {
-//	    WaitType            string        // Type of wait (e.g., PAGEIOLATCH_SH)
-//	    WaitCategory        string        // Wait category (CPU, I/O, Network, etc.)
-//	    WaitingTasksCount   int64         // Number of waits on this wait type
-//	    WaitTimeMs          int64         // Total wait time in milliseconds
-//	    MaxWaitTimeMs       int64         // Maximum wait time for single wait
-//	    SignalWaitTimeMs    int64         // Signal wait time (CPU scheduling)
-//	    ResourceWaitTimeMs  int64         // Resource wait time (actual resource wait)
-//	    WaitTimePerSecond   float64       // Wait time per second (calculated)
-//	    PercentageTotal     float64       // Percentage of total wait time
-//	}
-//
-// 3. Blocking Session Information:
-//
-//	type BlockingSession struct {
-//	    BlockedSessionID    int           // Session ID of blocked session
-//	    BlockingSessionID   int           // Session ID of blocking session
-//	    BlockedSPID         int           // Process ID of blocked session
-//	    BlockingSPID        int           // Process ID of blocking session
-//	    WaitType            string        // Type of wait causing the block
-//	    WaitResource        string        // Resource being waited for
-//	    WaitTime            time.Duration // How long the session has been blocked
-//	    BlockedLoginName    string        // Login name of blocked session
-//	    BlockingLoginName   string        // Login name of blocking session
-//	    BlockedHostName     string        // Host name of blocked session client
-//	    BlockingHostName    string        // Host name of blocking session client
-//	    BlockedProgramName  string        // Program name of blocked session
-//	    BlockingProgramName string        // Program name of blocking session
-//	    BlockedCommand      string        // Command being executed by blocked session
-//	    BlockingCommand     string        // Command being executed by blocking session
-//	    BlockedStatus       string        // Status of blocked session
-//	    BlockingStatus      string        // Status of blocking session
-//	    IsDeadlock          bool          // Whether this is part of a deadlock
-//	    BlockingLevel       int           // Level in blocking chain (head blocker = 0)
-//	}
-//
-// 4. Execution Plan Cache Information:
-//
-//	type ExecutionPlanCache struct {
-//	    PlanType            string        // Type of plan (Adhoc, Prepared, etc.)
-//	    CacheObjectType     string        // Cache object type (Compiled Plan, etc.)
-//	    ObjectName          string        // Name of cached object
-//	    PlanHandle          string        // Handle to the execution plan
-//	    UseCounts           int64         // Number of times plan has been used
-//	    SizeInBytes         int64         // Size of cached plan in bytes
-//	    PlanAge             time.Duration // Age of the plan in cache
-//	    CreationTime        time.Time     // When the plan was created
-//	    LastUsedTime        time.Time     // When the plan was last used
-//	    IsParameterized     bool          // Whether the plan is parameterized
-//	    ParameterList       string        // List of parameters (if any)
-//	}
-//
-// 5. Performance Summary Metrics:
-//
-//	type PerformanceMetrics struct {
-//	    SlowQueries         []SlowQuery         // Collection of slow queries
-//	    WaitStatistics      []WaitStatistic     // Collection of wait statistics
-//	    BlockingSessions    []BlockingSession   // Collection of blocking sessions
-//	    PlanCacheStats      []ExecutionPlanCache // Collection of plan cache statistics
-//	    CollectionTime      time.Time           // When metrics were collected
-//	    ServerName          string              // SQL Server instance name
-//	    DatabaseName        string              // Database name (if applicable)
-//	    EngineEdition       int                 // SQL Server engine edition
-//	}
-//
-// Common Field Types:
-// - time.Duration: Used for time measurements (elapsed time, wait time, etc.)
-// - time.Time: Used for timestamps (creation time, last execution, etc.)
-// - int64: Used for counters and large numeric values
-// - float64: Used for calculated percentages and rates
-// - string: Used for text fields, identifiers, and names
-// - bool: Used for boolean flags and status indicators
-//
-// Usage in Scrapers:
-// - Scrapers populate these structures from SQL query results
-// - Structures are converted to OpenTelemetry metrics
-// - Provides type safety and clear data contracts
-// - Enables consistent data handling across different engines
 package models
 
 // SlowQuery represents slow query performance data collected from SQL Server
@@ -147,53 +35,6 @@ type SlowQuery struct {
 	// NOTE: Only elapsed time has delta calculation, CPU uses historical average from DB
 	IntervalAvgElapsedTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_elapsed_time_ms" source_type:"gauge"`
 	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
-}
-
-// BlockingSession represents blocking session information with RCA enhancement fields
-type BlockingSession struct {
-	// Existing fields - Basic blocking context
-	BlockingSPID      *int64   `db:"blocking_spid" metric_name:"sqlserver.blocking.spid" source_type:"gauge"`
-	BlockingStatus    *string  `db:"blocking_status" metric_name:"sqlserver.blocking.status" source_type:"attribute"`
-	BlockedSPID       *int64   `db:"blocked_spid" metric_name:"sqlserver.blocked.spid" source_type:"gauge"`
-	BlockedStatus     *string  `db:"blocked_status" metric_name:"sqlserver.blocked.status" source_type:"attribute"`
-	WaitType          *string  `db:"wait_type" metric_name:"sqlserver.wait.type" source_type:"attribute"`
-	WaitTimeInSeconds *float64 `db:"wait_time_in_seconds" metric_name:"sqlserver.wait.time_seconds" source_type:"gauge"`
-	CommandType       *string  `db:"command_type" metric_name:"sqlserver.command.type" source_type:"attribute"`
-	DatabaseName      *string  `db:"database_name" metric_name:"sqlserver.database.name" source_type:"attribute"`
-
-	// RCA Enhancement: Correlation keys (query_hash for linking to slow queries and active queries)
-	BlockedQueryID  *QueryID `db:"blocked_query_id" metric_name:"sqlserver.blocked.query_id" source_type:"attribute"`
-	BlockingQueryID *QueryID `db:"blocking_query_id" metric_name:"sqlserver.blocking.query_id" source_type:"attribute"`
-
-	BlockingQueryText     *string `db:"blocking_query_text" metric_name:"sqlserver.blocking.query_text" source_type:"attribute"`
-	BlockedQueryText      *string `db:"blocked_query_text" metric_name:"sqlserver.blocked.query_text" source_type:"attribute"`
-	BlockedQueryStartTime *string `db:"blocked_query_start_time" metric_name:"sqlserver.blocked.query_start_time" source_type:"attribute"`
-
-	// RCA Enhancement: Blocker session identity (WHO is causing the block)
-	BlockerLoginName   *string `db:"blocker_login_name" metric_name:"sqlserver.blocker.login_name" source_type:"attribute"`
-	BlockerHostName    *string `db:"blocker_host_name" metric_name:"sqlserver.blocker.host_name" source_type:"attribute"`
-	BlockerProgramName *string `db:"blocker_program_name" metric_name:"sqlserver.blocker.program_name" source_type:"attribute"`
-
-	// RCA Enhancement: Lock resource details (WHAT is being locked)
-	WaitResource             *string `db:"wait_resource" metric_name:"sqlserver.blocking.wait_resource" source_type:"attribute"`
-	WaitResourceObjectName   *string `db:"wait_resource_object_name" metric_name:"sqlserver.blocking.wait_resource_object_name" source_type:"attribute"`
-	WaitResourceDatabaseName *string `db:"wait_resource_database_name" metric_name:"sqlserver.blocking.wait_resource_database_name" source_type:"attribute"`
-
-	// RCA Enhancement: Blocker activity context (WHAT is blocker doing)
-	BlockerCommandType          *string `db:"blocker_command_type" metric_name:"sqlserver.blocker.command_type" source_type:"attribute"`
-	BlockerStartTime            *string `db:"blocker_start_time" metric_name:"sqlserver.blocker.start_time" source_type:"attribute"`
-	BlockerStatus               *string `db:"blocker_status" metric_name:"sqlserver.blocker.status" source_type:"attribute"`
-	BlockerOpenTransactionCount *int64  `db:"blocker_open_transaction_count" metric_name:"sqlserver.blocker.open_transaction_count" source_type:"gauge"`
-
-	// RCA Enhancement: Transaction behavior (WHY is it blocking)
-	BlockedIsolationLevel       *int64 `db:"blocked_isolation_level" metric_name:"sqlserver.blocked.isolation_level" source_type:"attribute"`
-	BlockerIsolationLevel       *int64 `db:"blocker_isolation_level" metric_name:"sqlserver.blocker.isolation_level" source_type:"attribute"`
-	BlockedOpenTransactionCount *int64 `db:"blocked_open_transaction_count" metric_name:"sqlserver.blocked.open_transaction_count" source_type:"gauge"`
-
-	// RCA Enhancement: Blocked query performance impact
-	BlockedTotalElapsedMs *int64 `db:"blocked_total_elapsed_ms" metric_name:"sqlserver.blocked.total_elapsed_ms" source_type:"gauge"`
-	BlockedCPUTimeMs      *int64 `db:"blocked_cpu_time_ms" metric_name:"sqlserver.blocked.cpu_time_ms" source_type:"gauge"`
-	BlockedLogicalReads   *int64 `db:"blocked_logical_reads" metric_name:"sqlserver.blocked.logical_reads" source_type:"gauge"`
 }
 
 // WaitTimeAnalysis represents wait time analysis data for SQL Server queries
@@ -359,10 +200,13 @@ type ActiveRunningQuery struct {
 	// I. Blocking Details
 	// LINKING FIX: Changed from *string to *int64 for proper numeric joins
 	// NULL when not blocked (was "N/A" string) - enables: WHERE blocking_session_id = 123
-	BlockingSessionID  *int64  `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
-	BlockerLoginName   *string `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
-	BlockerHostName    *string `db:"blocker_host_name" metric_name:"blocker_host_name" source_type:"attribute"`
-	BlockerProgramName *string `db:"blocker_program_name" metric_name:"blocker_program_name" source_type:"attribute"`
+	BlockingSessionID             *int64  `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
+	BlockerLoginName              *string `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
+	BlockerHostName               *string `db:"blocker_host_name" metric_name:"blocker_host_name" source_type:"attribute"`
+	BlockerProgramName            *string `db:"blocker_program_name" metric_name:"blocker_program_name" source_type:"attribute"`
+	BlockerStatus                 *string `db:"blocker_status" metric_name:"blocker_status" source_type:"attribute"`
+	BlockerIsolationLevel         *int64  `db:"blocker_isolation_level" metric_name:"blocker_isolation_level" source_type:"attribute"`
+	BlockerOpenTransactionCount   *int64  `db:"blocker_open_transaction_count" metric_name:"blocker_open_transaction_count" source_type:"gauge"`
 
 	// J. Query Text
 	QueryStatementText         *string `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`

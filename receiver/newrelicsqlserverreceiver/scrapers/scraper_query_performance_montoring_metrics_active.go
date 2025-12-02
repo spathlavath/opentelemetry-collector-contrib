@@ -539,13 +539,22 @@ func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, re
 		attrs.PutInt("blocking_session_id", *result.BlockingSessionID)
 	}
 	if result.BlockerLoginName != nil {
-		attrs.PutStr("blocker_login_name", *result.BlockerLoginName)
+		attrs.PutStr("blocking_login_name", *result.BlockerLoginName)
 	}
 	if result.BlockerHostName != nil {
-		attrs.PutStr("blocker_host_name", *result.BlockerHostName)
+		attrs.PutStr("blocking_host_name", *result.BlockerHostName)
 	}
 	if result.BlockerProgramName != nil {
-		attrs.PutStr("blocker_program_name", *result.BlockerProgramName)
+		attrs.PutStr("blocking_program_name", *result.BlockerProgramName)
+	}
+	if result.BlockerStatus != nil {
+		attrs.PutStr("blocking_status", *result.BlockerStatus)
+	}
+	if result.BlockerIsolationLevel != nil {
+		attrs.PutInt("blocking_isolation_level", *result.BlockerIsolationLevel)
+	}
+	if result.BlockerOpenTransactionCount != nil {
+		attrs.PutInt("blocking_open_transaction_count", *result.BlockerOpenTransactionCount)
 	}
 
 	// Query text (anonymized) and query ID for correlation
