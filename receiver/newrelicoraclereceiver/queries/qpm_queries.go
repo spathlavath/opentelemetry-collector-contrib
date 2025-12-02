@@ -69,7 +69,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			(SELECT name FROM v$database) AS database_name,
+			d.name AS database_name,
 			s.username,
 			s.sid,
 			s.serial#,
@@ -152,11 +152,13 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 		FROM
 			v$session s
 		LEFT JOIN
-			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID AND s.ROW_WAIT_OBJ# >= 0
+			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID
 		LEFT JOIN
 			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
 		LEFT JOIN
 			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
+		CROSS JOIN
+			v$database d
 		LEFT JOIN
 			v$lock lock_held ON lock_held.SID = final_blocker.sid
 			                 AND lock_held.BLOCK > 0
@@ -180,11 +182,9 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
-// GetChildCursorsQuery returns SQL to get top N child cursors for a given SQL_ID from V$SQL
-// Returns average metrics per execution to normalize performance data
-// Time metrics are converted from microseconds to milliseconds for better readability
-// Ordered by most recent load time to get the latest child cursor versions
-func GetChildCursorsQuery(sqlID string, childLimit int) string {
+// GetSpecificChildCursorQuery returns SQL to get a SPECIFIC child cursor by sql_id and child_number
+// This is used when we know the exact child_number from a wait event
+func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
@@ -206,9 +206,7 @@ func GetChildCursorsQuery(sqlID string, childLimit int) string {
 			v$database d
 		WHERE
 			s.sql_id = '%s'
-		ORDER BY
-			s.last_load_time DESC
-		FETCH FIRST %d ROWS ONLY`, sqlID, childLimit)
+			AND s.child_number = %d`, sqlID, childNumber)
 }
 
 // GetExecutionPlanForChildQuery returns SQL to get execution plan from V$SQL_PLAN for specific child number

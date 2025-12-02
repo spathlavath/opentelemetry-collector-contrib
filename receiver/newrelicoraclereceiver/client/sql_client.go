@@ -140,13 +140,13 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 	return results, nil
 }
 
-// QueryChildCursors executes the child cursors query for a given SQL_ID.
-func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error) {
+// QuerySpecificChildCursor queries for a specific child cursor by sql_id and child_number
+func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error) {
 	if c == nil || c.db == nil {
 		return nil, fmt.Errorf("SQL client or database connection is nil")
 	}
 
-	query := queries.GetChildCursorsQuery(sqlID, childLimit)
+	query := queries.GetSpecificChildCursorQuery(sqlID, childNumber)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -154,9 +154,7 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 	}
 	defer rows.Close()
 
-	var results []models.ChildCursor
-
-	for rows.Next() {
+	if rows.Next() {
 		var childCursor models.ChildCursor
 
 		err := rows.Scan(
@@ -178,14 +176,11 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 			return nil, err
 		}
 
-		results = append(results, childCursor)
+		return &childCursor, nil
 	}
 
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return results, nil
+	// No matching child cursor found
+	return nil, nil
 }
 
 // QueryWaitEventsWithBlocking executes the combined wait events with blocking information query.
