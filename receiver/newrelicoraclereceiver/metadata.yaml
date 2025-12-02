@@ -199,6 +199,23 @@ attributes:
     description: SQL query text of the final blocking session's query
     type: string
 
+  # Lock information attributes (from v$lock)
+  lock_held_mode:
+    description: Lock mode held by the final blocker with human-readable description
+    type: string
+  lock_type:
+    description: Type of lock held by the final blocker with description
+    type: string
+  locked_object_owner:
+    description: Schema owner of the object being locked by the final blocker
+    type: string
+  locked_object_name:
+    description: Name of the database object being locked by the final blocker
+    type: string
+  locked_object_type:
+    description: Type of the database object being locked (e.g., TABLE, INDEX)
+    type: string
+
   db.instance.name:
     description: Oracle database instance name
     type: string
@@ -3764,6 +3781,11 @@ metrics:
       - final_blocker_serial
       - final_blocker_query_id
       - final_blocker_query_text
+      - lock_held_mode
+      - lock_type
+      - locked_object_owner
+      - locked_object_name
+      - locked_object_type
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.total_wait_time_ms:

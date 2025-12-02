@@ -255,6 +255,13 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
 	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
 
+	// Lock information
+	lockHeldMode := event.GetLockHeldMode()
+	lockType := event.GetLockType()
+	lockedObjectOwner := event.GetLockedObjectOwner()
+	lockedObjectName := event.GetLockedObjectName()
+	lockedObjectType := event.GetLockedObjectType()
+
 	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(
 		now,
 		blockedWaitMs,
@@ -272,5 +279,10 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		finalBlockerSerial,
 		finalBlockerQueryID,
 		finalBlockerQueryText,
+		lockHeldMode,
+		lockType,
+		lockedObjectOwner,
+		lockedObjectName,
+		lockedObjectType,
 	)
 }

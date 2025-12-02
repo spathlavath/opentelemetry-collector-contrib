@@ -103,6 +103,18 @@ type WaitEventWithBlocking struct {
 	FinalBlockerQueryID sql.NullString
 	// 38. final_blocker_query_text
 	FinalBlockerQueryText sql.NullString
+
+	// Lock information (from v$lock join)
+	// 39. lock_held_mode (LMODE from v$lock with human-readable description)
+	LockHeldMode sql.NullString
+	// 40. lock_type (TYPE from v$lock with human-readable description)
+	LockType sql.NullString
+	// 41. locked_object_owner (OWNER of locked object)
+	LockedObjectOwner sql.NullString
+	// 42. locked_object_name (NAME of locked object)
+	LockedObjectName sql.NullString
+	// 43. locked_object_type (TYPE of locked object)
+	LockedObjectType sql.NullString
 }
 
 // ========================================
@@ -379,6 +391,45 @@ func (w *WaitEventWithBlocking) GetFinalBlockerQueryID() string {
 func (w *WaitEventWithBlocking) GetFinalBlockerQueryText() string {
 	if w.FinalBlockerQueryText.Valid {
 		return w.FinalBlockerQueryText.String
+	}
+	return ""
+}
+
+// ========================================
+// Lock information getter methods
+// ========================================
+
+func (w *WaitEventWithBlocking) GetLockHeldMode() string {
+	if w.LockHeldMode.Valid {
+		return w.LockHeldMode.String
+	}
+	return ""
+}
+
+func (w *WaitEventWithBlocking) GetLockType() string {
+	if w.LockType.Valid {
+		return w.LockType.String
+	}
+	return ""
+}
+
+func (w *WaitEventWithBlocking) GetLockedObjectOwner() string {
+	if w.LockedObjectOwner.Valid {
+		return w.LockedObjectOwner.String
+	}
+	return ""
+}
+
+func (w *WaitEventWithBlocking) GetLockedObjectName() string {
+	if w.LockedObjectName.Valid {
+		return w.LockedObjectName.String
+	}
+	return ""
+}
+
+func (w *WaitEventWithBlocking) GetLockedObjectType() string {
+	if w.LockedObjectType.Valid {
+		return w.LockedObjectType.String
 	}
 	return ""
 }

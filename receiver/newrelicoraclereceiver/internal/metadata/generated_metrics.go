@@ -1501,7 +1501,7 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbBlockingQueriesWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string, finalBlockerUserAttributeValue string, finalBlockerSidAttributeValue string, finalBlockerSerialAttributeValue string, finalBlockerQueryIDAttributeValue string, finalBlockerQueryTextAttributeValue string) {
+func (m *metricNewrelicoracledbBlockingQueriesWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string, finalBlockerUserAttributeValue string, finalBlockerSidAttributeValue string, finalBlockerSerialAttributeValue string, finalBlockerQueryIDAttributeValue string, finalBlockerQueryTextAttributeValue string, lockHeldModeAttributeValue string, lockTypeAttributeValue string, lockedObjectOwnerAttributeValue string, lockedObjectNameAttributeValue string, lockedObjectTypeAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1523,6 +1523,11 @@ func (m *metricNewrelicoracledbBlockingQueriesWaitTimeMs) recordDataPoint(start 
 	dp.Attributes().PutStr("final_blocker_serial", finalBlockerSerialAttributeValue)
 	dp.Attributes().PutStr("final_blocker_query_id", finalBlockerQueryIDAttributeValue)
 	dp.Attributes().PutStr("final_blocker_query_text", finalBlockerQueryTextAttributeValue)
+	dp.Attributes().PutStr("lock_held_mode", lockHeldModeAttributeValue)
+	dp.Attributes().PutStr("lock_type", lockTypeAttributeValue)
+	dp.Attributes().PutStr("locked_object_owner", lockedObjectOwnerAttributeValue)
+	dp.Attributes().PutStr("locked_object_name", lockedObjectNameAttributeValue)
+	dp.Attributes().PutStr("locked_object_type", lockedObjectTypeAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -19657,8 +19662,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(ts 
 }
 
 // RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint adds a data point to newrelicoracledb.blocking_queries.wait_time_ms metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string, finalBlockerUserAttributeValue string, finalBlockerSidAttributeValue string, finalBlockerSerialAttributeValue string, finalBlockerQueryIDAttributeValue string, finalBlockerQueryTextAttributeValue string) {
-	mb.metricNewrelicoracledbBlockingQueriesWaitTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecIDAttributeValue, sqlExecStartAttributeValue, finalBlockerUserAttributeValue, finalBlockerSidAttributeValue, finalBlockerSerialAttributeValue, finalBlockerQueryIDAttributeValue, finalBlockerQueryTextAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, queryIDAttributeValue string, sqlChildNumberAttributeValue int64, sqlExecIDAttributeValue int64, sqlExecStartAttributeValue string, finalBlockerUserAttributeValue string, finalBlockerSidAttributeValue string, finalBlockerSerialAttributeValue string, finalBlockerQueryIDAttributeValue string, finalBlockerQueryTextAttributeValue string, lockHeldModeAttributeValue string, lockTypeAttributeValue string, lockedObjectOwnerAttributeValue string, lockedObjectNameAttributeValue string, lockedObjectTypeAttributeValue string) {
+	mb.metricNewrelicoracledbBlockingQueriesWaitTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, queryIDAttributeValue, sqlChildNumberAttributeValue, sqlExecIDAttributeValue, sqlExecStartAttributeValue, finalBlockerUserAttributeValue, finalBlockerSidAttributeValue, finalBlockerSerialAttributeValue, finalBlockerQueryIDAttributeValue, finalBlockerQueryTextAttributeValue, lockHeldModeAttributeValue, lockTypeAttributeValue, lockedObjectOwnerAttributeValue, lockedObjectNameAttributeValue, lockedObjectTypeAttributeValue)
 }
 
 // RecordNewrelicoracledbChildCursorsBufferGetsDataPoint adds a data point to newrelicoracledb.child_cursors.buffer_gets metric.
