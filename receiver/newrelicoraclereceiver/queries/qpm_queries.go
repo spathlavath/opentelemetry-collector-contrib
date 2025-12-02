@@ -117,38 +117,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			final_blocker.username AS final_blocker_user,
 			final_blocker.serial# AS final_blocker_serial,
 			final_blocker.sql_id AS final_blocker_query_id,
-			final_blocker_sql.sql_text AS final_blocker_query_text,
-			-- Lock information with human-readable descriptions
-			CASE lock_held.LMODE
-				WHEN 6 THEN '6: Exclusive (X) - Blocks ALL access'
-				WHEN 5 THEN '5: Share Row Exclusive (SSX) - Prevents table lock, allows row DML'
-				WHEN 4 THEN '4: Share (S) - Prevents DML, allows shared reads'
-				WHEN 3 THEN '3: Row Exclusive (SX) - Prevents table S/X lock, used for DML'
-				WHEN 2 THEN '2: Row Share (SS) - Least restrictive DML lock'
-				WHEN 1 THEN '1: Null (N) - Monitoring only, no restriction'
-				ELSE '0: None'
-			END AS lock_held_mode,
-			CASE lock_held.TYPE
-				WHEN 'TM' THEN 'TM: DML/Table Lock (Contention means DDL is blocked)'
-				WHEN 'TX' THEN 'TX: Transaction Lock (Contention means Row Lock)'
-				ELSE lock_held.TYPE -- Fallback for other lock types (e.g., CI, UL, etc.)
-			END AS lock_type,
-			-- Consolidated DBA_OBJECTS lookup: get locked object info in one place
-			CASE
-				WHEN lock_held.TYPE = 'TM' THEN locked_obj.OWNER
-				WHEN lock_held.TYPE = 'TX' THEN o.OWNER
-				ELSE NULL
-			END AS locked_object_owner,
-			CASE
-				WHEN lock_held.TYPE = 'TM' THEN locked_obj.OBJECT_NAME
-				WHEN lock_held.TYPE = 'TX' THEN o.OBJECT_NAME
-				ELSE NULL
-			END AS locked_object_name,
-			CASE
-				WHEN lock_held.TYPE = 'TM' THEN locked_obj.OBJECT_TYPE
-				WHEN lock_held.TYPE = 'TX' THEN o.OBJECT_TYPE
-				ELSE NULL
-			END AS locked_object_type
+			final_blocker_sql.sql_text AS final_blocker_query_text
 		FROM
 			v$session s
 		LEFT JOIN
@@ -159,19 +128,6 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
 		CROSS JOIN
 			v$database d
-		LEFT JOIN
-			v$lock lock_held ON lock_held.SID = final_blocker.sid
-			                 AND lock_held.BLOCK > 0
-			                 AND lock_held.TYPE IN ('TM', 'TX')
-			                 AND lock_held.LMODE = (
-			                     SELECT MAX(LMODE)
-			                     FROM v$lock l2
-			                     WHERE l2.SID = final_blocker.sid
-			                       AND l2.BLOCK > 0
-			                       AND l2.TYPE IN ('TM', 'TX')
-			                 )
-		LEFT JOIN
-			DBA_OBJECTS locked_obj ON lock_held.ID1 = locked_obj.OBJECT_ID AND lock_held.TYPE = 'TM'
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'

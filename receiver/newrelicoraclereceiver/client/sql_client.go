@@ -276,16 +276,6 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 			&w.FinalBlockerQueryID,
 			// 38. final_blocker_query_text
 			&w.FinalBlockerQueryText,
-			// 39. lock_held_mode
-			&w.LockHeldMode,
-			// 40. lock_type
-			&w.LockType,
-			// 41. locked_object_owner
-			&w.LockedObjectOwner,
-			// 42. locked_object_name
-			&w.LockedObjectName,
-			// 43. locked_object_type
-			&w.LockedObjectType,
 		)
 		if err != nil {
 			return nil, err
