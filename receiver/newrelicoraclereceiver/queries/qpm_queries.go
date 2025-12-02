@@ -157,17 +157,18 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
 		LEFT JOIN
 			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
-		LEFT JOIN (
-			-- Get the most restrictive lock for each blocker session
-			SELECT
-				SID, TYPE, LMODE, ID1,
-				ROW_NUMBER() OVER (PARTITION BY SID ORDER BY LMODE DESC, TYPE DESC) as rn
-			FROM v$lock
-			WHERE BLOCK > 0
-			  AND TYPE IN ('TM', 'TX')
-		) lock_held ON lock_held.SID = final_blocker.sid AND lock_held.rn = 1
 		LEFT JOIN
-			-- For TM locks, get object info from lock ID1
+			v$lock lock_held ON lock_held.SID = final_blocker.sid
+			                 AND lock_held.BLOCK > 0
+			                 AND lock_held.TYPE IN ('TM', 'TX')
+			                 AND lock_held.LMODE = (
+			                     SELECT MAX(LMODE)
+			                     FROM v$lock l2
+			                     WHERE l2.SID = final_blocker.sid
+			                       AND l2.BLOCK > 0
+			                       AND l2.TYPE IN ('TM', 'TX')
+			                 )
+		LEFT JOIN
 			DBA_OBJECTS locked_obj ON lock_held.ID1 = locked_obj.OBJECT_ID AND lock_held.TYPE = 'TM'
 		WHERE
 			s.status = 'ACTIVE'
