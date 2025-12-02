@@ -218,7 +218,7 @@ func (w *WaitEventWithBlocking) GetSQLChildNumber() int64 {
 	if w.SQLChildNumber.Valid {
 		return w.SQLChildNumber.Int64
 	}
-	return 0
+	return -1 // Return -1 for NULL to distinguish from legitimate child_number 0
 }
 
 func (w *WaitEventWithBlocking) GetSQLExecID() int64 {

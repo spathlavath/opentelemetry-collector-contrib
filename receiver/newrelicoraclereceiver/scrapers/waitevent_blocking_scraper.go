@@ -92,9 +92,20 @@ func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Conte
 			waitEventMetricCount++
 
 			// Extract SQL_ID and child_number for child cursor fetching
-			if event.HasValidQueryID() && event.GetSQLChildNumber() >= 0 {
-				sqlID := eventSQLID
-				childNumber := event.GetSQLChildNumber()
+			sqlID := eventSQLID
+			childNumber := event.GetSQLChildNumber()
+			hasValidQueryID := event.HasValidQueryID()
+			hasValidChildNumber := event.SQLChildNumber.Valid
+
+			s.logger.Debug("Wait event SQL info",
+				zap.String("sql_id", sqlID),
+				zap.Int64("child_number", childNumber),
+				zap.Bool("has_valid_query_id", hasValidQueryID),
+				zap.Bool("child_number_valid", hasValidChildNumber))
+
+			// Only collect SQL identifiers if BOTH sql_id AND child_number are valid (not NULL)
+			// Child number can be 0 (which is valid), but it must be explicitly set, not NULL
+			if hasValidQueryID && hasValidChildNumber {
 				key := fmt.Sprintf("%s#%d", sqlID, childNumber)
 
 				// Store unique combination
@@ -103,7 +114,16 @@ func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Conte
 						SQLID:       sqlID,
 						ChildNumber: childNumber,
 					}
+					s.logger.Info("Added SQL identifier for execution plan",
+						zap.String("sql_id", sqlID),
+						zap.Int64("child_number", childNumber))
 				}
+			} else {
+				s.logger.Debug("Skipped SQL identifier - missing valid query ID or child number",
+					zap.String("sql_id", sqlID),
+					zap.Int64("child_number", childNumber),
+					zap.Bool("has_valid_query_id", hasValidQueryID),
+					zap.Bool("has_valid_child_number", hasValidChildNumber))
 			}
 		}
 
