@@ -161,54 +161,6 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, sc
 
 	s.logger.Debug("Raw slow query metrics fetched", zap.Int("raw_result_count", len(rawResults)))
 
-	// Fetch currently active queries to backfill slow query metrics
-	// This ensures all active queries have corresponding slow query metrics for complete correlation
-	activeQueryStatsQuery := fmt.Sprintf(queries.ActiveQueryStatsForSlowQueryUnion, textTruncateLimit)
-	var activeQueryStats []models.SlowQuery
-	if err := s.connection.Query(ctx, &activeQueryStats, activeQueryStatsQuery); err != nil {
-		s.logger.Warn("Failed to fetch active query stats for union, continuing without them",
-			zap.Error(err))
-	} else {
-		s.logger.Debug("Active query stats fetched for union", zap.Int("active_count", len(activeQueryStats)))
-
-		// Merge active queries with slow queries
-		// Use a map to deduplicate by (query_hash, plan_handle)
-		// Priority: Keep slow query stat if it exists, otherwise use active query stat
-		queryMap := make(map[string]models.SlowQuery)
-
-		// First, add all slow queries from dm_exec_query_stats
-		for _, sq := range rawResults {
-			if sq.QueryID != nil && sq.PlanHandle != nil {
-				key := sq.QueryID.String() + "|" + sq.PlanHandle.String()
-				queryMap[key] = sq
-			}
-		}
-
-		// Then, add active queries that aren't already in the map
-		addedCount := 0
-		for _, aq := range activeQueryStats {
-			if aq.QueryID != nil && aq.PlanHandle != nil {
-				key := aq.QueryID.String() + "|" + aq.PlanHandle.String()
-				if _, exists := queryMap[key]; !exists {
-					queryMap[key] = aq
-					addedCount++
-				}
-			}
-		}
-
-		s.logger.Debug("Merged active queries with slow queries",
-			zap.Int("slow_query_count", len(rawResults)),
-			zap.Int("active_query_count", len(activeQueryStats)),
-			zap.Int("added_from_active", addedCount),
-			zap.Int("total_after_merge", len(queryMap)))
-
-		// Convert map back to slice
-		rawResults = make([]models.SlowQuery, 0, len(queryMap))
-		for _, sq := range queryMap {
-			rawResults = append(rawResults, sq)
-		}
-	}
-
 	// Apply simplified interval-based delta calculation if enabled
 	var resultsWithIntervalMetrics []models.SlowQuery
 	if s.intervalCalculator != nil {
