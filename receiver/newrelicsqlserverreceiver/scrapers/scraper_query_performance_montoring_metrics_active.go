@@ -30,26 +30,26 @@ import (
 //   - Must have valid query_hash (filtered in SQL)
 //
 // Results are sorted by total_elapsed_time DESC (slowest first) and limited to Top N
-// Returns the active queries for further processing (e.g., fetching top 5 plan handles per active query)
+// Returns the active queries for further processing (fetching execution stats for unique plan_handles)
 func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
-	// Early return if no slow queries to correlate with
+	// Skip active query scraping if no slow queries found (nothing to correlate)
 	if len(slowQueryIDs) == 0 {
 		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
 		return nil, nil
 	}
 
+	// Build query with slow query correlation filter
+	var queryIDFilter string
 	// Build query_id IN clause for SQL filtering
-	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
-
+	queryIDFilter = "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
 	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit, elapsedTimeThreshold) + " " + queryIDFilter
 
-	s.logger.Debug("Executing active running queries metrics collection (filtered by slow query IDs)",
+	s.logger.Debug("Executing active running queries metrics collection",
 		zap.String("query", queries.TruncateQuery(query, 100)),
 		zap.Int("limit", limit),
 		zap.Int("text_truncate_limit", textTruncateLimit),
 		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold),
-		zap.Int("slow_query_id_count", len(slowQueryIDs)),
-		zap.String("slow_query_ids_preview", queries.TruncateQuery(strings.Join(slowQueryIDs, ","), 100)))
+		zap.Int("slow_query_id_count", len(slowQueryIDs)))
 
 	var results []models.ActiveRunningQuery
 	if err := s.connection.Query(ctx, &results, query); err != nil {
@@ -172,7 +172,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		zap.Int("processed", processedCount),
 		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
 
-	// Return the active queries for further processing (e.g., fetching top 5 plan handles)
+	// Return the active queries for further processing (fetching execution stats for unique plan_handles)
 	return results, nil
 }
 
@@ -896,7 +896,7 @@ func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
 //
 // These functions have been replaced by the new approach in scraper_query_performance_montoring_metrics.go:
 // - ScrapeSlowQueryExecutionPlans: Fetches plans for ALL slow queries (not just active ones)
-// - emitSlowQueryPlanMetrics: Emits metrics with clean historical context (no session_id/request_id)
+// - emitActiveQueryPlanMetrics: Emits metrics with active query correlation (session_id, request_id, request_start_time)
 //
 // Benefits of the new approach:
 // 1. Plans available even when query is NOT currently running

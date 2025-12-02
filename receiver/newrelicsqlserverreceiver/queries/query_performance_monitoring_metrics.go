@@ -927,67 +927,15 @@ WHERE
 ORDER BY r.total_elapsed_time DESC
 OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values`
 
-// Top5PlanHandlesForActiveQueryQuery retrieves the top 5 most recently used plan_handles
-// for a specific query_hash (query_id) from dm_exec_query_stats
-// This provides historical execution plans for the currently active query
-// Parameters: query_hash (hex string), top N (default 5)
-// NOTE: Must return the same fields as Top5PlanHandlesForSlowQueryQuery for consistency
-const Top5PlanHandlesForActiveQueryQuery = `
-DECLARE @QueryHash BINARY(8) = %s;
-DECLARE @TopN INT = 5;
+// ExecutionStatsForActivePlanHandleQuery retrieves execution statistics for a specific plan_handle
+// from sys.dm_exec_query_stats - used for active running queries
+// This provides historical performance data for the exact plan currently executing
+// Parameters: plan_handle (hex string)
+// Returns: Execution statistics WITHOUT XML execution plan (plan already available in ActiveRunningQueriesQuery)
+const ExecutionStatsForActivePlanHandleQuery = `
+DECLARE @PlanHandle VARBINARY(MAX) = %s;
 
-SELECT TOP (@TopN)
-    qs.plan_handle,
-    qs.query_hash AS query_id,
-    qs.query_plan_hash,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_time,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
-    qs.execution_count,
-    qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
-    (qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
-    qs.min_elapsed_time / 1000.0 AS min_elapsed_time_ms,
-    qs.max_elapsed_time / 1000.0 AS max_elapsed_time_ms,
-    qs.last_elapsed_time / 1000.0 AS last_elapsed_time_ms,
-    qs.total_worker_time / 1000.0 AS total_worker_time_ms,
-    (qs.total_worker_time / qs.execution_count) / 1000.0 AS avg_worker_time_ms,
-    qs.total_logical_reads,
-    qs.total_logical_writes,
-    qs.total_physical_reads,
-    (qs.total_logical_reads / qs.execution_count) AS avg_logical_reads,
-    (qs.total_logical_writes / qs.execution_count) AS avg_logical_writes,
-    (qs.total_physical_reads / qs.execution_count) AS avg_physical_reads,
-    (qs.total_rows / qs.execution_count) AS avg_rows,
-    qs.last_grant_kb,
-    qs.last_used_grant_kb,
-    qs.min_grant_kb,
-    qs.max_grant_kb,
-    qs.last_spills,
-    qs.max_spills,
-    qs.last_dop,
-    qs.min_dop,
-    qs.max_dop,
-    CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
-FROM sys.dm_exec_query_stats qs
-CROSS APPLY sys.dm_exec_query_plan(qs.plan_handle) AS qp
-WHERE
-    qs.query_hash = @QueryHash
-    AND qs.plan_handle IS NOT NULL
-    AND qp.query_plan IS NOT NULL
-ORDER BY
-    qs.last_execution_time DESC
-OPTION (RECOMPILE);`
-
-// Top5PlanHandlesForSlowQueryQuery retrieves the top 5 most recently used plan_handles
-// for a specific query_hash (query_id) from dm_exec_query_stats
-// This query is used for SLOW QUERIES (not tied to active executions)
-// Returns historical statistics for each plan_handle independent of current active queries
-// Parameters: query_hash (hex string)
-// Ordered by: last_execution_time DESC (most recently executed plans first)
-const Top5PlanHandlesForSlowQueryQuery = `
-DECLARE @QueryHash BINARY(8) = %s;
-DECLARE @TopN INT = 5;
-
-SELECT TOP (@TopN)
+SELECT
     qs.plan_handle,
     qs.query_hash AS query_id,
     qs.query_plan_hash,
@@ -1018,9 +966,8 @@ SELECT TOP (@TopN)
     qs.min_dop,
     qs.max_dop
 FROM sys.dm_exec_query_stats qs
-WHERE qs.query_hash = @QueryHash
-  AND qs.plan_handle IS NOT NULL
-ORDER BY qs.last_execution_time DESC
+WHERE
+    qs.plan_handle = @PlanHandle
 OPTION (RECOMPILE);`
 
 // ExecutionPlanTopLevelDetailsQuery retrieves top-level execution plan details from XML
