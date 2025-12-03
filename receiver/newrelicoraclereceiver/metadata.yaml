@@ -3743,6 +3743,7 @@ metrics:
       Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
       Collected alongside wait events in a single optimized query from v$session.
       Includes information about the final blocking session (root cause) and its query.
+      Includes wait event details (event name, category, object) to identify the type of contention.
       Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
       Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
     enabled: true
@@ -3759,6 +3760,11 @@ metrics:
       - sql_child_number
       - sql_exec_id
       - sql_exec_start
+      - wait_event_name
+      - wait_category
+      - wait_object_name
+      - wait_object_owner
+      - wait_object_type
       - final_blocker_user
       - final_blocker_sid
       - final_blocker_serial

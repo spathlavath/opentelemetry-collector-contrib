@@ -64,6 +64,7 @@ Wait time in milliseconds for blocked queries
 Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
 Collected alongside wait events in a single optimized query from v$session.
 Includes information about the final blocking session (root cause) and its query.
+Includes wait event details (event name, category, object) to identify the type of contention.
 Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
 Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
@@ -85,6 +86,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
 | sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
+| wait_object_name | Name of the database object being waited on | Any Str | false |
+| wait_object_owner | Owner of the database object being waited on | Any Str | false |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
 | final_blocker_user | Username of the final blocking session (root cause) | Any Str | false |
 | final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | false |
 | final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |

@@ -82,7 +82,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, 11, "sql_exec_start-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1494,6 +1494,21 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sql_exec_start")
 					assert.True(t, ok)
 					assert.Equal(t, "sql_exec_start-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_category")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_category-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_object_name")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_object_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_object_owner")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_object_owner-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_object_type")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_object_type-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("final_blocker_user")
 					assert.True(t, ok)
 					assert.Equal(t, "final_blocker_user-val", attrVal.Str())

@@ -268,6 +268,13 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	sqlExecID := event.GetSQLExecID()
 	sqlExecStart := event.GetSQLExecStart().Format("2006-01-02 15:04:05")
 
+	// Wait event information (helps identify the type of contention)
+	waitEventName := event.GetWaitEventName()
+	waitCat := event.GetWaitCategory()
+	waitObjectName := event.GetObjectNameWaitedOn()
+	waitObjectOwner := event.GetObjectOwner()
+	waitObjectType := event.GetObjectTypeWaitedOn()
+
 	// Blocking session information
 	finalBlockerSID := strconv.FormatInt(event.GetFinalBlockerSID(), 10)
 	finalBlockerSerial := strconv.FormatInt(event.GetFinalBlockerSerial(), 10)
@@ -287,6 +294,11 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		sqlChildNumber,
 		sqlExecID,
 		sqlExecStart,
+		waitEventName,
+		waitCat,
+		waitObjectName,
+		waitObjectOwner,
+		waitObjectType,
 		finalBlockerUser,
 		finalBlockerSID,
 		finalBlockerSerial,
