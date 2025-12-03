@@ -150,11 +150,17 @@ func (m *MockClient) QuerySlowQueries(ctx context.Context, intervalSeconds, resp
 	return m.SlowQueries, nil
 }
 
-func (m *MockClient) QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error) {
+func (m *MockClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
-	return m.ChildCursors, nil
+	// Return first matching child cursor from mock data
+	for _, cursor := range m.ChildCursors {
+		if cursor.GetSQLID() == sqlID && cursor.GetChildNumber() == childNumber {
+			return &cursor, nil
+		}
+	}
+	return nil, nil
 }
 
 func (m *MockClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error) {

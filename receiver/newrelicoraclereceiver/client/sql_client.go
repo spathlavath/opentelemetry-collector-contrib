@@ -140,13 +140,13 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 	return results, nil
 }
 
-// QueryChildCursors executes the child cursors query for a given SQL_ID.
-func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error) {
+// QuerySpecificChildCursor queries for a specific child cursor by sql_id and child_number
+func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error) {
 	if c == nil || c.db == nil {
 		return nil, fmt.Errorf("SQL client or database connection is nil")
 	}
 
-	query := queries.GetChildCursorsQuery(sqlID, childLimit)
+	query := queries.GetSpecificChildCursorQuery(sqlID, childNumber)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
@@ -154,9 +154,7 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 	}
 	defer rows.Close()
 
-	var results []models.ChildCursor
-
-	for rows.Next() {
+	if rows.Next() {
 		var childCursor models.ChildCursor
 
 		err := rows.Scan(
@@ -178,14 +176,11 @@ func (c *SQLClient) QueryChildCursors(ctx context.Context, sqlID string, childLi
 			return nil, err
 		}
 
-		results = append(results, childCursor)
+		return &childCursor, nil
 	}
 
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return results, nil
+	// No matching child cursor found
+	return nil, nil
 }
 
 // QueryWaitEventsWithBlocking executes the combined wait events with blocking information query.
@@ -225,57 +220,61 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 			&w.WaitClass,
 			// 10. event
 			&w.Event,
-			// 11. SECONDS_IN_WAIT
-			&w.SecondsInWait,
-			// 12. time_remaining_seconds
-			&w.TimeRemainingSeconds,
-			// 13. SQL_EXEC_START
+			// 11. wait_time_ms
+			&w.WaitTimeMs,
+			// 12. blocked_time_ms
+			&w.BlockedTimeMs,
+			// 13. time_since_last_wait_ms
+			&w.TimeSinceLastWaitMs,
+			// 14. time_remaining_ms
+			&w.TimeRemainingMs,
+			// 15. SQL_EXEC_START
 			&w.SQLExecStart,
-			// 14. SQL_EXEC_ID
+			// 16. SQL_EXEC_ID
 			&w.SQLExecID,
-			// 15. PROGRAM
+			// 17. PROGRAM
 			&w.Program,
-			// 16. MACHINE
+			// 18. MACHINE
 			&w.Machine,
-			// 17. ROW_WAIT_OBJ#
+			// 19. ROW_WAIT_OBJ#
 			&w.RowWaitObj,
-			// 18. OWNER
+			// 20. OWNER
 			&w.Owner,
-			// 19. OBJECT_NAME
+			// 21. OBJECT_NAME
 			&w.ObjectName,
-			// 20. OBJECT_TYPE
+			// 22. OBJECT_TYPE
 			&w.ObjectType,
-			// 21. ROW_WAIT_FILE#
+			// 23. ROW_WAIT_FILE#
 			&w.RowWaitFile,
-			// 22. ROW_WAIT_BLOCK#
+			// 24. ROW_WAIT_BLOCK#
 			&w.RowWaitBlock,
-			// 23. p1text
+			// 25. p1text
 			&w.P1Text,
-			// 24. p1
+			// 26. p1
 			&w.P1,
-			// 25. p2text
+			// 27. p2text
 			&w.P2Text,
-			// 26. p2
+			// 28. p2
 			&w.P2,
-			// 27. p3text
+			// 29. p3text
 			&w.P3Text,
-			// 28. p3
+			// 30. p3
 			&w.P3,
-			// 29. BLOCKING_SESSION_STATUS
+			// 31. BLOCKING_SESSION_STATUS
 			&w.BlockingSessionStatus,
-			// 30. immediate_blocker_sid
+			// 32. immediate_blocker_sid
 			&w.ImmediateBlockerSID,
-			// 31. FINAL_BLOCKING_SESSION_STATUS
+			// 33. FINAL_BLOCKING_SESSION_STATUS
 			&w.FinalBlockingSessionStatus,
-			// 32. final_blocker_sid
+			// 34. final_blocker_sid
 			&w.FinalBlockerSID,
-			// 33. final_blocker_user
+			// 35. final_blocker_user
 			&w.FinalBlockerUser,
-			// 34. final_blocker_serial
+			// 36. final_blocker_serial
 			&w.FinalBlockerSerial,
-			// 35. final_blocker_query_id
+			// 37. final_blocker_query_id
 			&w.FinalBlockerQueryID,
-			// 36. final_blocker_query_text
+			// 38. final_blocker_query_text
 			&w.FinalBlockerQueryText,
 		)
 		if err != nil {

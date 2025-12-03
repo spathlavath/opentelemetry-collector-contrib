@@ -27,7 +27,7 @@ type OracleClient interface {
 	QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error)
 
 	// Child cursors (V$SQL)
-	QueryChildCursors(ctx context.Context, sqlID string, childLimit int) ([]models.ChildCursor, error)
+	QuerySpecificChildCursor(ctx context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error)
 
 	// Combined wait events with blocking information
 	// This replaces the separate QueryBlockingQueries and QueryWaitEvents methods

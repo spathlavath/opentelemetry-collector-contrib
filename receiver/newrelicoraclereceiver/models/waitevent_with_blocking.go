@@ -35,69 +35,73 @@ type WaitEventWithBlocking struct {
 	WaitClass sql.NullString
 	// 10. event
 	Event sql.NullString
-	// 11. SECONDS_IN_WAIT
-	SecondsInWait sql.NullInt64
-	// 12. time_remaining_seconds
-	TimeRemainingSeconds sql.NullFloat64
+	// 11. wait_time_ms (milliseconds the session has been waiting - general wait time)
+	WaitTimeMs sql.NullFloat64
+	// 12. blocked_time_ms (milliseconds waiting due to blocking - ONLY populated when BLOCKING_SESSION IS NOT NULL)
+	BlockedTimeMs sql.NullFloat64
+	// 13. time_since_last_wait_ms (milliseconds since last wait, useful for ON CPU time)
+	TimeSinceLastWaitMs sql.NullFloat64
+	// 14. time_remaining_ms (milliseconds remaining, NULL for indefinite waits)
+	TimeRemainingMs sql.NullFloat64
 
 	// SQL execution context
-	// 13. SQL_EXEC_START
+	// 15. SQL_EXEC_START
 	SQLExecStart sql.NullTime
-	// 14. SQL_EXEC_ID
+	// 16. SQL_EXEC_ID
 	SQLExecID sql.NullInt64
 
 	// Session context
-	// 15. PROGRAM
+	// 17. PROGRAM
 	Program sql.NullString
-	// 16. MACHINE
+	// 18. MACHINE
 	Machine sql.NullString
 
 	// Object being waited on
-	// 17. ROW_WAIT_OBJ#
+	// 19. ROW_WAIT_OBJ#
 	RowWaitObj sql.NullInt64
-	// 18. OWNER
+	// 20. OWNER
 	Owner sql.NullString
-	// 19. OBJECT_NAME
+	// 21. OBJECT_NAME
 	ObjectName sql.NullString
-	// 20. OBJECT_TYPE
+	// 22. OBJECT_TYPE
 	ObjectType sql.NullString
-	// 21. ROW_WAIT_FILE#
+	// 23. ROW_WAIT_FILE#
 	RowWaitFile sql.NullInt64
-	// 22. ROW_WAIT_BLOCK#
+	// 24. ROW_WAIT_BLOCK#
 	RowWaitBlock sql.NullInt64
 
 	// Wait parameters
-	// 23. p1text
+	// 25. p1text
 	P1Text sql.NullString
-	// 24. p1
+	// 26. p1
 	P1 sql.NullInt64
-	// 25. p2text
+	// 27. p2text
 	P2Text sql.NullString
-	// 26. p2
+	// 28. p2
 	P2 sql.NullInt64
-	// 27. p3text
+	// 29. p3text
 	P3Text sql.NullString
-	// 28. p3
+	// 30. p3
 	P3 sql.NullInt64
 
 	// Blocking session context
-	// 29. BLOCKING_SESSION_STATUS
+	// 31. BLOCKING_SESSION_STATUS
 	BlockingSessionStatus sql.NullString
-	// 30. immediate_blocker_sid
+	// 32. immediate_blocker_sid
 	ImmediateBlockerSID sql.NullInt64
-	// 31. FINAL_BLOCKING_SESSION_STATUS
+	// 33. FINAL_BLOCKING_SESSION_STATUS
 	FinalBlockingSessionStatus sql.NullString
-	// 32. final_blocker_sid
+	// 34. final_blocker_sid
 	FinalBlockerSID sql.NullInt64
 
 	// Final blocker details
-	// 33. final_blocker_user
+	// 35. final_blocker_user
 	FinalBlockerUser sql.NullString
-	// 34. final_blocker_serial
+	// 36. final_blocker_serial
 	FinalBlockerSerial sql.NullInt64
-	// 35. final_blocker_query_id
+	// 37. final_blocker_query_id
 	FinalBlockerQueryID sql.NullString
-	// 36. final_blocker_query_text
+	// 38. final_blocker_query_text
 	FinalBlockerQueryText sql.NullString
 }
 
@@ -214,7 +218,7 @@ func (w *WaitEventWithBlocking) GetSQLChildNumber() int64 {
 	if w.SQLChildNumber.Valid {
 		return w.SQLChildNumber.Int64
 	}
-	return 0
+	return -1 // Return -1 for NULL to distinguish from legitimate child_number 0
 }
 
 func (w *WaitEventWithBlocking) GetSQLExecID() int64 {
@@ -224,16 +228,34 @@ func (w *WaitEventWithBlocking) GetSQLExecID() int64 {
 	return -1
 }
 
-func (w *WaitEventWithBlocking) GetCurrentWaitSeconds() int64 {
-	if w.SecondsInWait.Valid {
-		return w.SecondsInWait.Int64
+// GetCurrentWaitMs returns wait time in milliseconds (general wait time)
+func (w *WaitEventWithBlocking) GetCurrentWaitMs() float64 {
+	if w.WaitTimeMs.Valid {
+		return w.WaitTimeMs.Float64
 	}
 	return 0
 }
 
-func (w *WaitEventWithBlocking) GetTimeRemainingSeconds() float64 {
-	if w.TimeRemainingSeconds.Valid {
-		return w.TimeRemainingSeconds.Float64
+// GetBlockedTimeMs returns blocked wait time in milliseconds (ONLY populated when there's a blocker)
+func (w *WaitEventWithBlocking) GetBlockedTimeMs() float64 {
+	if w.BlockedTimeMs.Valid {
+		return w.BlockedTimeMs.Float64
+	}
+	return 0
+}
+
+// GetTimeSinceLastWaitMs returns time since last wait in milliseconds (useful for ON CPU time)
+func (w *WaitEventWithBlocking) GetTimeSinceLastWaitMs() float64 {
+	if w.TimeSinceLastWaitMs.Valid {
+		return w.TimeSinceLastWaitMs.Float64
+	}
+	return 0
+}
+
+// GetTimeRemainingMs returns time remaining in milliseconds (NULL/0 for indefinite waits)
+func (w *WaitEventWithBlocking) GetTimeRemainingMs() float64 {
+	if w.TimeRemainingMs.Valid {
+		return w.TimeRemainingMs.Float64
 	}
 	return 0
 }
@@ -374,7 +396,7 @@ func (w *WaitEventWithBlocking) HasValidWaitEventName() bool {
 }
 
 func (w *WaitEventWithBlocking) HasValidCurrentWaitSeconds() bool {
-	return w.SecondsInWait.Valid
+	return w.WaitTimeMs.Valid && w.WaitTimeMs.Float64 > 0
 }
 
 func (w *WaitEventWithBlocking) IsValidForMetrics() bool {

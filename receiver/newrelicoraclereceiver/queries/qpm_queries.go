@@ -48,7 +48,10 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			AND sa.sql_text NOT LIKE '%%V$SQLAREA%%'
 			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
 			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
-			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER')
+			AND sa.sql_text NOT LIKE '%%gv$sqlarea%%'
+			AND sa.sql_text NOT LIKE '%%v$lock%%'
+			AND sa.sql_text NOT LIKE '%%gv$instance%%'
+			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER','C##OTEL_MONITOR')
 			-- KEY FILTER: Only fetch queries that ran in the last N seconds (interval window)
 			-- This is critical for delta calculation to work correctly
 			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
@@ -60,7 +63,7 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 // This combines both wait events and blocking queries into a single query to reduce overhead
 // High cardinality mitigation:
 // - FETCH FIRST limits total rows returned to configured rowLimit
-// - Filters active sessions with actual waits (status='ACTIVE', wait_class<>'Idle', seconds_in_wait>0)
+// - Filters active sessions with actual waits (status='ACTIVE', wait_class<>'Idle', wait_time_micro>0)
 // - Orders by wait time to get most impactful sessions first
 func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 	return fmt.Sprintf(`
@@ -75,8 +78,20 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			s.SQL_CHILD_NUMBER,
 			s.wait_class,
 			s.event,
-			s.SECONDS_IN_WAIT,
-			s.TIME_REMAINING_MICRO / 1000000.0 AS time_remaining_seconds,
+			-- 1. GENERAL WAIT TIME (Always populated for waiting sessions)
+			ROUND(s.WAIT_TIME_MICRO / 1000, 2) AS wait_time_ms,
+			-- 2. BLOCKED TIME (Specific: Shows wait time ONLY if there is a blocker)
+			CASE
+				WHEN s.BLOCKING_SESSION IS NOT NULL THEN ROUND(s.WAIT_TIME_MICRO / 1000, 2)
+				ELSE NULL
+			END AS blocked_time_ms,
+			-- 3. Time since last wait (useful to see how long it has been ON CPU)
+			ROUND(s.TIME_SINCE_LAST_WAIT_MICRO / 1000, 2) AS time_since_last_wait_ms,
+			-- 4. Time remaining for operation
+			CASE
+				WHEN s.TIME_REMAINING_MICRO = -1 THEN NULL -- Returns NULL for indefinite waits
+				ELSE ROUND(s.TIME_REMAINING_MICRO / 1000, 2)
+			END AS time_remaining_ms,
 			s.SQL_EXEC_START,
 			s.SQL_EXEC_ID,
 			s.PROGRAM,
@@ -116,17 +131,16 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
-			AND s.SECONDS_IN_WAIT > 0
+			AND s.WAIT_TIME_MICRO > 0
+			AND s.state = 'WAITING'
 		ORDER BY
-			s.SECONDS_IN_WAIT DESC
+			s.WAIT_TIME_MICRO DESC
 		FETCH FIRST %d ROWS ONLY`, rowLimit)
 }
 
-// GetChildCursorsQuery returns SQL to get top N child cursors for a given SQL_ID from V$SQL
-// Returns average metrics per execution to normalize performance data
-// Time metrics are converted from microseconds to milliseconds for better readability
-// Ordered by most recent load time to get the latest child cursor versions
-func GetChildCursorsQuery(sqlID string, childLimit int) string {
+// GetSpecificChildCursorQuery returns SQL to get a SPECIFIC child cursor by sql_id and child_number
+// This is used when we know the exact child_number from a wait event
+func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
@@ -148,9 +162,7 @@ func GetChildCursorsQuery(sqlID string, childLimit int) string {
 			v$database d
 		WHERE
 			s.sql_id = '%s'
-		ORDER BY
-			s.last_load_time DESC
-		FETCH FIRST %d ROWS ONLY`, sqlID, childLimit)
+			AND s.child_number = %d`, sqlID, childNumber)
 }
 
 // GetExecutionPlanForChildQuery returns SQL to get execution plan from V$SQL_PLAN for specific child number

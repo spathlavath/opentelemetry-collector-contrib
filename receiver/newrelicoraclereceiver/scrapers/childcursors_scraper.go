@@ -69,10 +69,10 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsWithCache(ctx context.Context, c
 	if len(newIdentifiers) > 0 {
 		newMetricsEmitted := 0
 		for _, identifier := range newIdentifiers {
-			// Query this specific (SQL_ID, CHILD_NUMBER) pair
-			childCursors, err := s.client.QueryChildCursors(ctx, identifier.SQLID, childLimit)
+			// Query this specific (SQL_ID, CHILD_NUMBER) pair directly
+			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifier.SQLID, identifier.ChildNumber)
 			if err != nil {
-				s.logger.Warn("Failed to fetch new child cursor from V$SQL",
+				s.logger.Warn("Failed to fetch specific child cursor from V$SQL",
 					zap.String("sql_id", identifier.SQLID),
 					zap.Int64("child_number", identifier.ChildNumber),
 					zap.Error(err))
@@ -80,16 +80,11 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsWithCache(ctx context.Context, c
 				continue
 			}
 
-			// Find the specific child cursor matching the identifier
-			for _, cursor := range childCursors {
-				if cursor.GetSQLID() == identifier.SQLID && cursor.GetChildNumber() == identifier.ChildNumber {
-					if cursor.HasValidIdentifier() {
-						s.recordChildCursorMetrics(now, &cursor)
-						metricsEmitted++
-						newMetricsEmitted++
-					}
-					break
-				}
+			// Record metrics if cursor was found
+			if cursor != nil && cursor.HasValidIdentifier() {
+				s.recordChildCursorMetrics(now, cursor)
+				metricsEmitted++
+				newMetricsEmitted++
 			}
 		}
 

@@ -31,7 +31,7 @@ type MetricsConfig struct {
 	NewrelicoracledbAsmDiskgroupFreeMb                                 MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.free_mb"`
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
 	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
-	NewrelicoracledbBlockingQueriesWaitTime                            MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time"`
+	NewrelicoracledbBlockingQueriesWaitTimeMs                          MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time_ms"`
 	NewrelicoracledbChildCursorsBufferGets                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.buffer_gets"`
 	NewrelicoracledbChildCursorsCPUTime                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.cpu_time"`
 	NewrelicoracledbChildCursorsDetails                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.details"`
@@ -352,8 +352,9 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceTotalBytes                               MetricConfig `mapstructure:"newrelicoracledb.tablespace.total_bytes"`
 	NewrelicoracledbTablespaceUsedBytes                                MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_bytes"`
 	NewrelicoracledbTablespaceUsedPercent                              MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_percent"`
-	NewrelicoracledbWaitEventsCurrentWaitSeconds                       MetricConfig `mapstructure:"newrelicoracledb.wait_events.current_wait_seconds"`
-	NewrelicoracledbWaitEventsTimeRemaining                            MetricConfig `mapstructure:"newrelicoracledb.wait_events.time_remaining"`
+	NewrelicoracledbWaitEventsCurrentWaitTimeMs                        MetricConfig `mapstructure:"newrelicoracledb.wait_events.current_wait_time_ms"`
+	NewrelicoracledbWaitEventsTimeRemainingMs                          MetricConfig `mapstructure:"newrelicoracledb.wait_events.time_remaining_ms"`
+	NewrelicoracledbWaitEventsTimeSinceLastWaitMs                      MetricConfig `mapstructure:"newrelicoracledb.wait_events.time_since_last_wait_ms"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -367,7 +368,7 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbAsmDiskgroupTotalMb: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbBlockingQueriesWaitTime: MetricConfig{
+		NewrelicoracledbBlockingQueriesWaitTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsBufferGets: MetricConfig{
@@ -1330,10 +1331,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbTablespaceUsedPercent: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbWaitEventsCurrentWaitSeconds: MetricConfig{
+		NewrelicoracledbWaitEventsCurrentWaitTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbWaitEventsTimeRemaining: MetricConfig{
+		NewrelicoracledbWaitEventsTimeRemainingMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbWaitEventsTimeSinceLastWaitMs: MetricConfig{
 			Enabled: true,
 		},
 	}
