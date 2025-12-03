@@ -86,35 +86,35 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "first_load_time-val", "last_load_time-val")
+			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val", "first_load_time-val", "last_load_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12)
+			mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1557,6 +1557,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.cpu_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.cpu_time"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.cpu_time")
 					validatedMetrics["newrelicoracledb.child_cursors.cpu_time"] = true
@@ -1581,6 +1584,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.details":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.details"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.details")
 					validatedMetrics["newrelicoracledb.child_cursors.details"] = true
@@ -1605,6 +1611,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("first_load_time")
 					assert.True(t, ok)
 					assert.Equal(t, "first_load_time-val", attrVal.Str())
@@ -1635,6 +1644,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.elapsed_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.elapsed_time")
 					validatedMetrics["newrelicoracledb.child_cursors.elapsed_time"] = true
@@ -1659,6 +1671,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.executions":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.executions"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.executions")
 					validatedMetrics["newrelicoracledb.child_cursors.executions"] = true
@@ -1683,6 +1698,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.invalidations":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.invalidations"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.invalidations")
 					validatedMetrics["newrelicoracledb.child_cursors.invalidations"] = true
@@ -1707,6 +1725,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.user_io_wait_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.user_io_wait_time"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.user_io_wait_time")
 					validatedMetrics["newrelicoracledb.child_cursors.user_io_wait_time"] = true
@@ -1731,6 +1752,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("child_number")
 					assert.True(t, ok)
 					assert.EqualValues(t, 12, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
 				case "newrelicoracledb.connection.active_sessions":
 					assert.False(t, validatedMetrics["newrelicoracledb.connection.active_sessions"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.active_sessions")
 					validatedMetrics["newrelicoracledb.connection.active_sessions"] = true

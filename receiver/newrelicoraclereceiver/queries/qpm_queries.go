@@ -147,6 +147,7 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 			d.name AS database_name,
 			s.sql_id,
 			s.child_number,
+			s.plan_hash_value,
 			CASE WHEN s.executions > 0 THEN (s.cpu_time / s.executions) / 1000 ELSE 0 END AS avg_cpu_time_ms,
 			CASE WHEN s.executions > 0 THEN (s.elapsed_time / s.executions) / 1000 ELSE 0 END AS avg_elapsed_time_ms,
 			CASE WHEN s.executions > 0 THEN (s.user_io_wait_time / s.executions) / 1000 ELSE 0 END AS avg_io_wait_time_ms,

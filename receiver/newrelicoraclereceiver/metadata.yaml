@@ -3659,6 +3659,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
 
   newrelicoracledb.child_cursors.elapsed_time:
     description: Average elapsed time per execution for this child cursor (in milliseconds)
@@ -3671,6 +3672,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
 
   newrelicoracledb.child_cursors.user_io_wait_time:
     description: Average user I/O wait time per execution for this child cursor (in milliseconds)
@@ -3683,6 +3685,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
 
   newrelicoracledb.child_cursors.disk_reads:
     description: Average number of disk reads per execution for this child cursor
@@ -3695,6 +3698,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
 
   newrelicoracledb.child_cursors.buffer_gets:
     description: Average number of buffer gets per execution for this child cursor
@@ -3707,6 +3711,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
 
   newrelicoracledb.child_cursors.executions:
     description: Total number of executions of this child cursor
@@ -3719,6 +3724,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
 
   newrelicoracledb.child_cursors.invalidations:
     description: Number of times this child cursor was invalidated
@@ -3731,6 +3737,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
 
   newrelicoracledb.child_cursors.details:
     description: Child cursor details including load times
@@ -3743,6 +3750,7 @@ metrics:
       - database_name
       - query_id
       - child_number
+      - plan_hash_value
       - first_load_time
       - last_load_time
 

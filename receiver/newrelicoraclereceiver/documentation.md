@@ -116,6 +116,7 @@ Average number of buffer gets per execution for this child cursor
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.cpu_time
 
@@ -133,6 +134,7 @@ Average CPU time per execution for this child cursor (in milliseconds)
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.details
 
@@ -150,6 +152,7 @@ Child cursor details including load times
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 | first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
 | last_load_time | Time at which the query plan was loaded into the library cache | Any Str | false |
 
@@ -169,6 +172,7 @@ Average number of disk reads per execution for this child cursor
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.elapsed_time
 
@@ -186,6 +190,7 @@ Average elapsed time per execution for this child cursor (in milliseconds)
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.executions
 
@@ -203,6 +208,7 @@ Total number of executions of this child cursor
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.invalidations
 
@@ -220,6 +226,7 @@ Number of times this child cursor was invalidated
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.user_io_wait_time
 
@@ -237,6 +244,7 @@ Average user I/O wait time per execution for this child cursor (in milliseconds)
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.connection.active_sessions
 

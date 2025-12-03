@@ -14,6 +14,7 @@ type ChildCursor struct {
 	DatabaseName        sql.NullString
 	SQLID               sql.NullString
 	ChildNumber         sql.NullInt64
+	PlanHashValue       sql.NullInt64   // Plan hash value - identifies the execution plan
 	AvgCPUTimeMs        sql.NullFloat64 // Average CPU time per execution (milliseconds) - can have decimals
 	AvgElapsedTimeMs    sql.NullFloat64 // Average elapsed time per execution (milliseconds) - can have decimals
 	AvgIOWaitTimeMs     sql.NullFloat64 // Average I/O wait time per execution (milliseconds) - can have decimals
@@ -53,6 +54,14 @@ func (cc *ChildCursor) GetSQLID() string {
 func (cc *ChildCursor) GetChildNumber() int64 {
 	if cc.ChildNumber.Valid {
 		return cc.ChildNumber.Int64
+	}
+	return 0
+}
+
+// GetPlanHashValue returns the plan hash value as int64, 0 if null
+func (cc *ChildCursor) GetPlanHashValue() int64 {
+	if cc.PlanHashValue.Valid {
+		return cc.PlanHashValue.Int64
 	}
 	return 0
 }

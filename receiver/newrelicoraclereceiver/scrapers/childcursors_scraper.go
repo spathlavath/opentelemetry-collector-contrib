@@ -5,6 +5,7 @@ package scrapers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -104,6 +105,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 	collectionTimestamp := cursor.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
 	sqlID := cursor.GetSQLID()
 	childNumber := cursor.GetChildNumber()
+	planHashValue := fmt.Sprintf("%d", cursor.GetPlanHashValue())
 	databaseName := cursor.GetDatabaseName()
 
 	// Record CPU time
@@ -115,6 +117,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 		)
 	}
 
@@ -127,6 +130,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 		)
 	}
 
@@ -139,6 +143,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 		)
 	}
 
@@ -151,6 +156,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 		)
 	}
 
@@ -163,6 +169,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 		)
 	}
 
@@ -175,6 +182,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 		)
 	}
 
@@ -187,6 +195,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 		)
 	}
 
@@ -199,6 +208,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			databaseName,
 			sqlID,
 			childNumber,
+			planHashValue,
 			cursor.GetFirstLoadTime(),
 			cursor.GetLastLoadTime(),
 		)
