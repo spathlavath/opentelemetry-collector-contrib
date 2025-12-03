@@ -91,6 +91,9 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | wait_object_name | Name of the database object being waited on | Any Str | false |
 | wait_object_owner | Owner of the database object being waited on | Any Str | false |
 | wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
+| blocking_session_status | Status of the blocking session (VALID, NO HOLDER, etc.) | Any Str | false |
+| immediate_blocker_sid | Session ID of the immediate blocking session (not necessarily the root cause) | Any Str | false |
+| final_blocking_session_status | Status of the final blocking session (VALID, NO HOLDER, etc.) | Any Str | false |
 | final_blocker_user | Username of the final blocking session (root cause) | Any Str | false |
 | final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | false |
 | final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |

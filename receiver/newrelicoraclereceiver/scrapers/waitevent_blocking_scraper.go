@@ -275,7 +275,12 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	waitObjectOwner := event.GetObjectOwner()
 	waitObjectType := event.GetObjectTypeWaitedOn()
 
-	// Blocking session information
+	// Blocking chain information
+	blockingSessionStatus := event.GetBlockingSessionStatus()
+	immediateBlockerSID := strconv.FormatInt(event.GetImmediateBlockerSID(), 10)
+	finalBlockingSessionStatus := event.GetFinalBlockingSessionStatus()
+
+	// Final blocker information
 	finalBlockerSID := strconv.FormatInt(event.GetFinalBlockerSID(), 10)
 	finalBlockerSerial := strconv.FormatInt(event.GetFinalBlockerSerial(), 10)
 	finalBlockerUser := event.GetFinalBlockerUser()
@@ -299,6 +304,9 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		waitObjectName,
 		waitObjectOwner,
 		waitObjectType,
+		blockingSessionStatus,
+		immediateBlockerSID,
+		finalBlockingSessionStatus,
 		finalBlockerUser,
 		finalBlockerSID,
 		finalBlockerSerial,

@@ -198,6 +198,15 @@ attributes:
   final_blocker_query_text:
     description: SQL query text of the final blocking session's query
     type: string
+  blocking_session_status:
+    description: Status of the blocking session (VALID, NO HOLDER, etc.)
+    type: string
+  immediate_blocker_sid:
+    description: Session ID of the immediate blocking session (not necessarily the root cause)
+    type: string
+  final_blocking_session_status:
+    description: Status of the final blocking session (VALID, NO HOLDER, etc.)
+    type: string
 
   db.instance.name:
     description: Oracle database instance name
@@ -3765,6 +3774,9 @@ metrics:
       - wait_object_name
       - wait_object_owner
       - wait_object_type
+      - blocking_session_status
+      - immediate_blocker_sid
+      - final_blocking_session_status
       - final_blocker_user
       - final_blocker_sid
       - final_blocker_serial
