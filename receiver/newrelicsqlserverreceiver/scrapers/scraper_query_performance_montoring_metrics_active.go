@@ -165,6 +165,11 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		}
 	}
 
+	// Cache the logs for the logs pipeline to avoid duplicate SQL queries
+	s.cachedLogs = logs
+	s.logger.Debug("Cached execution plan logs for logs pipeline",
+		zap.Int("log_record_count", logs.LogRecordCount()))
+
 	// Log filtering summary
 	s.logger.Info("Active running queries filtering summary",
 		zap.Int("total_fetched", len(results)),

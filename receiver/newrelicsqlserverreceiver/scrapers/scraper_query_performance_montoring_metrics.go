@@ -87,6 +87,7 @@ type QueryPerformanceScraper struct {
 	slowQuerySmoother   *SlowQuerySmoother            // EWMA-based smoothing algorithm for slow queries
 	intervalCalculator  *SimplifiedIntervalCalculator // Simplified delta-based interval calculator
 	metadataCache       *helpers.MetadataCache        // Metadata cache for wait resource enrichment
+	cachedLogs          plog.Logs                     // Cached execution plan logs for logs pipeline
 }
 
 // NewQueryPerformanceScraper creates a new query performance scraper with smoothing and interval calculator configuration
@@ -137,7 +138,14 @@ func NewQueryPerformanceScraper(
 		slowQuerySmoother:   smoother,
 		intervalCalculator:  intervalCalc,
 		metadataCache:       metadataCache,
+		cachedLogs:          plog.NewLogs(), // Initialize empty logs cache
 	}
+}
+
+// GetCachedLogs returns the cached execution plan logs for the logs pipeline
+// This avoids duplicate SQL queries by reusing data collected during metrics scraping
+func (s *QueryPerformanceScraper) GetCachedLogs() plog.Logs {
+	return s.cachedLogs
 }
 
 // ScrapeSlowQueryMetrics collects slow query performance monitoring metrics with interval-based averaging and/or EWMA smoothing
@@ -971,8 +979,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 
 	return nil
 }
-
-
 
 // processQueryExecutionPlanMetrics processes query execution plan metrics with cardinality safety
 func (s *QueryPerformanceScraper) processQueryExecutionPlanMetrics(result models.QueryExecutionPlan, scopeMetrics pmetric.ScopeMetrics, index int) error {
