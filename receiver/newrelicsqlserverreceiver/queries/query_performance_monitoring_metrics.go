@@ -373,6 +373,7 @@ WHERE
     AND r_wait.plan_handle IS NOT NULL  -- Required for execution plan retrieval
     AND r_wait.query_hash IS NOT NULL  -- Filter out queries without query_hash (PREEMPTIVE waits, system queries)
     AND r_wait.total_elapsed_time >= @ElapsedTimeThresholdMs  -- Filter by elapsed time threshold
+    %s  -- Placeholder for additional query_hash IN filter (injected from Go code)
 ORDER BY
     r_wait.total_elapsed_time DESC  -- Sort by slowest executions first (not wait_time)
 OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values`

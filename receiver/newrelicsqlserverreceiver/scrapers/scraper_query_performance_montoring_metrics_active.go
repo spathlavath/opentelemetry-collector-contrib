@@ -40,9 +40,10 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 	// Build query with slow query correlation filter
 	var queryIDFilter string
-	// Build query_id IN clause for SQL filtering
+	// Build query_id IN clause for SQL filtering (properly injected into WHERE clause)
 	queryIDFilter = "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
-	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit, elapsedTimeThreshold) + " " + queryIDFilter
+	// Inject filter into WHERE clause placeholder (4th parameter)
+	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit, elapsedTimeThreshold, queryIDFilter)
 
 	s.logger.Debug("Executing active running queries metrics collection",
 		zap.String("query", queries.TruncateQuery(query, 100)),
