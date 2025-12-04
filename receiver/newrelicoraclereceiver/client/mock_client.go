@@ -11,9 +11,9 @@ import (
 
 // MockClient is a mock implementation of OracleClient for testing.
 type MockClient struct {
-	SlowQueries              []models.SlowQuery
-	ChildCursors             []models.ChildCursor
-	WaitEventsWithBlocking   []models.WaitEventWithBlocking
+	SlowQueries            []models.SlowQuery
+	ChildCursors           []models.ChildCursor
+	WaitEventsWithBlocking []models.WaitEventWithBlocking
 
 	// Connection metrics
 	TotalSessions      int64
@@ -163,7 +163,7 @@ func (m *MockClient) QuerySpecificChildCursor(ctx context.Context, sqlID string,
 	return nil, nil
 }
 
-func (m *MockClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error) {
+func (m *MockClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int, slowQuerySQLIDs []string) ([]models.WaitEventWithBlocking, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}

@@ -16,7 +16,6 @@ import (
 )
 
 // WaitEventBlockingScraper collects both Oracle wait events and blocking query metrics
-// This replaces the separate BlockingScraper and WaitEventsScraper
 type WaitEventBlockingScraper struct {
 	client                        client.OracleClient
 	mb                            *metadata.MetricsBuilder
@@ -52,97 +51,22 @@ func NewWaitEventBlockingScraper(oracleClient client.OracleClient, mb *metadata.
 }
 
 // ScrapeWaitEventsAndBlocking collects both wait events and blocking query metrics in a single query
-// Filters wait events to ONLY show sessions running the provided slow query SQL_IDs
-// Returns unique SQL identifiers (sql_id, child_number) found in those filtered wait events
 func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Context, slowQuerySQLIDs []string) ([]models.SQLIdentifier, []error) {
 	var scrapeErrors []error
 
-	waitEvents, err := s.client.QueryWaitEventsWithBlocking(ctx, s.queryMonitoringCountThreshold)
+	waitEvents, err := s.client.QueryWaitEventsWithBlocking(ctx, s.queryMonitoringCountThreshold, slowQuerySQLIDs)
 	if err != nil {
 		s.logger.Error("Failed to query wait events with blocking information", zap.Error(err))
 		return nil, []error{err}
 	}
 
-	// Create a map of slow query SQL_IDs for fast lookup
-	slowQueryMap := make(map[string]bool, len(slowQuerySQLIDs))
-	for _, sqlID := range slowQuerySQLIDs {
-		slowQueryMap[sqlID] = true
-	}
-
 	now := pcommon.NewTimestampFromTime(time.Now())
-	waitEventMetricCount := 0
-	blockingMetricCount := 0
-	filteredOutCount := 0
+	waitEventMetricCount, blockingMetricCount := s.emitWaitEventMetrics(now, waitEvents)
 
-	// Track unique (sql_id, child_number) combinations from wait events
-	sqlIdentifiersMap := make(map[string]models.SQLIdentifier)
-
-	for _, event := range waitEvents {
-		eventSQLID := event.GetQueryID()
-
-		// FILTER: Only process wait events for TOP N slow query SQL_IDs
-		if len(slowQuerySQLIDs) > 0 && eventSQLID != "" && !slowQueryMap[eventSQLID] {
-			filteredOutCount++
-			continue
-		}
-
-		// Record wait event metrics
-		if event.IsValidForMetrics() {
-			s.recordWaitEventMetrics(now, &event)
-			waitEventMetricCount++
-
-			// Extract SQL_ID and child_number for child cursor fetching
-			sqlID := eventSQLID
-			childNumber := event.GetSQLChildNumber()
-			hasValidQueryID := event.HasValidQueryID()
-			hasValidChildNumber := event.SQLChildNumber.Valid
-
-			s.logger.Debug("Wait event SQL info",
-				zap.String("sql_id", sqlID),
-				zap.Int64("child_number", childNumber),
-				zap.Bool("has_valid_query_id", hasValidQueryID),
-				zap.Bool("child_number_valid", hasValidChildNumber))
-
-			// Only collect SQL identifiers if BOTH sql_id AND child_number are valid (not NULL)
-			// Child number can be 0 (which is valid), but it must be explicitly set, not NULL
-			if hasValidQueryID && hasValidChildNumber {
-				key := fmt.Sprintf("%s#%d", sqlID, childNumber)
-
-				// Store unique combination
-				if _, exists := sqlIdentifiersMap[key]; !exists {
-					sqlIdentifiersMap[key] = models.SQLIdentifier{
-						SQLID:       sqlID,
-						ChildNumber: childNumber,
-					}
-					s.logger.Info("Added SQL identifier for execution plan",
-						zap.String("sql_id", sqlID),
-						zap.Int64("child_number", childNumber))
-				}
-			} else {
-				s.logger.Debug("Skipped SQL identifier - missing valid query ID or child number",
-					zap.String("sql_id", sqlID),
-					zap.Int64("child_number", childNumber),
-					zap.Bool("has_valid_query_id", hasValidQueryID),
-					zap.Bool("has_valid_child_number", hasValidChildNumber))
-			}
-		}
-
-		// Record blocking metrics if this session is blocked
-		if event.IsBlocked() {
-			s.recordBlockingMetrics(now, &event)
-			blockingMetricCount++
-		}
-	}
-
-	// Convert map to slice
-	sqlIdentifiers := make([]models.SQLIdentifier, 0, len(sqlIdentifiersMap))
-	for _, identifier := range sqlIdentifiersMap {
-		sqlIdentifiers = append(sqlIdentifiers, identifier)
-	}
+	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents)
 
 	s.logger.Debug("Wait events and blocking scrape completed",
 		zap.Int("total_events", len(waitEvents)),
-		zap.Int("filtered_out", filteredOutCount),
 		zap.Int("wait_metrics", waitEventMetricCount),
 		zap.Int("blocking_metrics", blockingMetricCount),
 		zap.Int("unique_sql_identifiers", len(sqlIdentifiers)),
@@ -185,7 +109,6 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	p3Text := event.GetP3Text()
 	p3 := strconv.FormatInt(event.GetP3(), 10)
 
-	// Record current_wait_time_ms metric
 	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(
 		now,
 		event.GetCurrentWaitMs(),
@@ -217,7 +140,6 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		p3,
 	)
 
-	// Record time_remaining_ms metric with reduced attributes to avoid high cardinality
 	if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeRemainingMs.Enabled {
 		s.mb.RecordNewrelicoracledbWaitEventsTimeRemainingMsDataPoint(
 			now,
@@ -232,7 +154,6 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		)
 	}
 
-	// Record time_since_last_wait_ms metric to track ON CPU time
 	if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeSinceLastWaitMs.Enabled {
 		s.mb.RecordNewrelicoracledbWaitEventsTimeSinceLastWaitMsDataPoint(
 			now,
@@ -248,10 +169,88 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	}
 }
 
+// GetSQLIdentifiers retrieves unique SQL identifiers from wait events without emitting metrics
+func (s *WaitEventBlockingScraper) GetSQLIdentifiers(ctx context.Context, slowQuerySQLIDs []string) ([]models.SQLIdentifier, []error) {
+	waitEvents, err := s.client.QueryWaitEventsWithBlocking(ctx, s.queryMonitoringCountThreshold, slowQuerySQLIDs)
+	if err != nil {
+		s.logger.Error("Failed to query wait events for SQL identifiers", zap.Error(err))
+		return nil, []error{err}
+	}
+
+	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents)
+
+	s.logger.Debug("SQL identifiers collected without emitting metrics",
+		zap.Int("total_events", len(waitEvents)),
+		zap.Int("unique_sql_identifiers", len(sqlIdentifiers)),
+		zap.Int("slow_query_filter_count", len(slowQuerySQLIDs)))
+
+	return sqlIdentifiers, nil
+}
+
+// emitWaitEventMetrics emits metrics for wait events and blocking queries
+func (s *WaitEventBlockingScraper) emitWaitEventMetrics(
+	now pcommon.Timestamp,
+	waitEvents []models.WaitEventWithBlocking,
+) (int, int) {
+	waitEventMetricCount := 0
+	blockingMetricCount := 0
+
+	for _, event := range waitEvents {
+		if event.IsValidForMetrics() {
+			s.recordWaitEventMetrics(now, &event)
+			waitEventMetricCount++
+		}
+
+		if event.IsBlocked() {
+			s.recordBlockingMetrics(now, &event)
+			blockingMetricCount++
+		}
+	}
+
+	return waitEventMetricCount, blockingMetricCount
+}
+
+// extractSQLIdentifiers extracts unique SQL identifiers from wait events
+func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
+	waitEvents []models.WaitEventWithBlocking,
+) []models.SQLIdentifier {
+	sqlIdentifiersMap := make(map[string]models.SQLIdentifier)
+
+	for _, event := range waitEvents {
+		if !event.IsValidForMetrics() {
+			continue
+		}
+
+		sqlID := event.GetQueryID()
+		childNumber := event.GetSQLChildNumber()
+		hasValidQueryID := event.HasValidQueryID()
+		hasValidChildNumber := event.SQLChildNumber.Valid
+
+		if hasValidQueryID && hasValidChildNumber {
+			key := fmt.Sprintf("%s#%d", sqlID, childNumber)
+
+			if _, exists := sqlIdentifiersMap[key]; !exists {
+				sqlIdentifiersMap[key] = models.SQLIdentifier{
+					SQLID:       sqlID,
+					ChildNumber: childNumber,
+				}
+				s.logger.Debug("Added SQL identifier for execution plan",
+					zap.String("sql_id", sqlID),
+					zap.Int64("child_number", childNumber))
+			}
+		}
+	}
+
+	sqlIdentifiers := make([]models.SQLIdentifier, 0, len(sqlIdentifiersMap))
+	for _, identifier := range sqlIdentifiersMap {
+		sqlIdentifiers = append(sqlIdentifiers, identifier)
+	}
+
+	return sqlIdentifiers
+}
+
 // recordBlockingMetrics records blocking query metrics when a session is blocked
 func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking) {
-	// Get blocked wait time in milliseconds (ONLY populated when there's a blocker)
-	// This is more specific than general wait_time_ms as it's NULL for non-blocking waits
 	blockedWaitMs := event.GetBlockedTimeMs()
 
 	if blockedWaitMs <= 0 {
@@ -268,19 +267,16 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	sqlExecID := event.GetSQLExecID()
 	sqlExecStart := event.GetSQLExecStart().Format("2006-01-02 15:04:05")
 
-	// Wait event information (helps identify the type of contention)
 	waitEventName := event.GetWaitEventName()
 	waitCat := event.GetWaitCategory()
 	waitObjectName := event.GetObjectNameWaitedOn()
 	waitObjectOwner := event.GetObjectOwner()
 	waitObjectType := event.GetObjectTypeWaitedOn()
 
-	// Blocking chain information
 	blockingSessionStatus := event.GetBlockingSessionStatus()
 	immediateBlockerSID := strconv.FormatInt(event.GetImmediateBlockerSID(), 10)
 	finalBlockingSessionStatus := event.GetFinalBlockingSessionStatus()
 
-	// Final blocker information
 	finalBlockerSID := strconv.FormatInt(event.GetFinalBlockerSID(), 10)
 	finalBlockerSerial := strconv.FormatInt(event.GetFinalBlockerSerial(), 10)
 	finalBlockerUser := event.GetFinalBlockerUser()
