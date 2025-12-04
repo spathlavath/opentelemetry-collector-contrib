@@ -186,8 +186,9 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 
 // QueryWaitEventsWithBlocking executes the combined wait events with blocking information query.
 // This replaces the separate QueryBlockingQueries and QueryWaitEvents methods.
-func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error) {
-	query := queries.GetWaitEventsAndBlockingSQL(countThreshold)
+// slowQuerySQLIDs: Optional list of SQL_IDs to filter by at database level (empty slice returns all)
+func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int, slowQuerySQLIDs []string) ([]models.WaitEventWithBlocking, error) {
+	query := queries.GetWaitEventsAndBlockingSQL(countThreshold, slowQuerySQLIDs)
 
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {

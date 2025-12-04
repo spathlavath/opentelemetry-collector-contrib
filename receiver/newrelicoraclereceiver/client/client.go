@@ -31,7 +31,8 @@ type OracleClient interface {
 
 	// Combined wait events with blocking information
 	// This replaces the separate QueryBlockingQueries and QueryWaitEvents methods
-	QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int) ([]models.WaitEventWithBlocking, error)
+	// slowQuerySQLIDs: Optional list of SQL_IDs to filter by (empty slice returns all)
+	QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int, slowQuerySQLIDs []string) ([]models.WaitEventWithBlocking, error)
 
 	// Connection metrics - simple counts
 	QueryTotalSessions(ctx context.Context) (int64, error)

@@ -3,7 +3,10 @@
 
 package queries
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // GetSlowQueriesSQL returns SQL for slow queries with configurable time window
 // Returns total_elapsed_time_ms for delta calculation in addition to avg_elapsed_time_ms
@@ -64,8 +67,18 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 // High cardinality mitigation:
 // - FETCH FIRST limits total rows returned to configured rowLimit
 // - Filters active sessions with actual waits (status='ACTIVE', wait_class<>'Idle', wait_time_micro>0)
+// - Optional SQL_ID filter (slowQuerySQLIDs) for database-level filtering
 // - Orders by wait time to get most impactful sessions first
-func GetWaitEventsAndBlockingSQL(rowLimit int) string {
+func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string {
+	// Build SQL_ID filter clause if SQL_IDs provided
+	sqlIDFilter := ""
+	if len(slowQuerySQLIDs) > 0 {
+		quotedIDs := make([]string, len(slowQuerySQLIDs))
+		for i, id := range slowQuerySQLIDs {
+			quotedIDs[i] = fmt.Sprintf("'%s'", id)
+		}
+		sqlIDFilter = fmt.Sprintf("AND s.sql_id IN (%s)", strings.Join(quotedIDs, ", "))
+	}
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
@@ -133,9 +146,10 @@ func GetWaitEventsAndBlockingSQL(rowLimit int) string {
 			AND s.wait_class <> 'Idle'
 			AND s.WAIT_TIME_MICRO > 0
 			AND s.state = 'WAITING'
+			%s
 		ORDER BY
 			s.WAIT_TIME_MICRO DESC
-		FETCH FIRST %d ROWS ONLY`, rowLimit)
+		FETCH FIRST %d ROWS ONLY", sqlIDFilter, rowLimit)
 }
 
 // GetSpecificChildCursorQuery returns SQL to get a SPECIFIC child cursor by sql_id and child_number
