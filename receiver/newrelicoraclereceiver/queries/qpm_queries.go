@@ -4,8 +4,8 @@
 package queries
 
 import (
-	"fmt"
-	"strings"
+"fmt"
+"strings"
 )
 
 // GetSlowQueriesSQL returns SQL for slow queries with configurable time window
@@ -55,8 +55,6 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			AND sa.sql_text NOT LIKE '%%v$lock%%'
 			AND sa.sql_text NOT LIKE '%%gv$instance%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER','C##OTEL_MONITOR')
-			-- KEY FILTER: Only fetch queries that ran in the last N seconds (interval window)
-			-- This is critical for delta calculation to work correctly
 			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
 		ORDER BY
 			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) DESC`, intervalSeconds)
@@ -70,7 +68,6 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 // - Optional SQL_ID filter (slowQuerySQLIDs) for database-level filtering
 // - Orders by wait time to get most impactful sessions first
 func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string {
-	// Build SQL_ID filter clause if SQL_IDs provided
 	sqlIDFilter := ""
 	if len(slowQuerySQLIDs) > 0 {
 		quotedIDs := make([]string, len(slowQuerySQLIDs))
@@ -91,18 +88,14 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			s.SQL_CHILD_NUMBER,
 			s.wait_class,
 			s.event,
-			-- 1. GENERAL WAIT TIME (Always populated for waiting sessions)
 			ROUND(s.WAIT_TIME_MICRO / 1000, 2) AS wait_time_ms,
-			-- 2. BLOCKED TIME (Specific: Shows wait time ONLY if there is a blocker)
 			CASE
 				WHEN s.BLOCKING_SESSION IS NOT NULL THEN ROUND(s.WAIT_TIME_MICRO / 1000, 2)
 				ELSE NULL
 			END AS blocked_time_ms,
-			-- 3. Time since last wait (useful to see how long it has been ON CPU)
 			ROUND(s.TIME_SINCE_LAST_WAIT_MICRO / 1000, 2) AS time_since_last_wait_ms,
-			-- 4. Time remaining for operation
 			CASE
-				WHEN s.TIME_REMAINING_MICRO = -1 THEN NULL -- Returns NULL for indefinite waits
+				WHEN s.TIME_REMAINING_MICRO = -1 THEN NULL
 				ELSE ROUND(s.TIME_REMAINING_MICRO / 1000, 2)
 			END AS time_remaining_ms,
 			s.SQL_EXEC_START,
@@ -121,12 +114,10 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			s.p2,
 			s.p3text,
 			s.p3,
-			-- Blocking session context (for blocked sessions)
 			s.BLOCKING_SESSION_STATUS,
 			s.BLOCKING_SESSION AS immediate_blocker_sid,
 			s.FINAL_BLOCKING_SESSION_STATUS,
 			s.FINAL_BLOCKING_SESSION AS final_blocker_sid,
-			-- Final blocker's details (from joined v$session)
 			final_blocker.username AS final_blocker_user,
 			final_blocker.serial# AS final_blocker_serial,
 			final_blocker.sql_id AS final_blocker_query_id,
@@ -149,11 +140,10 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			%s
 		ORDER BY
 			s.WAIT_TIME_MICRO DESC
-		FETCH FIRST %d ROWS ONLY", sqlIDFilter, rowLimit)
+		FETCH FIRST %d ROWS ONLY`, sqlIDFilter, rowLimit)
 }
 
 // GetSpecificChildCursorQuery returns SQL to get a SPECIFIC child cursor by sql_id and child_number
-// This is used when we know the exact child_number from a wait event
 func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
@@ -206,9 +196,9 @@ func GetExecutionPlanForChildQuery(sqlID string, childNumber int64) string {
 			BYTES,
 			CPU_COST,
 			IO_COST
-	FROM
-		V$SQL_PLAN
-	WHERE
-		SQL_ID = '%s'
-		AND CHILD_NUMBER = %d`, sqlID, childNumber)
+		FROM
+			V$SQL_PLAN
+		WHERE
+			SQL_ID = '%s'
+			AND CHILD_NUMBER = %d`, sqlID, childNumber)
 }
