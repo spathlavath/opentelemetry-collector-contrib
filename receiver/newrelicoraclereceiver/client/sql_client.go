@@ -214,51 +214,53 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 			&w.Serial,
 			// 6. status
 			&w.Status,
-			// 7. sql_id
+			// 7. state
+			&w.State,
+			// 8. sql_id
 			&w.SQLID,
-			// 8. SQL_CHILD_NUMBER
+			// 9. SQL_CHILD_NUMBER
 			&w.SQLChildNumber,
-			// 9. wait_class
+			// 10. wait_class
 			&w.WaitClass,
-			// 10. event
+			// 11. event
 			&w.Event,
-			// 11. wait_time_ms
+			// 12. wait_time_ms
 			&w.WaitTimeMs,
-			// 12. SQL_EXEC_START
+			// 13. SQL_EXEC_START
 			&w.SQLExecStart,
-			// 13. SQL_EXEC_ID
+			// 14. SQL_EXEC_ID
 			&w.SQLExecID,
-			// 14. PROGRAM
+			// 15. PROGRAM
 			&w.Program,
-			// 15. MACHINE
+			// 16. MACHINE
 			&w.Machine,
-			// 16. ROW_WAIT_OBJ#
+			// 17. ROW_WAIT_OBJ#
 			&w.RowWaitObj,
-			// 17. OWNER
+			// 18. OWNER
 			&w.Owner,
-			// 18. OBJECT_NAME
+			// 19. OBJECT_NAME
 			&w.ObjectName,
-			// 19. OBJECT_TYPE
+			// 20. OBJECT_TYPE
 			&w.ObjectType,
-			// 20. ROW_WAIT_FILE#
+			// 21. ROW_WAIT_FILE#
 			&w.RowWaitFile,
-			// 21. ROW_WAIT_BLOCK#
+			// 22. ROW_WAIT_BLOCK#
 			&w.RowWaitBlock,
-			// 22. BLOCKING_SESSION_STATUS
+			// 23. BLOCKING_SESSION_STATUS
 			&w.BlockingSessionStatus,
-			// 23. immediate_blocker_sid
+			// 24. immediate_blocker_sid
 			&w.ImmediateBlockerSID,
-			// 24. FINAL_BLOCKING_SESSION_STATUS
+			// 25. FINAL_BLOCKING_SESSION_STATUS
 			&w.FinalBlockingSessionStatus,
-			// 25. final_blocker_sid
+			// 26. final_blocker_sid
 			&w.FinalBlockerSID,
-			// 26. final_blocker_user
+			// 27. final_blocker_user
 			&w.FinalBlockerUser,
-			// 27. final_blocker_serial
+			// 28. final_blocker_serial
 			&w.FinalBlockerSerial,
-			// 28. final_blocker_query_id
+			// 29. final_blocker_query_id
 			&w.FinalBlockerQueryID,
-			// 29. final_blocker_query_text
+			// 30. final_blocker_query_text
 			&w.FinalBlockerQueryText,
 		)
 		if err != nil {
