@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 )
@@ -22,23 +22,23 @@ import (
 type DatabaseRoleMembershipScraper struct {
 	logger        *zap.Logger
 	connection    SQLConnectionInterface
-	startTime     pcommon.Timestamp
+	mb            *metadata.MetricsBuilder
 	engineEdition int
 }
 
 // NewDatabaseRoleMembershipScraper creates a new scraper for database role membership metrics
 // This constructor initializes the scraper with necessary dependencies for metric collection
-func NewDatabaseRoleMembershipScraper(logger *zap.Logger, connection SQLConnectionInterface, engineEdition int) *DatabaseRoleMembershipScraper {
+func NewDatabaseRoleMembershipScraper(logger *zap.Logger, connection SQLConnectionInterface, engineEdition int, mb *metadata.MetricsBuilder) *DatabaseRoleMembershipScraper {
 	return &DatabaseRoleMembershipScraper{
 		connection:    connection,
 		logger:        logger,
-		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		mb:            mb,
 		engineEdition: engineEdition,
 	}
 }
 
 // ScrapeDatabaseRoleMembershipMetrics collects individual database role membership metrics using engine-specific queries
-func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database role membership metrics")
 
 	// Get the appropriate query for this engine edition
@@ -66,7 +66,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipMetrics(ctx 
 
 	// Process each role membership result
 	for _, result := range results {
-		if err := s.processDatabaseRoleMembershipMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabaseRoleMembershipMetrics(result); err != nil {
 			s.logger.Error("Failed to process database role membership metrics",
 				zap.Error(err),
 				zap.String("role_name", result.RoleName),
@@ -80,7 +80,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipMetrics(ctx 
 }
 
 // ScrapeDatabaseRoleMembershipSummaryMetrics collects aggregated database role membership statistics
-func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipSummaryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database role membership summary metrics")
 
 	// Get the appropriate summary query for this engine edition
@@ -108,7 +108,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipSummaryMetri
 
 	// Process each summary result
 	for _, result := range results {
-		if err := s.processDatabaseRoleMembershipSummaryMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabaseRoleMembershipSummaryMetrics(result); err != nil {
 			s.logger.Error("Failed to process database role membership summary metrics",
 				zap.Error(err),
 				zap.String("database_name", result.DatabaseName))
@@ -120,7 +120,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipSummaryMetri
 }
 
 // ScrapeDatabaseRoleHierarchyMetrics collects database role hierarchy and nesting information
-func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleHierarchyMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleHierarchyMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database role hierarchy metrics")
 
 	// Get the appropriate hierarchy query for this engine edition
@@ -148,7 +148,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleHierarchyMetrics(ctx c
 
 	// Process each hierarchy result
 	for _, result := range results {
-		if err := s.processDatabaseRoleHierarchyMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabaseRoleHierarchyMetrics(result); err != nil {
 			s.logger.Error("Failed to process database role hierarchy metrics",
 				zap.Error(err),
 				zap.String("parent_role", result.ParentRoleName),
@@ -162,7 +162,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleHierarchyMetrics(ctx c
 }
 
 // ScrapeDatabaseRoleActivityMetrics collects database role activity and usage metrics
-func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleActivityMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleActivityMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database role activity metrics")
 
 	// Get the appropriate activity query for this engine edition
@@ -190,7 +190,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleActivityMetrics(ctx co
 
 	// Process each activity result
 	for _, result := range results {
-		if err := s.processDatabaseRoleActivityMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabaseRoleActivityMetrics(result); err != nil {
 			s.logger.Error("Failed to process database role activity metrics",
 				zap.Error(err),
 				zap.String("database_name", result.DatabaseName))
@@ -202,7 +202,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleActivityMetrics(ctx co
 }
 
 // ScrapeDatabaseRolePermissionMatrixMetrics collects database role permission analysis
-func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRolePermissionMatrixMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRolePermissionMatrixMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database role permission matrix metrics")
 
 	// Get the appropriate permission matrix query for this engine edition
@@ -230,7 +230,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRolePermissionMatrixMetric
 
 	// Process each permission matrix result
 	for _, result := range results {
-		if err := s.processDatabaseRolePermissionMatrixMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabaseRolePermissionMatrixMetrics(result); err != nil {
 			s.logger.Error("Failed to process database role permission matrix metrics",
 				zap.Error(err),
 				zap.String("role_name", result.RoleName),
@@ -253,266 +253,55 @@ func (s *DatabaseRoleMembershipScraper) getQueryForMetric(metricName string) (st
 	return query, found
 }
 
-// processDatabaseRoleMembershipMetrics processes individual role membership metrics and adds them to the scope
-func (s *DatabaseRoleMembershipScraper) processDatabaseRoleMembershipMetrics(result models.DatabaseRoleMembershipMetrics, scopeMetrics pmetric.ScopeMetrics) error {
-	// Create metric for membership active status
-	if result.MembershipActive != nil {
-		membershipActiveMetric := scopeMetrics.Metrics().AppendEmpty()
-		membershipActiveMetric.SetName("sqlserver.database.role.membership.active")
-		membershipActiveMetric.SetDescription("Database role membership active status")
-
-		gauge := membershipActiveMetric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.MembershipActive)
-
-		// Add attributes
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-		attributes.PutStr("sqlserver.database.role.name", result.RoleName)
-		attributes.PutStr("sqlserver.database.role.member.name", result.MemberName)
-		attributes.PutStr("sqlserver.database.role.type", result.RoleType)
-		attributes.PutStr("sqlserver.database.role.member.type", result.MemberType)
-	}
-
+// processDatabaseRoleMembershipMetrics processes individual role membership metrics using MetricsBuilder
+func (s *DatabaseRoleMembershipScraper) processDatabaseRoleMembershipMetrics(result models.DatabaseRoleMembershipMetrics) error {
+	// Currently no individual membership metrics are defined in metadata.yaml
+	// This method is kept for future extensibility
 	return nil
 }
 
-// processDatabaseRoleMembershipSummaryMetrics processes summary metrics and adds them to the scope
-func (s *DatabaseRoleMembershipScraper) processDatabaseRoleMembershipSummaryMetrics(result models.DatabaseRoleMembershipSummary, scopeMetrics pmetric.ScopeMetrics) error {
-	// Process each summary metric field
+// processDatabaseRoleMembershipSummaryMetrics processes summary metrics using MetricsBuilder
+func (s *DatabaseRoleMembershipScraper) processDatabaseRoleMembershipSummaryMetrics(result models.DatabaseRoleMembershipSummary) error {
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+
 	if result.TotalMemberships != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.memberships.total")
-		metric.SetDescription("Total number of role memberships")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.TotalMemberships)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
+		s.mb.RecordSqlserverDatabaseRoleMembershipsTotalDataPoint(timestamp, *result.TotalMemberships)
 	}
-
-	if result.UniqueRoles != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.roles.withMembers")
-		metric.SetDescription("Number of unique roles with members")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.UniqueRoles)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
 	if result.UniqueMembers != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.members.unique")
-		metric.SetDescription("Number of unique members in roles")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.UniqueMembers)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
-	if result.CustomRoleMemberships != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.memberships.custom")
-		metric.SetDescription("Number of custom role memberships")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.CustomRoleMemberships)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
-	if result.NestedRoleMemberships != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.memberships.nested")
-		metric.SetDescription("Number of nested role memberships")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.NestedRoleMemberships)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
-	if result.UserRoleMemberships != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.memberships.users")
-		metric.SetDescription("Number of user role memberships")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.UserRoleMemberships)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
+		s.mb.RecordSqlserverDatabaseRoleMembersUniqueDataPoint(timestamp, *result.UniqueMembers)
 	}
 
 	return nil
 }
 
-// processDatabaseRoleHierarchyMetrics processes hierarchy metrics and adds them to the scope
-func (s *DatabaseRoleMembershipScraper) processDatabaseRoleHierarchyMetrics(result models.DatabaseRoleHierarchy, scopeMetrics pmetric.ScopeMetrics) error {
+// processDatabaseRoleHierarchyMetrics processes hierarchy metrics using MetricsBuilder
+func (s *DatabaseRoleMembershipScraper) processDatabaseRoleHierarchyMetrics(result models.DatabaseRoleHierarchy) error {
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+
 	if result.NestingLevel != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.nesting.level")
-		metric.SetDescription("Role nesting level")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.NestingLevel)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-		attributes.PutStr("sqlserver.database.role.parent.name", result.ParentRoleName)
-		attributes.PutStr("sqlserver.database.role.child.name", result.ChildRoleName)
+		s.mb.RecordSqlserverDatabaseRoleNestingLevelDataPoint(timestamp, *result.NestingLevel)
 	}
-
 	if result.EffectivePermissions != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.permissions.inherited")
-		metric.SetDescription("Role permission inheritance status")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.EffectivePermissions)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-		attributes.PutStr("sqlserver.database.role.parent.name", result.ParentRoleName)
-		attributes.PutStr("sqlserver.database.role.child.name", result.ChildRoleName)
+		s.mb.RecordSqlserverDatabaseRolePermissionsInheritedDataPoint(timestamp, *result.EffectivePermissions)
 	}
 
 	return nil
 }
 
-// processDatabaseRoleActivityMetrics processes activity metrics and adds them to the scope
-func (s *DatabaseRoleMembershipScraper) processDatabaseRoleActivityMetrics(result models.DatabaseRoleActivity, scopeMetrics pmetric.ScopeMetrics) error {
+// processDatabaseRoleActivityMetrics processes activity metrics using MetricsBuilder
+func (s *DatabaseRoleMembershipScraper) processDatabaseRoleActivityMetrics(result models.DatabaseRoleActivity) error {
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+
 	if result.ActiveMemberships != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.memberships.active")
-		metric.SetDescription("Number of active role memberships")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.ActiveMemberships)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
-	if result.EmptyRoles != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.roles.empty")
-		metric.SetDescription("Number of empty roles")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.EmptyRoles)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
-	if result.HighPrivilegeMembers != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.members.highPrivilege")
-		metric.SetDescription("Number of high privilege role members")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.HighPrivilegeMembers)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
-	if result.ApplicationRoleMembers != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.members.applicationRoles")
-		metric.SetDescription("Number of application role members")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.ApplicationRoleMembers)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-	}
-
-	if result.CrossRoleMembers != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.members.crossRole")
-		metric.SetDescription("Number of cross-role members")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.CrossRoleMembers)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
+		s.mb.RecordSqlserverDatabaseRoleMembershipsActiveDataPoint(timestamp, *result.ActiveMemberships)
 	}
 
 	return nil
 }
 
-// processDatabaseRolePermissionMatrixMetrics processes permission matrix metrics and adds them to the scope
-func (s *DatabaseRoleMembershipScraper) processDatabaseRolePermissionMatrixMetrics(result models.DatabaseRolePermissionMatrix, scopeMetrics pmetric.ScopeMetrics) error {
-	if result.MemberCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.permission.memberCount")
-		metric.SetDescription("Number of members in role")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.MemberCount)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-		attributes.PutStr("sqlserver.database.role.permission.roleName", result.RoleName)
-		attributes.PutStr("sqlserver.database.role.permission.scope", result.PermissionScope)
-	}
-
-	if result.RiskLevel != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.database.role.permission.riskLevel")
-		metric.SetDescription("Role risk level")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.RiskLevel)
-
-		attributes := dataPoint.Attributes()
-		attributes.PutStr("sqlserver.database.name", result.DatabaseName)
-		attributes.PutStr("sqlserver.database.role.permission.roleName", result.RoleName)
-		attributes.PutStr("sqlserver.database.role.permission.scope", result.PermissionScope)
-	}
-
+// processDatabaseRolePermissionMatrixMetrics processes permission matrix metrics using MetricsBuilder
+func (s *DatabaseRoleMembershipScraper) processDatabaseRolePermissionMatrixMetrics(result models.DatabaseRolePermissionMatrix) error {
+	// Currently no permission matrix metrics are defined in metadata.yaml
+	// This method is kept for future extensibility
 	return nil
 }

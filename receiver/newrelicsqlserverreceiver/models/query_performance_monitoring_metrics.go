@@ -3,6 +3,7 @@ package models
 // SlowQuery represents slow query performance data collected from SQL Server
 // This struct provides compatibility with the existing data structure format
 type SlowQuery struct {
+	SQLHandle              *QueryID `db:"sql_handle" metric_name:"sql_handle" source_type:"attribute"`
 	QueryID                *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
 	PlanHandle             *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
 	QueryText              *string  `db:"query_text" metric_name:"query_text" source_type:"attribute"`
@@ -11,9 +12,17 @@ type SlowQuery struct {
 	ObjectName             *string  `db:"object_name" metric_name:"object_name" source_type:"attribute"`
 	LastExecutionTimestamp *string  `db:"last_execution_timestamp" metric_name:"last_execution_timestamp" source_type:"attribute"`
 	ExecutionCount         *int64   `db:"execution_count" metric_name:"execution_count" source_type:"gauge"`
+	
+	// Total cumulative fields (from dm_exec_query_stats)
+	TotalCPUTimeMs        *float64 `db:"total_cpu_time_ms"` // Used for delta calculation
+	TotalElapsedTimeMS    *float64 `db:"total_elapsed_time_ms"` // Used for precise delta calculation
+	TotalLogicalReads     *int64   `db:"total_logical_reads"` // Used for delta calculation
+	TotalPhysicalReads    *int64   `db:"total_physical_reads"` // Used for delta calculation
+	TotalLogicalWrites    *int64   `db:"total_logical_writes"` // Used for delta calculation
+	
+	// Average fields (calculated from totals / execution_count)
 	AvgCPUTimeMS           *float64 `db:"avg_cpu_time_ms" metric_name:"sqlserver.slowquery.avg_cpu_time_ms" source_type:"gauge"`
 	AvgElapsedTimeMS       *float64 `db:"avg_elapsed_time_ms" metric_name:"sqlserver.slowquery.avg_elapsed_time_ms" source_type:"gauge"`
-	TotalElapsedTimeMS     *float64 `db:"total_elapsed_time_ms"` // Used for precise delta calculation only
 	AvgDiskReads           *float64 `db:"avg_disk_reads" metric_name:"sqlserver.slowquery.avg_disk_reads" source_type:"gauge"`
 	AvgDiskWrites          *float64 `db:"avg_disk_writes" metric_name:"sqlserver.slowquery.avg_disk_writes" source_type:"gauge"`
 	AvgRowsProcessed       *float64 `db:"avg_rows_processed" metric_name:"sqlserver.slowquery.rows_processed" source_type:"gauge"`

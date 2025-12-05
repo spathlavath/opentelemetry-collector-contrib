@@ -4,6 +4,7 @@ package metadata
 
 import (
 	"go.opentelemetry.io/collector/confmap"
+	"go.opentelemetry.io/collector/filter"
 )
 
 // MetricConfig provides common config for a particular metric.
@@ -27,12 +28,392 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicsqlserver metrics.
 type MetricsConfig struct {
-	SqlserverBufferPoolSizeBytes MetricConfig `mapstructure:"sqlserver.buffer_pool.size_bytes"`
+	SqlserverActivequeryCPUTime                         MetricConfig `mapstructure:"sqlserver.activequery.cpu_time"`
+	SqlserverActivequeryElapsedTime                     MetricConfig `mapstructure:"sqlserver.activequery.elapsed_time"`
+	SqlserverActivequeryGrantedMemory                   MetricConfig `mapstructure:"sqlserver.activequery.granted_memory"`
+	SqlserverActivequeryLogicalReads                    MetricConfig `mapstructure:"sqlserver.activequery.logical_reads"`
+	SqlserverActivequeryReads                           MetricConfig `mapstructure:"sqlserver.activequery.reads"`
+	SqlserverActivequeryRowCount                        MetricConfig `mapstructure:"sqlserver.activequery.row_count"`
+	SqlserverActivequeryWaitTime                        MetricConfig `mapstructure:"sqlserver.activequery.wait_time"`
+	SqlserverActivequeryWrites                          MetricConfig `mapstructure:"sqlserver.activequery.writes"`
+	SqlserverDatabaseBufferpoolSize                     MetricConfig `mapstructure:"sqlserver.database.bufferpool.size"`
+	SqlserverDatabaseDiskMaxSize                        MetricConfig `mapstructure:"sqlserver.database.disk.max_size"`
+	SqlserverDatabaseIoStallTime                        MetricConfig `mapstructure:"sqlserver.database.io.stall_time"`
+	SqlserverDatabaseLogTransactionGrowth               MetricConfig `mapstructure:"sqlserver.database.log.transaction_growth"`
+	SqlserverDatabasePagefileAvailable                  MetricConfig `mapstructure:"sqlserver.database.pagefile.available"`
+	SqlserverDatabasePagefileTotal                      MetricConfig `mapstructure:"sqlserver.database.pagefile.total"`
+	SqlserverDatabasePrincipalsCount                    MetricConfig `mapstructure:"sqlserver.database.principals.count"`
+	SqlserverDatabaseRoleMembersUnique                  MetricConfig `mapstructure:"sqlserver.database.role.members.unique"`
+	SqlserverDatabaseRoleMembershipsActive              MetricConfig `mapstructure:"sqlserver.database.role.memberships.active"`
+	SqlserverDatabaseRoleMembershipsTotal               MetricConfig `mapstructure:"sqlserver.database.role.memberships.total"`
+	SqlserverDatabaseRoleNestingLevel                   MetricConfig `mapstructure:"sqlserver.database.role.nesting_level"`
+	SqlserverDatabaseRolePermissionsInherited           MetricConfig `mapstructure:"sqlserver.database.role.permissions.inherited"`
+	SqlserverFailoverClusterFailureConditionLevel       MetricConfig `mapstructure:"sqlserver.failover_cluster.failure_condition_level"`
+	SqlserverFailoverClusterHealthCheckTimeout          MetricConfig `mapstructure:"sqlserver.failover_cluster.health_check_timeout"`
+	SqlserverFailoverClusterReplicaRole                 MetricConfig `mapstructure:"sqlserver.failover_cluster.replica_role"`
+	SqlserverFailoverClusterSynchronizationHealth       MetricConfig `mapstructure:"sqlserver.failover_cluster.synchronization_health"`
+	SqlserverInstanceActiveConnections                  MetricConfig `mapstructure:"sqlserver.instance.active_connections"`
+	SqlserverInstanceBufferPoolHitPercent               MetricConfig `mapstructure:"sqlserver.instance.buffer_pool.hit_percent"`
+	SqlserverInstanceBufferPoolSize                     MetricConfig `mapstructure:"sqlserver.instance.buffer_pool.size"`
+	SqlserverInstanceDiskMetrics                        MetricConfig `mapstructure:"sqlserver.instance.disk_metrics"`
+	SqlserverInstanceMemoryAvailable                    MetricConfig `mapstructure:"sqlserver.instance.memory.available"`
+	SqlserverInstanceMemoryTotal                        MetricConfig `mapstructure:"sqlserver.instance.memory.total"`
+	SqlserverInstanceMemoryUtilization                  MetricConfig `mapstructure:"sqlserver.instance.memory.utilization"`
+	SqlserverInstanceProcessCounts                      MetricConfig `mapstructure:"sqlserver.instance.process_counts"`
+	SqlserverInstanceRunnableTasks                      MetricConfig `mapstructure:"sqlserver.instance.runnable_tasks"`
+	SqlserverLockModeBulkUpdate                         MetricConfig `mapstructure:"sqlserver.lock.mode.bulk_update"`
+	SqlserverLockModeExclusive                          MetricConfig `mapstructure:"sqlserver.lock.mode.exclusive"`
+	SqlserverLockModeIntent                             MetricConfig `mapstructure:"sqlserver.lock.mode.intent"`
+	SqlserverLockModeSchema                             MetricConfig `mapstructure:"sqlserver.lock.mode.schema"`
+	SqlserverLockModeShared                             MetricConfig `mapstructure:"sqlserver.lock.mode.shared"`
+	SqlserverLockModeSharedIntentExclusive              MetricConfig `mapstructure:"sqlserver.lock.mode.shared_intent_exclusive"`
+	SqlserverLockModeTotal                              MetricConfig `mapstructure:"sqlserver.lock.mode.total"`
+	SqlserverLockModeUpdate                             MetricConfig `mapstructure:"sqlserver.lock.mode.update"`
+	SqlserverLockResourceAllocationUnit                 MetricConfig `mapstructure:"sqlserver.lock.resource.allocation_unit"`
+	SqlserverLockResourceApplication                    MetricConfig `mapstructure:"sqlserver.lock.resource.application"`
+	SqlserverLockResourceDatabase                       MetricConfig `mapstructure:"sqlserver.lock.resource.database"`
+	SqlserverLockResourceExtent                         MetricConfig `mapstructure:"sqlserver.lock.resource.extent"`
+	SqlserverLockResourceFile                           MetricConfig `mapstructure:"sqlserver.lock.resource.file"`
+	SqlserverLockResourceHobt                           MetricConfig `mapstructure:"sqlserver.lock.resource.hobt"`
+	SqlserverLockResourceKey                            MetricConfig `mapstructure:"sqlserver.lock.resource.key"`
+	SqlserverLockResourceMetadata                       MetricConfig `mapstructure:"sqlserver.lock.resource.metadata"`
+	SqlserverLockResourcePage                           MetricConfig `mapstructure:"sqlserver.lock.resource.page"`
+	SqlserverLockResourceRow                            MetricConfig `mapstructure:"sqlserver.lock.resource.row"`
+	SqlserverLockResourceTable                          MetricConfig `mapstructure:"sqlserver.lock.resource.table"`
+	SqlserverLockResourceTotal                          MetricConfig `mapstructure:"sqlserver.lock.resource.total"`
+	SqlserverLockedObject                               MetricConfig `mapstructure:"sqlserver.locked_object"`
+	SqlserverPlanElapsedTimeAvg                         MetricConfig `mapstructure:"sqlserver.plan.elapsed_time.avg"`
+	SqlserverPlanElapsedTimeTotal                       MetricConfig `mapstructure:"sqlserver.plan.elapsed_time.total"`
+	SqlserverPlanExecutionCount                         MetricConfig `mapstructure:"sqlserver.plan.execution_count"`
+	SqlserverPlanLogicalReads                           MetricConfig `mapstructure:"sqlserver.plan.logical_reads"`
+	SqlserverPlanLogicalWrites                          MetricConfig `mapstructure:"sqlserver.plan.logical_writes"`
+	SqlserverPlanWorkerTime                             MetricConfig `mapstructure:"sqlserver.plan.worker_time"`
+	SqlserverSecurityPrincipalsCount                    MetricConfig `mapstructure:"sqlserver.security.principals.count"`
+	SqlserverSecurityRoleMembersCount                   MetricConfig `mapstructure:"sqlserver.security.role_members.count"`
+	SqlserverSlowqueryCPUTime                           MetricConfig `mapstructure:"sqlserver.slowquery.cpu_time"`
+	SqlserverSlowqueryDegreeOfParallelism               MetricConfig `mapstructure:"sqlserver.slowquery.degree_of_parallelism"`
+	SqlserverSlowqueryDiskReads                         MetricConfig `mapstructure:"sqlserver.slowquery.disk_reads"`
+	SqlserverSlowqueryDiskWrites                        MetricConfig `mapstructure:"sqlserver.slowquery.disk_writes"`
+	SqlserverSlowqueryElapsedTimeHistorical             MetricConfig `mapstructure:"sqlserver.slowquery.elapsed_time.historical"`
+	SqlserverSlowqueryElapsedTimeInterval               MetricConfig `mapstructure:"sqlserver.slowquery.elapsed_time.interval"`
+	SqlserverSlowqueryExecutionCountHistorical          MetricConfig `mapstructure:"sqlserver.slowquery.execution_count.historical"`
+	SqlserverSlowqueryExecutionCountInterval            MetricConfig `mapstructure:"sqlserver.slowquery.execution_count.interval"`
+	SqlserverSlowqueryMemoryGrant                       MetricConfig `mapstructure:"sqlserver.slowquery.memory_grant"`
+	SqlserverSlowqueryRowsProcessed                     MetricConfig `mapstructure:"sqlserver.slowquery.rows_processed"`
+	SqlserverSlowqueryTempdbSpills                      MetricConfig `mapstructure:"sqlserver.slowquery.tempdb_spills"`
+	SqlserverTempdbAllocationWaits                      MetricConfig `mapstructure:"sqlserver.tempdb.allocation_waits"`
+	SqlserverTempdbCurrentWaiters                       MetricConfig `mapstructure:"sqlserver.tempdb.current_waiters"`
+	SqlserverTempdbDataFileCount                        MetricConfig `mapstructure:"sqlserver.tempdb.data_file_count"`
+	SqlserverTempdbPagelatchWaits                       MetricConfig `mapstructure:"sqlserver.tempdb.pagelatch_waits"`
+	SqlserverTempdbTotalSize                            MetricConfig `mapstructure:"sqlserver.tempdb.total_size"`
+	SqlserverThreadpoolCurrentTasks                     MetricConfig `mapstructure:"sqlserver.threadpool.current_tasks"`
+	SqlserverThreadpoolMaxWorkers                       MetricConfig `mapstructure:"sqlserver.threadpool.max_workers"`
+	SqlserverThreadpoolRunnableTasks                    MetricConfig `mapstructure:"sqlserver.threadpool.runnable_tasks"`
+	SqlserverThreadpoolRunningWorkers                   MetricConfig `mapstructure:"sqlserver.threadpool.running_workers"`
+	SqlserverThreadpoolUtilization                      MetricConfig `mapstructure:"sqlserver.threadpool.utilization"`
+	SqlserverThreadpoolWaitingTasks                     MetricConfig `mapstructure:"sqlserver.threadpool.waiting_tasks"`
+	SqlserverThreadpoolWorkQueueCount                   MetricConfig `mapstructure:"sqlserver.threadpool.work_queue_count"`
+	SqlserverUserConnectionsAuthenticationFailed        MetricConfig `mapstructure:"sqlserver.user_connections.authentication.failed"`
+	SqlserverUserConnectionsAuthenticationLoginsPerSec  MetricConfig `mapstructure:"sqlserver.user_connections.authentication.logins_per_sec"`
+	SqlserverUserConnectionsAuthenticationLogoutsPerSec MetricConfig `mapstructure:"sqlserver.user_connections.authentication.logouts_per_sec"`
+	SqlserverUserConnectionsByStatus                    MetricConfig `mapstructure:"sqlserver.user_connections.by_status"`
+	SqlserverUserConnectionsTotal                       MetricConfig `mapstructure:"sqlserver.user_connections.total"`
+	SqlserverUserConnectionsUtilizationActiveRatio      MetricConfig `mapstructure:"sqlserver.user_connections.utilization.active_ratio"`
+	SqlserverUserConnectionsUtilizationEfficiency       MetricConfig `mapstructure:"sqlserver.user_connections.utilization.efficiency"`
+	SqlserverWaitStatsLatchWaitTime                     MetricConfig `mapstructure:"sqlserver.wait_stats.latch.wait_time"`
+	SqlserverWaitStatsLatchWaitingTasksCount            MetricConfig `mapstructure:"sqlserver.wait_stats.latch.waiting_tasks_count"`
+	SqlserverWaitStatsWaitTime                          MetricConfig `mapstructure:"sqlserver.wait_stats.wait_time"`
+	SqlserverWaitStatsWaitingTasksCount                 MetricConfig `mapstructure:"sqlserver.wait_stats.waiting_tasks_count"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		SqlserverBufferPoolSizeBytes: MetricConfig{
+		SqlserverActivequeryCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryGrantedMemory: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryLogicalReads: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryReads: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryRowCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryWrites: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseBufferpoolSize: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseDiskMaxSize: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseIoStallTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseLogTransactionGrowth: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabasePagefileAvailable: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabasePagefileTotal: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabasePrincipalsCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseRoleMembersUnique: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseRoleMembershipsActive: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseRoleMembershipsTotal: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseRoleNestingLevel: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseRolePermissionsInherited: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverFailoverClusterFailureConditionLevel: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverFailoverClusterHealthCheckTimeout: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverFailoverClusterReplicaRole: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverFailoverClusterSynchronizationHealth: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceActiveConnections: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceBufferPoolHitPercent: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceBufferPoolSize: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceDiskMetrics: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceMemoryAvailable: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceMemoryTotal: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceMemoryUtilization: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceProcessCounts: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceRunnableTasks: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeBulkUpdate: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeExclusive: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeIntent: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeSchema: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeShared: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeSharedIntentExclusive: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeTotal: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockModeUpdate: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceAllocationUnit: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceApplication: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceDatabase: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceExtent: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceFile: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceHobt: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceKey: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceMetadata: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourcePage: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceRow: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceTable: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockResourceTotal: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverLockedObject: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanElapsedTimeAvg: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanElapsedTimeTotal: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanLogicalReads: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanLogicalWrites: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanWorkerTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSecurityPrincipalsCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSecurityRoleMembersCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryDegreeOfParallelism: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryDiskWrites: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryElapsedTimeHistorical: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryElapsedTimeInterval: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryExecutionCountHistorical: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryExecutionCountInterval: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryMemoryGrant: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryRowsProcessed: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverSlowqueryTempdbSpills: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverTempdbAllocationWaits: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverTempdbCurrentWaiters: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverTempdbDataFileCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverTempdbPagelatchWaits: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverTempdbTotalSize: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverThreadpoolCurrentTasks: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverThreadpoolMaxWorkers: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverThreadpoolRunnableTasks: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverThreadpoolRunningWorkers: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverThreadpoolUtilization: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverThreadpoolWaitingTasks: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverThreadpoolWorkQueueCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverUserConnectionsAuthenticationFailed: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverUserConnectionsAuthenticationLoginsPerSec: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverUserConnectionsAuthenticationLogoutsPerSec: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverUserConnectionsByStatus: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverUserConnectionsTotal: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverUserConnectionsUtilizationActiveRatio: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverUserConnectionsUtilizationEfficiency: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverWaitStatsLatchWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverWaitStatsLatchWaitingTasksCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverWaitStatsWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverWaitStatsWaitingTasksCount: MetricConfig{
 			Enabled: true,
 		},
 	}
@@ -41,6 +422,13 @@ func DefaultMetricsConfig() MetricsConfig {
 // ResourceAttributeConfig provides common config for a particular resource attribute.
 type ResourceAttributeConfig struct {
 	Enabled bool `mapstructure:"enabled"`
+	// Experimental: MetricsInclude defines a list of filters for attribute values.
+	// If the list is not empty, only metrics with matching resource attribute values will be emitted.
+	MetricsInclude []filter.Config `mapstructure:"metrics_include"`
+	// Experimental: MetricsExclude defines a list of filters for attribute values.
+	// If the list is not empty, metrics with matching resource attribute values will not be emitted.
+	// MetricsInclude has higher priority than MetricsExclude.
+	MetricsExclude []filter.Config `mapstructure:"metrics_exclude"`
 
 	enabledSetByUser bool
 }
@@ -59,14 +447,17 @@ func (rac *ResourceAttributeConfig) Unmarshal(parser *confmap.Conf) error {
 
 // ResourceAttributesConfig provides config for newrelicsqlserver resource attributes.
 type ResourceAttributesConfig struct {
+	DatabaseName  ResourceAttributeConfig `mapstructure:"database_name"`
 	DbSystem      ResourceAttributeConfig `mapstructure:"db.system"`
 	ServerAddress ResourceAttributeConfig `mapstructure:"server.address"`
 	ServerPort    ResourceAttributeConfig `mapstructure:"server.port"`
-	ServiceName   ResourceAttributeConfig `mapstructure:"service.name"`
 }
 
 func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 	return ResourceAttributesConfig{
+		DatabaseName: ResourceAttributeConfig{
+			Enabled: true,
+		},
 		DbSystem: ResourceAttributeConfig{
 			Enabled: true,
 		},
@@ -76,8 +467,18 @@ func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 		ServerPort: ResourceAttributeConfig{
 			Enabled: true,
 		},
-		ServiceName: ResourceAttributeConfig{
-			Enabled: true,
-		},
+	}
+}
+
+// MetricsBuilderConfig is a configuration for newrelicsqlserver metrics builder.
+type MetricsBuilderConfig struct {
+	Metrics            MetricsConfig            `mapstructure:"metrics"`
+	ResourceAttributes ResourceAttributesConfig `mapstructure:"resource_attributes"`
+}
+
+func DefaultMetricsBuilderConfig() MetricsBuilderConfig {
+	return MetricsBuilderConfig{
+		Metrics:            DefaultMetricsConfig(),
+		ResourceAttributes: DefaultResourceAttributesConfig(),
 	}
 }

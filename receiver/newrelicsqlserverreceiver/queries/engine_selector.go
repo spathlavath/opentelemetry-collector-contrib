@@ -318,7 +318,7 @@ var instanceQueriesAzureManagedInstance = []*QueryDefinition{
 var databaseQueriesDefault = []*QueryDefinition{
 	{
 		Query:       DatabaseBufferPoolQuery,
-		MetricName:  "sqlserver.database.buffer_pool_size",
+		MetricName:  "sqlserver.database.bufferpool.size",
 		Description: "Buffer pool size per database in bytes",
 	},
 	{
@@ -367,7 +367,7 @@ var databaseQueriesDefault = []*QueryDefinition{
 var databaseQueriesAzureManagedDatabase = []*QueryDefinition{
 	{
 		Query:       DatabaseBufferPoolQuery,
-		MetricName:  "sqlserver.database.buffer_pool_size",
+		MetricName:  "sqlserver.database.bufferpool.size",
 		Description: "Buffer pool size per database in bytes (Azure SQL Database)",
 	},
 	{
@@ -426,7 +426,7 @@ var databaseQueriesAzureManagedDatabase = []*QueryDefinition{
 var databaseQueriesAzureManagedInstance = []*QueryDefinition{
 	{
 		Query:       DatabaseBufferPoolQuery,
-		MetricName:  "sqlserver.database.buffer_pool_size",
+		MetricName:  "sqlserver.database.bufferpool.size",
 		Description: "Buffer pool size per database in bytes (Azure SQL Managed Instance)",
 	},
 	{

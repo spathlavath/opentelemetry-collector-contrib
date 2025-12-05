@@ -9,46 +9,36 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 )
 
 // WaitTimeScraper handles SQL Server wait time metrics collection
 type WaitTimeScraper struct {
-	connection    SQLConnectionInterface
+	client        client.SQLServerClient
 	logger        *zap.Logger
 	startTime     pcommon.Timestamp
 	engineEdition int
+	mb            *metadata.MetricsBuilder
 }
 
 // NewWaitTimeScraper creates a new wait time scraper instance
-func NewWaitTimeScraper(connection SQLConnectionInterface, logger *zap.Logger, engineEdition int) *WaitTimeScraper {
+func NewWaitTimeScraper(sqlClient client.SQLServerClient, logger *zap.Logger, engineEdition int, mb *metadata.MetricsBuilder) *WaitTimeScraper {
 	return &WaitTimeScraper{
-		connection:    connection,
+		client:        sqlClient,
 		logger:        logger,
 		startTime:     pcommon.NewTimestampFromTime(time.Now()),
 		engineEdition: engineEdition,
+		mb:            mb,
 	}
-}
-
-// getQueryForMetric retrieves the appropriate query for a metric based on engine edition with Default fallback
-func (s *WaitTimeScraper) getQueryForMetric(metricName string) (string, bool) {
-	query, found := queries.GetQueryForMetric(queries.WaitTimeQueries, metricName, s.engineEdition)
-	return query, found
 }
 
 // ScrapeWaitTimeMetrics collects wait time statistics from SQL Server
-func (s *WaitTimeScraper) ScrapeWaitTimeMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
-	query, found := s.getQueryForMetric("sqlserver.wait_stats.wait_time_metrics")
-	if !found {
-		return fmt.Errorf("no wait time metrics query available for engine edition %d", s.engineEdition)
-	}
-
-	var results []models.WaitTimeMetricsModel
-	if err := s.connection.Query(ctx, &results, query); err != nil {
+func (s *WaitTimeScraper) ScrapeWaitTimeMetrics(ctx context.Context) error {
+	results, err := s.client.QueryWaitTimeMetrics(ctx, s.engineEdition)
+	if err != nil {
 		s.logger.Error("Failed to execute wait time metrics query", zap.Error(err))
 		return fmt.Errorf("failed to execute wait time metrics query: %w", err)
 	}
@@ -58,22 +48,6 @@ func (s *WaitTimeScraper) ScrapeWaitTimeMetrics(ctx context.Context, scopeMetric
 		return fmt.Errorf("no results returned from wait time metrics query")
 	}
 
-	waitTimeMetric := scopeMetrics.Metrics().AppendEmpty()
-	waitTimeMetric.SetName("sqlserver.wait_stats.wait_time_ms")
-	waitTimeMetric.SetDescription("Total wait time in milliseconds")
-	waitTimeMetric.SetUnit("ms")
-	waitTimeSum := waitTimeMetric.SetEmptySum()
-	waitTimeSum.SetIsMonotonic(true)
-	waitTimeSum.SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-
-	waitingTasksMetric := scopeMetrics.Metrics().AppendEmpty()
-	waitingTasksMetric.SetName("sqlserver.wait_stats.waiting_tasks_count")
-	waitingTasksMetric.SetDescription("Number of tasks currently waiting")
-	waitingTasksMetric.SetUnit("1")
-	waitingTasksSum := waitingTasksMetric.SetEmptySum()
-	waitingTasksSum.SetIsMonotonic(true)
-	waitingTasksSum.SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	for _, result := range results {
@@ -82,25 +56,11 @@ func (s *WaitTimeScraper) ScrapeWaitTimeMetrics(ctx context.Context, scopeMetric
 		}
 
 		if result.WaitTimeMs != nil {
-			dp := waitTimeSum.DataPoints().AppendEmpty()
-			dp.SetTimestamp(now)
-			dp.SetStartTimestamp(s.startTime)
-			dp.SetDoubleValue(float64(*result.WaitTimeMs))
-
-			attrs := dp.Attributes()
-			attrs.PutStr("wait_type", *result.WaitType)
-			attrs.PutStr("metric.type", "rate")
+			s.mb.RecordSqlserverWaitStatsWaitTimeDataPoint(now, int64(*result.WaitTimeMs), *result.WaitType)
 		}
 
 		if result.WaitingTasksCount != nil {
-			dp := waitingTasksSum.DataPoints().AppendEmpty()
-			dp.SetTimestamp(now)
-			dp.SetStartTimestamp(s.startTime)
-			dp.SetDoubleValue(float64(*result.WaitingTasksCount))
-
-			attrs := dp.Attributes()
-			attrs.PutStr("wait_type", *result.WaitType)
-			attrs.PutStr("metric.type", "rate")
+			s.mb.RecordSqlserverWaitStatsWaitingTasksCountDataPoint(now, int64(*result.WaitingTasksCount), *result.WaitType)
 		}
 	}
 
@@ -108,14 +68,9 @@ func (s *WaitTimeScraper) ScrapeWaitTimeMetrics(ctx context.Context, scopeMetric
 }
 
 // ScrapeLatchWaitTimeMetrics collects latch-specific wait time statistics from SQL Server
-func (s *WaitTimeScraper) ScrapeLatchWaitTimeMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
-	query, found := s.getQueryForMetric("sqlserver.wait_stats.latch.wait_time_metrics")
-	if !found {
-		return fmt.Errorf("no latch wait time metrics query available for engine edition %d", s.engineEdition)
-	}
-
-	var results []models.LatchWaitTimeMetricsModel
-	if err := s.connection.Query(ctx, &results, query); err != nil {
+func (s *WaitTimeScraper) ScrapeLatchWaitTimeMetrics(ctx context.Context) error {
+	results, err := s.client.QueryLatchWaitTimeMetrics(ctx, s.engineEdition)
+	if err != nil {
 		s.logger.Error("Failed to execute latch wait time query", zap.Error(err))
 		return fmt.Errorf("failed to execute latch wait time query: %w", err)
 	}
@@ -125,22 +80,6 @@ func (s *WaitTimeScraper) ScrapeLatchWaitTimeMetrics(ctx context.Context, scopeM
 		return fmt.Errorf("no results returned from latch wait time query")
 	}
 
-	waitTimeMetric := scopeMetrics.Metrics().AppendEmpty()
-	waitTimeMetric.SetName("sqlserver.wait_stats.latch.wait_time_ms")
-	waitTimeMetric.SetDescription("Latch wait time in milliseconds")
-	waitTimeMetric.SetUnit("ms")
-	waitTimeSum := waitTimeMetric.SetEmptySum()
-	waitTimeSum.SetIsMonotonic(true)
-	waitTimeSum.SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-
-	waitingTasksMetric := scopeMetrics.Metrics().AppendEmpty()
-	waitingTasksMetric.SetName("sqlserver.wait_stats.latch.waiting_tasks_count")
-	waitingTasksMetric.SetDescription("Number of tasks waiting on latches")
-	waitingTasksMetric.SetUnit("1")
-	waitingTasksSum := waitingTasksMetric.SetEmptySum()
-	waitingTasksSum.SetIsMonotonic(true)
-	waitingTasksSum.SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	for _, result := range results {
@@ -149,25 +88,11 @@ func (s *WaitTimeScraper) ScrapeLatchWaitTimeMetrics(ctx context.Context, scopeM
 		}
 
 		if result.WaitTimeMs != nil {
-			dp := waitTimeSum.DataPoints().AppendEmpty()
-			dp.SetTimestamp(now)
-			dp.SetStartTimestamp(s.startTime)
-			dp.SetDoubleValue(float64(*result.WaitTimeMs))
-
-			attrs := dp.Attributes()
-			attrs.PutStr("wait_type", *result.WaitType)
-			attrs.PutStr("metric.type", "rate")
+			s.mb.RecordSqlserverWaitStatsLatchWaitTimeDataPoint(now, int64(*result.WaitTimeMs), *result.WaitType)
 		}
 
 		if result.WaitingTasksCount != nil {
-			dp := waitingTasksSum.DataPoints().AppendEmpty()
-			dp.SetTimestamp(now)
-			dp.SetStartTimestamp(s.startTime)
-			dp.SetDoubleValue(float64(*result.WaitingTasksCount))
-
-			attrs := dp.Attributes()
-			attrs.PutStr("wait_type", *result.WaitType)
-			attrs.PutStr("metric.type", "rate")
+			s.mb.RecordSqlserverWaitStatsLatchWaitingTasksCountDataPoint(now, int64(*result.WaitingTasksCount), *result.WaitType)
 		}
 	}
 

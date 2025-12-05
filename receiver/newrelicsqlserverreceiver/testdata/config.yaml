@@ -3,28 +3,26 @@
 
 # Extensions provide additional functionality
 extensions:
-  # Health check endpoint
-  health_check:
-    endpoint: localhost:13134
+  # No extensions enabled in minimal build
 
 # Service configuration
 service:
   # Enable extensions
-  extensions: [health_check]
+  extensions: []
   
   # Define the data pipeline
   pipelines:
     # Metrics pipeline: receiver -> processor -> exporter
     metrics:
       receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch, resource]
-      exporters: [otlphttp, debug]
+      processors: [resource]
+      exporters: [otlp, debug]
     
     # Logs pipeline: receiver -> processor -> exporter (for execution plans)
     logs:
       receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch, resource]
-      exporters: [otlphttp/logs, debug]
+      processors: [resource]
+      exporters: [otlp/logs, debug]
   
   # Telemetry configuration for the collector itself
   telemetry:
@@ -35,17 +33,6 @@ service:
 
 # Processors transform and enrich the data
 processors:
-  # Memory limiter prevents out-of-memory issues
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 256
-    spike_limit_mib: 64
-  
-  # Batch processor groups data for efficient transmission
-  batch:
-    timeout: 10s
-    send_batch_size: 1024
-  
   # Resource processor adds metadata to all telemetry
   resource:
     attributes:
@@ -95,9 +82,9 @@ receivers:
     enable_active_running_queries: true
 
     # Query monitoring thresholds (required when enable_query_monitoring is true)
-    query_monitoring_response_time_threshold: 0  # milliseconds - 0 = capture all queries (no threshold) for debugging
+    query_monitoring_response_time_threshold: 0  # milliseconds - 0 = capture all queries (no threshold)
     query_monitoring_count_threshold: 100         # TopN: emit top 100 slowest queries per collection cycle
-    query_monitoring_text_truncate_limit: 4094    # characters - maximum length of SQL text in query monitoring results (4KB - 2 bytes)
+    query_monitoring_text_truncate_limit: 4094    # characters - maximum length of SQL text
 
     # Interval-based averaging (delta calculation) - EXPLICITLY ENABLED
     enable_interval_based_averaging: true          # Enable delta-based interval calculations
@@ -105,15 +92,15 @@ receivers:
 
 # Exporters send telemetry data to destinations
 exporters:
-  # New Relic OTLP HTTP Exporter
-  otlphttp:
-    # New Relic OTLP endpoint (HTTP uses port 4318, not 4317)
+  # New Relic OTLP Exporter
+  otlp:
+    # New Relic OTLP endpoint
     endpoint: "https://staging-otlp.nr-data.net:4318"
     
     # Headers for authentication
     headers:
       # ⚠️  REPLACE WITH YOUR ACTUAL NEW RELIC LICENSE KEY ⚠️
-      api-key: ""
+      api-key: "c0d7a16f09a8f028fa9eb2d808a91b86FFFFNRAL"
     
     # TLS configuration
     tls:
@@ -138,15 +125,15 @@ exporters:
     # Timeout for HTTP requests
     timeout: 30s
   
-  # New Relic OTLP HTTP Exporter for Logs (Execution Plans)
-  otlphttp/logs:
-    # New Relic OTLP logs endpoint (HTTP uses port 4318, not 4317)
+  # New Relic OTLP Exporter for Logs (Execution Plans)
+  otlp/logs:
+    # New Relic OTLP logs endpoint
     endpoint: "https://staging-otlp.nr-data.net:4318"
     
     # Headers for authentication
     headers:
       # ⚠️  REPLACE WITH YOUR ACTUAL NEW RELIC LICENSE KEY ⚠️
-      api-key: ""
+      api-key: "c0d7a16f09a8f028fa9eb2d808a91b86FFFFNRAL"
     
     # TLS configuration
     tls:

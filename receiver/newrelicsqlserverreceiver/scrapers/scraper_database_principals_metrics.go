@@ -6,13 +6,12 @@ package scrapers
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 )
@@ -22,22 +21,22 @@ import (
 type DatabasePrincipalsScraper struct {
 	connection    SQLConnectionInterface
 	logger        *zap.Logger
-	startTime     pcommon.Timestamp
+	mb            *metadata.MetricsBuilder
 	engineEdition int
 }
 
 // NewDatabasePrincipalsScraper creates a new database principals scraper
-func NewDatabasePrincipalsScraper(conn SQLConnectionInterface, logger *zap.Logger, engineEdition int) *DatabasePrincipalsScraper {
+func NewDatabasePrincipalsScraper(conn SQLConnectionInterface, logger *zap.Logger, engineEdition int, mb *metadata.MetricsBuilder) *DatabasePrincipalsScraper {
 	return &DatabasePrincipalsScraper{
 		connection:    conn,
 		logger:        logger,
-		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		mb:            mb,
 		engineEdition: engineEdition,
 	}
 }
 
 // ScrapeDatabasePrincipalsMetrics collects individual database principals metrics using engine-specific queries
-func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database principals metrics")
 
 	// Get the appropriate query for this engine edition
@@ -65,7 +64,7 @@ func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsMetrics(ctx context.
 
 	// Process each principal result
 	for _, result := range results {
-		if err := s.processDatabasePrincipalsMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabasePrincipalsMetrics(result); err != nil {
 			s.logger.Error("Failed to process database principals metrics",
 				zap.Error(err),
 				zap.String("principal_name", result.PrincipalName),
@@ -78,7 +77,7 @@ func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsMetrics(ctx context.
 }
 
 // ScrapeDatabasePrincipalsSummaryMetrics collects aggregated database principals statistics
-func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsSummaryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database principals summary metrics")
 
 	// Get the appropriate summary query for this engine edition
@@ -106,7 +105,7 @@ func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsSummaryMetrics(ctx c
 
 	// Process each summary result
 	for _, result := range results {
-		if err := s.processDatabasePrincipalsSummaryMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabasePrincipalsSummaryMetrics(result); err != nil {
 			s.logger.Error("Failed to process database principals summary metrics",
 				zap.Error(err),
 				zap.String("database_name", result.DatabaseName))
@@ -118,7 +117,7 @@ func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsSummaryMetrics(ctx c
 }
 
 // ScrapeDatabasePrincipalActivityMetrics collects database principals activity and lifecycle metrics
-func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalActivityMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalActivityMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database principals activity metrics")
 
 	// Get the appropriate activity query for this engine edition
@@ -146,7 +145,7 @@ func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalActivityMetrics(ctx c
 
 	// Process each activity result
 	for _, result := range results {
-		if err := s.processDatabasePrincipalActivityMetrics(result, scopeMetrics); err != nil {
+		if err := s.processDatabasePrincipalActivityMetrics(result); err != nil {
 			s.logger.Error("Failed to process database principals activity metrics",
 				zap.Error(err),
 				zap.String("database_name", result.DatabaseName))
@@ -204,157 +203,27 @@ func (s *DatabasePrincipalsScraper) getQueryForMetric(metricName string) (string
 	return "", false
 }
 
-// processDatabasePrincipalsMetrics processes individual database principals metrics and creates OpenTelemetry metrics
-func (s *DatabasePrincipalsScraper) processDatabasePrincipalsMetrics(result models.DatabasePrincipalsMetrics, scopeMetrics pmetric.ScopeMetrics) error {
-	// Use reflection to process metrics following the existing pattern
-	resultValue := reflect.ValueOf(result)
-	resultType := reflect.TypeOf(result)
+// processDatabasePrincipalsMetrics processes individual database principals metrics using MetricsBuilder
+func (s *DatabasePrincipalsScraper) processDatabasePrincipalsMetrics(result models.DatabasePrincipalsMetrics) error {
+	// Currently no individual principal metrics are defined in metadata.yaml
+	// This method is kept for future extensibility
+	return nil
+}
 
-	for i := 0; i < resultValue.NumField(); i++ {
-		field := resultValue.Field(i)
-		fieldType := resultType.Field(i)
+// processDatabasePrincipalsSummaryMetrics processes summary metrics using MetricsBuilder
+func (s *DatabasePrincipalsScraper) processDatabasePrincipalsSummaryMetrics(result models.DatabasePrincipalsSummary) error {
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-		// Get metric metadata from struct tags
-		metricName := fieldType.Tag.Get("metric_name")
-		sourceType := fieldType.Tag.Get("source_type")
-
-		if metricName == "" || sourceType == "attribute" {
-			continue // Skip fields without metric names or attribute fields
-		}
-
-		// Create metric based on field type and value
-		if err := s.createMetricFromField(field, fieldType, metricName, result.DatabaseName, result.PrincipalName, result.TypeDesc, scopeMetrics); err != nil {
-			return fmt.Errorf("failed to create metric %s: %w", metricName, err)
-		}
+	if result.TotalPrincipals != nil {
+		s.mb.RecordSqlserverDatabasePrincipalsCountDataPoint(timestamp, *result.TotalPrincipals)
 	}
 
 	return nil
 }
 
-// processDatabasePrincipalsSummaryMetrics processes summary metrics and creates OpenTelemetry metrics
-func (s *DatabasePrincipalsScraper) processDatabasePrincipalsSummaryMetrics(result models.DatabasePrincipalsSummary, scopeMetrics pmetric.ScopeMetrics) error {
-	// Use reflection to process summary metrics
-	resultValue := reflect.ValueOf(result)
-	resultType := reflect.TypeOf(result)
-
-	for i := 0; i < resultValue.NumField(); i++ {
-		field := resultValue.Field(i)
-		fieldType := resultType.Field(i)
-
-		// Get metric metadata from struct tags
-		metricName := fieldType.Tag.Get("metric_name")
-		sourceType := fieldType.Tag.Get("source_type")
-
-		if metricName == "" || sourceType != "gauge" {
-			continue // Skip non-metric fields
-		}
-
-		// Create gauge metric
-		if err := s.createGaugeMetric(field, metricName, result.DatabaseName, scopeMetrics); err != nil {
-			return fmt.Errorf("failed to create summary metric %s: %w", metricName, err)
-		}
-	}
-
-	return nil
-}
-
-// processDatabasePrincipalActivityMetrics processes activity metrics and creates OpenTelemetry metrics
-func (s *DatabasePrincipalsScraper) processDatabasePrincipalActivityMetrics(result models.DatabasePrincipalActivity, scopeMetrics pmetric.ScopeMetrics) error {
-	// Use reflection to process activity metrics
-	resultValue := reflect.ValueOf(result)
-	resultType := reflect.TypeOf(result)
-
-	for i := 0; i < resultValue.NumField(); i++ {
-		field := resultValue.Field(i)
-		fieldType := resultType.Field(i)
-
-		// Get metric metadata from struct tags
-		metricName := fieldType.Tag.Get("metric_name")
-		sourceType := fieldType.Tag.Get("source_type")
-
-		if metricName == "" || sourceType != "gauge" {
-			continue // Skip non-metric fields
-		}
-
-		// Create gauge metric
-		if err := s.createGaugeMetric(field, metricName, result.DatabaseName, scopeMetrics); err != nil {
-			return fmt.Errorf("failed to create activity metric %s: %w", metricName, err)
-		}
-	}
-
-	return nil
-}
-
-// createMetricFromField creates an OpenTelemetry metric from a struct field
-func (s *DatabasePrincipalsScraper) createMetricFromField(field reflect.Value, fieldType reflect.StructField, metricName, databaseName, principalName, principalType string, scopeMetrics pmetric.ScopeMetrics) error {
-	// Handle different field types
-	switch field.Kind() {
-	case reflect.Ptr:
-		if field.IsNil() {
-			return nil // Skip nil pointer values
-		}
-
-		// Handle time.Time pointer for creation date
-		if field.Type().Elem().String() == "time.Time" {
-			timeValue := field.Elem().Interface().(time.Time)
-			return s.createTimestampMetric(timeValue, metricName, databaseName, principalName, principalType, scopeMetrics)
-		}
-
-	case reflect.String:
-		// Strings are handled as attributes, not metrics
-		return nil
-	}
-
-	return fmt.Errorf("unsupported field type for metric %s: %s", metricName, field.Type())
-}
-
-// createGaugeMetric creates a gauge metric from an int64 pointer field
-func (s *DatabasePrincipalsScraper) createGaugeMetric(field reflect.Value, metricName, databaseName string, scopeMetrics pmetric.ScopeMetrics) error {
-	if field.Kind() != reflect.Ptr || field.IsNil() {
-		return nil // Skip nil values
-	}
-
-	if field.Type().Elem().Kind() != reflect.Int64 {
-		return fmt.Errorf("expected *int64 for gauge metric %s, got %s", metricName, field.Type())
-	}
-
-	value := field.Elem().Int()
-
-	// Create gauge metric
-	metric := scopeMetrics.Metrics().AppendEmpty()
-	metric.SetName(metricName)
-	metric.SetDescription(fmt.Sprintf("Database principals metric: %s", metricName))
-
-	gauge := metric.SetEmptyGauge()
-	dataPoint := gauge.DataPoints().AppendEmpty()
-	dataPoint.SetTimestamp(s.startTime)
-	dataPoint.SetIntValue(value)
-
-	// Add database name as attribute
-	dataPoint.Attributes().PutStr("database_name", databaseName)
-
-	return nil
-}
-
-// createTimestampMetric creates a timestamp-based metric from a time.Time value
-func (s *DatabasePrincipalsScraper) createTimestampMetric(timeValue time.Time, metricName, databaseName, principalName, principalType string, scopeMetrics pmetric.ScopeMetrics) error {
-	// Convert time to Unix timestamp
-	timestamp := timeValue.Unix()
-
-	// Create gauge metric with timestamp as value
-	metric := scopeMetrics.Metrics().AppendEmpty()
-	metric.SetName(metricName)
-	metric.SetDescription(fmt.Sprintf("Database principal creation date: %s", metricName))
-
-	gauge := metric.SetEmptyGauge()
-	dataPoint := gauge.DataPoints().AppendEmpty()
-	dataPoint.SetTimestamp(s.startTime)
-	dataPoint.SetIntValue(timestamp)
-
-	// Add attributes
-	dataPoint.Attributes().PutStr("database_name", databaseName)
-	dataPoint.Attributes().PutStr("principal_name", principalName)
-	dataPoint.Attributes().PutStr("principal_type", principalType)
-
+// processDatabasePrincipalActivityMetrics processes activity metrics using MetricsBuilder
+func (s *DatabasePrincipalsScraper) processDatabasePrincipalActivityMetrics(result models.DatabasePrincipalActivity) error {
+	// Currently no activity metrics are defined in metadata.yaml
+	// This method is kept for future extensibility
 	return nil
 }

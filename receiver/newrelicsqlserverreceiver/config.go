@@ -131,6 +131,7 @@ type Config struct {
 
 	// Concurrency and timeouts
 	MaxConcurrentWorkers int           `mapstructure:"max_concurrent_workers"`
+	MaxOpenConnections   int           `mapstructure:"max_open_connections"` // Maximum number of open connections to the database
 	Timeout              time.Duration `mapstructure:"timeout"`
 
 	// Custom queries
@@ -272,6 +273,7 @@ func DefaultConfig() component.Config {
 
 		// Default concurrency and timeout
 		MaxConcurrentWorkers: 10,
+		MaxOpenConnections:   10,
 		Timeout:              30 * time.Second,
 
 		// Default SSL settings
@@ -308,6 +310,28 @@ func DefaultConfig() component.Config {
 	cfg.ControllerConfig.CollectionInterval = 15 * time.Second
 
 	return cfg
+}
+
+// SetDefaults applies default values to the configuration
+func (cfg *Config) SetDefaults() {
+	if cfg.Hostname == "" {
+		cfg.Hostname = "127.0.0.1"
+	}
+	if cfg.Port == "" && cfg.Instance == "" {
+		cfg.Port = "1433"
+	}
+	if cfg.MaxConcurrentWorkers <= 0 {
+		cfg.MaxConcurrentWorkers = 10
+	}
+	if cfg.MaxOpenConnections <= 0 {
+		cfg.MaxOpenConnections = 10
+	}
+	if cfg.Timeout <= 0 {
+		cfg.Timeout = 30 * time.Second
+	}
+	if cfg.ControllerConfig.CollectionInterval <= 0 {
+		cfg.ControllerConfig.CollectionInterval = 15 * time.Second
+	}
 }
 
 // Validate validates the configuration and sets defaults where needed

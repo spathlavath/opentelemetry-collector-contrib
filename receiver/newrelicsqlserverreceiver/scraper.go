@@ -6,77 +6,203 @@ package newrelicsqlserverreceiver // import "github.com/open-telemetry/opentelem
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/plog"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.opentelemetry.io/collector/receiver"
+	"go.opentelemetry.io/collector/scraper"
+	"go.opentelemetry.io/collector/scraper/scraperhelper"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/scrapers"
 )
 
-// sqlServerScraper handles SQL Server metrics collection
+// Constants for scraper configuration
+const (
+	// keepAlive defines the connection keepalive duration
+	keepAlive = 30 * time.Second
+	// maxErrors defines the buffer size for error channel to prevent blocking
+	maxErrors = 100
+)
+
+// Type definitions
+type (
+	// ScraperFunc represents a function that scrapes metrics and returns errors
+	ScraperFunc func(context.Context) []error
+
+	// dbProviderFunc represents a function that provides database connections
+	dbProviderFunc func() (*sqlx.DB, error)
+)
+
+// sqlServerScraper orchestrates all metric collection scrapers for SQL Server database monitoring
 type sqlServerScraper struct {
-	connection              *SQLConnection
-	config                  *Config
-	logger                  *zap.Logger
-	startTime               pcommon.Timestamp
-	settings                receiver.Settings
-	instanceScraper         *scrapers.InstanceScraper
-	queryPerformanceScraper *scrapers.QueryPerformanceScraper
-	// slowQueryScraper  *scrapers.SlowQueryScraper
+	// Database connection and configuration
+	db             *sqlx.DB
+	client         client.SQLServerClient
+	dbProviderFunc dbProviderFunc
+	config         *Config
+
+	// Core scrapers for basic database metrics
+	instanceScraper               *scrapers.InstanceScraper
 	databaseScraper               *scrapers.DatabaseScraper
 	userConnectionScraper         *scrapers.UserConnectionScraper
 	failoverClusterScraper        *scrapers.FailoverClusterScraper
 	databasePrincipalsScraper     *scrapers.DatabasePrincipalsScraper
 	databaseRoleMembershipScraper *scrapers.DatabaseRoleMembershipScraper
-	waitTimeScraper               *scrapers.WaitTimeScraper         // Add this line
-	securityScraper               *scrapers.SecurityScraper         // Security metrics scraper
-	lockScraper                   *scrapers.LockScraper             // Lock analysis metrics scraper
-	threadPoolHealthScraper       *scrapers.ThreadPoolHealthScraper // Thread pool health monitoring
-	tempdbContentionScraper       *scrapers.TempDBContentionScraper // TempDB contention monitoring
-	metadataCache                 *helpers.MetadataCache            // Metadata cache for wait resource enrichment
-	engineEdition                 int                               // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
+	waitTimeScraper               *scrapers.WaitTimeScraper
+	securityScraper               *scrapers.SecurityScraper
+	lockScraper                   *scrapers.LockScraper
+	threadPoolHealthScraper       *scrapers.ThreadPoolHealthScraper
+	tempdbContentionScraper       *scrapers.TempDBContentionScraper
+
+	// Query Performance Monitoring (QPM) scrapers
+	queryPerformanceScraper *scrapers.QueryPerformanceScraper
+
+	// Metadata and runtime configuration
+	metadataCache    *helpers.MetadataCache
+	mb               *metadata.MetricsBuilder
+	receiverSettings receiver.Settings
+	engineEdition    int
+	instanceName     string
+	hostName         string
+	logger           *zap.Logger
+	scrapeCfg        scraperhelper.ControllerConfig
+	startTime        pcommon.Timestamp
 }
 
-// newSqlServerScraper creates a new SQL Server scraper with structured approach
-func newSqlServerScraper(settings receiver.Settings, cfg *Config) *sqlServerScraper {
-	return &sqlServerScraper{
-		config:   cfg,
-		logger:   settings.Logger,
-		settings: settings,
+// newScraper creates a new SQL Server metrics scraper
+func newScraper(
+	scrapeCfg scraperhelper.ControllerConfig,
+	config *Config,
+	settings receiver.Settings,
+	providerFunc dbProviderFunc,
+	instanceName, hostName string,
+) (scraper.Metrics, error) {
+	s := &sqlServerScraper{
+		config:           config,
+		scrapeCfg:        scrapeCfg,
+		dbProviderFunc:   providerFunc,
+		receiverSettings: settings,
+		logger:           settings.Logger,
+		instanceName:     instanceName,
+		hostName:         hostName,
+		startTime:        pcommon.NewTimestampFromTime(time.Now()),
 	}
+
+	// Initialize MetricsBuilder
+	s.mb = metadata.NewMetricsBuilder(
+		metadata.DefaultMetricsBuilderConfig(),
+		s.receiverSettings,
+		metadata.WithStartTime(s.startTime),
+	)
+
+	return scraper.NewMetrics(
+		s.scrape,
+		scraper.WithShutdown(s.shutdown),
+		scraper.WithStart(s.start),
+	)
+}
+
+// newLogsScraper creates a new logs scraper for SQL Server execution plans
+func newLogsScraper(
+	scrapeCfg scraperhelper.ControllerConfig,
+	config *Config,
+	settings receiver.Settings,
+	providerFunc dbProviderFunc,
+	instanceName, hostName string,
+) (scraper.Logs, error) {
+	s := &sqlServerScraper{
+		config:           config,
+		scrapeCfg:        scrapeCfg,
+		dbProviderFunc:   providerFunc,
+		receiverSettings: settings,
+		logger:           settings.Logger,
+		instanceName:     instanceName,
+		hostName:         hostName,
+		startTime:        pcommon.NewTimestampFromTime(time.Now()),
+	}
+
+	return scraper.NewLogs(
+		s.scrapeLogs,
+		scraper.WithShutdown(s.shutdown),
+		scraper.WithStart(s.startLogs),
+	)
 }
 
 // start initializes the scraper and establishes database connection
 func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
-	s.logger.Info("Starting SQL Server receiver")
-
-	connection, err := NewSQLConnection(ctx, s.config, s.logger)
-	if err != nil {
-		s.logger.Error("Failed to connect to SQL Server", zap.Error(err))
-		return err
-	}
-	s.connection = connection
 	s.startTime = pcommon.NewTimestampFromTime(time.Now())
 
-	if err := s.connection.Ping(ctx); err != nil {
-		s.logger.Error("Failed to ping SQL Server", zap.Error(err))
+	// Establish database connection
+	if err := s.initializeDatabase(); err != nil {
 		return err
 	}
 
+	// Initialize all scrapers
+	if err := s.initializeScrapers(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// startLogs initializes the logs scraper (execution plans only)
+func (s *sqlServerScraper) startLogs(_ context.Context, _ component.Host) error {
+	s.startTime = pcommon.NewTimestampFromTime(time.Now())
+
+	// Establish database connection
+	if err := s.initializeDatabase(); err != nil {
+		return err
+	}
+
+	// Initialize only the scrapers needed for logs (query performance scraper)
+	s.logger.Info("Initializing logs scrapers for execution plans")
+
+	// Initialize query performance scraper for execution plans
+	if s.config.EnableQueryMonitoring {
+		s.queryPerformanceScraper = scrapers.NewQueryPerformanceScraper(
+			s.client,
+			s.logger,
+			s.engineEdition,
+			s.config.EnableSlowQuerySmoothing,
+			s.config.SlowQuerySmoothingFactor,
+			s.config.SlowQuerySmoothingDecayThreshold,
+			s.config.SlowQuerySmoothingMaxAgeMinutes,
+			s.config.EnableIntervalBasedAveraging,
+			s.config.IntervalCalculatorCacheTTLMinutes,
+			s.metadataCache,
+			s.mb,
+		)
+	}
+
+	return nil
+}
+
+// initializeDatabase establishes the database connection
+func (s *sqlServerScraper) initializeDatabase() error {
+	db, err := s.dbProviderFunc()
+	if err != nil {
+		return fmt.Errorf("failed to open db connection: %w", err)
+	}
+	s.db = db
+	s.client = client.NewSQLClient(db, s.logger)
+
 	// Get EngineEdition
-	s.engineEdition = 0 // Default to 0 (Unknown)
+	ctx := context.Background()
 	s.engineEdition, err = s.detectEngineEdition(ctx)
 	if err != nil {
-		s.logger.Debug("Failed to get engine edition, using default", zap.Error(err))
-		s.engineEdition = queries.StandardSQLServerEngineEdition
+		s.logger.Warn("Failed to detect SQL Server engine edition, defaulting to Unknown", zap.Error(err))
+		s.engineEdition = 0
 	} else {
 		s.logger.Info("Detected SQL Server engine edition",
 			zap.Int("engine_edition", s.engineEdition),
@@ -86,16 +212,14 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 	// Initialize metadata cache for wait resource enrichment if enabled
 	if s.config.EnableWaitResourceEnrichment {
 		refreshInterval := time.Duration(s.config.WaitResourceMetadataRefreshMinutes) * time.Minute
-		s.metadataCache = helpers.NewMetadataCache(s.connection.Connection.DB, refreshInterval)
+		s.metadataCache = helpers.NewMetadataCache(s.db.DB, refreshInterval)
 
 		// Perform initial cache refresh
 		s.logger.Info("Initializing metadata cache for wait resource enrichment",
 			zap.Int("refresh_interval_minutes", s.config.WaitResourceMetadataRefreshMinutes))
 
 		if err := s.metadataCache.Refresh(ctx); err != nil {
-			s.logger.Warn("Failed to perform initial metadata cache refresh",
-				zap.Error(err))
-			// Continue - cache will retry on next scrape
+			s.logger.Warn("Failed to perform initial metadata cache refresh", zap.Error(err))
 		} else {
 			stats := s.metadataCache.GetCacheStats()
 			s.logger.Info("Metadata cache initialized successfully",
@@ -108,7 +232,26 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 		s.logger.Info("Wait resource enrichment disabled, skipping metadata cache initialization")
 	}
 
-	// Initialize instance scraper with engine edition for engine-specific queries
+	return nil
+}
+
+// initializeScrapers initializes all metric scrapers
+func (s *sqlServerScraper) initializeScrapers() error {
+	// Initialize core database scrapers
+	if err := s.initializeCoreScrapers(); err != nil {
+		return err
+	}
+
+	// Initialize Query Performance Monitoring scrapers
+	if err := s.initializeQPMScrapers(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// initializeCoreScrapers initializes basic database metric scrapers
+func (s *sqlServerScraper) initializeCoreScrapers() error {
 	// Create instance scraper for instance-level metrics
 	instanceConfig := scrapers.InstanceConfig{
 		EnableInstanceMemoryMetrics:        s.config.EnableInstanceMemoryMetrics,
@@ -121,53 +264,59 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 		EnableInstanceActiveConnections:    s.config.EnableInstanceActiveConnections,
 		EnableInstanceBufferPoolSize:       s.config.EnableInstanceBufferPoolSize,
 	}
-	s.instanceScraper = scrapers.NewInstanceScraper(s.connection, s.logger, s.engineEdition, instanceConfig)
+	s.instanceScraper = scrapers.NewInstanceScraper(s.client, s.logger, s.engineEdition, instanceConfig, s.mb)
 
 	// Create database scraper for database-level metrics
-	s.databaseScraper = scrapers.NewDatabaseScraper(s.connection, s.logger, s.engineEdition)
+	s.databaseScraper = scrapers.NewDatabaseScraper(s.client, s.logger, s.engineEdition, s.mb)
 
 	// Create failover cluster scraper for Always On Availability Group metrics
-	s.failoverClusterScraper = scrapers.NewFailoverClusterScraper(s.connection, s.logger, s.engineEdition)
+	s.failoverClusterScraper = scrapers.NewFailoverClusterScraper(s.client, s.logger, s.engineEdition, s.mb)
 
 	// Create database principals scraper for database security metrics
-	s.databasePrincipalsScraper = scrapers.NewDatabasePrincipalsScraper(s.connection, s.logger, s.engineEdition)
+	s.databasePrincipalsScraper = scrapers.NewDatabasePrincipalsScraper(s.client, s.logger, s.engineEdition, s.mb)
 
 	// Create database role membership scraper for database role and membership metrics
-	s.databaseRoleMembershipScraper = scrapers.NewDatabaseRoleMembershipScraper(s.logger, s.connection, s.engineEdition)
-
-	// Initialize query performance scraper for blocking sessions and performance monitoring
-	// Pass smoothing and simplified interval calculator configuration parameters from config
-	s.queryPerformanceScraper = scrapers.NewQueryPerformanceScraper(
-		s.connection,
-		s.logger,
-		s.engineEdition,
-		s.config.EnableSlowQuerySmoothing,
-		s.config.SlowQuerySmoothingFactor,
-		s.config.SlowQuerySmoothingDecayThreshold,
-		s.config.SlowQuerySmoothingMaxAgeMinutes,
-		s.config.EnableIntervalBasedAveraging,
-		s.config.IntervalCalculatorCacheTTLMinutes,
-		s.metadataCache,
-	)
-	// s.slowQueryScraper = scrapers.NewSlowQueryScraper(s.logger, s.connection)
+	s.databaseRoleMembershipScraper = scrapers.NewDatabaseRoleMembershipScraper(s.logger, s.client, s.engineEdition, s.mb)
 
 	// Initialize user connection scraper for user connection and authentication metrics
-	s.userConnectionScraper = scrapers.NewUserConnectionScraper(s.connection, s.logger, s.engineEdition)
+	s.userConnectionScraper = scrapers.NewUserConnectionScraper(s.client, s.logger, s.engineEdition, s.mb)
 
 	// Initialize wait time scraper for wait time metrics
-	s.waitTimeScraper = scrapers.NewWaitTimeScraper(s.connection, s.logger, s.engineEdition)
+	s.waitTimeScraper = scrapers.NewWaitTimeScraper(s.client, s.logger, s.engineEdition, s.mb)
 
 	// Initialize security scraper for server-level security metrics
-	s.securityScraper = scrapers.NewSecurityScraper(s.connection, s.logger, s.engineEdition)
+	s.securityScraper = scrapers.NewSecurityScraper(s.client, s.logger, s.engineEdition, s.mb)
 
 	// Initialize lock scraper for lock analysis metrics
-	s.lockScraper = scrapers.NewLockScraper(s.connection, s.logger, s.engineEdition)
+	s.lockScraper = scrapers.NewLockScraper(s.client, s.logger, s.engineEdition, s.mb)
 
 	// Initialize thread pool health scraper for thread pool monitoring
-	s.threadPoolHealthScraper = scrapers.NewThreadPoolHealthScraper(s.connection, s.logger)
+	s.threadPoolHealthScraper = scrapers.NewThreadPoolHealthScraper(s.client, s.logger, s.mb)
 
 	// Initialize TempDB contention scraper for TempDB monitoring
-	s.tempdbContentionScraper = scrapers.NewTempDBContentionScraper(s.connection, s.logger)
+	s.tempdbContentionScraper = scrapers.NewTempDBContentionScraper(s.client, s.logger, s.mb)
+
+	return nil
+}
+
+// initializeQPMScrapers initializes Query Performance Monitoring scrapers
+func (s *sqlServerScraper) initializeQPMScrapers() error {
+	// Initialize query performance scraper for blocking sessions and performance monitoring
+	if s.config.EnableQueryMonitoring {
+		s.queryPerformanceScraper = scrapers.NewQueryPerformanceScraper(
+			s.client,
+			s.logger,
+			s.engineEdition,
+			s.config.EnableSlowQuerySmoothing,
+			s.config.SlowQuerySmoothingFactor,
+			s.config.SlowQuerySmoothingDecayThreshold,
+			s.config.SlowQuerySmoothingMaxAgeMinutes,
+			s.config.EnableIntervalBasedAveraging,
+			s.config.IntervalCalculatorCacheTTLMinutes,
+			s.metadataCache,
+			s.mb,
+		)
+	}
 
 	s.logger.Info("Successfully connected to SQL Server",
 		zap.String("hostname", s.config.Hostname),
@@ -181,10 +330,165 @@ func (s *sqlServerScraper) start(ctx context.Context, _ component.Host) error {
 // shutdown closes the database connection
 func (s *sqlServerScraper) shutdown(ctx context.Context) error {
 	s.logger.Info("Shutting down SQL Server receiver")
-	if s.connection != nil {
-		s.connection.Close()
+	if s.db != nil {
+		return s.db.Close()
 	}
 	return nil
+}
+
+// createScrapeContext creates a context with timeout for scraping operations
+func (s *sqlServerScraper) createScrapeContext(ctx context.Context) context.Context {
+	if s.scrapeCfg.Timeout > 0 {
+		scrapeCtx, cancel := context.WithTimeout(ctx, s.scrapeCfg.Timeout)
+		// Note: cancel is intentionally not deferred here as it's managed by the caller
+		_ = cancel
+		return scrapeCtx
+	}
+	return ctx
+}
+
+// executeIndependentScrapers launches concurrent scrapers for independent metrics
+func (s *sqlServerScraper) executeIndependentScrapers(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup) {
+	scraperFuncs := s.getIndependentScraperFunctions()
+
+	for i, scraperFunc := range scraperFuncs {
+		wg.Add(1)
+		go s.runScraperWithErrorHandling(ctx, errChan, wg, i, scraperFunc)
+	}
+}
+
+// getIndependentScraperFunctions returns the list of scraper functions that can run independently
+func (s *sqlServerScraper) getIndependentScraperFunctions() []ScraperFunc {
+	// Return empty slice for now - will be populated with actual scrapers
+	// This will include instance, database, user connection, security, lock, etc.
+	return []ScraperFunc{}
+}
+
+// runScraperWithErrorHandling executes a single scraper function with proper error handling
+func (s *sqlServerScraper) runScraperWithErrorHandling(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup, index int, scraperFunc ScraperFunc) {
+	defer wg.Done()
+
+	// Check for context cancellation before starting
+	select {
+	case <-ctx.Done():
+		s.logger.Debug("Context cancelled before starting scraper",
+			zap.Int("scraper_index", index),
+			zap.Error(ctx.Err()))
+		return
+	default:
+	}
+
+	// Execute scraper with timing
+	s.logger.Debug("Starting scraper", zap.Int("scraper_index", index))
+	startTime := time.Now()
+
+	errs := scraperFunc(ctx)
+
+	duration := time.Since(startTime)
+	s.logger.Debug("Completed scraper",
+		zap.Int("scraper_index", index),
+		zap.Duration("duration", duration),
+		zap.Int("error_count", len(errs)))
+
+	// Send errors to channel with cancellation check
+	s.sendErrorsToChannelWithCancellation(ctx, errChan, errs, index)
+}
+
+// collectScrapingErrors collects all errors from concurrent scrapers
+func (s *sqlServerScraper) collectScrapingErrors(ctx context.Context, errChan chan error, wg *sync.WaitGroup) []error {
+	// Setup cleanup
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		wg.Wait()
+		close(errChan)
+	}()
+
+	var scrapeErrors []error
+	collecting := true
+
+	for collecting {
+		select {
+		case err, ok := <-errChan:
+			if !ok {
+				collecting = false
+				break
+			}
+			scrapeErrors = append(scrapeErrors, err)
+		case <-ctx.Done():
+			s.logger.Warn("Context cancelled while collecting errors", zap.Error(ctx.Err()))
+			scrapeErrors = append(scrapeErrors, fmt.Errorf("scrape operation cancelled: %w", ctx.Err()))
+			collecting = false
+		case <-done:
+			// Collect remaining errors
+			for err := range errChan {
+				scrapeErrors = append(scrapeErrors, err)
+			}
+			collecting = false
+		}
+	}
+
+	return scrapeErrors
+}
+
+// buildMetrics constructs the final metrics output
+func (s *sqlServerScraper) buildMetrics() pmetric.Metrics {
+	metrics := pmetric.NewMetrics()
+	resourceMetrics := metrics.ResourceMetrics().AppendEmpty()
+
+	// Set basic resource attributes
+	attrs := resourceMetrics.Resource().Attributes()
+	attrs.PutStr("server.address", s.config.Hostname)
+	attrs.PutStr("server.port", s.config.Port)
+	attrs.PutStr("db.system", "mssql")
+	attrs.PutStr("service.name", "sql-server-monitoring")
+
+	// Add instance name if configured
+	if s.config.Instance != "" {
+		attrs.PutStr("db.instance", s.config.Instance)
+	}
+
+	return metrics
+}
+
+// logScrapeCompletion logs the completion of the scraping operation
+func (s *sqlServerScraper) logScrapeCompletion(scrapeErrors []error) {
+	scraperCount := len(s.getIndependentScraperFunctions())
+	s.logger.Debug("Done SQL Server scraping",
+		zap.Int("total_errors", len(scrapeErrors)),
+		zap.Int("scrapers_executed", scraperCount),
+	)
+}
+
+// sendErrorsToChannel sends a slice of errors to the error channel
+func (s *sqlServerScraper) sendErrorsToChannel(errChan chan<- error, errs []error, scraperType string) {
+	for _, err := range errs {
+		select {
+		case errChan <- err:
+		default:
+			s.logger.Warn("Error channel full, dropping error",
+				zap.Error(err),
+				zap.String("scraper_type", scraperType))
+		}
+	}
+}
+
+// sendErrorsToChannelWithCancellation sends errors to channel with context cancellation check
+func (s *sqlServerScraper) sendErrorsToChannelWithCancellation(ctx context.Context, errChan chan<- error, errs []error, scraperIndex int) {
+	for _, err := range errs {
+		select {
+		case errChan <- err:
+		case <-ctx.Done():
+			s.logger.Debug("Context cancelled while sending errors",
+				zap.Int("scraper_index", scraperIndex),
+				zap.Error(ctx.Err()))
+			return
+		default:
+			s.logger.Warn("Error channel full, dropping error",
+				zap.Error(err),
+				zap.Int("scraper_index", scraperIndex))
+		}
+	}
 }
 
 // scrapeLogs collects execution plan logs from SQL Server and emits them as OTLP logs
@@ -220,11 +524,7 @@ func (s *sqlServerScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
 		zap.Int("top_n", topN),
 		zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
 
-	// Create a temporary scope metrics for slow query scraping (results not exported, only used for ID extraction)
-	tempMetrics := pmetric.NewMetrics()
-	tempScopeMetrics := tempMetrics.ResourceMetrics().AppendEmpty().ScopeMetrics().AppendEmpty()
-
-	slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(ctx, tempScopeMetrics, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
+	slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(ctx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
 	if err != nil {
 		s.logger.Warn("Failed to fetch slow queries for correlation, will skip execution plan collection",
 			zap.Error(err))
@@ -243,10 +543,6 @@ func (s *sqlServerScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
 		return logs, nil // No slow queries, nothing to collect
 	}
 
-	// Create a dummy scope metrics (not used, but required by scraper signature)
-	dummyMetrics := pmetric.NewMetrics()
-	scopeMetrics := dummyMetrics.ResourceMetrics().AppendEmpty().ScopeMetrics().AppendEmpty()
-
 	// Scrape active running queries with execution plans
 	// This will fetch, parse, and emit execution plan operators as OTLP logs
 	limit := s.config.QueryMonitoringCountThreshold
@@ -260,7 +556,7 @@ func (s *sqlServerScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
 
 	// Pass slowQueryIDs for correlation filtering and XML execution plan fetching
 	// Note: We don't need the returned active queries here since execution plans are already included in logs
-	_, err = s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, scopeMetrics, logs, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
+	_, err = s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, logs, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
 	if err != nil {
 		s.logger.Error("Failed to scrape active running query execution plans", zap.Error(err))
 		return logs, err
@@ -405,7 +701,7 @@ func (s *sqlServerScraper) detectEngineEdition(ctx context.Context) (int, error)
 			EngineEdition int `db:"EngineEdition"`
 		}
 
-		err := s.connection.Query(ctx, &results, query)
+		err := s.client.Query(ctx, &results, query)
 		if err != nil {
 			return 0, err
 		}
@@ -457,8 +753,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	var scrapeErrors []error
 
 	// Check if connection is still valid before scraping
-	if s.connection != nil {
-		if err := s.connection.Ping(ctx); err != nil {
+	if s.db != nil {
+		if err := s.client.Ping(ctx); err != nil {
 			s.logger.Error("Connection health check failed before scraping", zap.Error(err))
 			scrapeErrors = append(scrapeErrors, fmt.Errorf("connection health check failed: %w", err))
 			// Continue with scraping attempt - connection might recover
@@ -482,7 +778,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseBufferMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseBufferMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database buffer metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -499,7 +795,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseIOMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseIOMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database IO metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -518,7 +814,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseLogGrowthMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseLogGrowthMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database log growth metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -537,7 +833,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabasePageFileMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabasePageFileMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database page file metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -556,7 +852,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabasePageFileTotalMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabasePageFileTotalMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database page file total metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -575,7 +871,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseMemoryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseMemoryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database memory metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -594,7 +890,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseSizeMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseSizeMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database size metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -613,7 +909,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseDiskMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseDiskMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database disk metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -632,7 +928,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseTransactionLogMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseTransactionLogMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database transaction log metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -651,7 +947,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.databaseScraper.ScrapeDatabaseLogSpaceUsageMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseScraper.ScrapeDatabaseLogSpaceUsageMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database log space usage metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -705,7 +1001,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			zap.Int("top_n", topN),
 			zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
 
-		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, scopeMetrics, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
+		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
 		if err != nil {
 			s.logger.Warn("Failed to scrape slow query metrics - continuing with other metrics",
 				zap.Error(err),
@@ -733,7 +1029,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 				s.logger.Info("Attempting to scrape execution plans for slow queries",
 					zap.Int("slow_query_count", len(slowQueries)))
 
-				if err := s.queryPerformanceScraper.ScrapeSlowQueryExecutionPlans(scrapeCtx, scopeMetrics, slowQueries); err != nil {
+				if err := s.queryPerformanceScraper.ScrapeSlowQueryExecutionPlans(scrapeCtx, slowQueries); err != nil {
 					s.logger.Warn("Failed to scrape slow query execution plans - continuing with other metrics",
 						zap.Error(err))
 					// Don't fail the entire scrape, just log the warning
@@ -763,7 +1059,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 		// Create empty logs (metrics scraper doesn't emit logs, only metrics)
 		emptyLogs := plog.NewLogs()
-		activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(scrapeCtx, scopeMetrics, emptyLogs, limit, textTruncateLimit, elapsedTimeThreshold, slowQueryIDs)
+		activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(scrapeCtx, emptyLogs, limit, textTruncateLimit, elapsedTimeThreshold, slowQueryIDs)
 		if err != nil {
 			s.logger.Warn("Failed to scrape active running queries metrics - continuing with other metrics",
 				zap.Error(err),
@@ -784,7 +1080,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 				s.logger.Info("Attempting to scrape execution plans for active queries",
 					zap.Int("active_query_count", len(activeQueries)))
 
-				if err := s.queryPerformanceScraper.ScrapeActiveQueryExecutionPlans(scrapeCtx, scopeMetrics, activeQueries); err != nil {
+				if err := s.queryPerformanceScraper.ScrapeActiveQueryExecutionPlans(scrapeCtx, activeQueries); err != nil {
 					s.logger.Warn("Failed to scrape active query execution plans - continuing with other metrics",
 						zap.Error(err))
 					// Don't fail the entire scrape, just log the warning
@@ -817,7 +1113,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	s.logger.Debug("Starting instance buffer pool hit percent metrics scraping")
 	scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 	defer cancel()
-	if err := s.instanceScraper.ScrapeInstanceComprehensiveStats(scrapeCtx, scopeMetrics); err != nil {
+	if err := s.instanceScraper.ScrapeInstanceComprehensiveStats(scrapeCtx); err != nil {
 		s.logger.Error("Failed to scrape instance comprehensive statistics",
 			zap.Error(err),
 			zap.Duration("timeout", s.config.Timeout))
@@ -832,7 +1128,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance memory metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceMemoryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceMemoryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance memory metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -850,7 +1146,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance process counts metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceProcessCounts(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceProcessCounts(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance process counts metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -868,7 +1164,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance runnable tasks metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceRunnableTasks(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceRunnableTasks(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance runnable tasks metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -886,7 +1182,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance active connections metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceActiveConnections(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceActiveConnections(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance active connections metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -904,7 +1200,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance buffer pool hit percent metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceBufferPoolHitPercent(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceBufferPoolHitPercent(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance buffer pool hit percent metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -922,7 +1218,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance disk metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceDiskMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceDiskMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance disk metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -940,7 +1236,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance buffer pool size metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceBufferPoolSize(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceBufferPoolSize(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance buffer pool size metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -958,7 +1254,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance comprehensive statistics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceComprehensiveStats(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceComprehensiveStats(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance comprehensive statistics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -983,7 +1279,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance target memory metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceTargetMemoryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceTargetMemoryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance target memory metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -999,7 +1295,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance performance ratios metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstancePerformanceRatiosMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstancePerformanceRatiosMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance performance ratios metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1015,7 +1311,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance index metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceIndexMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceIndexMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance index metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1031,7 +1327,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting instance lock metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.instanceScraper.ScrapeInstanceLockMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.instanceScraper.ScrapeInstanceLockMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape instance lock metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1059,7 +1355,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeUserConnectionStatusMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeUserConnectionStatusMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape user connection status metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1078,7 +1374,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeUserConnectionSummaryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeUserConnectionSummaryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape user connection summary metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1097,7 +1393,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeUserConnectionUtilizationMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeUserConnectionUtilizationMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape user connection utilization metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1116,7 +1412,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeUserConnectionByClientMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeUserConnectionByClientMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape user connection by client metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1135,7 +1431,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeUserConnectionClientSummaryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeUserConnectionClientSummaryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape user connection client summary metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1154,7 +1450,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeUserConnectionStatsMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeUserConnectionStatsMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape user connection stats metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1175,7 +1471,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeLoginLogoutMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeLoginLogoutMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape login/logout rate metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1194,7 +1490,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeLoginLogoutSummaryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeLoginLogoutSummaryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape login/logout summary metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1213,7 +1509,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeFailedLoginMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeFailedLoginMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape failed login metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1232,7 +1528,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
 
-		if err := s.userConnectionScraper.ScrapeFailedLoginSummaryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.userConnectionScraper.ScrapeFailedLoginSummaryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape failed login summary metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1252,7 +1548,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting failover cluster replica metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.failoverClusterScraper.ScrapeFailoverClusterMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.failoverClusterScraper.ScrapeFailoverClusterMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape failover cluster replica metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1270,7 +1566,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting failover cluster replica state metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.failoverClusterScraper.ScrapeFailoverClusterReplicaStateMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.failoverClusterScraper.ScrapeFailoverClusterReplicaStateMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape failover cluster replica state metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1288,7 +1584,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting availability group health metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.failoverClusterScraper.ScrapeFailoverClusterAvailabilityGroupHealthMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.failoverClusterScraper.ScrapeFailoverClusterAvailabilityGroupHealthMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape availability group health metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1306,7 +1602,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting availability group configuration metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.failoverClusterScraper.ScrapeFailoverClusterAvailabilityGroupMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.failoverClusterScraper.ScrapeFailoverClusterAvailabilityGroupMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape availability group configuration metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1324,7 +1620,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting failover cluster redo queue metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.failoverClusterScraper.ScrapeFailoverClusterRedoQueueMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.failoverClusterScraper.ScrapeFailoverClusterRedoQueueMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape failover cluster redo queue metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1344,7 +1640,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database principals details metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databasePrincipalsScraper.ScrapeDatabasePrincipalsMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databasePrincipalsScraper.ScrapeDatabasePrincipalsMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database principals details metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1362,7 +1658,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database principals summary metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databasePrincipalsScraper.ScrapeDatabasePrincipalsSummaryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databasePrincipalsScraper.ScrapeDatabasePrincipalsSummaryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database principals summary metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1380,7 +1676,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database principals activity metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databasePrincipalsScraper.ScrapeDatabasePrincipalActivityMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databasePrincipalsScraper.ScrapeDatabasePrincipalActivityMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database principals activity metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1400,7 +1696,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database role membership details metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleMembershipMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleMembershipMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database role membership details metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1418,7 +1714,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database role membership summary metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleMembershipSummaryMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleMembershipSummaryMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database role membership summary metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1436,7 +1732,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database role hierarchy metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleHierarchyMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleHierarchyMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database role hierarchy metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1454,7 +1750,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database role activity metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleActivityMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleActivityMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database role activity metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1472,7 +1768,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting database role permission matrix metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRolePermissionMatrixMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRolePermissionMatrixMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape database role permission matrix metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1489,7 +1785,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	s.logger.Debug("Starting wait time metrics scraping")
 	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
 	defer cancel()
-	if err := s.waitTimeScraper.ScrapeWaitTimeMetrics(scrapeCtx, scopeMetrics); err != nil {
+	if err := s.waitTimeScraper.ScrapeWaitTimeMetrics(scrapeCtx); err != nil {
 		s.logger.Error("Failed to scrape wait time metrics",
 			zap.Error(err),
 			zap.Duration("timeout", s.config.Timeout))
@@ -1504,7 +1800,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting latch wait time metrics scraping")
 		scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.waitTimeScraper.ScrapeLatchWaitTimeMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.waitTimeScraper.ScrapeLatchWaitTimeMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape latch wait time metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1527,7 +1823,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			s.logger.Debug("Starting security principals metrics scraping")
 			scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
 			defer cancel()
-			if err := s.securityScraper.ScrapeSecurityPrincipalsMetrics(scrapeCtx, scopeMetrics); err != nil {
+			if err := s.securityScraper.ScrapeSecurityPrincipalsMetrics(scrapeCtx); err != nil {
 				s.logger.Error("Failed to scrape security principals metrics",
 					zap.Error(err),
 					zap.Duration("timeout", s.config.Timeout))
@@ -1543,7 +1839,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			s.logger.Debug("Starting security role members metrics scraping")
 			scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
 			defer cancel()
-			if err := s.securityScraper.ScrapeSecurityRoleMembersMetrics(scrapeCtx, scopeMetrics); err != nil {
+			if err := s.securityScraper.ScrapeSecurityRoleMembersMetrics(scrapeCtx); err != nil {
 				s.logger.Error("Failed to scrape security role members metrics",
 					zap.Error(err),
 					zap.Duration("timeout", s.config.Timeout))
@@ -1560,7 +1856,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting lock resource metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.lockScraper.ScrapeLockResourceMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.lockScraper.ScrapeLockResourceMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape lock resource metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1576,7 +1872,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting lock mode metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.lockScraper.ScrapeLockModeMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.lockScraper.ScrapeLockModeMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape lock mode metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1592,7 +1888,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting thread pool health metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.threadPoolHealthScraper.ScrapeThreadPoolHealthMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.threadPoolHealthScraper.ScrapeThreadPoolHealthMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape thread pool health metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1608,7 +1904,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Starting TempDB contention metrics scraping")
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
-		if err := s.tempdbContentionScraper.ScrapeTempDBContentionMetrics(scrapeCtx, scopeMetrics); err != nil {
+		if err := s.tempdbContentionScraper.ScrapeTempDBContentionMetrics(scrapeCtx); err != nil {
 			s.logger.Error("Failed to scrape TempDB contention metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout))
@@ -1625,12 +1921,67 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			zap.Int("error_count", len(scrapeErrors)),
 			zap.Int("metrics_collected", scopeMetrics.Metrics().Len()))
 
+		// Emit metrics from MetricsBuilder before returning error
+		emittedMetrics := s.mb.Emit()
+
+		// Count datapoints
+		dpCount := 0
+		for i := 0; i < emittedMetrics.ResourceMetrics().Len(); i++ {
+			rm := emittedMetrics.ResourceMetrics().At(i)
+			for j := 0; j < rm.ScopeMetrics().Len(); j++ {
+				sm := rm.ScopeMetrics().At(j)
+				for k := 0; k < sm.Metrics().Len(); k++ {
+					m := sm.Metrics().At(k)
+					switch m.Type() {
+					case pmetric.MetricTypeGauge:
+						dpCount += m.Gauge().DataPoints().Len()
+					case pmetric.MetricTypeSum:
+						dpCount += m.Sum().DataPoints().Len()
+					}
+				}
+			}
+		}
+
+		s.logger.Warn("Emitting partial metrics from MetricsBuilder",
+			zap.Int("resource_metrics", emittedMetrics.ResourceMetrics().Len()),
+			zap.Int("total_datapoints", dpCount))
+
+		emittedMetrics.ResourceMetrics().MoveAndAppendTo(metrics.ResourceMetrics())
+
 		// Return the first error but with partial metrics
 		return metrics, scrapeErrors[0]
 	}
 
+	// Emit metrics from MetricsBuilder
+	emittedMetrics := s.mb.Emit()
+
+	// Count datapoints before merging
+	dpCount := 0
+	for i := 0; i < emittedMetrics.ResourceMetrics().Len(); i++ {
+		rm := emittedMetrics.ResourceMetrics().At(i)
+		for j := 0; j < rm.ScopeMetrics().Len(); j++ {
+			sm := rm.ScopeMetrics().At(j)
+			for k := 0; k < sm.Metrics().Len(); k++ {
+				m := sm.Metrics().At(k)
+				switch m.Type() {
+				case pmetric.MetricTypeGauge:
+					dpCount += m.Gauge().DataPoints().Len()
+				case pmetric.MetricTypeSum:
+					dpCount += m.Sum().DataPoints().Len()
+				}
+			}
+		}
+	}
+
+	s.logger.Info("Emitting metrics from MetricsBuilder",
+		zap.Int("resource_metrics", emittedMetrics.ResourceMetrics().Len()),
+		zap.Int("total_datapoints", dpCount))
+
+	emittedMetrics.ResourceMetrics().MoveAndAppendTo(metrics.ResourceMetrics())
+
 	s.logger.Debug("Successfully completed SQL Server metrics collection",
-		zap.Int("metrics_collected", scopeMetrics.Metrics().Len()))
+		zap.Int("metrics_collected", scopeMetrics.Metrics().Len()),
+		zap.Int("mb_datapoints", dpCount))
 
 	return metrics, nil
 }
@@ -1750,7 +2101,7 @@ func (s *sqlServerScraper) CollectSystemInformation(ctx context.Context) (*model
 	s.logger.Debug("Collecting SQL Server system and host information")
 
 	var results []models.SystemInformation
-	if err := s.connection.Query(ctx, &results, queries.SystemInformationQuery); err != nil {
+	if err := s.client.Query(ctx, &results, queries.SystemInformationQuery); err != nil {
 		s.logger.Error("Failed to execute system information query",
 			zap.Error(err),
 			zap.String("query", queries.TruncateQuery(queries.SystemInformationQuery, 100)),

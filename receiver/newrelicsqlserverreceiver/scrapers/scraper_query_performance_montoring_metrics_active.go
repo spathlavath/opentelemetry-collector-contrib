@@ -31,7 +31,7 @@ import (
 //
 // Results are sorted by total_elapsed_time DESC (slowest first) and limited to Top N
 // Returns the active queries for further processing (fetching execution stats for unique plan_handles)
-func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
+func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
 	// Skip active query scraping if no slow queries found (nothing to correlate)
 	if len(slowQueryIDs) == 0 {
 		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
@@ -39,9 +39,8 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 	}
 
 	// Build query with slow query correlation filter
-	var queryIDFilter string
 	// Build query_id IN clause for SQL filtering
-	queryIDFilter = "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
+	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
 	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit, elapsedTimeThreshold) + " " + queryIDFilter
 
 	s.logger.Debug("Executing active running queries metrics collection",
@@ -61,6 +60,15 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 	// Track filtered queries for logging
 	filteredCount := 0
 	processedCount := 0
+
+	// Get timestamp for metrics
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// Check if MetricsBuilder is available
+	if s.mb == nil {
+		s.logger.Warn("MetricsBuilder is nil, skipping metric recording for active queries")
+		// Continue processing for logs even if metrics can't be recorded
+	}
 
 	// Log each query result from SQL Server
 	for i, result := range results {
@@ -99,60 +107,64 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 		// Query passed all filters, process it
 		processedCount++
-		s.logger.Info("=== SCRAPED ACTIVE QUERY FROM DB ===",
+		s.logger.Debug("Scraped active query from DB",
 			zap.Int("index", i),
 			zap.Any("session_id", result.CurrentSessionID),
-			zap.Any("request_id", result.RequestID),
-			zap.Any("database_name", result.DatabaseName),
-			zap.Any("request_status", result.RequestStatus),
-			zap.Any("wait_type", result.WaitType),
 			zap.Any("wait_time_s", result.WaitTimeS),
-			zap.Any("last_wait_type", result.LastWaitType),
 			zap.Any("cpu_time_ms", result.CPUTimeMs),
-			zap.Any("elapsed_time_ms", result.TotalElapsedTimeMs),
-			zap.Any("reads", result.Reads),
-			zap.Any("logical_reads", result.LogicalReads),
-			zap.Any("writes", result.Writes),
-			zap.Any("row_count", result.RowCount),
-			zap.Any("granted_query_memory_pages", result.GrantedQueryMemoryPages),
-			zap.Any("blocking_session_id", result.BlockingSessionID),
-			zap.String("query_text_preview", func() string {
-				if result.QueryStatementText != nil && len(*result.QueryStatementText) > 100 {
-					return (*result.QueryStatementText)[:100] + "..."
-				} else if result.QueryStatementText != nil {
-					return *result.QueryStatementText
-				}
-				return "N/A"
-			}()))
+			zap.Any("elapsed_time_ms", result.TotalElapsedTimeMs))
 
-		// Fetch execution plan XML for logs endpoint ONLY
-		// For metrics endpoint: We use aggregate plan stats from slow query scraper (dm_exec_query_stats)
-		// For logs endpoint: We fetch detailed XML execution plan for operator-level analysis
+		// Record metrics using MetricsBuilder pattern
+		if s.mb != nil {
+			if result.WaitTimeS != nil && *result.WaitTimeS > 0 {
+				s.mb.RecordSqlserverActivequeryWaitTimeDataPoint(now, *result.WaitTimeS)
+			}
+
+			if result.CPUTimeMs != nil {
+				s.mb.RecordSqlserverActivequeryCPUTimeDataPoint(now, *result.CPUTimeMs)
+			}
+
+			if result.TotalElapsedTimeMs != nil {
+				s.mb.RecordSqlserverActivequeryElapsedTimeDataPoint(now, *result.TotalElapsedTimeMs)
+			}
+
+			if result.Reads != nil {
+				s.mb.RecordSqlserverActivequeryReadsDataPoint(now, *result.Reads)
+			}
+
+			if result.Writes != nil {
+				s.mb.RecordSqlserverActivequeryWritesDataPoint(now, *result.Writes)
+			}
+
+			if result.LogicalReads != nil {
+				s.mb.RecordSqlserverActivequeryLogicalReadsDataPoint(now, *result.LogicalReads)
+			}
+
+			if result.RowCount != nil {
+				s.mb.RecordSqlserverActivequeryRowCountDataPoint(now, *result.RowCount)
+			}
+
+			if result.GrantedQueryMemoryPages != nil {
+				s.mb.RecordSqlserverActivequeryGrantedMemoryDataPoint(now, *result.GrantedQueryMemoryPages)
+			}
+		}
+
+		// Fetch execution plan XML for logs endpoint if needed
 		var executionPlanXML string
-		shouldFetchXML := logs.ResourceLogs().Len() >= 0 // Check if logs collection is active (not nil)
+		shouldFetchXML := logs.ResourceLogs().Len() >= 0
 
 		if shouldFetchXML && result.PlanHandle != nil && !result.PlanHandle.IsEmpty() {
-			s.logger.Debug("Fetching execution plan XML for active query (logs endpoint)",
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.String("plan_handle", result.PlanHandle.String()))
-
 			planXML, err := s.fetchExecutionPlanXML(ctx, result.PlanHandle)
 			if err != nil {
 				s.logger.Warn("Failed to fetch execution plan XML for active query",
 					zap.Error(err),
-					zap.Any("session_id", result.CurrentSessionID),
-					zap.String("plan_handle", result.PlanHandle.String()))
+					zap.Any("session_id", result.CurrentSessionID))
 			} else if planXML != "" {
 				executionPlanXML = planXML
 				s.logger.Debug("Successfully fetched execution plan XML",
 					zap.Any("session_id", result.CurrentSessionID),
 					zap.Int("xml_length", len(planXML)))
 			}
-		}
-
-		// Process active query metrics with execution plan
-		if err := s.processActiveRunningQueryMetricsWithPlan(result, scopeMetrics, i, executionPlanXML); err != nil {
-			s.logger.Error("Failed to process active running query metric", zap.Error(err), zap.Int("index", i))
 		}
 
 		// If we have execution plan XML, parse and emit as logs
@@ -176,9 +188,10 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 	return results, nil
 }
 
-// processActiveRunningQueryMetricsWithPlan processes and emits metrics for a single active running query
-// with optional execution plan XML
-func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, scopeMetrics pmetric.ScopeMetrics, index int, executionPlanXML string) error {
+// processActiveRunningQueryMetricsWithPlan is deprecated and removed in favor of MetricsBuilder pattern
+// Use s.mb.Record*DataPoint() calls directly in ScrapeActiveRunningQueriesMetrics
+// This function is kept as a placeholder to maintain compatibility during refactoring
+func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan_DEPRECATED(result models.ActiveRunningQuery, scopeMetrics pmetric.ScopeMetrics, index int, executionPlanXML string) error {
 	if result.CurrentSessionID == nil {
 		s.logger.Debug("Skipping active running query with nil session ID", zap.Int("index", index))
 		return nil
@@ -597,7 +610,16 @@ func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, re
 
 // ScrapeLockedObjectsMetrics collects detailed information about objects locked by a specific session
 // This provides table/object names for locked resources, enabling better lock contention troubleshooting
-func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, sessionID int) error {
+// NOTE: This method is currently not migrated to MetricsBuilder pattern as locked objects
+// are not defined in metadata.yaml. Consider adding them or removing this method.
+func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context, sessionID int) error {
+	// TODO: Migrate to MetricsBuilder pattern or remove if not needed
+	// This method is commented out during MetricsBuilder migration
+	s.logger.Debug("ScrapeLockedObjectsMetrics not yet migrated to MetricsBuilder pattern",
+		zap.Int("session_id", sessionID))
+	return nil
+
+	/* Original implementation commented out during migration
 	query := fmt.Sprintf(queries.LockedObjectsBySessionQuery, sessionID)
 
 	s.logger.Debug("Executing locked objects metrics collection",
@@ -612,16 +634,19 @@ func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context
 	s.logger.Debug("Locked objects metrics fetched", zap.Int("result_count", len(results)))
 
 	for i, result := range results {
-		if err := s.processLockedObjectMetrics(result, scopeMetrics, i); err != nil {
+		if err := s.processLockedObjectMetrics(result, i); err != nil {
 			s.logger.Error("Failed to process locked object metric", zap.Error(err), zap.Int("index", i))
 		}
 	}
 
 	return nil
+	*/
 }
 
 // processLockedObjectMetrics processes and emits metrics for a single locked object
-func (s *QueryPerformanceScraper) processLockedObjectMetrics(result models.LockedObject, scopeMetrics pmetric.ScopeMetrics, index int) error {
+// NOTE: Commented out during MetricsBuilder migration - locked object metrics not in metadata.yaml
+func (s *QueryPerformanceScraper) processLockedObjectMetrics_DEPRECATED(result models.LockedObject, scopeMetrics pmetric.ScopeMetrics, index int) error {
+	/* Commented out during MetricsBuilder migration
 	if result.SessionID == nil {
 		s.logger.Debug("Skipping locked object with nil session ID", zap.Int("index", index))
 		return nil
@@ -640,7 +665,6 @@ func (s *QueryPerformanceScraper) processLockedObjectMetrics(result models.Locke
 	dp := gauge.DataPoints().AppendEmpty()
 	dp.SetIntValue(1) // Presence indicator
 	dp.SetTimestamp(timestamp)
-	dp.SetStartTimestamp(s.startTime)
 
 	// Add all locked object attributes
 	attrs := dp.Attributes()
@@ -687,6 +711,7 @@ func (s *QueryPerformanceScraper) processLockedObjectMetrics(result models.Locke
 		zap.Any("locked_object_name", result.LockedObjectName),
 		zap.Any("lock_granularity", result.LockGranularity),
 		zap.Any("lock_mode", result.LockMode))
+	*/
 
 	return nil
 }

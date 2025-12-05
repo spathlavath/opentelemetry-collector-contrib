@@ -158,7 +158,7 @@ func TestConfigValidation(t *testing.T) {
 				QueryMonitoringResponseTimeThreshold: -1,
 			},
 			wantErr: true,
-			errMsg:  "query_monitoring_response_time_threshold must be positive when query monitoring is enabled",
+			errMsg:  "query_monitoring_response_time_threshold must be >= 0",
 		},
 		{
 			name: "invalid_negative_count_threshold",
@@ -226,7 +226,7 @@ func TestConfigDefaults(t *testing.T) {
 
 	// Query monitoring defaults
 	assert.True(t, cfg.EnableQueryMonitoring)
-	assert.Equal(t, 1, cfg.QueryMonitoringResponseTimeThreshold)
+	assert.Equal(t, 0, cfg.QueryMonitoringResponseTimeThreshold)
 	assert.Equal(t, 20, cfg.QueryMonitoringCountThreshold)
 	assert.Equal(t, 15, cfg.QueryMonitoringFetchInterval)
 
