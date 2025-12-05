@@ -5080,6 +5080,7 @@ Oracle SQL execution plan data with individual fields for each plan step. Contai
 
 | Name | Description | Values |
 | ---- | ----------- | ------ |
+| newrelic.event.type | New Relic event type for log categorization | Any Str |
 | query_id | SQL query identifier | Any Str |
 | plan_hash_value | Oracle execution plan hash value | Any Str |
 | query_text | SQL query text | Any Str |

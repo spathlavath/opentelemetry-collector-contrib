@@ -129,7 +129,7 @@ func TestLogsBuilder(t *testing.T) {
 			allEventsCount := 0
 			defaultEventsCount++
 			allEventsCount++
-			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
+			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "newrelic.event.type-val", "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
 
 			rb := lb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -163,7 +163,10 @@ func TestLogsBuilder(t *testing.T) {
 					assert.Equal(t, timestamp, lr.Timestamp())
 					assert.Equal(t, pcommon.TraceID(traceID), lr.TraceID())
 					assert.Equal(t, pcommon.SpanID(spanID), lr.SpanID())
-					attrVal, ok := lr.Attributes().Get("query_id")
+					attrVal, ok := lr.Attributes().Get("newrelic.event.type")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.event.type-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
 					attrVal, ok = lr.Attributes().Get("plan_hash_value")

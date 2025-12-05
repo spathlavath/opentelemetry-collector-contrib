@@ -221,6 +221,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
 		context.Background(),
 		pcommon.NewTimestampFromTime(time.Now()),
+		"OracleExecutionPlan",
 		queryID,
 		planHashValue,
 		queryText,

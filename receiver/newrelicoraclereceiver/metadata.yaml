@@ -114,6 +114,9 @@ attributes:
   filter_predicates:
     description: Filter predicates applied after accessing rows
     type: string
+  newrelic.event.type:
+    description: New Relic event type for log categorization
+    type: string
   
   wait_event_name:
     description: Oracle wait event name for wait events
@@ -360,6 +363,7 @@ events:
     enabled: true
     description: Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
     attributes:
+      - newrelic.event.type
       - query_id
       - plan_hash_value
       - query_text
