@@ -37,71 +37,51 @@ type WaitEventWithBlocking struct {
 	Event sql.NullString
 	// 11. wait_time_ms (milliseconds the session has been waiting - general wait time)
 	WaitTimeMs sql.NullFloat64
-	// 12. blocked_time_ms (milliseconds waiting due to blocking - ONLY populated when BLOCKING_SESSION IS NOT NULL)
-	BlockedTimeMs sql.NullFloat64
-	// 13. time_since_last_wait_ms (milliseconds since last wait, useful for ON CPU time)
-	TimeSinceLastWaitMs sql.NullFloat64
-	// 14. time_remaining_ms (milliseconds remaining, NULL for indefinite waits)
-	TimeRemainingMs sql.NullFloat64
 
 	// SQL execution context
-	// 15. SQL_EXEC_START
+	// 12. SQL_EXEC_START
 	SQLExecStart sql.NullTime
-	// 16. SQL_EXEC_ID
+	// 13. SQL_EXEC_ID
 	SQLExecID sql.NullInt64
 
 	// Session context
-	// 17. PROGRAM
+	// 14. PROGRAM
 	Program sql.NullString
-	// 18. MACHINE
+	// 15. MACHINE
 	Machine sql.NullString
 
 	// Object being waited on
-	// 19. ROW_WAIT_OBJ#
+	// 16. ROW_WAIT_OBJ#
 	RowWaitObj sql.NullInt64
-	// 20. OWNER
+	// 17. OWNER
 	Owner sql.NullString
-	// 21. OBJECT_NAME
+	// 18. OBJECT_NAME
 	ObjectName sql.NullString
-	// 22. OBJECT_TYPE
+	// 19. OBJECT_TYPE
 	ObjectType sql.NullString
-	// 23. ROW_WAIT_FILE#
+	// 20. ROW_WAIT_FILE#
 	RowWaitFile sql.NullInt64
-	// 24. ROW_WAIT_BLOCK#
+	// 21. ROW_WAIT_BLOCK#
 	RowWaitBlock sql.NullInt64
 
-	// Wait parameters
-	// 25. p1text
-	P1Text sql.NullString
-	// 26. p1
-	P1 sql.NullInt64
-	// 27. p2text
-	P2Text sql.NullString
-	// 28. p2
-	P2 sql.NullInt64
-	// 29. p3text
-	P3Text sql.NullString
-	// 30. p3
-	P3 sql.NullInt64
-
 	// Blocking session context
-	// 31. BLOCKING_SESSION_STATUS
+	// 22. BLOCKING_SESSION_STATUS
 	BlockingSessionStatus sql.NullString
-	// 32. immediate_blocker_sid
+	// 23. immediate_blocker_sid
 	ImmediateBlockerSID sql.NullInt64
-	// 33. FINAL_BLOCKING_SESSION_STATUS
+	// 24. FINAL_BLOCKING_SESSION_STATUS
 	FinalBlockingSessionStatus sql.NullString
-	// 34. final_blocker_sid
+	// 25. final_blocker_sid
 	FinalBlockerSID sql.NullInt64
 
 	// Final blocker details
-	// 35. final_blocker_user
+	// 26. final_blocker_user
 	FinalBlockerUser sql.NullString
-	// 36. final_blocker_serial
+	// 27. final_blocker_serial
 	FinalBlockerSerial sql.NullInt64
-	// 37. final_blocker_query_id
+	// 28. final_blocker_query_id
 	FinalBlockerQueryID sql.NullString
-	// 38. final_blocker_query_text
+	// 29. final_blocker_query_text
 	FinalBlockerQueryText sql.NullString
 }
 
@@ -179,27 +159,6 @@ func (w *WaitEventWithBlocking) GetObjectTypeWaitedOn() string {
 	return ""
 }
 
-func (w *WaitEventWithBlocking) GetP1Text() string {
-	if w.P1Text.Valid {
-		return w.P1Text.String
-	}
-	return ""
-}
-
-func (w *WaitEventWithBlocking) GetP2Text() string {
-	if w.P2Text.Valid {
-		return w.P2Text.String
-	}
-	return ""
-}
-
-func (w *WaitEventWithBlocking) GetP3Text() string {
-	if w.P3Text.Valid {
-		return w.P3Text.String
-	}
-	return ""
-}
-
 func (w *WaitEventWithBlocking) GetSID() int64 {
 	if w.SID.Valid {
 		return w.SID.Int64
@@ -236,30 +195,6 @@ func (w *WaitEventWithBlocking) GetCurrentWaitMs() float64 {
 	return 0
 }
 
-// GetBlockedTimeMs returns blocked wait time in milliseconds (ONLY populated when there's a blocker)
-func (w *WaitEventWithBlocking) GetBlockedTimeMs() float64 {
-	if w.BlockedTimeMs.Valid {
-		return w.BlockedTimeMs.Float64
-	}
-	return 0
-}
-
-// GetTimeSinceLastWaitMs returns time since last wait in milliseconds (useful for ON CPU time)
-func (w *WaitEventWithBlocking) GetTimeSinceLastWaitMs() float64 {
-	if w.TimeSinceLastWaitMs.Valid {
-		return w.TimeSinceLastWaitMs.Float64
-	}
-	return 0
-}
-
-// GetTimeRemainingMs returns time remaining in milliseconds (NULL/0 for indefinite waits)
-func (w *WaitEventWithBlocking) GetTimeRemainingMs() float64 {
-	if w.TimeRemainingMs.Valid {
-		return w.TimeRemainingMs.Float64
-	}
-	return 0
-}
-
 func (w *WaitEventWithBlocking) GetLockedObjectID() int64 {
 	if w.RowWaitObj.Valid {
 		return w.RowWaitObj.Int64
@@ -277,27 +212,6 @@ func (w *WaitEventWithBlocking) GetLockedFileID() int64 {
 func (w *WaitEventWithBlocking) GetLockedBlockID() int64 {
 	if w.RowWaitBlock.Valid {
 		return w.RowWaitBlock.Int64
-	}
-	return 0
-}
-
-func (w *WaitEventWithBlocking) GetP1() int64 {
-	if w.P1.Valid {
-		return w.P1.Int64
-	}
-	return 0
-}
-
-func (w *WaitEventWithBlocking) GetP2() int64 {
-	if w.P2.Valid {
-		return w.P2.Int64
-	}
-	return 0
-}
-
-func (w *WaitEventWithBlocking) GetP3() int64 {
-	if w.P3.Valid {
-		return w.P3.Int64
 	}
 	return 0
 }

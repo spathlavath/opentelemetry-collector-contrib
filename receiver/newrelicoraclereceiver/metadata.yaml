@@ -154,24 +154,6 @@ attributes:
   row_wait_block_id:
     description: Block ID of the row being waited on
     type: string
-  wait_p1text:
-    description: Description of wait event parameter 1
-    type: string
-  wait_p1:
-    description: Wait event parameter 1 value
-    type: string
-  wait_p2text:
-    description: Description of wait event parameter 2
-    type: string
-  wait_p2:
-    description: Wait event parameter 2 value
-    type: string
-  wait_p3text:
-    description: Description of wait event parameter 3
-    type: string
-  wait_p3:
-    description: Wait event parameter 3 value
-    type: string
 
   session_serial:
     description: Oracle session serial number
@@ -3883,54 +3865,6 @@ metrics:
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id
-      - wait_p1text
-      - wait_p1
-      - wait_p2text
-      - wait_p2
-      - wait_p3text
-      - wait_p3
-
-  newrelicoracledb.wait_events.time_remaining_ms:
-    description: Time remaining for the wait event operation in milliseconds
-    extended_documentation: |
-      Estimated time remaining for the current wait operation to complete in high precision milliseconds.
-      Collected alongside wait events and blocking information in a single query.
-      Useful for identifying long-running operations and predicting when they will complete.
-      Returns NULL (reported as 0) for indefinite waits (when Oracle returns -1).
-      Source: TIME_REMAINING_MICRO / 1000 (rounded to 2 decimal places).
-    enabled: true
-    gauge:
-      value_type: double
-    unit: ms
-    attributes:
-      - collection_timestamp
-      - database_name
-      - session_id
-      - query_id
-      - sql_child_number
-      - sql_exec_id
-      - sql_exec_start
-
-  newrelicoracledb.wait_events.time_since_last_wait_ms:
-    description: Time since last wait in milliseconds (ON CPU time indicator)
-    extended_documentation: |
-      Time elapsed since the session's last wait event in high precision milliseconds.
-      Useful for identifying sessions that are currently ON CPU (high CPU consumers).
-      When this value is high and wait_time_ms is low, the session is actively using CPU rather than waiting.
-      Collected alongside wait events and blocking information in a single query.
-      Source: TIME_SINCE_LAST_WAIT_MICRO / 1000 (rounded to 2 decimal places).
-    enabled: true
-    gauge:
-      value_type: double
-    unit: ms
-    attributes:
-      - collection_timestamp
-      - database_name
-      - session_id
-      - query_id
-      - sql_child_number
-      - sql_exec_id
-      - sql_exec_start
 
   # Disabled old wait events metrics - replaced with current_wait_time_ms
   # newrelicoracledb.wait_events.avg_wait_time_ms:

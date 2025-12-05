@@ -353,8 +353,6 @@ type MetricsConfig struct {
 	NewrelicoracledbTablespaceUsedBytes                                MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_bytes"`
 	NewrelicoracledbTablespaceUsedPercent                              MetricConfig `mapstructure:"newrelicoracledb.tablespace.used_percent"`
 	NewrelicoracledbWaitEventsCurrentWaitTimeMs                        MetricConfig `mapstructure:"newrelicoracledb.wait_events.current_wait_time_ms"`
-	NewrelicoracledbWaitEventsTimeRemainingMs                          MetricConfig `mapstructure:"newrelicoracledb.wait_events.time_remaining_ms"`
-	NewrelicoracledbWaitEventsTimeSinceLastWaitMs                      MetricConfig `mapstructure:"newrelicoracledb.wait_events.time_since_last_wait_ms"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -1332,12 +1330,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbWaitEventsCurrentWaitTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbWaitEventsTimeRemainingMs: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbWaitEventsTimeSinceLastWaitMs: MetricConfig{
 			Enabled: true,
 		},
 	}

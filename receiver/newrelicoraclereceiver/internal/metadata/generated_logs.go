@@ -53,15 +53,6 @@ func (e *eventNewrelicoracledbExecutionPlan) recordEvent(ctx context.Context, ti
 	dp.Attributes().PutInt("time", timeAttributeValue)
 	dp.Attributes().PutStr("filter_predicates", filterPredicatesAttributeValue)
 
-	// ============================================================================
-	// MANUAL ADDITION - DO NOT REMOVE - MUST BE PRESERVED AFTER MDATAGEN RUNS
-	// ============================================================================
-	// Add New Relic custom event type attribute to ingest as Custom Event instead of Log.
-	// This attribute cannot be defined in metadata.yaml because it needs a constant value,
-	// not a parameter. New Relic uses this attribute to route logs to Custom Events table.
-	// If mdatagen removes this line, it must be manually re-added after generation.
-	dp.Attributes().PutStr("newrelic.event.type", "OracleExecutionPlan")
-
 }
 
 // emit appends recorded event data to a events slice and prepares it for recording another set of log records.

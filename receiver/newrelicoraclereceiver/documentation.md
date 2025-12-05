@@ -5061,66 +5061,6 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
 | row_wait_file_id | File ID of the row being waited on | Any Str | false |
 | row_wait_block_id | Block ID of the row being waited on | Any Str | false |
-| wait_p1text | Description of wait event parameter 1 | Any Str | false |
-| wait_p1 | Wait event parameter 1 value | Any Str | false |
-| wait_p2text | Description of wait event parameter 2 | Any Str | false |
-| wait_p2 | Wait event parameter 2 value | Any Str | false |
-| wait_p3text | Description of wait event parameter 3 | Any Str | false |
-| wait_p3 | Wait event parameter 3 value | Any Str | false |
-
-### newrelicoracledb.wait_events.time_remaining_ms
-
-Time remaining for the wait event operation in milliseconds
-
-Estimated time remaining for the current wait operation to complete in high precision milliseconds.
-Collected alongside wait events and blocking information in a single query.
-Useful for identifying long-running operations and predicting when they will complete.
-Returns NULL (reported as 0) for indefinite waits (when Oracle returns -1).
-Source: TIME_REMAINING_MICRO / 1000 (rounded to 2 decimal places).
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| sql_child_number | SQL child cursor number | Any Int | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
-
-### newrelicoracledb.wait_events.time_since_last_wait_ms
-
-Time since last wait in milliseconds (ON CPU time indicator)
-
-Time elapsed since the session's last wait event in high precision milliseconds.
-Useful for identifying sessions that are currently ON CPU (high CPU consumers).
-When this value is high and wait_time_ms is low, the session is actively using CPU rather than waiting.
-Collected alongside wait events and blocking information in a single query.
-Source: TIME_SINCE_LAST_WAIT_MICRO / 1000 (rounded to 2 decimal places).
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| sql_child_number | SQL child cursor number | Any Int | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
 
 ## Default Events
 
