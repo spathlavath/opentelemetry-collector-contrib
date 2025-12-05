@@ -88,6 +88,7 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	sid := strconv.FormatInt(event.GetSID(), 10)
 	serial := event.GetSerial()
 	status := event.GetStatus()
+	state := event.GetState()
 	qID := event.GetQueryID()
 	sqlChildNumber := event.GetSQLChildNumber()
 	waitCat := event.GetWaitCategory()
@@ -112,6 +113,7 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		sid,
 		serial,
 		status,
+		state,
 		qID,
 		sqlChildNumber,
 		waitEventName,
@@ -190,13 +192,21 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 			key := fmt.Sprintf("%s#%d", sqlID, childNumber)
 
 			if _, exists := sqlIdentifiersMap[key]; !exists {
+				// Use the collection timestamp from the wait event as the query execution timestamp
+				timestamp := event.GetCollectionTimestamp()
+				if timestamp.IsZero() {
+					timestamp = time.Now()
+				}
+
 				sqlIdentifiersMap[key] = models.SQLIdentifier{
 					SQLID:       sqlID,
 					ChildNumber: childNumber,
+					Timestamp:   timestamp,
 				}
 				s.logger.Debug("Added SQL identifier for execution plan",
 					zap.String("sql_id", sqlID),
-					zap.Int64("child_number", childNumber))
+					zap.Int64("child_number", childNumber),
+					zap.Time("timestamp", timestamp))
 			}
 		}
 	}
@@ -223,6 +233,7 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	queryID := event.GetQueryID()
 	sessionID := strconv.FormatInt(event.GetSID(), 10)
 	blockedSerial := event.GetSerial()
+	state := event.GetState()
 	sqlChildNumber := event.GetSQLChildNumber()
 	sqlExecID := event.GetSQLExecID()
 	sqlExecStart := event.GetSQLExecStart().Format("2006-01-02 15:04:05")
@@ -251,6 +262,7 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		blockedUser,
 		sessionID,
 		blockedSerial,
+		state,
 		queryID,
 		sqlChildNumber,
 		sqlExecID,

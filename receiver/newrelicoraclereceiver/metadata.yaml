@@ -130,6 +130,9 @@ attributes:
   session_status:
     description: Oracle session status (ACTIVE, INACTIVE, etc.)
     type: string
+  session_state:
+    description: Oracle session state (WAITING or not WAITING)
+    type: string
   session_program:
     description: Program name of the session
     type: string
@@ -3759,6 +3762,7 @@ metrics:
       - user_name
       - session_id
       - session_serial
+      - session_state
       - query_id
       - sql_child_number
       - sql_exec_id
@@ -3855,6 +3859,7 @@ metrics:
       - session_id
       - session_serial
       - session_status
+      - session_state
       - query_id
       - sql_child_number
       - wait_event_name

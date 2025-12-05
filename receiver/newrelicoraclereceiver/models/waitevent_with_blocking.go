@@ -23,65 +23,67 @@ type WaitEventWithBlocking struct {
 	Serial sql.NullInt64
 	// 6. status
 	Status sql.NullString
+	// 7. state
+	State sql.NullString
 
 	// SQL identification
-	// 7. sql_id
+	// 8. sql_id
 	SQLID sql.NullString
-	// 8. SQL_CHILD_NUMBER
+	// 9. SQL_CHILD_NUMBER
 	SQLChildNumber sql.NullInt64
 
 	// Wait event information
-	// 9. wait_class
+	// 10. wait_class
 	WaitClass sql.NullString
-	// 10. event
+	// 11. event
 	Event sql.NullString
-	// 11. wait_time_ms (milliseconds the session has been waiting - general wait time)
+	// 12. wait_time_ms (milliseconds the session has been waiting - general wait time)
 	WaitTimeMs sql.NullFloat64
 
 	// SQL execution context
-	// 12. SQL_EXEC_START
+	// 13. SQL_EXEC_START
 	SQLExecStart sql.NullTime
-	// 13. SQL_EXEC_ID
+	// 14. SQL_EXEC_ID
 	SQLExecID sql.NullInt64
 
 	// Session context
-	// 14. PROGRAM
+	// 15. PROGRAM
 	Program sql.NullString
-	// 15. MACHINE
+	// 16. MACHINE
 	Machine sql.NullString
 
 	// Object being waited on
-	// 16. ROW_WAIT_OBJ#
+	// 17. ROW_WAIT_OBJ#
 	RowWaitObj sql.NullInt64
-	// 17. OWNER
+	// 18. OWNER
 	Owner sql.NullString
-	// 18. OBJECT_NAME
+	// 19. OBJECT_NAME
 	ObjectName sql.NullString
-	// 19. OBJECT_TYPE
+	// 20. OBJECT_TYPE
 	ObjectType sql.NullString
-	// 20. ROW_WAIT_FILE#
+	// 21. ROW_WAIT_FILE#
 	RowWaitFile sql.NullInt64
-	// 21. ROW_WAIT_BLOCK#
+	// 22. ROW_WAIT_BLOCK#
 	RowWaitBlock sql.NullInt64
 
 	// Blocking session context
-	// 22. BLOCKING_SESSION_STATUS
+	// 23. BLOCKING_SESSION_STATUS
 	BlockingSessionStatus sql.NullString
-	// 23. immediate_blocker_sid
+	// 24. immediate_blocker_sid
 	ImmediateBlockerSID sql.NullInt64
-	// 24. FINAL_BLOCKING_SESSION_STATUS
+	// 25. FINAL_BLOCKING_SESSION_STATUS
 	FinalBlockingSessionStatus sql.NullString
-	// 25. final_blocker_sid
+	// 26. final_blocker_sid
 	FinalBlockerSID sql.NullInt64
 
 	// Final blocker details
-	// 26. final_blocker_user
+	// 27. final_blocker_user
 	FinalBlockerUser sql.NullString
-	// 27. final_blocker_serial
+	// 28. final_blocker_serial
 	FinalBlockerSerial sql.NullInt64
-	// 28. final_blocker_query_id
+	// 29. final_blocker_query_id
 	FinalBlockerQueryID sql.NullString
-	// 29. final_blocker_query_text
+	// 30. final_blocker_query_text
 	FinalBlockerQueryText sql.NullString
 }
 
@@ -99,6 +101,13 @@ func (w *WaitEventWithBlocking) GetUsername() string {
 func (w *WaitEventWithBlocking) GetStatus() string {
 	if w.Status.Valid {
 		return w.Status.String
+	}
+	return ""
+}
+
+func (w *WaitEventWithBlocking) GetState() string {
+	if w.State.Valid {
+		return w.State.String
 	}
 	return ""
 }
