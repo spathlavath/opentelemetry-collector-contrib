@@ -4,8 +4,8 @@
 package queries
 
 import (
-"fmt"
-"strings"
+	"fmt"
+	"strings"
 )
 
 // GetSlowQueriesSQL returns SQL for slow queries with configurable time window
@@ -135,11 +135,18 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.wait_class <> 'Idle'
-			AND s.WAIT_TIME_MICRO > 0
-			AND s.state = 'WAITING'
+			AND (
+				-- Capture sessions currently waiting (blocked, I/O waits, lock waits)
+				(s.state = 'WAITING' AND s.WAIT_TIME_MICRO > 0)
+				OR
+				-- Capture sessions actively running (ON CPU, executing queries)
+				-- These have recently waited and may be of interest
+				(s.state IN ('WAITED UNKNOWN TIME', 'WAITED SHORT TIME', 'WAITED KNOWN TIME'))
+			)
 			%s
 		ORDER BY
-			s.WAIT_TIME_MICRO DESC
+			-- Order by wait time, but put 0 wait times (active runners) at the end
+			CASE WHEN s.WAIT_TIME_MICRO > 0 THEN s.WAIT_TIME_MICRO ELSE -1 END DESC
 		FETCH FIRST %d ROWS ONLY`, sqlIDFilter, rowLimit)
 }
 
