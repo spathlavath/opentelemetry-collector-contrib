@@ -102,12 +102,6 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	rowWaitObjID := strconv.FormatInt(event.GetLockedObjectID(), 10)
 	rowWaitFileID := strconv.FormatInt(event.GetLockedFileID(), 10)
 	rowWaitBlockID := strconv.FormatInt(event.GetLockedBlockID(), 10)
-	p1Text := event.GetP1Text()
-	p1 := strconv.FormatInt(event.GetP1(), 10)
-	p2Text := event.GetP2Text()
-	p2 := strconv.FormatInt(event.GetP2(), 10)
-	p3Text := event.GetP3Text()
-	p3 := strconv.FormatInt(event.GetP3(), 10)
 
 	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(
 		now,
@@ -132,41 +126,7 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		rowWaitObjID,
 		rowWaitFileID,
 		rowWaitBlockID,
-		p1Text,
-		p1,
-		p2Text,
-		p2,
-		p3Text,
-		p3,
 	)
-
-	if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeRemainingMs.Enabled {
-		s.mb.RecordNewrelicoracledbWaitEventsTimeRemainingMsDataPoint(
-			now,
-			event.GetTimeRemainingMs(),
-			collectionTimestamp,
-			dbName,
-			sid,
-			qID,
-			sqlChildNumber,
-			sqlExecID,
-			sqlExecStart,
-		)
-	}
-
-	if s.metricsBuilderConfig.Metrics.NewrelicoracledbWaitEventsTimeSinceLastWaitMs.Enabled {
-		s.mb.RecordNewrelicoracledbWaitEventsTimeSinceLastWaitMsDataPoint(
-			now,
-			event.GetTimeSinceLastWaitMs(),
-			collectionTimestamp,
-			dbName,
-			sid,
-			qID,
-			sqlChildNumber,
-			sqlExecID,
-			sqlExecStart,
-		)
-	}
 }
 
 // GetSQLIdentifiers retrieves unique SQL identifiers from wait events without emitting metrics
@@ -251,7 +211,7 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 
 // recordBlockingMetrics records blocking query metrics when a session is blocked
 func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking) {
-	blockedWaitMs := event.GetBlockedTimeMs()
+	blockedWaitMs := event.GetCurrentWaitMs()
 
 	if blockedWaitMs <= 0 {
 		return
