@@ -346,47 +346,136 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryExecutionPlans(ctx context.Cont
 
 func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Context, activeQueries []models.ActiveRunningQuery) error {
 	if len(activeQueries) == 0 {
-		s.logger.Debug("No active queries to fetch execution plans for")
+		s.logger.Debug("No active queries to fetch execution statistics for")
 		return nil
 	}
 
-	s.logger.Debug("Scraping active query execution plans", zap.Int("query_count", len(activeQueries)))
+	totalStatsFound := 0
 
-	// For each active query, fetch its execution plan using plan_handle
-	for i, activeQuery := range activeQueries {
-		if i >= 10 { // Limit to top 10 to avoid excessive queries
-			break
-		}
-
+	// Collect unique plan_handles from active queries to avoid duplicate fetches
+	uniquePlanHandles := make(map[string]models.ActiveRunningQuery)
+	for _, activeQuery := range activeQueries {
 		if activeQuery.PlanHandle == nil || activeQuery.PlanHandle.IsEmpty() {
-			s.logger.Debug("Skipping active query without plan_handle",
-				zap.Any("session_id", activeQuery.CurrentSessionID))
 			continue
 		}
-
-		// Use the properly defined ActiveQueryExecutionPlanQuery from queries package
-		query := fmt.Sprintf(queries.ActiveQueryExecutionPlanQuery, activeQuery.PlanHandle.String())
-
-		var planResults []struct {
-			ExecutionPlanXML *string `db:"execution_plan_xml"`
-		}
-
-		if err := s.connection.Query(ctx, &planResults, query); err != nil {
-			s.logger.Warn("Failed to fetch active query execution plan",
-				zap.Error(err),
-				zap.Any("session_id", activeQuery.CurrentSessionID))
-			continue
-		}
-
-		if len(planResults) > 0 && planResults[0].ExecutionPlanXML != nil && *planResults[0].ExecutionPlanXML != "" {
-			s.logger.Debug("Active query execution plan retrieved",
-				zap.Any("session_id", activeQuery.CurrentSessionID))
-			// TODO: Log execution plan to metadata cache or file
-			// if s.metadataCache != nil {
-			//     s.metadataCache.StoreExecutionPlan(activeQuery.PlanHandle, *planResults[0].ExecutionPlanXML)
-			// }
+		planHandleStr := activeQuery.PlanHandle.String()
+		// Keep first occurrence for correlation attributes
+		if _, exists := uniquePlanHandles[planHandleStr]; !exists {
+			uniquePlanHandles[planHandleStr] = activeQuery
 		}
 	}
+
+	s.logger.Info("Fetching execution statistics for active running query plan_handles",
+		zap.Int("active_query_count", len(activeQueries)),
+		zap.Int("unique_plan_handle_count", len(uniquePlanHandles)))
+
+	// Fetch execution statistics for each unique plan_handle
+	for _, activeQuery := range uniquePlanHandles {
+		// Extract correlation attributes for logging
+		sessionID := int64(0)
+		if activeQuery.CurrentSessionID != nil {
+			sessionID = *activeQuery.CurrentSessionID
+		}
+		requestID := int64(0)
+		if activeQuery.RequestID != nil {
+			requestID = *activeQuery.RequestID
+		}
+
+		planHandleHex := activeQuery.PlanHandle.String()
+		query := fmt.Sprintf(queries.ExecutionStatsForActivePlanHandleQuery, planHandleHex)
+
+		s.logger.Debug("Fetching execution statistics for active query plan_handle",
+			zap.String("plan_handle", planHandleHex),
+			zap.Int64("session_id", sessionID),
+			zap.Int64("request_id", requestID))
+
+		var planResults []models.PlanHandleResult
+		if err := s.connection.Query(ctx, &planResults, query); err != nil {
+			s.logger.Warn("Failed to fetch execution statistics for active query plan_handle - continuing with others",
+				zap.Error(err),
+				zap.String("plan_handle", planHandleHex),
+				zap.Int64("session_id", sessionID))
+			continue
+		}
+
+		if len(planResults) == 0 {
+			s.logger.Debug("No execution statistics found for active query plan_handle",
+				zap.String("plan_handle", planHandleHex),
+				zap.Int64("session_id", sessionID))
+			continue
+		}
+
+		// Should only be 1 result (query by plan_handle, not query_hash)
+		if len(planResults) > 1 {
+			s.logger.Warn("Expected 1 result for plan_handle query, got multiple - using first",
+				zap.String("plan_handle", planHandleHex),
+				zap.Int("result_count", len(planResults)))
+		}
+
+		// Emit metrics for the historical statistics retrieved
+		planResult := planResults[0]
+		totalStatsFound++
+
+		s.logger.Info("Fetched execution statistics for active query plan_handle",
+			zap.String("plan_handle", planHandleHex),
+			zap.Int64("session_id", sessionID),
+			zap.Any("execution_count", planResult.ExecutionCount),
+			zap.Any("avg_elapsed_time_ms", planResult.AvgElapsedTimeMs),
+			zap.Any("last_elapsed_time_ms", planResult.LastElapsedTimeMs))
+
+		// Emit metrics using MetricsBuilder
+		// These historical statistics provide context about how this plan has performed over time
+		if s.mb != nil {
+			now := pcommon.NewTimestampFromTime(time.Now())
+			metricsEmitted := 0
+
+			// Execution count
+			if planResult.ExecutionCount != nil {
+				s.mb.RecordSqlserverPlanExecutionCountDataPoint(now, *planResult.ExecutionCount)
+				metricsEmitted++
+			}
+
+			// Average elapsed time
+			if planResult.AvgElapsedTimeMs != nil {
+				s.mb.RecordSqlserverPlanElapsedTimeAvgDataPoint(now, *planResult.AvgElapsedTimeMs)
+				metricsEmitted++
+			}
+
+			// Total elapsed time (convert float64 to int64)
+			if planResult.TotalElapsedTimeMs != nil {
+				s.mb.RecordSqlserverPlanElapsedTimeTotalDataPoint(now, int64(*planResult.TotalElapsedTimeMs))
+				metricsEmitted++
+			}
+
+			// Average worker time (CPU)
+			if planResult.AvgWorkerTimeMs != nil {
+				s.mb.RecordSqlserverPlanWorkerTimeDataPoint(now, *planResult.AvgWorkerTimeMs)
+				metricsEmitted++
+			}
+
+			// Logical reads
+			if planResult.AvgLogicalReads != nil {
+				s.mb.RecordSqlserverPlanLogicalReadsDataPoint(now, *planResult.AvgLogicalReads)
+				metricsEmitted++
+			}
+
+			// Logical writes
+			if planResult.AvgLogicalWrites != nil {
+				s.mb.RecordSqlserverPlanLogicalWritesDataPoint(now, *planResult.AvgLogicalWrites)
+				metricsEmitted++
+			}
+
+			s.logger.Debug("Emitted plan execution statistics metrics",
+				zap.String("plan_handle", planHandleHex),
+				zap.Int64("session_id", sessionID),
+				zap.Int("metrics_emitted", metricsEmitted))
+		}
+	}
+
+	s.logger.Info("Successfully fetched execution statistics for active running query plan_handles",
+		zap.Int("active_query_count", len(activeQueries)),
+		zap.Int("unique_plan_handles", len(uniquePlanHandles)),
+		zap.Int("stats_found", totalStatsFound))
 
 	return nil
 }
