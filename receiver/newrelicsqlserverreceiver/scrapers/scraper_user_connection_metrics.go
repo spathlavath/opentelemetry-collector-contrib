@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 )
@@ -22,21 +22,28 @@ type UserConnectionScraper struct {
 	logger        *zap.Logger
 	startTime     pcommon.Timestamp
 	engineEdition int
+	mb            *metadata.MetricsBuilder
 }
 
 // NewUserConnectionScraper creates a new UserConnectionScraper instance
-func NewUserConnectionScraper(connection SQLConnectionInterface, logger *zap.Logger, engineEdition int) *UserConnectionScraper {
+func NewUserConnectionScraper(connection SQLConnectionInterface, logger *zap.Logger, engineEdition int, mb *metadata.MetricsBuilder) *UserConnectionScraper {
 	return &UserConnectionScraper{
 		connection:    connection,
 		logger:        logger,
 		startTime:     pcommon.NewTimestampFromTime(time.Now()),
 		engineEdition: engineEdition,
+		mb:            mb,
 	}
+}
+
+// SetMetricsBuilder sets the metrics builder for the scraper
+func (s *UserConnectionScraper) SetMetricsBuilder(mb *metadata.MetricsBuilder) {
+	s.mb = mb
 }
 
 // ScrapeUserConnectionStatusMetrics collects user connection status distribution metrics
 // This method retrieves the count of user connections grouped by their current status
-func (s *UserConnectionScraper) ScrapeUserConnectionStatusMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeUserConnectionStatusMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server user connection status metrics")
 
 	// Get the appropriate query for this engine edition
@@ -70,7 +77,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionStatusMetrics(ctx context.Co
 
 	// Process each status result
 	for _, result := range results {
-		if err := s.processUserConnectionStatusMetrics(result, scopeMetrics); err != nil {
+		if err := s.processUserConnectionStatusMetrics(result); err != nil {
 			s.logger.Error("Failed to process user connection status metrics",
 				zap.Error(err),
 				zap.String("status", result.Status))
@@ -93,23 +100,14 @@ func (s *UserConnectionScraper) getQueryForMetric(metricName string) (string, bo
 }
 
 // processUserConnectionStatusMetrics processes user connection status metrics and creates OpenTelemetry metrics
-func (s *UserConnectionScraper) processUserConnectionStatusMetrics(result models.UserConnectionStatusMetrics, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processUserConnectionStatusMetrics(result models.UserConnectionStatusMetrics) error {
 	// Process SessionCount as a gauge metric
 	if result.SessionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.status.count")
-		metric.SetDescription("Number of user connections by status")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.SessionCount)
-
-		// Add attributes
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("status", result.Status)
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsStatusCountDataPoint(
+			pcommon.NewTimestampFromTime(time.Now()),
+			int64(*result.SessionCount),
+			result.Status,
+		)
 	}
 
 	return nil
@@ -117,7 +115,7 @@ func (s *UserConnectionScraper) processUserConnectionStatusMetrics(result models
 
 // ScrapeLoginLogoutMetrics collects login and logout rate metrics
 // This method retrieves authentication activity counters from performance counters
-func (s *UserConnectionScraper) ScrapeLoginLogoutMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeLoginLogoutMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server login/logout rate metrics")
 
 	// Get the appropriate query for this engine edition
@@ -151,7 +149,7 @@ func (s *UserConnectionScraper) ScrapeLoginLogoutMetrics(ctx context.Context, sc
 
 	// Process each authentication result
 	for _, result := range results {
-		if err := s.processLoginLogoutMetrics(result, scopeMetrics); err != nil {
+		if err := s.processLoginLogoutMetrics(result); err != nil {
 			s.logger.Error("Failed to process login/logout rate metrics",
 				zap.Error(err),
 				zap.String("counter_name", result.CounterName))
@@ -163,7 +161,7 @@ func (s *UserConnectionScraper) ScrapeLoginLogoutMetrics(ctx context.Context, sc
 }
 
 // ScrapeLoginLogoutSummaryMetrics collects aggregated authentication activity statistics
-func (s *UserConnectionScraper) ScrapeLoginLogoutSummaryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeLoginLogoutSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server login/logout summary metrics")
 
 	// Get the appropriate query for this engine edition
@@ -197,7 +195,7 @@ func (s *UserConnectionScraper) ScrapeLoginLogoutSummaryMetrics(ctx context.Cont
 
 	// Process each summary result
 	for _, result := range results {
-		if err := s.processLoginLogoutSummaryMetrics(result, scopeMetrics); err != nil {
+		if err := s.processLoginLogoutSummaryMetrics(result); err != nil {
 			s.logger.Error("Failed to process login/logout summary metrics",
 				zap.Error(err))
 			return err
@@ -208,115 +206,53 @@ func (s *UserConnectionScraper) ScrapeLoginLogoutSummaryMetrics(ctx context.Cont
 }
 
 // processLoginLogoutMetrics processes login/logout rate metrics and creates OpenTelemetry metrics
-func (s *UserConnectionScraper) processLoginLogoutMetrics(result models.LoginLogoutMetrics, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processLoginLogoutMetrics(result models.LoginLogoutMetrics) error {
 	// Process CntrValue as a gauge metric
 	if result.CntrValue != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.rate")
-		metric.SetDescription("SQL Server authentication rate per second (logins and logouts)")
-		metric.SetUnit("1/s")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.CntrValue)
-
-		// Add attributes to identify the counter type and user information
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("counter_name", result.CounterName)
-		attrs.PutStr("source_type", "user_connections")
-
-		// Add username if available
-		if result.Username != nil {
-			attrs.PutStr("username", *result.Username)
-		}
-
-		// Add source IP if available
-		if result.SourceIP != nil {
-			attrs.PutStr("source_ip", *result.SourceIP)
-		}
+		s.mb.RecordSqlserverUserConnectionsAuthenticationRateDataPoint(
+			pcommon.NewTimestampFromTime(time.Now()),
+			int64(*result.CntrValue),
+			result.CounterName,
+		)
 	}
 
 	return nil
 }
 
 // processLoginLogoutSummaryMetrics processes login/logout summary metrics and creates OpenTelemetry metrics
-func (s *UserConnectionScraper) processLoginLogoutSummaryMetrics(result models.LoginLogoutSummary, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processLoginLogoutSummaryMetrics(result models.LoginLogoutSummary) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
-
-	// Helper function to add common attributes
-	addCommonAttributes := func(attrs pcommon.Map) {
-		attrs.PutStr("source_type", "user_connections")
-		if result.Username != nil {
-			attrs.PutStr("username", *result.Username)
-		}
-		if result.SourceIP != nil {
-			attrs.PutStr("source_ip", *result.SourceIP)
-		}
-	}
 
 	// Process LoginsPerSec
 	if result.LoginsPerSec != nil && *result.LoginsPerSec > 0 {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.logins_per_sec")
-		metric.SetDescription("SQL Server login rate per second")
-		metric.SetUnit("1/s")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetIntValue(*result.LoginsPerSec)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationLoginsPerSecDataPoint(
+			timestamp,
+			int64(*result.LoginsPerSec),
+		)
 	}
 
 	// Process LogoutsPerSec
 	if result.LogoutsPerSec != nil && *result.LogoutsPerSec > 0 {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.logouts_per_sec")
-		metric.SetDescription("SQL Server logout rate per second")
-		metric.SetUnit("1/s")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetIntValue(*result.LogoutsPerSec)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationLogoutsPerSecDataPoint(
+			timestamp,
+			int64(*result.LogoutsPerSec),
+		)
 	}
 
 	// Process TotalAuthActivity
 	if result.TotalAuthActivity != nil && *result.TotalAuthActivity > 0 {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.total_activity")
-		metric.SetDescription("SQL Server total authentication activity per second (logins + logouts)")
-		metric.SetUnit("1/s")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetIntValue(*result.TotalAuthActivity)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationTotalActivityDataPoint(
+			timestamp,
+			int64(*result.TotalAuthActivity),
+		)
 	}
 
 	// Process ConnectionChurnRate
 	if result.ConnectionChurnRate != nil && *result.ConnectionChurnRate >= 0 {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.churn_rate")
-		metric.SetDescription("SQL Server connection churn rate (logout/login ratio)")
-		metric.SetUnit("%")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetDoubleValue(*result.ConnectionChurnRate)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationChurnRateDataPoint(
+			timestamp,
+			float64(*result.ConnectionChurnRate),
+		)
 	}
 
 	return nil
@@ -324,7 +260,7 @@ func (s *UserConnectionScraper) processLoginLogoutSummaryMetrics(result models.L
 
 // ScrapeFailedLoginMetrics collects failed login attempts from SQL Server error log
 // This method retrieves failed login messages from the error log for security monitoring
-func (s *UserConnectionScraper) ScrapeFailedLoginMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeFailedLoginMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server failed login metrics")
 
 	// Get the appropriate query for this engine edition
@@ -352,7 +288,7 @@ func (s *UserConnectionScraper) ScrapeFailedLoginMetrics(ctx context.Context, sc
 
 	// Process each failed login result
 	for _, result := range results {
-		if err := s.processFailedLoginMetrics(result, scopeMetrics); err != nil {
+		if err := s.processFailedLoginMetrics(result); err != nil {
 			logDate := ""
 			if result.LogDate != nil {
 				logDate = *result.LogDate
@@ -368,7 +304,7 @@ func (s *UserConnectionScraper) ScrapeFailedLoginMetrics(ctx context.Context, sc
 }
 
 // ScrapeFailedLoginSummaryMetrics collects aggregated failed login statistics
-func (s *UserConnectionScraper) ScrapeFailedLoginSummaryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeFailedLoginSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server failed login summary metrics")
 
 	// Get the appropriate query for this engine edition
@@ -396,7 +332,7 @@ func (s *UserConnectionScraper) ScrapeFailedLoginSummaryMetrics(ctx context.Cont
 
 	// Process each summary result
 	for _, result := range results {
-		if err := s.processFailedLoginSummaryMetrics(result, scopeMetrics); err != nil {
+		if err := s.processFailedLoginSummaryMetrics(result); err != nil {
 			s.logger.Error("Failed to process failed login summary metrics",
 				zap.Error(err))
 			return err
@@ -407,85 +343,85 @@ func (s *UserConnectionScraper) ScrapeFailedLoginSummaryMetrics(ctx context.Cont
 }
 
 // processFailedLoginMetrics processes failed login metrics and creates OpenTelemetry metrics
-func (s *UserConnectionScraper) processFailedLoginMetrics(result models.FailedLoginMetrics, scopeMetrics pmetric.ScopeMetrics) error {
-	// Create a counter metric for failed login events
-	metric := scopeMetrics.Metrics().AppendEmpty()
-	metric.SetName("sqlserver.user_connections.authentication.failed_login_event")
-	metric.SetDescription("SQL Server failed login attempt event")
-	metric.SetUnit("1")
-
-	gauge := metric.SetEmptyGauge()
-	dataPoint := gauge.DataPoints().AppendEmpty()
-	dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-	dataPoint.SetIntValue(1) // Each record represents one failed login
-
-	// Add attributes with failed login details
-	attrs := dataPoint.Attributes()
-	attrs.PutStr("source_type", "user_connections")
-
-	// Add extracted username and source IP if available
-	if result.Username != nil {
-		attrs.PutStr("username", *result.Username)
-	}
-	if result.SourceIP != nil {
-		attrs.PutStr("source_ip", *result.SourceIP)
-	}
-
+func (s *UserConnectionScraper) processFailedLoginMetrics(result models.FailedLoginMetrics) error {
+	// Record failed login event count with attributes based on engine edition
+	
+	// Initialize all attribute values
+	eventType := ""
+	description := ""
+	startTime := ""
+	clientIP := ""
+	logDate := ""
+	processInfo := ""
+	errorText := ""
+	
 	// Handle different query formats based on engine edition
 	if s.engineEdition == queries.AzureSQLDatabaseEngineEdition {
 		// Azure SQL Database format
 		if result.EventType != nil {
-			attrs.PutStr("event_type", *result.EventType)
+			eventType = *result.EventType
 		}
 		if result.Description != nil {
-			attrs.PutStr("description", *result.Description)
+			description = *result.Description
 		}
 		if result.StartTime != nil {
-			attrs.PutStr("start_time", *result.StartTime)
+			startTime = *result.StartTime
 		}
 		if result.ClientIP != nil {
-			attrs.PutStr("client_ip", *result.ClientIP)
+			clientIP = *result.ClientIP
 		}
 	} else {
 		// Standard SQL Server format using sp_readerrorlog
 		if result.LogDate != nil {
-			attrs.PutStr("log_date", *result.LogDate)
+			logDate = *result.LogDate
 		}
 		if result.ProcessInfo != nil {
-			attrs.PutStr("process_info", *result.ProcessInfo)
+			processInfo = *result.ProcessInfo
 		}
 		if result.Text != nil {
-			attrs.PutStr("error_text", *result.Text)
+			errorText = *result.Text
 		}
 	}
+	
+	s.mb.RecordSqlserverUserConnectionsAuthenticationFailedLoginEventsDataPoint(
+		pcommon.NewTimestampFromTime(time.Now()),
+		1, // Each record represents one failed login event
+		eventType,
+		description,
+		startTime,
+		clientIP,
+		logDate,
+		processInfo,
+		errorText,
+	)
 
 	return nil
 }
 
 // ScrapeUserConnectionStatsMetrics scrapes user connection statistical analysis metrics
-func (s *UserConnectionScraper) ScrapeUserConnectionStatsMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeUserConnectionStatsMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server user connection stats metrics")
 
 	// Scrape summary metrics
-	if err := s.ScrapeUserConnectionSummaryMetrics(ctx, scopeMetrics); err != nil {
+	if err := s.ScrapeUserConnectionSummaryMetrics(ctx); err != nil {
 		s.logger.Error("Failed to scrape user connection summary metrics", zap.Error(err))
 		return fmt.Errorf("failed to scrape user connection summary metrics: %w", err)
 	}
 
 	// Scrape utilization metrics
-	if err := s.ScrapeUserConnectionUtilizationMetrics(ctx, scopeMetrics); err != nil {
+	if err := s.ScrapeUserConnectionUtilizationMetrics(ctx); err != nil {
 		s.logger.Error("Failed to scrape user connection utilization metrics", zap.Error(err))
 		return fmt.Errorf("failed to scrape user connection utilization metrics: %w", err)
 	}
 
 	// Scrape client breakdown metrics
-	if err := s.ScrapeUserConnectionByClientMetrics(ctx, scopeMetrics); err != nil {
+	if err := s.ScrapeUserConnectionByClientMetrics(ctx); err != nil {
 		s.logger.Error("Failed to scrape user connection by client metrics", zap.Error(err))
 		return fmt.Errorf("failed to scrape user connection by client metrics: %w", err)
 	}
 
 	// Scrape client summary metrics
-	if err := s.ScrapeUserConnectionClientSummaryMetrics(ctx, scopeMetrics); err != nil {
+	if err := s.ScrapeUserConnectionClientSummaryMetrics(ctx); err != nil {
 		s.logger.Error("Failed to scrape user connection client summary metrics", zap.Error(err))
 		return fmt.Errorf("failed to scrape user connection client summary metrics: %w", err)
 	}
@@ -494,7 +430,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionStatsMetrics(ctx context.Con
 }
 
 // ScrapeUserConnectionSummaryMetrics scrapes user connection summary metrics
-func (s *UserConnectionScraper) ScrapeUserConnectionSummaryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeUserConnectionSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server user connection summary metrics")
 
 	// Get the appropriate query for this engine edition
@@ -528,7 +464,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionSummaryMetrics(ctx context.C
 
 	// Process each summary result
 	for _, result := range results {
-		if err := s.processUserConnectionSummaryMetrics(result, scopeMetrics); err != nil {
+		if err := s.processUserConnectionSummaryMetrics(result); err != nil {
 			s.logger.Error("Failed to process user connection summary metrics",
 				zap.Error(err))
 			return err
@@ -539,7 +475,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionSummaryMetrics(ctx context.C
 }
 
 // ScrapeUserConnectionUtilizationMetrics scrapes user connection utilization metrics
-func (s *UserConnectionScraper) ScrapeUserConnectionUtilizationMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeUserConnectionUtilizationMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server user connection utilization metrics")
 
 	// Get the appropriate query for this engine edition
@@ -573,7 +509,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionUtilizationMetrics(ctx conte
 
 	// Process each utilization result
 	for _, result := range results {
-		if err := s.processUserConnectionUtilizationMetrics(result, scopeMetrics); err != nil {
+		if err := s.processUserConnectionUtilizationMetrics(result); err != nil {
 			s.logger.Error("Failed to process user connection utilization metrics",
 				zap.Error(err))
 			return err
@@ -584,7 +520,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionUtilizationMetrics(ctx conte
 }
 
 // ScrapeUserConnectionByClientMetrics scrapes user connection by client metrics
-func (s *UserConnectionScraper) ScrapeUserConnectionByClientMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeUserConnectionByClientMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server user connection by client metrics")
 
 	// Get the appropriate query for this engine edition
@@ -618,7 +554,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionByClientMetrics(ctx context.
 
 	// Process each client result
 	for _, result := range results {
-		if err := s.processUserConnectionByClientMetrics(result, scopeMetrics); err != nil {
+		if err := s.processUserConnectionByClientMetrics(result); err != nil {
 			s.logger.Error("Failed to process user connection by client metrics",
 				zap.Error(err),
 				zap.String("program_name", result.ProgramName))
@@ -630,7 +566,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionByClientMetrics(ctx context.
 }
 
 // ScrapeUserConnectionClientSummaryMetrics scrapes user connection client summary metrics
-func (s *UserConnectionScraper) ScrapeUserConnectionClientSummaryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) ScrapeUserConnectionClientSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server user connection client summary metrics")
 
 	// Get the appropriate query for this engine edition
@@ -664,7 +600,7 @@ func (s *UserConnectionScraper) ScrapeUserConnectionClientSummaryMetrics(ctx con
 
 	// Process each client summary result
 	for _, result := range results {
-		if err := s.processUserConnectionClientSummaryMetrics(result, scopeMetrics); err != nil {
+		if err := s.processUserConnectionClientSummaryMetrics(result); err != nil {
 			s.logger.Error("Failed to process user connection client summary metrics",
 				zap.Error(err))
 			return err
@@ -675,364 +611,214 @@ func (s *UserConnectionScraper) ScrapeUserConnectionClientSummaryMetrics(ctx con
 }
 
 // processUserConnectionSummaryMetrics processes user connection summary metrics
-func (s *UserConnectionScraper) processUserConnectionSummaryMetrics(result models.UserConnectionStatusSummary, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processUserConnectionSummaryMetrics(result models.UserConnectionStatusSummary) error {
 	s.logger.Debug("Processing user connection summary metrics")
+
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	// Process total user connections
 	if result.TotalUserConnections != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.total")
-		metric.SetDescription("Total number of user connections")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.TotalUserConnections)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsTotalDataPoint(
+			timestamp,
+			int64(*result.TotalUserConnections),
+		)
 	}
 
 	// Process sleeping connections
 	if result.SleepingConnections != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.sleeping")
-		metric.SetDescription("Number of sleeping user connections")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.SleepingConnections)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsSleepingDataPoint(
+			timestamp,
+			int64(*result.SleepingConnections),
+		)
 	}
 
 	// Process running connections
 	if result.RunningConnections != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.running")
-		metric.SetDescription("Number of running user connections")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.RunningConnections)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsRunningDataPoint(
+			timestamp,
+			int64(*result.RunningConnections),
+		)
 	}
 
 	// Process suspended connections
 	if result.SuspendedConnections != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.suspended")
-		metric.SetDescription("Number of suspended user connections")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.SuspendedConnections)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsSuspendedDataPoint(
+			timestamp,
+			int64(*result.SuspendedConnections),
+		)
 	}
 
 	// Process runnable connections
 	if result.RunnableConnections != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.runnable")
-		metric.SetDescription("Number of runnable user connections")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.RunnableConnections)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsRunnableDataPoint(
+			timestamp,
+			int64(*result.RunnableConnections),
+		)
 	}
 
 	// Process dormant connections
 	if result.DormantConnections != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.dormant")
-		metric.SetDescription("Number of dormant user connections")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.DormantConnections)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsDormantDataPoint(
+			timestamp,
+			int64(*result.DormantConnections),
+		)
 	}
 
 	return nil
 }
 
 // processUserConnectionUtilizationMetrics processes user connection utilization metrics
-func (s *UserConnectionScraper) processUserConnectionUtilizationMetrics(result models.UserConnectionUtilization, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processUserConnectionUtilizationMetrics(result models.UserConnectionUtilization) error {
 	s.logger.Debug("Processing user connection utilization metrics")
+
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	// Process active connection ratio
 	if result.ActiveConnectionRatio != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.utilization.active_ratio")
-		metric.SetDescription("Active connection ratio")
-		metric.SetUnit("ratio")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetDoubleValue(*result.ActiveConnectionRatio)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsUtilizationActiveRatioDataPoint(
+			timestamp,
+			float64(*result.ActiveConnectionRatio),
+		)
 	}
 
 	// Process idle connection ratio
 	if result.IdleConnectionRatio != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.utilization.idle_ratio")
-		metric.SetDescription("Idle connection ratio")
-		metric.SetUnit("ratio")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetDoubleValue(*result.IdleConnectionRatio)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsUtilizationIdleRatioDataPoint(
+			timestamp,
+			float64(*result.IdleConnectionRatio),
+		)
 	}
 
 	// Process waiting connection ratio
 	if result.WaitingConnectionRatio != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.utilization.waiting_ratio")
-		metric.SetDescription("Waiting connection ratio")
-		metric.SetUnit("ratio")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetDoubleValue(*result.WaitingConnectionRatio)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsUtilizationWaitingRatioDataPoint(
+			timestamp,
+			float64(*result.WaitingConnectionRatio),
+		)
 	}
 
 	// Process connection efficiency
 	if result.ConnectionEfficiency != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.utilization.efficiency")
-		metric.SetDescription("Connection efficiency score")
-		metric.SetUnit("ratio")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetDoubleValue(*result.ConnectionEfficiency)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsUtilizationEfficiencyDataPoint(
+			timestamp,
+			float64(*result.ConnectionEfficiency),
+		)
 	}
 
 	return nil
 }
 
 // processUserConnectionByClientMetrics processes user connection by client metrics
-func (s *UserConnectionScraper) processUserConnectionByClientMetrics(result models.UserConnectionByClientMetrics, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processUserConnectionByClientMetrics(result models.UserConnectionByClientMetrics) error {
 	s.logger.Debug("Processing user connection by client metrics",
 		zap.String("host_name", result.HostName),
 		zap.String("program_name", result.ProgramName))
 
 	if result.ConnectionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.client.count")
-		metric.SetDescription("Number of connections by client host and program")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.ConnectionCount)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
-		attrs.PutStr("host_name", result.HostName)
-		attrs.PutStr("program_name", result.ProgramName)
+		s.mb.RecordSqlserverUserConnectionsClientCountDataPoint(
+			pcommon.NewTimestampFromTime(time.Now()),
+			int64(*result.ConnectionCount),
+			result.HostName,
+			result.ProgramName,
+		)
 	}
 
 	return nil
 }
 
 // processUserConnectionClientSummaryMetrics processes user connection client summary metrics
-func (s *UserConnectionScraper) processUserConnectionClientSummaryMetrics(result models.UserConnectionClientSummary, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processUserConnectionClientSummaryMetrics(result models.UserConnectionClientSummary) error {
 	s.logger.Debug("Processing user connection client summary metrics")
+
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	// Process unique hosts
 	if result.UniqueHosts != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.client.unique_hosts")
-		metric.SetDescription("Number of unique client hosts with connections")
-		metric.SetUnit("hosts")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.UniqueHosts)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsClientUniqueHostsDataPoint(
+			timestamp,
+			int64(*result.UniqueHosts),
+		)
 	}
 
 	// Process unique programs
 	if result.UniquePrograms != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.client.unique_programs")
-		metric.SetDescription("Number of unique programs with connections")
-		metric.SetUnit("programs")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.UniquePrograms)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsClientUniqueProgramsDataPoint(
+			timestamp,
+			int64(*result.UniquePrograms),
+		)
 	}
 
 	// Process top host connection count
 	if result.TopHostConnectionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.client.top_host_connections")
-		metric.SetDescription("Highest number of connections from a single host")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.TopHostConnectionCount)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsClientTopHostConnectionsDataPoint(
+			timestamp,
+			int64(*result.TopHostConnectionCount),
+		)
 	}
 
 	// Process top program connection count
 	if result.TopProgramConnectionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.client.top_program_connections")
-		metric.SetDescription("Highest number of connections from a single program")
-		metric.SetUnit("connections")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.TopProgramConnectionCount)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsClientTopProgramConnectionsDataPoint(
+			timestamp,
+			int64(*result.TopProgramConnectionCount),
+		)
 	}
 
 	// Process hosts with multiple programs
 	if result.HostsWithMultiplePrograms != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.client.hosts_multi_program")
-		metric.SetDescription("Number of hosts running multiple different programs")
-		metric.SetUnit("hosts")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.HostsWithMultiplePrograms)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsClientHostsMultiProgramDataPoint(
+			timestamp,
+			int64(*result.HostsWithMultiplePrograms),
+		)
 	}
 
 	// Process programs from multiple hosts
 	if result.ProgramsFromMultipleHosts != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.client.programs_multi_host")
-		metric.SetDescription("Number of programs connecting from multiple hosts")
-		metric.SetUnit("programs")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.ProgramsFromMultipleHosts)
-
-		attrs := dataPoint.Attributes()
-		attrs.PutStr("source_type", "user_connections")
+		s.mb.RecordSqlserverUserConnectionsClientProgramsMultiHostDataPoint(
+			timestamp,
+			int64(*result.ProgramsFromMultipleHosts),
+		)
 	}
 
 	return nil
 }
 
 // processFailedLoginSummaryMetrics processes failed login summary metrics
-func (s *UserConnectionScraper) processFailedLoginSummaryMetrics(result models.FailedLoginSummary, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *UserConnectionScraper) processFailedLoginSummaryMetrics(result models.FailedLoginSummary) error {
 	s.logger.Debug("Processing failed login summary metrics")
 
-	// Helper function to add common attributes
-	addCommonAttributes := func(attrs pcommon.Map) {
-		attrs.PutStr("source_type", "user_connections")
-		if result.Username != nil {
-			attrs.PutStr("username", *result.Username)
-		}
-		if result.SourceIP != nil {
-			attrs.PutStr("source_ip", *result.SourceIP)
-		}
-	}
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	// Process total failed logins
 	if result.TotalFailedLogins != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.total_failed_logins")
-		metric.SetDescription("Total count of failed login attempts")
-		metric.SetUnit("1")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.TotalFailedLogins)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationTotalFailedLoginsDataPoint(
+			timestamp,
+			int64(*result.TotalFailedLogins),
+		)
 	}
 
 	// Process recent failed logins
 	if result.RecentFailedLogins != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.recent_failed_logins")
-		metric.SetDescription("Count of failed logins in the last hour")
-		metric.SetUnit("1")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.RecentFailedLogins)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationRecentFailedLoginsDataPoint(
+			timestamp,
+			int64(*result.RecentFailedLogins),
+		)
 	}
 
 	// Process unique failed users
 	if result.UniqueFailedUsers != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.unique_failed_users")
-		metric.SetDescription("Count of distinct usernames with failed logins")
-		metric.SetUnit("1")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.UniqueFailedUsers)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationUniqueFailedUsersDataPoint(
+			timestamp,
+			int64(*result.UniqueFailedUsers),
+		)
 	}
 
 	// Process unique failed sources
 	if result.UniqueFailedSources != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.user_connections.authentication.unique_failed_sources")
-		metric.SetDescription("Count of distinct source IPs with failed logins")
-		metric.SetUnit("1")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetIntValue(*result.UniqueFailedSources)
-
-		attrs := dataPoint.Attributes()
-		addCommonAttributes(attrs)
+		s.mb.RecordSqlserverUserConnectionsAuthenticationUniqueFailedSourcesDataPoint(
+			timestamp,
+			int64(*result.UniqueFailedSources),
+		)
 	}
 
 	return nil

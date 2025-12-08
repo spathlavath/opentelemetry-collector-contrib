@@ -1,63 +1,6 @@
 // Copyright The OpenTelemetry Authors
 // SPDX-License-Identifier: Apache-2.0
 
-// Package scrapers provides the performance monitoring scraper for SQL Server.
-// This file implements comprehensive query performance monitoring including
-// slow query analysis, wait time statistics, blocking session detection, and execution plan analysis.
-//
-// Performance Monitoring Features:
-//
-// 1. Top N Slow Queries:
-//   - Query dm_exec_query_stats for execution statistics
-//   - Rank by total_elapsed_time, avg_elapsed_time, execution_count
-//   - Include query text from dm_exec_sql_text()
-//   - Track CPU time, logical reads, physical reads, writes
-//   - Monitor plan generation time and recompiles
-//
-// 2. Blocking Session Detection:
-//   - Query dm_exec_requests for blocked sessions
-//   - Identify blocking session hierarchy (head blockers)
-//   - Track blocked session duration and wait types
-//   - Include session details (login, program, host)
-//   - Monitor lock resource information
-//
-// 3. Execution Plan Analysis:
-//   - Query dm_exec_cached_plans for plan cache statistics
-//   - Track plan reuse ratio and cache hit rates
-//   - Monitor plan cache memory consumption
-//   - Identify ad-hoc vs prepared statement ratios
-//   - Include parameterized vs non-parameterized queries
-//
-// Scraper Structure:
-//
-//	type PerformanceScraper struct {
-//	    config   *Config
-//	    mb       *metadata.MetricsBuilder
-//	    queries  *queries.PerformanceQueries
-//	    logger   *zap.Logger
-//	}
-//
-// Metrics Generated:
-// - sqlserver.slowquery.avg_cpu_time_ms
-// - sqlserver.slowquery.avg_disk_reads
-// - sqlserver.slowquery.avg_disk_writes
-// - sqlserver.slowquery.rows_processed
-// - sqlserver.slowquery.avg_elapsed_time_ms
-// - sqlserver.slowquery.execution_count
-// - sqlserver.slowquery.query_text
-// - sqlserver.slowquery.query_id
-// - sqlserver.blocking_query.wait_time_seconds
-// - sqlserver.blocked_query.wait_time_seconds
-// - sqlserver.wait_analysis.query_text
-// - sqlserver.wait_analysis.total_wait_time_ms
-// - sqlserver.wait_analysis.avg_wait_time_ms
-// - sqlserver.wait_analysis.wait_event_count
-// - sqlserver.wait_analysis.last_execution_time
-//
-// Engine-Specific Considerations:
-// - Azure SQL Database: Limited access to some DMVs, use Azure-specific alternatives
-// - Azure SQL Managed Instance: Most performance DMVs available
-// - Standard SQL Server: Full access to all performance monitoring DMVs
 package scrapers
 
 import (
@@ -68,10 +11,10 @@ import (
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/plog"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 )
@@ -80,7 +23,8 @@ import (
 type QueryPerformanceScraper struct {
 	connection          SQLConnectionInterface
 	logger              *zap.Logger
-	startTime           pcommon.Timestamp
+	mb                  *metadata.MetricsBuilder
+	startTime           pcommon.Timestamp // Used by slow query metrics (not yet migrated)
 	engineEdition       int
 	executionPlanLogger *models.ExecutionPlanLogger
 	logConsumer         plog.Logs                     // For emitting execution plan logs
@@ -93,6 +37,7 @@ type QueryPerformanceScraper struct {
 func NewQueryPerformanceScraper(
 	conn SQLConnectionInterface,
 	logger *zap.Logger,
+	mb *metadata.MetricsBuilder,
 	engineEdition int,
 	smoothingEnabled bool,
 	smoothingFactor float64,
@@ -131,6 +76,7 @@ func NewQueryPerformanceScraper(
 	return &QueryPerformanceScraper{
 		connection:          conn,
 		logger:              logger,
+		mb:                  mb,
 		startTime:           pcommon.NewTimestampFromTime(time.Now()),
 		engineEdition:       engineEdition,
 		executionPlanLogger: models.NewExecutionPlanLogger(),
@@ -140,9 +86,15 @@ func NewQueryPerformanceScraper(
 	}
 }
 
+// SetMetricsBuilder sets the metrics builder for this scraper
+// This is called before each scrape operation to provide the current metrics builder
+func (s *QueryPerformanceScraper) SetMetricsBuilder(mb *metadata.MetricsBuilder) {
+	s.mb = mb
+}
+
 // ScrapeSlowQueryMetrics collects slow query performance monitoring metrics with interval-based averaging and/or EWMA smoothing
 // Returns the processed slow queries for downstream correlation (e.g., filtering active queries by slow query IDs)
-func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit int) ([]models.SlowQuery, error) {
+func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit int) ([]models.SlowQuery, error) {
 
 	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
 
@@ -273,7 +225,7 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, sc
 
 	// Process results (interval-calculated + smoothed, or just one, or raw)
 	for i, result := range resultsToProcess {
-		if err := s.processSlowQueryMetrics(result, scopeMetrics, i); err != nil {
+		if err := s.processSlowQueryMetrics(result, i); err != nil {
 			s.logger.Error("Failed to process slow query metric", zap.Error(err), zap.Int("index", i))
 		}
 	}
@@ -285,7 +237,7 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, sc
 // ScrapeSlowQueryExecutionPlans - REMOVED: No longer fetch top 5 plans per slow query
 // Plan metrics are now only emitted for active queries via ScrapeActiveQueryExecutionPlans
 // This function is now a no-op to maintain interface compatibility
-func (s *QueryPerformanceScraper) ScrapeSlowQueryExecutionPlans(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, slowQueries []models.SlowQuery) error {
+func (s *QueryPerformanceScraper) ScrapeSlowQueryExecutionPlans(ctx context.Context, slowQueries []models.SlowQuery) error {
 	s.logger.Debug("ScrapeSlowQueryExecutionPlans called but disabled - plan metrics only for active queries")
 	return nil
 }
@@ -297,7 +249,7 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryExecutionPlans(ctx context.Cont
 //   - No redundancy: ActiveRunningQueriesQuery already includes execution_plan_xml
 //   - Direct correlation: Fetch stats for the plan that's actually running (not historical top 5)
 //   - Emits metrics WITH active query correlation (session_id, request_id, request_start_time)
-func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, activeQueries []models.ActiveRunningQuery) error {
+func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Context, activeQueries []models.ActiveRunningQuery) error {
 	if len(activeQueries) == 0 {
 		s.logger.Debug("No active queries to fetch execution statistics for")
 		return nil
@@ -368,7 +320,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Co
 
 		// Emit metrics for this plan_handle WITH active query correlation
 		planResult := planResults[0]
-		s.emitActiveQueryPlanMetrics(planResult, activeQuery, scopeMetrics, timestamp)
+		s.emitActiveQueryPlanMetrics(planResult, activeQuery, timestamp)
 
 		totalStatsFound++
 		s.logger.Debug("Fetched and emitted execution statistics for active query plan_handle",
@@ -389,281 +341,340 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Co
 // Uses namespace: sqlserver.plan.* (SAME as slow query plans)
 // Context: Active query drill-down (WITH session_id/request_id/request_start_time for correlation)
 // The key difference from slow query plans is the presence of session correlation attributes
-func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, scopeMetrics pmetric.ScopeMetrics, timestamp pcommon.Timestamp) {
-	// Helper to create common attributes with active query correlation
-	createAttrs := func() pcommon.Map {
-		attrs := pcommon.NewMap()
-
-		// Correlation keys
+func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
+	// Helper functions to safely get attribute values
+	getQueryID := func() string {
 		if planResult.QueryID != nil {
-			attrs.PutStr("query_id", planResult.QueryID.String())
+			return planResult.QueryID.String()
 		}
+		return ""
+	}
+
+	getPlanHandle := func() string {
 		if planResult.PlanHandle != nil {
-			attrs.PutStr("plan_handle", planResult.PlanHandle.String())
+			return planResult.PlanHandle.String()
 		}
+		return ""
+	}
+
+	getQueryPlanHash := func() string {
 		if planResult.QueryPlanHash != nil {
-			attrs.PutStr("query_plan_hash", planResult.QueryPlanHash.String())
+			return planResult.QueryPlanHash.String()
 		}
+		return ""
+	}
 
-		// ACTIVE QUERY CORRELATION ATTRIBUTES (key requirement!)
+	getSessionID := func() int64 {
 		if activeQuery.CurrentSessionID != nil {
-			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
+			return *activeQuery.CurrentSessionID
 		}
+		return 0
+	}
+
+	getRequestID := func() int64 {
 		if activeQuery.RequestID != nil {
-			attrs.PutInt("request_id", *activeQuery.RequestID)
+			return *activeQuery.RequestID
 		}
+		return 0
+	}
+
+	getRequestStartTime := func() string {
 		if activeQuery.RequestStartTime != nil {
-			attrs.PutStr("request_start_time", *activeQuery.RequestStartTime)
+			return *activeQuery.RequestStartTime
 		}
+		return ""
+	}
 
-		// Timestamps
+	getLastExecutionTime := func() string {
 		if planResult.LastExecutionTime != nil {
-			attrs.PutStr("last_execution_time", *planResult.LastExecutionTime)
+			return *planResult.LastExecutionTime
 		}
+		return ""
+	}
+
+	getCreationTime := func() string {
 		if planResult.CreationTime != nil {
-			attrs.PutStr("creation_time", *planResult.CreationTime)
+			return *planResult.CreationTime
 		}
+		return ""
+	}
 
-		// Context from active query
+	getDatabaseName := func() string {
 		if activeQuery.DatabaseName != nil {
-			attrs.PutStr("database_name", *activeQuery.DatabaseName)
+			return *activeQuery.DatabaseName
 		}
-		if activeQuery.SchemaName != nil {
-			attrs.PutStr("schema_name", *activeQuery.SchemaName)
-		}
+		return ""
+	}
 
-		return attrs
+	getSchemaName := func() string {
+		if activeQuery.SchemaName != nil {
+			return *activeQuery.SchemaName
+		}
+		return ""
 	}
 
 	// Metric 1: Execution count
 	if planResult.ExecutionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.execution_count")
-		metric.SetDescription("Total number of executions for this execution plan (historical)")
-		metric.SetUnit("{executions}")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(*planResult.ExecutionCount)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanExecutionCountDataPoint(
+			timestamp,
+			*planResult.ExecutionCount,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 2: Average elapsed time
 	if planResult.AvgElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.avg_elapsed_time_ms")
-		metric.SetDescription("Average elapsed time per execution of this plan (historical)")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.AvgElapsedTimeMs)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(
+			timestamp,
+			*planResult.AvgElapsedTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 3: Total elapsed time
 	if planResult.TotalElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.total_elapsed_time_ms")
-		metric.SetDescription("Total elapsed time across all executions of this plan (historical)")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.TotalElapsedTimeMs)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanTotalElapsedTimeMsDataPoint(
+			timestamp,
+			*planResult.TotalElapsedTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 4: Min/Max elapsed time
 	if planResult.MinElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.min_elapsed_time_ms")
-		metric.SetDescription("Minimum elapsed time for this plan (historical)")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.MinElapsedTimeMs)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanMinElapsedTimeMsDataPoint(
+			timestamp,
+			*planResult.MinElapsedTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	if planResult.MaxElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.max_elapsed_time_ms")
-		metric.SetDescription("Maximum elapsed time for this plan (historical)")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.MaxElapsedTimeMs)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanMaxElapsedTimeMsDataPoint(
+			timestamp,
+			*planResult.MaxElapsedTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 5: Average worker time (CPU)
 	if planResult.AvgWorkerTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.avg_worker_time_ms")
-		metric.SetDescription("Average CPU time per execution of this plan (historical)")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.AvgWorkerTimeMs)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanAvgWorkerTimeMsDataPoint(
+			timestamp,
+			*planResult.AvgWorkerTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 6: Average logical reads
 	if planResult.AvgLogicalReads != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.avg_logical_reads")
-		metric.SetDescription("Average logical reads per execution of this plan (historical)")
-		metric.SetUnit("{reads}")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.AvgLogicalReads)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanAvgLogicalReadsDataPoint(
+			timestamp,
+			*planResult.AvgLogicalReads,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 7: Average logical writes
 	if planResult.AvgLogicalWrites != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.avg_logical_writes")
-		metric.SetDescription("Average logical writes per execution of this plan (historical)")
-		metric.SetUnit("{writes}")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.AvgLogicalWrites)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanAvgLogicalWritesDataPoint(
+			timestamp,
+			*planResult.AvgLogicalWrites,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 8: Last DOP (degree of parallelism)
 	if planResult.LastDOP != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.last_dop")
-		metric.SetDescription("Degree of parallelism for last execution of this plan")
-		metric.SetUnit("{threads}")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(int64(*planResult.LastDOP))
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanLastDopDataPoint(
+			timestamp,
+			int64(*planResult.LastDOP),
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 9: Last grant KB (memory grant)
 	if planResult.LastGrantKB != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.last_grant_kb")
-		metric.SetDescription("Memory grant for last execution of this plan")
-		metric.SetUnit("KB")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetDoubleValue(*planResult.LastGrantKB)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanLastGrantKbDataPoint(
+			timestamp,
+			*planResult.LastGrantKB,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 
 	// Metric 10: Last spills (tempdb spills)
 	if planResult.LastSpills != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.plan.last_spills")
-		metric.SetDescription("TempDB spills for last execution of this plan")
-		metric.SetUnit("{pages}")
-		gauge := metric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetTimestamp(timestamp)
-		dp.SetIntValue(*planResult.LastSpills)
-		createAttrs().CopyTo(dp.Attributes())
+		s.mb.RecordSqlserverPlanLastSpillsDataPoint(
+			timestamp,
+			int64(*planResult.LastSpills),
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanHash(),
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			getLastExecutionTime(),
+			getCreationTime(),
+			getDatabaseName(),
+			getSchemaName(),
+		)
 	}
 }
-
-// ScrapeBlockingSessionMetrics collects blocking session metrics
-// func (s *QueryPerformanceScraper) ScrapeBlockingSessionMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, limit, textTruncateLimit int) error {
-// 	query := fmt.Sprintf(queries.BlockingSessionsQuery, limit, textTruncateLimit)
-
-// 	s.logger.Debug("Executing blocking session metrics collection",
-// 		zap.String("query", queries.TruncateQuery(query, 100)),
-// 		zap.Int("limit", limit),
-// 		zap.Int("text_truncate_limit", textTruncateLimit))
-
-// 	var results []models.BlockingSession
-// 	if err := s.connection.Query(ctx, &results, query); err != nil {
-// 		return fmt.Errorf("failed to execute blocking session metrics query: %w", err)
-// 	}
-
-// 	s.logger.Debug("Blocking session metrics fetched", zap.Int("result_count", len(results)))
-
-// 	for i, result := range results {
-// 		if err := s.processBlockingSessionMetrics(result, scopeMetrics, i); err != nil {
-// 			s.logger.Error("Failed to process blocking session metric", zap.Error(err), zap.Int("index", i))
-// 		}
-// 	}
-
-// 	return nil
-// }
-
-// REMOVED: ScrapeWaitTimeAnalysisMetrics - Used Query Store views
-// This functionality has been replaced by the new active query monitoring approach
-// which gets wait information directly from sys.dm_exec_requests
-//
-// func (s *QueryPerformanceScraper) ScrapeWaitTimeAnalysisMetrics(...) error { ... }
-
-// REMOVED: ScrapeQueryExecutionPlanMetrics - Redundant fallback scraper
-//
-// This function has been removed because execution plans are already included in:
-// 1. SlowQuery - via CROSS APPLY sys.dm_exec_query_plan(qs.plan_handle) in the SQL query
-// 2. ActiveRunningQuery - via OUTER APPLY sys.dm_exec_query_plan(r.plan_handle) in the SQL query
-//
-// The separate scraper was redundant and added unnecessary complexity.
-// All execution plan data is now collected directly in the primary scrapers.
-
-// processSlowQueryMetrics processes slow query metrics and creates separate OpenTelemetry metrics for each measurement
-// CARDINALITY-SAFE: Implements controlled attribute strategy to prevent metric explosion
-func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, scopeMetrics pmetric.ScopeMetrics, index int) error {
+func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, index int) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// CARDINALITY-SAFE: Create limited common attributes (query_id + plan_handle as composite key)
-	// plan_handle is included because delta calculation tracks state per (query_id, plan_handle)
-	// and same query can have multiple execution plans with different performance characteristics
-	createSafeAttributes := func() pcommon.Map {
-		attrs := pcommon.NewMap()
+	// Helper functions to safely get attribute values
+	getQueryID := func() string {
 		if result.QueryID != nil {
-			attrs.PutStr("query_id", result.QueryID.String())
+			return result.QueryID.String()
 		}
-		if result.PlanHandle != nil {
-			attrs.PutStr("plan_handle", result.PlanHandle.String())
-		}
-		if result.DatabaseName != nil {
-			attrs.PutStr("database_name", *result.DatabaseName)
-		}
-		if result.SchemaName != nil {
-			attrs.PutStr("schema_name", *result.SchemaName)
-		}
-		if result.StatementType != nil {
-			attrs.PutStr("statement_type", *result.StatementType)
-		}
-		// Include query_text for observability - already truncated by SQL query (@TextTruncateLimit)
-		// Cardinality is controlled by query_id grouping (parameterized queries share same query_id)
-		if result.QueryText != nil {
-			attrs.PutStr("query_text", *result.QueryText)
-		}
-		// NOTE: NOT including CollectionTimestamp as attribute to prevent additional cardinality
-		return attrs
+		return ""
 	}
 
-	// Create attributes WITH timestamps - ONLY for primary metric (avg_elapsed_time_ms)
-	// This enables time-based filtering on the most commonly queried performance metric
-	createSafeAttributesWithTimestamps := func() pcommon.Map {
-		attrs := createSafeAttributes()
-		// Add ISO 8601 timestamp strings (not Unix epoch numbers)
+	getPlanHandle := func() string {
+		if result.PlanHandle != nil {
+			return result.PlanHandle.String()
+		}
+		return ""
+	}
+
+	getDatabaseName := func() string {
+		if result.DatabaseName != nil {
+			return *result.DatabaseName
+		}
+		return ""
+	}
+
+	getSchemaName := func() string {
+		if result.SchemaName != nil {
+			return *result.SchemaName
+		}
+		return ""
+	}
+
+	getStatementType := func() string {
+		if result.StatementType != nil {
+			return *result.StatementType
+		}
+		return ""
+	}
+
+	getQueryText := func() string {
+		if result.QueryText != nil {
+			return *result.QueryText
+		}
+		return ""
+	}
+
+	getCollectionTimestamp := func() string {
 		if result.CollectionTimestamp != nil {
-			attrs.PutStr("collection_timestamp", *result.CollectionTimestamp)
+			return *result.CollectionTimestamp
 		}
+		return ""
+	}
+
+	getLastExecutionTimestamp := func() string {
 		if result.LastExecutionTimestamp != nil {
-			attrs.PutStr("last_execution_timestamp", *result.LastExecutionTimestamp)
+			return *result.LastExecutionTimestamp
 		}
-		return attrs
+		return ""
+	}
+
+	getQuerySignature := func() string {
+		if result.QueryText != nil {
+			return helpers.ComputeQueryHash(*result.QueryText)
+		}
+		return ""
 	}
 
 	// Create detailed attributes for logging/debugging (not used in metrics)
@@ -697,125 +708,118 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 
 	// Create avg_cpu_time_ms metric (historical/cumulative only, no delta) - CARDINALITY SAFE
 	if result.AvgCPUTimeMS != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.historical_avg_cpu_time_ms")
-		metric.SetDescription("Historical average CPU time in milliseconds (cumulative since plan cached)")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.AvgCPUTimeMS)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint(
+			timestamp,
+			*result.AvgCPUTimeMS,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Create avg_disk_reads metric - CARDINALITY SAFE
 	if result.AvgDiskReads != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.avg_disk_reads")
-		metric.SetDescription("Average disk reads for slow query")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.AvgDiskReads)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryAvgDiskReadsDataPoint(
+			timestamp,
+			*result.AvgDiskReads,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Create avg_disk_writes metric - CARDINALITY SAFE
 	if result.AvgDiskWrites != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.avg_disk_writes")
-		metric.SetDescription("Average disk writes for slow query")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.AvgDiskWrites)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryAvgDiskWritesDataPoint(
+			timestamp,
+			*result.AvgDiskWrites,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Create avg_rows_processed metric - CARDINALITY SAFE
 	if result.AvgRowsProcessed != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.avg_rows_processed")
-		metric.SetDescription("Average rows processed (returned) per execution for slow query")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.AvgRowsProcessed)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(
+			timestamp,
+			*result.AvgRowsProcessed,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	} else {
 		s.logger.Debug("AvgRowsProcessed is nil for slow query", zap.Int("index", index))
 	}
 
 	// Create avg_elapsed_time_ms metric (historical/cumulative) - CARDINALITY SAFE
 	if result.AvgElapsedTimeMS != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.historical_avg_elapsed_time_ms")
-		metric.SetDescription("Historical average elapsed time in milliseconds (cumulative since plan cached)")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.AvgElapsedTimeMS)
-		// Use timestamp attributes for this primary metric only
-		createSafeAttributesWithTimestamps().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(
+			timestamp,
+			*result.AvgElapsedTimeMS,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+			getCollectionTimestamp(),
+			getLastExecutionTimestamp(),
+		)
 	}
 
 	// Create interval_avg_elapsed_time_ms metric (delta) - CARDINALITY SAFE
 	if result.IntervalAvgElapsedTimeMS != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.interval_avg_elapsed_time_ms")
-		metric.SetDescription("Interval average elapsed time in milliseconds (delta for this collection interval)")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.IntervalAvgElapsedTimeMS)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(
+			timestamp,
+			*result.IntervalAvgElapsedTimeMS,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Create execution_count metric (historical/cumulative) - CARDINALITY SAFE
 	if result.ExecutionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.historical_execution_count")
-		metric.SetDescription("Historical execution count (cumulative since plan cached)")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.ExecutionCount)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(
+			timestamp,
+			*result.ExecutionCount,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Create interval_execution_count metric (delta) - CARDINALITY SAFE
 	if result.IntervalExecutionCount != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.interval_execution_count")
-		metric.SetDescription("Interval execution count (delta for this collection interval)")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetIntValue(*result.IntervalExecutionCount)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(
+			timestamp,
+			*result.IntervalExecutionCount,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// NOTE: Removed separate query_id and plan_handle metrics as these attributes
@@ -824,34 +828,17 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 
 	// Create query_text metric with cardinality control
 	if result.QueryText != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.query_text")
-		metric.SetDescription("Query text for slow query")
-		metric.SetUnit("1")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetIntValue(1) // Dummy value since this is primarily for the string attribute
-
-		attrs := createSafeAttributes()
-		// Safely anonymize query text with size limits to control cardinality
-		anonymizedText := helpers.SafeAnonymizeQueryText(result.QueryText)
-		// Truncate to prevent attribute size issues
-		if len(anonymizedText) > 1000 {
-			anonymizedText = anonymizedText[:1000] + "...[truncated]"
-		}
-		attrs.PutStr("query_text", anonymizedText)
-
-		// Add computed query_signature for cross-instance correlation
-		// This is a SHA256 hash of the normalized query, providing a secondary correlation method
-		querySignature := helpers.ComputeQueryHash(*result.QueryText)
-		if querySignature != "" {
-			attrs.PutStr("query_signature", querySignature)
-		}
-
-		attrs.CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryQueryTextDataPoint(
+			timestamp,
+			1,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+			getQuerySignature(),
+		)
 	}
 
 	// ========================================
@@ -860,110 +847,110 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 
 	// Min/Max/Last Elapsed Time Metrics
 	if result.MinElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.min_elapsed_time_ms")
-		metric.SetDescription("Minimum elapsed time in milliseconds")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.MinElapsedTimeMs)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(
+			timestamp,
+			*result.MinElapsedTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	if result.MaxElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.max_elapsed_time_ms")
-		metric.SetDescription("Maximum elapsed time in milliseconds")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.MaxElapsedTimeMs)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(
+			timestamp,
+			*result.MaxElapsedTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	if result.LastElapsedTimeMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.last_elapsed_time_ms")
-		metric.SetDescription("Last elapsed time in milliseconds")
-		metric.SetUnit("ms")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.LastElapsedTimeMs)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(
+			timestamp,
+			*result.LastElapsedTimeMs,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Memory Grant Metrics
 	if result.LastGrantKB != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.last_grant_kb")
-		metric.SetDescription("Last memory grant in KB")
-		metric.SetUnit("KB")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.LastGrantKB)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryLastGrantKbDataPoint(
+			timestamp,
+			*result.LastGrantKB,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	if result.LastUsedGrantKB != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.last_used_grant_kb")
-		metric.SetDescription("Last used memory grant in KB")
-		metric.SetUnit("KB")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.LastUsedGrantKB)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(
+			timestamp,
+			*result.LastUsedGrantKB,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// TempDB Spill Metrics
 	if result.LastSpills != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.last_spills")
-		metric.SetDescription("Last TempDB spills count")
-		metric.SetUnit("1")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.LastSpills)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryLastSpillsDataPoint(
+			timestamp,
+			*result.LastSpills,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	if result.MaxSpills != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.max_spills")
-		metric.SetDescription("Maximum TempDB spills count")
-		metric.SetUnit("1")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.MaxSpills)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryMaxSpillsDataPoint(
+			timestamp,
+			*result.MaxSpills,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Parallelism Metrics
 	if result.LastDOP != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.slowquery.last_dop")
-		metric.SetDescription("Last degree of parallelism")
-		metric.SetUnit("1")
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.LastDOP)
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverSlowqueryLastDopDataPoint(
+			timestamp,
+			*result.LastDOP,
+			getQueryID(),
+			getPlanHandle(),
+			getDatabaseName(),
+			getSchemaName(),
+			getStatementType(),
+			getQueryText(),
+		)
 	}
 
 	// Use dedicated logging function with cardinality-safe approach
@@ -972,42 +959,51 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	return nil
 }
 
-
-
 // processQueryExecutionPlanMetrics processes query execution plan metrics with cardinality safety
-func (s *QueryPerformanceScraper) processQueryExecutionPlanMetrics(result models.QueryExecutionPlan, scopeMetrics pmetric.ScopeMetrics, index int) error {
+func (s *QueryPerformanceScraper) processQueryExecutionPlanMetrics(result models.QueryExecutionPlan, index int) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// CARDINALITY-SAFE: Create limited common attributes
-	// Only include query_id as the primary identifier, avoid full SQL text and multiple hashes
-	createSafeAttributes := func() pcommon.Map {
-		attrs := pcommon.NewMap()
+	// Helper functions to safely get attribute values
+	getQueryID := func() string {
 		if result.QueryID != nil {
-			attrs.PutStr("query_id", result.QueryID.String())
+			return result.QueryID.String()
 		}
-		if result.PlanHandle != nil {
-			attrs.PutStr("plan_handle", result.PlanHandle.String())
-		}
-		if result.QueryPlanID != nil {
-			attrs.PutStr("query_plan_id", result.QueryPlanID.String())
-		}
-		// NOTE: execution_plan_xml is NOT included in metrics to avoid data duplication
-		// Execution plans are already sent as parsed logs via scrapeLogs() with full operator details
-		// If you need the XML, query the logs: FROM Log WHERE eventName = 'sqlserver.execution_plan_operator'
+		return ""
+	}
 
-		// Add SQL text (anonymized)
+	getPlanHandle := func() string {
+		if result.PlanHandle != nil {
+			return result.PlanHandle.String()
+		}
+		return ""
+	}
+
+	getQueryPlanID := func() string {
+		if result.QueryPlanID != nil {
+			return result.QueryPlanID.String()
+		}
+		return ""
+	}
+
+	getQueryText := func() string {
 		if result.SQLText != nil {
-			anonymizedSQL := helpers.AnonymizeQueryText(*result.SQLText)
-			attrs.PutStr("query_text", anonymizedSQL)
+			return helpers.AnonymizeQueryText(*result.SQLText)
 		}
-		// Add timestamps in ISO 8601 format
+		return ""
+	}
+
+	getCreationTime := func() string {
 		if result.CreationTime != nil {
-			attrs.PutStr("creation_time", *result.CreationTime)
+			return *result.CreationTime
 		}
+		return ""
+	}
+
+	getLastExecutionTime := func() string {
 		if result.LastExecutionTime != nil {
-			attrs.PutStr("last_execution_time", *result.LastExecutionTime)
+			return *result.LastExecutionTime
 		}
-		return attrs
+		return ""
 	}
 
 	// Create detailed attributes for logging/debugging (not used in metrics)
@@ -1035,37 +1031,31 @@ func (s *QueryPerformanceScraper) processQueryExecutionPlanMetrics(result models
 
 	// Create TotalCPUMs metric - CARDINALITY SAFE
 	if result.TotalCPUMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.individual_query.total_cpu_ms")
-		metric.SetDescription("Total CPU time in milliseconds for individual query analysis")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.TotalCPUMs)
-
-		// Use all attributes including execution plan XML
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverIndividualQueryTotalCPUMsDataPoint(
+			timestamp,
+			*result.TotalCPUMs,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanID(),
+			getQueryText(),
+			getCreationTime(),
+			getLastExecutionTime(),
+		)
 	}
 
 	// Create TotalElapsedMs metric - CARDINALITY SAFE
 	// This metric includes all attributes: execution plan XML, timestamps, query details
 	if result.TotalElapsedMs != nil {
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName("sqlserver.individual_query.total_elapsed_ms")
-		metric.SetDescription("Total elapsed time in milliseconds for individual query analysis")
-		metric.SetUnit("ms")
-
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(timestamp)
-		dataPoint.SetStartTimestamp(s.startTime)
-		dataPoint.SetDoubleValue(*result.TotalElapsedMs)
-
-		// Use all attributes including execution plan XML and timestamps
-		createSafeAttributes().CopyTo(dataPoint.Attributes())
+		s.mb.RecordSqlserverIndividualQueryTotalElapsedMsDataPoint(
+			timestamp,
+			*result.TotalElapsedMs,
+			getQueryID(),
+			getPlanHandle(),
+			getQueryPlanID(),
+			getQueryText(),
+			getCreationTime(),
+			getLastExecutionTime(),
+		)
 	}
 
 	// Log detailed information for debugging/analysis

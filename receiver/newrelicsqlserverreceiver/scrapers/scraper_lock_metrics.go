@@ -6,13 +6,12 @@ package scrapers
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 )
@@ -21,16 +20,16 @@ import (
 type LockScraper struct {
 	connection    SQLConnectionInterface
 	logger        *zap.Logger
-	startTime     pcommon.Timestamp
+	mb            *metadata.MetricsBuilder
 	engineEdition int
 }
 
 // NewLockScraper creates a new lock scraper
-func NewLockScraper(conn SQLConnectionInterface, logger *zap.Logger, engineEdition int) *LockScraper {
+func NewLockScraper(conn SQLConnectionInterface, logger *zap.Logger, mb *metadata.MetricsBuilder, engineEdition int) *LockScraper {
 	return &LockScraper{
 		connection:    conn,
 		logger:        logger,
-		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		mb:            mb,
 		engineEdition: engineEdition,
 	}
 }
@@ -47,7 +46,7 @@ func (s *LockScraper) getQueryForMetric(metricName string) (string, bool) {
 }
 
 // ScrapeLockResourceMetrics collects lock resource metrics using engine-specific queries
-func (s *LockScraper) ScrapeLockResourceMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *LockScraper) ScrapeLockResourceMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server lock resource metrics")
 
 	// Check if this metric is compatible with the current engine edition
@@ -92,7 +91,7 @@ func (s *LockScraper) ScrapeLockResourceMetrics(ctx context.Context, scopeMetric
 			continue
 		}
 
-		if err := s.processLockResourceMetrics(result, scopeMetrics); err != nil {
+		if err := s.processLockResourceMetrics(result); err != nil {
 			s.logger.Error("Failed to process lock resource metrics",
 				zap.Error(err),
 				zap.String("database_name", *result.DatabaseName))
@@ -111,7 +110,7 @@ func (s *LockScraper) ScrapeLockResourceMetrics(ctx context.Context, scopeMetric
 }
 
 // ScrapeLockModeMetrics collects lock mode metrics using engine-specific queries
-func (s *LockScraper) ScrapeLockModeMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics) error {
+func (s *LockScraper) ScrapeLockModeMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server lock mode metrics")
 
 	// Check if this metric is compatible with the current engine edition
@@ -156,7 +155,7 @@ func (s *LockScraper) ScrapeLockModeMetrics(ctx context.Context, scopeMetrics pm
 			continue
 		}
 
-		if err := s.processLockModeMetrics(result, scopeMetrics); err != nil {
+		if err := s.processLockModeMetrics(result); err != nil {
 			s.logger.Error("Failed to process lock mode metrics",
 				zap.Error(err),
 				zap.String("database_name", *result.DatabaseName))
@@ -175,130 +174,104 @@ func (s *LockScraper) ScrapeLockModeMetrics(ctx context.Context, scopeMetrics pm
 }
 
 // processLockResourceMetrics processes lock resource metrics and creates OpenTelemetry metrics
-func (s *LockScraper) processLockResourceMetrics(result models.LockResourceSummary, scopeMetrics pmetric.ScopeMetrics) error {
-	// Use reflection to process the struct fields with metric tags
-	resultValue := reflect.ValueOf(result)
-	resultType := reflect.TypeOf(result)
+func (s *LockScraper) processLockResourceMetrics(result models.LockResourceSummary) error {
+	now := pcommon.NewTimestampFromTime(time.Now())
 
-	for i := 0; i < resultValue.NumField(); i++ {
-		field := resultValue.Field(i)
-		fieldType := resultType.Field(i)
+	databaseName := ""
+	if result.DatabaseName != nil {
+		databaseName = *result.DatabaseName
+	}
 
-		// Skip nil values and non-metric fields
-		if field.Kind() == reflect.Ptr && field.IsNil() {
-			continue
-		}
+	if result.TotalActiveLocks != nil {
+		s.mb.RecordSqlserverLockResourceTotalDataPoint(now, int64(*result.TotalActiveLocks), databaseName)
+	}
 
-		// Get metric metadata from struct tags
-		metricName := fieldType.Tag.Get("metric_name")
-		sourceType := fieldType.Tag.Get("source_type")
+	if result.TableLocks != nil {
+		s.mb.RecordSqlserverLockResourceTableDataPoint(now, int64(*result.TableLocks), databaseName)
+	}
 
-		if metricName == "" || sourceType == "attribute" {
-			continue
-		}
+	if result.PageLocks != nil {
+		s.mb.RecordSqlserverLockResourcePageDataPoint(now, int64(*result.PageLocks), databaseName)
+	}
 
-		// Create the metric
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName(metricName)
-		metric.SetUnit("1")
-		metric.SetDescription(fmt.Sprintf("SQL Server lock resource metric: %s", metricName))
+	if result.RowLocks != nil {
+		s.mb.RecordSqlserverLockResourceRowDataPoint(now, int64(*result.RowLocks), databaseName)
+	}
 
-		// Create gauge metric
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetStartTimestamp(s.startTime)
+	if result.KeyLocks != nil {
+		s.mb.RecordSqlserverLockResourceKeyDataPoint(now, int64(*result.KeyLocks), databaseName)
+	}
 
-		// Add database name as attribute
-		if result.DatabaseName != nil {
-			dataPoint.Attributes().PutStr("database_name", *result.DatabaseName)
-		}
+	if result.ExtentLocks != nil {
+		s.mb.RecordSqlserverLockResourceExtentDataPoint(now, int64(*result.ExtentLocks), databaseName)
+	}
 
-		// Handle pointer fields and set the value
-		fieldValue := field
-		if field.Kind() == reflect.Ptr {
-			if field.IsNil() {
-				dataPoint.SetIntValue(0)
-				continue
-			}
-			fieldValue = field.Elem()
-		}
+	if result.DatabaseLocks != nil {
+		s.mb.RecordSqlserverLockResourceDatabaseLevelDataPoint(now, int64(*result.DatabaseLocks), databaseName)
+	}
 
-		// Set the value based on field type
-		switch fieldValue.Kind() {
-		case reflect.Int64:
-			dataPoint.SetIntValue(fieldValue.Int())
-		default:
-			s.logger.Warn("Unsupported field type for lock resource metric",
-				zap.String("metric_name", metricName),
-				zap.String("field_type", fieldValue.Kind().String()))
-			continue
-		}
+	if result.FileLocks != nil {
+		s.mb.RecordSqlserverLockResourceFileDataPoint(now, int64(*result.FileLocks), databaseName)
+	}
+
+	if result.ApplicationLocks != nil {
+		s.mb.RecordSqlserverLockResourceApplicationDataPoint(now, int64(*result.ApplicationLocks), databaseName)
+	}
+
+	if result.MetadataLocks != nil {
+		s.mb.RecordSqlserverLockResourceMetadataDataPoint(now, int64(*result.MetadataLocks), databaseName)
+	}
+
+	if result.HobtLocks != nil {
+		s.mb.RecordSqlserverLockResourceHobtDataPoint(now, int64(*result.HobtLocks), databaseName)
+	}
+
+	if result.AllocationUnitLocks != nil {
+		s.mb.RecordSqlserverLockResourceAllocationUnitDataPoint(now, int64(*result.AllocationUnitLocks), databaseName)
 	}
 
 	return nil
 }
 
 // processLockModeMetrics processes lock mode metrics and creates OpenTelemetry metrics
-func (s *LockScraper) processLockModeMetrics(result models.LockModeSummary, scopeMetrics pmetric.ScopeMetrics) error {
-	// Use reflection to process the struct fields with metric tags
-	resultValue := reflect.ValueOf(result)
-	resultType := reflect.TypeOf(result)
+func (s *LockScraper) processLockModeMetrics(result models.LockModeSummary) error {
+	now := pcommon.NewTimestampFromTime(time.Now())
 
-	for i := 0; i < resultValue.NumField(); i++ {
-		field := resultValue.Field(i)
-		fieldType := resultType.Field(i)
+	databaseName := ""
+	if result.DatabaseName != nil {
+		databaseName = *result.DatabaseName
+	}
 
-		// Skip nil values and non-metric fields
-		if field.Kind() == reflect.Ptr && field.IsNil() {
-			continue
-		}
+	if result.TotalActiveLocks != nil {
+		s.mb.RecordSqlserverLockModeTotalDataPoint(now, int64(*result.TotalActiveLocks), databaseName)
+	}
 
-		// Get metric metadata from struct tags
-		metricName := fieldType.Tag.Get("metric_name")
-		sourceType := fieldType.Tag.Get("source_type")
+	if result.SharedLocks != nil {
+		s.mb.RecordSqlserverLockModeSharedDataPoint(now, int64(*result.SharedLocks), databaseName)
+	}
 
-		if metricName == "" || sourceType == "attribute" {
-			continue
-		}
+	if result.ExclusiveLocks != nil {
+		s.mb.RecordSqlserverLockModeExclusiveDataPoint(now, int64(*result.ExclusiveLocks), databaseName)
+	}
 
-		// Create the metric
-		metric := scopeMetrics.Metrics().AppendEmpty()
-		metric.SetName(metricName)
-		metric.SetUnit("1")
-		metric.SetDescription(fmt.Sprintf("SQL Server lock mode metric: %s", metricName))
+	if result.UpdateLocks != nil {
+		s.mb.RecordSqlserverLockModeUpdateDataPoint(now, int64(*result.UpdateLocks), databaseName)
+	}
 
-		// Create gauge metric
-		gauge := metric.SetEmptyGauge()
-		dataPoint := gauge.DataPoints().AppendEmpty()
-		dataPoint.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-		dataPoint.SetStartTimestamp(s.startTime)
+	if result.IntentLocks != nil {
+		s.mb.RecordSqlserverLockModeIntentDataPoint(now, int64(*result.IntentLocks), databaseName)
+	}
 
-		// Add database name as attribute
-		if result.DatabaseName != nil {
-			dataPoint.Attributes().PutStr("database_name", *result.DatabaseName)
-		}
+	if result.SchemaLocks != nil {
+		s.mb.RecordSqlserverLockModeSchemaDataPoint(now, int64(*result.SchemaLocks), databaseName)
+	}
 
-		// Handle pointer fields and set the value
-		fieldValue := field
-		if field.Kind() == reflect.Ptr {
-			if field.IsNil() {
-				dataPoint.SetIntValue(0)
-				continue
-			}
-			fieldValue = field.Elem()
-		}
+	if result.BulkUpdateLocks != nil {
+		s.mb.RecordSqlserverLockModeBulkUpdateDataPoint(now, int64(*result.BulkUpdateLocks), databaseName)
+	}
 
-		// Set the value based on field type
-		switch fieldValue.Kind() {
-		case reflect.Int64:
-			dataPoint.SetIntValue(fieldValue.Int())
-		default:
-			s.logger.Warn("Unsupported field type for lock mode metric",
-				zap.String("metric_name", metricName),
-				zap.String("field_type", fieldValue.Kind().String()))
-			continue
-		}
+	if result.SharedIntentExclusiveLocks != nil {
+		s.mb.RecordSqlserverLockModeSharedIntentExclusiveDataPoint(now, int64(*result.SharedIntentExclusiveLocks), databaseName)
 	}
 
 	return nil

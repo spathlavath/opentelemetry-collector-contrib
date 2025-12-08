@@ -144,13 +144,7 @@ type ActiveRunningQuery struct {
 	ProgramName      *string `db:"program_name" metric_name:"program_name" source_type:"attribute"`
 	RequestCommand   *string `db:"request_command" metric_name:"request_command" source_type:"attribute"`
 	RequestStatus    *string `db:"request_status" metric_name:"request_status" source_type:"attribute"`
-
-	// B. Correlation Key (Critical for RCA)
-	// QueryID: SQL Server's query_hash - used for correlating with slow query metrics
-	// NULL for non-cached queries (ad-hoc SQL with different literals, OPTION(RECOMPILE), etc.)
 	QueryID *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
-
-	// C. Wait Details
 	WaitType                   *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
 	WaitTimeS                  *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
 	WaitResource               *string  `db:"wait_resource" metric_name:"wait_resource" source_type:"attribute"`
@@ -159,17 +153,14 @@ type ActiveRunningQuery struct {
 	WaitResourceDatabaseName   *string  `db:"wait_resource_database_name" metric_name:"wait_resource_database_name" source_type:"attribute"`
 	LastWaitType               *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
 
-	// C2. Enhanced Wait Resource Decoding (OBJECT locks - table-level locks)
 	WaitResourceSchemaNameObject *string `db:"wait_resource_schema_name_object" metric_name:"wait_resource_schema_name_object" source_type:"attribute"`
 	WaitResourceObjectType       *string `db:"wait_resource_object_type" metric_name:"wait_resource_object_type" source_type:"attribute"`
 
-	// C3. Enhanced Wait Resource Decoding (INDEX locks - KEY locks, row-level locks)
 	WaitResourceSchemaNameIndex *string `db:"wait_resource_schema_name_index" metric_name:"wait_resource_schema_name_index" source_type:"attribute"`
 	WaitResourceTableNameIndex  *string `db:"wait_resource_table_name_index" metric_name:"wait_resource_table_name_index" source_type:"attribute"`
 	WaitResourceIndexName       *string `db:"wait_resource_index_name" metric_name:"wait_resource_index_name" source_type:"attribute"`
 	WaitResourceIndexType       *string `db:"wait_resource_index_type" metric_name:"wait_resource_index_type" source_type:"attribute"`
 
-	// D. Performance/Execution Metrics
 	CPUTimeMs               *int64  `db:"cpu_time_ms" metric_name:"sqlserver.activequery.cpu_time_ms" source_type:"gauge"`
 	TotalElapsedTimeMs      *int64  `db:"total_elapsed_time_ms" metric_name:"sqlserver.activequery.elapsed_time_ms" source_type:"gauge"`
 	Reads                   *int64  `db:"reads" metric_name:"sqlserver.activequery.reads" source_type:"gauge"`

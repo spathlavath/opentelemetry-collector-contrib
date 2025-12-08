@@ -11,7 +11,6 @@ import (
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/plog"
-	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
@@ -19,19 +18,8 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 )
 
-// ScrapeActiveRunningQueriesMetrics collects currently executing queries with wait and blocking details
-// This scraper captures real-time query execution state from sys.dm_exec_requests
-// If a plan_handle is available, it fetches, parses, and emits execution plan as OTLP logs
-// SQL-level filters (applied in WHERE clause):
-//   - slowQueryIDs: filter to only queries matching slow query query_hash values (correlation)
-//   - elapsedTimeThreshold: minimum elapsed time in milliseconds (filtered in SQL)
-//   - Must have valid wait_type (filtered in SQL)
-//   - Must have valid plan_handle (filtered in SQL)
-//   - Must have valid query_hash (filtered in SQL)
-//
-// Results are sorted by total_elapsed_time DESC (slowest first) and limited to Top N
 // Returns the active queries for further processing (fetching execution stats for unique plan_handles)
-func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
+func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
 	// Skip active query scraping if no slow queries found (nothing to correlate)
 	if len(slowQueryIDs) == 0 {
 		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
@@ -126,9 +114,6 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 				return "N/A"
 			}()))
 
-		// Fetch execution plan XML for logs endpoint ONLY
-		// For metrics endpoint: We use aggregate plan stats from slow query scraper (dm_exec_query_stats)
-		// For logs endpoint: We fetch detailed XML execution plan for operator-level analysis
 		var executionPlanXML string
 		shouldFetchXML := logs.ResourceLogs().Len() >= 0 // Check if logs collection is active (not nil)
 
@@ -152,7 +137,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		}
 
 		// Process active query metrics with execution plan
-		if err := s.processActiveRunningQueryMetricsWithPlan(result, scopeMetrics, i, executionPlanXML); err != nil {
+		if err := s.processActiveRunningQueryMetricsWithPlan(result, i, executionPlanXML); err != nil {
 			s.logger.Error("Failed to process active running query metric", zap.Error(err), zap.Int("index", i))
 		}
 
@@ -177,18 +162,275 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 	return results, nil
 }
 
-// processActiveRunningQueryMetricsWithPlan processes and emits metrics for a single active running query
-// with optional execution plan XML
-func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, scopeMetrics pmetric.ScopeMetrics, index int, executionPlanXML string) error {
+func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, index int, executionPlanXML string) error {
 	if result.CurrentSessionID == nil {
 		s.logger.Debug("Skipping active running query with nil session ID", zap.Int("index", index))
 		return nil
 	}
 
-	// Create metrics for each active running query
-	// We'll emit each query as a separate data point with all its attributes
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Metric 1: Active query wait time
+	// Helper functions for attribute extraction
+	getSessionID := func() int64 {
+		if result.CurrentSessionID != nil {
+			return *result.CurrentSessionID
+		}
+		return 0
+	}
+	getRequestID := func() int64 {
+		if result.RequestID != nil {
+			return *result.RequestID
+		}
+		return 0
+	}
+	getDatabaseName := func() string {
+		if result.DatabaseName != nil {
+			return *result.DatabaseName
+		}
+		return ""
+	}
+	getLoginName := func() string {
+		if result.LoginName != nil {
+			return *result.LoginName
+		}
+		return ""
+	}
+	getHostName := func() string {
+		if result.HostName != nil {
+			return *result.HostName
+		}
+		return ""
+	}
+	getProgramName := func() string {
+		if result.ProgramName != nil {
+			return *result.ProgramName
+		}
+		return ""
+	}
+	getRequestCommand := func() string {
+		if result.RequestCommand != nil {
+			return *result.RequestCommand
+		}
+		return ""
+	}
+	getRequestStatus := func() string {
+		if result.RequestStatus != nil {
+			return *result.RequestStatus
+		}
+		return ""
+	}
+	getSessionStatus := func() string {
+		if result.SessionStatus != nil {
+			return *result.SessionStatus
+		}
+		return ""
+	}
+	getClientInterfaceName := func() string {
+		if result.ClientInterfaceName != nil {
+			return *result.ClientInterfaceName
+		}
+		return ""
+	}
+	getWaitType := func() string {
+		if result.WaitType != nil {
+			return *result.WaitType
+		}
+		return ""
+	}
+	getWaitResource := func() string {
+		if result.WaitResource != nil {
+			return *result.WaitResource
+		}
+		return ""
+	}
+	getWaitResourceObjectName := func() string {
+		if result.WaitResourceObjectName != nil {
+			return *result.WaitResourceObjectName
+		}
+		return ""
+	}
+	getWaitResourceDatabaseName := func() string {
+		if result.WaitResourceDatabaseName != nil {
+			return *result.WaitResourceDatabaseName
+		}
+		return ""
+	}
+	getLastWaitType := func() string {
+		if result.LastWaitType != nil {
+			return *result.LastWaitType
+		}
+		return ""
+	}
+	getRequestStartTime := func() string {
+		if result.RequestStartTime != nil {
+			return *result.RequestStartTime
+		}
+		return ""
+	}
+	getCollectionTimestamp := func() string {
+		if result.CollectionTimestamp != nil {
+			return *result.CollectionTimestamp
+		}
+		return ""
+	}
+	getTransactionID := func() int64 {
+		if result.TransactionID != nil {
+			return *result.TransactionID
+		}
+		return 0
+	}
+	getOpenTransactionCount := func() int64 {
+		if result.OpenTransactionCount != nil {
+			return *result.OpenTransactionCount
+		}
+		return 0
+	}
+	getTransactionIsolationLevel := func() int64 {
+		if result.TransactionIsolationLevel != nil {
+			return *result.TransactionIsolationLevel
+		}
+		return 0
+	}
+	getDegreeOfParallelism := func() int64 {
+		if result.DegreeOfParallelism != nil {
+			return *result.DegreeOfParallelism
+		}
+		return 0
+	}
+	getParallelWorkerCount := func() int64 {
+		if result.ParallelWorkerCount != nil {
+			return *result.ParallelWorkerCount
+		}
+		return 0
+	}
+	getBlockingSessionID := func() int64 {
+		if result.BlockingSessionID != nil {
+			return *result.BlockingSessionID
+		}
+		return 0
+	}
+	getBlockingLoginName := func() string {
+		if result.BlockerLoginName != nil {
+			return *result.BlockerLoginName
+		}
+		return ""
+	}
+	getBlockingHostName := func() string {
+		if result.BlockerHostName != nil {
+			return *result.BlockerHostName
+		}
+		return ""
+	}
+	getBlockingProgramName := func() string {
+		if result.BlockerProgramName != nil {
+			return *result.BlockerProgramName
+		}
+		return ""
+	}
+	getBlockingStatus := func() string {
+		if result.BlockerStatus != nil {
+			return *result.BlockerStatus
+		}
+		return ""
+	}
+	getBlockingIsolationLevel := func() int64 {
+		if result.BlockerIsolationLevel != nil {
+			return *result.BlockerIsolationLevel
+		}
+		return 0
+	}
+	getBlockingOpenTransactionCount := func() int64 {
+		if result.BlockerOpenTransactionCount != nil {
+			return *result.BlockerOpenTransactionCount
+		}
+		return 0
+	}
+	getQueryText := func() string {
+		if result.QueryStatementText != nil {
+			return *result.QueryStatementText
+		}
+		return ""
+	}
+	getQueryID := func() string {
+		if result.QueryID != nil && !result.QueryID.IsEmpty() {
+			return result.QueryID.String()
+		}
+		return ""
+	}
+	getPlanHandle := func() string {
+		if result.PlanHandle != nil && !result.PlanHandle.IsEmpty() {
+			return result.PlanHandle.String()
+		}
+		return ""
+	}
+	getWaitTypeDescription := func() string {
+		// This would be computed using helpers.DecodeWaitType()
+		if result.WaitType != nil {
+			return helpers.DecodeWaitType(*result.WaitType)
+		}
+		return ""
+	}
+	getWaitTypeCategory := func() string {
+		// This would be computed using helpers.GetWaitTypeCategory()
+		if result.WaitType != nil {
+			return helpers.GetWaitTypeCategory(*result.WaitType)
+		}
+		return ""
+	}
+	getWaitResourceType := func() string {
+		// This would be computed from wait_resource parsing
+		if result.WaitResource != nil {
+			resourceType, _ := helpers.DecodeWaitResource(*result.WaitResource)
+			return resourceType
+		}
+		return ""
+	}
+	getWaitResourceDescription := func() string {
+		// This would be computed with enhanced logic from addActiveQueryAttributes
+		if result.WaitResource != nil {
+			_, resourceDesc := helpers.DecodeWaitResource(*result.WaitResource)
+			return resourceDesc
+		}
+		return ""
+	}
+	getWaitResourceSchemaName := func() string {
+		if result.WaitResourceSchemaNameObject != nil {
+			return *result.WaitResourceSchemaNameObject
+		}
+		return ""
+	}
+	getWaitResourceTableName := func() string {
+		if result.WaitResourceObjectName != nil {
+			return *result.WaitResourceObjectName
+		}
+		return ""
+	}
+	getWaitResourceObjectType := func() string {
+		if result.WaitResourceObjectType != nil {
+			return *result.WaitResourceObjectType
+		}
+		return ""
+	}
+	getWaitResourceIndexName := func() string {
+		if result.WaitResourceIndexName != nil {
+			return *result.WaitResourceIndexName
+		}
+		return ""
+	}
+	getWaitResourceIndexType := func() string {
+		if result.WaitResourceIndexType != nil {
+			return *result.WaitResourceIndexType
+		}
+		return ""
+	}
+	getLastWaitTypeDescription := func() string {
+		if result.LastWaitType != nil {
+			return helpers.DecodeWaitType(*result.LastWaitType)
+		}
+		return ""
+	}
+
+	// Active query wait time
 	if result.WaitTimeS != nil && *result.WaitTimeS > 0 {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.wait_time_seconds",
 			zap.Any("session_id", result.CurrentSessionID),
@@ -196,17 +438,52 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			zap.Any("wait_type", result.WaitType),
 			zap.Any("database_name", result.DatabaseName))
 
-		waitTimeMetric := scopeMetrics.Metrics().AppendEmpty()
-		waitTimeMetric.SetName("sqlserver.activequery.wait_time_seconds")
-		waitTimeMetric.SetDescription("Wait time for currently executing query")
-		waitTimeMetric.SetUnit("s")
-		gauge := waitTimeMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetDoubleValue(*result.WaitTimeS)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(
+			timestamp,
+			*result.WaitTimeS,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Warn("❌ SKIPPED wait_time metric (wait_time_s <= 0 or nil)",
 			zap.Any("session_id", result.CurrentSessionID),
@@ -214,391 +491,410 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			zap.Any("wait_type", result.WaitType))
 	}
 
-	// Metric 2: Active query CPU time
+	// Active query CPU time
 	if result.CPUTimeMs != nil {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.cpu_time_ms",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int64("value", *result.CPUTimeMs))
 
-		cpuTimeMetric := scopeMetrics.Metrics().AppendEmpty()
-		cpuTimeMetric.SetName("sqlserver.activequery.cpu_time_ms")
-		cpuTimeMetric.SetDescription("CPU time for currently executing query")
-		cpuTimeMetric.SetUnit("ms")
-		gauge := cpuTimeMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetIntValue(*result.CPUTimeMs)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryCPUTimeMsDataPoint(
+			timestamp,
+			*result.CPUTimeMs,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Debug("SKIPPED cpu_time metric (nil)",
 			zap.Any("session_id", result.CurrentSessionID))
 	}
 
-	// Metric 3: Active query elapsed time
+	// Active query elapsed time
 	if result.TotalElapsedTimeMs != nil {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.elapsed_time_ms",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int64("value", *result.TotalElapsedTimeMs))
 
-		elapsedTimeMetric := scopeMetrics.Metrics().AppendEmpty()
-		elapsedTimeMetric.SetName("sqlserver.activequery.elapsed_time_ms")
-		elapsedTimeMetric.SetDescription("Total elapsed time for currently executing query")
-		elapsedTimeMetric.SetUnit("ms")
-		gauge := elapsedTimeMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetIntValue(*result.TotalElapsedTimeMs)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryElapsedTimeMsDataPoint(
+			timestamp,
+			*result.TotalElapsedTimeMs,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Debug("SKIPPED elapsed_time metric (nil)",
 			zap.Any("session_id", result.CurrentSessionID))
 	}
 
-	// Metric 4: Active query reads (physical reads from disk)
+	// Active query reads
 	if result.Reads != nil {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.reads",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int64("value", *result.Reads))
 
-		readsMetric := scopeMetrics.Metrics().AppendEmpty()
-		readsMetric.SetName("sqlserver.activequery.reads")
-		readsMetric.SetDescription("Number of physical reads from disk for currently executing query")
-		readsMetric.SetUnit("{reads}")
-		gauge := readsMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetIntValue(*result.Reads)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryReadsDataPoint(
+			timestamp,
+			*result.Reads,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Debug("SKIPPED reads metric (nil)",
 			zap.Any("session_id", result.CurrentSessionID))
 	}
 
-	// Metric 5: Active query writes
+	// Active query writes
 	if result.Writes != nil {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.writes",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int64("value", *result.Writes))
 
-		writesMetric := scopeMetrics.Metrics().AppendEmpty()
-		writesMetric.SetName("sqlserver.activequery.writes")
-		writesMetric.SetDescription("Number of writes for currently executing query")
-		writesMetric.SetUnit("{writes}")
-		gauge := writesMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetIntValue(*result.Writes)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryWritesDataPoint(
+			timestamp,
+			*result.Writes,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Debug("SKIPPED writes metric (nil)",
 			zap.Any("session_id", result.CurrentSessionID))
 	}
 
-	// Metric 6: Active query logical reads (reads from buffer cache/memory)
+	// Active query logical reads
 	if result.LogicalReads != nil {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.logical_reads",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int64("value", *result.LogicalReads))
 
-		logicalReadsMetric := scopeMetrics.Metrics().AppendEmpty()
-		logicalReadsMetric.SetName("sqlserver.activequery.logical_reads")
-		logicalReadsMetric.SetDescription("Number of logical reads from buffer cache for currently executing query")
-		logicalReadsMetric.SetUnit("{reads}")
-		gauge := logicalReadsMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetIntValue(*result.LogicalReads)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryLogicalReadsDataPoint(
+			timestamp,
+			*result.LogicalReads,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Debug("SKIPPED logical_reads metric (nil)",
 			zap.Any("session_id", result.CurrentSessionID))
 	}
 
-	// Metric 7: Active query row count
+	// Active query row count
 	if result.RowCount != nil {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.row_count",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int64("value", *result.RowCount))
 
-		rowCountMetric := scopeMetrics.Metrics().AppendEmpty()
-		rowCountMetric.SetName("sqlserver.activequery.row_count")
-		rowCountMetric.SetDescription("Number of rows returned by currently executing query")
-		rowCountMetric.SetUnit("{rows}")
-		gauge := rowCountMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetIntValue(*result.RowCount)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryRowCountDataPoint(
+			timestamp,
+			*result.RowCount,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Debug("SKIPPED row_count metric (nil)",
 			zap.Any("session_id", result.CurrentSessionID))
 	}
 
-	// Metric 8: Active query granted memory
 	if result.GrantedQueryMemoryPages != nil {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.granted_query_memory_pages",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int64("value", *result.GrantedQueryMemoryPages))
 
-		grantedMemoryMetric := scopeMetrics.Metrics().AppendEmpty()
-		grantedMemoryMetric.SetName("sqlserver.activequery.granted_query_memory_pages")
-		grantedMemoryMetric.SetDescription("Number of memory pages granted to currently executing query")
-		grantedMemoryMetric.SetUnit("{pages}")
-		gauge := grantedMemoryMetric.SetEmptyGauge()
-		dp := gauge.DataPoints().AppendEmpty()
-		dp.SetIntValue(*result.GrantedQueryMemoryPages)
-		dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
-
-		// Add attributes including execution plan
-		s.addActiveQueryAttributes(dp.Attributes(), result, executionPlanXML)
+		s.mb.RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(
+			timestamp,
+			*result.GrantedQueryMemoryPages,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingSessionID(),
+			getBlockingLoginName(),
+			getBlockingHostName(),
+			getBlockingProgramName(),
+			getBlockingStatus(),
+			getBlockingIsolationLevel(),
+			getBlockingOpenTransactionCount(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
 	} else {
 		s.logger.Debug("SKIPPED granted_query_memory_pages metric (nil)",
 			zap.Any("session_id", result.CurrentSessionID))
 	}
 
-	s.logger.Info("=== FINISHED PROCESSING ACTIVE QUERY ===",
-		zap.Any("session_id", result.CurrentSessionID),
-		zap.Int("total_metrics_in_scope", scopeMetrics.Metrics().Len()))
-
 	return nil
-}
-
-// addActiveQueryAttributes adds all attributes from an active running query to a data point
-func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, result models.ActiveRunningQuery, executionPlanXML string) {
-	// NOTE: execution_plan_xml is NOT added as a metric attribute to avoid large data payloads
-	// Execution plans are sent as parsed OTLP logs with individual operators
-	// Query: FROM Log WHERE event.name = 'sqlserver.execution_plan_operator'
-
-	// Session details
-	if result.CurrentSessionID != nil {
-		attrs.PutInt("session_id", *result.CurrentSessionID)
-	}
-	if result.RequestID != nil {
-		attrs.PutInt("request_id", *result.RequestID)
-	}
-	if result.DatabaseName != nil {
-		attrs.PutStr("database_name", *result.DatabaseName)
-	}
-	if result.LoginName != nil {
-		attrs.PutStr("login_name", *result.LoginName)
-	}
-	if result.HostName != nil {
-		attrs.PutStr("host_name", *result.HostName)
-	}
-	if result.ProgramName != nil {
-		attrs.PutStr("program_name", *result.ProgramName)
-	}
-	if result.RequestCommand != nil {
-		attrs.PutStr("request_command", *result.RequestCommand)
-	}
-	if result.RequestStatus != nil {
-		attrs.PutStr("request_status", *result.RequestStatus)
-	}
-	if result.SessionStatus != nil {
-		attrs.PutStr("session_status", *result.SessionStatus)
-	}
-	if result.ClientInterfaceName != nil {
-		attrs.PutStr("client_interface_name", *result.ClientInterfaceName)
-	}
-
-	// Wait details (raw and decoded)
-	if result.WaitType != nil {
-		waitType := *result.WaitType
-		attrs.PutStr("wait_type", waitType)
-		attrs.PutStr("wait_type_description", helpers.DecodeWaitType(waitType))
-		attrs.PutStr("wait_type_category", helpers.GetWaitTypeCategory(waitType))
-	}
-	if result.WaitResource != nil {
-		waitResource := *result.WaitResource
-		attrs.PutStr("wait_resource", waitResource)
-
-		// Add SQL Server's decoded wait resource names (from SQL query)
-		if result.WaitResourceObjectName != nil {
-			attrs.PutStr("wait_resource_object_name", *result.WaitResourceObjectName)
-		}
-		if result.WaitResourceDatabaseName != nil {
-			attrs.PutStr("wait_resource_database_name", *result.WaitResourceDatabaseName)
-		}
-
-		// Add Go helper's parsed resource type and base description
-		resourceType, resourceDesc := helpers.DecodeWaitResource(waitResource)
-		attrs.PutStr("wait_resource_type", resourceType)
-
-		// Build enhanced wait_resource_description based on lock type
-		enhancedDesc := resourceDesc // Start with base description
-
-		// Enhanced wait resource decoding from SQL joins
-		// For OBJECT locks (table-level locks)
-		if result.WaitResourceSchemaNameObject != nil && result.WaitResourceObjectName != nil {
-			attrs.PutStr("wait_resource_schema_name", *result.WaitResourceSchemaNameObject)
-			attrs.PutStr("wait_resource_table_name", *result.WaitResourceObjectName)
-
-			// Build enhanced description: "Database: X | Schema: Y | Table: Z | Type: USER_TABLE"
-			dbName := ""
-			if result.WaitResourceDatabaseName != nil {
-				dbName = *result.WaitResourceDatabaseName
-			}
-			objectType := ""
-			if result.WaitResourceObjectType != nil {
-				attrs.PutStr("wait_resource_object_type", *result.WaitResourceObjectType)
-				objectType = *result.WaitResourceObjectType
-			}
-
-			enhancedDesc = fmt.Sprintf("Database: %s | Schema: %s | Table: %s | Type: %s",
-				dbName, *result.WaitResourceSchemaNameObject, *result.WaitResourceObjectName, objectType)
-		}
-
-		// For INDEX locks (KEY locks - row-level locks)
-		// Parse HOBT ID from wait_resource and look up in MetadataCache
-		if resourceType == "Key Lock" && s.metadataCache != nil {
-			// KEY wait_resource format: "KEY: <db_id>:<hobt_id> (<key_hash>)"
-			// Example: "KEY: 5:72057594042908672 (e5e11ab44f5d)"
-			hobtID := helpers.ParseHOBTIDFromWaitResource(waitResource)
-			s.logger.Debug("Parsing KEY lock wait_resource",
-				zap.String("wait_resource", waitResource),
-				zap.Int64("parsed_hobt_id", hobtID))
-			if hobtID > 0 {
-				if hobtMetadata, ok := s.metadataCache.GetHOBTMetadata(hobtID); ok {
-					s.logger.Debug("Found HOBT metadata in cache",
-						zap.Int64("hobt_id", hobtID),
-						zap.String("database", hobtMetadata.DatabaseName),
-						zap.String("schema", hobtMetadata.SchemaName),
-						zap.String("table", hobtMetadata.ObjectName),
-						zap.String("index", hobtMetadata.IndexName))
-					// Add attributes from MetadataCache lookup
-					attrs.PutStr("wait_resource_schema_name", hobtMetadata.SchemaName)
-					attrs.PutStr("wait_resource_table_name", hobtMetadata.ObjectName)
-					attrs.PutStr("wait_resource_index_name", hobtMetadata.IndexName)
-					attrs.PutStr("wait_resource_index_type", hobtMetadata.IndexType)
-
-					// Build enhanced description using cached metadata
-					dbName := hobtMetadata.DatabaseName
-					if result.WaitResourceDatabaseName != nil {
-						dbName = *result.WaitResourceDatabaseName // Prefer real-time database name if available
-					}
-
-					enhancedDesc = fmt.Sprintf("Database: %s | Schema: %s | Table: %s | Index: %s (%s)",
-						dbName, hobtMetadata.SchemaName, hobtMetadata.ObjectName, hobtMetadata.IndexName, hobtMetadata.IndexType)
-				} else {
-					s.logger.Debug("HOBT ID not found in metadata cache",
-						zap.Int64("hobt_id", hobtID),
-						zap.String("wait_resource", waitResource))
-				}
-			}
-		}
-
-		// Set the final enhanced description
-		attrs.PutStr("wait_resource_description", enhancedDesc)
-	}
-	if result.LastWaitType != nil {
-		lastWaitType := *result.LastWaitType
-		attrs.PutStr("last_wait_type", lastWaitType)
-		attrs.PutStr("last_wait_type_description", helpers.DecodeWaitType(lastWaitType))
-	}
-
-	// Timestamps
-	if result.RequestStartTime != nil {
-		attrs.PutStr("request_start_time", *result.RequestStartTime)
-	}
-	if result.CollectionTimestamp != nil {
-		attrs.PutStr("collection_timestamp", *result.CollectionTimestamp)
-	}
-
-	// Transaction context (Phase 1 RCA)
-	if result.TransactionID != nil {
-		attrs.PutInt("transaction_id", *result.TransactionID)
-	}
-	if result.OpenTransactionCount != nil {
-		attrs.PutInt("open_transaction_count", *result.OpenTransactionCount)
-	}
-	if result.TransactionIsolationLevel != nil {
-		attrs.PutInt("transaction_isolation_level", *result.TransactionIsolationLevel)
-	}
-
-	// Parallel execution details (Phase 1 RCA)
-	if result.DegreeOfParallelism != nil {
-		attrs.PutInt("degree_of_parallelism", *result.DegreeOfParallelism)
-	}
-	if result.ParallelWorkerCount != nil {
-		attrs.PutInt("parallel_worker_count", *result.ParallelWorkerCount)
-	}
-
-	// Blocking details (LINKING FIX: Now int64 for proper joins)
-	if result.BlockingSessionID != nil {
-		attrs.PutInt("blocking_session_id", *result.BlockingSessionID)
-	}
-	if result.BlockerLoginName != nil {
-		attrs.PutStr("blocking_login_name", *result.BlockerLoginName)
-	}
-	if result.BlockerHostName != nil {
-		attrs.PutStr("blocking_host_name", *result.BlockerHostName)
-	}
-	if result.BlockerProgramName != nil {
-		attrs.PutStr("blocking_program_name", *result.BlockerProgramName)
-	}
-	if result.BlockerStatus != nil {
-		attrs.PutStr("blocking_status", *result.BlockerStatus)
-	}
-	if result.BlockerIsolationLevel != nil {
-		attrs.PutInt("blocking_isolation_level", *result.BlockerIsolationLevel)
-	}
-	if result.BlockerOpenTransactionCount != nil {
-		attrs.PutInt("blocking_open_transaction_count", *result.BlockerOpenTransactionCount)
-	}
-
-	// Query text (anonymized) and query ID for correlation
-	if result.QueryStatementText != nil {
-		anonymizedQuery := helpers.AnonymizeQueryText(*result.QueryStatementText)
-		attrs.PutStr("query_text", anonymizedQuery)
-	}
-
-	// Phase 1 RCA: Correlation keys
-	// Add SQL Server's native query_id if available (from dm_exec_query_stats)
-	// This enables direct correlation with slow queries
-	if result.QueryID != nil && !result.QueryID.IsEmpty() {
-		attrs.PutStr("query_id", result.QueryID.String())
-	}
-
-	// Add plan_handle for execution plan correlation and fetching
-	if result.PlanHandle != nil && !result.PlanHandle.IsEmpty() {
-		attrs.PutStr("plan_handle", result.PlanHandle.String())
-	}
-
-	// ALSO compute and add query_signature (client-side hash) for backwards compatibility
-	// This provides a secondary correlation method for queries not yet cached
-	if result.QueryStatementText != nil {
-		querySignature := helpers.ComputeQueryHash(*result.QueryStatementText)
-		if querySignature != "" {
-			attrs.PutStr("query_signature", querySignature)
-		}
-	}
-	if result.BlockingQueryStatementText != nil && *result.BlockingQueryStatementText != "N/A" {
-		anonymizedBlockingQuery := helpers.AnonymizeQueryText(*result.BlockingQueryStatementText)
-		attrs.PutStr("blocking_query_text", anonymizedBlockingQuery)
-
-		// Also compute hash for blocking query for additional correlation
-		blockingQueryHash := helpers.ComputeQueryHash(*result.BlockingQueryStatementText)
-		if blockingQueryHash != "" {
-			attrs.PutStr("blocking_query_hash", blockingQueryHash)
-		}
-	}
 }
 
 // ScrapeLockedObjectsMetrics collects detailed information about objects locked by a specific session
 // This provides table/object names for locked resources, enabling better lock contention troubleshooting
-func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context, scopeMetrics pmetric.ScopeMetrics, sessionID int) error {
+func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context, sessionID int) error {
 	query := fmt.Sprintf(queries.LockedObjectsBySessionQuery, sessionID)
 
 	s.logger.Debug("Executing locked objects metrics collection",
@@ -613,7 +909,7 @@ func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context
 	s.logger.Debug("Locked objects metrics fetched", zap.Int("result_count", len(results)))
 
 	for i, result := range results {
-		if err := s.processLockedObjectMetrics(result, scopeMetrics, i); err != nil {
+		if err := s.processLockedObjectMetrics(result, i); err != nil {
 			s.logger.Error("Failed to process locked object metric", zap.Error(err), zap.Int("index", i))
 		}
 	}
@@ -622,7 +918,7 @@ func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context
 }
 
 // processLockedObjectMetrics processes and emits metrics for a single locked object
-func (s *QueryPerformanceScraper) processLockedObjectMetrics(result models.LockedObject, scopeMetrics pmetric.ScopeMetrics, index int) error {
+func (s *QueryPerformanceScraper) processLockedObjectMetrics(result models.LockedObject, index int) error {
 	if result.SessionID == nil {
 		s.logger.Debug("Skipping locked object with nil session ID", zap.Int("index", index))
 		return nil
@@ -630,58 +926,7 @@ func (s *QueryPerformanceScraper) processLockedObjectMetrics(result models.Locke
 
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Create a metric for locked object tracking
-	// Value = 1 to indicate presence of lock, attributes contain all details
-	metric := scopeMetrics.Metrics().AppendEmpty()
-	metric.SetName("sqlserver.locked_object")
-	metric.SetDescription("Database object locked by a session")
-	metric.SetUnit("1")
-
-	gauge := metric.SetEmptyGauge()
-	dp := gauge.DataPoints().AppendEmpty()
-	dp.SetIntValue(1) // Presence indicator
-	dp.SetTimestamp(timestamp)
-	dp.SetStartTimestamp(s.startTime)
-
-	// Add all locked object attributes
-	attrs := dp.Attributes()
-
-	if result.SessionID != nil {
-		attrs.PutInt("session_id", *result.SessionID)
-	}
-	if result.DatabaseName != nil {
-		attrs.PutStr("database_name", *result.DatabaseName)
-	}
-	if result.SchemaName != nil && *result.SchemaName != "" {
-		attrs.PutStr("schema_name", *result.SchemaName)
-	}
-	if result.LockedObjectName != nil && *result.LockedObjectName != "" {
-		attrs.PutStr("locked_object_name", *result.LockedObjectName)
-	} else {
-		// If object name is NULL, this might be a database or file lock
-		attrs.PutStr("locked_object_name", "N/A")
-	}
-	if result.ResourceType != nil {
-		attrs.PutStr("resource_type", *result.ResourceType)
-	}
-	if result.LockGranularity != nil {
-		attrs.PutStr("lock_granularity", *result.LockGranularity)
-	}
-	if result.LockMode != nil {
-		attrs.PutStr("lock_mode", *result.LockMode)
-	}
-	if result.LockStatus != nil {
-		attrs.PutStr("lock_status", *result.LockStatus)
-	}
-	if result.LockRequestType != nil {
-		attrs.PutStr("lock_request_type", *result.LockRequestType)
-	}
-	if result.ResourceDescription != nil && *result.ResourceDescription != "" {
-		attrs.PutStr("resource_description", *result.ResourceDescription)
-	}
-	if result.CollectionTimestamp != nil {
-		attrs.PutStr("collection_timestamp", *result.CollectionTimestamp)
-	}
+	s.mb.RecordSqlserverLockedObjectDataPoint(timestamp, 1)
 
 	s.logger.Debug("Processed locked object metric",
 		zap.Any("session_id", result.SessionID),

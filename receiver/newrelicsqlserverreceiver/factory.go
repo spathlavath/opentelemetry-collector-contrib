@@ -22,7 +22,7 @@ func NewFactory() receiver.Factory {
 		metadata.Type,
 		createDefaultConfig,
 		receiver.WithMetrics(createMetricsReceiver, metadata.MetricsStability),
-		receiver.WithLogs(createLogsReceiver, metadata.LogsStability))
+		receiver.WithLogs(createLogsReceiver, component.StabilityLevelDevelopment))
 }
 
 func createDefaultConfig() component.Config {
@@ -52,8 +52,8 @@ func createMetricsReceiver(
 	ns := newSqlServerScraper(params, cfg)
 	s, err := scraper.NewMetrics(
 		ns.scrape,
-		scraper.WithStart(ns.start),
-		scraper.WithShutdown(ns.shutdown))
+		scraper.WithStart(ns.Start),
+		scraper.WithShutdown(ns.Shutdown))
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,6 @@ func createMetricsReceiver(
 	)
 }
 
-// createLogsReceiver creates a logs receiver based on provided config.
 func createLogsReceiver(
 	_ context.Context,
 	params receiver.Settings,
@@ -74,24 +73,18 @@ func createLogsReceiver(
 	cfg := rConf.(*Config)
 
 	ns := newSqlServerScraper(params, cfg)
-	s, err := scraper.NewLogs(
-		ns.scrapeLogs,
-		scraper.WithStart(ns.start),
-		scraper.WithShutdown(ns.shutdown))
-	if err != nil {
-		return nil, err
-	}
 
-	opts := make([]scraperhelper.ControllerOption, 0)
-	opt := scraperhelper.AddFactoryWithConfig(
-		scraper.NewFactory(metadata.Type, nil,
-			scraper.WithLogs(func(context.Context, scraper.Settings, component.Config) (scraper.Logs, error) {
-				return s, nil
-			}, metadata.LogsStability)), nil)
-	opts = append(opts, opt)
+	f := scraper.NewFactory(metadata.Type, nil,
+		scraper.WithLogs(func(context.Context, scraper.Settings, component.Config) (scraper.Logs, error) {
+			return ns, nil
+		}, component.StabilityLevelDevelopment))
+
+	opt := scraperhelper.AddFactoryWithConfig(f, nil)
 
 	return scraperhelper.NewLogsController(
-		&cfg.ControllerConfig, params, consumer,
-		opts...,
+		&cfg.ControllerConfig,
+		params,
+		consumer,
+		opt,
 	)
 }
