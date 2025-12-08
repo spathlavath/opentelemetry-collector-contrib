@@ -68,10 +68,6 @@ func (m *MockSQLConnectionInterface) Query(ctx context.Context, dest interface{}
 			if mockResults, ok := results.([]models.FailoverClusterReplicaMetrics); ok {
 				*v = mockResults
 			}
-		case *[]models.FailoverClusterReplicaStateMetrics:
-			if mockResults, ok := results.([]models.FailoverClusterReplicaStateMetrics); ok {
-				*v = mockResults
-			}
 		}
 	}
 

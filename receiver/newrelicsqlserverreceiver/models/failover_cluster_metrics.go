@@ -66,78 +66,8 @@ type FailoverClusterReplicaMetrics struct {
 	FlowControlTimeMs *int64 `db:"Flow Control Time (ms/sec)" metric_name:"sqlserver.failover_cluster.flow_control_time_ms" source_type:"gauge"`
 }
 
-// FailoverClusterReplicaStateMetrics represents Always On Availability Group database replica state metrics
-// This model captures the essential database-level replica state information including log synchronization details
-type FailoverClusterReplicaStateMetrics struct {
-	// ReplicaServerName represents the name of the server hosting the replica
-	// Query source: sys.availability_replicas joined with sys.dm_hadr_database_replica_states
-	ReplicaServerName string `db:"replica_server_name" source_type:"attribute"`
-
-	// DatabaseName represents the name of the database in the availability group
-	// Query source: sys.databases joined with sys.dm_hadr_database_replica_states
-	DatabaseName string `db:"database_name" source_type:"attribute"`
-
-	// LogSendQueueKB represents the amount of log records that haven't been sent to secondary replica
-	// This metric corresponds to 'log_send_queue_size' from sys.dm_hadr_database_replica_states
-	// Query source: sys.dm_hadr_database_replica_states.log_send_queue_size
-	LogSendQueueKB *int64 `db:"log_send_queue_kb" metric_name:"sqlserver.failover_cluster.log_send_queue_kb" source_type:"gauge"`
-
-	// RedoQueueKB represents the amount of log records waiting to be redone on secondary replica
-	// This metric corresponds to 'redo_queue_size' from sys.dm_hadr_database_replica_states
-	// Query source: sys.dm_hadr_database_replica_states.redo_queue_size
-	RedoQueueKB *int64 `db:"redo_queue_kb" metric_name:"sqlserver.failover_cluster.redo_queue_kb" source_type:"gauge"`
-
-	// RedoRateKBSec represents the rate at which log records are being redone on secondary replica
-	// This metric corresponds to 'redo_rate' from sys.dm_hadr_database_replica_states
-	// Query source: sys.dm_hadr_database_replica_states.redo_rate
-	RedoRateKBSec *int64 `db:"redo_rate_kb_sec" metric_name:"sqlserver.failover_cluster.redo_rate_kb_sec" source_type:"gauge"`
-
-	// DatabaseStateDesc represents the current state of the database replica
-	// Query source: sys.dm_hadr_database_replica_states.database_state_desc
-	// Expected values: "ONLINE", "RESTORING", "RECOVERING", "RECOVERY_PENDING", "SUSPECT", "EMERGENCY", "OFFLINE"
-	DatabaseStateDesc string `db:"database_state_desc" metric_name:"sqlserver.failover_cluster.database_state" source_type:"info"`
-
-	// SynchronizationStateDesc represents the synchronization state of the database replica
-	// Query source: sys.dm_hadr_database_replica_states.synchronization_state_desc
-	// Expected values: "SYNCHRONIZING", "SYNCHRONIZED", "NOT SYNCHRONIZING", "REVERTING", "INITIALIZING"
-	SynchronizationStateDesc string `db:"synchronization_state_desc" metric_name:"sqlserver.failover_cluster.synchronization_state" source_type:"info"`
-
-	// IsLocal indicates whether this is a local replica (1) or remote (0)
-	// Query source: sys.dm_hadr_database_replica_states.is_local
-	IsLocal *int64 `db:"is_local" metric_name:"sqlserver.failover_cluster.is_local_replica" source_type:"gauge"`
-
-	// IsPrimaryReplica indicates whether this is the primary replica (1) or secondary (0)
-	// Query source: sys.dm_hadr_database_replica_states.is_primary_replica
-	IsPrimaryReplica *int64 `db:"is_primary_replica" metric_name:"sqlserver.failover_cluster.is_primary_replica" source_type:"gauge"`
-
-	// LastCommitTime represents the timestamp of the last transaction commit
-	// Query source: sys.dm_hadr_database_replica_states.last_commit_time
-	LastCommitTime *string `db:"last_commit_time" metric_name:"sqlserver.failover_cluster.last_commit_time" source_type:"info"`
-
-	// LastSentTime represents the timestamp when the last log block was sent
-	// Query source: sys.dm_hadr_database_replica_states.last_sent_time
-	LastSentTime *string `db:"last_sent_time" metric_name:"sqlserver.failover_cluster.last_sent_time" source_type:"info"`
-
-	// LastReceivedTime represents the timestamp when the last log block was received
-	// Query source: sys.dm_hadr_database_replica_states.last_received_time
-	LastReceivedTime *string `db:"last_received_time" metric_name:"sqlserver.failover_cluster.last_received_time" source_type:"info"`
-
-	// LastHardenedTime represents the timestamp when the last log block was hardened
-	// Query source: sys.dm_hadr_database_replica_states.last_hardened_time
-	LastHardenedTime *string `db:"last_hardened_time" metric_name:"sqlserver.failover_cluster.last_hardened_time" source_type:"info"`
-
-	// LastRedoneLSN represents the log sequence number of the last redone log record
-	// Query source: sys.dm_hadr_database_replica_states.last_redone_lsn
-	LastRedoneLSN *string `db:"last_redone_lsn" metric_name:"sqlserver.failover_cluster.last_redone_lsn" source_type:"info"`
-
-	// SuspendReasonDesc represents the reason why the database is suspended (if applicable)
-	// Query source: sys.dm_hadr_database_replica_states.suspend_reason_desc
-	// Expected values: null (not suspended), or reason descriptions like "SUSPEND_FROM_USER", etc.
-	SuspendReasonDesc *string `db:"suspend_reason_desc" metric_name:"sqlserver.failover_cluster.suspend_reason" source_type:"info"`
-}
-
 // FailoverClusterAvailabilityGroupHealthMetrics represents Always On Availability Group health status
-// This model captures the health and role information for availability group replicas
+// This model captures the essential health and role information for availability group replicas
 type FailoverClusterAvailabilityGroupHealthMetrics struct {
 	// ReplicaServerName represents the name of the server instance hosting the availability replica
 	// Query source: sys.availability_replicas.replica_server_name
@@ -153,76 +83,38 @@ type FailoverClusterAvailabilityGroupHealthMetrics struct {
 	// Expected values: "HEALTHY", "PARTIALLY_HEALTHY", "NOT_HEALTHY"
 	SynchronizationHealthDesc string `db:"synchronization_health_desc" metric_name:"sqlserver.failover_cluster.ag_synchronization_health" source_type:"info"`
 
-	// AvailabilityModeDesc represents the availability mode of the replica
-	// Query source: sys.availability_replicas.availability_mode_desc
-	// Expected values: "SYNCHRONOUS_COMMIT", "ASYNCHRONOUS_COMMIT"
-	AvailabilityModeDesc string `db:"availability_mode_desc" metric_name:"sqlserver.failover_cluster.availability_mode" source_type:"info"`
-
-	// FailoverModeDesc represents the failover mode of the replica
-	// Query source: sys.availability_replicas.failover_mode_desc
-	// Expected values: "AUTOMATIC", "MANUAL", "EXTERNAL"
-	FailoverModeDesc string `db:"failover_mode_desc" metric_name:"sqlserver.failover_cluster.failover_mode" source_type:"info"`
-
-	// BackupPriority represents the backup priority setting for this replica
-	// Query source: sys.availability_replicas.backup_priority
-	// Range: 0-100, higher values indicate higher priority for backups
-	BackupPriority *int64 `db:"backup_priority" metric_name:"sqlserver.failover_cluster.backup_priority" source_type:"gauge"`
-
-	// EndpointURL represents the database mirroring endpoint URL for this replica
-	// Query source: sys.availability_replicas.endpoint_url
-	EndpointURL *string `db:"endpoint_url" source_type:"attribute"`
-
-	// ReadOnlyRoutingURL represents the read-only routing URL for this replica
-	// Query source: sys.availability_replicas.read_only_routing_url
-	ReadOnlyRoutingURL *string `db:"read_only_routing_url" source_type:"attribute"`
-
-	// ConnectedStateDesc indicates the connection state of the replica
-	// Query source: sys.dm_hadr_availability_replica_states.connected_state_desc
-	// Expected values: "CONNECTED", "DISCONNECTED"
-	ConnectedStateDesc string `db:"connected_state_desc" metric_name:"sqlserver.failover_cluster.connected_state" source_type:"info"`
-
-	// OperationalStateDesc indicates the operational state of the replica
-	// Query source: sys.dm_hadr_availability_replica_states.operational_state_desc
-	// Expected values: "PENDING_FAILOVER", "PENDING", "ONLINE", "OFFLINE", "FAILED", "FAILED_NO_QUORUM"
-	// Can be NULL if not applicable
-	OperationalStateDesc *string `db:"operational_state_desc" metric_name:"sqlserver.failover_cluster.operational_state" source_type:"info"`
-
-	// RecoveryHealthDesc indicates the recovery health of the replica
-	// Query source: sys.dm_hadr_availability_replica_states.recovery_health_desc
-	// Expected values: "ONLINE_IN_PROGRESS", "ONLINE", "OFFLINE"
-	// Can be NULL if not applicable
-	RecoveryHealthDesc *string `db:"recovery_health_desc" metric_name:"sqlserver.failover_cluster.recovery_health" source_type:"info"`
+	// Note: Removed unused fields that are not processed in the scraper:
+	// - AvailabilityModeDesc, FailoverModeDesc, BackupPriority, EndpointURL, ReadOnlyRoutingURL
+	// - ConnectedStateDesc, OperationalStateDesc, RecoveryHealthDesc
+	// These were defined in the data model but never used in metric creation
 }
 
 // FailoverClusterAvailabilityGroupMetrics represents Always On Availability Group configuration metrics
-// This model captures the availability group level configuration and settings
+// This model captures the essential availability group level configuration and settings
 type FailoverClusterAvailabilityGroupMetrics struct {
 	// GroupName represents the name of the availability group
 	// Query source: sys.availability_groups.name
 	GroupName string `db:"group_name" source_type:"attribute"`
 
-	// AutomatedBackupPreferenceDesc represents the backup preference setting for the AG
-	// Query source: sys.availability_groups.automated_backup_preference_desc
-	// Expected values: "PRIMARY", "SECONDARY_ONLY", "SECONDARY", "NONE"
-	AutomatedBackupPreferenceDesc string `db:"automated_backup_preference_desc" metric_name:"sqlserver.failover_cluster.automated_backup_preference" source_type:"info"`
-
 	// FailureConditionLevel represents the failure detection level for the AG
 	// Query source: sys.availability_groups.failure_condition_level
 	// Range: 1-5, higher values indicate more sensitive failure detection
-	FailureConditionLevel *int64 `db:"failure_condition_level" metric_name:"sqlserver.failover_cluster.failure_condition_level" source_type:"gauge"`
-
-	// HealthCheckTimeout represents the health check timeout value in milliseconds
-	// Query source: sys.availability_groups.health_check_timeout
-	HealthCheckTimeout *int64 `db:"health_check_timeout" metric_name:"sqlserver.failover_cluster.health_check_timeout_ms" source_type:"gauge"`
+	FailureConditionLevel *int64 `db:"failure_condition_level" metric_name:"sqlserver.failover_cluster.ag_failure_condition_level" source_type:"gauge"`
 
 	// ClusterTypeDesc represents the cluster type for the availability group
 	// Query source: sys.availability_groups.cluster_type_desc
 	// Expected values: "WSFC", "EXTERNAL", "NONE"
-	ClusterTypeDesc string `db:"cluster_type_desc" metric_name:"sqlserver.failover_cluster.cluster_type" source_type:"info"`
+	ClusterTypeDesc string `db:"cluster_type_desc" metric_name:"sqlserver.failover_cluster.ag_cluster_type" source_type:"info"`
 
-	// RequiredSynchronizedSecondariesToCommit represents the number of secondary replicas required to be synchronized
+	// HealthCheckTimeout represents the health check timeout for the availability group
+	// Query source: sys.availability_groups.health_check_timeout
+	// Unit: Milliseconds
+	HealthCheckTimeout *int64 `db:"health_check_timeout" metric_name:"sqlserver.failover_cluster.ag_health_check_timeout" source_type:"gauge"`
+
+	// RequiredSynchronizedSecondariesToCommit represents the number of synchronous secondaries required to commit
 	// Query source: sys.availability_groups.required_synchronized_secondaries_to_commit
-	RequiredSynchronizedSecondariesToCommit *int64 `db:"required_synchronized_secondaries_to_commit" metric_name:"sqlserver.failover_cluster.required_sync_secondaries" source_type:"gauge"`
+	// Used for controlling commit behavior in Always On Availability Groups
+	RequiredSynchronizedSecondariesToCommit *int64 `db:"required_synchronized_secondaries_to_commit" metric_name:"sqlserver.failover_cluster.ag_required_sync_secondaries" source_type:"gauge"`
 }
 
 // FailoverClusterRedoQueueMetrics represents Always On redo queue metrics

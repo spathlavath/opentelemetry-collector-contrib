@@ -1350,24 +1350,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Failover cluster replica metrics disabled in configuration")
 	}
 
-	// Scrape failover cluster replica state metrics if enabled
-	if s.config.IsFailoverClusterReplicaStateMetricsEnabled() {
-		s.logger.Debug("Starting failover cluster replica state metrics scraping")
-		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-		defer cancel()
-		if err := s.failoverClusterScraper.ScrapeFailoverClusterReplicaStateMetrics(scrapeCtx, scopeMetrics); err != nil {
-			s.logger.Error("Failed to scrape failover cluster replica state metrics",
-				zap.Error(err),
-				zap.Duration("timeout", s.config.Timeout))
-			scrapeErrors = append(scrapeErrors, err)
-			// Don't return here - continue with other metrics
-		} else {
-			s.logger.Debug("Successfully scraped failover cluster replica state metrics")
-		}
-	} else {
-		s.logger.Debug("Failover cluster replica state metrics disabled in configuration")
-	}
-
 	// Scrape availability group health metrics if enabled
 	if s.config.IsFailoverClusterAvailabilityGroupHealthMetricsEnabled() {
 		s.logger.Debug("Starting availability group health metrics scraping")

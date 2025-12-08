@@ -72,7 +72,6 @@ type Config struct {
 
 	// Granular failover cluster metrics configuration
 	EnableFailoverClusterReplicaMetrics                 bool `mapstructure:"enable_failover_cluster_replica_metrics"`
-	EnableFailoverClusterReplicaStateMetrics            bool `mapstructure:"enable_failover_cluster_replica_state_metrics"`
 	EnableFailoverClusterAvailabilityGroupHealthMetrics bool `mapstructure:"enable_failover_cluster_availability_group_health_metrics"`
 	EnableFailoverClusterAvailabilityGroupMetrics       bool `mapstructure:"enable_failover_cluster_availability_group_metrics"`
 	EnableFailoverClusterRedoQueueMetrics               bool `mapstructure:"enable_failover_cluster_redo_queue_metrics"`
@@ -192,7 +191,6 @@ func DefaultConfig() component.Config {
 
 		// Default granular failover cluster metrics (disabled by default)
 		EnableFailoverClusterReplicaMetrics:                 false, // Always On replica performance metrics
-		EnableFailoverClusterReplicaStateMetrics:            false, // Database replica state and synchronization metrics
 		EnableFailoverClusterAvailabilityGroupHealthMetrics: false, // Availability Group health and role status
 		EnableFailoverClusterAvailabilityGroupMetrics:       false, // Availability Group configuration metrics
 		EnableFailoverClusterRedoQueueMetrics:               false, // Redo queue metrics (Azure SQL Managed Instance only)
@@ -488,11 +486,6 @@ func (cfg *Config) IsFailoverClusterMetricsEnabled() bool {
 // IsFailoverClusterReplicaMetricsEnabled checks if failover cluster replica metrics should be collected
 func (cfg *Config) IsFailoverClusterReplicaMetricsEnabled() bool {
 	return cfg.EnableFailoverClusterMetrics || cfg.EnableFailoverClusterReplicaMetrics
-}
-
-// IsFailoverClusterReplicaStateMetricsEnabled checks if failover cluster replica state metrics should be collected
-func (cfg *Config) IsFailoverClusterReplicaStateMetricsEnabled() bool {
-	return cfg.EnableFailoverClusterMetrics || cfg.EnableFailoverClusterReplicaStateMetrics
 }
 
 // IsFailoverClusterAvailabilityGroupHealthMetricsEnabled checks if availability group health metrics should be collected
