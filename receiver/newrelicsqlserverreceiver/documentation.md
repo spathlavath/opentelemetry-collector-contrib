@@ -12,7 +12,7 @@ metrics:
     enabled: false
 ```
 
-### sqlserver.activequery.cpu_time
+### sqlserver.activequery.cpu_time_ms
 
 CPU time consumed by active query
 
@@ -20,7 +20,7 @@ CPU time consumed by active query
 | ---- | ----------- | ---------- |
 | ms | Gauge | Int |
 
-### sqlserver.activequery.elapsed_time
+### sqlserver.activequery.elapsed_time_ms
 
 Total elapsed time for active query
 
@@ -28,7 +28,7 @@ Total elapsed time for active query
 | ---- | ----------- | ---------- |
 | ms | Gauge | Int |
 
-### sqlserver.activequery.granted_memory
+### sqlserver.activequery.granted_memory_pages
 
 Granted query memory in pages
 
@@ -44,13 +44,21 @@ Logical reads by active query
 | ---- | ----------- | ---------- |
 | {reads} | Gauge | Int |
 
-### sqlserver.activequery.reads
+### sqlserver.activequery.physical_reads
 
 Physical reads by active query
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {reads} | Gauge | Int |
+
+### sqlserver.activequery.physical_writes
+
+Writes by active query
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {writes} | Gauge | Int |
 
 ### sqlserver.activequery.row_count
 
@@ -60,21 +68,13 @@ Rows returned by active query
 | ---- | ----------- | ---------- |
 | {rows} | Gauge | Int |
 
-### sqlserver.activequery.wait_time
+### sqlserver.activequery.wait_time_s
 
 Current wait time for active query
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | s | Gauge | Double |
-
-### sqlserver.activequery.writes
-
-Writes by active query
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Int |
 
 ### sqlserver.database.bufferpool.size
 
@@ -138,15 +138,7 @@ Number of database principals
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Int |
 
-### sqlserver.database.role.members.unique
-
-Unique role members
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### sqlserver.database.role.memberships.active
+### sqlserver.database.role.active_memberships
 
 Active role memberships
 
@@ -154,9 +146,9 @@ Active role memberships
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Int |
 
-### sqlserver.database.role.memberships.total
+### sqlserver.database.role.inherited_permissions
 
-Total role memberships
+Inherited permissions count
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -170,9 +162,17 @@ Role nesting depth
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Int |
 
-### sqlserver.database.role.permissions.inherited
+### sqlserver.database.role.total_memberships
 
-Inherited permissions count
+Total role memberships
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.database.role.unique_members
+
+Unique role members
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -186,7 +186,7 @@ AG failure condition level setting
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Int |
 
-### sqlserver.failover_cluster.health_check_timeout
+### sqlserver.failover_cluster.health_check_timeout_ms
 
 AG health check timeout
 
@@ -464,7 +464,7 @@ Information about locked database objects
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Int |
 
-### sqlserver.plan.elapsed_time.avg
+### sqlserver.plan.avg_elapsed_time_ms
 
 Average elapsed time for plan
 
@@ -472,13 +472,29 @@ Average elapsed time for plan
 | ---- | ----------- | ---------- |
 | ms | Gauge | Double |
 
-### sqlserver.plan.elapsed_time.total
+### sqlserver.plan.avg_logical_reads
 
-Total elapsed time for all executions
+Average logical page reads
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| {reads} | Gauge | Double |
+
+### sqlserver.plan.avg_logical_writes
+
+Average logical page writes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {writes} | Gauge | Double |
+
+### sqlserver.plan.avg_worker_time_ms
+
+Average CPU worker time
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
 
 ### sqlserver.plan.execution_count
 
@@ -488,29 +504,13 @@ Number of times execution plan was executed
 | ---- | ----------- | ---------- |
 | {executions} | Gauge | Int |
 
-### sqlserver.plan.logical_reads
+### sqlserver.plan.total_elapsed_time_ms
 
-Average logical page reads
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
-
-### sqlserver.plan.logical_writes
-
-Average logical page writes
+Total elapsed time for all executions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| {writes} | Gauge | Double |
-
-### sqlserver.plan.worker_time
-
-Average CPU worker time
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| ms | Gauge | Int |
 
 ### sqlserver.security.principals.count
 
@@ -528,7 +528,7 @@ Server role members count
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Int |
 
-### sqlserver.slowquery.cpu_time
+### sqlserver.slowquery.avg_cpu_time_ms
 
 Average CPU time for slow query
 
@@ -536,15 +536,16 @@ Average CPU time for slow query
 | ---- | ----------- | ---------- |
 | ms | Gauge | Double |
 
-### sqlserver.slowquery.degree_of_parallelism
+#### Attributes
 
-Degree of parallelism (DOP) used
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {threads} | Gauge | Int |
-
-### sqlserver.slowquery.disk_reads
+### sqlserver.slowquery.avg_disk_reads
 
 Average physical disk reads
 
@@ -552,7 +553,16 @@ Average physical disk reads
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
 
-### sqlserver.slowquery.disk_writes
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.avg_disk_writes
 
 Average physical disk writes
 
@@ -560,47 +570,16 @@ Average physical disk writes
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
 
-### sqlserver.slowquery.elapsed_time.historical
+#### Attributes
 
-Historical average elapsed time since plan cached
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-### sqlserver.slowquery.elapsed_time.interval
-
-Interval (delta) average elapsed time
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-### sqlserver.slowquery.execution_count.historical
-
-Total execution count since plan cached
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### sqlserver.slowquery.execution_count.interval
-
-Execution count in collection interval (delta)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### sqlserver.slowquery.memory_grant
-
-Memory grant for query in KB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| KBy | Gauge | Int |
-
-### sqlserver.slowquery.rows_processed
+### sqlserver.slowquery.avg_rows_processed
 
 Average number of rows processed
 
@@ -608,13 +587,133 @@ Average number of rows processed
 | ---- | ----------- | ---------- |
 | {rows} | Gauge | Double |
 
-### sqlserver.slowquery.tempdb_spills
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.historical_avg_elapsed_time_ms
+
+Historical average elapsed time since plan cached
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.historical_execution_count
+
+Total execution count since plan cached
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.interval_avg_elapsed_time_ms
+
+Interval (delta) average elapsed time
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.interval_execution_count
+
+Execution count in collection interval (delta)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.last_dop
+
+Degree of parallelism (DOP) used
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {threads} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.last_grant_kb
+
+Memory grant for query in KB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| KBy | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
+
+### sqlserver.slowquery.last_spills
 
 TempDB spill pages
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {pages} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the query | Any Str | false |
+| database_name | Name of the database where the query executed | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| last_execution_timestamp | Timestamp of last execution | Any Str | false |
 
 ### sqlserver.tempdb.allocation_waits
 

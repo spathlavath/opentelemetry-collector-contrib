@@ -200,6 +200,24 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 		metricsRecorded := 0
 
 		for _, result := range results {
+			// Extract attributes for all metrics (with safe nil handling)
+			queryID := ""
+			if result.QueryID != nil {
+				queryID = result.QueryID.String()
+			}
+			databaseName := ""
+			if result.DatabaseName != nil {
+				databaseName = *result.DatabaseName
+			}
+			queryText := ""
+			if result.QueryText != nil {
+				queryText = *result.QueryText
+			}
+			lastExecutionTimestamp := ""
+			if result.LastExecutionTimestamp != nil {
+				lastExecutionTimestamp = *result.LastExecutionTimestamp
+			}
+
 			// Get interval metrics if available (already calculated above)
 			var intervalMetrics *SimplifiedIntervalMetrics
 			if s.intervalCalculator != nil {
@@ -210,83 +228,83 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 
 			// CPU time (historical only)
 			if result.AvgCPUTimeMS != nil {
-				s.mb.RecordSqlserverSlowqueryCPUTimeDataPoint(now, *result.AvgCPUTimeMS)
+				s.mb.RecordSqlserverSlowqueryAvgCPUTimeMsDataPoint(now, *result.AvgCPUTimeMS, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Elapsed time - historical (avg since plan cached)
 			if intervalMetrics != nil {
-				s.mb.RecordSqlserverSlowqueryElapsedTimeHistoricalDataPoint(now, intervalMetrics.HistoricalAvgElapsedTimeMs)
+				s.mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(now, intervalMetrics.HistoricalAvgElapsedTimeMs, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			} else if result.AvgElapsedTimeMS != nil {
 				// Fallback if no interval calculator
-				s.mb.RecordSqlserverSlowqueryElapsedTimeHistoricalDataPoint(now, *result.AvgElapsedTimeMS)
+				s.mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(now, *result.AvgElapsedTimeMS, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Elapsed time - interval (delta-based average)
 			if intervalMetrics != nil && intervalMetrics.HasNewExecutions {
-				s.mb.RecordSqlserverSlowqueryElapsedTimeIntervalDataPoint(now, intervalMetrics.IntervalAvgElapsedTimeMs)
+				s.mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(now, intervalMetrics.IntervalAvgElapsedTimeMs, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			} else if result.AvgElapsedTimeMS != nil {
 				// Fallback if no interval calculator or no new executions
-				s.mb.RecordSqlserverSlowqueryElapsedTimeIntervalDataPoint(now, *result.AvgElapsedTimeMS)
+				s.mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(now, *result.AvgElapsedTimeMS, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Execution count - historical
 			if intervalMetrics != nil {
-				s.mb.RecordSqlserverSlowqueryExecutionCountHistoricalDataPoint(now, intervalMetrics.HistoricalExecutionCount)
+				s.mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(now, intervalMetrics.HistoricalExecutionCount, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			} else if result.ExecutionCount != nil {
 				// Fallback if no interval calculator
-				s.mb.RecordSqlserverSlowqueryExecutionCountHistoricalDataPoint(now, *result.ExecutionCount)
+				s.mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(now, *result.ExecutionCount, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Execution count - interval (delta)
 			if intervalMetrics != nil && intervalMetrics.HasNewExecutions {
-				s.mb.RecordSqlserverSlowqueryExecutionCountIntervalDataPoint(now, intervalMetrics.IntervalExecutionCount)
+				s.mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(now, intervalMetrics.IntervalExecutionCount, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			} else if result.ExecutionCount != nil {
 				// Fallback if no interval calculator or no new executions
-				s.mb.RecordSqlserverSlowqueryExecutionCountIntervalDataPoint(now, *result.ExecutionCount)
+				s.mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(now, *result.ExecutionCount, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Disk reads
 			if result.AvgDiskReads != nil {
-				s.mb.RecordSqlserverSlowqueryDiskReadsDataPoint(now, *result.AvgDiskReads)
+				s.mb.RecordSqlserverSlowqueryAvgDiskReadsDataPoint(now, *result.AvgDiskReads, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Disk writes
 			if result.AvgDiskWrites != nil {
-				s.mb.RecordSqlserverSlowqueryDiskWritesDataPoint(now, *result.AvgDiskWrites)
+				s.mb.RecordSqlserverSlowqueryAvgDiskWritesDataPoint(now, *result.AvgDiskWrites, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Rows processed
 			if result.AvgRowsProcessed != nil {
-				s.mb.RecordSqlserverSlowqueryRowsProcessedDataPoint(now, *result.AvgRowsProcessed)
+				s.mb.RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(now, *result.AvgRowsProcessed, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Memory grant
 			if result.LastGrantKB != nil {
-				s.mb.RecordSqlserverSlowqueryMemoryGrantDataPoint(now, int64(*result.LastGrantKB))
+				s.mb.RecordSqlserverSlowqueryLastGrantKbDataPoint(now, *result.LastGrantKB, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// TempDB spills
 			if result.LastSpills != nil {
-				s.mb.RecordSqlserverSlowqueryTempdbSpillsDataPoint(now, int64(*result.LastSpills))
+				s.mb.RecordSqlserverSlowqueryLastSpillsDataPoint(now, int64(*result.LastSpills), queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 
 			// Degree of parallelism
 			if result.LastDOP != nil {
-				s.mb.RecordSqlserverSlowqueryDegreeOfParallelismDataPoint(now, int64(*result.LastDOP))
+				s.mb.RecordSqlserverSlowqueryLastDopDataPoint(now, *result.LastDOP, queryID, databaseName, queryText, lastExecutionTimestamp)
 				metricsRecorded++
 			}
 		}
@@ -437,31 +455,31 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Co
 
 			// Average elapsed time
 			if planResult.AvgElapsedTimeMs != nil {
-				s.mb.RecordSqlserverPlanElapsedTimeAvgDataPoint(now, *planResult.AvgElapsedTimeMs)
+				s.mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(now, *planResult.AvgElapsedTimeMs)
 				metricsEmitted++
 			}
 
 			// Total elapsed time (convert float64 to int64)
 			if planResult.TotalElapsedTimeMs != nil {
-				s.mb.RecordSqlserverPlanElapsedTimeTotalDataPoint(now, int64(*planResult.TotalElapsedTimeMs))
+				s.mb.RecordSqlserverPlanTotalElapsedTimeMsDataPoint(now, int64(*planResult.TotalElapsedTimeMs))
 				metricsEmitted++
 			}
 
 			// Average worker time (CPU)
 			if planResult.AvgWorkerTimeMs != nil {
-				s.mb.RecordSqlserverPlanWorkerTimeDataPoint(now, *planResult.AvgWorkerTimeMs)
+				s.mb.RecordSqlserverPlanAvgWorkerTimeMsDataPoint(now, *planResult.AvgWorkerTimeMs)
 				metricsEmitted++
 			}
 
 			// Logical reads
 			if planResult.AvgLogicalReads != nil {
-				s.mb.RecordSqlserverPlanLogicalReadsDataPoint(now, *planResult.AvgLogicalReads)
+				s.mb.RecordSqlserverPlanAvgLogicalReadsDataPoint(now, *planResult.AvgLogicalReads)
 				metricsEmitted++
 			}
 
 			// Logical writes
 			if planResult.AvgLogicalWrites != nil {
-				s.mb.RecordSqlserverPlanLogicalWritesDataPoint(now, *planResult.AvgLogicalWrites)
+				s.mb.RecordSqlserverPlanAvgLogicalWritesDataPoint(now, *planResult.AvgLogicalWrites)
 				metricsEmitted++
 			}
 

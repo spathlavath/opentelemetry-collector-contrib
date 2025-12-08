@@ -120,8 +120,6 @@ SELECT
 FROM
     StatementDetails s`
 
-
-
 // WaitQuery - Real-time wait statistics from dm_exec_requests (NO Query Store)
 // This query captures currently waiting queries directly from sys.dm_exec_requests
 // providing real-time wait analysis without Query Store performance overhead

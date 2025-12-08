@@ -511,7 +511,7 @@ func checkForMissingJoinPredicate(relOp *RelOp) bool {
 // ParseExecutionPlanTopLevelDetails parses execution plan XML to extract only top-level details
 // This is much faster than full node parsing and suitable for high-volume active query monitoring
 // Returns top-level plan information: costs, compilation details, optimizer info, and warnings
-func ParseExecutionPlanTopLevelDetails(xmlContent string, queryID string, planHandle string, planHandleResult *PlanHandleResult) (*ExecutionPlanTopLevelDetails, error) {
+func ParseExecutionPlanTopLevelDetails(xmlContent, queryID, planHandle string, planHandleResult *PlanHandleResult) (*ExecutionPlanTopLevelDetails, error) {
 	if xmlContent == "" {
 		return nil, fmt.Errorf("empty execution plan XML")
 	}

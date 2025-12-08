@@ -59,7 +59,7 @@ type SQLServerClient interface {
 	QueryDatabaseRoleMembershipSummary(ctx context.Context, engineEdition int) ([]models.DatabaseRoleMembershipSummary, error)
 	QueryDatabaseRoleHierarchy(ctx context.Context, engineEdition int) ([]models.DatabaseRoleHierarchy, error)
 
-	// Security metrics  
+	// Security metrics
 	QuerySecurityPrincipals(ctx context.Context, engineEdition int) ([]models.SecurityPrincipalsModel, error)
 	QuerySecurityRoleMembers(ctx context.Context, engineEdition int) ([]models.SecurityRoleMembersModel, error)
 
@@ -83,7 +83,7 @@ type SQLServerClient interface {
 	QueryFailoverClusterReplicaState(ctx context.Context, engineEdition int) ([]models.FailoverClusterReplicaStateMetrics, error)
 
 	// Query performance monitoring
-	QuerySlowQueries(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int, engineEdition int) ([]models.SlowQuery, error)
+	QuerySlowQueries(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold, engineEdition int) ([]models.SlowQuery, error)
 	QueryActiveQueries(ctx context.Context, engineEdition int) ([]models.ActiveRunningQuery, error)
 	QueryExecutionPlanForQuery(ctx context.Context, planHandle string) (string, error)
 }

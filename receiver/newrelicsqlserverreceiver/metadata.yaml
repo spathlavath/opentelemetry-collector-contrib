@@ -47,6 +47,39 @@ attributes:
   synchronization_health:
     description: Synchronization health status
     type: string
+  query_id:
+    description: Unique identifier for the query
+    type: string
+  database_name:
+    description: Name of the database where the query executed
+    type: string
+  query_text:
+    description: SQL query text
+    type: string
+  last_execution_timestamp:
+    description: Timestamp of last execution
+    type: string
+  plan_handle:
+    description: Execution plan handle identifier
+    type: string
+  session_id:
+    description: SQL Server session ID
+    type: string
+  request_status:
+    description: Request status (running, suspended, etc.)
+    type: string
+  login_name:
+    description: Login name of the session
+    type: string
+  host_name:
+    description: Host name of the client
+    type: string
+  program_name:
+    description: Program/application name
+    type: string
+  blocking_session_id:
+    description: Session ID that is blocking this query
+    type: string
 
 metrics:
   # Instance Memory Metrics
@@ -482,82 +515,93 @@ metrics:
       value_type: int
 
   # Query Performance Monitoring - Slow Queries
-  sqlserver.slowquery.cpu_time:
+  sqlserver.slowquery.avg_cpu_time_ms:
     enabled: true
     description: Average CPU time for slow query
     unit: ms
     gauge:
       value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.elapsed_time.historical:
+  sqlserver.slowquery.historical_avg_elapsed_time_ms:
     enabled: true
     description: Historical average elapsed time since plan cached
     unit: ms
     gauge:
       value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.elapsed_time.interval:
+  sqlserver.slowquery.interval_avg_elapsed_time_ms:
     enabled: true
     description: Interval (delta) average elapsed time
     unit: ms
     gauge:
       value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.execution_count.historical:
+  sqlserver.slowquery.historical_execution_count:
     enabled: true
     description: Total execution count since plan cached
     unit: "1"
     gauge:
       value_type: int
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.execution_count.interval:
+  sqlserver.slowquery.interval_execution_count:
     enabled: true
     description: Execution count in collection interval (delta)
     unit: "1"
     gauge:
       value_type: int
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.disk_reads:
+  sqlserver.slowquery.avg_disk_reads:
     enabled: true
     description: Average physical disk reads
     unit: "1"
     gauge:
       value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.disk_writes:
+  sqlserver.slowquery.avg_disk_writes:
     enabled: true
     description: Average physical disk writes
     unit: "1"
     gauge:
       value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.rows_processed:
+  sqlserver.slowquery.avg_rows_processed:
     enabled: true
     description: Average number of rows processed
     unit: "{rows}"
     gauge:
       value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.memory_grant:
+  sqlserver.slowquery.last_grant_kb:
     enabled: true
     description: Memory grant for query in KB
     unit: KBy
     gauge:
-      value_type: int
+      value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.tempdb_spills:
+  sqlserver.slowquery.last_spills:
     enabled: true
     description: TempDB spill pages
     unit: "{pages}"
     gauge:
       value_type: int
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
   
-  sqlserver.slowquery.degree_of_parallelism:
+  sqlserver.slowquery.last_dop:
     enabled: true
     description: Degree of parallelism (DOP) used
     unit: "{threads}"
     gauge:
-      value_type: int
+      value_type: double
+    attributes: [query_id, database_name, query_text, last_execution_timestamp]
 
   # Query Performance - Execution Plans
   sqlserver.plan.execution_count:
@@ -566,77 +610,88 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
+    attributes: [query_id, plan_handle, session_id, database_name]
   
-  sqlserver.plan.elapsed_time.avg:
+  sqlserver.plan.avg_elapsed_time_ms:
     enabled: true
     description: Average elapsed time for plan
     unit: ms
     gauge:
       value_type: double
+    attributes: [query_id, plan_handle, session_id, database_name]
   
-  sqlserver.plan.elapsed_time.total:
+  sqlserver.plan.total_elapsed_time_ms:
     enabled: true
     description: Total elapsed time for all executions
     unit: ms
     gauge:
       value_type: int
+    attributes: [query_id, plan_handle, session_id, database_name]
   
-  sqlserver.plan.worker_time:
+  sqlserver.plan.avg_worker_time_ms:
     enabled: true
     description: Average CPU worker time
     unit: ms
     gauge:
       value_type: double
+    attributes: [query_id, plan_handle, session_id, database_name]
   
-  sqlserver.plan.logical_reads:
+  sqlserver.plan.avg_logical_reads:
     enabled: true
     description: Average logical page reads
     unit: "{reads}"
     gauge:
       value_type: double
+    attributes: [query_id, plan_handle, session_id, database_name]
   
-  sqlserver.plan.logical_writes:
+  sqlserver.plan.avg_logical_writes:
     enabled: true
     description: Average logical page writes
     unit: "{writes}"
     gauge:
       value_type: double
+    attributes: [query_id, plan_handle, session_id, database_name]
 
   # Active Query Metrics
-  sqlserver.activequery.wait_time:
+  sqlserver.activequery.wait_time_s:
     enabled: true
     description: Current wait time for active query
     unit: s
     gauge:
       value_type: double
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
   
-  sqlserver.activequery.cpu_time:
+  sqlserver.activequery.cpu_time_ms:
     enabled: true
     description: CPU time consumed by active query
     unit: ms
     gauge:
       value_type: int
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
   
-  sqlserver.activequery.elapsed_time:
+  sqlserver.activequery.elapsed_time_ms:
     enabled: true
     description: Total elapsed time for active query
     unit: ms
     gauge:
       value_type: int
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
   
-  sqlserver.activequery.reads:
+  sqlserver.activequery.physical_reads:
     enabled: true
     description: Physical reads by active query
     unit: "{reads}"
     gauge:
       value_type: int
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
   
-  sqlserver.activequery.writes:
+  sqlserver.activequery.physical_writes:
     enabled: true
     description: Writes by active query
     unit: "{writes}"
     gauge:
       value_type: int
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
   
   sqlserver.activequery.logical_reads:
     enabled: true
@@ -644,6 +699,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
   
   sqlserver.activequery.row_count:
     enabled: true
@@ -651,30 +707,32 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: int
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
   
-  sqlserver.activequery.granted_memory:
+  sqlserver.activequery.granted_memory_pages:
     enabled: true
     description: Granted query memory in pages
     unit: "{pages}"
     gauge:
       value_type: int
+    attributes: [query_id, session_id, database_name, wait_type, request_status, login_name, host_name, program_name, blocking_session_id]
 
   # Database Role Membership Metrics
-  sqlserver.database.role.memberships.total:
+  sqlserver.database.role.total_memberships:
     enabled: true
     description: Total role memberships
     unit: "1"
     gauge:
       value_type: int
   
-  sqlserver.database.role.memberships.active:
+  sqlserver.database.role.active_memberships:
     enabled: true
     description: Active role memberships
     unit: "1"
     gauge:
       value_type: int
   
-  sqlserver.database.role.members.unique:
+  sqlserver.database.role.unique_members:
     enabled: true
     description: Unique role members
     unit: "1"
@@ -688,7 +746,7 @@ metrics:
     gauge:
       value_type: int
   
-  sqlserver.database.role.permissions.inherited:
+  sqlserver.database.role.inherited_permissions:
     enabled: true
     description: Inherited permissions count
     unit: "1"
@@ -742,7 +800,7 @@ metrics:
     gauge:
       value_type: int
   
-  sqlserver.failover_cluster.health_check_timeout:
+  sqlserver.failover_cluster.health_check_timeout_ms:
     enabled: true
     description: AG health check timeout
     unit: ms

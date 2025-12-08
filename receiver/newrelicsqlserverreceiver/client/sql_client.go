@@ -447,7 +447,7 @@ func (c *SQLClient) QueryFailoverClusterReplicaState(ctx context.Context, engine
 
 // Query performance monitoring methods
 
-func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int, engineEdition int) ([]models.SlowQuery, error) {
+func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold, engineEdition int) ([]models.SlowQuery, error) {
 	query := fmt.Sprintf(`
 		SELECT TOP %d
 			qs.sql_handle as query_id,
@@ -468,7 +468,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, topN,
 		WHERE qs.total_elapsed_time / 1000 > %d
 		ORDER BY qs.total_elapsed_time DESC
 	`, topN, elapsedTimeThreshold)
-	
+
 	var results []models.SlowQuery
 	err := c.db.SelectContext(ctx, &results, query)
 	return results, err
@@ -493,7 +493,7 @@ func (c *SQLClient) QueryActiveQueries(ctx context.Context, engineEdition int) (
 		LEFT JOIN sys.dm_exec_sessions s ON r.session_id = s.session_id
 		WHERE r.session_id != @@SPID
 	`
-	
+
 	var results []models.ActiveRunningQuery
 	err := c.db.SelectContext(ctx, &results, query)
 	return results, err
@@ -504,7 +504,7 @@ func (c *SQLClient) QueryExecutionPlanForQuery(ctx context.Context, planHandle s
 		SELECT query_plan
 		FROM sys.dm_exec_query_plan(%s)
 	`, planHandle)
-	
+
 	var planXML string
 	err := c.db.QueryRowContext(ctx, query).Scan(&planXML)
 	return planXML, err

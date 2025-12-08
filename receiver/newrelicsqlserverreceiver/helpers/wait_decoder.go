@@ -79,7 +79,7 @@ func GetWaitTypeCategory(waitType string) string {
 // Based on sys.dm_tran_locks resource_description format
 // DecodeWaitResource parses wait_resource and returns resource type and description
 // Only decodes table names when OBJECT identifier is available
-func DecodeWaitResource(waitResource string) (resourceType string, description string) {
+func DecodeWaitResource(waitResource string) (resourceType, description string) {
 	if waitResource == "" {
 		return "", ""
 	}

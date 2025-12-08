@@ -265,10 +265,10 @@ func (s *DatabaseRoleMembershipScraper) processDatabaseRoleMembershipSummaryMetr
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.TotalMemberships != nil {
-		s.mb.RecordSqlserverDatabaseRoleMembershipsTotalDataPoint(timestamp, *result.TotalMemberships)
+		s.mb.RecordSqlserverDatabaseRoleTotalMembershipsDataPoint(timestamp, *result.TotalMemberships)
 	}
 	if result.UniqueMembers != nil {
-		s.mb.RecordSqlserverDatabaseRoleMembersUniqueDataPoint(timestamp, *result.UniqueMembers)
+		s.mb.RecordSqlserverDatabaseRoleUniqueMembersDataPoint(timestamp, *result.UniqueMembers)
 	}
 
 	return nil
@@ -282,7 +282,7 @@ func (s *DatabaseRoleMembershipScraper) processDatabaseRoleHierarchyMetrics(resu
 		s.mb.RecordSqlserverDatabaseRoleNestingLevelDataPoint(timestamp, *result.NestingLevel)
 	}
 	if result.EffectivePermissions != nil {
-		s.mb.RecordSqlserverDatabaseRolePermissionsInheritedDataPoint(timestamp, *result.EffectivePermissions)
+		s.mb.RecordSqlserverDatabaseRoleInheritedPermissionsDataPoint(timestamp, *result.EffectivePermissions)
 	}
 
 	return nil
@@ -293,7 +293,7 @@ func (s *DatabaseRoleMembershipScraper) processDatabaseRoleActivityMetrics(resul
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.ActiveMemberships != nil {
-		s.mb.RecordSqlserverDatabaseRoleMembershipsActiveDataPoint(timestamp, *result.ActiveMemberships)
+		s.mb.RecordSqlserverDatabaseRoleActiveMembershipsDataPoint(timestamp, *result.ActiveMemberships)
 	}
 
 	return nil

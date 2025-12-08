@@ -134,7 +134,7 @@ func (s *FailoverClusterScraper) ScrapeFailoverClusterReplicaStateMetrics(ctx co
 
 	// Process each replica state's metrics
 	for _, result := range results {
-		if err := s.processFailoverClusterReplicaStateMetrics(result); err != nil{
+		if err := s.processFailoverClusterReplicaStateMetrics(result); err != nil {
 			s.logger.Error("Failed to process failover cluster replica state metrics",
 				zap.Error(err))
 			continue
@@ -288,7 +288,7 @@ func (s *FailoverClusterScraper) processFailoverClusterAvailabilityGroupMetrics(
 		s.mb.RecordSqlserverFailoverClusterFailureConditionLevelDataPoint(timestamp, *result.FailureConditionLevel)
 	}
 	if result.HealthCheckTimeout != nil {
-		s.mb.RecordSqlserverFailoverClusterHealthCheckTimeoutDataPoint(timestamp, *result.HealthCheckTimeout)
+		s.mb.RecordSqlserverFailoverClusterHealthCheckTimeoutMsDataPoint(timestamp, *result.HealthCheckTimeout)
 	}
 
 	return nil

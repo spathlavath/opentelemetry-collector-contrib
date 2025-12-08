@@ -117,23 +117,23 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		// Record metrics using MetricsBuilder pattern
 		if s.mb != nil {
 			if result.WaitTimeS != nil && *result.WaitTimeS > 0 {
-				s.mb.RecordSqlserverActivequeryWaitTimeDataPoint(now, *result.WaitTimeS)
+				s.mb.RecordSqlserverActivequeryWaitTimeSDataPoint(now, *result.WaitTimeS)
 			}
 
 			if result.CPUTimeMs != nil {
-				s.mb.RecordSqlserverActivequeryCPUTimeDataPoint(now, *result.CPUTimeMs)
+				s.mb.RecordSqlserverActivequeryCPUTimeMsDataPoint(now, *result.CPUTimeMs)
 			}
 
 			if result.TotalElapsedTimeMs != nil {
-				s.mb.RecordSqlserverActivequeryElapsedTimeDataPoint(now, *result.TotalElapsedTimeMs)
+				s.mb.RecordSqlserverActivequeryElapsedTimeMsDataPoint(now, *result.TotalElapsedTimeMs)
 			}
 
 			if result.Reads != nil {
-				s.mb.RecordSqlserverActivequeryReadsDataPoint(now, *result.Reads)
+				s.mb.RecordSqlserverActivequeryPhysicalReadsDataPoint(now, *result.Reads)
 			}
 
 			if result.Writes != nil {
-				s.mb.RecordSqlserverActivequeryWritesDataPoint(now, *result.Writes)
+				s.mb.RecordSqlserverActivequeryPhysicalWritesDataPoint(now, *result.Writes)
 			}
 
 			if result.LogicalReads != nil {
@@ -145,7 +145,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 			}
 
 			if result.GrantedQueryMemoryPages != nil {
-				s.mb.RecordSqlserverActivequeryGrantedMemoryDataPoint(now, *result.GrantedQueryMemoryPages)
+				s.mb.RecordSqlserverActivequeryGrantedMemoryPagesDataPoint(now, *result.GrantedQueryMemoryPages)
 			}
 		}
 
@@ -610,16 +610,8 @@ func (s *QueryPerformanceScraper) addActiveQueryAttributes(attrs pcommon.Map, re
 
 // ScrapeLockedObjectsMetrics collects detailed information about objects locked by a specific session
 // This provides table/object names for locked resources, enabling better lock contention troubleshooting
-// NOTE: This method is currently not migrated to MetricsBuilder pattern as locked objects
-// are not defined in metadata.yaml. Consider adding them or removing this method.
+// Migrated to MetricsBuilder pattern - emits sqlserver.locked_object metric
 func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context, sessionID int) error {
-	// TODO: Migrate to MetricsBuilder pattern or remove if not needed
-	// This method is commented out during MetricsBuilder migration
-	s.logger.Debug("ScrapeLockedObjectsMetrics not yet migrated to MetricsBuilder pattern",
-		zap.Int("session_id", sessionID))
-	return nil
-
-	/* Original implementation commented out during migration
 	query := fmt.Sprintf(queries.LockedObjectsBySessionQuery, sessionID)
 
 	s.logger.Debug("Executing locked objects metrics collection",
@@ -633,85 +625,35 @@ func (s *QueryPerformanceScraper) ScrapeLockedObjectsMetrics(ctx context.Context
 
 	s.logger.Debug("Locked objects metrics fetched", zap.Int("result_count", len(results)))
 
-	for i, result := range results {
-		if err := s.processLockedObjectMetrics(result, i); err != nil {
-			s.logger.Error("Failed to process locked object metric", zap.Error(err), zap.Int("index", i))
+	// Record metrics using MetricsBuilder
+	if s.mb != nil {
+		now := pcommon.NewTimestampFromTime(time.Now())
+		metricsRecorded := 0
+
+		for _, result := range results {
+			if result.SessionID == nil {
+				s.logger.Debug("Skipping locked object with nil session ID")
+				continue
+			}
+
+			// Record locked object metric (value=1 indicates presence of lock)
+			s.mb.RecordSqlserverLockedObjectDataPoint(now, int64(1))
+			metricsRecorded++
+
+			s.logger.Debug("Recorded locked object metric",
+				zap.Any("session_id", result.SessionID),
+				zap.Any("locked_object_name", result.LockedObjectName),
+				zap.Any("lock_granularity", result.LockGranularity),
+				zap.Any("lock_mode", result.LockMode))
 		}
-	}
 
-	return nil
-	*/
-}
-
-// processLockedObjectMetrics processes and emits metrics for a single locked object
-// NOTE: Commented out during MetricsBuilder migration - locked object metrics not in metadata.yaml
-func (s *QueryPerformanceScraper) processLockedObjectMetrics_DEPRECATED(result models.LockedObject, scopeMetrics pmetric.ScopeMetrics, index int) error {
-	/* Commented out during MetricsBuilder migration
-	if result.SessionID == nil {
-		s.logger.Debug("Skipping locked object with nil session ID", zap.Int("index", index))
-		return nil
-	}
-
-	timestamp := pcommon.NewTimestampFromTime(time.Now())
-
-	// Create a metric for locked object tracking
-	// Value = 1 to indicate presence of lock, attributes contain all details
-	metric := scopeMetrics.Metrics().AppendEmpty()
-	metric.SetName("sqlserver.locked_object")
-	metric.SetDescription("Database object locked by a session")
-	metric.SetUnit("1")
-
-	gauge := metric.SetEmptyGauge()
-	dp := gauge.DataPoints().AppendEmpty()
-	dp.SetIntValue(1) // Presence indicator
-	dp.SetTimestamp(timestamp)
-
-	// Add all locked object attributes
-	attrs := dp.Attributes()
-
-	if result.SessionID != nil {
-		attrs.PutInt("session_id", *result.SessionID)
-	}
-	if result.DatabaseName != nil {
-		attrs.PutStr("database_name", *result.DatabaseName)
-	}
-	if result.SchemaName != nil && *result.SchemaName != "" {
-		attrs.PutStr("schema_name", *result.SchemaName)
-	}
-	if result.LockedObjectName != nil && *result.LockedObjectName != "" {
-		attrs.PutStr("locked_object_name", *result.LockedObjectName)
+		s.logger.Info("Locked objects metrics recorded",
+			zap.Int("session_id", sessionID),
+			zap.Int("lock_count", len(results)),
+			zap.Int("metrics_recorded", metricsRecorded))
 	} else {
-		// If object name is NULL, this might be a database or file lock
-		attrs.PutStr("locked_object_name", "N/A")
+		s.logger.Warn("MetricsBuilder is nil, skipping locked objects metric recording")
 	}
-	if result.ResourceType != nil {
-		attrs.PutStr("resource_type", *result.ResourceType)
-	}
-	if result.LockGranularity != nil {
-		attrs.PutStr("lock_granularity", *result.LockGranularity)
-	}
-	if result.LockMode != nil {
-		attrs.PutStr("lock_mode", *result.LockMode)
-	}
-	if result.LockStatus != nil {
-		attrs.PutStr("lock_status", *result.LockStatus)
-	}
-	if result.LockRequestType != nil {
-		attrs.PutStr("lock_request_type", *result.LockRequestType)
-	}
-	if result.ResourceDescription != nil && *result.ResourceDescription != "" {
-		attrs.PutStr("resource_description", *result.ResourceDescription)
-	}
-	if result.CollectionTimestamp != nil {
-		attrs.PutStr("collection_timestamp", *result.CollectionTimestamp)
-	}
-
-	s.logger.Debug("Processed locked object metric",
-		zap.Any("session_id", result.SessionID),
-		zap.Any("locked_object_name", result.LockedObjectName),
-		zap.Any("lock_granularity", result.LockGranularity),
-		zap.Any("lock_mode", result.LockMode))
-	*/
 
 	return nil
 }

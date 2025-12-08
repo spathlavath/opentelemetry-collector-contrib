@@ -28,14 +28,14 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicsqlserver metrics.
 type MetricsConfig struct {
-	SqlserverActivequeryCPUTime                         MetricConfig `mapstructure:"sqlserver.activequery.cpu_time"`
-	SqlserverActivequeryElapsedTime                     MetricConfig `mapstructure:"sqlserver.activequery.elapsed_time"`
-	SqlserverActivequeryGrantedMemory                   MetricConfig `mapstructure:"sqlserver.activequery.granted_memory"`
+	SqlserverActivequeryCPUTimeMs                       MetricConfig `mapstructure:"sqlserver.activequery.cpu_time_ms"`
+	SqlserverActivequeryElapsedTimeMs                   MetricConfig `mapstructure:"sqlserver.activequery.elapsed_time_ms"`
+	SqlserverActivequeryGrantedMemoryPages              MetricConfig `mapstructure:"sqlserver.activequery.granted_memory_pages"`
 	SqlserverActivequeryLogicalReads                    MetricConfig `mapstructure:"sqlserver.activequery.logical_reads"`
-	SqlserverActivequeryReads                           MetricConfig `mapstructure:"sqlserver.activequery.reads"`
+	SqlserverActivequeryPhysicalReads                   MetricConfig `mapstructure:"sqlserver.activequery.physical_reads"`
+	SqlserverActivequeryPhysicalWrites                  MetricConfig `mapstructure:"sqlserver.activequery.physical_writes"`
 	SqlserverActivequeryRowCount                        MetricConfig `mapstructure:"sqlserver.activequery.row_count"`
-	SqlserverActivequeryWaitTime                        MetricConfig `mapstructure:"sqlserver.activequery.wait_time"`
-	SqlserverActivequeryWrites                          MetricConfig `mapstructure:"sqlserver.activequery.writes"`
+	SqlserverActivequeryWaitTimeS                       MetricConfig `mapstructure:"sqlserver.activequery.wait_time_s"`
 	SqlserverDatabaseBufferpoolSize                     MetricConfig `mapstructure:"sqlserver.database.bufferpool.size"`
 	SqlserverDatabaseDiskMaxSize                        MetricConfig `mapstructure:"sqlserver.database.disk.max_size"`
 	SqlserverDatabaseIoStallTime                        MetricConfig `mapstructure:"sqlserver.database.io.stall_time"`
@@ -43,13 +43,13 @@ type MetricsConfig struct {
 	SqlserverDatabasePagefileAvailable                  MetricConfig `mapstructure:"sqlserver.database.pagefile.available"`
 	SqlserverDatabasePagefileTotal                      MetricConfig `mapstructure:"sqlserver.database.pagefile.total"`
 	SqlserverDatabasePrincipalsCount                    MetricConfig `mapstructure:"sqlserver.database.principals.count"`
-	SqlserverDatabaseRoleMembersUnique                  MetricConfig `mapstructure:"sqlserver.database.role.members.unique"`
-	SqlserverDatabaseRoleMembershipsActive              MetricConfig `mapstructure:"sqlserver.database.role.memberships.active"`
-	SqlserverDatabaseRoleMembershipsTotal               MetricConfig `mapstructure:"sqlserver.database.role.memberships.total"`
+	SqlserverDatabaseRoleActiveMemberships              MetricConfig `mapstructure:"sqlserver.database.role.active_memberships"`
+	SqlserverDatabaseRoleInheritedPermissions           MetricConfig `mapstructure:"sqlserver.database.role.inherited_permissions"`
 	SqlserverDatabaseRoleNestingLevel                   MetricConfig `mapstructure:"sqlserver.database.role.nesting_level"`
-	SqlserverDatabaseRolePermissionsInherited           MetricConfig `mapstructure:"sqlserver.database.role.permissions.inherited"`
+	SqlserverDatabaseRoleTotalMemberships               MetricConfig `mapstructure:"sqlserver.database.role.total_memberships"`
+	SqlserverDatabaseRoleUniqueMembers                  MetricConfig `mapstructure:"sqlserver.database.role.unique_members"`
 	SqlserverFailoverClusterFailureConditionLevel       MetricConfig `mapstructure:"sqlserver.failover_cluster.failure_condition_level"`
-	SqlserverFailoverClusterHealthCheckTimeout          MetricConfig `mapstructure:"sqlserver.failover_cluster.health_check_timeout"`
+	SqlserverFailoverClusterHealthCheckTimeoutMs        MetricConfig `mapstructure:"sqlserver.failover_cluster.health_check_timeout_ms"`
 	SqlserverFailoverClusterReplicaRole                 MetricConfig `mapstructure:"sqlserver.failover_cluster.replica_role"`
 	SqlserverFailoverClusterSynchronizationHealth       MetricConfig `mapstructure:"sqlserver.failover_cluster.synchronization_health"`
 	SqlserverInstanceActiveConnections                  MetricConfig `mapstructure:"sqlserver.instance.active_connections"`
@@ -82,25 +82,25 @@ type MetricsConfig struct {
 	SqlserverLockResourceTable                          MetricConfig `mapstructure:"sqlserver.lock.resource.table"`
 	SqlserverLockResourceTotal                          MetricConfig `mapstructure:"sqlserver.lock.resource.total"`
 	SqlserverLockedObject                               MetricConfig `mapstructure:"sqlserver.locked_object"`
-	SqlserverPlanElapsedTimeAvg                         MetricConfig `mapstructure:"sqlserver.plan.elapsed_time.avg"`
-	SqlserverPlanElapsedTimeTotal                       MetricConfig `mapstructure:"sqlserver.plan.elapsed_time.total"`
+	SqlserverPlanAvgElapsedTimeMs                       MetricConfig `mapstructure:"sqlserver.plan.avg_elapsed_time_ms"`
+	SqlserverPlanAvgLogicalReads                        MetricConfig `mapstructure:"sqlserver.plan.avg_logical_reads"`
+	SqlserverPlanAvgLogicalWrites                       MetricConfig `mapstructure:"sqlserver.plan.avg_logical_writes"`
+	SqlserverPlanAvgWorkerTimeMs                        MetricConfig `mapstructure:"sqlserver.plan.avg_worker_time_ms"`
 	SqlserverPlanExecutionCount                         MetricConfig `mapstructure:"sqlserver.plan.execution_count"`
-	SqlserverPlanLogicalReads                           MetricConfig `mapstructure:"sqlserver.plan.logical_reads"`
-	SqlserverPlanLogicalWrites                          MetricConfig `mapstructure:"sqlserver.plan.logical_writes"`
-	SqlserverPlanWorkerTime                             MetricConfig `mapstructure:"sqlserver.plan.worker_time"`
+	SqlserverPlanTotalElapsedTimeMs                     MetricConfig `mapstructure:"sqlserver.plan.total_elapsed_time_ms"`
 	SqlserverSecurityPrincipalsCount                    MetricConfig `mapstructure:"sqlserver.security.principals.count"`
 	SqlserverSecurityRoleMembersCount                   MetricConfig `mapstructure:"sqlserver.security.role_members.count"`
-	SqlserverSlowqueryCPUTime                           MetricConfig `mapstructure:"sqlserver.slowquery.cpu_time"`
-	SqlserverSlowqueryDegreeOfParallelism               MetricConfig `mapstructure:"sqlserver.slowquery.degree_of_parallelism"`
-	SqlserverSlowqueryDiskReads                         MetricConfig `mapstructure:"sqlserver.slowquery.disk_reads"`
-	SqlserverSlowqueryDiskWrites                        MetricConfig `mapstructure:"sqlserver.slowquery.disk_writes"`
-	SqlserverSlowqueryElapsedTimeHistorical             MetricConfig `mapstructure:"sqlserver.slowquery.elapsed_time.historical"`
-	SqlserverSlowqueryElapsedTimeInterval               MetricConfig `mapstructure:"sqlserver.slowquery.elapsed_time.interval"`
-	SqlserverSlowqueryExecutionCountHistorical          MetricConfig `mapstructure:"sqlserver.slowquery.execution_count.historical"`
-	SqlserverSlowqueryExecutionCountInterval            MetricConfig `mapstructure:"sqlserver.slowquery.execution_count.interval"`
-	SqlserverSlowqueryMemoryGrant                       MetricConfig `mapstructure:"sqlserver.slowquery.memory_grant"`
-	SqlserverSlowqueryRowsProcessed                     MetricConfig `mapstructure:"sqlserver.slowquery.rows_processed"`
-	SqlserverSlowqueryTempdbSpills                      MetricConfig `mapstructure:"sqlserver.slowquery.tempdb_spills"`
+	SqlserverSlowqueryAvgCPUTimeMs                      MetricConfig `mapstructure:"sqlserver.slowquery.avg_cpu_time_ms"`
+	SqlserverSlowqueryAvgDiskReads                      MetricConfig `mapstructure:"sqlserver.slowquery.avg_disk_reads"`
+	SqlserverSlowqueryAvgDiskWrites                     MetricConfig `mapstructure:"sqlserver.slowquery.avg_disk_writes"`
+	SqlserverSlowqueryAvgRowsProcessed                  MetricConfig `mapstructure:"sqlserver.slowquery.avg_rows_processed"`
+	SqlserverSlowqueryHistoricalAvgElapsedTimeMs        MetricConfig `mapstructure:"sqlserver.slowquery.historical_avg_elapsed_time_ms"`
+	SqlserverSlowqueryHistoricalExecutionCount          MetricConfig `mapstructure:"sqlserver.slowquery.historical_execution_count"`
+	SqlserverSlowqueryIntervalAvgElapsedTimeMs          MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_elapsed_time_ms"`
+	SqlserverSlowqueryIntervalExecutionCount            MetricConfig `mapstructure:"sqlserver.slowquery.interval_execution_count"`
+	SqlserverSlowqueryLastDop                           MetricConfig `mapstructure:"sqlserver.slowquery.last_dop"`
+	SqlserverSlowqueryLastGrantKb                       MetricConfig `mapstructure:"sqlserver.slowquery.last_grant_kb"`
+	SqlserverSlowqueryLastSpills                        MetricConfig `mapstructure:"sqlserver.slowquery.last_spills"`
 	SqlserverTempdbAllocationWaits                      MetricConfig `mapstructure:"sqlserver.tempdb.allocation_waits"`
 	SqlserverTempdbCurrentWaiters                       MetricConfig `mapstructure:"sqlserver.tempdb.current_waiters"`
 	SqlserverTempdbDataFileCount                        MetricConfig `mapstructure:"sqlserver.tempdb.data_file_count"`
@@ -128,28 +128,28 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		SqlserverActivequeryCPUTime: MetricConfig{
+		SqlserverActivequeryCPUTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverActivequeryElapsedTime: MetricConfig{
+		SqlserverActivequeryElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverActivequeryGrantedMemory: MetricConfig{
+		SqlserverActivequeryGrantedMemoryPages: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverActivequeryLogicalReads: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverActivequeryReads: MetricConfig{
+		SqlserverActivequeryPhysicalReads: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverActivequeryPhysicalWrites: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverActivequeryRowCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverActivequeryWaitTime: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryWrites: MetricConfig{
+		SqlserverActivequeryWaitTimeS: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabaseBufferpoolSize: MetricConfig{
@@ -173,25 +173,25 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverDatabasePrincipalsCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseRoleMembersUnique: MetricConfig{
+		SqlserverDatabaseRoleActiveMemberships: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseRoleMembershipsActive: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverDatabaseRoleMembershipsTotal: MetricConfig{
+		SqlserverDatabaseRoleInheritedPermissions: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabaseRoleNestingLevel: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseRolePermissionsInherited: MetricConfig{
+		SqlserverDatabaseRoleTotalMemberships: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverDatabaseRoleUniqueMembers: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverFailoverClusterFailureConditionLevel: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverFailoverClusterHealthCheckTimeout: MetricConfig{
+		SqlserverFailoverClusterHealthCheckTimeoutMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverFailoverClusterReplicaRole: MetricConfig{
@@ -290,22 +290,22 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverLockedObject: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverPlanElapsedTimeAvg: MetricConfig{
+		SqlserverPlanAvgElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverPlanElapsedTimeTotal: MetricConfig{
+		SqlserverPlanAvgLogicalReads: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanAvgLogicalWrites: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverPlanAvgWorkerTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverPlanExecutionCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverPlanLogicalReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanLogicalWrites: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanWorkerTime: MetricConfig{
+		SqlserverPlanTotalElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSecurityPrincipalsCount: MetricConfig{
@@ -314,37 +314,37 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverSecurityRoleMembersCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryCPUTime: MetricConfig{
+		SqlserverSlowqueryAvgCPUTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryDegreeOfParallelism: MetricConfig{
+		SqlserverSlowqueryAvgDiskReads: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryDiskReads: MetricConfig{
+		SqlserverSlowqueryAvgDiskWrites: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryDiskWrites: MetricConfig{
+		SqlserverSlowqueryAvgRowsProcessed: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryElapsedTimeHistorical: MetricConfig{
+		SqlserverSlowqueryHistoricalAvgElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryElapsedTimeInterval: MetricConfig{
+		SqlserverSlowqueryHistoricalExecutionCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryExecutionCountHistorical: MetricConfig{
+		SqlserverSlowqueryIntervalAvgElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryExecutionCountInterval: MetricConfig{
+		SqlserverSlowqueryIntervalExecutionCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryMemoryGrant: MetricConfig{
+		SqlserverSlowqueryLastDop: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryRowsProcessed: MetricConfig{
+		SqlserverSlowqueryLastGrantKb: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryTempdbSpills: MetricConfig{
+		SqlserverSlowqueryLastSpills: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverTempdbAllocationWaits: MetricConfig{
