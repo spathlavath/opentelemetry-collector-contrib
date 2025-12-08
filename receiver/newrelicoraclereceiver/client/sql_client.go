@@ -1404,9 +1404,9 @@ func (c *SQLClient) QueryRACActiveServices(ctx context.Context) ([]models.RACAct
 	var results []models.RACActiveService
 	for rows.Next() {
 		var service models.RACActiveService
-		if err := rows.Scan(&service.ServiceName, &service.InstID, &service.FailoverMethod,
-			&service.FailoverType, &service.Goal, &service.NetworkName, &service.CreationDate,
-			&service.FailoverRetries, &service.FailoverDelay, &service.ClbGoal); err != nil {
+		// Only common columns across Oracle versions
+		if err := rows.Scan(&service.ServiceName, &service.InstID, &service.Goal,
+			&service.NetworkName, &service.CreationDate, &service.ClbGoal); err != nil {
 			continue
 		}
 		results = append(results, service)

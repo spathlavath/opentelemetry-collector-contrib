@@ -400,15 +400,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbRacServiceCreationAgeDays: metricInfo{
 		Name: "newrelicoracledb.rac.service.creation_age_days",
 	},
-	NewrelicoracledbRacServiceFailoverConfig: metricInfo{
-		Name: "newrelicoracledb.rac.service.failover_config",
-	},
-	NewrelicoracledbRacServiceFailoverDelaySeconds: metricInfo{
-		Name: "newrelicoracledb.rac.service.failover_delay_seconds",
-	},
-	NewrelicoracledbRacServiceFailoverRetries: metricInfo{
-		Name: "newrelicoracledb.rac.service.failover_retries",
-	},
 	NewrelicoracledbRacServiceInstanceID: metricInfo{
 		Name: "newrelicoracledb.rac.service.instance_id",
 	},
@@ -1120,9 +1111,6 @@ type metricsInfo struct {
 	NewrelicoracledbRacInstanceVersionInfo                             metricInfo
 	NewrelicoracledbRacServiceClbConfig                                metricInfo
 	NewrelicoracledbRacServiceCreationAgeDays                          metricInfo
-	NewrelicoracledbRacServiceFailoverConfig                           metricInfo
-	NewrelicoracledbRacServiceFailoverDelaySeconds                     metricInfo
-	NewrelicoracledbRacServiceFailoverRetries                          metricInfo
 	NewrelicoracledbRacServiceInstanceID                               metricInfo
 	NewrelicoracledbRacServiceNetworkConfig                            metricInfo
 	NewrelicoracledbRacTotalWaits                                      metricInfo
@@ -8145,167 +8133,6 @@ func (m *metricNewrelicoracledbRacServiceCreationAgeDays) emit(metrics pmetric.M
 
 func newMetricNewrelicoracledbRacServiceCreationAgeDays(cfg MetricConfig) metricNewrelicoracledbRacServiceCreationAgeDays {
 	m := metricNewrelicoracledbRacServiceCreationAgeDays{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbRacServiceFailoverConfig struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.rac.service.failover_config metric with initial data.
-func (m *metricNewrelicoracledbRacServiceFailoverConfig) init() {
-	m.data.SetName("newrelicoracledb.rac.service.failover_config")
-	m.data.SetDescription("Service failover configuration indicator (always 1, config in attributes)")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbRacServiceFailoverConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
-	dp.Attributes().PutStr("failover.method", failoverMethodAttributeValue)
-	dp.Attributes().PutStr("failover.type", failoverTypeAttributeValue)
-	dp.Attributes().PutStr("service.goal", serviceGoalAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbRacServiceFailoverConfig) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbRacServiceFailoverConfig) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbRacServiceFailoverConfig(cfg MetricConfig) metricNewrelicoracledbRacServiceFailoverConfig {
-	m := metricNewrelicoracledbRacServiceFailoverConfig{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbRacServiceFailoverDelaySeconds struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.rac.service.failover_delay_seconds metric with initial data.
-func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) init() {
-	m.data.SetName("newrelicoracledb.rac.service.failover_delay_seconds")
-	m.data.SetDescription("Failover delay in seconds configured for the service")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbRacServiceFailoverDelaySeconds) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbRacServiceFailoverDelaySeconds(cfg MetricConfig) metricNewrelicoracledbRacServiceFailoverDelaySeconds {
-	m := metricNewrelicoracledbRacServiceFailoverDelaySeconds{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbRacServiceFailoverRetries struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.rac.service.failover_retries metric with initial data.
-func (m *metricNewrelicoracledbRacServiceFailoverRetries) init() {
-	m.data.SetName("newrelicoracledb.rac.service.failover_retries")
-	m.data.SetDescription("Number of failover retries configured for the service")
-	m.data.SetUnit("{retries}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbRacServiceFailoverRetries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
-	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbRacServiceFailoverRetries) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbRacServiceFailoverRetries) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbRacServiceFailoverRetries(cfg MetricConfig) metricNewrelicoracledbRacServiceFailoverRetries {
-	m := metricNewrelicoracledbRacServiceFailoverRetries{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18539,9 +18366,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbRacInstanceVersionInfo                             metricNewrelicoracledbRacInstanceVersionInfo
 	metricNewrelicoracledbRacServiceClbConfig                                metricNewrelicoracledbRacServiceClbConfig
 	metricNewrelicoracledbRacServiceCreationAgeDays                          metricNewrelicoracledbRacServiceCreationAgeDays
-	metricNewrelicoracledbRacServiceFailoverConfig                           metricNewrelicoracledbRacServiceFailoverConfig
-	metricNewrelicoracledbRacServiceFailoverDelaySeconds                     metricNewrelicoracledbRacServiceFailoverDelaySeconds
-	metricNewrelicoracledbRacServiceFailoverRetries                          metricNewrelicoracledbRacServiceFailoverRetries
 	metricNewrelicoracledbRacServiceInstanceID                               metricNewrelicoracledbRacServiceInstanceID
 	metricNewrelicoracledbRacServiceNetworkConfig                            metricNewrelicoracledbRacServiceNetworkConfig
 	metricNewrelicoracledbRacTotalWaits                                      metricNewrelicoracledbRacTotalWaits
@@ -18889,9 +18713,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbRacInstanceVersionInfo:                             newMetricNewrelicoracledbRacInstanceVersionInfo(mbc.Metrics.NewrelicoracledbRacInstanceVersionInfo),
 		metricNewrelicoracledbRacServiceClbConfig:                                newMetricNewrelicoracledbRacServiceClbConfig(mbc.Metrics.NewrelicoracledbRacServiceClbConfig),
 		metricNewrelicoracledbRacServiceCreationAgeDays:                          newMetricNewrelicoracledbRacServiceCreationAgeDays(mbc.Metrics.NewrelicoracledbRacServiceCreationAgeDays),
-		metricNewrelicoracledbRacServiceFailoverConfig:                           newMetricNewrelicoracledbRacServiceFailoverConfig(mbc.Metrics.NewrelicoracledbRacServiceFailoverConfig),
-		metricNewrelicoracledbRacServiceFailoverDelaySeconds:                     newMetricNewrelicoracledbRacServiceFailoverDelaySeconds(mbc.Metrics.NewrelicoracledbRacServiceFailoverDelaySeconds),
-		metricNewrelicoracledbRacServiceFailoverRetries:                          newMetricNewrelicoracledbRacServiceFailoverRetries(mbc.Metrics.NewrelicoracledbRacServiceFailoverRetries),
 		metricNewrelicoracledbRacServiceInstanceID:                               newMetricNewrelicoracledbRacServiceInstanceID(mbc.Metrics.NewrelicoracledbRacServiceInstanceID),
 		metricNewrelicoracledbRacServiceNetworkConfig:                            newMetricNewrelicoracledbRacServiceNetworkConfig(mbc.Metrics.NewrelicoracledbRacServiceNetworkConfig),
 		metricNewrelicoracledbRacTotalWaits:                                      newMetricNewrelicoracledbRacTotalWaits(mbc.Metrics.NewrelicoracledbRacTotalWaits),
@@ -19298,9 +19119,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbRacInstanceVersionInfo.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacServiceClbConfig.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacServiceCreationAgeDays.emit(ils.Metrics())
-	mb.metricNewrelicoracledbRacServiceFailoverConfig.emit(ils.Metrics())
-	mb.metricNewrelicoracledbRacServiceFailoverDelaySeconds.emit(ils.Metrics())
-	mb.metricNewrelicoracledbRacServiceFailoverRetries.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacServiceInstanceID.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacServiceNetworkConfig.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacTotalWaits.emit(ils.Metrics())
@@ -20168,21 +19986,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts 
 // RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint adds a data point to newrelicoracledb.rac.service.creation_age_days metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string) {
 	mb.metricNewrelicoracledbRacServiceCreationAgeDays.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue)
-}
-
-// RecordNewrelicoracledbRacServiceFailoverConfigDataPoint adds a data point to newrelicoracledb.rac.service.failover_config metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, failoverMethodAttributeValue string, failoverTypeAttributeValue string, serviceGoalAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceFailoverConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, failoverMethodAttributeValue, failoverTypeAttributeValue, serviceGoalAttributeValue)
-}
-
-// RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint adds a data point to newrelicoracledb.rac.service.failover_delay_seconds metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceFailoverDelaySeconds.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue)
-}
-
-// RecordNewrelicoracledbRacServiceFailoverRetriesDataPoint adds a data point to newrelicoracledb.rac.service.failover_retries metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFailoverRetriesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, instanceIDAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceFailoverRetries.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, instanceIDAttributeValue)
 }
 
 // RecordNewrelicoracledbRacServiceInstanceIDDataPoint adds a data point to newrelicoracledb.rac.service.instance_id metric.

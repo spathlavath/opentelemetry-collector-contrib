@@ -586,18 +586,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "failover.method-val", "failover.type-val", "service.goal-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceFailoverRetriesDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceInstanceIDDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "instance.id-val")
 
 			defaultMetricsCount++
@@ -4037,75 +4025,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("service.name")
 					assert.True(t, ok)
 					assert.Equal(t, "service.name-val", attrVal.Str())
-				case "newrelicoracledb.rac.service.failover_config":
-					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.failover_config"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.failover_config")
-					validatedMetrics["newrelicoracledb.rac.service.failover_config"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Service failover configuration indicator (always 1, config in attributes)", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.instance.name")
-					assert.True(t, ok)
-					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("service.name")
-					assert.True(t, ok)
-					assert.Equal(t, "service.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("failover.method")
-					assert.True(t, ok)
-					assert.Equal(t, "failover.method-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("failover.type")
-					assert.True(t, ok)
-					assert.Equal(t, "failover.type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("service.goal")
-					assert.True(t, ok)
-					assert.Equal(t, "service.goal-val", attrVal.Str())
-				case "newrelicoracledb.rac.service.failover_delay_seconds":
-					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.failover_delay_seconds"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.failover_delay_seconds")
-					validatedMetrics["newrelicoracledb.rac.service.failover_delay_seconds"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Failover delay in seconds configured for the service", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.instance.name")
-					assert.True(t, ok)
-					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("service.name")
-					assert.True(t, ok)
-					assert.Equal(t, "service.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
-				case "newrelicoracledb.rac.service.failover_retries":
-					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.failover_retries"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.failover_retries")
-					validatedMetrics["newrelicoracledb.rac.service.failover_retries"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of failover retries configured for the service", ms.At(i).Description())
-					assert.Equal(t, "{retries}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.instance.name")
-					assert.True(t, ok)
-					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("service.name")
-					assert.True(t, ok)
-					assert.Equal(t, "service.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("instance.id")
-					assert.True(t, ok)
-					assert.Equal(t, "instance.id-val", attrVal.Str())
 				case "newrelicoracledb.rac.service.instance_id":
 					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.instance_id"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.instance_id")
 					validatedMetrics["newrelicoracledb.rac.service.instance_id"] = true

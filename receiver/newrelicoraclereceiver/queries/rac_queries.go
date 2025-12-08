@@ -30,29 +30,25 @@ const (
 		FROM GV$INSTANCE`
 
 	// RACActiveServicesSQL returns active services for failover tracking
+	// Note: Only common columns across Oracle versions are selected
 	RACActiveServicesSQL = `
 		SELECT
 			NAME AS SERVICE_NAME,
 			INST_ID,
-			FAILOVER_METHOD,
-			FAILOVER_TYPE,
 			GOAL,
 			NETWORK_NAME,
 			CREATION_DATE,
-			FAILOVER_RETRIES,
-			FAILOVER_DELAY,
 			CLB_GOAL
 		FROM GV$ACTIVE_SERVICES`
 )
 
 // ASM (Automatic Storage Management) Queries
 const (
-	// ASMDetectionSQL checks if ASM instance is available
+	// ASMDetectionSQL checks if ASM instance is available by querying the view directly
+	// Returns row count if ASM is configured, otherwise throws error (caught by client)
 	ASMDetectionSQL = `
 		SELECT COUNT(*) AS ASM_COUNT
-		FROM ALL_TABLES 
-		WHERE TABLE_NAME = 'GV$ASM_DISKGROUP' 
-			AND OWNER = 'SYS'`
+		FROM GV$ASM_DISKGROUP`
 
 	// ASMDiskGroupSQL returns ASM disk group information
 	ASMDiskGroupSQL = `

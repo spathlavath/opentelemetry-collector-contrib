@@ -316,11 +316,8 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 
 func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceInstanceID.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverConfig.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceCreationAgeDays.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverRetries.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverDelaySeconds.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled {
 		return nil
 	}
@@ -347,38 +344,12 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 			s.mb.RecordNewrelicoracledbRacServiceInstanceIDDataPoint(now, instanceIDInt, s.instanceName, serviceNameStr, instanceIDStr)
 		}
 
-		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverConfig.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceFailoverConfigDataPoint(now, int64(1), s.instanceName, serviceNameStr,
-				nullStringToString(service.FailoverMethod), nullStringToString(service.FailoverType), nullStringToString(service.Goal))
-		}
-
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled {
 			s.mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.NetworkName))
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceCreationAgeDays.Enabled {
 			s.mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(now, 1, s.instanceName, serviceNameStr)
-		}
-
-		// Parse and record failover metrics only if enabled
-		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverRetries.Enabled {
-			var failoverRetriesValue int64 = 0
-			if failoverRetriesStr := nullStringToString(service.FailoverRetries); failoverRetriesStr != "" {
-				if retriesInt, err := strconv.ParseInt(failoverRetriesStr, 10, 64); err == nil {
-					failoverRetriesValue = retriesInt
-				}
-			}
-			s.mb.RecordNewrelicoracledbRacServiceFailoverRetriesDataPoint(now, failoverRetriesValue, s.instanceName, serviceNameStr, instanceIDStr)
-		}
-
-		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFailoverDelaySeconds.Enabled {
-			var failoverDelayValue int64 = 0
-			if failoverDelayStr := nullStringToString(service.FailoverDelay); failoverDelayStr != "" {
-				if delayInt, err := strconv.ParseInt(failoverDelayStr, 10, 64); err == nil {
-					failoverDelayValue = delayInt
-				}
-			}
-			s.mb.RecordNewrelicoracledbRacServiceFailoverDelaySecondsDataPoint(now, failoverDelayValue, s.instanceName, serviceNameStr, instanceIDStr)
 		}
 
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled {

@@ -289,15 +289,6 @@ attributes:
   archiver.status:
     description: Oracle archiver status (STARTED, STOPPED)
     type: string
-  failover.method:
-    description: Oracle service failover method
-    type: string
-  failover.type:
-    description: Oracle service failover type
-    type: string
-  service.goal:
-    description: Oracle service goal (THROUGHPUT, SERVICE_TIME, etc.)
-    type: string
   oracle.version:
     description: Oracle database version
     type: string
@@ -3435,18 +3426,8 @@ metrics:
       - archiver.status
 
   # Additional RAC Service Configuration Metrics
-  newrelicoracledb.rac.service.failover_config:
-    description: Service failover configuration indicator (always 1, config in attributes)
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - service.name
-      - failover.method
-      - failover.type
-      - service.goal
+  # NOTE: FAILOVER_METHOD and FAILOVER_TYPE columns removed from GV$ACTIVE_SERVICES query
+  # These columns are not consistently available across Oracle versions (12c/19c/21c)
 
   # Oracle Database Version Metric
   newrelicoracledb.rac.instance.version_info:
@@ -3483,27 +3464,9 @@ metrics:
       - db.instance.name
       - service.name
 
-  newrelicoracledb.rac.service.failover_retries:
-    description: Number of failover retries configured for the service
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{retries}"
-    attributes:
-      - db.instance.name
-      - service.name
-      - instance.id
-
-  newrelicoracledb.rac.service.failover_delay_seconds:
-    description: Failover delay in seconds configured for the service
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "s"
-    attributes:
-      - db.instance.name
-      - service.name
-      - instance.id
+  # NOTE: The following metrics are DEPRECATED and removed
+  # FAILOVER_RETRIES and FAILOVER_DELAY columns do not exist in GV$ACTIVE_SERVICES
+  # in Oracle 12c/19c/21c - these were causing ORA-00904 errors
 
   newrelicoracledb.rac.service.clb_config:
     description: Connection load balancing configuration (always 1, config in attributes)

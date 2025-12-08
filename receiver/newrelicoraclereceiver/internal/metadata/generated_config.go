@@ -157,9 +157,6 @@ type MetricsConfig struct {
 	NewrelicoracledbRacInstanceVersionInfo                             MetricConfig `mapstructure:"newrelicoracledb.rac.instance.version_info"`
 	NewrelicoracledbRacServiceClbConfig                                MetricConfig `mapstructure:"newrelicoracledb.rac.service.clb_config"`
 	NewrelicoracledbRacServiceCreationAgeDays                          MetricConfig `mapstructure:"newrelicoracledb.rac.service.creation_age_days"`
-	NewrelicoracledbRacServiceFailoverConfig                           MetricConfig `mapstructure:"newrelicoracledb.rac.service.failover_config"`
-	NewrelicoracledbRacServiceFailoverDelaySeconds                     MetricConfig `mapstructure:"newrelicoracledb.rac.service.failover_delay_seconds"`
-	NewrelicoracledbRacServiceFailoverRetries                          MetricConfig `mapstructure:"newrelicoracledb.rac.service.failover_retries"`
 	NewrelicoracledbRacServiceInstanceID                               MetricConfig `mapstructure:"newrelicoracledb.rac.service.instance_id"`
 	NewrelicoracledbRacServiceNetworkConfig                            MetricConfig `mapstructure:"newrelicoracledb.rac.service.network_config"`
 	NewrelicoracledbRacTotalWaits                                      MetricConfig `mapstructure:"newrelicoracledb.rac.total_waits"`
@@ -742,15 +739,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbRacServiceCreationAgeDays: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRacServiceFailoverConfig: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRacServiceFailoverDelaySeconds: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRacServiceFailoverRetries: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbRacServiceInstanceID: MetricConfig{

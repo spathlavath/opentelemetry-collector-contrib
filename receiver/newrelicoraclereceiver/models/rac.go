@@ -48,15 +48,12 @@ type RACInstanceStatus struct {
 }
 
 // RACActiveService represents RAC active service information
+// Note: Only columns available across all Oracle versions are included
 type RACActiveService struct {
-	ServiceName     sql.NullString
-	InstID          sql.NullString
-	FailoverMethod  sql.NullString
-	FailoverType    sql.NullString
-	Goal            sql.NullString
-	NetworkName     sql.NullString
-	CreationDate    sql.NullString
-	FailoverRetries sql.NullString
-	FailoverDelay   sql.NullString
-	ClbGoal         sql.NullString
+	ServiceName  sql.NullString
+	InstID       sql.NullString
+	Goal         sql.NullString
+	NetworkName  sql.NullString
+	CreationDate sql.NullString
+	ClbGoal      sql.NullString
 }

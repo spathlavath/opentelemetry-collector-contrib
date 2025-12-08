@@ -259,12 +259,6 @@ all_set:
       enabled: true
     newrelicoracledb.rac.service.creation_age_days:
       enabled: true
-    newrelicoracledb.rac.service.failover_config:
-      enabled: true
-    newrelicoracledb.rac.service.failover_delay_seconds:
-      enabled: true
-    newrelicoracledb.rac.service.failover_retries:
-      enabled: true
     newrelicoracledb.rac.service.instance_id:
       enabled: true
     newrelicoracledb.rac.service.network_config:
@@ -918,12 +912,6 @@ none_set:
     newrelicoracledb.rac.service.clb_config:
       enabled: false
     newrelicoracledb.rac.service.creation_age_days:
-      enabled: false
-    newrelicoracledb.rac.service.failover_config:
-      enabled: false
-    newrelicoracledb.rac.service.failover_delay_seconds:
-      enabled: false
-    newrelicoracledb.rac.service.failover_retries:
       enabled: false
     newrelicoracledb.rac.service.instance_id:
       enabled: false

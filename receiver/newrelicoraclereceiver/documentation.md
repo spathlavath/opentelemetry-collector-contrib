@@ -2061,56 +2061,6 @@ Service age in days since creation
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 
-### newrelicoracledb.rac.service.failover_config
-
-Service failover configuration indicator (always 1, config in attributes)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| failover.method | Oracle service failover method | Any Str | false |
-| failover.type | Oracle service failover type | Any Str | false |
-| service.goal | Oracle service goal (THROUGHPUT, SERVICE_TIME, etc.) | Any Str | false |
-
-### newrelicoracledb.rac.service.failover_delay_seconds
-
-Failover delay in seconds configured for the service
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.rac.service.failover_retries
-
-Number of failover retries configured for the service
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {retries} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.rac.service.instance_id
 
 Instance ID where the service is currently running
