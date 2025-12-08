@@ -76,7 +76,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 				continue
 			}
 
-			if err := s.buildExecutionPlanLogs(&row); err != nil {
+			// Pass the timestamp from the identifier (when the query was captured)
+			if err := s.buildExecutionPlanLogs(&row, identifier.Timestamp); err != nil {
 				s.logger.Warn("Failed to build logs for execution plan row",
 					zap.String("sql_id", row.SQLID.String),
 					zap.Error(err))
@@ -89,6 +90,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		s.logger.Debug("Scraped execution plan rows",
 			zap.String("sql_id", identifier.SQLID),
 			zap.Int64("child_number", identifier.ChildNumber),
+			zap.Time("query_timestamp", identifier.Timestamp),
 			zap.Int("total", len(planRows)),
 			zap.Int("success", successCount),
 			zap.Int("failed", len(errs)))
@@ -99,7 +101,9 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 
 // buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
 // Each field from V$SQL_PLAN is sent as a separate attribute for direct querying in New Relic.
-func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow) error {
+// The queryTimestamp parameter is the timestamp when the query was captured (from wait event or slow query)
+// and is used to correlate execution plans with their actual query execution time.
+func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
 	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
 	}
@@ -187,10 +191,13 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		ioCost = s.parseIntSafe(row.IOCost.String)
 	}
 
-	timestamp := ""
+	planGeneratedTimestamp := ""
 	if row.Timestamp.Valid {
-		timestamp = row.Timestamp.String
+		planGeneratedTimestamp = row.Timestamp.String
 	}
+
+	// Convert queryTimestamp to string for the timestamp attribute
+	queryTimestampStr := queryTimestamp.Format(time.RFC3339)
 
 	tempSpace := int64(-1)
 	if row.TempSpace.Valid && row.TempSpace.String != "" {
@@ -218,9 +225,11 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	}
 
 	// Record the event with all attributes
+	// Use the query timestamp (when the query was captured) instead of time.Now() (scraper time)
+	// This ensures execution plans are correlated with their actual query execution time
 	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
 		context.Background(),
-		pcommon.NewTimestampFromTime(time.Now()),
+		pcommon.NewTimestampFromTime(queryTimestamp),
 		"OracleExecutionPlan",
 		queryID,
 		planHashValue,
@@ -239,7 +248,8 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		bytes,
 		cpuCost,
 		ioCost,
-		timestamp,
+		queryTimestampStr,
+		planGeneratedTimestamp,
 		tempSpace,
 		accessPredicates,
 		projection,

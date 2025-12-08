@@ -82,6 +82,7 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
+| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | sql_child_number | SQL child cursor number | Any Int | false |
 | sql_exec_id | SQL execution identifier | Any Int | false |
@@ -5047,6 +5048,7 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
 | session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | sql_child_number | SQL child cursor number | Any Int | false |
 | wait_event_name | Oracle wait event name for wait events | Any Str | false |
@@ -5098,7 +5100,8 @@ Oracle SQL execution plan data with individual fields for each plan step. Contai
 | bytes | Estimated number of bytes the operation will return | Any Int |
 | cpu_cost | Estimated CPU cost of the operation | Any Int |
 | io_cost | Estimated I/O cost of the operation | Any Int |
-| timestamp | Timestamp when the execution plan was created | Any Str |
+| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str |
+| plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str |
 | temp_space | Estimated temporary space required for the operation (in bytes) | Any Int |
 | access_predicates | Access predicates used to locate rows in an access structure | Any Str |
 | projection | Column projection information from the operation | Any Str |

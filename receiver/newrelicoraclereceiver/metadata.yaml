@@ -97,7 +97,10 @@ attributes:
     description: Estimated I/O cost of the operation
     type: int
   timestamp:
-    description: Timestamp when the execution plan was created
+    description: Timestamp when the query was captured/observed (from wait event or slow query)
+    type: string
+  plan_generated_timestamp:
+    description: Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP)
     type: string
   temp_space:
     description: Estimated temporary space required for the operation (in bytes)
@@ -129,6 +132,9 @@ attributes:
     type: string
   session_status:
     description: Oracle session status (ACTIVE, INACTIVE, etc.)
+    type: string
+  session_state:
+    description: Oracle session state (WAITING or not WAITING)
     type: string
   session_program:
     description: Program name of the session
@@ -382,6 +388,7 @@ events:
       - cpu_cost
       - io_cost
       - timestamp
+      - plan_generated_timestamp
       - temp_space
       - access_predicates
       - projection
@@ -3759,6 +3766,7 @@ metrics:
       - user_name
       - session_id
       - session_serial
+      - session_state
       - query_id
       - sql_child_number
       - sql_exec_id
@@ -3855,6 +3863,7 @@ metrics:
       - session_id
       - session_serial
       - session_status
+      - session_state
       - query_id
       - sql_child_number
       - wait_event_name

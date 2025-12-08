@@ -8,7 +8,7 @@ import "database/sql"
 // ExecutionPlanRow represents a single row from V$SQL_PLAN
 type ExecutionPlanRow struct {
 	SQLID            sql.NullString
-	Timestamp        sql.NullString
+	Timestamp        sql.NullString // Date and time when the execution plan was generated (from V$SQL_PLAN.TIMESTAMP)
 	TempSpace        sql.NullString // Changed to string to handle large values
 	AccessPredicates sql.NullString
 	Projection       sql.NullString

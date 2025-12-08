@@ -64,9 +64,15 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 // This combines both wait events and blocking queries into a single query to reduce overhead
 // High cardinality mitigation:
 // - FETCH FIRST limits total rows returned to configured rowLimit
-// - Filters active sessions with actual waits (status='ACTIVE', wait_class<>'Idle', wait_time_micro>0)
+// - Filters active sessions capturing both CPU activity and actual waits (status='ACTIVE', excludes Idle waits and BACKGROUND processes)
 // - Optional SQL_ID filter (slowQuerySQLIDs) for database-level filtering
-// - Orders by wait time to get most impactful sessions first
+// - Orders by time in state (CPU or wait time) to get most impactful sessions first
+//
+// Key improvements:
+// - Captures CPU activity (state != 'WAITING') in addition to wait events
+// - Correctly labels activity as 'ON CPU' or actual wait event name
+// - Uses proper timer: wait_time_micro for WAITING state, time_since_last_wait_micro for CPU
+// - Excludes background processes to match ASH behavior
 func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string {
 	sqlIDFilter := ""
 	if len(slowQuerySQLIDs) > 0 {
@@ -84,11 +90,17 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			s.sid,
 			s.serial#,
 			s.status,
+			s.state,
 			s.sql_id,
 			s.SQL_CHILD_NUMBER,
 			s.wait_class,
 			s.event,
-			ROUND(s.WAIT_TIME_MICRO / 1000, 2) AS wait_time_ms,
+			ROUND(
+				CASE
+					WHEN s.state = 'WAITING' THEN s.WAIT_TIME_MICRO
+					ELSE s.TIME_SINCE_LAST_WAIT_MICRO
+				END / 1000, 2
+			) AS wait_time_ms,
 			s.SQL_EXEC_START,
 			s.SQL_EXEC_ID,
 			s.PROGRAM,
@@ -119,12 +131,18 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			v$database d
 		WHERE
 			s.status = 'ACTIVE'
-			AND s.wait_class <> 'Idle'
-			AND s.WAIT_TIME_MICRO > 0
-			AND s.state = 'WAITING'
+			AND s.type != 'BACKGROUND'
+			AND s.sql_id IS NOT NULL
+			AND (
+				s.state != 'WAITING'
+				OR s.wait_class <> 'Idle'
+			)
 			%s
 		ORDER BY
-			s.WAIT_TIME_MICRO DESC
+			CASE
+				WHEN s.state = 'WAITING' THEN s.WAIT_TIME_MICRO
+				ELSE s.TIME_SINCE_LAST_WAIT_MICRO
+			END DESC
 		FETCH FIRST %d ROWS ONLY`, sqlIDFilter, rowLimit)
 }
 
