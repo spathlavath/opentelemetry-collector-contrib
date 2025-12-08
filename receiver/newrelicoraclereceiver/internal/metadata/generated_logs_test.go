@@ -129,7 +129,7 @@ func TestLogsBuilder(t *testing.T) {
 			allEventsCount := 0
 			defaultEventsCount++
 			allEventsCount++
-			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "newrelic.event.type-val", "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
+			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "newrelic.event.type-val", "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", "plan_generated_timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
 
 			rb := lb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -220,6 +220,9 @@ func TestLogsBuilder(t *testing.T) {
 					attrVal, ok = lr.Attributes().Get("timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "timestamp-val", attrVal.Str())
+					attrVal, ok = lr.Attributes().Get("plan_generated_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_generated_timestamp-val", attrVal.Str())
 					attrVal, ok = lr.Attributes().Get("temp_space")
 					assert.True(t, ok)
 					assert.EqualValues(t, 10, attrVal.Int())

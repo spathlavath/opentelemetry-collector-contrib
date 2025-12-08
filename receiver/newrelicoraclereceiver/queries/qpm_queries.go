@@ -93,14 +93,8 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			s.state,
 			s.sql_id,
 			s.SQL_CHILD_NUMBER,
-			CASE
-				WHEN s.state != 'WAITING' THEN 'CPU'
-				ELSE s.wait_class
-			END AS wait_class,
-			CASE
-				WHEN s.state != 'WAITING' THEN 'ON CPU'
-				ELSE s.event
-			END AS event,
+			s.wait_class,
+			s.event,
 			ROUND(
 				CASE
 					WHEN s.state = 'WAITING' THEN s.WAIT_TIME_MICRO

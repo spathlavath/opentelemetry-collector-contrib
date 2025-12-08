@@ -5100,7 +5100,8 @@ Oracle SQL execution plan data with individual fields for each plan step. Contai
 | bytes | Estimated number of bytes the operation will return | Any Int |
 | cpu_cost | Estimated CPU cost of the operation | Any Int |
 | io_cost | Estimated I/O cost of the operation | Any Int |
-| timestamp | Timestamp when the execution plan was created | Any Str |
+| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str |
+| plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str |
 | temp_space | Estimated temporary space required for the operation (in bytes) | Any Int |
 | access_predicates | Access predicates used to locate rows in an access structure | Any Str |
 | projection | Column projection information from the operation | Any Str |

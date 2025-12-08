@@ -191,10 +191,13 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		ioCost = s.parseIntSafe(row.IOCost.String)
 	}
 
-	timestamp := ""
+	planGeneratedTimestamp := ""
 	if row.Timestamp.Valid {
-		timestamp = row.Timestamp.String
+		planGeneratedTimestamp = row.Timestamp.String
 	}
+
+	// Convert queryTimestamp to string for the timestamp attribute
+	queryTimestampStr := queryTimestamp.Format(time.RFC3339)
 
 	tempSpace := int64(-1)
 	if row.TempSpace.Valid && row.TempSpace.String != "" {
@@ -245,7 +248,8 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		bytes,
 		cpuCost,
 		ioCost,
-		timestamp,
+		queryTimestampStr,
+		planGeneratedTimestamp,
 		tempSpace,
 		accessPredicates,
 		projection,
