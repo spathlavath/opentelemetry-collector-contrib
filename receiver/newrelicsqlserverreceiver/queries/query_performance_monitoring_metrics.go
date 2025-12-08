@@ -122,44 +122,6 @@ FROM
 
 
 
-// WaitQuery - Real-time wait statistics from dm_exec_requests (NO Query Store)
-// This query captures currently waiting queries directly from sys.dm_exec_requests
-// providing real-time wait analysis without Query Store performance overhead
-const WaitQuery = `DECLARE @TopN INT = %d; 				-- Number of results to retrieve
-				DECLARE @TextTruncateLimit INT = %d; 	-- Truncate limit for query_text
-
-SELECT TOP (@TopN)
-    r.query_hash AS query_id,
-    DB_NAME(r.database_id) AS database_name,
-    -- Using full text to avoid SUBSTRING calculation errors when offsets are invalid
-    LEFT(st.text, @TextTruncateLimit) AS query_text,
-    -- Categorize wait types
-    CASE
-        WHEN r.wait_type LIKE 'PAGEIOLATCH%%' OR r.wait_type LIKE 'WRITELOG%%' OR r.wait_type LIKE 'IO_COMPLETION%%' THEN 'I/O'
-        WHEN r.wait_type LIKE 'LCK_%%' OR r.wait_type LIKE 'LOCK_%%' THEN 'Lock'
-        WHEN r.wait_type LIKE 'SOS_SCHEDULER_YIELD%%' OR r.wait_type LIKE 'THREADPOOL%%' THEN 'CPU'
-        WHEN r.wait_type LIKE 'NETWORK_%%' OR r.wait_type LIKE 'ASYNC_NETWORK_%%' THEN 'Network'
-        WHEN r.wait_type LIKE 'RESOURCE_SEMAPHORE%%' OR r.wait_type LIKE 'CMEMTHREAD%%' THEN 'Memory'
-        WHEN r.wait_type LIKE 'CXPACKET%%' OR r.wait_type LIKE 'CXCONSUMER%%' THEN 'Parallelism'
-        ELSE 'Other'
-    END AS wait_category,
-    r.wait_time AS total_wait_time_ms,
-    r.wait_time AS avg_wait_time_ms,
-    1 AS wait_event_count,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(r.start_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_time,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
-FROM sys.dm_exec_requests r
-INNER JOIN sys.dm_exec_sessions s ON r.session_id = s.session_id
-CROSS APPLY sys.dm_exec_sql_text(r.sql_handle) st
-WHERE r.session_id > 50
-    AND r.database_id > 4
-    AND r.wait_type IS NOT NULL
-    AND r.wait_time > 0
-    -- OPTIMIZED: Removed expensive LIKE filters - Go code handles these post-query
-    -- Only ~20-50 rows returned, so text filtering in Go is faster
-ORDER BY r.wait_time DESC
-OPTION (RECOMPILE);`
-
 // ActiveQueryExecutionPlanQuery fetches the execution plan for an active query using its plan_handle
 // NOTE: This is used only for active running queries, NOT for slow queries from dm_exec_query_stats
 const ActiveQueryExecutionPlanQuery = `
@@ -378,114 +340,15 @@ ORDER BY
     r_wait.total_elapsed_time DESC  -- Sort by slowest executions first (not wait_time)
 OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values`
 
-// LockedObjectsBySessionQuery retrieves detailed information about objects locked by a specific session
-// This query resolves lock resources to actual table/object names for better troubleshooting
-// Returns: locked object names, lock types, lock granularity (table/page/row level)
-const LockedObjectsBySessionQuery = `
-DECLARE @SessionID INT = %d;
 
-SELECT
-    l.request_session_id AS session_id,
-    DB_NAME(l.resource_database_id) AS database_name,
-    OBJECT_SCHEMA_NAME(p.object_id, l.resource_database_id) AS schema_name,
-    OBJECT_NAME(p.object_id, l.resource_database_id) AS locked_object_name,
-    l.resource_type,
-    CASE l.resource_type
-        WHEN 'OBJECT' THEN 'Table Lock'
-        WHEN 'PAGE' THEN 'Page Lock'
-        WHEN 'KEY' THEN 'Row Lock'
-        WHEN 'RID' THEN 'Row Lock'
-        WHEN 'DATABASE' THEN 'Database Lock'
-        WHEN 'FILE' THEN 'File Lock'
-        WHEN 'HOBT' THEN 'Heap/B-Tree Lock'
-        WHEN 'ALLOCATION_UNIT' THEN 'Allocation Unit Lock'
-        ELSE l.resource_type
-    END AS lock_granularity,
-    l.request_mode AS lock_mode,
-    l.request_status AS lock_status,
-    l.request_type AS lock_request_type,
-    l.resource_description,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
-FROM sys.dm_tran_locks l
-LEFT JOIN sys.partitions p
-    ON l.resource_associated_entity_id = p.hobt_id
-    AND l.resource_type IN ('PAGE', 'KEY', 'RID', 'HOBT')
-WHERE l.request_session_id = @SessionID
-    AND l.resource_database_id > 0
-ORDER BY l.resource_database_id, locked_object_name, l.resource_type;`
-
-// ActiveQueryStatsForSlowQueryUnion fetches currently running queries from dm_exec_requests
-// to backfill slow query metrics for queries that are active but not yet in dm_exec_query_stats
-// This ensures complete correlation: all active queries have corresponding slow query metrics
-const ActiveQueryStatsForSlowQueryUnion = `
-DECLARE @TextTruncateLimit INT = %d; -- Truncate limit for query_text
-
-SELECT
-    r.query_hash AS query_id,
-    r.plan_handle,
-    LEFT(st.text, @TextTruncateLimit) AS query_text,
-    DB_NAME(r.database_id) AS database_name,
-    OBJECT_SCHEMA_NAME(st.objectid, r.database_id) AS schema_name,
-    OBJECT_NAME(st.objectid, r.database_id) AS object_name,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(r.start_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_timestamp,
-    -- Use 1 as execution count (this is the current running execution)
-    CAST(1 AS BIGINT) AS execution_count,
-    -- Current execution stats as "avg" since we only have this one execution
-    r.cpu_time / 1000.0 AS avg_cpu_time_ms,
-    r.total_elapsed_time / 1000.0 AS avg_elapsed_time_ms,
-    r.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
-    CAST(r.reads AS FLOAT) AS avg_disk_reads,
-    CAST(r.writes AS FLOAT) AS avg_disk_writes,
-    CAST(r.row_count AS FLOAT) AS avg_rows_processed,
-    -- Lock wait time approximation: elapsed - cpu
-    CASE
-        WHEN r.total_elapsed_time > r.cpu_time
-        THEN (r.total_elapsed_time - r.cpu_time) / 1000.0
-        ELSE 0.0
-    END AS avg_lock_wait_time_ms,
-    -- Statement type detection
-    CASE
-        WHEN UPPER(LTRIM(SUBSTRING(st.text, 1, 6))) LIKE 'SELECT' THEN 'SELECT'
-        WHEN UPPER(LTRIM(SUBSTRING(st.text, 1, 6))) LIKE 'INSERT' THEN 'INSERT'
-        WHEN UPPER(LTRIM(SUBSTRING(st.text, 1, 6))) LIKE 'UPDATE' THEN 'UPDATE'
-        WHEN UPPER(LTRIM(SUBSTRING(st.text, 1, 6))) LIKE 'DELETE' THEN 'DELETE'
-        ELSE 'OTHER'
-    END AS statement_type,
-    -- RCA Enhancement Fields: Use current execution values
-    r.total_elapsed_time / 1000.0 AS min_elapsed_time_ms,
-    r.total_elapsed_time / 1000.0 AS max_elapsed_time_ms,
-    r.total_elapsed_time / 1000.0 AS last_elapsed_time_ms,
-    r.granted_query_memory AS last_grant_kb,
-    r.granted_query_memory AS last_used_grant_kb,
-    CAST(0 AS BIGINT) AS last_spills, -- dm_exec_requests doesn't have spill info
-    CAST(0 AS BIGINT) AS max_spills,
-    r.dop AS last_dop,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
-FROM
-    sys.dm_exec_requests r
-INNER JOIN
-    sys.dm_exec_sessions s ON s.session_id = r.session_id
-CROSS APPLY
-    sys.dm_exec_sql_text(r.sql_handle) AS st
-WHERE
-    r.session_id > 50
-    AND r.database_id > 4
-    AND r.query_hash IS NOT NULL
-    AND r.plan_handle IS NOT NULL
-    AND st.text IS NOT NULL
-    AND LTRIM(RTRIM(st.text)) <> ''
-    AND DB_NAME(r.database_id) NOT IN ('master', 'model', 'msdb', 'tempdb')
-    -- OPTIMIZED: Removed NOT LIKE filters - only ~10-50 active queries, filter in Go
-ORDER BY r.total_elapsed_time DESC
-OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values`
 
 // ExecutionStatsForActivePlanHandleQuery retrieves execution statistics for a specific plan_handle
 // from sys.dm_exec_query_stats - used for active running queries
 // This provides historical performance data for the exact plan currently executing
-// Parameters: plan_handle (hex string)
+// Parameters: plan_handle (hex string with 0x prefix, e.g., '0x060005...')
 // Returns: Execution statistics WITHOUT XML execution plan (plan already available in ActiveRunningQueriesQuery)
 const ExecutionStatsForActivePlanHandleQuery = `
-DECLARE @PlanHandle VARBINARY(MAX) = %s;
+DECLARE @PlanHandle VARBINARY(MAX) = CONVERT(VARBINARY(MAX), %s, 1);
 
 SELECT
     qs.plan_handle,
@@ -522,14 +385,3 @@ WHERE
     qs.plan_handle = @PlanHandle
 OPTION (RECOMPILE);`
 
-// ExecutionPlanTopLevelDetailsQuery retrieves top-level execution plan details from XML
-// This is a lightweight query that returns high-level plan information without parsing all operators
-// Parameters: plan_handle (hex string)
-const ExecutionPlanTopLevelDetailsQuery = `
-DECLARE @PlanHandle VARBINARY(MAX) = %s;
-
-SELECT
-    @PlanHandle AS plan_handle,
-    CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
-FROM sys.dm_exec_query_plan(@PlanHandle) AS qp
-WHERE qp.query_plan IS NOT NULL;`

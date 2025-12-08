@@ -134,24 +134,24 @@ type ExecutionPlanAnalysis struct {
 // correlation_query_id fallback that uses text hash when query_hash is NULL (non-cached queries)
 type ActiveRunningQuery struct {
 	// A. Current Session Details
-	CurrentSessionID *int64  `db:"current_session_id" metric_name:"sqlserver.activequery.session_id" source_type:"gauge"`
-	RequestID        *int64  `db:"request_id" metric_name:"request_id" source_type:"attribute"`
-	DatabaseName     *string `db:"database_name" metric_name:"database_name" source_type:"attribute"`
-	SchemaName       *string `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
-	ObjectName       *string `db:"object_name" metric_name:"object_name" source_type:"attribute"`
-	LoginName        *string `db:"login_name" metric_name:"login_name" source_type:"attribute"`
-	HostName         *string `db:"host_name" metric_name:"host_name" source_type:"attribute"`
-	ProgramName      *string `db:"program_name" metric_name:"program_name" source_type:"attribute"`
-	RequestCommand   *string `db:"request_command" metric_name:"request_command" source_type:"attribute"`
-	RequestStatus    *string `db:"request_status" metric_name:"request_status" source_type:"attribute"`
-	QueryID *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
-	WaitType                   *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
-	WaitTimeS                  *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
-	WaitResource               *string  `db:"wait_resource" metric_name:"wait_resource" source_type:"attribute"`
-	WaitResourceDecoded        *string  `db:"wait_resource_decoded" metric_name:"wait_resource_decoded" source_type:"attribute"`
-	WaitResourceObjectName     *string  `db:"wait_resource_object_name" metric_name:"wait_resource_object_name" source_type:"attribute"`
-	WaitResourceDatabaseName   *string  `db:"wait_resource_database_name" metric_name:"wait_resource_database_name" source_type:"attribute"`
-	LastWaitType               *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
+	CurrentSessionID         *int64   `db:"current_session_id" metric_name:"sqlserver.activequery.session_id" source_type:"gauge"`
+	RequestID                *int64   `db:"request_id" metric_name:"request_id" source_type:"attribute"`
+	DatabaseName             *string  `db:"database_name" metric_name:"database_name" source_type:"attribute"`
+	SchemaName               *string  `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
+	ObjectName               *string  `db:"object_name" metric_name:"object_name" source_type:"attribute"`
+	LoginName                *string  `db:"login_name" metric_name:"login_name" source_type:"attribute"`
+	HostName                 *string  `db:"host_name" metric_name:"host_name" source_type:"attribute"`
+	ProgramName              *string  `db:"program_name" metric_name:"program_name" source_type:"attribute"`
+	RequestCommand           *string  `db:"request_command" metric_name:"request_command" source_type:"attribute"`
+	RequestStatus            *string  `db:"request_status" metric_name:"request_status" source_type:"attribute"`
+	QueryID                  *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
+	WaitType                 *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
+	WaitTimeS                *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
+	WaitResource             *string  `db:"wait_resource" metric_name:"wait_resource" source_type:"attribute"`
+	WaitResourceDecoded      *string  `db:"wait_resource_decoded" metric_name:"wait_resource_decoded" source_type:"attribute"`
+	WaitResourceObjectName   *string  `db:"wait_resource_object_name" metric_name:"wait_resource_object_name" source_type:"attribute"`
+	WaitResourceDatabaseName *string  `db:"wait_resource_database_name" metric_name:"wait_resource_database_name" source_type:"attribute"`
+	LastWaitType             *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
 
 	WaitResourceSchemaNameObject *string `db:"wait_resource_schema_name_object" metric_name:"wait_resource_schema_name_object" source_type:"attribute"`
 	WaitResourceObjectType       *string `db:"wait_resource_object_type" metric_name:"wait_resource_object_type" source_type:"attribute"`
@@ -191,13 +191,13 @@ type ActiveRunningQuery struct {
 	// I. Blocking Details
 	// LINKING FIX: Changed from *string to *int64 for proper numeric joins
 	// NULL when not blocked (was "N/A" string) - enables: WHERE blocking_session_id = 123
-	BlockingSessionID             *int64  `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
-	BlockerLoginName              *string `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
-	BlockerHostName               *string `db:"blocker_host_name" metric_name:"blocker_host_name" source_type:"attribute"`
-	BlockerProgramName            *string `db:"blocker_program_name" metric_name:"blocker_program_name" source_type:"attribute"`
-	BlockerStatus                 *string `db:"blocker_status" metric_name:"blocker_status" source_type:"attribute"`
-	BlockerIsolationLevel         *int64  `db:"blocker_isolation_level" metric_name:"blocker_isolation_level" source_type:"attribute"`
-	BlockerOpenTransactionCount   *int64  `db:"blocker_open_transaction_count" metric_name:"blocker_open_transaction_count" source_type:"gauge"`
+	BlockingSessionID           *int64  `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
+	BlockerLoginName            *string `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
+	BlockerHostName             *string `db:"blocker_host_name" metric_name:"blocker_host_name" source_type:"attribute"`
+	BlockerProgramName          *string `db:"blocker_program_name" metric_name:"blocker_program_name" source_type:"attribute"`
+	BlockerStatus               *string `db:"blocker_status" metric_name:"blocker_status" source_type:"attribute"`
+	BlockerIsolationLevel       *int64  `db:"blocker_isolation_level" metric_name:"blocker_isolation_level" source_type:"attribute"`
+	BlockerOpenTransactionCount *int64  `db:"blocker_open_transaction_count" metric_name:"blocker_open_transaction_count" source_type:"gauge"`
 
 	// J. Query Text
 	QueryStatementText         *string `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
@@ -230,13 +230,13 @@ type LockedObject struct {
 // PlanHandleResult represents a plan_handle and its associated execution plan for an active query
 // Used to fetch top N most recently used execution plans for a given query_hash
 type PlanHandleResult struct {
-	PlanHandle         *QueryID `db:"plan_handle"`
-	QueryHash          *QueryID `db:"query_hash"`
-	QueryID            *QueryID `db:"query_id"` // Alias for query_hash (used in slow query context)
-	QueryPlanHash      *QueryID `db:"query_plan_hash"`
-	LastExecutionTime  *string  `db:"last_execution_time"`
-	CreationTime       *string  `db:"creation_time"`
-	ExecutionCount     *int64   `db:"execution_count"`
+	PlanHandle        *QueryID `db:"plan_handle"`
+	QueryHash         *QueryID `db:"query_hash"`
+	QueryID           *QueryID `db:"query_id"` // Alias for query_hash (used in slow query context)
+	QueryPlanHash     *QueryID `db:"query_plan_hash"`
+	LastExecutionTime *string  `db:"last_execution_time"`
+	CreationTime      *string  `db:"creation_time"`
+	ExecutionCount    *int64   `db:"execution_count"`
 
 	// Elapsed Time Statistics
 	TotalElapsedTimeMs *float64 `db:"total_elapsed_time_ms"`

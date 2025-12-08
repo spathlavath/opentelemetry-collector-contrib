@@ -4,6 +4,7 @@ status:
   class: receiver
   stability:
     alpha: [metrics]
+    development: [logs]
   distributions: [contrib]
   codeowners:
     active: [tanushangural]
@@ -1812,6 +1813,121 @@ attributes:
   engine_edition_id:
     description: SQL Server engine edition ID
     type: int
+  newrelic_event_type:
+    description: New Relic custom event type identifier
+    type: string
+  node_id:
+    description: Execution plan node identifier
+    type: int
+  parent_node_id:
+    description: Parent node identifier in execution plan tree
+    type: int
+  input_type:
+    description: Type of input to the operator
+    type: string
+  physical_op:
+    description: Physical operator name (e.g., Index Seek, Table Scan)
+    type: string
+  logical_op:
+    description: Logical operator name
+    type: string
+  table_name:
+    description: Table name referenced in the operator
+    type: string
+  index_name:
+    description: Index name used by the operator
+    type: string
+  referenced_columns:
+    description: Comma-separated list of columns referenced
+    type: string
+  estimate_rows:
+    description: Estimated number of rows
+    type: double
+  estimate_io:
+    description: Estimated I/O cost
+    type: double
+  estimate_cpu:
+    description: Estimated CPU cost
+    type: double
+  avg_row_size:
+    description: Average row size in bytes
+    type: double
+  total_subtree_cost:
+    description: Cumulative cost of this operator and its children
+    type: double
+  estimated_operator_cost:
+    description: Estimated cost of this operator alone
+    type: double
+  estimated_execution_mode:
+    description: Execution mode (Row, Batch)
+    type: string
+  granted_memory_kb:
+    description: Memory granted in KB
+    type: int
+  spill_occurred:
+    description: Whether memory spill occurred
+    type: bool
+  no_join_predicate:
+    description: Whether join lacks a predicate (potential Cartesian product)
+    type: bool
+  total_worker_time:
+    description: Total CPU time for this operator
+    type: double
+  total_elapsed_time:
+    description: Total elapsed time for this operator
+    type: double
+  total_logical_reads:
+    description: Total logical reads for this operator
+    type: int
+  total_logical_writes:
+    description: Total logical writes for this operator
+    type: int
+  execution_count:
+    description: Number of times this operator executed
+    type: int
+  avg_elapsed_time_ms:
+    description: Average elapsed time in milliseconds
+    type: double
+
+events:
+  sqlserver.active_query_execution_plan:
+    enabled: true
+    description: Execution plan details for active SQL Server queries
+    attributes:
+      - newrelic_event_type
+      - query_id
+      - plan_handle
+      - session_id
+      - request_id
+      - database_name
+      - start_time
+      - node_id
+      - parent_node_id
+      - input_type
+      - physical_op
+      - logical_op
+      - query_text
+      - schema_name
+      - table_name
+      - index_name
+      - referenced_columns
+      - estimate_rows
+      - estimate_io
+      - estimate_cpu
+      - avg_row_size
+      - total_subtree_cost
+      - estimated_operator_cost
+      - estimated_execution_mode
+      - granted_memory_kb
+      - spill_occurred
+      - no_join_predicate
+      - total_worker_time
+      - total_elapsed_time
+      - total_logical_reads
+      - total_logical_writes
+      - execution_count
+      - avg_elapsed_time_ms
+      - last_execution_time
 
 tests:
   config:

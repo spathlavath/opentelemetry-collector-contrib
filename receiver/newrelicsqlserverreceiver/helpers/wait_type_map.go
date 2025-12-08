@@ -140,27 +140,27 @@ func getSQLServerWaitTypeMap() map[string]string {
 		// ============================================================
 		// SERVICE BROKER WAITS
 		// ============================================================
-		"BROKER_RECEIVE_WAITFOR":   "Service Broker - Receive Wait",
-		"BROKER_TRANSMITTER":       "Service Broker - Transmitter Wait",
-		"BROKER_TASK_STOP":         "Service Broker - Task Stop",
-		"DBMIRROR_EVENTS_QUEUE":    "Database Mirroring - Event Queue",
+		"BROKER_RECEIVE_WAITFOR": "Service Broker - Receive Wait",
+		"BROKER_TRANSMITTER":     "Service Broker - Transmitter Wait",
+		"BROKER_TASK_STOP":       "Service Broker - Task Stop",
+		"DBMIRROR_EVENTS_QUEUE":  "Database Mirroring - Event Queue",
 
 		// ============================================================
 		// SLEEP/IDLE WAITS
 		// ============================================================
-		"SLEEP_TASK":           "Sleep - Intentional Wait (WAITFOR command)",
-		"SLEEP_BPOOL_STEAL":    "Sleep - Buffer Pool Steal",
-		"SLEEP_SYSTEMTASK":     "Sleep - System Task Wait",
-		"LAZYWRITER_SLEEP":     "Sleep - Lazy Writer Wait",
+		"SLEEP_TASK":        "Sleep - Intentional Wait (WAITFOR command)",
+		"SLEEP_BPOOL_STEAL": "Sleep - Buffer Pool Steal",
+		"SLEEP_SYSTEMTASK":  "Sleep - System Task Wait",
+		"LAZYWRITER_SLEEP":  "Sleep - Lazy Writer Wait",
 
 		// ============================================================
 		// CLR WAITS
 		// ============================================================
-		"CLR_AUTO_EVENT":    "CLR - Auto Event Wait",
-		"CLR_MANUAL_EVENT":  "CLR - Manual Event Wait",
-		"CLR_SEMAPHORE":     "CLR - Semaphore Wait",
-		"SQLCLR_APPDOMAIN":  "CLR - Application Domain Startup",
-		"SQLCLR_ASSEMBLY":   "CLR - Assembly List Access",
+		"CLR_AUTO_EVENT":   "CLR - Auto Event Wait",
+		"CLR_MANUAL_EVENT": "CLR - Manual Event Wait",
+		"CLR_SEMAPHORE":    "CLR - Semaphore Wait",
+		"SQLCLR_APPDOMAIN": "CLR - Application Domain Startup",
+		"SQLCLR_ASSEMBLY":  "CLR - Assembly List Access",
 
 		// ============================================================
 		// FULL-TEXT SEARCH WAITS
@@ -171,70 +171,70 @@ func getSQLServerWaitTypeMap() map[string]string {
 		// ============================================================
 		// BATCH MODE / COLUMNSTORE WAITS
 		// ============================================================
-		"HTBUILD":          "Batch Mode - Hash Table Build",
-		"HTDELETE":         "Batch Mode - Hash Table Delete",
-		"HTREINIT":         "Batch Mode - Hash Table Reinit",
-		"HTREPARTITION":    "Batch Mode - Hash Table Repartition",
-		"BMPALLOCATION":    "Batch Mode - Bitmap Filter Allocation",
-		"BMPBUILD":         "Batch Mode - Bitmap Filter Build",
-		"BMPREPARTITION":   "Batch Mode - Bitmap Filter Repartition",
+		"HTBUILD":        "Batch Mode - Hash Table Build",
+		"HTDELETE":       "Batch Mode - Hash Table Delete",
+		"HTREINIT":       "Batch Mode - Hash Table Reinit",
+		"HTREPARTITION":  "Batch Mode - Hash Table Repartition",
+		"BMPALLOCATION":  "Batch Mode - Bitmap Filter Allocation",
+		"BMPBUILD":       "Batch Mode - Bitmap Filter Build",
+		"BMPREPARTITION": "Batch Mode - Bitmap Filter Repartition",
 
 		// ============================================================
 		// IN-MEMORY OLTP (HEKATON) WAITS
 		// ============================================================
-		"WAIT_XTP_GUEST":              "In-Memory OLTP - Guest Wait",
-		"WAIT_XTP_HOST_WAIT":          "In-Memory OLTP - Host Wait",
+		"WAIT_XTP_GUEST":                "In-Memory OLTP - Guest Wait",
+		"WAIT_XTP_HOST_WAIT":            "In-Memory OLTP - Host Wait",
 		"WAIT_XTP_OFFLINE_CKPT_NEW_LOG": "In-Memory OLTP - Offline Checkpoint New Log",
-		"WAIT_XTP_CKPT_CLOSE":         "In-Memory OLTP - Checkpoint Close",
-		"XTPPROC_CACHE_ACCESS":        "In-Memory OLTP - Procedure Cache Access",
+		"WAIT_XTP_CKPT_CLOSE":           "In-Memory OLTP - Checkpoint Close",
+		"XTPPROC_CACHE_ACCESS":          "In-Memory OLTP - Procedure Cache Access",
 
 		// ============================================================
 		// QUERY STORE WAITS
 		// ============================================================
-		"QDS_SHUTDOWN_QUEUE":           "Query Store - Shutdown Queue",
+		"QDS_SHUTDOWN_QUEUE":                             "Query Store - Shutdown Queue",
 		"QDS_CLEANUP_STALE_QUERIES_TASK_MAIN_LOOP_SLEEP": "Query Store - Cleanup Task Sleep",
-		"QDS_PERSIST_TASK_MAIN_LOOP_SLEEP": "Query Store - Persist Task Sleep",
+		"QDS_PERSIST_TASK_MAIN_LOOP_SLEEP":               "Query Store - Persist Task Sleep",
 
 		// ============================================================
 		// MISCELLANEOUS COMMON WAITS
 		// ============================================================
-		"OLEDB":                  "External Data Access - OLE DB Provider Call",
-		"MSQL_XP":                "Extended Stored Procedure - Execution Wait",
-		"WAITFOR":                "Waitfor - User-Initiated Wait",
-		"ONDEMAND_TASK_QUEUE":    "Background Task - Waiting for High Priority Requests",
-		"TEMPOBJ":                "Temp Object - Drop Synchronization",
-		"TRACEWRITE":             "Trace - Buffer Wait",
-		"SQLTRACE_BUFFER_FLUSH":  "Trace - Buffer Flush",
-		"DEADLOCK_ENUM_MUTEX":    "Deadlock - Detection Synchronization",
-		"DEADLOCK_TASK_SEARCH":   "Deadlock - Task Search",
-		"DBMIRROR_SEND":          "Database Mirroring - Send Wait",
-		"DBMIRRORING_CMD":        "Database Mirroring - Command Wait",
-		"ASYNC_DISKPOOL_LOCK":      "Async - Disk Pool Lock",
-		"FCB_REPLICA_WRITE":        "Snapshot - Sparse File Write",
-		"FCB_REPLICA_READ":         "Snapshot - Sparse File Read",
-		"QRY_MEM_GRANT_INFO_MUTEX": "Query - Memory Grant Info Mutex",
-		"SOS_WORK_DISPATCHER":    "SOS - Work Dispatcher",
-		"POOL_LOG_RATE_GOVERNOR": "Log Rate - Pool Governor",
+		"OLEDB":                      "External Data Access - OLE DB Provider Call",
+		"MSQL_XP":                    "Extended Stored Procedure - Execution Wait",
+		"WAITFOR":                    "Waitfor - User-Initiated Wait",
+		"ONDEMAND_TASK_QUEUE":        "Background Task - Waiting for High Priority Requests",
+		"TEMPOBJ":                    "Temp Object - Drop Synchronization",
+		"TRACEWRITE":                 "Trace - Buffer Wait",
+		"SQLTRACE_BUFFER_FLUSH":      "Trace - Buffer Flush",
+		"DEADLOCK_ENUM_MUTEX":        "Deadlock - Detection Synchronization",
+		"DEADLOCK_TASK_SEARCH":       "Deadlock - Task Search",
+		"DBMIRROR_SEND":              "Database Mirroring - Send Wait",
+		"DBMIRRORING_CMD":            "Database Mirroring - Command Wait",
+		"ASYNC_DISKPOOL_LOCK":        "Async - Disk Pool Lock",
+		"FCB_REPLICA_WRITE":          "Snapshot - Sparse File Write",
+		"FCB_REPLICA_READ":           "Snapshot - Sparse File Read",
+		"QRY_MEM_GRANT_INFO_MUTEX":   "Query - Memory Grant Info Mutex",
+		"SOS_WORK_DISPATCHER":        "SOS - Work Dispatcher",
+		"POOL_LOG_RATE_GOVERNOR":     "Log Rate - Pool Governor",
 		"INSTANCE_LOG_RATE_GOVERNOR": "Log Rate - Instance Governor",
-		"RBIO_RG_STORAGE":        "Hyperscale - Log Consumption by Page Servers",
-		"RBIO_RG_DESTAGE":        "Hyperscale - Log Consumption by Long-Term Storage",
+		"RBIO_RG_STORAGE":            "Hyperscale - Log Consumption by Page Servers",
+		"RBIO_RG_DESTAGE":            "Hyperscale - Log Consumption by Long-Term Storage",
 
 		// ============================================================
 		// INTERNAL/INFORMATIONAL WAITS (Less Critical)
 		// ============================================================
-		"ASSEMBLY_LOAD":           "Internal - Assembly Loading",
-		"BROKER_EVENTHANDLER":     "Internal - Service Broker Event Handler",
-		"CHECKPOINT_QUEUE":        "Internal - Checkpoint Queue",
-		"CHKPT":                   "Internal - Checkpoint Thread Startup",
-		"DIRTY_PAGE_POLL":         "Internal - Dirty Page Poll",
-		"KSOURCE_WAKEUP":          "Internal - Service Control Task",
-		"LOGMGR_QUEUE":            "Internal - Log Writer Task",
-		"REQUEST_FOR_DEADLOCK_SEARCH": "Internal - Deadlock Monitor",
-		"SERVER_IDLE_CHECK":       "Internal - Server Idle Check",
-		"SLEEP_DBSTARTUP":         "Internal - Database Startup",
-		"SLEEP_DCOMSTARTUP":       "Internal - DCOM Initialization",
+		"ASSEMBLY_LOAD":                    "Internal - Assembly Loading",
+		"BROKER_EVENTHANDLER":              "Internal - Service Broker Event Handler",
+		"CHECKPOINT_QUEUE":                 "Internal - Checkpoint Queue",
+		"CHKPT":                            "Internal - Checkpoint Thread Startup",
+		"DIRTY_PAGE_POLL":                  "Internal - Dirty Page Poll",
+		"KSOURCE_WAKEUP":                   "Internal - Service Control Task",
+		"LOGMGR_QUEUE":                     "Internal - Log Writer Task",
+		"REQUEST_FOR_DEADLOCK_SEARCH":      "Internal - Deadlock Monitor",
+		"SERVER_IDLE_CHECK":                "Internal - Server Idle Check",
+		"SLEEP_DBSTARTUP":                  "Internal - Database Startup",
+		"SLEEP_DCOMSTARTUP":                "Internal - DCOM Initialization",
 		"SQLTRACE_INCREMENTAL_FLUSH_SLEEP": "Internal - SQL Trace Incremental Flush",
-		"XE_DISPATCHER_WAIT":      "Internal - Extended Events Dispatcher",
-		"XE_TIMER_EVENT":          "Internal - Extended Events Timer",
+		"XE_DISPATCHER_WAIT":               "Internal - Extended Events Dispatcher",
+		"XE_TIMER_EVENT":                   "Internal - Extended Events Timer",
 	}
 }

@@ -288,7 +288,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Co
 		}
 
 		planHandleHex := activeQuery.PlanHandle.String()
-		query := fmt.Sprintf(queries.ExecutionStatsForActivePlanHandleQuery, planHandleHex)
+		query := fmt.Sprintf(queries.ExecutionStatsForActivePlanHandleQuery, "'"+planHandleHex+"'")
 
 		s.logger.Debug("Fetching execution statistics for active query plan_handle",
 			zap.String("plan_handle", planHandleHex),
