@@ -68,7 +68,6 @@ WITH StatementDetails AS (
 	FROM
 		sys.dm_exec_query_stats qs
 		CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) AS qt
-		-- OPTIMIZED: Use OUTER APPLY with TOP 1 instead of JOIN (20-30% faster)
 		OUTER APPLY (
 			SELECT TOP 1 pa.value
 			FROM sys.dm_exec_plan_attributes(qs.plan_handle) AS pa

@@ -35,7 +35,6 @@ func createDefaultConfig() component.Config {
 		Port:                 "1433",
 		Username:             "",
 		Password:             "",
-		EnableBufferMetrics:  true,
 		MaxConcurrentWorkers: 5,
 		Timeout:              30 * time.Second,
 	}

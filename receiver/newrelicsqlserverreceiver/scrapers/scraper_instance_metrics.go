@@ -16,18 +16,6 @@ import (
 )
 
 // InstanceConfig holds configuration for instance metrics
-type InstanceConfig struct {
-	EnableInstanceMemoryMetrics        bool
-	EnableInstanceComprehensiveStats   bool
-	EnableInstanceStats                bool
-	EnableInstanceBufferPoolHitPercent bool
-	EnableInstanceProcessCounts        bool
-	EnableInstanceRunnableTasks        bool
-	EnableInstanceDiskMetrics          bool
-	EnableInstanceActiveConnections    bool
-	EnableInstanceBufferPoolSize       bool
-}
-
 // SQLConnectionInterface defines the interface for database connections
 type SQLConnectionInterface interface {
 	Query(ctx context.Context, dest interface{}, query string) error
@@ -39,17 +27,15 @@ type InstanceScraper struct {
 	logger        *zap.Logger
 	mb            *metadata.MetricsBuilder
 	engineEdition int
-	config        InstanceConfig
 }
 
 // NewInstanceScraper creates a new instance scraper
-func NewInstanceScraper(conn SQLConnectionInterface, logger *zap.Logger, mb *metadata.MetricsBuilder, engineEdition int, config InstanceConfig) *InstanceScraper {
+func NewInstanceScraper(conn SQLConnectionInterface, logger *zap.Logger, mb *metadata.MetricsBuilder, engineEdition int) *InstanceScraper {
 	return &InstanceScraper{
 		connection:    conn,
 		logger:        logger,
 		mb:            mb,
 		engineEdition: engineEdition,
-		config:        config,
 	}
 }
 
@@ -65,12 +51,6 @@ func (s *InstanceScraper) getQueryForMetric(metricName string) (string, bool) {
 }
 
 func (s *InstanceScraper) ScrapeInstanceMemoryMetrics(ctx context.Context) error {
-	// Check if instance memory metrics are enabled
-	if !s.config.EnableInstanceMemoryMetrics {
-		s.logger.Debug("Instance memory metrics collection is disabled")
-		return nil
-	}
-
 	s.logger.Debug("Scraping SQL Server instance memory metrics")
 
 	// Check if this metric is compatible with the current engine edition
@@ -127,12 +107,6 @@ func (s *InstanceScraper) ScrapeInstanceMemoryMetrics(ctx context.Context) error
 
 // ScrapeInstanceComprehensiveStats scrapes comprehensive instance statistics
 func (s *InstanceScraper) ScrapeInstanceComprehensiveStats(ctx context.Context) error {
-	// Check if instance comprehensive stats are enabled
-	if !s.config.EnableInstanceComprehensiveStats {
-		s.logger.Debug("Instance comprehensive stats collection is disabled")
-		return nil
-	}
-
 	s.logger.Debug("Scraping SQL Server comprehensive instance statistics")
 
 	// Check if this metric is compatible with the current engine edition
