@@ -1152,6 +1152,7 @@ Number of active parallel sessions in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.active_serial_sessions
 
@@ -1167,6 +1168,7 @@ Number of active serial sessions in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.average_active_sessions
 
@@ -1182,6 +1184,7 @@ Average number of active sessions in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.background_cpu_usage_per_second
 
@@ -1197,6 +1200,7 @@ Background CPU usage per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.background_time_per_second
 
@@ -1212,6 +1216,7 @@ Background time per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.block_changes_per_second
 
@@ -1227,6 +1232,7 @@ DB block changes per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.block_changes_per_transaction
 
@@ -1242,6 +1248,7 @@ DB block changes per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_time_ratio
 
@@ -1257,6 +1264,7 @@ Database CPU time ratio in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_usage_per_second
 
@@ -1272,6 +1280,7 @@ CPU usage per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_usage_per_transaction
 
@@ -1287,6 +1296,7 @@ CPU usage per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.current_logons
 
@@ -1302,6 +1312,7 @@ Current number of logons in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.current_open_cursors
 
@@ -1317,6 +1328,7 @@ Current number of open cursors in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_read_bytes_per_second
 
@@ -1332,6 +1344,7 @@ Physical read bytes per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_reads_per_second
 
@@ -1347,6 +1360,7 @@ Physical reads per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_write_bytes_per_second
 
@@ -1362,6 +1376,7 @@ Physical write bytes per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_writes_per_second
 
@@ -1377,6 +1392,7 @@ Physical writes per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.execute_without_parse_ratio
 
@@ -1392,6 +1408,7 @@ Execute without parse ratio in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.executions_per_second
 
@@ -1407,6 +1424,7 @@ Executions per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.executions_per_transaction
 
@@ -1422,6 +1440,7 @@ Executions per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_second
 
@@ -1437,6 +1456,7 @@ Hard parse count per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_transaction
 
@@ -1452,6 +1472,7 @@ Hard parse count per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logical_reads_per_second
 
@@ -1467,6 +1488,7 @@ Logical reads per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logical_reads_per_transaction
 
@@ -1482,6 +1504,7 @@ Logical reads per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logons_per_second
 
@@ -1497,6 +1520,7 @@ Logons per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logons_per_transaction
 
@@ -1512,6 +1536,7 @@ Logons per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.network_traffic_byte_per_second
 
@@ -1527,6 +1552,7 @@ Network traffic volume per second in bytes in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.open_cursors_per_second
 
@@ -1542,6 +1568,7 @@ Open cursors per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.open_cursors_per_transaction
 
@@ -1557,6 +1584,7 @@ Open cursors per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.open_mode
 
@@ -1589,6 +1617,7 @@ Parse failure count per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_read_bytes_per_second
 
@@ -1604,6 +1633,7 @@ Physical read total bytes per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_reads_per_transaction
 
@@ -1619,6 +1649,7 @@ Physical reads per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_write_bytes_per_second
 
@@ -1634,6 +1665,7 @@ Physical write total bytes per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_writes_per_transaction
 
@@ -1649,6 +1681,7 @@ Physical writes per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_second
 
@@ -1664,6 +1697,7 @@ Redo generated per second in bytes in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_transaction
 
@@ -1679,6 +1713,7 @@ Redo generated per transaction in bytes in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.response_time_per_transaction
 
@@ -1694,6 +1729,7 @@ Response time per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.session_count
 
@@ -1709,6 +1745,7 @@ Session count in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.soft_parse_ratio
 
@@ -1724,6 +1761,7 @@ Soft parse ratio in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.sql_service_response_time
 
@@ -1739,6 +1777,7 @@ SQL service response time in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.total_parse_count_per_second
 
@@ -1754,6 +1793,7 @@ Total parse count per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.total_parse_count_per_transaction
 
@@ -1769,6 +1809,7 @@ Total parse count per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.total_size_bytes
 
@@ -1800,6 +1841,7 @@ User transactions per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_calls_per_second
 
@@ -1815,6 +1857,7 @@ User calls per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_calls_per_transaction
 
@@ -1830,6 +1873,7 @@ User calls per transaction in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_commits_per_second
 
@@ -1845,6 +1889,7 @@ User commits per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_commits_percentage
 
@@ -1860,6 +1905,7 @@ User commits percentage in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_rollbacks_per_second
 
@@ -1875,6 +1921,7 @@ User rollbacks per second in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_rollbacks_percentage
 
@@ -1890,6 +1937,7 @@ User rollbacks percentage in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.pdb.wait_time_ratio
 
@@ -1905,6 +1953,7 @@ Database wait time ratio in PDB
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 
 ### newrelicoracledb.rac.instance.active_state
 
@@ -2123,6 +2172,7 @@ Rate of cluster wait time in microseconds per second
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| pdb.name | Oracle Pluggable Database name | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 
 ### newrelicoracledb.redo_log_parallel_write_waits

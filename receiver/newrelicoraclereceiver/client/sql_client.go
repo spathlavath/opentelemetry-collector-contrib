@@ -1255,7 +1255,7 @@ func (c *SQLClient) QueryPDBSysMetrics(ctx context.Context) ([]models.PDBSysMetr
 	var results []models.PDBSysMetric
 	for rows.Next() {
 		var metric models.PDBSysMetric
-		if err := rows.Scan(&metric.InstID, &metric.MetricName, &metric.Value); err != nil {
+		if err := rows.Scan(&metric.InstID, &metric.PDBName, &metric.MetricName, &metric.Value); err != nil {
 			continue
 		}
 		results = append(results, metric)
