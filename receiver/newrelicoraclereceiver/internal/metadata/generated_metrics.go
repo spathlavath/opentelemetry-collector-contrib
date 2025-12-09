@@ -394,17 +394,32 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbRacInstanceVersionInfo: metricInfo{
 		Name: "newrelicoracledb.rac.instance.version_info",
 	},
+	NewrelicoracledbRacServiceBlockedStatus: metricInfo{
+		Name: "newrelicoracledb.rac.service.blocked_status",
+	},
 	NewrelicoracledbRacServiceClbConfig: metricInfo{
 		Name: "newrelicoracledb.rac.service.clb_config",
 	},
-	NewrelicoracledbRacServiceCreationAgeDays: metricInfo{
-		Name: "newrelicoracledb.rac.service.creation_age_days",
+	NewrelicoracledbRacServiceDrainTimeoutSeconds: metricInfo{
+		Name: "newrelicoracledb.rac.service.drain_timeout_seconds",
+	},
+	NewrelicoracledbRacServiceFanEnabled: metricInfo{
+		Name: "newrelicoracledb.rac.service.fan_enabled",
+	},
+	NewrelicoracledbRacServiceGoalConfig: metricInfo{
+		Name: "newrelicoracledb.rac.service.goal_config",
 	},
 	NewrelicoracledbRacServiceInstanceID: metricInfo{
 		Name: "newrelicoracledb.rac.service.instance_id",
 	},
 	NewrelicoracledbRacServiceNetworkConfig: metricInfo{
 		Name: "newrelicoracledb.rac.service.network_config",
+	},
+	NewrelicoracledbRacServiceReplayTimeoutSeconds: metricInfo{
+		Name: "newrelicoracledb.rac.service.replay_timeout_seconds",
+	},
+	NewrelicoracledbRacServiceTransactionGuardEnabled: metricInfo{
+		Name: "newrelicoracledb.rac.service.transaction_guard_enabled",
 	},
 	NewrelicoracledbRacTotalWaits: metricInfo{
 		Name: "newrelicoracledb.rac.total_waits",
@@ -1109,10 +1124,15 @@ type metricsInfo struct {
 	NewrelicoracledbRacInstanceStatus                                  metricInfo
 	NewrelicoracledbRacInstanceUptimeSeconds                           metricInfo
 	NewrelicoracledbRacInstanceVersionInfo                             metricInfo
+	NewrelicoracledbRacServiceBlockedStatus                            metricInfo
 	NewrelicoracledbRacServiceClbConfig                                metricInfo
-	NewrelicoracledbRacServiceCreationAgeDays                          metricInfo
+	NewrelicoracledbRacServiceDrainTimeoutSeconds                      metricInfo
+	NewrelicoracledbRacServiceFanEnabled                               metricInfo
+	NewrelicoracledbRacServiceGoalConfig                               metricInfo
 	NewrelicoracledbRacServiceInstanceID                               metricInfo
 	NewrelicoracledbRacServiceNetworkConfig                            metricInfo
+	NewrelicoracledbRacServiceReplayTimeoutSeconds                     metricInfo
+	NewrelicoracledbRacServiceTransactionGuardEnabled                  metricInfo
 	NewrelicoracledbRacTotalWaits                                      metricInfo
 	NewrelicoracledbRacWaitTime                                        metricInfo
 	NewrelicoracledbRedoLogParallelWriteWaits                          metricInfo
@@ -8084,6 +8104,59 @@ func newMetricNewrelicoracledbRacInstanceVersionInfo(cfg MetricConfig) metricNew
 	return m
 }
 
+type metricNewrelicoracledbRacServiceBlockedStatus struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.blocked_status metric with initial data.
+func (m *metricNewrelicoracledbRacServiceBlockedStatus) init() {
+	m.data.SetName("newrelicoracledb.rac.service.blocked_status")
+	m.data.SetDescription("Service blocked indicator (1=blocked, 0=not blocked)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceBlockedStatus) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceBlockedAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("service.blocked", serviceBlockedAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceBlockedStatus) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceBlockedStatus) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceBlockedStatus(cfg MetricConfig) metricNewrelicoracledbRacServiceBlockedStatus {
+	m := metricNewrelicoracledbRacServiceBlockedStatus{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbRacServiceClbConfig struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -8137,22 +8210,22 @@ func newMetricNewrelicoracledbRacServiceClbConfig(cfg MetricConfig) metricNewrel
 	return m
 }
 
-type metricNewrelicoracledbRacServiceCreationAgeDays struct {
+type metricNewrelicoracledbRacServiceDrainTimeoutSeconds struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
 	capacity int            // max observed number of data points added to the metric.
 }
 
-// init fills newrelicoracledb.rac.service.creation_age_days metric with initial data.
-func (m *metricNewrelicoracledbRacServiceCreationAgeDays) init() {
-	m.data.SetName("newrelicoracledb.rac.service.creation_age_days")
-	m.data.SetDescription("Service age in days since creation")
-	m.data.SetUnit("d")
+// init fills newrelicoracledb.rac.service.drain_timeout_seconds metric with initial data.
+func (m *metricNewrelicoracledbRacServiceDrainTimeoutSeconds) init() {
+	m.data.SetName("newrelicoracledb.rac.service.drain_timeout_seconds")
+	m.data.SetDescription("Session drain timeout in seconds before service stop")
+	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRacServiceCreationAgeDays) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string) {
+func (m *metricNewrelicoracledbRacServiceDrainTimeoutSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceDrainTimeoutAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8162,17 +8235,18 @@ func (m *metricNewrelicoracledbRacServiceCreationAgeDays) recordDataPoint(start 
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("service.drain_timeout", serviceDrainTimeoutAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbRacServiceCreationAgeDays) updateCapacity() {
+func (m *metricNewrelicoracledbRacServiceDrainTimeoutSeconds) updateCapacity() {
 	if m.data.Gauge().DataPoints().Len() > m.capacity {
 		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbRacServiceCreationAgeDays) emit(metrics pmetric.MetricSlice) {
+func (m *metricNewrelicoracledbRacServiceDrainTimeoutSeconds) emit(metrics pmetric.MetricSlice) {
 	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
@@ -8180,8 +8254,114 @@ func (m *metricNewrelicoracledbRacServiceCreationAgeDays) emit(metrics pmetric.M
 	}
 }
 
-func newMetricNewrelicoracledbRacServiceCreationAgeDays(cfg MetricConfig) metricNewrelicoracledbRacServiceCreationAgeDays {
-	m := metricNewrelicoracledbRacServiceCreationAgeDays{config: cfg}
+func newMetricNewrelicoracledbRacServiceDrainTimeoutSeconds(cfg MetricConfig) metricNewrelicoracledbRacServiceDrainTimeoutSeconds {
+	m := metricNewrelicoracledbRacServiceDrainTimeoutSeconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceFanEnabled struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.fan_enabled metric with initial data.
+func (m *metricNewrelicoracledbRacServiceFanEnabled) init() {
+	m.data.SetName("newrelicoracledb.rac.service.fan_enabled")
+	m.data.SetDescription("Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceFanEnabled) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceFanEnabledAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("service.fan_enabled", serviceFanEnabledAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceFanEnabled) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceFanEnabled) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceFanEnabled(cfg MetricConfig) metricNewrelicoracledbRacServiceFanEnabled {
+	m := metricNewrelicoracledbRacServiceFanEnabled{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceGoalConfig struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.goal_config metric with initial data.
+func (m *metricNewrelicoracledbRacServiceGoalConfig) init() {
+	m.data.SetName("newrelicoracledb.rac.service.goal_config")
+	m.data.SetDescription("Service goal configuration (always 1, goal in attributes)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceGoalConfig) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceGoalAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("service.goal", serviceGoalAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceGoalConfig) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceGoalConfig) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceGoalConfig(cfg MetricConfig) metricNewrelicoracledbRacServiceGoalConfig {
+	m := metricNewrelicoracledbRacServiceGoalConfig{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -8288,6 +8468,112 @@ func (m *metricNewrelicoracledbRacServiceNetworkConfig) emit(metrics pmetric.Met
 
 func newMetricNewrelicoracledbRacServiceNetworkConfig(cfg MetricConfig) metricNewrelicoracledbRacServiceNetworkConfig {
 	m := metricNewrelicoracledbRacServiceNetworkConfig{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceReplayTimeoutSeconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.replay_timeout_seconds metric with initial data.
+func (m *metricNewrelicoracledbRacServiceReplayTimeoutSeconds) init() {
+	m.data.SetName("newrelicoracledb.rac.service.replay_timeout_seconds")
+	m.data.SetDescription("Application Continuity replay initiation timeout in seconds")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceReplayTimeoutSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceReplayTimeoutAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("service.replay_timeout", serviceReplayTimeoutAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceReplayTimeoutSeconds) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceReplayTimeoutSeconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceReplayTimeoutSeconds(cfg MetricConfig) metricNewrelicoracledbRacServiceReplayTimeoutSeconds {
+	m := metricNewrelicoracledbRacServiceReplayTimeoutSeconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbRacServiceTransactionGuardEnabled struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.rac.service.transaction_guard_enabled metric with initial data.
+func (m *metricNewrelicoracledbRacServiceTransactionGuardEnabled) init() {
+	m.data.SetName("newrelicoracledb.rac.service.transaction_guard_enabled")
+	m.data.SetDescription("Transaction Guard enabled indicator (1=enabled, 0=disabled)")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbRacServiceTransactionGuardEnabled) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceTransactionGuardAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
+	dp.Attributes().PutStr("service.name", serviceNameAttributeValue)
+	dp.Attributes().PutStr("service.transaction_guard", serviceTransactionGuardAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbRacServiceTransactionGuardEnabled) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbRacServiceTransactionGuardEnabled) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbRacServiceTransactionGuardEnabled(cfg MetricConfig) metricNewrelicoracledbRacServiceTransactionGuardEnabled {
+	m := metricNewrelicoracledbRacServiceTransactionGuardEnabled{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18413,10 +18699,15 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbRacInstanceStatus                                  metricNewrelicoracledbRacInstanceStatus
 	metricNewrelicoracledbRacInstanceUptimeSeconds                           metricNewrelicoracledbRacInstanceUptimeSeconds
 	metricNewrelicoracledbRacInstanceVersionInfo                             metricNewrelicoracledbRacInstanceVersionInfo
+	metricNewrelicoracledbRacServiceBlockedStatus                            metricNewrelicoracledbRacServiceBlockedStatus
 	metricNewrelicoracledbRacServiceClbConfig                                metricNewrelicoracledbRacServiceClbConfig
-	metricNewrelicoracledbRacServiceCreationAgeDays                          metricNewrelicoracledbRacServiceCreationAgeDays
+	metricNewrelicoracledbRacServiceDrainTimeoutSeconds                      metricNewrelicoracledbRacServiceDrainTimeoutSeconds
+	metricNewrelicoracledbRacServiceFanEnabled                               metricNewrelicoracledbRacServiceFanEnabled
+	metricNewrelicoracledbRacServiceGoalConfig                               metricNewrelicoracledbRacServiceGoalConfig
 	metricNewrelicoracledbRacServiceInstanceID                               metricNewrelicoracledbRacServiceInstanceID
 	metricNewrelicoracledbRacServiceNetworkConfig                            metricNewrelicoracledbRacServiceNetworkConfig
+	metricNewrelicoracledbRacServiceReplayTimeoutSeconds                     metricNewrelicoracledbRacServiceReplayTimeoutSeconds
+	metricNewrelicoracledbRacServiceTransactionGuardEnabled                  metricNewrelicoracledbRacServiceTransactionGuardEnabled
 	metricNewrelicoracledbRacTotalWaits                                      metricNewrelicoracledbRacTotalWaits
 	metricNewrelicoracledbRacWaitTime                                        metricNewrelicoracledbRacWaitTime
 	metricNewrelicoracledbRedoLogParallelWriteWaits                          metricNewrelicoracledbRedoLogParallelWriteWaits
@@ -18760,10 +19051,15 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbRacInstanceStatus:                                  newMetricNewrelicoracledbRacInstanceStatus(mbc.Metrics.NewrelicoracledbRacInstanceStatus),
 		metricNewrelicoracledbRacInstanceUptimeSeconds:                           newMetricNewrelicoracledbRacInstanceUptimeSeconds(mbc.Metrics.NewrelicoracledbRacInstanceUptimeSeconds),
 		metricNewrelicoracledbRacInstanceVersionInfo:                             newMetricNewrelicoracledbRacInstanceVersionInfo(mbc.Metrics.NewrelicoracledbRacInstanceVersionInfo),
+		metricNewrelicoracledbRacServiceBlockedStatus:                            newMetricNewrelicoracledbRacServiceBlockedStatus(mbc.Metrics.NewrelicoracledbRacServiceBlockedStatus),
 		metricNewrelicoracledbRacServiceClbConfig:                                newMetricNewrelicoracledbRacServiceClbConfig(mbc.Metrics.NewrelicoracledbRacServiceClbConfig),
-		metricNewrelicoracledbRacServiceCreationAgeDays:                          newMetricNewrelicoracledbRacServiceCreationAgeDays(mbc.Metrics.NewrelicoracledbRacServiceCreationAgeDays),
+		metricNewrelicoracledbRacServiceDrainTimeoutSeconds:                      newMetricNewrelicoracledbRacServiceDrainTimeoutSeconds(mbc.Metrics.NewrelicoracledbRacServiceDrainTimeoutSeconds),
+		metricNewrelicoracledbRacServiceFanEnabled:                               newMetricNewrelicoracledbRacServiceFanEnabled(mbc.Metrics.NewrelicoracledbRacServiceFanEnabled),
+		metricNewrelicoracledbRacServiceGoalConfig:                               newMetricNewrelicoracledbRacServiceGoalConfig(mbc.Metrics.NewrelicoracledbRacServiceGoalConfig),
 		metricNewrelicoracledbRacServiceInstanceID:                               newMetricNewrelicoracledbRacServiceInstanceID(mbc.Metrics.NewrelicoracledbRacServiceInstanceID),
 		metricNewrelicoracledbRacServiceNetworkConfig:                            newMetricNewrelicoracledbRacServiceNetworkConfig(mbc.Metrics.NewrelicoracledbRacServiceNetworkConfig),
+		metricNewrelicoracledbRacServiceReplayTimeoutSeconds:                     newMetricNewrelicoracledbRacServiceReplayTimeoutSeconds(mbc.Metrics.NewrelicoracledbRacServiceReplayTimeoutSeconds),
+		metricNewrelicoracledbRacServiceTransactionGuardEnabled:                  newMetricNewrelicoracledbRacServiceTransactionGuardEnabled(mbc.Metrics.NewrelicoracledbRacServiceTransactionGuardEnabled),
 		metricNewrelicoracledbRacTotalWaits:                                      newMetricNewrelicoracledbRacTotalWaits(mbc.Metrics.NewrelicoracledbRacTotalWaits),
 		metricNewrelicoracledbRacWaitTime:                                        newMetricNewrelicoracledbRacWaitTime(mbc.Metrics.NewrelicoracledbRacWaitTime),
 		metricNewrelicoracledbRedoLogParallelWriteWaits:                          newMetricNewrelicoracledbRedoLogParallelWriteWaits(mbc.Metrics.NewrelicoracledbRedoLogParallelWriteWaits),
@@ -19166,10 +19462,15 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbRacInstanceStatus.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacInstanceUptimeSeconds.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacInstanceVersionInfo.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceBlockedStatus.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacServiceClbConfig.emit(ils.Metrics())
-	mb.metricNewrelicoracledbRacServiceCreationAgeDays.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceDrainTimeoutSeconds.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceFanEnabled.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceGoalConfig.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacServiceInstanceID.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacServiceNetworkConfig.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceReplayTimeoutSeconds.emit(ils.Metrics())
+	mb.metricNewrelicoracledbRacServiceTransactionGuardEnabled.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacTotalWaits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacWaitTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRedoLogParallelWriteWaits.emit(ils.Metrics())
@@ -20027,14 +20328,29 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbRacInstanceVersionInfoDataPoint(
 	mb.metricNewrelicoracledbRacInstanceVersionInfo.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, racInstanceNameAttributeValue, hostNameRacAttributeValue, oracleVersionAttributeValue)
 }
 
+// RecordNewrelicoracledbRacServiceBlockedStatusDataPoint adds a data point to newrelicoracledb.rac.service.blocked_status metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceBlockedStatusDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceBlockedAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceBlockedStatus.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, serviceBlockedAttributeValue)
+}
+
 // RecordNewrelicoracledbRacServiceClbConfigDataPoint adds a data point to newrelicoracledb.rac.service.clb_config metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, clbGoalAttributeValue string) {
 	mb.metricNewrelicoracledbRacServiceClbConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, clbGoalAttributeValue)
 }
 
-// RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint adds a data point to newrelicoracledb.rac.service.creation_age_days metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string) {
-	mb.metricNewrelicoracledbRacServiceCreationAgeDays.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue)
+// RecordNewrelicoracledbRacServiceDrainTimeoutSecondsDataPoint adds a data point to newrelicoracledb.rac.service.drain_timeout_seconds metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceDrainTimeoutSecondsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceDrainTimeoutAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceDrainTimeoutSeconds.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, serviceDrainTimeoutAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceFanEnabledDataPoint adds a data point to newrelicoracledb.rac.service.fan_enabled metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceFanEnabledDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceFanEnabledAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceFanEnabled.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, serviceFanEnabledAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceGoalConfigDataPoint adds a data point to newrelicoracledb.rac.service.goal_config metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceGoalConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceGoalAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceGoalConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, serviceGoalAttributeValue)
 }
 
 // RecordNewrelicoracledbRacServiceInstanceIDDataPoint adds a data point to newrelicoracledb.rac.service.instance_id metric.
@@ -20045,6 +20361,16 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceInstanceIDDataPoint(ts
 // RecordNewrelicoracledbRacServiceNetworkConfigDataPoint adds a data point to newrelicoracledb.rac.service.network_config metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, networkNameAttributeValue string) {
 	mb.metricNewrelicoracledbRacServiceNetworkConfig.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, networkNameAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceReplayTimeoutSecondsDataPoint adds a data point to newrelicoracledb.rac.service.replay_timeout_seconds metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceReplayTimeoutSecondsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceReplayTimeoutAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceReplayTimeoutSeconds.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, serviceReplayTimeoutAttributeValue)
+}
+
+// RecordNewrelicoracledbRacServiceTransactionGuardEnabledDataPoint adds a data point to newrelicoracledb.rac.service.transaction_guard_enabled metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacServiceTransactionGuardEnabledDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, serviceNameAttributeValue string, serviceTransactionGuardAttributeValue string) {
+	mb.metricNewrelicoracledbRacServiceTransactionGuardEnabled.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, serviceNameAttributeValue, serviceTransactionGuardAttributeValue)
 }
 
 // RecordNewrelicoracledbRacTotalWaitsDataPoint adds a data point to newrelicoracledb.rac.total_waits metric.

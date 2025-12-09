@@ -578,11 +578,23 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbRacServiceBlockedStatusDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "service.blocked-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "clb.goal-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(ts, 1, "db.instance.name-val", "service.name-val")
+			mb.RecordNewrelicoracledbRacServiceDrainTimeoutSecondsDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "service.drain_timeout-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbRacServiceFanEnabledDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "service.fan_enabled-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbRacServiceGoalConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "service.goal-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -591,6 +603,14 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "network.name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbRacServiceReplayTimeoutSecondsDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "service.replay_timeout-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbRacServiceTransactionGuardEnabledDataPoint(ts, 1, "db.instance.name-val", "service.name-val", "service.transaction_guard-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4133,6 +4153,27 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("oracle.version")
 					assert.True(t, ok)
 					assert.Equal(t, "oracle.version-val", attrVal.Str())
+				case "newrelicoracledb.rac.service.blocked_status":
+					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.blocked_status"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.blocked_status")
+					validatedMetrics["newrelicoracledb.rac.service.blocked_status"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Service blocked indicator (1=blocked, 0=not blocked)", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("db.instance.name")
+					assert.True(t, ok)
+					assert.Equal(t, "db.instance.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.name")
+					assert.True(t, ok)
+					assert.Equal(t, "service.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.blocked")
+					assert.True(t, ok)
+					assert.Equal(t, "service.blocked-val", attrVal.Str())
 				case "newrelicoracledb.rac.service.clb_config":
 					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.clb_config"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.clb_config")
 					validatedMetrics["newrelicoracledb.rac.service.clb_config"] = true
@@ -4154,13 +4195,13 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("clb.goal")
 					assert.True(t, ok)
 					assert.Equal(t, "clb.goal-val", attrVal.Str())
-				case "newrelicoracledb.rac.service.creation_age_days":
-					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.creation_age_days"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.creation_age_days")
-					validatedMetrics["newrelicoracledb.rac.service.creation_age_days"] = true
+				case "newrelicoracledb.rac.service.drain_timeout_seconds":
+					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.drain_timeout_seconds"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.drain_timeout_seconds")
+					validatedMetrics["newrelicoracledb.rac.service.drain_timeout_seconds"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Service age in days since creation", ms.At(i).Description())
-					assert.Equal(t, "d", ms.At(i).Unit())
+					assert.Equal(t, "Session drain timeout in seconds before service stop", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -4172,6 +4213,51 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("service.name")
 					assert.True(t, ok)
 					assert.Equal(t, "service.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.drain_timeout")
+					assert.True(t, ok)
+					assert.Equal(t, "service.drain_timeout-val", attrVal.Str())
+				case "newrelicoracledb.rac.service.fan_enabled":
+					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.fan_enabled"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.fan_enabled")
+					validatedMetrics["newrelicoracledb.rac.service.fan_enabled"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("db.instance.name")
+					assert.True(t, ok)
+					assert.Equal(t, "db.instance.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.name")
+					assert.True(t, ok)
+					assert.Equal(t, "service.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.fan_enabled")
+					assert.True(t, ok)
+					assert.Equal(t, "service.fan_enabled-val", attrVal.Str())
+				case "newrelicoracledb.rac.service.goal_config":
+					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.goal_config"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.goal_config")
+					validatedMetrics["newrelicoracledb.rac.service.goal_config"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Service goal configuration (always 1, goal in attributes)", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("db.instance.name")
+					assert.True(t, ok)
+					assert.Equal(t, "db.instance.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.name")
+					assert.True(t, ok)
+					assert.Equal(t, "service.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.goal")
+					assert.True(t, ok)
+					assert.Equal(t, "service.goal-val", attrVal.Str())
 				case "newrelicoracledb.rac.service.instance_id":
 					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.instance_id"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.instance_id")
 					validatedMetrics["newrelicoracledb.rac.service.instance_id"] = true
@@ -4214,6 +4300,48 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("network.name")
 					assert.True(t, ok)
 					assert.Equal(t, "network.name-val", attrVal.Str())
+				case "newrelicoracledb.rac.service.replay_timeout_seconds":
+					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.replay_timeout_seconds"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.replay_timeout_seconds")
+					validatedMetrics["newrelicoracledb.rac.service.replay_timeout_seconds"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Application Continuity replay initiation timeout in seconds", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("db.instance.name")
+					assert.True(t, ok)
+					assert.Equal(t, "db.instance.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.name")
+					assert.True(t, ok)
+					assert.Equal(t, "service.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.replay_timeout")
+					assert.True(t, ok)
+					assert.Equal(t, "service.replay_timeout-val", attrVal.Str())
+				case "newrelicoracledb.rac.service.transaction_guard_enabled":
+					assert.False(t, validatedMetrics["newrelicoracledb.rac.service.transaction_guard_enabled"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.service.transaction_guard_enabled")
+					validatedMetrics["newrelicoracledb.rac.service.transaction_guard_enabled"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Transaction Guard enabled indicator (1=enabled, 0=disabled)", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("db.instance.name")
+					assert.True(t, ok)
+					assert.Equal(t, "db.instance.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.name")
+					assert.True(t, ok)
+					assert.Equal(t, "service.name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("service.transaction_guard")
+					assert.True(t, ok)
+					assert.Equal(t, "service.transaction_guard-val", attrVal.Str())
 				case "newrelicoracledb.rac.total_waits":
 					assert.False(t, validatedMetrics["newrelicoracledb.rac.total_waits"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.total_waits")
 					validatedMetrics["newrelicoracledb.rac.total_waits"] = true

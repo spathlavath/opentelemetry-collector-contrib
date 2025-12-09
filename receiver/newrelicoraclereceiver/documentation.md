@@ -2079,6 +2079,22 @@ Oracle database version information (always 1, version in attributes)
 | host.name.rac | Oracle RAC host name | Any Str | false |
 | oracle.version | Oracle database version | Any Str | false |
 
+### newrelicoracledb.rac.service.blocked_status
+
+Service blocked indicator (1=blocked, 0=not blocked)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.blocked | Service blocked status (YES/NO) | Any Str | false |
+
 ### newrelicoracledb.rac.service.clb_config
 
 Connection load balancing configuration (always 1, config in attributes)
@@ -2095,13 +2111,13 @@ Connection load balancing configuration (always 1, config in attributes)
 | service.name | Oracle database service name | Any Str | false |
 | clb.goal | Oracle service connection load balancing goal | Any Str | false |
 
-### newrelicoracledb.rac.service.creation_age_days
+### newrelicoracledb.rac.service.drain_timeout_seconds
 
-Service age in days since creation
+Session drain timeout in seconds before service stop
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| d | Gauge | Int |
+| s | Gauge | Int |
 
 #### Attributes
 
@@ -2109,6 +2125,39 @@ Service age in days since creation
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
+| service.drain_timeout | Session drain timeout in seconds | Any Str | false |
+
+### newrelicoracledb.rac.service.fan_enabled
+
+Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.fan_enabled | Fast Application Notification (FAN) enabled status (YES/NO) | Any Str | false |
+
+### newrelicoracledb.rac.service.goal_config
+
+Service goal configuration (always 1, goal in attributes)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.goal | Oracle service goal (THROUGHPUT or SERVICE_TIME) | Any Str | false |
 
 ### newrelicoracledb.rac.service.instance_id
 
@@ -2141,6 +2190,38 @@ Service network configuration (always 1, config in attributes)
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 | network.name | Oracle service network name | Any Str | false |
+
+### newrelicoracledb.rac.service.replay_timeout_seconds
+
+Application Continuity replay initiation timeout in seconds
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| s | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.replay_timeout | Application Continuity replay initiation timeout in seconds | Any Str | false |
+
+### newrelicoracledb.rac.service.transaction_guard_enabled
+
+Transaction Guard enabled indicator (1=enabled, 0=disabled)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.transaction_guard | Transaction Guard (COMMIT_OUTCOME) enabled status (TRUE/FALSE) | Any Str | false |
 
 ### newrelicoracledb.rac.total_waits
 
