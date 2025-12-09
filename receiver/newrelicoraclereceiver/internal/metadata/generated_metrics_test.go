@@ -598,7 +598,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbRacWaitTimeDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "pdb.name-val", "wait.event-val")
+			mb.RecordNewrelicoracledbRacWaitTimeDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "wait.event-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4253,9 +4253,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("pdb.name")
-					assert.True(t, ok)
-					assert.Equal(t, "pdb.name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("wait.event")
 					assert.True(t, ok)
 					assert.Equal(t, "wait.event-val", attrVal.Str())

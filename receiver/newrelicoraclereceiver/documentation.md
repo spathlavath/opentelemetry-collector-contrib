@@ -2172,7 +2172,6 @@ Rate of cluster wait time in microseconds per second
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
-| pdb.name | Oracle Pluggable Database name | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 
 ### newrelicoracledb.redo_log_parallel_write_waits

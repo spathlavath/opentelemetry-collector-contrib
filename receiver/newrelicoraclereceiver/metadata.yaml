@@ -3370,7 +3370,6 @@ metrics:
     attributes:
       - db.instance.name
       - instance.id
-      - pdb.name
       - wait.event
 
   newrelicoracledb.rac.total_waits:

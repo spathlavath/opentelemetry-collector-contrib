@@ -8363,7 +8363,7 @@ func (m *metricNewrelicoracledbRacWaitTime) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbRacWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, pdbNameAttributeValue string, waitEventAttributeValue string) {
+func (m *metricNewrelicoracledbRacWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, waitEventAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -8373,7 +8373,6 @@ func (m *metricNewrelicoracledbRacWaitTime) recordDataPoint(start pcommon.Timest
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
 	dp.Attributes().PutStr("instance.id", instanceIDAttributeValue)
-	dp.Attributes().PutStr("pdb.name", pdbNameAttributeValue)
 	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
 }
 
@@ -20054,8 +20053,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbRacTotalWaitsDataPoint(ts pcommo
 }
 
 // RecordNewrelicoracledbRacWaitTimeDataPoint adds a data point to newrelicoracledb.rac.wait_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbRacWaitTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, pdbNameAttributeValue string, waitEventAttributeValue string) {
-	mb.metricNewrelicoracledbRacWaitTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, pdbNameAttributeValue, waitEventAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbRacWaitTimeDataPoint(ts pcommon.Timestamp, val float64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string, waitEventAttributeValue string) {
+	mb.metricNewrelicoracledbRacWaitTime.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue, waitEventAttributeValue)
 }
 
 // RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint adds a data point to newrelicoracledb.redo_log_parallel_write_waits metric.
