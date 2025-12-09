@@ -2112,7 +2112,7 @@ func (m *metricNewrelicoracledbConnectionBytesReceived) init() {
 	m.data.SetDescription("Bytes received via SQL*Net from client")
 	m.data.SetUnit("By")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -2165,7 +2165,7 @@ func (m *metricNewrelicoracledbConnectionBytesSent) init() {
 	m.data.SetDescription("Bytes sent via SQL*Net to client")
 	m.data.SetUnit("By")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -2320,7 +2320,7 @@ func (m *metricNewrelicoracledbConnectionExecuteCount) init() {
 	m.data.SetDescription("Number of SQL executions")
 	m.data.SetUnit("{executions}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -2424,7 +2424,7 @@ func (m *metricNewrelicoracledbConnectionLogonsCumulative) init() {
 	m.data.SetDescription("Cumulative number of logons since instance startup")
 	m.data.SetUnit("{logons}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -2528,7 +2528,7 @@ func (m *metricNewrelicoracledbConnectionParseCountHard) init() {
 	m.data.SetDescription("Number of hard parse calls")
 	m.data.SetUnit("{parses}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -2581,7 +2581,7 @@ func (m *metricNewrelicoracledbConnectionParseCountTotal) init() {
 	m.data.SetDescription("Total number of parse calls")
 	m.data.SetUnit("{parses}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -3165,7 +3165,7 @@ func (m *metricNewrelicoracledbConnectionSqlnetRoundtrips) init() {
 	m.data.SetDescription("Number of SQL*Net roundtrips to/from client")
 	m.data.SetUnit("{roundtrips}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -3269,7 +3269,7 @@ func (m *metricNewrelicoracledbConnectionUserCommits) init() {
 	m.data.SetDescription("Number of user commits")
 	m.data.SetUnit("{commits}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -3322,7 +3322,7 @@ func (m *metricNewrelicoracledbConnectionUserRollbacks) init() {
 	m.data.SetDescription("Number of user rollbacks")
 	m.data.SetUnit("{rollbacks}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -3428,7 +3428,7 @@ func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) init() {
 	m.data.SetDescription("Total time waited for each wait event")
 	m.data.SetUnit("ms")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
@@ -3483,7 +3483,7 @@ func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) init() {
 	m.data.SetDescription("Total number of waits for each wait event")
 	m.data.SetUnit("{waits}")
 	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetIsMonotonic(false)
 	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }

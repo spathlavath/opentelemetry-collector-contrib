@@ -12,6 +12,254 @@ metrics:
     enabled: false
 ```
 
+### newrelicoracledb.connection.execute_count
+
+Number of SQL executions
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {executions} | Sum | Double | Cumulative | false |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+
+### newrelicoracledb.memory.pga_max_size_bytes
+
+Global memory bound for PGA in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.sessions.count
+
+Total number of active Oracle database sessions
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+
+### newrelicoracledb.system.average_active_sessions
+
+Average Active Sessions
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.buffer_cache_hit_ratio
+
+Buffer Cache Hit Ratio
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.database_cpu_time_ratio
+
+Database CPU Time Ratio
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.enqueue_waits_per_second
+
+Enqueue Waits Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.executions_per_second
+
+Executions Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.hard_parse_count_per_second
+
+Hard Parse Count Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.host_cpu_utilization
+
+Host CPU Utilization (%)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.io_megabytes_per_second
+
+I/O Megabytes per Second
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| MBy/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.physical_reads_per_second
+
+Physical Reads Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.physical_writes_per_second
+
+Physical Writes Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.redo_generated_bytes_per_second
+
+Redo Generated Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.response_time_per_transaction
+
+Response Time Per Txn
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.transactions_per_second
+
+User Transaction Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+## Optional Metrics
+
+The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: true
+```
+
 ### newrelicoracledb.asm.diskgroup.free_mb
 
 Available free space in the ASM disk group in MB
@@ -286,7 +534,7 @@ Bytes received via SQL*Net from client
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| By | Sum | Double | Cumulative | true |
+| By | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -300,7 +548,7 @@ Bytes sent via SQL*Net to client
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| By | Sum | Double | Cumulative | true |
+| By | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -336,20 +584,6 @@ Number of dispatchers
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 
-### newrelicoracledb.connection.execute_count
-
-Number of SQL executions
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {executions} | Sum | Double | Cumulative | true |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-
 ### newrelicoracledb.connection.inactive_sessions
 
 Number of inactive Oracle database sessions
@@ -370,7 +604,7 @@ Cumulative number of logons since instance startup
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| {logons} | Sum | Double | Cumulative | true |
+| {logons} | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -398,7 +632,7 @@ Number of hard parse calls
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| {parses} | Sum | Double | Cumulative | true |
+| {parses} | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -412,7 +646,7 @@ Total number of parse calls
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| {parses} | Sum | Double | Cumulative | true |
+| {parses} | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -587,7 +821,7 @@ Number of SQL*Net roundtrips to/from client
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| {roundtrips} | Sum | Double | Cumulative | true |
+| {roundtrips} | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -615,7 +849,7 @@ Number of user commits
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| {commits} | Sum | Double | Cumulative | true |
+| {commits} | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -629,7 +863,7 @@ Number of user rollbacks
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| {rollbacks} | Sum | Double | Cumulative | true |
+| {rollbacks} | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -659,7 +893,7 @@ Total time waited for each wait event
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| ms | Sum | Double | Cumulative | true |
+| ms | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -675,7 +909,7 @@ Total number of waits for each wait event
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
-| {waits} | Sum | Double | Cumulative | true |
+| {waits} | Sum | Double | Cumulative | false |
 
 #### Attributes
 
@@ -1066,21 +1300,6 @@ Total freeable PGA memory in bytes
 ### newrelicoracledb.memory.pga_in_use_bytes
 
 Total PGA memory currently in use in bytes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.memory.pga_max_size_bytes
-
-Global memory bound for PGA in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2311,20 +2530,6 @@ Oracle service status (1=active, 0=inactive)
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 
-### newrelicoracledb.sessions.count
-
-Total number of active Oracle database sessions
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-
 ### newrelicoracledb.sga_buffer_busy_waits
 
 Number of buffer busy waits events
@@ -2753,21 +2958,6 @@ Active Serial Sessions
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.average_active_sessions
-
-Average Active Sessions
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.background_checkpoints_per_second
 
 Background Checkpoints Per Sec
@@ -2835,21 +3025,6 @@ Branch Node Splits Per Txn
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.buffer_cache_hit_ratio
-
-Buffer Cache Hit Ratio
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
 
 #### Attributes
 
@@ -3071,21 +3246,6 @@ Current OS Load
 ### newrelicoracledb.system.cursor_cache_hit_ratio
 
 Cursor Cache Hit Ratio
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.database_cpu_time_ratio
-
-Database CPU Time Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3353,21 +3513,6 @@ Enqueue Timeouts Per Txn
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.enqueue_waits_per_second
-
-Enqueue Waits Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.enqueue_waits_per_transaction
 
 Enqueue Waits Per Txn
@@ -3390,21 +3535,6 @@ Execute Without Parse Ratio
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | % | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.executions_per_second
-
-Executions Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
 
 #### Attributes
 
@@ -3593,21 +3723,6 @@ Global Cache Blocks Lost
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.hard_parse_count_per_second
-
-Hard Parse Count Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.hard_parse_count_per_transaction
 
 Hard Parse Count Per Txn
@@ -3630,36 +3745,6 @@ Host CPU Usage Per Sec
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.host_cpu_utilization
-
-Host CPU Utilization (%)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.io_megabytes_per_second
-
-I/O Megabytes per Second
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MBy/s | Gauge | Double |
 
 #### Attributes
 
@@ -4103,21 +4188,6 @@ Physical Reads Direct Per Txn
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.physical_reads_per_second
-
-Physical Reads Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.physical_reads_per_transaction
 
 Physical Reads Per Txn
@@ -4223,21 +4293,6 @@ Physical Writes Direct Per Txn
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.physical_writes_per_second
-
-Physical Writes Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.physical_writes_per_transaction
 
 Physical Writes Per Txn
@@ -4313,21 +4368,6 @@ Redo Allocation Hit Ratio
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.redo_generated_bytes_per_second
-
-Redo Generated Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.redo_generated_bytes_per_transaction
 
 Redo Generated Per Txn
@@ -4365,21 +4405,6 @@ Redo Writes Per Txn
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.response_time_per_transaction
-
-Response Time Per Txn
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
 
 #### Attributes
 
@@ -4661,21 +4686,6 @@ Total Table Scans Per User Call
 ### newrelicoracledb.system.transactions_per_logon
 
 Txns Per Logon
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.transactions_per_second
-
-User Transaction Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -5074,6 +5084,16 @@ events:
     enabled: false
 ```
 
+## Optional Events
+
+The following events are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+events:
+  <event_name>:
+    enabled: true
+```
+
 ### newrelicoracledb.execution_plan
 
 Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
@@ -5112,5 +5132,5 @@ Oracle SQL execution plan data with individual fields for each plan step. Contai
 
 | Name | Description | Values | Enabled |
 | ---- | ----------- | ------ | ------- |
-| host.name | The host name of Oracle Server | Any Str | true |
-| newrelicoracledb.instance.name | The name of the Oracle instance that data is coming from. | Any Str | true |
+| host.name | The host name of Oracle Server | Any Str | false |
+| newrelicoracledb.instance.name | The name of the Oracle instance that data is coming from. | Any Str | false |

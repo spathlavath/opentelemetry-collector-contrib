@@ -127,7 +127,7 @@ func TestLogsBuilder(t *testing.T) {
 
 			defaultEventsCount := 0
 			allEventsCount := 0
-			defaultEventsCount++
+
 			allEventsCount++
 			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "newrelic.event.type-val", "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", "plan_generated_timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
 

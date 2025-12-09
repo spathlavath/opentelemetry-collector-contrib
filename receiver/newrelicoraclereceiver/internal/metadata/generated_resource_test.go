@@ -21,7 +21,7 @@ func TestResourceBuilder(t *testing.T) {
 
 			switch tt {
 			case "default":
-				assert.Equal(t, 2, res.Attributes().Len())
+				assert.Equal(t, 0, res.Attributes().Len())
 			case "all_set":
 				assert.Equal(t, 2, res.Attributes().Len())
 			case "none_set":
@@ -32,12 +32,12 @@ func TestResourceBuilder(t *testing.T) {
 			}
 
 			val, ok := res.Attributes().Get("host.name")
-			assert.True(t, ok)
+			assert.Equal(t, tt == "all_set", ok)
 			if ok {
 				assert.Equal(t, "host.name-val", val.Str())
 			}
 			val, ok = res.Attributes().Get("newrelicoracledb.instance.name")
-			assert.True(t, ok)
+			assert.Equal(t, tt == "all_set", ok)
 			if ok {
 				assert.Equal(t, "newrelicoracledb.instance.name-val", val.Str())
 			}

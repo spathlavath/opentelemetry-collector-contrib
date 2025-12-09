@@ -358,700 +358,700 @@ type MetricsConfig struct {
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
 		NewrelicoracledbAsmDiskgroupFreeMb: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbAsmDiskgroupOfflineDisks: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbAsmDiskgroupTotalMb: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbBlockingQueriesWaitTimeMs: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsBufferGets: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsCPUTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsDetails: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsDiskReads: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsElapsedTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsExecutions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsInvalidations: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbChildCursorsUserIoWaitTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionActiveSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionBlockingSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionBytesReceived: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionBytesSent: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionCircuits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionDispatchers: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionExecuteCount: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbConnectionInactiveSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionLogonsCumulative: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionLogonsCurrent: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionParseCountHard: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionParseCountTotal: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionResourceCurrentUtilization: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionResourceLimit: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionResourceMaxUtilization: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSessionCPUUsage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSessionIdleTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSessionLogicalReads: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSessionPgaMemory: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSessionsByStatus: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSessionsByType: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSharedServers: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionSqlnetRoundtrips: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionTotalSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionUserCommits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionUserRollbacks: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionWaitEventAvgWaitTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionWaitEventTimeWaited: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionWaitEventTotalWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbConnectionWaitEvents: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbContainerRestricted: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbContainerStatus: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDatabaseInfo: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDatabaseRole: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDatafileAutoextensible: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDatafileSizeBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDatafileUsedBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDbID: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDiskBlocksRead: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDiskBlocksWritten: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDiskReadTimeMilliseconds: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDiskReads: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDiskWriteTimeMilliseconds: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDiskWrites: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbGlobalName: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbHostingInfo: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbLockedAccounts: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbLocksBlockedSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbLocksCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbLongRunningQueries: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbMemoryPgaAllocatedBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbMemoryPgaFreeableBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbMemoryPgaInUseBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbMemoryPgaMaxSizeBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbMemorySgaUgaTotalBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbActiveParallelSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbActiveSerialSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbAverageActiveSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbBackgroundCPUUsagePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbBackgroundTimePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbBlockChangesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbBlockChangesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbCPUTimeRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbCPUUsagePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbCPUUsagePerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbCurrentLogons: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbCurrentOpenCursors: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbDbPhysicalReadBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbDbPhysicalReadsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbDbPhysicalWriteBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbDbPhysicalWritesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbExecuteWithoutParseRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbExecutionsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbExecutionsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbHardParseCountPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbHardParseCountPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbLogicalReadsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbLogicalReadsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbLogonsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbLogonsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbNetworkTrafficBytePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbOpenCursorsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbOpenCursorsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbOpenMode: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbParseFailureCountPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbPhysicalReadBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbPhysicalReadsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbPhysicalWriteBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbPhysicalWritesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbRedoGeneratedBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbRedoGeneratedBytesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbResponseTimePerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbSessionCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbSoftParseRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbSQLServiceResponseTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbTotalParseCountPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbTotalParseCountPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbTotalSizeBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbTransactionsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbUserCallsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbUserCallsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbUserCommitsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbUserCommitsPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbUserRollbacksPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbUserRollbacksPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbPdbWaitTimeRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacInstanceActiveState: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacInstanceArchiverStarted: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacInstanceDatabaseStatus: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacInstanceLoginsAllowed: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacInstanceStatus: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacInstanceUptimeSeconds: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacInstanceVersionInfo: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacServiceClbConfig: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacServiceCreationAgeDays: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacServiceFailoverConfig: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacServiceFailoverDelaySeconds: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacServiceFailoverRetries: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacServiceInstanceID: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacServiceNetworkConfig: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacTotalWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRacWaitTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRedoLogParallelWriteWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRedoLogSwitchArchivingNeededWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRedoLogSwitchCompletionWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRollbackSegmentsGets: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRollbackSegmentsWaitRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbRollbackSegmentsWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbServiceCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbServiceStatus: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSessionsCount: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSgaBufferBusyWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaFixedSizeBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaFreeBufferInspectedWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaFreeBufferWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaHitRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaLogAllocationRetriesRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaLogBufferRedoAllocationRetries: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaLogBufferRedoEntries: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaLogBufferSpaceWaits: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaRedoBuffersBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaSharedPoolDictCacheMissRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaSharedPoolLibraryCacheHitRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesAvgCPUTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesAvgDiskReads: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesAvgDiskWrites: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesAvgElapsedTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesAvgLockTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesAvgRowsExamined: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesExecutionCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesIntervalAvgElapsedTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesIntervalExecutionCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSlowQueriesQueryDetails: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSortsDisk: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSortsMemory: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemActiveParallelSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemActiveSerialSessions: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemAverageActiveSessions: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemBackgroundCheckpointsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemBackgroundCPUUsagePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemBackgroundTimePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemBranchNodeSplitsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemBranchNodeSplitsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemBufferCacheHitRatio: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemCapturedUserCalls: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemConsistentReadChangesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemConsistentReadChangesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemConsistentReadGetsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemConsistentReadGetsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCPUUsagePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCPUUsagePerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCrBlocksCreatedPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCrBlocksCreatedPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCrUndoRecordsAppliedPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCurrentLogonsCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCurrentOpenCursorsCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCurrentOsLoad: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemCursorCacheHitRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDatabaseCPUTimeRatio: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemDatabaseTimePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDatabaseWaitTimeRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDbBlockChangesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDbBlockChangesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDbBlockChangesPerUserCall: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDbBlockGetsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDbBlockGetsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDbBlockGetsPerUserCall: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDbwrCheckpointsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDiskSortPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemDiskSortPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemEnqueueDeadlocksPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemEnqueueDeadlocksPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemEnqueueRequestsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemEnqueueRequestsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemEnqueueTimeoutsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemEnqueueTimeoutsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemEnqueueWaitsPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemEnqueueWaitsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemExecuteWithoutParseRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemExecutionsPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemExecutionsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemExecutionsPerUserCall: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemFullIndexScansPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemFullIndexScansPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGcCrBlockReceivedPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGcCrBlockReceivedPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGcCurrentBlockReceivedPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGlobalCacheAverageCrGetTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGlobalCacheAverageCurrentGetTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGlobalCacheBlocksCorrupted: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemGlobalCacheBlocksLost: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemHardParseCountPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemHardParseCountPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemHostCPUUsagePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemHostCPUUtilization: MetricConfig{
 			Enabled: true,
@@ -1060,277 +1060,277 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbSystemIoRequestsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLeafNodeSplitsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLeafNodeSplitsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLibraryCacheHitRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLibraryCacheMissRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLogicalReadsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLogicalReadsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLogicalReadsPerUserCall: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLogonsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLogonsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLongTableScansPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemLongTableScansPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemMemorySortsRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemNetworkTrafficVolumePerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemOpenCursorsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemOpenCursorsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemParseFailureCountPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemParseFailureCountPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPgaCacheHitPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalLobsReadsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalLobsReadsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalLobsWritesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalLobsWritesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalReadBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalReadIoRequestsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalReadTotalBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalReadsDirectPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalReadsDirectPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalReadsPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemPhysicalReadsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalWriteBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalWritesDirectPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalWritesDirectPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemPhysicalWritesPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemPhysicalWritesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemProcessLimitPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRecursiveCallsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRecursiveCallsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRedoAllocationHitRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRedoGeneratedBytesPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemRedoGeneratedBytesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRedoWritesPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRedoWritesPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemResponseTimePerTransaction: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemRowCacheHitRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRowCacheMissRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemRowsPerSort: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemSessionCount: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemSessionLimitPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemSharedPoolFreePercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemSoftParseRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemSQLServiceResponseTime: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemStreamsPoolUsagePercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTempSpaceUsed: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalIndexScansPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalIndexScansPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalParseCountPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalParseCountPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalSortsPerUserCall: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalTableScansPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalTableScansPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTotalTableScansPerUserCall: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTransactionsPerLogon: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemTransactionsPerSecond: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSystemUserCallsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserCallsPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserCallsRatio: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserCommitsPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserCommitsPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserLimitPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserRollbacksPerSecond: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbSystemUserRollbacksPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceDbID: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceGlobalName: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceIsOffline: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceOfflineCdbDatafiles: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceOfflinePdbDatafiles: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespacePdbNonWriteMode: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceSpaceConsumedBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceSpaceReservedBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceSpaceUsedPercentage: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceTotalBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceUsedBytes: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbTablespaceUsedPercent: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbWaitEventsCurrentWaitTimeMs: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 	}
 }
@@ -1362,7 +1362,7 @@ type EventsConfig struct {
 func DefaultEventsConfig() EventsConfig {
 	return EventsConfig{
 		NewrelicoracledbExecutionPlan: EventConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 	}
 }
@@ -1409,10 +1409,10 @@ type ResourceAttributesConfig struct {
 func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 	return ResourceAttributesConfig{
 		HostName: ResourceAttributeConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbInstanceName: ResourceAttributeConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 	}
 }
