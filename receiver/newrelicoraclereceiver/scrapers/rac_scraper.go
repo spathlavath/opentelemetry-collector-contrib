@@ -6,6 +6,7 @@ package scrapers
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"strconv"
 	"strings"
 	"sync"
@@ -317,7 +318,6 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceInstanceID.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceCreationAgeDays.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled {
 		return nil
 	}
@@ -348,12 +348,57 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 			s.mb.RecordNewrelicoracledbRacServiceNetworkConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.NetworkName))
 		}
 
-		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceCreationAgeDays.Enabled {
-			s.mb.RecordNewrelicoracledbRacServiceCreationAgeDaysDataPoint(now, 1, s.instanceName, serviceNameStr)
-		}
-
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled {
 			s.mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.ClbGoal))
+		}
+
+		// Service goal configuration
+		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceGoalConfig.Enabled {
+			s.mb.RecordNewrelicoracledbRacServiceGoalConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.Goal))
+		}
+
+		// Service blocked status (1 if blocked, 0 if not)
+		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceBlockedStatus.Enabled {
+			blockedValue := stringStatusToBinary(nullStringToString(service.Blocked), "YES")
+			s.mb.RecordNewrelicoracledbRacServiceBlockedStatusDataPoint(now, blockedValue, s.instanceName, serviceNameStr, nullStringToString(service.Blocked))
+		}
+
+		// Fast Application Notification (FAN) enabled status (1 if enabled, 0 if not)
+		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceFanEnabled.Enabled {
+			fanValue := stringStatusToBinary(nullStringToString(service.AqHaNotification), "YES")
+			s.mb.RecordNewrelicoracledbRacServiceFanEnabledDataPoint(now, fanValue, s.instanceName, serviceNameStr, nullStringToString(service.AqHaNotification))
+		}
+
+		// Transaction Guard enabled status (1 if enabled, 0 if not)
+		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceTransactionGuardEnabled.Enabled {
+			tgValue := stringStatusToBinary(nullStringToString(service.CommitOutcome), "TRUE")
+			s.mb.RecordNewrelicoracledbRacServiceTransactionGuardEnabledDataPoint(now, tgValue, s.instanceName, serviceNameStr, nullStringToString(service.CommitOutcome))
+		}
+
+		// Session drain timeout in seconds
+		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceDrainTimeoutSeconds.Enabled {
+			var drainTimeout int64
+			if service.DrainTimeout.Valid {
+				drainTimeout = int64(service.DrainTimeout.Float64)
+			}
+			drainTimeoutStr := fmt.Sprintf("%.0f", service.DrainTimeout.Float64)
+			if !service.DrainTimeout.Valid {
+				drainTimeoutStr = "0"
+			}
+			s.mb.RecordNewrelicoracledbRacServiceDrainTimeoutSecondsDataPoint(now, drainTimeout, s.instanceName, serviceNameStr, drainTimeoutStr)
+		}
+
+		// Application Continuity replay initiation timeout in seconds
+		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceReplayTimeoutSeconds.Enabled {
+			var replayTimeout int64
+			if service.ReplayInitiationTimeout.Valid {
+				replayTimeout = int64(service.ReplayInitiationTimeout.Float64)
+			}
+			replayTimeoutStr := fmt.Sprintf("%.0f", service.ReplayInitiationTimeout.Float64)
+			if !service.ReplayInitiationTimeout.Valid {
+				replayTimeoutStr = "0"
+			}
+			s.mb.RecordNewrelicoracledbRacServiceReplayTimeoutSecondsDataPoint(now, replayTimeout, s.instanceName, serviceNameStr, replayTimeoutStr)
 		}
 	}
 
