@@ -6,6 +6,7 @@ package models
 // PDBSysMetric represents a PDB system metric
 type PDBSysMetric struct {
 	InstID     int
+	PDBName    string
 	MetricName string
 	Value      float64
 }

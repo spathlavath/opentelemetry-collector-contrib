@@ -13,10 +13,12 @@ const (
 	// PDBSysMetricsSQL returns PDB-specific system metrics
 	PDBSysMetricsSQL = `
 		SELECT
-			INST_ID,
-			METRIC_NAME,
-			VALUE
-		FROM gv$con_sysmetric`
+			csm.INST_ID,
+			pd.NAME AS PDB_NAME,
+			csm.METRIC_NAME,
+			csm.VALUE
+		FROM gv$con_sysmetric csm
+		JOIN gv$pdbs pd ON csm.CON_ID = pd.CON_ID AND csm.INST_ID = pd.INST_ID`
 
 	// ReadWriteMetricsSQL returns database I/O statistics
 	ReadWriteMetricsSQL = `

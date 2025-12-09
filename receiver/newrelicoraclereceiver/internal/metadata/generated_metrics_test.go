@@ -346,207 +346,207 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbActiveParallelSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbActiveSerialSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbAverageActiveSessionsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBackgroundCPUUsagePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBackgroundTimePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBlockChangesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbBlockChangesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCPUTimeRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCPUTimeRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCPUUsagePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCPUUsagePerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCurrentLogonsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCurrentLogonsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbCurrentOpenCursorsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalReadBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalReadsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbDbPhysicalWritesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbExecuteWithoutParseRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbExecutionsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbExecutionsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbHardParseCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbHardParseCountPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogicalReadsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogicalReadsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogonsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogonsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbLogonsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbNetworkTrafficBytePerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbOpenCursorsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbOpenCursorsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbOpenModeDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "pdb.name-val", "open.mode-val")
+			mb.RecordNewrelicoracledbPdbOpenModeDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "database_name-val", "open.mode-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbParseFailureCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalReadBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalReadsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalWriteBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbPhysicalWritesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbRedoGeneratedBytesPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbResponseTimePerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbSessionCountDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbSessionCountDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbSoftParseRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbSQLServiceResponseTimeDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbTotalParseCountPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbTotalParseCountPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "pdb.name-val")
+			mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(ts, 1, "db.instance.name-val", "con.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbTransactionsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCallsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCallsPerTransactionDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCommitsPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserCommitsPercentageDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserRollbacksPerSecondDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbUserRollbacksPercentageDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbPdbWaitTimeRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
+			mb.RecordNewrelicoracledbPdbWaitTimeRatioDataPoint(ts, 1, "db.instance.name-val", "instance.id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2914,6 +2914,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.active_serial_sessions":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.active_serial_sessions"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.active_serial_sessions")
 					validatedMetrics["newrelicoracledb.pdb.active_serial_sessions"] = true
@@ -2932,6 +2935,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.average_active_sessions":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.average_active_sessions"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.average_active_sessions")
 					validatedMetrics["newrelicoracledb.pdb.average_active_sessions"] = true
@@ -2950,6 +2956,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.background_cpu_usage_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.background_cpu_usage_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.background_cpu_usage_per_second")
 					validatedMetrics["newrelicoracledb.pdb.background_cpu_usage_per_second"] = true
@@ -2968,6 +2977,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.background_time_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.background_time_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.background_time_per_second")
 					validatedMetrics["newrelicoracledb.pdb.background_time_per_second"] = true
@@ -2986,6 +2998,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.block_changes_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.block_changes_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.block_changes_per_second")
 					validatedMetrics["newrelicoracledb.pdb.block_changes_per_second"] = true
@@ -3004,6 +3019,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.block_changes_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.block_changes_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.block_changes_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.block_changes_per_transaction"] = true
@@ -3022,6 +3040,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.cpu_time_ratio":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.cpu_time_ratio"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.cpu_time_ratio")
 					validatedMetrics["newrelicoracledb.pdb.cpu_time_ratio"] = true
@@ -3040,6 +3061,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.cpu_usage_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.cpu_usage_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.cpu_usage_per_second")
 					validatedMetrics["newrelicoracledb.pdb.cpu_usage_per_second"] = true
@@ -3058,6 +3082,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.cpu_usage_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.cpu_usage_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.cpu_usage_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.cpu_usage_per_transaction"] = true
@@ -3076,6 +3103,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.current_logons":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.current_logons"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.current_logons")
 					validatedMetrics["newrelicoracledb.pdb.current_logons"] = true
@@ -3094,6 +3124,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.current_open_cursors":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.current_open_cursors"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.current_open_cursors")
 					validatedMetrics["newrelicoracledb.pdb.current_open_cursors"] = true
@@ -3112,6 +3145,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_read_bytes_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.db_physical_read_bytes_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.db_physical_read_bytes_per_second")
 					validatedMetrics["newrelicoracledb.pdb.db_physical_read_bytes_per_second"] = true
@@ -3130,6 +3166,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_reads_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.db_physical_reads_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.db_physical_reads_per_second")
 					validatedMetrics["newrelicoracledb.pdb.db_physical_reads_per_second"] = true
@@ -3148,6 +3187,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_write_bytes_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.db_physical_write_bytes_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.db_physical_write_bytes_per_second")
 					validatedMetrics["newrelicoracledb.pdb.db_physical_write_bytes_per_second"] = true
@@ -3166,6 +3208,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.db_physical_writes_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.db_physical_writes_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.db_physical_writes_per_second")
 					validatedMetrics["newrelicoracledb.pdb.db_physical_writes_per_second"] = true
@@ -3184,6 +3229,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.execute_without_parse_ratio":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.execute_without_parse_ratio"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.execute_without_parse_ratio")
 					validatedMetrics["newrelicoracledb.pdb.execute_without_parse_ratio"] = true
@@ -3202,6 +3250,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.executions_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.executions_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.executions_per_second")
 					validatedMetrics["newrelicoracledb.pdb.executions_per_second"] = true
@@ -3220,6 +3271,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.executions_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.executions_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.executions_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.executions_per_transaction"] = true
@@ -3238,6 +3292,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.hard_parse_count_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.hard_parse_count_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.hard_parse_count_per_second")
 					validatedMetrics["newrelicoracledb.pdb.hard_parse_count_per_second"] = true
@@ -3256,6 +3313,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.hard_parse_count_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.hard_parse_count_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.hard_parse_count_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.hard_parse_count_per_transaction"] = true
@@ -3274,6 +3334,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logical_reads_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.logical_reads_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.logical_reads_per_second")
 					validatedMetrics["newrelicoracledb.pdb.logical_reads_per_second"] = true
@@ -3292,6 +3355,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logical_reads_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.logical_reads_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.logical_reads_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.logical_reads_per_transaction"] = true
@@ -3310,6 +3376,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logons_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.logons_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.logons_per_second")
 					validatedMetrics["newrelicoracledb.pdb.logons_per_second"] = true
@@ -3328,6 +3397,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.logons_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.logons_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.logons_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.logons_per_transaction"] = true
@@ -3346,6 +3418,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.network_traffic_byte_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.network_traffic_byte_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.network_traffic_byte_per_second")
 					validatedMetrics["newrelicoracledb.pdb.network_traffic_byte_per_second"] = true
@@ -3364,6 +3439,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.open_cursors_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.open_cursors_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.open_cursors_per_second")
 					validatedMetrics["newrelicoracledb.pdb.open_cursors_per_second"] = true
@@ -3382,6 +3460,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.open_cursors_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.open_cursors_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.open_cursors_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.open_cursors_per_transaction"] = true
@@ -3400,6 +3481,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.open_mode":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.open_mode"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.open_mode")
 					validatedMetrics["newrelicoracledb.pdb.open_mode"] = true
@@ -3418,9 +3502,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("con.id")
 					assert.True(t, ok)
 					assert.Equal(t, "con.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("pdb.name")
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
-					assert.Equal(t, "pdb.name-val", attrVal.Str())
+					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("open.mode")
 					assert.True(t, ok)
 					assert.Equal(t, "open.mode-val", attrVal.Str())
@@ -3442,6 +3526,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_read_bytes_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.physical_read_bytes_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.physical_read_bytes_per_second")
 					validatedMetrics["newrelicoracledb.pdb.physical_read_bytes_per_second"] = true
@@ -3460,6 +3547,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_reads_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.physical_reads_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.physical_reads_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.physical_reads_per_transaction"] = true
@@ -3478,6 +3568,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_write_bytes_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.physical_write_bytes_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.physical_write_bytes_per_second")
 					validatedMetrics["newrelicoracledb.pdb.physical_write_bytes_per_second"] = true
@@ -3496,6 +3589,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.physical_writes_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.physical_writes_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.physical_writes_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.physical_writes_per_transaction"] = true
@@ -3514,6 +3610,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.redo_generated_bytes_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.redo_generated_bytes_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.redo_generated_bytes_per_second")
 					validatedMetrics["newrelicoracledb.pdb.redo_generated_bytes_per_second"] = true
@@ -3532,6 +3631,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.redo_generated_bytes_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.redo_generated_bytes_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.redo_generated_bytes_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.redo_generated_bytes_per_transaction"] = true
@@ -3550,6 +3652,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.response_time_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.response_time_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.response_time_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.response_time_per_transaction"] = true
@@ -3568,6 +3673,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.session_count":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.session_count"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.session_count")
 					validatedMetrics["newrelicoracledb.pdb.session_count"] = true
@@ -3586,6 +3694,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.soft_parse_ratio":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.soft_parse_ratio"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.soft_parse_ratio")
 					validatedMetrics["newrelicoracledb.pdb.soft_parse_ratio"] = true
@@ -3604,6 +3715,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.sql_service_response_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.sql_service_response_time"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.sql_service_response_time")
 					validatedMetrics["newrelicoracledb.pdb.sql_service_response_time"] = true
@@ -3622,6 +3736,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.total_parse_count_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.total_parse_count_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.total_parse_count_per_second")
 					validatedMetrics["newrelicoracledb.pdb.total_parse_count_per_second"] = true
@@ -3640,6 +3757,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.total_parse_count_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.total_parse_count_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.total_parse_count_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.total_parse_count_per_transaction"] = true
@@ -3658,6 +3778,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.total_size_bytes":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.total_size_bytes"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.total_size_bytes")
 					validatedMetrics["newrelicoracledb.pdb.total_size_bytes"] = true
@@ -3676,9 +3799,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("con.id")
 					assert.True(t, ok)
 					assert.Equal(t, "con.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("pdb.name")
+					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
-					assert.Equal(t, "pdb.name-val", attrVal.Str())
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.transactions_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.transactions_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.transactions_per_second")
 					validatedMetrics["newrelicoracledb.pdb.transactions_per_second"] = true
@@ -3697,6 +3820,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_calls_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.user_calls_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.user_calls_per_second")
 					validatedMetrics["newrelicoracledb.pdb.user_calls_per_second"] = true
@@ -3715,6 +3841,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_calls_per_transaction":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.user_calls_per_transaction"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.user_calls_per_transaction")
 					validatedMetrics["newrelicoracledb.pdb.user_calls_per_transaction"] = true
@@ -3733,6 +3862,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_commits_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.user_commits_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.user_commits_per_second")
 					validatedMetrics["newrelicoracledb.pdb.user_commits_per_second"] = true
@@ -3751,6 +3883,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_commits_percentage":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.user_commits_percentage"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.user_commits_percentage")
 					validatedMetrics["newrelicoracledb.pdb.user_commits_percentage"] = true
@@ -3769,6 +3904,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_rollbacks_per_second":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.user_rollbacks_per_second"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.user_rollbacks_per_second")
 					validatedMetrics["newrelicoracledb.pdb.user_rollbacks_per_second"] = true
@@ -3787,6 +3925,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.user_rollbacks_percentage":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.user_rollbacks_percentage"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.user_rollbacks_percentage")
 					validatedMetrics["newrelicoracledb.pdb.user_rollbacks_percentage"] = true
@@ -3805,6 +3946,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.pdb.wait_time_ratio":
 					assert.False(t, validatedMetrics["newrelicoracledb.pdb.wait_time_ratio"], "Found a duplicate in the metrics slice: newrelicoracledb.pdb.wait_time_ratio")
 					validatedMetrics["newrelicoracledb.pdb.wait_time_ratio"] = true
@@ -3823,6 +3967,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "newrelicoracledb.rac.instance.active_state":
 					assert.False(t, validatedMetrics["newrelicoracledb.rac.instance.active_state"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.instance.active_state")
 					validatedMetrics["newrelicoracledb.rac.instance.active_state"] = true

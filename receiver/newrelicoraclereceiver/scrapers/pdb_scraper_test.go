@@ -110,7 +110,7 @@ func TestRecordMetric_SessionMetrics(t *testing.T) {
 	}
 
 	for _, metricName := range testCases {
-		scraper.recordMetric(0, metricName, 100.0, "1")
+		scraper.recordMetric(0, metricName, 100.0, "1", "TEST_PDB")
 	}
 }
 
@@ -129,7 +129,7 @@ func TestRecordMetric_CPUMetrics(t *testing.T) {
 	}
 
 	for _, metricName := range testCases {
-		scraper.recordMetric(0, metricName, 50.5, "1")
+		scraper.recordMetric(0, metricName, 50.5, "1", "TEST_PDB")
 	}
 }
 
@@ -148,7 +148,7 @@ func TestRecordMetric_IOMetrics(t *testing.T) {
 	}
 
 	for _, metricName := range testCases {
-		scraper.recordMetric(0, metricName, 1024.0, "1")
+		scraper.recordMetric(0, metricName, 1024.0, "1", "TEST_PDB")
 	}
 }
 
@@ -166,7 +166,7 @@ func TestRecordMetric_ParseMetrics(t *testing.T) {
 	}
 
 	for _, metricName := range testCases {
-		scraper.recordMetric(0, metricName, 75.0, "1")
+		scraper.recordMetric(0, metricName, 75.0, "1", "TEST_PDB")
 	}
 }
 
@@ -184,7 +184,7 @@ func TestRecordMetric_TransactionMetrics(t *testing.T) {
 	}
 
 	for _, metricName := range testCases {
-		scraper.recordMetric(0, metricName, 10.0, "1")
+		scraper.recordMetric(0, metricName, 10.0, "1", "TEST_PDB")
 	}
 }
 
@@ -195,7 +195,7 @@ func TestRecordMetric_UnknownMetric(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
 
-	scraper.recordMetric(0, "Unknown Metric Name", 100.0, "1")
+	scraper.recordMetric(0, "Unknown Metric Name", 100.0, "1", "TEST_PDB")
 }
 
 func TestPdbScraper_CDBCapableStates(t *testing.T) {
