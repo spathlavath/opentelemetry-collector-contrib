@@ -98,6 +98,7 @@ type MetricsConfig struct {
 	SqlserverFailoverClusterAgFailureConditionLevel           MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_failure_condition_level"`
 	SqlserverFailoverClusterAgHealthCheckTimeout              MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_health_check_timeout"`
 	SqlserverFailoverClusterAgReplicaRole                     MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_replica_role"`
+	SqlserverFailoverClusterAgRequiredSyncSecondaries         MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_required_sync_secondaries"`
 	SqlserverFailoverClusterAgSynchronizationHealth           MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_synchronization_health"`
 	SqlserverFailoverClusterFlowControlTimeMs                 MetricConfig `mapstructure:"sqlserver.failover_cluster.flow_control_time_ms"`
 	SqlserverFailoverClusterLogBytesReceivedPerSec            MetricConfig `mapstructure:"sqlserver.failover_cluster.log_bytes_received_per_sec"`
@@ -434,6 +435,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverFailoverClusterAgReplicaRole: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverFailoverClusterAgRequiredSyncSecondaries: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverFailoverClusterAgSynchronizationHealth: MetricConfig{

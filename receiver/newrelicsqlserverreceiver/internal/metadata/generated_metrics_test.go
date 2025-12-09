@@ -350,6 +350,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordSqlserverFailoverClusterAgRequiredSyncSecondariesDataPoint(ts, 1, "group_name-val", "cluster_type_desc-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterAgSynchronizationHealthDataPoint(ts, 1, "replica_server_name-val", "role_desc-val", "synchronization_health_desc-val")
 
 			defaultMetricsCount++
@@ -3011,6 +3015,24 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("synchronization_health_desc")
 					assert.True(t, ok)
 					assert.Equal(t, "synchronization_health_desc-val", attrVal.Str())
+				case "sqlserver.failover_cluster.ag_required_sync_secondaries":
+					assert.False(t, validatedMetrics["sqlserver.failover_cluster.ag_required_sync_secondaries"], "Found a duplicate in the metrics slice: sqlserver.failover_cluster.ag_required_sync_secondaries")
+					validatedMetrics["sqlserver.failover_cluster.ag_required_sync_secondaries"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of synchronous secondary replicas required to commit transactions", ms.At(i).Description())
+					assert.Equal(t, "{replicas}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("group_name")
+					assert.True(t, ok)
+					assert.Equal(t, "group_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("cluster_type_desc")
+					assert.True(t, ok)
+					assert.Equal(t, "cluster_type_desc-val", attrVal.Str())
 				case "sqlserver.failover_cluster.ag_synchronization_health":
 					assert.False(t, validatedMetrics["sqlserver.failover_cluster.ag_synchronization_health"], "Found a duplicate in the metrics slice: sqlserver.failover_cluster.ag_synchronization_health")
 					validatedMetrics["sqlserver.failover_cluster.ag_synchronization_health"] = true

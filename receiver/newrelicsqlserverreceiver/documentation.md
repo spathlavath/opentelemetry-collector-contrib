@@ -1260,6 +1260,21 @@ Current role of the replica within the Availability Group (PRIMARY or SECONDARY)
 | role_desc | Replica role description (PRIMARY or SECONDARY) | Any Str | false |
 | synchronization_health_desc | Synchronization health description (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY) | Any Str | false |
 
+### sqlserver.failover_cluster.ag_required_sync_secondaries
+
+Number of synchronous secondary replicas required to commit transactions
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {replicas} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| group_name | Availability group name | Any Str | false |
+| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | false |
+
 ### sqlserver.failover_cluster.ag_synchronization_health
 
 Health of data synchronization between primary and secondary replica (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY)
@@ -2958,6 +2973,59 @@ Number of tasks currently waiting
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
+
+## Default Events
+
+The following events are emitted by default. Each of them can be disabled by applying the following configuration:
+
+```yaml
+events:
+  <event_name>:
+    enabled: false
+```
+
+### sqlserver.active_query_execution_plan
+
+Execution plan details for active SQL Server queries
+
+#### Attributes
+
+| Name | Description | Values |
+| ---- | ----------- | ------ |
+| newrelic_event_type | New Relic custom event type identifier | Any Str |
+| query_id | Unique identifier for the SQL query | Any Str |
+| plan_handle | Handle to the cached execution plan | Any Str |
+| session_id | SQL Server session identifier | Any Int |
+| request_id | SQL Server request identifier | Any Int |
+| database_name | Name of the database | Any Str |
+| start_time | Event start time | Any Str |
+| node_id | Execution plan node identifier | Any Int |
+| parent_node_id | Parent node identifier in execution plan tree | Any Int |
+| input_type | Type of input to the operator | Any Str |
+| physical_op | Physical operator name (e.g., Index Seek, Table Scan) | Any Str |
+| logical_op | Logical operator name | Any Str |
+| query_text | SQL query text (truncated and anonymized) | Any Str |
+| schema_name | Schema name of the database object | Any Str |
+| table_name | Table name referenced in the operator | Any Str |
+| index_name | Index name used by the operator | Any Str |
+| referenced_columns | Comma-separated list of columns referenced | Any Str |
+| estimate_rows | Estimated number of rows | Any Double |
+| estimate_io | Estimated I/O cost | Any Double |
+| estimate_cpu | Estimated CPU cost | Any Double |
+| avg_row_size | Average row size in bytes | Any Double |
+| total_subtree_cost | Cumulative cost of this operator and its children | Any Double |
+| estimated_operator_cost | Estimated cost of this operator alone | Any Double |
+| estimated_execution_mode | Execution mode (Row, Batch) | Any Str |
+| granted_memory_kb | Memory granted in KB | Any Int |
+| spill_occurred | Whether memory spill occurred | Any Bool |
+| no_join_predicate | Whether join lacks a predicate (potential Cartesian product) | Any Bool |
+| total_worker_time | Total CPU time for this operator | Any Double |
+| total_elapsed_time | Total elapsed time for this operator | Any Double |
+| total_logical_reads | Total logical reads for this operator | Any Int |
+| total_logical_writes | Total logical writes for this operator | Any Int |
+| execution_count | Number of times this operator executed | Any Int |
+| avg_elapsed_time_ms | Average elapsed time in milliseconds | Any Double |
+| last_execution_time | Timestamp of last execution | Any Str |
 
 ## Resource Attributes
 

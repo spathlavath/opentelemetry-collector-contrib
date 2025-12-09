@@ -223,6 +223,9 @@ var MetricsInfo = metricsInfo{
 	SqlserverFailoverClusterAgReplicaRole: metricInfo{
 		Name: "sqlserver.failover_cluster.ag_replica_role",
 	},
+	SqlserverFailoverClusterAgRequiredSyncSecondaries: metricInfo{
+		Name: "sqlserver.failover_cluster.ag_required_sync_secondaries",
+	},
 	SqlserverFailoverClusterAgSynchronizationHealth: metricInfo{
 		Name: "sqlserver.failover_cluster.ag_synchronization_health",
 	},
@@ -668,6 +671,7 @@ type metricsInfo struct {
 	SqlserverFailoverClusterAgFailureConditionLevel           metricInfo
 	SqlserverFailoverClusterAgHealthCheckTimeout              metricInfo
 	SqlserverFailoverClusterAgReplicaRole                     metricInfo
+	SqlserverFailoverClusterAgRequiredSyncSecondaries         metricInfo
 	SqlserverFailoverClusterAgSynchronizationHealth           metricInfo
 	SqlserverFailoverClusterFlowControlTimeMs                 metricInfo
 	SqlserverFailoverClusterLogBytesReceivedPerSec            metricInfo
@@ -4705,6 +4709,58 @@ func (m *metricSqlserverFailoverClusterAgReplicaRole) emit(metrics pmetric.Metri
 
 func newMetricSqlserverFailoverClusterAgReplicaRole(cfg MetricConfig) metricSqlserverFailoverClusterAgReplicaRole {
 	m := metricSqlserverFailoverClusterAgReplicaRole{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricSqlserverFailoverClusterAgRequiredSyncSecondaries struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills sqlserver.failover_cluster.ag_required_sync_secondaries metric with initial data.
+func (m *metricSqlserverFailoverClusterAgRequiredSyncSecondaries) init() {
+	m.data.SetName("sqlserver.failover_cluster.ag_required_sync_secondaries")
+	m.data.SetDescription("Number of synchronous secondary replicas required to commit transactions")
+	m.data.SetUnit("{replicas}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricSqlserverFailoverClusterAgRequiredSyncSecondaries) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, groupNameAttributeValue string, clusterTypeDescAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("group_name", groupNameAttributeValue)
+	dp.Attributes().PutStr("cluster_type_desc", clusterTypeDescAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricSqlserverFailoverClusterAgRequiredSyncSecondaries) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricSqlserverFailoverClusterAgRequiredSyncSecondaries) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricSqlserverFailoverClusterAgRequiredSyncSecondaries(cfg MetricConfig) metricSqlserverFailoverClusterAgRequiredSyncSecondaries {
+	m := metricSqlserverFailoverClusterAgRequiredSyncSecondaries{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -11269,6 +11325,7 @@ type MetricsBuilder struct {
 	metricSqlserverFailoverClusterAgFailureConditionLevel           metricSqlserverFailoverClusterAgFailureConditionLevel
 	metricSqlserverFailoverClusterAgHealthCheckTimeout              metricSqlserverFailoverClusterAgHealthCheckTimeout
 	metricSqlserverFailoverClusterAgReplicaRole                     metricSqlserverFailoverClusterAgReplicaRole
+	metricSqlserverFailoverClusterAgRequiredSyncSecondaries         metricSqlserverFailoverClusterAgRequiredSyncSecondaries
 	metricSqlserverFailoverClusterAgSynchronizationHealth           metricSqlserverFailoverClusterAgSynchronizationHealth
 	metricSqlserverFailoverClusterFlowControlTimeMs                 metricSqlserverFailoverClusterFlowControlTimeMs
 	metricSqlserverFailoverClusterLogBytesReceivedPerSec            metricSqlserverFailoverClusterLogBytesReceivedPerSec
@@ -11488,6 +11545,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverFailoverClusterAgFailureConditionLevel:           newMetricSqlserverFailoverClusterAgFailureConditionLevel(mbc.Metrics.SqlserverFailoverClusterAgFailureConditionLevel),
 		metricSqlserverFailoverClusterAgHealthCheckTimeout:              newMetricSqlserverFailoverClusterAgHealthCheckTimeout(mbc.Metrics.SqlserverFailoverClusterAgHealthCheckTimeout),
 		metricSqlserverFailoverClusterAgReplicaRole:                     newMetricSqlserverFailoverClusterAgReplicaRole(mbc.Metrics.SqlserverFailoverClusterAgReplicaRole),
+		metricSqlserverFailoverClusterAgRequiredSyncSecondaries:         newMetricSqlserverFailoverClusterAgRequiredSyncSecondaries(mbc.Metrics.SqlserverFailoverClusterAgRequiredSyncSecondaries),
 		metricSqlserverFailoverClusterAgSynchronizationHealth:           newMetricSqlserverFailoverClusterAgSynchronizationHealth(mbc.Metrics.SqlserverFailoverClusterAgSynchronizationHealth),
 		metricSqlserverFailoverClusterFlowControlTimeMs:                 newMetricSqlserverFailoverClusterFlowControlTimeMs(mbc.Metrics.SqlserverFailoverClusterFlowControlTimeMs),
 		metricSqlserverFailoverClusterLogBytesReceivedPerSec:            newMetricSqlserverFailoverClusterLogBytesReceivedPerSec(mbc.Metrics.SqlserverFailoverClusterLogBytesReceivedPerSec),
@@ -11784,6 +11842,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverFailoverClusterAgFailureConditionLevel.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterAgHealthCheckTimeout.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterAgReplicaRole.emit(ils.Metrics())
+	mb.metricSqlserverFailoverClusterAgRequiredSyncSecondaries.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterAgSynchronizationHealth.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterFlowControlTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterLogBytesReceivedPerSec.emit(ils.Metrics())
@@ -12287,6 +12346,11 @@ func (mb *MetricsBuilder) RecordSqlserverFailoverClusterAgHealthCheckTimeoutData
 // RecordSqlserverFailoverClusterAgReplicaRoleDataPoint adds a data point to sqlserver.failover_cluster.ag_replica_role metric.
 func (mb *MetricsBuilder) RecordSqlserverFailoverClusterAgReplicaRoleDataPoint(ts pcommon.Timestamp, val int64, replicaServerNameAttributeValue string, roleDescAttributeValue string, synchronizationHealthDescAttributeValue string) {
 	mb.metricSqlserverFailoverClusterAgReplicaRole.recordDataPoint(mb.startTime, ts, val, replicaServerNameAttributeValue, roleDescAttributeValue, synchronizationHealthDescAttributeValue)
+}
+
+// RecordSqlserverFailoverClusterAgRequiredSyncSecondariesDataPoint adds a data point to sqlserver.failover_cluster.ag_required_sync_secondaries metric.
+func (mb *MetricsBuilder) RecordSqlserverFailoverClusterAgRequiredSyncSecondariesDataPoint(ts pcommon.Timestamp, val int64, groupNameAttributeValue string, clusterTypeDescAttributeValue string) {
+	mb.metricSqlserverFailoverClusterAgRequiredSyncSecondaries.recordDataPoint(mb.startTime, ts, val, groupNameAttributeValue, clusterTypeDescAttributeValue)
 }
 
 // RecordSqlserverFailoverClusterAgSynchronizationHealthDataPoint adds a data point to sqlserver.failover_cluster.ag_synchronization_health metric.

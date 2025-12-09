@@ -653,6 +653,14 @@ metrics:
       value_type: int
     attributes: [group_name, cluster_type_desc]
   
+  sqlserver.failover_cluster.ag_required_sync_secondaries:
+    enabled: true
+    description: Number of synchronous secondary replicas required to commit transactions
+    unit: "{replicas}"
+    gauge:
+      value_type: int
+    attributes: [group_name, cluster_type_desc]
+  
   sqlserver.failover_cluster.ag_cluster_type:
     enabled: true
     description: Cluster type for the availability group (WSFC, EXTERNAL, NONE)

@@ -141,6 +141,8 @@ all_set:
       enabled: true
     sqlserver.failover_cluster.ag_replica_role:
       enabled: true
+    sqlserver.failover_cluster.ag_required_sync_secondaries:
+      enabled: true
     sqlserver.failover_cluster.ag_synchronization_health:
       enabled: true
     sqlserver.failover_cluster.flow_control_time_ms:
@@ -544,6 +546,8 @@ none_set:
     sqlserver.failover_cluster.ag_health_check_timeout:
       enabled: false
     sqlserver.failover_cluster.ag_replica_role:
+      enabled: false
+    sqlserver.failover_cluster.ag_required_sync_secondaries:
       enabled: false
     sqlserver.failover_cluster.ag_synchronization_health:
       enabled: false
