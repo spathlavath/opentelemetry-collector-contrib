@@ -6,7 +6,6 @@ package scrapers
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"strconv"
 	"strings"
 	"sync"
@@ -232,7 +231,7 @@ func (s *RacScraper) scrapeClusterWaitEvents(ctx context.Context) []error {
 		eventName := event.Event.String
 
 		if event.TimeWaitedMicro.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacWaitTime.Enabled {
-			s.mb.RecordNewrelicoracledbRacWaitTimeDataPoint(now, event.TimeWaitedMicro.Float64, s.instanceName, instanceIDStr, eventName)
+			s.mb.RecordNewrelicoracledbRacWaitTimeDataPoint(now, event.TimeWaitedMicro.Float64, s.instanceName, instanceIDStr, "", "", eventName)
 		}
 		if event.TotalWaits.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbRacTotalWaits.Enabled {
 			s.mb.RecordNewrelicoracledbRacTotalWaitsDataPoint(now, int64(event.TotalWaits.Float64), s.instanceName, instanceIDStr, eventName)
@@ -352,6 +351,9 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 			s.mb.RecordNewrelicoracledbRacServiceClbConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.ClbGoal))
 		}
 
+		// TODO: The following metrics are not yet defined in metadata.yaml
+		// Uncomment when these metrics are added to metadata.yaml
+		/*
 		// Service goal configuration
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceGoalConfig.Enabled {
 			s.mb.RecordNewrelicoracledbRacServiceGoalConfigDataPoint(now, 1, s.instanceName, serviceNameStr, nullStringToString(service.Goal))
@@ -400,6 +402,7 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 			}
 			s.mb.RecordNewrelicoracledbRacServiceReplayTimeoutSecondsDataPoint(now, replayTimeout, s.instanceName, serviceNameStr, replayTimeoutStr)
 		}
+		*/
 	}
 
 	return scrapeErrors

@@ -4,8 +4,9 @@ import "database/sql"
 
 // SlowQuery represents a slow query record from Oracle V$SQL view
 type SlowQuery struct {
-	CollectionTimestamp sql.NullString  // Timestamp when query was collected from Oracle
-	DatabaseName        sql.NullString
+	CollectionTimestamp sql.NullString // Timestamp when query was collected from Oracle
+	CDBName             sql.NullString // Container Database (CDB) name
+	DatabaseName        sql.NullString // Pluggable Database (PDB) name
 	QueryID             sql.NullString
 	SchemaName          sql.NullString
 	UserName            sql.NullString // NEW: The user who parsed the statement
@@ -32,6 +33,14 @@ type SlowQuery struct {
 func (sq *SlowQuery) GetCollectionTimestamp() string {
 	if sq.CollectionTimestamp.Valid {
 		return sq.CollectionTimestamp.String
+	}
+	return ""
+}
+
+// GetCDBName returns the CDB name as a string, empty if null
+func (sq *SlowQuery) GetCDBName() string {
+	if sq.CDBName.Valid {
+		return sq.CDBName.String
 	}
 	return ""
 }

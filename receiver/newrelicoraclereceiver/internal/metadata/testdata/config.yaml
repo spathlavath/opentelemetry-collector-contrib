@@ -255,23 +255,13 @@ all_set:
       enabled: true
     newrelicoracledb.rac.instance.version_info:
       enabled: true
-    newrelicoracledb.rac.service.blocked_status:
-      enabled: true
     newrelicoracledb.rac.service.clb_config:
       enabled: true
-    newrelicoracledb.rac.service.drain_timeout_seconds:
-      enabled: true
-    newrelicoracledb.rac.service.fan_enabled:
-      enabled: true
-    newrelicoracledb.rac.service.goal_config:
+    newrelicoracledb.rac.service.creation_age_days:
       enabled: true
     newrelicoracledb.rac.service.instance_id:
       enabled: true
     newrelicoracledb.rac.service.network_config:
-      enabled: true
-    newrelicoracledb.rac.service.replay_timeout_seconds:
-      enabled: true
-    newrelicoracledb.rac.service.transaction_guard_enabled:
       enabled: true
     newrelicoracledb.rac.total_waits:
       enabled: true
@@ -919,23 +909,13 @@ none_set:
       enabled: false
     newrelicoracledb.rac.instance.version_info:
       enabled: false
-    newrelicoracledb.rac.service.blocked_status:
-      enabled: false
     newrelicoracledb.rac.service.clb_config:
       enabled: false
-    newrelicoracledb.rac.service.drain_timeout_seconds:
-      enabled: false
-    newrelicoracledb.rac.service.fan_enabled:
-      enabled: false
-    newrelicoracledb.rac.service.goal_config:
+    newrelicoracledb.rac.service.creation_age_days:
       enabled: false
     newrelicoracledb.rac.service.instance_id:
       enabled: false
     newrelicoracledb.rac.service.network_config:
-      enabled: false
-    newrelicoracledb.rac.service.replay_timeout_seconds:
-      enabled: false
-    newrelicoracledb.rac.service.transaction_guard_enabled:
       enabled: false
     newrelicoracledb.rac.total_waits:
       enabled: false

@@ -111,6 +111,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 
 		err := rows.Scan(
 			&slowQuery.CollectionTimestamp,
+			&slowQuery.CDBName,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
@@ -159,6 +160,7 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 
 		err := rows.Scan(
 			&childCursor.CollectionTimestamp,
+			&childCursor.CDBName,
 			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
@@ -204,63 +206,65 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 		err := rows.Scan(
 			// 1. COLLECTION_TIMESTAMP
 			&w.CollectionTimestamp,
-			// 2. database_name
+			// 2. cdb_name
+			&w.CDBName,
+			// 3. database_name
 			&w.DatabaseName,
-			// 3. username
+			// 4. username
 			&w.Username,
-			// 4. sid
+			// 5. sid
 			&w.SID,
-			// 5. serial#
+			// 6. serial#
 			&w.Serial,
-			// 6. status
+			// 7. status
 			&w.Status,
-			// 7. state
+			// 8. state
 			&w.State,
-			// 8. sql_id
+			// 9. sql_id
 			&w.SQLID,
-			// 9. SQL_CHILD_NUMBER
+			// 10. SQL_CHILD_NUMBER
 			&w.SQLChildNumber,
-			// 10. wait_class
+			// 11. wait_class
 			&w.WaitClass,
-			// 11. event
+			// 12. event
 			&w.Event,
-			// 12. wait_time_ms
+			// 13. wait_time_ms
 			&w.WaitTimeMs,
-			// 13. SQL_EXEC_START
+			// 14. SQL_EXEC_START
 			&w.SQLExecStart,
-			// 14. SQL_EXEC_ID
+			// 15. SQL_EXEC_ID
 			&w.SQLExecID,
-			// 15. PROGRAM
+			// 16. PROGRAM
 			&w.Program,
-			// 16. MACHINE
+			// 17. MACHINE
 			&w.Machine,
-			// 17. ROW_WAIT_OBJ#
+			// 18. ROW_WAIT_OBJ#
 			&w.RowWaitObj,
-			// 18. OWNER
+			// 19. OWNER
 			&w.Owner,
-			// 19. OBJECT_NAME
+			// 20. OBJECT_NAME
 			&w.ObjectName,
-			// 20. OBJECT_TYPE
+			// 21. OBJECT_TYPE
 			&w.ObjectType,
-			// 21. ROW_WAIT_FILE#
+			// 22. ROW_WAIT_FILE#
 			&w.RowWaitFile,
-			// 22. ROW_WAIT_BLOCK#
+			// 23. ROW_WAIT_BLOCK#
 			&w.RowWaitBlock,
-			// 23. BLOCKING_SESSION_STATUS
+			// 24. BLOCKING_SESSION_STATUS
 			&w.BlockingSessionStatus,
-			// 24. immediate_blocker_sid
+			// 25. immediate_blocker_sid
 			&w.ImmediateBlockerSID,
-			// 25. FINAL_BLOCKING_SESSION_STATUS
+			// 26. FINAL_BLOCKING_SESSION_STATUS
 			&w.FinalBlockingSessionStatus,
-			// 26. final_blocker_sid
+			// 27. final_blocker_sid
 			&w.FinalBlockerSID,
-			// 27. final_blocker_user
+			// 28. final_blocker_user
 			&w.FinalBlockerUser,
-			// 28. final_blocker_serial
+			// 29. final_blocker_serial
 			&w.FinalBlockerSerial,
-			// 29. final_blocker_query_id
+			// 30. final_blocker_query_id
 			&w.FinalBlockerQueryID,
-			// 30. final_blocker_query_text
+			// 31. final_blocker_query_text
 			&w.FinalBlockerQueryText,
 		)
 		if err != nil {

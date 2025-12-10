@@ -22,6 +22,9 @@ attributes:
   collection_timestamp:
     description: Timestamp when the query metrics were collected from Oracle
     type: string
+  cdb_name:
+    description: Oracle Container Database (CDB) name
+    type: string  
   database_name:
     description: Oracle database name
     type: string
@@ -294,24 +297,6 @@ attributes:
     type: string
   clb.goal:
     description: Oracle service connection load balancing goal
-    type: string
-  service.goal:
-    description: Oracle service goal (THROUGHPUT or SERVICE_TIME)
-    type: string
-  service.blocked:
-    description: Service blocked status (YES/NO)
-    type: string
-  service.fan_enabled:
-    description: Fast Application Notification (FAN) enabled status (YES/NO)
-    type: string
-  service.transaction_guard:
-    description: Transaction Guard (COMMIT_OUTCOME) enabled status (TRUE/FALSE)
-    type: string
-  service.drain_timeout:
-    description: Session drain timeout in seconds
-    type: string
-  service.replay_timeout:
-    description: Application Continuity replay initiation timeout in seconds
     type: string
 
   # Database Version Attributes (OpenTelemetry semantic conventions)
@@ -3385,6 +3370,8 @@ metrics:
     attributes:
       - db.instance.name
       - instance.id
+      - cdb_name
+      - database_name
       - wait.event
 
   newrelicoracledb.rac.total_waits:
@@ -3518,6 +3505,16 @@ metrics:
       - service.name
       - network.name
 
+  newrelicoracledb.rac.service.creation_age_days:
+    description: Service age in days since creation
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "d"
+    attributes:
+      - db.instance.name
+      - service.name
+
   # NOTE: The following metrics are DEPRECATED and removed
   # FAILOVER_RETRIES and FAILOVER_DELAY columns do not exist in GV$ACTIVE_SERVICES
   # in Oracle 12c/19c/21c - these were causing ORA-00904 errors
@@ -3532,73 +3529,6 @@ metrics:
       - db.instance.name
       - service.name
       - clb.goal
-
-  newrelicoracledb.rac.service.goal_config:
-    description: Service goal configuration (always 1, goal in attributes)
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - service.name
-      - service.goal
-
-  newrelicoracledb.rac.service.blocked_status:
-    description: Service blocked indicator (1=blocked, 0=not blocked)
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - service.name
-      - service.blocked
-
-  newrelicoracledb.rac.service.fan_enabled:
-    description: Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - service.name
-      - service.fan_enabled
-
-  newrelicoracledb.rac.service.transaction_guard_enabled:
-    description: Transaction Guard enabled indicator (1=enabled, 0=disabled)
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.instance.name
-      - service.name
-      - service.transaction_guard
-
-  newrelicoracledb.rac.service.drain_timeout_seconds:
-    description: Session drain timeout in seconds before service stop
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "s"
-    attributes:
-      - db.instance.name
-      - service.name
-      - service.drain_timeout
-
-  newrelicoracledb.rac.service.replay_timeout_seconds:
-    description: Application Continuity replay initiation timeout in seconds
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "s"
-    attributes:
-      - db.instance.name
-      - service.name
-      - service.replay_timeout
-
   newrelicoracledb.slow_queries.execution_count:
     description: Number of executions for slow queries
     enabled: true
@@ -3691,6 +3621,7 @@ metrics:
     unit: "{count}"
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - query_text
@@ -3733,6 +3664,7 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3746,6 +3678,7 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3759,6 +3692,7 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3772,6 +3706,7 @@ metrics:
     unit: "{reads}"
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3785,6 +3720,7 @@ metrics:
     unit: "{gets}"
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3798,6 +3734,7 @@ metrics:
     unit: "{executions}"
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3811,6 +3748,7 @@ metrics:
     unit: "{invalidations}"
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3824,6 +3762,7 @@ metrics:
     unit: "{count}"
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3846,6 +3785,7 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - user_name
       - session_id
@@ -3942,6 +3882,7 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
+      - cdb_name
       - database_name
       - user_name
       - session_id
