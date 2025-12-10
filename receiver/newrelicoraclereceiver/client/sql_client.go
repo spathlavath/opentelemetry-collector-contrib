@@ -111,6 +111,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 
 		err := rows.Scan(
 			&slowQuery.CollectionTimestamp,
+			&slowQuery.CDBName,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
@@ -159,6 +160,7 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 
 		err := rows.Scan(
 			&childCursor.CollectionTimestamp,
+			&childCursor.CDBName,
 			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
@@ -202,65 +204,36 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 		var w models.WaitEventWithBlocking
 
 		err := rows.Scan(
-			// 1. COLLECTION_TIMESTAMP
 			&w.CollectionTimestamp,
-			// 2. database_name
+			&w.CDBName,
 			&w.DatabaseName,
-			// 3. username
 			&w.Username,
-			// 4. sid
 			&w.SID,
-			// 5. serial#
 			&w.Serial,
-			// 6. status
 			&w.Status,
-			// 7. state
 			&w.State,
-			// 8. sql_id
 			&w.SQLID,
-			// 9. SQL_CHILD_NUMBER
 			&w.SQLChildNumber,
-			// 10. wait_class
 			&w.WaitClass,
-			// 11. event
 			&w.Event,
-			// 12. wait_time_ms
 			&w.WaitTimeMs,
-			// 13. SQL_EXEC_START
 			&w.SQLExecStart,
-			// 14. SQL_EXEC_ID
 			&w.SQLExecID,
-			// 15. PROGRAM
 			&w.Program,
-			// 16. MACHINE
 			&w.Machine,
-			// 17. ROW_WAIT_OBJ#
 			&w.RowWaitObj,
-			// 18. OWNER
 			&w.Owner,
-			// 19. OBJECT_NAME
 			&w.ObjectName,
-			// 20. OBJECT_TYPE
 			&w.ObjectType,
-			// 21. ROW_WAIT_FILE#
 			&w.RowWaitFile,
-			// 22. ROW_WAIT_BLOCK#
 			&w.RowWaitBlock,
-			// 23. BLOCKING_SESSION_STATUS
 			&w.BlockingSessionStatus,
-			// 24. immediate_blocker_sid
 			&w.ImmediateBlockerSID,
-			// 25. FINAL_BLOCKING_SESSION_STATUS
 			&w.FinalBlockingSessionStatus,
-			// 26. final_blocker_sid
 			&w.FinalBlockerSID,
-			// 27. final_blocker_user
 			&w.FinalBlockerUser,
-			// 28. final_blocker_serial
 			&w.FinalBlockerSerial,
-			// 29. final_blocker_query_id
 			&w.FinalBlockerQueryID,
-			// 30. final_blocker_query_text
 			&w.FinalBlockerQueryText,
 		)
 		if err != nil {

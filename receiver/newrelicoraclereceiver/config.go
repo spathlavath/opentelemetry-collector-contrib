@@ -45,7 +45,6 @@ const (
 	maxUsernameLength                       = 128
 	maxServiceLength                        = 128
 	minQueryMonitoringResponseTimeThreshold = queries.MinQueryMonitoringResponseTimeThreshold
-	maxQueryMonitoringResponseTimeThreshold = queries.MaxQueryMonitoringResponseTimeThreshold
 	minQueryMonitoringCountThreshold        = queries.MinQueryMonitoringCountThreshold
 	maxQueryMonitoringCountThreshold        = queries.MaxQueryMonitoringCountThreshold
 	minChildCursorsPerSQLID                 = 3  // Minimum child cursors to fetch per SQL_ID
@@ -94,8 +93,8 @@ type Config struct {
 	ChildCursorsPerSQLID                 int  `mapstructure:"child_cursors_per_sql_id"`
 
 	// Interval Calculator Configuration
-	EnableIntervalBasedAveraging       bool `mapstructure:"enable_interval_based_averaging"`
-	IntervalCalculatorCacheTTLMinutes  int  `mapstructure:"interval_calculator_cache_ttl_minutes"`
+	EnableIntervalBasedAveraging      bool `mapstructure:"enable_interval_based_averaging"`
+	IntervalCalculatorCacheTTLMinutes int  `mapstructure:"interval_calculator_cache_ttl_minutes"`
 
 	// Tablespace Filtering Configuration
 	TablespaceFilter TablespaceFilterConfig `mapstructure:"tablespace_filter"`

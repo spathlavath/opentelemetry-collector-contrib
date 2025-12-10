@@ -24,7 +24,8 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			d.name AS database_name,
+			d.name AS cdb_name,
+			p.name AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,
@@ -42,6 +43,8 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			v$sqlarea sa
 		INNER JOIN
 			ALL_USERS au ON sa.parsing_user_id = au.user_id
+		INNER JOIN
+			v$pdbs p ON sa.con_id = p.con_id
 		CROSS JOIN
 			v$database d
 		WHERE
@@ -85,7 +88,8 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			d.name AS database_name,
+			d.name AS cdb_name,
+			p.name AS database_name,
 			s.username,
 			s.sid,
 			s.serial#,
@@ -127,6 +131,8 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
 		LEFT JOIN
 			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
+		INNER JOIN
+    		v$pdbs p ON s.con_id = p.con_id
 		CROSS JOIN
 			v$database d
 		WHERE
@@ -151,7 +157,8 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			d.name AS database_name,
+			d.name AS cdb_name,
+			p.name AS database_name,
 			s.sql_id,
 			s.child_number,
 			s.plan_hash_value,
@@ -166,6 +173,8 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 			s.last_load_time
 		FROM
 			v$sql s
+		INNER JOIN
+    		v$pdbs p ON s.con_id = p.con_id	
 		CROSS JOIN
 			v$database d
 		WHERE
