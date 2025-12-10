@@ -70,50 +70,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordActiveConnectionsDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceBackgroundProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceBlockedProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceDiskInBytesDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceDormantProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstancePreconnectProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceRunnableProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceRunnableTasksDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceRunningProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceSleepingProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordInstanceSuspendedProcessesCountDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverAccessPageSplitsPerSecDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -162,10 +118,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverBufferPoolHitPercentDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverBufferpoolBatchRequestsPerSecDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -178,15 +130,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseBufferpoolSizePerDatabaseInBytesDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabaseBufferpoolSizePerDatabaseBytesDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseIoStallInMillisecondsDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabaseIoStallMsDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseLogBytesFlushesPerSecDataPoint(ts, 1, "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabaseLogBytesFlushedPerSecDataPoint(ts, 1, "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -202,19 +154,19 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseLogUsedSpaceMBDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabaseLogUsedSpaceMbDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseMaxDiskSizeInBytesDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabaseMaxDiskSizeBytesDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabasePageFileAvailableDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabasePageFileAvailableBytesDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabasePageFileTotalDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabasePageFileTotalBytesDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -322,11 +274,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseSizeDataSizeMBDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabaseSizeDataMbDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseSizeTotalSizeMBDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
+			mb.RecordSqlserverDatabaseSizeTotalMbDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -390,11 +342,35 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordSqlserverInstanceBackgroundProcessesCountDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceBlockedProcessesCountDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceBufferPoolHitPercentDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordSqlserverInstanceBufferPoolSizeDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceCompilationsPerBatchDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceConnectionsActiveDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceDiskInBytesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceDormantProcessesCountDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -418,11 +394,35 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverInstanceMemoryUtilizationDataPoint(ts, 1)
+			mb.RecordSqlserverInstanceMemoryUtilizationPercentDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstancePageSplitsPerBatchDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstancePreconnectProcessesCountDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceRunnableProcessesCountDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceRunnableTasksDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceRunningProcessesCountDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceSleepingProcessesCountDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverInstanceSuspendedProcessesCountDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -876,138 +876,6 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
-				case "activeConnections":
-					assert.False(t, validatedMetrics["activeConnections"], "Found a duplicate in the metrics slice: activeConnections")
-					validatedMetrics["activeConnections"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of active connections", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.backgroundProcessesCount":
-					assert.False(t, validatedMetrics["instance.backgroundProcessesCount"], "Found a duplicate in the metrics slice: instance.backgroundProcessesCount")
-					validatedMetrics["instance.backgroundProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of background processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.blockedProcessesCount":
-					assert.False(t, validatedMetrics["instance.blockedProcessesCount"], "Found a duplicate in the metrics slice: instance.blockedProcessesCount")
-					validatedMetrics["instance.blockedProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of blocked processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.diskInBytes":
-					assert.False(t, validatedMetrics["instance.diskInBytes"], "Found a duplicate in the metrics slice: instance.diskInBytes")
-					validatedMetrics["instance.diskInBytes"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Total disk space in bytes", ms.At(i).Description())
-					assert.Equal(t, "By", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.dormantProcessesCount":
-					assert.False(t, validatedMetrics["instance.dormantProcessesCount"], "Found a duplicate in the metrics slice: instance.dormantProcessesCount")
-					validatedMetrics["instance.dormantProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of dormant processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.preconnectProcessesCount":
-					assert.False(t, validatedMetrics["instance.preconnectProcessesCount"], "Found a duplicate in the metrics slice: instance.preconnectProcessesCount")
-					validatedMetrics["instance.preconnectProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of preconnect processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.runnableProcessesCount":
-					assert.False(t, validatedMetrics["instance.runnableProcessesCount"], "Found a duplicate in the metrics slice: instance.runnableProcessesCount")
-					validatedMetrics["instance.runnableProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of runnable processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.runnableTasks":
-					assert.False(t, validatedMetrics["instance.runnableTasks"], "Found a duplicate in the metrics slice: instance.runnableTasks")
-					validatedMetrics["instance.runnableTasks"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of runnable tasks", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.runningProcessesCount":
-					assert.False(t, validatedMetrics["instance.runningProcessesCount"], "Found a duplicate in the metrics slice: instance.runningProcessesCount")
-					validatedMetrics["instance.runningProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of running processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.sleepingProcessesCount":
-					assert.False(t, validatedMetrics["instance.sleepingProcessesCount"], "Found a duplicate in the metrics slice: instance.sleepingProcessesCount")
-					validatedMetrics["instance.sleepingProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of sleeping processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "instance.suspendedProcessesCount":
-					assert.False(t, validatedMetrics["instance.suspendedProcessesCount"], "Found a duplicate in the metrics slice: instance.suspendedProcessesCount")
-					validatedMetrics["instance.suspendedProcessesCount"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of suspended processes", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
 				case "sqlserver.access.page_splits_per_sec":
 					assert.False(t, validatedMetrics["sqlserver.access.page_splits_per_sec"], "Found a duplicate in the metrics slice: sqlserver.access.page_splits_per_sec")
 					validatedMetrics["sqlserver.access.page_splits_per_sec"] = true
@@ -2160,18 +2028,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.bufferPoolHitPercent":
-					assert.False(t, validatedMetrics["sqlserver.bufferPoolHitPercent"], "Found a duplicate in the metrics slice: sqlserver.bufferPoolHitPercent")
-					validatedMetrics["sqlserver.bufferPoolHitPercent"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Buffer pool hit percentage", ms.At(i).Description())
-					assert.Equal(t, "Percent", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "sqlserver.bufferpool.batch_requests_per_sec":
 					assert.False(t, validatedMetrics["sqlserver.bufferpool.batch_requests_per_sec"], "Found a duplicate in the metrics slice: sqlserver.bufferpool.batch_requests_per_sec")
 					validatedMetrics["sqlserver.bufferpool.batch_requests_per_sec"] = true
@@ -2208,9 +2064,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.database.bufferpool.sizePerDatabaseInBytes":
-					assert.False(t, validatedMetrics["sqlserver.database.bufferpool.sizePerDatabaseInBytes"], "Found a duplicate in the metrics slice: sqlserver.database.bufferpool.sizePerDatabaseInBytes")
-					validatedMetrics["sqlserver.database.bufferpool.sizePerDatabaseInBytes"] = true
+				case "sqlserver.database.bufferpool.size_per_database_bytes":
+					assert.False(t, validatedMetrics["sqlserver.database.bufferpool.size_per_database_bytes"], "Found a duplicate in the metrics slice: sqlserver.database.bufferpool.size_per_database_bytes")
+					validatedMetrics["sqlserver.database.bufferpool.size_per_database_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Size of the SQL Server buffer pool allocated for the database", ms.At(i).Description())
@@ -2232,9 +2088,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.io.stallInMilliseconds":
-					assert.False(t, validatedMetrics["sqlserver.database.io.stallInMilliseconds"], "Found a duplicate in the metrics slice: sqlserver.database.io.stallInMilliseconds")
-					validatedMetrics["sqlserver.database.io.stallInMilliseconds"] = true
+				case "sqlserver.database.io.stall_ms":
+					assert.False(t, validatedMetrics["sqlserver.database.io.stall_ms"], "Found a duplicate in the metrics slice: sqlserver.database.io.stall_ms")
+					validatedMetrics["sqlserver.database.io.stall_ms"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total IO stall time for the SQL Server database", ms.At(i).Description())
@@ -2256,9 +2112,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.log.bytesFlushesPerSec":
-					assert.False(t, validatedMetrics["sqlserver.database.log.bytesFlushesPerSec"], "Found a duplicate in the metrics slice: sqlserver.database.log.bytesFlushesPerSec")
-					validatedMetrics["sqlserver.database.log.bytesFlushesPerSec"] = true
+				case "sqlserver.database.log.bytes_flushed_per_sec":
+					assert.False(t, validatedMetrics["sqlserver.database.log.bytes_flushed_per_sec"], "Found a duplicate in the metrics slice: sqlserver.database.log.bytes_flushed_per_sec")
+					validatedMetrics["sqlserver.database.log.bytes_flushed_per_sec"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Number of log bytes flushed per second", ms.At(i).Description())
@@ -2277,9 +2133,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.log.flushWaitsPerSec":
-					assert.False(t, validatedMetrics["sqlserver.database.log.flushWaitsPerSec"], "Found a duplicate in the metrics slice: sqlserver.database.log.flushWaitsPerSec")
-					validatedMetrics["sqlserver.database.log.flushWaitsPerSec"] = true
+				case "sqlserver.database.log.flush_waits_per_sec":
+					assert.False(t, validatedMetrics["sqlserver.database.log.flush_waits_per_sec"], "Found a duplicate in the metrics slice: sqlserver.database.log.flush_waits_per_sec")
+					validatedMetrics["sqlserver.database.log.flush_waits_per_sec"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Number of flush wait operations per second", ms.At(i).Description())
@@ -2298,9 +2154,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.log.flushesPerSec":
-					assert.False(t, validatedMetrics["sqlserver.database.log.flushesPerSec"], "Found a duplicate in the metrics slice: sqlserver.database.log.flushesPerSec")
-					validatedMetrics["sqlserver.database.log.flushesPerSec"] = true
+				case "sqlserver.database.log.flushes_per_sec":
+					assert.False(t, validatedMetrics["sqlserver.database.log.flushes_per_sec"], "Found a duplicate in the metrics slice: sqlserver.database.log.flushes_per_sec")
+					validatedMetrics["sqlserver.database.log.flushes_per_sec"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Number of log flush operations per second", ms.At(i).Description())
@@ -2319,9 +2175,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.log.transactionGrowth":
-					assert.False(t, validatedMetrics["sqlserver.database.log.transactionGrowth"], "Found a duplicate in the metrics slice: sqlserver.database.log.transactionGrowth")
-					validatedMetrics["sqlserver.database.log.transactionGrowth"] = true
+				case "sqlserver.database.log.transaction_growth":
+					assert.False(t, validatedMetrics["sqlserver.database.log.transaction_growth"], "Found a duplicate in the metrics slice: sqlserver.database.log.transaction_growth")
+					validatedMetrics["sqlserver.database.log.transaction_growth"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Number of log growth events for the SQL Server database", ms.At(i).Description())
@@ -2343,9 +2199,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.log.usedSpaceMB":
-					assert.False(t, validatedMetrics["sqlserver.database.log.usedSpaceMB"], "Found a duplicate in the metrics slice: sqlserver.database.log.usedSpaceMB")
-					validatedMetrics["sqlserver.database.log.usedSpaceMB"] = true
+				case "sqlserver.database.log.used_space_mb":
+					assert.False(t, validatedMetrics["sqlserver.database.log.used_space_mb"], "Found a duplicate in the metrics slice: sqlserver.database.log.used_space_mb")
+					validatedMetrics["sqlserver.database.log.used_space_mb"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Used log space in megabytes", ms.At(i).Description())
@@ -2367,9 +2223,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.maxDiskSizeInBytes":
-					assert.False(t, validatedMetrics["sqlserver.database.maxDiskSizeInBytes"], "Found a duplicate in the metrics slice: sqlserver.database.maxDiskSizeInBytes")
-					validatedMetrics["sqlserver.database.maxDiskSizeInBytes"] = true
+				case "sqlserver.database.max_disk_size_bytes":
+					assert.False(t, validatedMetrics["sqlserver.database.max_disk_size_bytes"], "Found a duplicate in the metrics slice: sqlserver.database.max_disk_size_bytes")
+					validatedMetrics["sqlserver.database.max_disk_size_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Maximum disk size allowed for the SQL Server database", ms.At(i).Description())
@@ -2391,9 +2247,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.pageFileAvailable":
-					assert.False(t, validatedMetrics["sqlserver.database.pageFileAvailable"], "Found a duplicate in the metrics slice: sqlserver.database.pageFileAvailable")
-					validatedMetrics["sqlserver.database.pageFileAvailable"] = true
+				case "sqlserver.database.page_file_available_bytes":
+					assert.False(t, validatedMetrics["sqlserver.database.page_file_available_bytes"], "Found a duplicate in the metrics slice: sqlserver.database.page_file_available_bytes")
+					validatedMetrics["sqlserver.database.page_file_available_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Available page file space (reserved space not used) for the SQL Server database", ms.At(i).Description())
@@ -2415,9 +2271,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.pageFileTotal":
-					assert.False(t, validatedMetrics["sqlserver.database.pageFileTotal"], "Found a duplicate in the metrics slice: sqlserver.database.pageFileTotal")
-					validatedMetrics["sqlserver.database.pageFileTotal"] = true
+				case "sqlserver.database.page_file_total_bytes":
+					assert.False(t, validatedMetrics["sqlserver.database.page_file_total_bytes"], "Found a duplicate in the metrics slice: sqlserver.database.page_file_total_bytes")
+					validatedMetrics["sqlserver.database.page_file_total_bytes"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total page file space (total reserved space) for the SQL Server database", ms.At(i).Description())
@@ -2871,9 +2727,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-				case "sqlserver.database.size.dataSizeMB":
-					assert.False(t, validatedMetrics["sqlserver.database.size.dataSizeMB"], "Found a duplicate in the metrics slice: sqlserver.database.size.dataSizeMB")
-					validatedMetrics["sqlserver.database.size.dataSizeMB"] = true
+				case "sqlserver.database.size.data_mb":
+					assert.False(t, validatedMetrics["sqlserver.database.size.data_mb"], "Found a duplicate in the metrics slice: sqlserver.database.size.data_mb")
+					validatedMetrics["sqlserver.database.size.data_mb"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total data file size excluding log files", ms.At(i).Description())
@@ -2895,9 +2751,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.size.totalSizeMB":
-					assert.False(t, validatedMetrics["sqlserver.database.size.totalSizeMB"], "Found a duplicate in the metrics slice: sqlserver.database.size.totalSizeMB")
-					validatedMetrics["sqlserver.database.size.totalSizeMB"] = true
+				case "sqlserver.database.size.total_mb":
+					assert.False(t, validatedMetrics["sqlserver.database.size.total_mb"], "Found a duplicate in the metrics slice: sqlserver.database.size.total_mb")
+					validatedMetrics["sqlserver.database.size.total_mb"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total database size including data and log files", ms.At(i).Description())
@@ -3213,6 +3069,42 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("last_execution_time")
 					assert.True(t, ok)
 					assert.Equal(t, "last_execution_time-val", attrVal.Str())
+				case "sqlserver.instance.background_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.background_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.background_processes_count")
+					validatedMetrics["sqlserver.instance.background_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of background processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.blocked_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.blocked_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.blocked_processes_count")
+					validatedMetrics["sqlserver.instance.blocked_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of blocked processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.buffer_pool_hit_percent":
+					assert.False(t, validatedMetrics["sqlserver.instance.buffer_pool_hit_percent"], "Found a duplicate in the metrics slice: sqlserver.instance.buffer_pool_hit_percent")
+					validatedMetrics["sqlserver.instance.buffer_pool_hit_percent"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Buffer pool hit percentage", ms.At(i).Description())
+					assert.Equal(t, "Percent", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "sqlserver.instance.buffer_pool_size":
 					assert.False(t, validatedMetrics["sqlserver.instance.buffer_pool_size"], "Found a duplicate in the metrics slice: sqlserver.instance.buffer_pool_size")
 					validatedMetrics["sqlserver.instance.buffer_pool_size"] = true
@@ -3237,6 +3129,42 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "sqlserver.instance.connections_active":
+					assert.False(t, validatedMetrics["sqlserver.instance.connections_active"], "Found a duplicate in the metrics slice: sqlserver.instance.connections_active")
+					validatedMetrics["sqlserver.instance.connections_active"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of active connections", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.disk_in_bytes":
+					assert.False(t, validatedMetrics["sqlserver.instance.disk_in_bytes"], "Found a duplicate in the metrics slice: sqlserver.instance.disk_in_bytes")
+					validatedMetrics["sqlserver.instance.disk_in_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total disk space in bytes", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.dormant_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.dormant_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.dormant_processes_count")
+					validatedMetrics["sqlserver.instance.dormant_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of dormant processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "sqlserver.instance.forced_parameterizations_per_sec":
 					assert.False(t, validatedMetrics["sqlserver.instance.forced_parameterizations_per_sec"], "Found a duplicate in the metrics slice: sqlserver.instance.forced_parameterizations_per_sec")
 					validatedMetrics["sqlserver.instance.forced_parameterizations_per_sec"] = true
@@ -3273,9 +3201,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "sqlserver.instance.memoryAvailable":
-					assert.False(t, validatedMetrics["sqlserver.instance.memoryAvailable"], "Found a duplicate in the metrics slice: sqlserver.instance.memoryAvailable")
-					validatedMetrics["sqlserver.instance.memoryAvailable"] = true
+				case "sqlserver.instance.memory_available":
+					assert.False(t, validatedMetrics["sqlserver.instance.memory_available"], "Found a duplicate in the metrics slice: sqlserver.instance.memory_available")
+					validatedMetrics["sqlserver.instance.memory_available"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Available physical memory on the system", ms.At(i).Description())
@@ -3285,9 +3213,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "sqlserver.instance.memoryTotal":
-					assert.False(t, validatedMetrics["sqlserver.instance.memoryTotal"], "Found a duplicate in the metrics slice: sqlserver.instance.memoryTotal")
-					validatedMetrics["sqlserver.instance.memoryTotal"] = true
+				case "sqlserver.instance.memory_total":
+					assert.False(t, validatedMetrics["sqlserver.instance.memory_total"], "Found a duplicate in the metrics slice: sqlserver.instance.memory_total")
+					validatedMetrics["sqlserver.instance.memory_total"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total physical memory on the system", ms.At(i).Description())
@@ -3297,9 +3225,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "sqlserver.instance.memoryUtilization":
-					assert.False(t, validatedMetrics["sqlserver.instance.memoryUtilization"], "Found a duplicate in the metrics slice: sqlserver.instance.memoryUtilization")
-					validatedMetrics["sqlserver.instance.memoryUtilization"] = true
+				case "sqlserver.instance.memory_utilization_percent":
+					assert.False(t, validatedMetrics["sqlserver.instance.memory_utilization_percent"], "Found a duplicate in the metrics slice: sqlserver.instance.memory_utilization_percent")
+					validatedMetrics["sqlserver.instance.memory_utilization_percent"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Percentage of memory utilization", ms.At(i).Description())
@@ -3321,6 +3249,78 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "sqlserver.instance.preconnect_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.preconnect_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.preconnect_processes_count")
+					validatedMetrics["sqlserver.instance.preconnect_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of preconnect processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.runnable_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.runnable_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.runnable_processes_count")
+					validatedMetrics["sqlserver.instance.runnable_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of runnable processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.runnable_tasks":
+					assert.False(t, validatedMetrics["sqlserver.instance.runnable_tasks"], "Found a duplicate in the metrics slice: sqlserver.instance.runnable_tasks")
+					validatedMetrics["sqlserver.instance.runnable_tasks"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of runnable tasks", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.running_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.running_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.running_processes_count")
+					validatedMetrics["sqlserver.instance.running_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of running processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.sleeping_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.sleeping_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.sleeping_processes_count")
+					validatedMetrics["sqlserver.instance.sleeping_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of sleeping processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "sqlserver.instance.suspended_processes_count":
+					assert.False(t, validatedMetrics["sqlserver.instance.suspended_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.suspended_processes_count")
+					validatedMetrics["sqlserver.instance.suspended_processes_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of suspended processes", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "sqlserver.instance.target_memory_kb":
 					assert.False(t, validatedMetrics["sqlserver.instance.target_memory_kb"], "Found a duplicate in the metrics slice: sqlserver.instance.target_memory_kb")
 					validatedMetrics["sqlserver.instance.target_memory_kb"] = true

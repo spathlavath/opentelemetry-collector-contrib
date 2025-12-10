@@ -12,94 +12,6 @@ metrics:
     enabled: false
 ```
 
-### activeConnections
-
-Number of active connections
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.backgroundProcessesCount
-
-Number of background processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.blockedProcessesCount
-
-Number of blocked processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.diskInBytes
-
-Total disk space in bytes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
-
-### instance.dormantProcessesCount
-
-Number of dormant processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.preconnectProcessesCount
-
-Number of preconnect processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.runnableProcessesCount
-
-Number of runnable processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.runnableTasks
-
-Number of runnable tasks
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.runningProcessesCount
-
-Number of running processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.sleepingProcessesCount
-
-Number of sleeping processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-### instance.suspendedProcessesCount
-
-Number of suspended processes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
 ### sqlserver.access.page_splits_per_sec
 
 Page splits per second
@@ -572,14 +484,6 @@ Page life expectancy in seconds
 | ---- | ----------- | ---------- |
 | s | Gauge | Int |
 
-### sqlserver.bufferPoolHitPercent
-
-Buffer pool hit percentage
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| Percent | Gauge | Double |
-
 ### sqlserver.bufferpool.batch_requests_per_sec
 
 Batch requests per second
@@ -604,7 +508,7 @@ Number of user connections
 | ---- | ----------- | ---------- |
 | {connections} | Gauge | Int |
 
-### sqlserver.database.bufferpool.sizePerDatabaseInBytes
+### sqlserver.database.bufferpool.size_per_database_bytes
 
 Size of the SQL Server buffer pool allocated for the database
 
@@ -621,7 +525,7 @@ Size of the SQL Server buffer pool allocated for the database
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.io.stallInMilliseconds
+### sqlserver.database.io.stall_ms
 
 Total IO stall time for the SQL Server database
 
@@ -638,7 +542,7 @@ Total IO stall time for the SQL Server database
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.log.bytesFlushesPerSec
+### sqlserver.database.log.bytes_flushed_per_sec
 
 Number of log bytes flushed per second
 
@@ -654,7 +558,7 @@ Number of log bytes flushed per second
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.log.flushWaitsPerSec
+### sqlserver.database.log.flush_waits_per_sec
 
 Number of flush wait operations per second
 
@@ -670,7 +574,7 @@ Number of flush wait operations per second
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.log.flushesPerSec
+### sqlserver.database.log.flushes_per_sec
 
 Number of log flush operations per second
 
@@ -686,7 +590,7 @@ Number of log flush operations per second
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.log.transactionGrowth
+### sqlserver.database.log.transaction_growth
 
 Number of log growth events for the SQL Server database
 
@@ -703,7 +607,7 @@ Number of log growth events for the SQL Server database
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.log.usedSpaceMB
+### sqlserver.database.log.used_space_mb
 
 Used log space in megabytes
 
@@ -720,7 +624,7 @@ Used log space in megabytes
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.maxDiskSizeInBytes
+### sqlserver.database.max_disk_size_bytes
 
 Maximum disk size allowed for the SQL Server database
 
@@ -737,7 +641,7 @@ Maximum disk size allowed for the SQL Server database
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.pageFileAvailable
+### sqlserver.database.page_file_available_bytes
 
 Available page file space (reserved space not used) for the SQL Server database
 
@@ -754,7 +658,7 @@ Available page file space (reserved space not used) for the SQL Server database
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.pageFileTotal
+### sqlserver.database.page_file_total_bytes
 
 Total page file space (total reserved space) for the SQL Server database
 
@@ -1149,7 +1053,7 @@ Number of unique roles with members
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the database | Any Str | false |
 
-### sqlserver.database.size.dataSizeMB
+### sqlserver.database.size.data_mb
 
 Total data file size excluding log files
 
@@ -1166,7 +1070,7 @@ Total data file size excluding log files
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.size.totalSizeMB
+### sqlserver.database.size.total_mb
 
 Total database size including data and log files
 
@@ -1416,6 +1320,30 @@ Total elapsed time in milliseconds for individual query analysis
 | creation_time | Timestamp when the plan was created | Any Str | false |
 | last_execution_time | Timestamp of last execution | Any Str | false |
 
+### sqlserver.instance.background_processes_count
+
+Number of background processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.blocked_processes_count
+
+Number of blocked processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.buffer_pool_hit_percent
+
+Buffer pool hit percentage
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| Percent | Gauge | Double |
+
 ### sqlserver.instance.buffer_pool_size
 
 Buffer pool size
@@ -1431,6 +1359,30 @@ SQL compilations per batch request
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
+
+### sqlserver.instance.connections_active
+
+Number of active connections
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.disk_in_bytes
+
+Total disk space in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+### sqlserver.instance.dormant_processes_count
+
+Number of dormant processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
 
 ### sqlserver.instance.forced_parameterizations_per_sec
 
@@ -1456,7 +1408,7 @@ Number of lock timeouts per second
 | ---- | ----------- | ---------- |
 | 1/s | Gauge | Double |
 
-### sqlserver.instance.memoryAvailable
+### sqlserver.instance.memory_available
 
 Available physical memory on the system
 
@@ -1464,7 +1416,7 @@ Available physical memory on the system
 | ---- | ----------- | ---------- |
 | By | Gauge | Double |
 
-### sqlserver.instance.memoryTotal
+### sqlserver.instance.memory_total
 
 Total physical memory on the system
 
@@ -1472,7 +1424,7 @@ Total physical memory on the system
 | ---- | ----------- | ---------- |
 | By | Gauge | Double |
 
-### sqlserver.instance.memoryUtilization
+### sqlserver.instance.memory_utilization_percent
 
 Percentage of memory utilization
 
@@ -1487,6 +1439,54 @@ Page splits per batch request
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
+
+### sqlserver.instance.preconnect_processes_count
+
+Number of preconnect processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.runnable_processes_count
+
+Number of runnable processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.runnable_tasks
+
+Number of runnable tasks
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.running_processes_count
+
+Number of running processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.sleeping_processes_count
+
+Number of sleeping processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+### sqlserver.instance.suspended_processes_count
+
+Number of suspended processes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
 
 ### sqlserver.instance.target_memory_kb
 

@@ -30,12 +30,11 @@ func TestCreateDefaultConfig(t *testing.T) {
 	assert.True(t, ok)
 
 	// Test default values
-	assert.Equal(t, "localhost", config.Hostname)
+	assert.Equal(t, "127.0.0.1", config.Hostname)
 	assert.Equal(t, "1433", config.Port)
 	assert.Equal(t, "", config.Username)
 	assert.Equal(t, "", config.Password)
-	assert.Equal(t, true, config.EnableBufferMetrics)
-	assert.Equal(t, 5, config.MaxConcurrentWorkers)
+	assert.Equal(t, 10, config.MaxConcurrentWorkers)
 	assert.Equal(t, 30*time.Second, config.Timeout)
 	assert.Equal(t, 10*time.Second, config.ControllerConfig.CollectionInterval)
 }
@@ -46,6 +45,6 @@ func TestFactoryFunctions(t *testing.T) {
 	assert.NotNil(t, cfg)
 
 	config := cfg.(*Config)
-	assert.Equal(t, "localhost", config.Hostname)
+	assert.Equal(t, "127.0.0.1", config.Hostname)
 	assert.Equal(t, "1433", config.Port)
 }
