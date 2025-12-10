@@ -269,10 +269,6 @@ SELECT TOP (@Limit)
         WHEN st_blocker.text IS NOT NULL THEN LEFT(st_blocker.text, @TextTruncateLimit)
         ELSE 'N/A'
     END AS blocking_query_statement_text,
-
-    -- K. EXECUTION PLAN XML
-    CAST(qp_wait.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml,
-
     -- L. ENHANCED WAIT RESOURCE DECODING (OBJECT locks - table-level locks)
     SCHEMA_NAME(obj_lock.schema_id) AS wait_resource_schema_name_object,
     obj_lock.type_desc AS wait_resource_object_type,

@@ -260,6 +260,16 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 	s.logger.Info("Active queries fetched, emitting metrics",
 		zap.Int("active_query_count", len(activeQueries)))
 
+	// Step 2: Fetch execution plan statistics and emit as metrics
+	if err := s.queryPerformanceScraper.ScrapeActiveQueryExecutionPlans(ctx, activeQueries); err != nil {
+		s.logger.Warn("Failed to scrape active query execution plan statistics - continuing with logs",
+			zap.Error(err))
+		// Don't fail - continue to emit XML logs
+	} else {
+		s.logger.Info("Successfully emitted execution plan statistics as metrics",
+			zap.Int("active_query_count", len(activeQueries)))
+	}
+
 	// Step 3: Fetch execution plans and emit as logs
 	if err := s.queryPerformanceScraper.EmitActiveRunningExecutionPlansAsLogs(ctx, logs, activeQueries); err != nil {
 		s.logger.Error("Failed to emit execution plans as logs", zap.Error(err))
@@ -704,6 +714,16 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 					zap.Error(err))
 			} else {
 				s.logger.Info("Successfully emitted active running queries metrics",
+					zap.Int("active_query_count", len(activeQueries)))
+			}
+
+			// Step 3: Fetch execution plan statistics and emit as metrics
+			if err := s.queryPerformanceScraper.ScrapeActiveQueryExecutionPlans(scrapeCtx, activeQueries); err != nil {
+				s.logger.Warn("Failed to scrape active query execution plan statistics - continuing with other metrics",
+					zap.Error(err))
+				// Don't fail the entire scrape, just log the warning
+			} else {
+				s.logger.Info("Successfully emitted execution plan statistics as metrics",
 					zap.Int("active_query_count", len(activeQueries)))
 			}
 		}
