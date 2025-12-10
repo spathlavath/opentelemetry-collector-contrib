@@ -78,6 +78,7 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
@@ -150,6 +151,7 @@ Child cursor details including load times
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -2766,6 +2768,7 @@ Slow Query Details
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | query_text | SQL query text | Any Str | false |
@@ -5123,6 +5126,7 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |

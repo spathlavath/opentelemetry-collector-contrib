@@ -103,6 +103,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsWithCache(ctx context.Context, c
 // recordChildCursorMetrics records all metrics for a single child cursor
 func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cursor *models.ChildCursor) {
 	collectionTimestamp := cursor.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
+	cdbName := cursor.GetCDBName()
 	sqlID := cursor.GetSQLID()
 	childNumber := cursor.GetChildNumber()
 	planHashValue := fmt.Sprintf("%d", cursor.GetPlanHashValue())
@@ -205,6 +206,7 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 			now,
 			1, // count of 1 for each child cursor
 			collectionTimestamp,
+			cdbName,
 			databaseName,
 			sqlID,
 			childNumber,
