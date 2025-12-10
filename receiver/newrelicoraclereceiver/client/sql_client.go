@@ -111,8 +111,8 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 
 		err := rows.Scan(
 			&slowQuery.CollectionTimestamp,
-			&slowQuery.DatabaseName,
 			&slowQuery.CDBName,
+			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
 			&slowQuery.UserName,
@@ -160,8 +160,8 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 
 		err := rows.Scan(
 			&childCursor.CollectionTimestamp,
-			&childCursor.DatabaseName,
 			&childCursor.CDBName,
+			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
 			&childCursor.PlanHashValue,
