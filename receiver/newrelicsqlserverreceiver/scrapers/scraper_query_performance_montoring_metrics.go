@@ -94,7 +94,8 @@ func (s *QueryPerformanceScraper) SetMetricsBuilder(mb *metadata.MetricsBuilder)
 
 // ScrapeSlowQueryMetrics collects slow query performance monitoring metrics with interval-based averaging and/or EWMA smoothing
 // Returns the processed slow queries for downstream correlation (e.g., filtering active queries by slow query IDs)
-func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit int) ([]models.SlowQuery, error) {
+// emitMetrics: if true, emit metrics to MetricsBuilder; if false, only fetch and process data without metric emission
+func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit int, emitMetrics bool) ([]models.SlowQuery, error) {
 
 	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
 
@@ -223,32 +224,22 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 		s.logger.Debug("EWMA smoothing disabled, using interval-calculated or raw results")
 	}
 
-	// Process results (interval-calculated + smoothed, or just one, or raw)
-	for i, result := range resultsToProcess {
-		if err := s.processSlowQueryMetrics(result, i); err != nil {
-			s.logger.Error("Failed to process slow query metric", zap.Error(err), zap.Int("index", i))
+	// Process results and emit metrics if requested
+	if emitMetrics {
+		for i, result := range resultsToProcess {
+			if err := s.processSlowQueryMetrics(result, i); err != nil {
+				s.logger.Error("Failed to process slow query metric", zap.Error(err), zap.Int("index", i))
+			}
 		}
+		s.logger.Debug("Slow query metrics emitted", zap.Int("count", len(resultsToProcess)))
+	} else {
+		s.logger.Debug("Skipping metric emission (emitMetrics=false)", zap.Int("count", len(resultsToProcess)))
 	}
 
 	// Return processed results for downstream correlation (e.g., filtering active queries)
 	return resultsToProcess, nil
 }
 
-// ScrapeSlowQueryExecutionPlans - REMOVED: No longer fetch top 5 plans per slow query
-// Plan metrics are now only emitted for active queries via ScrapeActiveQueryExecutionPlans
-// This function is now a no-op to maintain interface compatibility
-func (s *QueryPerformanceScraper) ScrapeSlowQueryExecutionPlans(ctx context.Context, slowQueries []models.SlowQuery) error {
-	s.logger.Debug("ScrapeSlowQueryExecutionPlans called but disabled - plan metrics only for active queries")
-	return nil
-}
-
-// ScrapeActiveQueryExecutionPlans fetches execution statistics for each unique plan_handle from active running queries
-// This is called AFTER active query scraping to get historical plan statistics with active query correlation
-// KEY CHANGE: Instead of fetching top 5 plans per query_hash, we fetch stats for the EXACT plan_handle currently executing
-// Benefits:
-//   - No redundancy: ActiveRunningQueriesQuery already includes execution_plan_xml
-//   - Direct correlation: Fetch stats for the plan that's actually running (not historical top 5)
-//   - Emits metrics WITH active query correlation (session_id, request_id, request_start_time)
 func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Context, activeQueries []models.ActiveRunningQuery) error {
 	if len(activeQueries) == 0 {
 		s.logger.Debug("No active queries to fetch execution statistics for")

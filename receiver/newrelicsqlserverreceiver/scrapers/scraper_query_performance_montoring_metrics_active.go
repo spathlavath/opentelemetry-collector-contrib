@@ -18,8 +18,9 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 )
 
-// Returns the active queries for further processing (fetching execution stats for unique plan_handles)
-func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, logs plog.Logs, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
+// ScrapeActiveRunningQueriesMetrics fetches active running queries from SQL Server
+// Returns the list of active queries for further processing (metrics emission and execution plan fetching)
+func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
 	// Skip active query scraping if no slow queries found (nothing to correlate)
 	if len(slowQueryIDs) == 0 {
 		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
@@ -27,13 +28,10 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 	}
 
 	// Build query with slow query correlation filter
-	var queryIDFilter string
-	// Build query_id IN clause for SQL filtering (properly injected into WHERE clause)
-	queryIDFilter = "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
-	// Inject filter into WHERE clause placeholder (4th parameter)
+	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
 	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit, elapsedTimeThreshold, queryIDFilter)
 
-	s.logger.Debug("Executing active running queries metrics collection",
+	s.logger.Debug("Executing active running queries fetch",
 		zap.String("query", queries.TruncateQuery(query, 100)),
 		zap.Int("limit", limit),
 		zap.Int("text_truncate_limit", textTruncateLimit),
@@ -42,124 +40,125 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 	var results []models.ActiveRunningQuery
 	if err := s.connection.Query(ctx, &results, query); err != nil {
-		return nil, fmt.Errorf("failed to execute active running queries metrics query: %w", err)
+		return nil, fmt.Errorf("failed to execute active running queries query: %w", err)
 	}
 
-	s.logger.Debug("Active running queries metrics fetched", zap.Int("result_count", len(results)))
+	s.logger.Info("Active running queries fetched from database",
+		zap.Int("result_count", len(results)))
 
-	// Track filtered queries for logging
+	return results, nil
+}
+
+// EmitActiveRunningQueriesMetrics emits metrics for active running queries
+// This processes the active queries and emits metrics (no execution plans)
+func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Context, activeQueries []models.ActiveRunningQuery) error {
+	if len(activeQueries) == 0 {
+		s.logger.Info("No active queries to emit metrics for")
+		return nil
+	}
+
 	filteredCount := 0
 	processedCount := 0
 
-	// Log each query result from SQL Server
-	for i, result := range results {
-		// SQL-LEVEL FILTERING: Most filters already applied in SQL WHERE clause
-		// - elapsed_time >= threshold
-		// - wait_type IS NOT NULL
-		// - plan_handle IS NOT NULL
-		// - query_hash IS NOT NULL
-		//
-		// Go-level checks below are defensive (should not trigger if SQL is correct)
-
-		// Defensive check: wait_type should never be null (filtered in SQL)
+	for i, result := range activeQueries {
+		// Defensive checks for required fields
 		if result.WaitType == nil || *result.WaitType == "" {
 			filteredCount++
-			s.logger.Warn("Active query has NULL/empty wait_type despite SQL filter (should not happen)",
+			s.logger.Warn("Active query has NULL/empty wait_type, skipping metric emission",
 				zap.Any("session_id", result.CurrentSessionID))
 			continue
 		}
 
-		// Defensive check: plan_handle should never be null (filtered in SQL)
 		if result.PlanHandle == nil || result.PlanHandle.IsEmpty() {
 			filteredCount++
-			s.logger.Warn("Active query has NULL/empty plan_handle despite SQL filter (should not happen)",
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.Any("query_id", result.QueryID))
-			continue
-		}
-
-		// Defensive check: query_id should never be null (filtered in SQL)
-		if result.QueryID == nil || result.QueryID.IsEmpty() {
-			filteredCount++
-			s.logger.Warn("Active query has NULL/empty query_id despite SQL filter (should not happen)",
+			s.logger.Warn("Active query has NULL/empty plan_handle, skipping metric emission",
 				zap.Any("session_id", result.CurrentSessionID))
 			continue
 		}
 
-		// Query passed all filters, process it
+		if result.QueryID == nil || result.QueryID.IsEmpty() {
+			filteredCount++
+			s.logger.Warn("Active query has NULL/empty query_id, skipping metric emission",
+				zap.Any("session_id", result.CurrentSessionID))
+			continue
+		}
+
 		processedCount++
-		s.logger.Info("=== SCRAPED ACTIVE QUERY FROM DB ===",
-			zap.Int("index", i),
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Any("request_id", result.RequestID),
-			zap.Any("database_name", result.DatabaseName),
-			zap.Any("request_status", result.RequestStatus),
-			zap.Any("wait_type", result.WaitType),
-			zap.Any("wait_time_s", result.WaitTimeS),
-			zap.Any("last_wait_type", result.LastWaitType),
-			zap.Any("cpu_time_ms", result.CPUTimeMs),
-			zap.Any("elapsed_time_ms", result.TotalElapsedTimeMs),
-			zap.Any("reads", result.Reads),
-			zap.Any("logical_reads", result.LogicalReads),
-			zap.Any("writes", result.Writes),
-			zap.Any("row_count", result.RowCount),
-			zap.Any("granted_query_memory_pages", result.GrantedQueryMemoryPages),
-			zap.Any("blocking_session_id", result.BlockingSessionID),
-			zap.String("query_text_preview", func() string {
-				if result.QueryStatementText != nil && len(*result.QueryStatementText) > 100 {
-					return (*result.QueryStatementText)[:100] + "..."
-				} else if result.QueryStatementText != nil {
-					return *result.QueryStatementText
-				}
-				return "N/A"
-			}()))
 
-		var executionPlanXML string
-		shouldFetchXML := logs.ResourceLogs().Len() >= 0 // Check if logs collection is active (not nil)
-
-		if shouldFetchXML && result.PlanHandle != nil && !result.PlanHandle.IsEmpty() {
-			s.logger.Debug("Fetching execution plan XML for active query (logs endpoint)",
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.String("plan_handle", result.PlanHandle.String()))
-
-			planXML, err := s.fetchExecutionPlanXML(ctx, result.PlanHandle)
-			if err != nil {
-				s.logger.Warn("Failed to fetch execution plan XML for active query",
-					zap.Error(err),
-					zap.Any("session_id", result.CurrentSessionID),
-					zap.String("plan_handle", result.PlanHandle.String()))
-			} else if planXML != "" {
-				executionPlanXML = planXML
-				s.logger.Debug("Successfully fetched execution plan XML",
-					zap.Any("session_id", result.CurrentSessionID),
-					zap.Int("xml_length", len(planXML)))
-			}
-		}
-
-		// Process active query metrics with execution plan
-		if err := s.processActiveRunningQueryMetricsWithPlan(result, i, executionPlanXML); err != nil {
-			s.logger.Error("Failed to process active running query metric", zap.Error(err), zap.Int("index", i))
-		}
-
-		// If we have execution plan XML, parse and emit as logs
-		if executionPlanXML != "" && shouldFetchXML {
-			if err := s.parseAndEmitExecutionPlanAsLogs(ctx, result, executionPlanXML, logs); err != nil {
-				s.logger.Error("Failed to parse and emit execution plan as logs",
-					zap.Error(err),
-					zap.Any("session_id", result.CurrentSessionID))
-			}
+		// Emit metrics for this active query (no execution plan XML)
+		if err := s.processActiveRunningQueryMetricsWithPlan(result, i, ""); err != nil {
+			s.logger.Error("Failed to emit active running query metrics", zap.Error(err), zap.Int("index", i))
 		}
 	}
 
-	// Log filtering summary
-	s.logger.Info("Active running queries filtering summary",
-		zap.Int("total_fetched", len(results)),
+	s.logger.Info("Active running queries metrics emission complete",
+		zap.Int("total_queries", len(activeQueries)),
 		zap.Int("filtered_out", filteredCount),
-		zap.Int("processed", processedCount),
-		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
+		zap.Int("metrics_emitted", processedCount))
 
-	// Return the active queries for further processing (fetching execution stats for unique plan_handles)
-	return results, nil
+	return nil
+}
+
+// EmitActiveRunningExecutionPlansAsLogs fetches execution plans for active queries and emits as OTLP logs
+// This is called from ScrapeLogs to emit execution plans with slow query correlation
+func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx context.Context, logs plog.Logs, activeQueries []models.ActiveRunningQuery) error {
+	if len(activeQueries) == 0 {
+		s.logger.Info("No active queries to fetch execution plans for")
+		return nil
+	}
+
+	fetchedCount := 0
+	errorCount := 0
+
+	for i, result := range activeQueries {
+		// Skip if no plan handle
+		if result.PlanHandle == nil || result.PlanHandle.IsEmpty() {
+			continue
+		}
+
+		s.logger.Debug("Fetching execution plan XML for active query",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.String("plan_handle", result.PlanHandle.String()))
+
+		// Fetch execution plan XML
+		executionPlanXML, err := s.fetchExecutionPlanXML(ctx, result.PlanHandle)
+		if err != nil {
+			errorCount++
+			s.logger.Warn("Failed to fetch execution plan XML for active query",
+				zap.Error(err),
+				zap.Any("session_id", result.CurrentSessionID))
+			continue
+		}
+
+		if executionPlanXML == "" {
+			s.logger.Debug("Empty execution plan XML returned",
+				zap.Any("session_id", result.CurrentSessionID))
+			continue
+		}
+
+		s.logger.Debug("Successfully fetched execution plan XML",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int("xml_length", len(executionPlanXML)))
+
+		// Parse and emit execution plan as logs
+		if err := s.parseAndEmitExecutionPlanAsLogs(ctx, result, executionPlanXML, logs); err != nil {
+			errorCount++
+			s.logger.Error("Failed to parse and emit execution plan as logs",
+				zap.Error(err),
+				zap.Any("session_id", result.CurrentSessionID),
+				zap.Int("index", i))
+			continue
+		}
+
+		fetchedCount++
+	}
+
+	s.logger.Info("Execution plans emission complete",
+		zap.Int("total_queries", len(activeQueries)),
+		zap.Int("plans_fetched", fetchedCount),
+		zap.Int("errors", errorCount))
+
+	return nil
 }
 
 func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, index int, executionPlanXML string) error {
