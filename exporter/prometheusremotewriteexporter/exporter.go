@@ -230,7 +230,7 @@ func newPRWExporter(cfg *Config, set exporter.Settings) (*prwExporter, error) {
 
 // Start creates the prometheus client
 func (prwe *prwExporter) Start(ctx context.Context, host component.Host) (err error) {
-	prwe.client, err = prwe.clientSettings.ToClient(ctx, host, prwe.settings)
+	prwe.client, err = prwe.clientSettings.ToClient(ctx, host.GetExtensions(), prwe.settings)
 	if err != nil {
 		return err
 	}
@@ -372,7 +372,7 @@ func (prwe *prwExporter) export(ctx context.Context, requests []*prompb.WriteReq
 	var errs error
 	// Run concurrencyLimit of workers until there
 	// is no more requests to execute in the input channel.
-	for i := 0; i < concurrencyLimit; i++ {
+	for range concurrencyLimit {
 		go func() {
 			defer wg.Done()
 			err := prwe.handleRequests(ctx, input)

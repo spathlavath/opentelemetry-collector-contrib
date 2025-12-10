@@ -16,6 +16,7 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/extension"
 	"go.opentelemetry.io/collector/extension/extensioncapabilities"
+	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/service"
 	"go.opentelemetry.io/collector/service/hostcapabilities"
 	"go.uber.org/zap"
@@ -27,7 +28,10 @@ import (
 	datadogconfig "github.com/open-telemetry/opentelemetry-collector-contrib/pkg/datadog/config"
 )
 
-const payloadSendingInterval = 30 * time.Minute
+const (
+	payloadSendingInterval = 5 * time.Minute
+	payloadTTL             = payloadSendingInterval * 3
+)
 
 // uuidProvider defines an interface for generating UUIDs, allowing for mocking in tests.
 type uuidProvider interface {
@@ -49,11 +53,12 @@ type configs struct {
 }
 
 type info struct {
-	host           source.Source
-	hostnameSource string
-	uuid           string
-	build          component.BuildInfo
-	modules        service.ModuleInfos
+	host               source.Source
+	hostnameSource     string
+	uuid               string
+	build              component.BuildInfo
+	modules            service.ModuleInfos
+	resourceAttributes map[string]string
 }
 
 type payloadSender struct {
@@ -117,8 +122,13 @@ func (e *datadogExtension) NotifyConfig(_ context.Context, conf *confmap.Conf) e
 		e.info.build.Version, // This is the same version from buildInfo; it is possible we could want to set a different version here in the future
 		e.configs.extension.API.Site,
 		fullConfig,
+		e.configs.extension.DeploymentType,
 		buildInfo,
+		int64(payloadTTL),
 	)
+
+	// Populate resource attributes collected from TelemetrySettings.Resource
+	otelCollectorPayload.CollectorResourceAttributes = e.info.resourceAttributes
 
 	// Populate the full list of components available in the collector build
 	moduleInfoJSON, err := componentchecker.PopulateFullComponentsJSON(e.info.modules, e.configs.collector)
@@ -313,6 +323,16 @@ func newExtension(
 	logComponent := agentcomponents.NewLogComponent(set.TelemetrySettings)
 	serializer := agentcomponents.NewSerializerComponent(configComponent, logComponent, host.Identifier)
 
+	// Collect resource attributes from TelemetrySettings.Resource
+	// Format: map[string]string
+	resourceMap := make(map[string]string)
+	if attrs := set.Resource.Attributes(); attrs.Len() > 0 {
+		attrs.Range(func(k string, v pcommon.Value) bool {
+			resourceMap[k] = v.AsString()
+			return true
+		})
+	}
+
 	// configure payloadSender struct
 	ctxWithCancel, cancel := context.WithCancel(ctx)
 	ticker := time.NewTicker(payloadSendingInterval)
@@ -323,11 +343,12 @@ func newExtension(
 		logger:     set.Logger,
 		serializer: serializer,
 		info: &info{
-			host:           host,
-			hostnameSource: hostnameSource,
-			uuid:           uuidProvider.NewString(),
-			build:          set.BuildInfo,
-			modules:        service.ModuleInfos{}, // moduleInfos will be populated in Start()
+			host:               host,
+			hostnameSource:     hostnameSource,
+			uuid:               uuidProvider.NewString(),
+			build:              set.BuildInfo,
+			modules:            service.ModuleInfos{}, // moduleInfos will be populated in Start()
+			resourceAttributes: resourceMap,
 		},
 		payloadSender: &payloadSender{
 			ctx:     ctxWithCancel,

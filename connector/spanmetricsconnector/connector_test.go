@@ -57,10 +57,11 @@ const (
 
 // metricID represents the minimum attributes that uniquely identifies a metric in our tests.
 type metricID struct {
-	service    string
-	name       string
-	kind       string
-	statusCode string
+	service        string
+	name           string
+	kind           string
+	statusCode     string
+	otelStatusCode string
 }
 
 type metricDataPoint interface {
@@ -131,6 +132,72 @@ func verifyConsumeMetricsInputCumulative(tb testing.TB, input pmetric.Metrics) b
 
 func verifyBadMetricsOkay(testing.TB, pmetric.Metrics) bool {
 	return true // Validating no exception
+}
+
+func verifyOtelStatusCode(tb testing.TB, input pmetric.Metrics) bool {
+	require.Equal(tb, 8, input.DataPointCount(),
+		"Should be 4 for each of call count and latency split into three resource scopes defined by: "+
+			"service-a: service-a (server kind) -> service-a (client kind), "+
+			"service-b: service-b (server kind), and"+
+			"service-c: service-c (server kind)",
+	)
+
+	require.Equal(tb, 3, input.ResourceMetrics().Len())
+
+	for i := 0; i < input.ResourceMetrics().Len(); i++ {
+		rm := input.ResourceMetrics().At(i)
+
+		ilm := rm.ScopeMetrics()
+		require.Equal(tb, 1, ilm.Len())
+		assert.Equal(tb, "spanmetricsconnector", ilm.At(0).Scope().Name())
+
+		m := ilm.At(0).Metrics()
+		require.Equal(tb, 2, m.Len(), "only sum and histogram metric types generated")
+
+		metric := m.At(0)
+		// validate the sum metrics for simplicity
+		assert.Equal(tb, pmetric.MetricTypeSum, metric.Type())
+		seenMetricIDs := make(map[metricID]bool)
+
+		dataPoints := metric.Sum().DataPoints()
+		var expectedStatusCode string
+		var serviceName string
+
+		for dpi := 0; dpi < dataPoints.Len(); dpi++ {
+			dp := dataPoints.At(dpi)
+
+			val, ok := dp.Attributes().Get(serviceNameKey)
+			require.True(tb, ok)
+			if serviceName == "" {
+				serviceName = val.AsString()
+				switch serviceName {
+				case "service-a":
+					expectedStatusCode = "OK"
+				case "service-b":
+					expectedStatusCode = "ERROR"
+				case "service-c":
+					expectedStatusCode = ""
+				default:
+					require.Fail(tb, fmt.Sprintf("Unexpected service name: %s", serviceName))
+				}
+			}
+			require.Equal(tb, serviceName, val.AsString())
+
+			statusCode, ok := dp.Attributes().Get(otelStatusCodeKey)
+			if expectedStatusCode == "" {
+				require.False(tb, ok)
+			} else {
+				require.True(tb, ok)
+				assert.Equal(tb, expectedStatusCode, statusCode.AsString())
+			}
+			verifyMetricLabels(tb, dp, seenMetricIDs)
+		}
+		for id := range seenMetricIDs {
+			assert.Equal(tb, expectedStatusCode, id.otelStatusCode)
+			assert.Empty(tb, id.statusCode)
+		}
+	}
+	return true
 }
 
 // verifyConsumeMetricsInputDelta expects one accumulation of metrics, and marked as delta
@@ -229,7 +296,7 @@ func verifyConsumeMetricsInput(tb testing.TB, input pmetric.Metrics, expectedTem
 func verifyExplicitHistogramDataPoints(tb testing.TB, dps pmetric.HistogramDataPointSlice, numDataPoints, numCumulativeConsumptions int) {
 	seenMetricIDs := make(map[metricID]bool)
 	require.Equal(tb, numDataPoints, dps.Len())
-	for dpi := 0; dpi < numDataPoints; dpi++ {
+	for dpi := range numDataPoints {
 		dp := dps.At(dpi)
 		assert.Equal(
 			tb,
@@ -268,7 +335,7 @@ func verifyExplicitHistogramDataPoints(tb testing.TB, dps pmetric.HistogramDataP
 func verifyExponentialHistogramDataPoints(tb testing.TB, dps pmetric.ExponentialHistogramDataPointSlice, numDataPoints, numCumulativeConsumptions int) {
 	seenMetricIDs := make(map[metricID]bool)
 	require.Equal(tb, numDataPoints, dps.Len())
-	for dpi := 0; dpi < numDataPoints; dpi++ {
+	for dpi := range numDataPoints {
 		dp := dps.At(dpi)
 		assert.Equal(
 			tb,
@@ -306,6 +373,8 @@ func verifyMetricLabels(tb testing.TB, dp metricDataPoint, seenMetricIDs map[met
 			mID.kind = v.Str()
 		case statusCodeKey:
 			mID.statusCode = v.Str()
+		case otelStatusCodeKey:
+			mID.otelStatusCode = v.Str()
 		case notInSpanAttrName1:
 			assert.Fail(tb, notInSpanAttrName1+" should not be in this metric")
 		default:
@@ -373,6 +442,26 @@ func buildSampleTrace() ptrace.Traces {
 			},
 		}, traces.ResourceSpans().AppendEmpty())
 	initServiceSpans(serviceSpans{}, traces.ResourceSpans().AppendEmpty())
+	return traces
+}
+
+// buildTraceWithUnsetStatusCode builds the following trace:
+//
+//	service-c/ping (server)
+func appendTraceWithUnsetStatusCode(traces ptrace.Traces) ptrace.Traces {
+	initServiceSpans(
+		serviceSpans{
+			serviceName: "service-c",
+			spans: []span{
+				{
+					name:       "/ping",
+					kind:       ptrace.SpanKindServer,
+					statusCode: ptrace.StatusCodeUnset,
+					traceID:    [16]byte{0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20},
+					spanID:     [8]byte{0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28},
+				},
+			},
+		}, traces.ResourceSpans().AppendEmpty())
 	return traces
 }
 
@@ -665,7 +754,7 @@ func TestConcurrentShutdown(t *testing.T) {
 	var wg sync.WaitGroup
 	const concurrency = 1000
 	wg.Add(concurrency)
-	for i := 0; i < concurrency; i++ {
+	for range concurrency {
 		go func() {
 			err := p.Shutdown(ctx)
 			assert.NoError(t, err)
@@ -782,6 +871,7 @@ func TestConsumeTraces(t *testing.T) {
 		exemplarConfig         func() ExemplarsConfig
 		verifier               func(tb testing.TB, input pmetric.Metrics) bool
 		traces                 []ptrace.Traces
+		statusCodeFeatureGate  bool
 	}{
 		// disabling histogram
 		{
@@ -835,6 +925,16 @@ func TestConsumeTraces(t *testing.T) {
 			exemplarConfig:         disabledExemplarsConfig,
 			verifier:               verifyBadMetricsOkay,
 			traces:                 []ptrace.Traces{buildBadSampleTrace()},
+		},
+		{
+			// Test that the status code is set properly
+			name:                   "Test using new status code attribute",
+			aggregationTemporality: delta,
+			histogramConfig:        exponentialHistogramsConfig,
+			exemplarConfig:         disabledExemplarsConfig,
+			verifier:               verifyOtelStatusCode,
+			traces:                 []ptrace.Traces{appendTraceWithUnsetStatusCode(buildSampleTrace())},
+			statusCodeFeatureGate:  true,
 		},
 
 		// explicit buckets histogram
@@ -902,6 +1002,12 @@ func TestConsumeTraces(t *testing.T) {
 			require.NoError(t, err)
 			// Override the default no-op consumer with metrics sink for testing.
 			p.metricsConsumer = mcon
+			if tc.statusCodeFeatureGate {
+				require.NoError(t, featuregate.GlobalRegistry().Set(useOtelStatusCodeAttribute.ID(), true))
+				defer func() {
+					require.NoError(t, featuregate.GlobalRegistry().Set(useOtelStatusCodeAttribute.ID(), false))
+				}()
+			}
 
 			ctx := metadata.NewIncomingContext(t.Context(), nil)
 			err = p.Start(ctx, componenttest.NewNopHost())
@@ -983,7 +1089,7 @@ func TestResourceMetricsCache(t *testing.T) {
 	assert.Equal(t, 2, p.resourceMetrics.Len())
 
 	// consume more batches for new resources. Max size is exceeded causing old resource entries to be discarded
-	for i := 0; i < resourceMetricsCacheSize; i++ {
+	for i := range resourceMetricsCacheSize {
 		traces := buildSampleTrace()
 
 		// add resource attributes to simulate additional resources providing data
@@ -1045,7 +1151,7 @@ func TestResourceMetricsKeyAttributes(t *testing.T) {
 	assert.Equal(t, 2, p.resourceMetrics.Len())
 
 	// consume more batches for new resources. Max size is exceeded causing old resource entries to be discarded
-	for i := 0; i < resourceMetricsCacheSize; i++ {
+	for i := range resourceMetricsCacheSize {
 		traces := buildSampleTrace()
 
 		// add resource attributes to simulate additional resources providing data
@@ -1061,6 +1167,110 @@ func TestResourceMetricsKeyAttributes(t *testing.T) {
 	assert.Equal(t, 2, p.resourceMetrics.Len())
 }
 
+func TestAddResourceAttributesConfig(t *testing.T) {
+	tests := []struct {
+		name                     string
+		addResourceAttributes    bool
+		featureGateEnabled       bool
+		expectResourceAttributes bool
+	}{
+		{
+			name:                     "feature gate disabled, config false - should include resource attributes",
+			addResourceAttributes:    false,
+			featureGateEnabled:       false,
+			expectResourceAttributes: true,
+		},
+		{
+			name:                     "feature gate enabled, config false - should exclude resource attributes",
+			addResourceAttributes:    false,
+			featureGateEnabled:       true,
+			expectResourceAttributes: false,
+		},
+		{
+			name:                     "feature gate enabled, config true - should include resource attributes (override)",
+			addResourceAttributes:    true,
+			featureGateEnabled:       true,
+			expectResourceAttributes: true,
+		},
+		{
+			name:                     "feature gate disabled, config true - should include resource attributes",
+			addResourceAttributes:    true,
+			featureGateEnabled:       false,
+			expectResourceAttributes: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Save and restore the feature gate state
+			previousValue := excludeResourceMetrics.IsEnabled()
+			require.NoError(t, featuregate.GlobalRegistry().Set(excludeResourceMetrics.ID(), tt.featureGateEnabled))
+			defer func() {
+				require.NoError(t, featuregate.GlobalRegistry().Set(excludeResourceMetrics.ID(), previousValue))
+			}()
+
+			// Create a custom config with AddResourceAttributes
+			cfg := &Config{
+				AggregationTemporality:       cumulative,
+				Histogram:                    explicitHistogramsConfig(),
+				Exemplars:                    disabledExemplarsConfig(),
+				Events:                       disabledEventsConfig(),
+				ResourceMetricsCacheSize:     resourceMetricsCacheSize,
+				ResourceMetricsKeyAttributes: []string{},
+				Dimensions:                   []Dimension{},
+				MetricsFlushInterval:         time.Nanosecond,
+				AddResourceAttributes:        tt.addResourceAttributes,
+			}
+
+			p, err := newConnector(zaptest.NewLogger(t), cfg, clockwork.NewFakeClock(), instanceID)
+			require.NoError(t, err)
+			p.metricsConsumer = consumertest.NewNop()
+
+			// Create a trace with resource attributes
+			traces := ptrace.NewTraces()
+			rs := traces.ResourceSpans().AppendEmpty()
+			rs.Resource().Attributes().PutStr(string(conventions.ServiceNameKey), "test-service")
+			rs.Resource().Attributes().PutStr("test.resource.attr", "test-value")
+			rs.Resource().Attributes().PutStr(regionResourceAttrName, sampleRegion)
+
+			ils := rs.ScopeSpans().AppendEmpty()
+			span := ils.Spans().AppendEmpty()
+			span.SetName("/test")
+			span.SetKind(ptrace.SpanKindServer)
+			span.SetTraceID([16]byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10})
+			span.SetSpanID([8]byte{0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18})
+			span.SetStartTimestamp(pcommon.NewTimestampFromTime(time.Now()))
+			span.SetEndTimestamp(pcommon.NewTimestampFromTime(time.Now().Add(sampleDuration)))
+
+			// Consume the traces
+			ctx := metadata.NewIncomingContext(t.Context(), nil)
+			err = p.ConsumeTraces(ctx, traces)
+			require.NoError(t, err)
+
+			// Build metrics and verify
+			m := p.buildMetrics()
+			require.Equal(t, 1, m.ResourceMetrics().Len())
+
+			rm := m.ResourceMetrics().At(0)
+			resourceAttrs := rm.Resource().Attributes()
+
+			if tt.expectResourceAttributes {
+				// Should have resource attributes
+				assert.Positive(t, resourceAttrs.Len(), "Expected resource attributes to be present")
+				val, ok := resourceAttrs.Get(string(conventions.ServiceNameKey))
+				assert.True(t, ok, "Expected service.name attribute to be present")
+				assert.Equal(t, "test-service", val.Str())
+				val, ok = resourceAttrs.Get("test.resource.attr")
+				assert.True(t, ok, "Expected test.resource.attr attribute to be present")
+				assert.Equal(t, "test-value", val.Str())
+			} else {
+				// Should not have resource attributes
+				assert.Equal(t, 0, resourceAttrs.Len(), "Expected no resource attributes")
+			}
+		})
+	}
+}
+
 func BenchmarkConnectorConsumeTraces(b *testing.B) {
 	// Prepare
 	conn, err := newConnectorImp(stringp("defaultNullValue"), explicitHistogramsConfig, disabledExemplarsConfig, disabledEventsConfig, cumulative, 0, []string{}, 1000, clockwork.NewFakeClock())
@@ -1070,7 +1280,7 @@ func BenchmarkConnectorConsumeTraces(b *testing.B) {
 
 	// Test
 	ctx := metadata.NewIncomingContext(b.Context(), nil)
-	for n := 0; n < b.N; n++ {
+	for b.Loop() {
 		assert.NoError(b, conn.ConsumeTraces(ctx, traces))
 	}
 }
@@ -2074,7 +2284,7 @@ func TestConnectorWithCardinalityLimit(t *testing.T) {
 	ils2 := rspan2.ScopeSpans().AppendEmpty()
 
 	// Add spans with different names to trigger overflow
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		span1 := ils1.Spans().AppendEmpty()
 		span1.SetName(fmt.Sprintf("operation%d", i))
 		span1.SetKind(ptrace.SpanKindServer)
@@ -2207,7 +2417,7 @@ func TestConnectorWithCardinalityLimitForEvents(t *testing.T) {
 
 	// Add 3 different events to trigger overflow
 	events := span.Events()
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		event := events.AppendEmpty()
 		event.SetName(fmt.Sprintf("event%d", i))
 		event.Attributes().PutStr("event.name", fmt.Sprintf("event%d", i))

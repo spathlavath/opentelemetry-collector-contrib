@@ -22,7 +22,7 @@ import (
 	"go.opentelemetry.io/collector/consumer/consumertest"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
-	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
 	"go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest"
 
@@ -187,8 +187,8 @@ func BenchmarkConnectorWithTraces(b *testing.B) {
 	require.NoError(b, err)
 
 	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+
+	for b.Loop() {
 		if err := connector.ConsumeTraces(b.Context(), inputTraces); err != nil {
 			b.Fatal(err)
 		}
@@ -213,8 +213,8 @@ func BenchmarkConnectorWithMetrics(b *testing.B) {
 	require.NoError(b, err)
 
 	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+
+	for b.Loop() {
 		if err := connector.ConsumeMetrics(b.Context(), inputMetrics); err != nil {
 			b.Fatal(err)
 		}
@@ -239,8 +239,8 @@ func BenchmarkConnectorWithLogs(b *testing.B) {
 	require.NoError(b, err)
 
 	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+
+	for b.Loop() {
 		if err := connector.ConsumeLogs(b.Context(), inputLogs); err != nil {
 			b.Fatal(err)
 		}

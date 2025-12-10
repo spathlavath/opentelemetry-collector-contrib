@@ -167,10 +167,33 @@ func TestConsumerConfig(t *testing.T) {
 				MaxPartitionFetchSize: 4096,
 			},
 		},
+		"zero_min_fetch_size": {
+			expected: ConsumerConfig{
+				SessionTimeout:    10 * time.Second,
+				HeartbeatInterval: 3 * time.Second,
+				GroupID:           "otel-collector",
+				InitialOffset:     "latest",
+				AutoCommit: AutoCommitConfig{
+					Enable:   true,
+					Interval: 1 * time.Second,
+				},
+				MinFetchSize:          0,
+				DefaultFetchSize:      1048576,
+				MaxFetchSize:          1048576,
+				MaxFetchWait:          250 * time.Millisecond,
+				MaxPartitionFetchSize: 1048576,
+			},
+		},
 
 		// Invalid configurations
 		"invalid_initial_offset": {
 			expectedErr: "initial_offset should be one of 'latest' or 'earliest'. configured value middle",
+		},
+		"invalid_fetch_size": {
+			expectedErr: "max_fetch_size (100) cannot be less than min_fetch_size (1000)",
+		},
+		"negative_min_fetch_size": {
+			expectedErr: "min_fetch_size (-100) must be non-negative",
 		},
 	})
 }
@@ -193,6 +216,7 @@ func TestProducerConfig(t *testing.T) {
 				},
 				FlushMaxMessages:       2,
 				AllowAutoTopicCreation: true,
+				Linger:                 10 * time.Millisecond,
 			},
 		},
 		"default_compression_level": {
@@ -206,6 +230,7 @@ func TestProducerConfig(t *testing.T) {
 				},
 				FlushMaxMessages:       2,
 				AllowAutoTopicCreation: true,
+				Linger:                 10 * time.Millisecond,
 			},
 		},
 		"snappy_compression": {
@@ -214,6 +239,7 @@ func TestProducerConfig(t *testing.T) {
 				RequiredAcks:           1,
 				Compression:            "snappy",
 				AllowAutoTopicCreation: true,
+				Linger:                 10 * time.Millisecond,
 			},
 		},
 		"disable_auto_topic_creation": {
@@ -222,6 +248,25 @@ func TestProducerConfig(t *testing.T) {
 				RequiredAcks:           1,
 				Compression:            "none",
 				AllowAutoTopicCreation: false,
+				Linger:                 10 * time.Millisecond,
+			},
+		},
+		"producer_linger": {
+			expected: ProducerConfig{
+				MaxMessageBytes:        1000000,
+				RequiredAcks:           1,
+				Compression:            "none",
+				AllowAutoTopicCreation: true,
+				Linger:                 100 * time.Millisecond,
+			},
+		},
+		"producer_linger_1s": {
+			expected: ProducerConfig{
+				MaxMessageBytes:        1000000,
+				RequiredAcks:           1,
+				Compression:            "none",
+				AllowAutoTopicCreation: true,
+				Linger:                 1 * time.Second,
 			},
 		},
 		"invalid_compression_level": {

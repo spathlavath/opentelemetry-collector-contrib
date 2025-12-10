@@ -20,7 +20,7 @@ import (
 	"go.opentelemetry.io/collector/consumer/consumertest"
 	"go.opentelemetry.io/collector/pdata/ptrace"
 	"go.opentelemetry.io/collector/receiver/receivertest"
-	conventions "go.opentelemetry.io/otel/semconv/v1.27.0"
+	conventions "go.opentelemetry.io/otel/semconv/v1.37.0"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/internal/common/testutil"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/pkg/translator/jaeger"
@@ -116,7 +116,7 @@ func testJaegerAgent(t *testing.T, agentEndpoint string, receiverConfig Protocol
 	require.NoError(t, err)
 	t.Cleanup(func() { require.NoError(t, jr.Shutdown(t.Context())) })
 
-	for i := 0; i < 3; i++ {
+	for range 3 {
 		err = jr.Start(t.Context(), componenttest.NewNopHost())
 		if err == nil {
 			break
