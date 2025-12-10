@@ -6,7 +6,7 @@ status:
     alpha: [metrics, logs]
   distributions: [contrib]
   codeowners:
-    active: [newrelic-team]
+    active: [tharun0064,spathlavath,sjyothi54,RamanaReddy8801]
 
 resource_attributes:
   newrelicoracledb.instance.name:
