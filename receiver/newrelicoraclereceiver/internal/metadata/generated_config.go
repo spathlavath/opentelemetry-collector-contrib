@@ -155,15 +155,10 @@ type MetricsConfig struct {
 	NewrelicoracledbRacInstanceStatus                                  MetricConfig `mapstructure:"newrelicoracledb.rac.instance.status"`
 	NewrelicoracledbRacInstanceUptimeSeconds                           MetricConfig `mapstructure:"newrelicoracledb.rac.instance.uptime_seconds"`
 	NewrelicoracledbRacInstanceVersionInfo                             MetricConfig `mapstructure:"newrelicoracledb.rac.instance.version_info"`
-	NewrelicoracledbRacServiceBlockedStatus                            MetricConfig `mapstructure:"newrelicoracledb.rac.service.blocked_status"`
 	NewrelicoracledbRacServiceClbConfig                                MetricConfig `mapstructure:"newrelicoracledb.rac.service.clb_config"`
-	NewrelicoracledbRacServiceDrainTimeoutSeconds                      MetricConfig `mapstructure:"newrelicoracledb.rac.service.drain_timeout_seconds"`
-	NewrelicoracledbRacServiceFanEnabled                               MetricConfig `mapstructure:"newrelicoracledb.rac.service.fan_enabled"`
-	NewrelicoracledbRacServiceGoalConfig                               MetricConfig `mapstructure:"newrelicoracledb.rac.service.goal_config"`
+	NewrelicoracledbRacServiceCreationAgeDays                          MetricConfig `mapstructure:"newrelicoracledb.rac.service.creation_age_days"`
 	NewrelicoracledbRacServiceInstanceID                               MetricConfig `mapstructure:"newrelicoracledb.rac.service.instance_id"`
 	NewrelicoracledbRacServiceNetworkConfig                            MetricConfig `mapstructure:"newrelicoracledb.rac.service.network_config"`
-	NewrelicoracledbRacServiceReplayTimeoutSeconds                     MetricConfig `mapstructure:"newrelicoracledb.rac.service.replay_timeout_seconds"`
-	NewrelicoracledbRacServiceTransactionGuardEnabled                  MetricConfig `mapstructure:"newrelicoracledb.rac.service.transaction_guard_enabled"`
 	NewrelicoracledbRacTotalWaits                                      MetricConfig `mapstructure:"newrelicoracledb.rac.total_waits"`
 	NewrelicoracledbRacWaitTime                                        MetricConfig `mapstructure:"newrelicoracledb.rac.wait_time"`
 	NewrelicoracledbRedoLogParallelWriteWaits                          MetricConfig `mapstructure:"newrelicoracledb.redo_log_parallel_write_waits"`
@@ -740,31 +735,16 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbRacInstanceVersionInfo: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbRacServiceBlockedStatus: MetricConfig{
-			Enabled: true,
-		},
 		NewrelicoracledbRacServiceClbConfig: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbRacServiceDrainTimeoutSeconds: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRacServiceFanEnabled: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRacServiceGoalConfig: MetricConfig{
+		NewrelicoracledbRacServiceCreationAgeDays: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbRacServiceInstanceID: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbRacServiceNetworkConfig: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRacServiceReplayTimeoutSeconds: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbRacServiceTransactionGuardEnabled: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbRacTotalWaits: MetricConfig{

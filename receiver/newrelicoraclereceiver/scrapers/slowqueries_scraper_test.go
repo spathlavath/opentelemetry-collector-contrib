@@ -49,6 +49,7 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.SlowQueries = []models.SlowQuery{
 		{
+			CDBName:          sql.NullString{String: "TESTCDB", Valid: true},
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "test_query_1", Valid: true},
 			SchemaName:       sql.NullString{String: "TEST_SCHEMA", Valid: true},
@@ -61,6 +62,7 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.75, Valid: true},
 		},
 		{
+			CDBName:          sql.NullString{String: "TESTCDB", Valid: true},
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "test_query_2", Valid: true},
 			UserName:         sql.NullString{String: "TEST_USER2", Valid: true},
@@ -123,12 +125,14 @@ func TestSlowQueriesScraper_ScrapeWithInvalidData(t *testing.T) {
 	mockClient.SlowQueries = []models.SlowQuery{
 		{
 			// Missing required fields - should be skipped
+			CDBName:          sql.NullString{Valid: false},
 			DatabaseName:     sql.NullString{Valid: false},
 			QueryID:          sql.NullString{Valid: false},
 			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		},
 		{
 			// Valid query
+			CDBName:          sql.NullString{String: "TESTCDB", Valid: true},
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "valid_query", Valid: true},
 			UserName:         sql.NullString{String: "USER", Valid: true},
@@ -151,6 +155,7 @@ func TestSlowQueriesScraper_RecordMetrics(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.SlowQueries = []models.SlowQuery{
 		{
+			CDBName:          sql.NullString{String: "TESTCDB", Valid: true},
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "test_query", Valid: true},
 			UserName:         sql.NullString{String: "TEST_USER", Valid: true},

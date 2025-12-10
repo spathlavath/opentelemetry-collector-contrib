@@ -78,6 +78,7 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
@@ -114,6 +115,7 @@ Average number of buffer gets per execution for this child cursor
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -132,6 +134,7 @@ Average CPU time per execution for this child cursor (in milliseconds)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -150,6 +153,7 @@ Child cursor details including load times
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -170,6 +174,7 @@ Average number of disk reads per execution for this child cursor
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -188,6 +193,7 @@ Average elapsed time per execution for this child cursor (in milliseconds)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -206,6 +212,7 @@ Total number of executions of this child cursor
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -224,6 +231,7 @@ Number of times this child cursor was invalidated
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -242,6 +250,7 @@ Average user I/O wait time per execution for this child cursor (in milliseconds)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -2079,22 +2088,6 @@ Oracle database version information (always 1, version in attributes)
 | host.name.rac | Oracle RAC host name | Any Str | false |
 | oracle.version | Oracle database version | Any Str | false |
 
-### newrelicoracledb.rac.service.blocked_status
-
-Service blocked indicator (1=blocked, 0=not blocked)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| service.blocked | Service blocked status (YES/NO) | Any Str | false |
-
 ### newrelicoracledb.rac.service.clb_config
 
 Connection load balancing configuration (always 1, config in attributes)
@@ -2111,13 +2104,13 @@ Connection load balancing configuration (always 1, config in attributes)
 | service.name | Oracle database service name | Any Str | false |
 | clb.goal | Oracle service connection load balancing goal | Any Str | false |
 
-### newrelicoracledb.rac.service.drain_timeout_seconds
+### newrelicoracledb.rac.service.creation_age_days
 
-Session drain timeout in seconds before service stop
+Service age in days since creation
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
-| s | Gauge | Int |
+| d | Gauge | Int |
 
 #### Attributes
 
@@ -2125,39 +2118,6 @@ Session drain timeout in seconds before service stop
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
-| service.drain_timeout | Session drain timeout in seconds | Any Str | false |
-
-### newrelicoracledb.rac.service.fan_enabled
-
-Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| service.fan_enabled | Fast Application Notification (FAN) enabled status (YES/NO) | Any Str | false |
-
-### newrelicoracledb.rac.service.goal_config
-
-Service goal configuration (always 1, goal in attributes)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| service.goal | Oracle service goal (THROUGHPUT or SERVICE_TIME) | Any Str | false |
 
 ### newrelicoracledb.rac.service.instance_id
 
@@ -2191,38 +2151,6 @@ Service network configuration (always 1, config in attributes)
 | service.name | Oracle database service name | Any Str | false |
 | network.name | Oracle service network name | Any Str | false |
 
-### newrelicoracledb.rac.service.replay_timeout_seconds
-
-Application Continuity replay initiation timeout in seconds
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| service.replay_timeout | Application Continuity replay initiation timeout in seconds | Any Str | false |
-
-### newrelicoracledb.rac.service.transaction_guard_enabled
-
-Transaction Guard enabled indicator (1=enabled, 0=disabled)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| service.name | Oracle database service name | Any Str | false |
-| service.transaction_guard | Transaction Guard (COMMIT_OUTCOME) enabled status (TRUE/FALSE) | Any Str | false |
-
 ### newrelicoracledb.rac.total_waits
 
 Total number of cluster wait events
@@ -2253,6 +2181,8 @@ Rate of cluster wait time in microseconds per second
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 | wait.event | Oracle wait event name | Any Str | false |
 
 ### newrelicoracledb.redo_log_parallel_write_waits
@@ -2766,6 +2696,7 @@ Slow Query Details
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | query_text | SQL query text | Any Str | false |
@@ -5123,6 +5054,7 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
