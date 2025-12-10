@@ -215,7 +215,7 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 		zap.Int("top_n", topN),
 		zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
 
-	slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(ctx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
+	slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(ctx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit, false)
 	if err != nil {
 		s.logger.Warn("Failed to fetch slow queries for correlation, will skip execution plan collection",
 			zap.Error(err))
@@ -245,11 +245,24 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 		zap.Int("elapsed_time_threshold_ms", activeElapsedTimeThreshold),
 		zap.Int("slow_query_id_filter_count", len(slowQueryIDs)))
 
-	// Pass slowQueryIDs for correlation filtering and XML execution plan fetching
-	// Note: We don't need the returned active queries here since execution plans are already included in logs
-	_, err = s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, logs, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
+	// Step 1: Fetch active queries from database
+	activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
 	if err != nil {
-		s.logger.Error("Failed to scrape active running query execution plans", zap.Error(err))
+		s.logger.Error("Failed to fetch active running queries", zap.Error(err))
+		return logs, err
+	}
+
+	if len(activeQueries) == 0 {
+		s.logger.Info("No active queries found matching slow query IDs")
+		return logs, nil
+	}
+
+	s.logger.Info("Active queries fetched, emitting metrics",
+		zap.Int("active_query_count", len(activeQueries)))
+
+	// Step 3: Fetch execution plans and emit as logs
+	if err := s.queryPerformanceScraper.EmitActiveRunningExecutionPlansAsLogs(ctx, logs, activeQueries); err != nil {
+		s.logger.Error("Failed to emit execution plans as logs", zap.Error(err))
 		return logs, err
 	}
 
@@ -629,7 +642,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			zap.Int("top_n", topN),
 			zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
 
-		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
+		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit, true)
 		if err != nil {
 			s.logger.Warn("Failed to scrape slow query metrics - continuing with other metrics",
 				zap.Error(err),
@@ -652,19 +665,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			s.logger.Info("Extracted query IDs from slow queries for active query filtering",
 				zap.Int("unique_query_id_count", len(slowQueryIDs)))
 
-			// Fetch top 5 execution plans for each slow query
-			if len(slowQueries) > 0 {
-				s.logger.Info("Attempting to scrape execution plans for slow queries",
-					zap.Int("slow_query_count", len(slowQueries)))
-
-				if err := s.queryPerformanceScraper.ScrapeSlowQueryExecutionPlans(scrapeCtx, slowQueries); err != nil {
-					s.logger.Warn("Failed to scrape slow query execution plans - continuing with other metrics",
-						zap.Error(err))
-					// Don't fail the entire scrape, just log the warning
-				} else {
-					s.logger.Info("Successfully scraped execution plans for slow queries")
-				}
-			}
 		}
 	} else {
 		s.logger.Info("Slow query scraping SKIPPED - EnableQueryMonitoring is false")
@@ -685,59 +685,31 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			zap.Int("text_truncate_limit", textTruncateLimit),
 			zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
 
-		// Create empty logs (metrics scraper doesn't emit logs, only metrics)
-		emptyLogs := plog.NewLogs()
-		activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(scrapeCtx, emptyLogs, limit, textTruncateLimit, elapsedTimeThreshold, slowQueryIDs)
+		// Step 1: Fetch active queries from database
+		activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(scrapeCtx, limit, textTruncateLimit, elapsedTimeThreshold, slowQueryIDs)
 		if err != nil {
-			s.logger.Warn("Failed to scrape active running queries metrics - continuing with other metrics",
+			s.logger.Warn("Failed to fetch active running queries - continuing with other metrics",
 				zap.Error(err),
-				zap.Duration("timeout", s.config.Timeout),
-				zap.Int("limit", limit),
-				zap.Int("text_truncate_limit", textTruncateLimit),
-				zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
+				zap.Duration("timeout", s.config.Timeout))
 			// Don't add to scrapeErrors - just warn and continue
+		} else if len(activeQueries) == 0 {
+			s.logger.Info("No active queries found matching slow query IDs")
 		} else {
-			s.logger.Info("Successfully scraped active running queries metrics",
-				zap.Int("limit", limit),
-				zap.Int("text_truncate_limit", textTruncateLimit),
-				zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold),
+			s.logger.Info("Active queries fetched, emitting metrics",
 				zap.Int("active_query_count", len(activeQueries)))
 
-			// Fetch top 5 execution plans for each active query with correlation attributes
-			if len(activeQueries) > 0 {
-				s.logger.Info("Attempting to scrape execution plans for active queries",
+			// Step 2: Emit metrics for active queries
+			if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries); err != nil {
+				s.logger.Warn("Failed to emit active running queries metrics",
+					zap.Error(err))
+			} else {
+				s.logger.Info("Successfully emitted active running queries metrics",
 					zap.Int("active_query_count", len(activeQueries)))
-
-				if err := s.queryPerformanceScraper.ScrapeActiveQueryExecutionPlans(scrapeCtx, activeQueries); err != nil {
-					s.logger.Warn("Failed to scrape active query execution plans - continuing with other metrics",
-						zap.Error(err))
-					// Don't fail the entire scrape, just log the warning
-				} else {
-					s.logger.Info("Successfully scraped execution plans for active queries")
-				}
 			}
 		}
 	} else {
 		s.logger.Info("Active running queries scraping SKIPPED - EnableActiveRunningQueries is false")
 	}
-
-	// Scrape wait time analysis metrics if query monitoring is enabled
-	// REMOVED: Query monitoring wait analysis block (used Query Store views)
-	// This functionality has been replaced by the new active query monitoring approach
-	// which gets wait information directly from sys.dm_exec_requests
-	//
-	// if s.config.EnableQueryMonitoring {
-	//     scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-	//     defer cancel()
-	//     ... ScrapeWaitTimeAnalysisMetrics call ...
-	// }
-
-	// NOTE: Removed ScrapeQueryExecutionPlanMetrics fallback scraper
-	// Execution plans are now only fetched from ActiveRunningQuery via OUTER APPLY sys.dm_exec_query_plan
-	// Execution plans are NOT included in SlowQuery (dm_exec_query_stats) as they are not needed for stats-level metrics
-	// This eliminates the redundant separate scraper and simplifies the architecture
-
-	// Continue with other SQL Server metrics collection
 	s.logger.Debug("Starting instance buffer pool hit percent metrics scraping")
 	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
 	defer cancel()
