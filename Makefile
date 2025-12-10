@@ -436,15 +436,17 @@ genotelcontribcol: $(BUILDER)
 	$(BUILDER) --skip-compilation --config cmd/otelcontribcol/builder-config-replaced.yaml
 
 # Build the Collector executable.
+# Note: CGO_ENABLED=1 is required for Oracle receiver (godror driver)
 .PHONY: otelcontribcol
 otelcontribcol: genotelcontribcol
-	cd ./cmd/otelcontribcol && GO111MODULE=on CGO_ENABLED=0 $(GOCMD) build -trimpath -o ../../bin/otelcontribcol_$(GOOS)_$(GOARCH)$(EXTENSION) \
+	cd ./cmd/otelcontribcol && GO111MODULE=on CGO_ENABLED=1 $(GOCMD) build -trimpath -o ../../bin/otelcontribcol_$(GOOS)_$(GOARCH)$(EXTENSION) \
 		-tags $(GO_BUILD_TAGS) .
 
 # Build the Collector executable without the symbol table, debug information, and the DWARF symbol table.
+# Note: CGO_ENABLED=1 is required for Oracle receiver (godror driver)
 .PHONY: otelcontribcollite
 otelcontribcollite: genotelcontribcol
-	cd ./cmd/otelcontribcol && GO111MODULE=on CGO_ENABLED=0 $(GOCMD) build -trimpath -o ../../bin/otelcontribcol_$(GOOS)_$(GOARCH)$(EXTENSION) \
+	cd ./cmd/otelcontribcol && GO111MODULE=on CGO_ENABLED=1 $(GOCMD) build -trimpath -o ../../bin/otelcontribcol_$(GOOS)_$(GOARCH)$(EXTENSION) \
 		-tags $(GO_BUILD_TAGS) -ldflags $(GO_BUILD_LDFLAGS) .
 
 .PHONY: genoteltestbedcol
