@@ -297,9 +297,10 @@ func (s *FailoverClusterScraper) processFailoverClusterAvailabilityGroupMetrics(
 // This method retrieves log send queue, redo queue, and redo rate metrics for monitoring replication performance
 // Compatible with both Standard SQL Server and Azure SQL Managed Instance
 func (s *FailoverClusterScraper) ScrapeFailoverClusterRedoQueueMetrics(ctx context.Context) error {
-	// Skip for all engine types except Azure SQL Managed Instance
-	if s.engineEdition != 8 { // Azure SQL Managed Instance
-		s.logger.Debug("Skipping failover cluster redo queue metrics - only supported in Azure SQL Managed Instance",
+	// Available for SQL Server with Always On AG and Azure SQL Managed Instance
+	// Skip for Azure SQL Database (edition 5) which doesn't support Always On
+	if s.engineEdition == 5 { // Azure SQL Database
+		s.logger.Debug("Skipping failover cluster redo queue metrics - not supported in Azure SQL Database",
 			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
 		return nil
 	}
