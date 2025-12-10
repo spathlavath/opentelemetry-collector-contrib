@@ -463,7 +463,7 @@ func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan
 		return
 	}
 
-	childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsWithCache(ctx, nil, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
+	childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
 	if len(childCursorErrs) > 0 {
 		s.logger.Warn("Errors occurred while scraping child cursor metrics",
 			zap.Int("error_count", len(childCursorErrs)))

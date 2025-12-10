@@ -35,42 +35,18 @@ func NewChildCursorsScraper(oracleClient client.OracleClient, mb *metadata.Metri
 		metricsBuilderConfig: metricsBuilderConfig,
 	}
 }
-
-// ScrapeChildCursorsWithCache collects metrics for pre-fetched child cursors and additional new identifiers
-// This optimized method avoids re-querying V$SQL for child cursors already fetched
-// Parameters:
-//   - cachedChildCursors: Child cursors already fetched from V$SQL (to avoid duplicate queries)
-//   - newIdentifiers: New SQL identifiers found in wait events (need to be queried)
-//   - childLimit: Limit for querying new identifiers
-func (s *ChildCursorsScraper) ScrapeChildCursorsWithCache(ctx context.Context, cachedChildCursors []models.ChildCursor, newIdentifiers []models.SQLIdentifier, childLimit int) []error {
+func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Context, identifiers []models.SQLIdentifier, childLimit int) []error {
 	var errs []error
 
-	s.logger.Debug("Starting cached child cursors scrape",
-		zap.Int("cached_cursors", len(cachedChildCursors)),
-		zap.Int("new_identifiers", len(newIdentifiers)),
+	s.logger.Debug("Starting child cursors scrape",
+		zap.Int("identifiers", len(identifiers)),
 		zap.Int("child_limit", childLimit))
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricsEmitted := 0
 
-	// STEP 1: Record metrics for cached child cursors (from V$SQL top N)
-	for _, cursor := range cachedChildCursors {
-		if !cursor.HasValidIdentifier() {
-			continue
-		}
-
-		s.recordChildCursorMetrics(now, &cursor)
-		metricsEmitted++
-	}
-
-	s.logger.Debug("Cached child cursor metrics emitted",
-		zap.Int("metrics_emitted", metricsEmitted))
-
-	// STEP 2: Query V$SQL ONLY for NEW child numbers found in wait events
-	if len(newIdentifiers) > 0 {
-		newMetricsEmitted := 0
-		for _, identifier := range newIdentifiers {
-			// Query this specific (SQL_ID, CHILD_NUMBER) pair directly
+	if len(identifiers) > 0 {
+		for _, identifier := range identifiers {
 			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifier.SQLID, identifier.ChildNumber)
 			if err != nil {
 				s.logger.Warn("Failed to fetch specific child cursor from V$SQL",
@@ -81,20 +57,15 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsWithCache(ctx context.Context, c
 				continue
 			}
 
-			// Record metrics if cursor was found
 			if cursor != nil && cursor.HasValidIdentifier() {
 				s.recordChildCursorMetrics(now, cursor)
 				metricsEmitted++
-				newMetricsEmitted++
 			}
 		}
-
-		s.logger.Debug("New child cursor metrics emitted",
-			zap.Int("new_metrics_emitted", newMetricsEmitted))
 	}
 
-	s.logger.Debug("Child cursors scrape with cache completed",
-		zap.Int("total_metrics_emitted", metricsEmitted),
+	s.logger.Debug("Child cursors scrape completed",
+		zap.Int("metrics_emitted", metricsEmitted),
 		zap.Int("errors", len(errs)))
 
 	return errs
