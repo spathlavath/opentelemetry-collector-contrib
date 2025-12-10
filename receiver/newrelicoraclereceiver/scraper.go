@@ -301,7 +301,8 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 
 	if len(slowQueryErrs) > 0 {
 		s.logger.Warn("Errors occurred while getting query IDs for execution plans",
-			zap.Int("error_count", len(slowQueryErrs)))
+			zap.Int("error_count", len(slowQueryErrs)),
+			zap.Error(multierr.Combine(slowQueryErrs...)))
 	}
 
 	s.logger.Info("Query IDs fetched for execution plans",
