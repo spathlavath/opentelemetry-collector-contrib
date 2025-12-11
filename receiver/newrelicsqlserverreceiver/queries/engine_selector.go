@@ -625,11 +625,7 @@ var failoverClusterQueriesDefault = []*QueryDefinition{
 		MetricName:  "sqlserver.failover_cluster.replica_metrics",
 		Description: "Always On Availability Group replica performance metrics",
 	},
-	{
-		Query:       FailoverClusterReplicaStateQuery,
-		MetricName:  "sqlserver.failover_cluster.replica_state_metrics",
-		Description: "Always On Availability Group database replica state metrics",
-	},
+	
 
 	{
 		Query:       FailoverClusterAvailabilityGroupHealthQuery,
@@ -661,11 +657,6 @@ var failoverClusterQueriesAzureManagedInstance = []*QueryDefinition{
 		Query:       FailoverClusterReplicaQuery,
 		MetricName:  "sqlserver.failover_cluster.replica_metrics",
 		Description: "Always On Availability Group replica performance metrics",
-	},
-	{
-		Query:       FailoverClusterReplicaStateQuery,
-		MetricName:  "sqlserver.failover_cluster.replica_state_metrics",
-		Description: "Always On Availability Group database replica state metrics",
 	},
 	{
 		Query:       FailoverClusterAvailabilityGroupHealthQuery,

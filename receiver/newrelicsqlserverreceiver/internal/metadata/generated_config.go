@@ -28,17 +28,6 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicsqlserver metrics.
 type MetricsConfig struct {
-	ActiveConnections                                         MetricConfig `mapstructure:"activeConnections"`
-	InstanceBackgroundProcessesCount                          MetricConfig `mapstructure:"instance.backgroundProcessesCount"`
-	InstanceBlockedProcessesCount                             MetricConfig `mapstructure:"instance.blockedProcessesCount"`
-	InstanceDiskInBytes                                       MetricConfig `mapstructure:"instance.diskInBytes"`
-	InstanceDormantProcessesCount                             MetricConfig `mapstructure:"instance.dormantProcessesCount"`
-	InstancePreconnectProcessesCount                          MetricConfig `mapstructure:"instance.preconnectProcessesCount"`
-	InstanceRunnableProcessesCount                            MetricConfig `mapstructure:"instance.runnableProcessesCount"`
-	InstanceRunnableTasks                                     MetricConfig `mapstructure:"instance.runnableTasks"`
-	InstanceRunningProcessesCount                             MetricConfig `mapstructure:"instance.runningProcessesCount"`
-	InstanceSleepingProcessesCount                            MetricConfig `mapstructure:"instance.sleepingProcessesCount"`
-	InstanceSuspendedProcessesCount                           MetricConfig `mapstructure:"instance.suspendedProcessesCount"`
 	SqlserverAccessPageSplitsPerSec                           MetricConfig `mapstructure:"sqlserver.access.page_splits_per_sec"`
 	SqlserverActivequeryCPUTimeMs                             MetricConfig `mapstructure:"sqlserver.activequery.cpu_time_ms"`
 	SqlserverActivequeryElapsedTimeMs                         MetricConfig `mapstructure:"sqlserver.activequery.elapsed_time_ms"`
@@ -51,20 +40,19 @@ type MetricsConfig struct {
 	SqlserverBufferCacheHitRatio                              MetricConfig `mapstructure:"sqlserver.buffer.cache_hit_ratio"`
 	SqlserverBufferCheckpointPagesPerSec                      MetricConfig `mapstructure:"sqlserver.buffer.checkpoint_pages_per_sec"`
 	SqlserverBufferPageLifeExpectancy                         MetricConfig `mapstructure:"sqlserver.buffer.page_life_expectancy"`
-	SqlserverBufferPoolHitPercent                             MetricConfig `mapstructure:"sqlserver.bufferPoolHitPercent"`
 	SqlserverBufferpoolBatchRequestsPerSec                    MetricConfig `mapstructure:"sqlserver.bufferpool.batch_requests_per_sec"`
 	SqlserverBufferpoolPageLifeExpectancyMs                   MetricConfig `mapstructure:"sqlserver.bufferpool.page_life_expectancy_ms"`
 	SqlserverConnectionsUser                                  MetricConfig `mapstructure:"sqlserver.connections.user"`
-	SqlserverDatabaseBufferpoolSizePerDatabaseInBytes         MetricConfig `mapstructure:"sqlserver.database.bufferpool.sizePerDatabaseInBytes"`
-	SqlserverDatabaseIoStallInMilliseconds                    MetricConfig `mapstructure:"sqlserver.database.io.stallInMilliseconds"`
-	SqlserverDatabaseLogBytesFlushesPerSec                    MetricConfig `mapstructure:"sqlserver.database.log.bytesFlushesPerSec"`
-	SqlserverDatabaseLogFlushWaitsPerSec                      MetricConfig `mapstructure:"sqlserver.database.log.flushWaitsPerSec"`
-	SqlserverDatabaseLogFlushesPerSec                         MetricConfig `mapstructure:"sqlserver.database.log.flushesPerSec"`
-	SqlserverDatabaseLogTransactionGrowth                     MetricConfig `mapstructure:"sqlserver.database.log.transactionGrowth"`
-	SqlserverDatabaseLogUsedSpaceMB                           MetricConfig `mapstructure:"sqlserver.database.log.usedSpaceMB"`
-	SqlserverDatabaseMaxDiskSizeInBytes                       MetricConfig `mapstructure:"sqlserver.database.maxDiskSizeInBytes"`
-	SqlserverDatabasePageFileAvailable                        MetricConfig `mapstructure:"sqlserver.database.pageFileAvailable"`
-	SqlserverDatabasePageFileTotal                            MetricConfig `mapstructure:"sqlserver.database.pageFileTotal"`
+	SqlserverDatabaseBufferpoolSizePerDatabaseBytes           MetricConfig `mapstructure:"sqlserver.database.bufferpool.size_per_database_bytes"`
+	SqlserverDatabaseIoStallMs                                MetricConfig `mapstructure:"sqlserver.database.io.stall_ms"`
+	SqlserverDatabaseLogBytesFlushedPerSec                    MetricConfig `mapstructure:"sqlserver.database.log.bytes_flushed_per_sec"`
+	SqlserverDatabaseLogFlushWaitsPerSec                      MetricConfig `mapstructure:"sqlserver.database.log.flush_waits_per_sec"`
+	SqlserverDatabaseLogFlushesPerSec                         MetricConfig `mapstructure:"sqlserver.database.log.flushes_per_sec"`
+	SqlserverDatabaseLogTransactionGrowth                     MetricConfig `mapstructure:"sqlserver.database.log.transaction_growth"`
+	SqlserverDatabaseLogUsedSpaceMb                           MetricConfig `mapstructure:"sqlserver.database.log.used_space_mb"`
+	SqlserverDatabaseMaxDiskSizeBytes                         MetricConfig `mapstructure:"sqlserver.database.max_disk_size_bytes"`
+	SqlserverDatabasePageFileAvailableBytes                   MetricConfig `mapstructure:"sqlserver.database.page_file_available_bytes"`
+	SqlserverDatabasePageFileTotalBytes                       MetricConfig `mapstructure:"sqlserver.database.page_file_total_bytes"`
 	SqlserverDatabasePrincipalCreateDate                      MetricConfig `mapstructure:"sqlserver.database.principal.createDate"`
 	SqlserverDatabasePrincipalsApplicationRoles               MetricConfig `mapstructure:"sqlserver.database.principals.applicationRoles"`
 	SqlserverDatabasePrincipalsOld                            MetricConfig `mapstructure:"sqlserver.database.principals.old"`
@@ -91,13 +79,14 @@ type MetricsConfig struct {
 	SqlserverDatabaseRolePermissionsInherited                 MetricConfig `mapstructure:"sqlserver.database.role.permissions.inherited"`
 	SqlserverDatabaseRoleRolesEmpty                           MetricConfig `mapstructure:"sqlserver.database.role.roles.empty"`
 	SqlserverDatabaseRoleRolesWithMembers                     MetricConfig `mapstructure:"sqlserver.database.role.roles.withMembers"`
-	SqlserverDatabaseSizeDataSizeMB                           MetricConfig `mapstructure:"sqlserver.database.size.dataSizeMB"`
-	SqlserverDatabaseSizeTotalSizeMB                          MetricConfig `mapstructure:"sqlserver.database.size.totalSizeMB"`
+	SqlserverDatabaseSizeDataMb                               MetricConfig `mapstructure:"sqlserver.database.size.data_mb"`
+	SqlserverDatabaseSizeTotalMb                              MetricConfig `mapstructure:"sqlserver.database.size.total_mb"`
 	SqlserverDatabaseTransactionsActive                       MetricConfig `mapstructure:"sqlserver.database.transactions.active"`
 	SqlserverFailoverClusterAgClusterType                     MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_cluster_type"`
 	SqlserverFailoverClusterAgFailureConditionLevel           MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_failure_condition_level"`
 	SqlserverFailoverClusterAgHealthCheckTimeout              MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_health_check_timeout"`
 	SqlserverFailoverClusterAgReplicaRole                     MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_replica_role"`
+	SqlserverFailoverClusterAgRequiredSyncSecondaries         MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_required_sync_secondaries"`
 	SqlserverFailoverClusterAgSynchronizationHealth           MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_synchronization_health"`
 	SqlserverFailoverClusterFlowControlTimeMs                 MetricConfig `mapstructure:"sqlserver.failover_cluster.flow_control_time_ms"`
 	SqlserverFailoverClusterLogBytesReceivedPerSec            MetricConfig `mapstructure:"sqlserver.failover_cluster.log_bytes_received_per_sec"`
@@ -107,15 +96,27 @@ type MetricsConfig struct {
 	SqlserverFailoverClusterTransactionDelayMs                MetricConfig `mapstructure:"sqlserver.failover_cluster.transaction_delay_ms"`
 	SqlserverIndividualQueryTotalCPUMs                        MetricConfig `mapstructure:"sqlserver.individual_query.total_cpu_ms"`
 	SqlserverIndividualQueryTotalElapsedMs                    MetricConfig `mapstructure:"sqlserver.individual_query.total_elapsed_ms"`
+	SqlserverInstanceBackgroundProcessesCount                 MetricConfig `mapstructure:"sqlserver.instance.background_processes_count"`
+	SqlserverInstanceBlockedProcessesCount                    MetricConfig `mapstructure:"sqlserver.instance.blocked_processes_count"`
+	SqlserverInstanceBufferPoolHitPercent                     MetricConfig `mapstructure:"sqlserver.instance.buffer_pool_hit_percent"`
 	SqlserverInstanceBufferPoolSize                           MetricConfig `mapstructure:"sqlserver.instance.buffer_pool_size"`
 	SqlserverInstanceCompilationsPerBatch                     MetricConfig `mapstructure:"sqlserver.instance.compilations_per_batch"`
+	SqlserverInstanceConnectionsActive                        MetricConfig `mapstructure:"sqlserver.instance.connections_active"`
+	SqlserverInstanceDiskInBytes                              MetricConfig `mapstructure:"sqlserver.instance.disk_in_bytes"`
+	SqlserverInstanceDormantProcessesCount                    MetricConfig `mapstructure:"sqlserver.instance.dormant_processes_count"`
 	SqlserverInstanceForcedParameterizationsPerSec            MetricConfig `mapstructure:"sqlserver.instance.forced_parameterizations_per_sec"`
 	SqlserverInstanceFullScansRate                            MetricConfig `mapstructure:"sqlserver.instance.full_scans_rate"`
 	SqlserverInstanceLockTimeoutsRate                         MetricConfig `mapstructure:"sqlserver.instance.lock_timeouts_rate"`
-	SqlserverInstanceMemoryAvailable                          MetricConfig `mapstructure:"sqlserver.instance.memoryAvailable"`
-	SqlserverInstanceMemoryTotal                              MetricConfig `mapstructure:"sqlserver.instance.memoryTotal"`
-	SqlserverInstanceMemoryUtilization                        MetricConfig `mapstructure:"sqlserver.instance.memoryUtilization"`
+	SqlserverInstanceMemoryAvailable                          MetricConfig `mapstructure:"sqlserver.instance.memory_available"`
+	SqlserverInstanceMemoryTotal                              MetricConfig `mapstructure:"sqlserver.instance.memory_total"`
+	SqlserverInstanceMemoryUtilizationPercent                 MetricConfig `mapstructure:"sqlserver.instance.memory_utilization_percent"`
 	SqlserverInstancePageSplitsPerBatch                       MetricConfig `mapstructure:"sqlserver.instance.page_splits_per_batch"`
+	SqlserverInstancePreconnectProcessesCount                 MetricConfig `mapstructure:"sqlserver.instance.preconnect_processes_count"`
+	SqlserverInstanceRunnableProcessesCount                   MetricConfig `mapstructure:"sqlserver.instance.runnable_processes_count"`
+	SqlserverInstanceRunnableTasks                            MetricConfig `mapstructure:"sqlserver.instance.runnable_tasks"`
+	SqlserverInstanceRunningProcessesCount                    MetricConfig `mapstructure:"sqlserver.instance.running_processes_count"`
+	SqlserverInstanceSleepingProcessesCount                   MetricConfig `mapstructure:"sqlserver.instance.sleeping_processes_count"`
+	SqlserverInstanceSuspendedProcessesCount                  MetricConfig `mapstructure:"sqlserver.instance.suspended_processes_count"`
 	SqlserverInstanceTargetMemoryKb                           MetricConfig `mapstructure:"sqlserver.instance.target_memory_kb"`
 	SqlserverInstanceTransactionsPerSec                       MetricConfig `mapstructure:"sqlserver.instance.transactions_per_sec"`
 	SqlserverLockModeBulkUpdate                               MetricConfig `mapstructure:"sqlserver.lock.mode.bulk_update"`
@@ -226,39 +227,6 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		ActiveConnections: MetricConfig{
-			Enabled: true,
-		},
-		InstanceBackgroundProcessesCount: MetricConfig{
-			Enabled: true,
-		},
-		InstanceBlockedProcessesCount: MetricConfig{
-			Enabled: true,
-		},
-		InstanceDiskInBytes: MetricConfig{
-			Enabled: true,
-		},
-		InstanceDormantProcessesCount: MetricConfig{
-			Enabled: true,
-		},
-		InstancePreconnectProcessesCount: MetricConfig{
-			Enabled: true,
-		},
-		InstanceRunnableProcessesCount: MetricConfig{
-			Enabled: true,
-		},
-		InstanceRunnableTasks: MetricConfig{
-			Enabled: true,
-		},
-		InstanceRunningProcessesCount: MetricConfig{
-			Enabled: true,
-		},
-		InstanceSleepingProcessesCount: MetricConfig{
-			Enabled: true,
-		},
-		InstanceSuspendedProcessesCount: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverAccessPageSplitsPerSec: MetricConfig{
 			Enabled: true,
 		},
@@ -295,9 +263,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverBufferPageLifeExpectancy: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverBufferPoolHitPercent: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverBufferpoolBatchRequestsPerSec: MetricConfig{
 			Enabled: true,
 		},
@@ -307,13 +272,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverConnectionsUser: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseBufferpoolSizePerDatabaseInBytes: MetricConfig{
+		SqlserverDatabaseBufferpoolSizePerDatabaseBytes: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseIoStallInMilliseconds: MetricConfig{
+		SqlserverDatabaseIoStallMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseLogBytesFlushesPerSec: MetricConfig{
+		SqlserverDatabaseLogBytesFlushedPerSec: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabaseLogFlushWaitsPerSec: MetricConfig{
@@ -325,16 +290,16 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverDatabaseLogTransactionGrowth: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseLogUsedSpaceMB: MetricConfig{
+		SqlserverDatabaseLogUsedSpaceMb: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseMaxDiskSizeInBytes: MetricConfig{
+		SqlserverDatabaseMaxDiskSizeBytes: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabasePageFileAvailable: MetricConfig{
+		SqlserverDatabasePageFileAvailableBytes: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabasePageFileTotal: MetricConfig{
+		SqlserverDatabasePageFileTotalBytes: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabasePrincipalCreateDate: MetricConfig{
@@ -415,10 +380,10 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverDatabaseRoleRolesWithMembers: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseSizeDataSizeMB: MetricConfig{
+		SqlserverDatabaseSizeDataMb: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseSizeTotalSizeMB: MetricConfig{
+		SqlserverDatabaseSizeTotalMb: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabaseTransactionsActive: MetricConfig{
@@ -434,6 +399,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverFailoverClusterAgReplicaRole: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverFailoverClusterAgRequiredSyncSecondaries: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverFailoverClusterAgSynchronizationHealth: MetricConfig{
@@ -463,10 +431,28 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverIndividualQueryTotalElapsedMs: MetricConfig{
 			Enabled: true,
 		},
+		SqlserverInstanceBackgroundProcessesCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceBlockedProcessesCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceBufferPoolHitPercent: MetricConfig{
+			Enabled: true,
+		},
 		SqlserverInstanceBufferPoolSize: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverInstanceCompilationsPerBatch: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceConnectionsActive: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceDiskInBytes: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceDormantProcessesCount: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverInstanceForcedParameterizationsPerSec: MetricConfig{
@@ -484,10 +470,28 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverInstanceMemoryTotal: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverInstanceMemoryUtilization: MetricConfig{
+		SqlserverInstanceMemoryUtilizationPercent: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverInstancePageSplitsPerBatch: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstancePreconnectProcessesCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceRunnableProcessesCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceRunnableTasks: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceRunningProcessesCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceSleepingProcessesCount: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverInstanceSuspendedProcessesCount: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverInstanceTargetMemoryKb: MetricConfig{

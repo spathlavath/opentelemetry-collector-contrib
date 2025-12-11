@@ -169,7 +169,7 @@ func (s *InstanceScraper) processInstanceMemoryMetrics(result models.InstanceMem
 	}
 
 	if result.MemoryUtilization != nil {
-		s.mb.RecordSqlserverInstanceMemoryUtilizationDataPoint(now, *result.MemoryUtilization)
+		s.mb.RecordSqlserverInstanceMemoryUtilizationPercentDataPoint(now, *result.MemoryUtilization)
 	}
 
 	return nil
@@ -314,7 +314,7 @@ func (s *InstanceScraper) processInstanceBufferPoolHitPercent(result models.Buff
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.BufferPoolHitPercent != nil {
-		s.mb.RecordSqlserverBufferPoolHitPercentDataPoint(now, *result.BufferPoolHitPercent)
+		s.mb.RecordSqlserverInstanceBufferPoolHitPercentDataPoint(now, *result.BufferPoolHitPercent)
 	}
 
 	return nil
@@ -349,35 +349,35 @@ func (s *InstanceScraper) processInstanceProcessCounts(result models.InstancePro
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.Preconnect != nil {
-		s.mb.RecordInstancePreconnectProcessesCountDataPoint(now, int64(*result.Preconnect))
+		s.mb.RecordSqlserverInstancePreconnectProcessesCountDataPoint(now, int64(*result.Preconnect))
 	}
 
 	if result.Background != nil {
-		s.mb.RecordInstanceBackgroundProcessesCountDataPoint(now, int64(*result.Background))
+		s.mb.RecordSqlserverInstanceBackgroundProcessesCountDataPoint(now, int64(*result.Background))
 	}
 
 	if result.Dormant != nil {
-		s.mb.RecordInstanceDormantProcessesCountDataPoint(now, int64(*result.Dormant))
+		s.mb.RecordSqlserverInstanceDormantProcessesCountDataPoint(now, int64(*result.Dormant))
 	}
 
 	if result.Runnable != nil {
-		s.mb.RecordInstanceRunnableProcessesCountDataPoint(now, int64(*result.Runnable))
+		s.mb.RecordSqlserverInstanceRunnableProcessesCountDataPoint(now, int64(*result.Runnable))
 	}
 
 	if result.Suspended != nil {
-		s.mb.RecordInstanceSuspendedProcessesCountDataPoint(now, int64(*result.Suspended))
+		s.mb.RecordSqlserverInstanceSuspendedProcessesCountDataPoint(now, int64(*result.Suspended))
 	}
 
 	if result.Running != nil {
-		s.mb.RecordInstanceRunningProcessesCountDataPoint(now, int64(*result.Running))
+		s.mb.RecordSqlserverInstanceRunningProcessesCountDataPoint(now, int64(*result.Running))
 	}
 
 	if result.Blocked != nil {
-		s.mb.RecordInstanceBlockedProcessesCountDataPoint(now, int64(*result.Blocked))
+		s.mb.RecordSqlserverInstanceBlockedProcessesCountDataPoint(now, int64(*result.Blocked))
 	}
 
 	if result.Sleeping != nil {
-		s.mb.RecordInstanceSleepingProcessesCountDataPoint(now, int64(*result.Sleeping))
+		s.mb.RecordSqlserverInstanceSleepingProcessesCountDataPoint(now, int64(*result.Sleeping))
 	}
 
 	return nil
@@ -412,7 +412,7 @@ func (s *InstanceScraper) processInstanceRunnableTasks(result models.RunnableTas
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.RunnableTasksCount != nil {
-		s.mb.RecordInstanceRunnableTasksDataPoint(now, int64(*result.RunnableTasksCount))
+		s.mb.RecordSqlserverInstanceRunnableTasksDataPoint(now, int64(*result.RunnableTasksCount))
 	}
 
 	return nil
@@ -447,7 +447,7 @@ func (s *InstanceScraper) processInstanceDiskMetrics(result models.InstanceDiskM
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.TotalDiskSpace != nil {
-		s.mb.RecordInstanceDiskInBytesDataPoint(now, int64(*result.TotalDiskSpace))
+		s.mb.RecordSqlserverInstanceDiskInBytesDataPoint(now, int64(*result.TotalDiskSpace))
 	}
 
 	return nil
@@ -482,7 +482,7 @@ func (s *InstanceScraper) processInstanceActiveConnections(result models.Instanc
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.InstanceActiveConnections != nil {
-		s.mb.RecordActiveConnectionsDataPoint(now, int64(*result.InstanceActiveConnections))
+		s.mb.RecordSqlserverInstanceConnectionsActiveDataPoint(now, int64(*result.InstanceActiveConnections))
 	}
 
 	return nil

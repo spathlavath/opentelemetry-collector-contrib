@@ -162,30 +162,30 @@ type InstanceStatsModel struct {
 }
 
 type BufferPoolHitPercentMetricsModel struct {
-	BufferPoolHitPercent *float64 `db:"buffer_pool_hit_percent" metric_name:"sqlserver.bufferPoolHitPercent" source_type:"gauge"`
+	BufferPoolHitPercent *float64 `db:"buffer_pool_hit_percent" metric_name:"sqlserver.instance.buffer_pool_hit_percent" source_type:"gauge"`
 }
 
 type InstanceProcessCountsModel struct {
-	Preconnect *int64 `db:"preconnect" metric_name:"instance.preconnectProcessesCount" source_type:"gauge"`
-	Background *int64 `db:"background" metric_name:"instance.backgroundProcessesCount" source_type:"gauge"`
-	Dormant    *int64 `db:"dormant" metric_name:"instance.dormantProcessesCount" source_type:"gauge"`
-	Runnable   *int64 `db:"runnable" metric_name:"instance.runnableProcessesCount" source_type:"gauge"`
-	Suspended  *int64 `db:"suspended" metric_name:"instance.suspendedProcessesCount" source_type:"gauge"`
-	Running    *int64 `db:"running" metric_name:"instance.runningProcessesCount" source_type:"gauge"`
-	Blocked    *int64 `db:"blocked" metric_name:"instance.blockedProcessesCount" source_type:"gauge"`
-	Sleeping   *int64 `db:"sleeping" metric_name:"instance.sleepingProcessesCount" source_type:"gauge"`
+	Preconnect *int64 `db:"preconnect" metric_name:"sqlserver.instance.preconnect_processes_count" source_type:"gauge"`
+	Background *int64 `db:"background" metric_name:"sqlserver.instance.background_processes_count" source_type:"gauge"`
+	Dormant    *int64 `db:"dormant" metric_name:"sqlserver.instance.dormant_processes_count" source_type:"gauge"`
+	Runnable   *int64 `db:"runnable" metric_name:"sqlserver.instance.runnable_processes_count" source_type:"gauge"`
+	Suspended  *int64 `db:"suspended" metric_name:"sqlserver.instance.suspended_processes_count" source_type:"gauge"`
+	Running    *int64 `db:"running" metric_name:"sqlserver.instance.running_processes_count" source_type:"gauge"`
+	Blocked    *int64 `db:"blocked" metric_name:"sqlserver.instance.blocked_processes_count" source_type:"gauge"`
+	Sleeping   *int64 `db:"sleeping" metric_name:"sqlserver.instance.sleeping_processes_count" source_type:"gauge"`
 }
 
 type RunnableTasksMetricsModel struct {
-	RunnableTasksCount *int64 `db:"runnable_tasks_count" metric_name:"instance.runnableTasks" source_type:"gauge"`
+	RunnableTasksCount *int64 `db:"runnable_tasks_count" metric_name:"sqlserver.instance.runnable_tasks" source_type:"gauge"`
 }
 
 type InstanceActiveConnectionsMetricsModel struct {
-	InstanceActiveConnections *int64 `db:"instance_active_connections" metric_name:"activeConnections" source_type:"gauge"`
+	InstanceActiveConnections *int64 `db:"instance_active_connections" metric_name:"sqlserver.instance.connections_active" source_type:"gauge"`
 }
 
 type InstanceDiskMetricsModel struct {
-	TotalDiskSpace *int64 `db:"total_disk_space" metric_name:"instance.diskInBytes" source_type:"gauge"`
+	TotalDiskSpace *int64 `db:"total_disk_space" metric_name:"sqlserver.instance.disk_in_bytes" source_type:"gauge"`
 }
 
 // New instance metrics models for enhanced performance monitoring
