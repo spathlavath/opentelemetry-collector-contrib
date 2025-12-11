@@ -222,13 +222,15 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 		return logs, nil // Return empty logs, don't fail
 	}
 
-	// Extract query IDs from slow queries
+	// Extract query IDs and plan_handle map from slow queries in a single pass
 	var slowQueryIDs []string
+	var slowQueryPlanHandleMap map[string]*models.QueryID
 	if len(slowQueries) > 0 {
-		slowQueryIDs = s.queryPerformanceScraper.ExtractQueryIDsFromSlowQueries(slowQueries)
-		s.logger.Info("Extracted query IDs from slow queries for active query filtering",
+		slowQueryIDs, slowQueryPlanHandleMap = s.queryPerformanceScraper.ExtractQueryDataFromSlowQueries(slowQueries)
+		s.logger.Info("Extracted query IDs and plan_handle map from slow queries",
 			zap.Int("slow_query_count", len(slowQueries)),
-			zap.Int("unique_query_id_count", len(slowQueryIDs)))
+			zap.Int("unique_query_id_count", len(slowQueryIDs)),
+			zap.Int("plan_handle_map_size", len(slowQueryPlanHandleMap)))
 	} else {
 		s.logger.Info("No slow queries found, skipping execution plan collection")
 		return logs, nil // No slow queries, nothing to collect
@@ -260,8 +262,8 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 	s.logger.Info("Active queries fetched, emitting metrics",
 		zap.Int("active_query_count", len(activeQueries)))
 
-	// Step 2: Fetch execution plan statistics and emit as metrics
-	if err := s.queryPerformanceScraper.ScrapeActiveQueryExecutionPlans(ctx, activeQueries); err != nil {
+	// Step 2: Fetch execution plan statistics and emit as metrics (using slow query plan_handles)
+	if err := s.queryPerformanceScraper.ScrapeActiveQueryPlanStatistics(ctx, activeQueries, slowQueryPlanHandleMap); err != nil {
 		s.logger.Warn("Failed to scrape active query execution plan statistics - continuing with logs",
 			zap.Error(err))
 		// Don't fail - continue to emit XML logs
@@ -270,8 +272,8 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 			zap.Int("active_query_count", len(activeQueries)))
 	}
 
-	// Step 3: Fetch execution plans and emit as logs
-	if err := s.queryPerformanceScraper.EmitActiveRunningExecutionPlansAsLogs(ctx, logs, activeQueries); err != nil {
+	// Step 3: Fetch execution plans and emit as logs (using slow query plan_handles)
+	if err := s.queryPerformanceScraper.EmitActiveRunningExecutionPlansAsLogs(ctx, logs, activeQueries, slowQueryPlanHandleMap); err != nil {
 		s.logger.Error("Failed to emit execution plans as logs", zap.Error(err))
 		return logs, err
 	}
@@ -635,8 +637,9 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	// }
 
 	// Scrape slow query metrics if query monitoring is enabled
-	// Store query IDs for correlation with active queries
+	// Store query IDs and plan_handle map for correlation with active queries
 	var slowQueryIDs []string
+	var slowQueryPlanHandleMap map[string]*models.QueryID
 	if s.config.EnableQueryMonitoring {
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
@@ -670,10 +673,11 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 				zap.Int("text_truncate_limit", textTruncateLimit),
 				zap.Int("slow_query_count", len(slowQueries)))
 
-			// Extract query IDs for active query correlation
-			slowQueryIDs = s.queryPerformanceScraper.ExtractQueryIDsFromSlowQueries(slowQueries)
-			s.logger.Info("Extracted query IDs from slow queries for active query filtering",
-				zap.Int("unique_query_id_count", len(slowQueryIDs)))
+			// Extract query IDs and plan_handle map for active query correlation in a single pass
+			slowQueryIDs, slowQueryPlanHandleMap = s.queryPerformanceScraper.ExtractQueryDataFromSlowQueries(slowQueries)
+			s.logger.Info("Extracted query IDs and plan_handle map from slow queries",
+				zap.Int("unique_query_id_count", len(slowQueryIDs)),
+				zap.Int("plan_handle_map_size", len(slowQueryPlanHandleMap)))
 
 		}
 	} else {
@@ -708,8 +712,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			s.logger.Info("Active queries fetched, emitting metrics",
 				zap.Int("active_query_count", len(activeQueries)))
 
-			// Step 2: Emit metrics for active queries
-			if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries); err != nil {
+			// Step 2: Emit metrics for active queries (using slow query plan_handles for consistency)
+			if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries, slowQueryPlanHandleMap); err != nil {
 				s.logger.Warn("Failed to emit active running queries metrics",
 					zap.Error(err))
 			} else {
@@ -717,8 +721,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 					zap.Int("active_query_count", len(activeQueries)))
 			}
 
-			// Step 3: Fetch execution plan statistics and emit as metrics
-			if err := s.queryPerformanceScraper.ScrapeActiveQueryExecutionPlans(scrapeCtx, activeQueries); err != nil {
+			// Step 3: Fetch execution plan statistics and emit as metrics (using slow query plan_handles)
+			if err := s.queryPerformanceScraper.ScrapeActiveQueryPlanStatistics(scrapeCtx, activeQueries, slowQueryPlanHandleMap); err != nil {
 				s.logger.Warn("Failed to scrape active query execution plan statistics - continuing with other metrics",
 					zap.Error(err))
 				// Don't fail the entire scrape, just log the warning

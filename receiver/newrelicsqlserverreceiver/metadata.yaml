@@ -7,7 +7,7 @@ status:
     development: [logs]
   distributions: [contrib]
   codeowners:
-    active: [tanushangural]
+    active: [pkulkarni,avadla,pkudikyala]
 
 resource_attributes:
   server.address:

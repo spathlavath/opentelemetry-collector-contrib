@@ -240,7 +240,7 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 	return resultsToProcess, nil
 }
 
-func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Context, activeQueries []models.ActiveRunningQuery) error {
+func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanHandleMap map[string]*models.QueryID) error {
 	if len(activeQueries) == 0 {
 		s.logger.Debug("No active queries to fetch execution statistics for")
 		return nil
@@ -249,25 +249,39 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Co
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 	totalStatsFound := 0
 
-	// Collect unique plan_handles from active queries to avoid duplicate fetches
+	// Collect unique plan_handles from SLOW QUERIES (not active queries) to avoid duplicate fetches
+	// We use the slow query plan_handle for each active query based on query_id matching
 	uniquePlanHandles := make(map[string]models.ActiveRunningQuery)
+	skippedNoSlowQueryMatch := 0
+
 	for _, activeQuery := range activeQueries {
-		if activeQuery.PlanHandle == nil || activeQuery.PlanHandle.IsEmpty() {
+		// Get plan_handle from slow query map using query_id
+		var planHandle *models.QueryID
+		if activeQuery.QueryID != nil && !activeQuery.QueryID.IsEmpty() {
+			queryIDStr := activeQuery.QueryID.String()
+			planHandle = slowQueryPlanHandleMap[queryIDStr]
+		}
+
+		// Skip if no matching slow query plan_handle found
+		if planHandle == nil || planHandle.IsEmpty() {
+			skippedNoSlowQueryMatch++
 			continue
 		}
-		planHandleStr := activeQuery.PlanHandle.String()
+
+		planHandleStr := planHandle.String()
 		// Keep first occurrence for correlation attributes
 		if _, exists := uniquePlanHandles[planHandleStr]; !exists {
 			uniquePlanHandles[planHandleStr] = activeQuery
 		}
 	}
 
-	s.logger.Info("Fetching execution statistics for active running query plan_handles",
+	s.logger.Info("Fetching execution statistics using plan_handles statistics",
 		zap.Int("active_query_count", len(activeQueries)),
-		zap.Int("unique_plan_handle_count", len(uniquePlanHandles)))
+		zap.Int("unique_plan_handle_count", len(uniquePlanHandles)),
+		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch))
 
-	// Fetch execution statistics for each unique plan_handle
-	for _, activeQuery := range uniquePlanHandles {
+	// Fetch execution statistics for each unique plan_handle from slow queries
+	for planHandleStr, activeQuery := range uniquePlanHandles {
 		// Extract correlation attributes for logging
 		sessionID := int64(0)
 		if activeQuery.CurrentSessionID != nil {
@@ -278,7 +292,8 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryExecutionPlans(ctx context.Co
 			requestID = *activeQuery.RequestID
 		}
 
-		planHandleHex := activeQuery.PlanHandle.String()
+		// Use plan_handle from slow queries (planHandleStr from map key)
+		planHandleHex := planHandleStr
 		query := fmt.Sprintf(queries.ExecutionStatsForActivePlanHandleQuery, "'"+planHandleHex+"'")
 
 		s.logger.Debug("Fetching execution statistics for active query plan_handle",
@@ -1177,4 +1192,37 @@ func (s *QueryPerformanceScraper) formatPlanHandlesForSQL(planHandles []string) 
 		zap.String("formatted_plan_handles", queries.TruncateQuery(planHandlesString, 100)))
 
 	return planHandlesString
+}
+
+// ExtractQueryDataFromSlowQueries extracts both query IDs and plan_handle map from slow queries in a single pass
+// This is more efficient than iterating over the slice twice
+// Returns: (queryIDs []string, planHandleMap map[string]*models.QueryID)
+func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []models.SlowQuery) ([]string, map[string]*models.QueryID) {
+	queryIDMap := make(map[string]bool) // For deduplication
+	planHandleMap := make(map[string]*models.QueryID)
+
+	for _, slowQuery := range slowQueries {
+		if slowQuery.QueryID != nil && !slowQuery.QueryID.IsEmpty() {
+			queryIDStr := slowQuery.QueryID.String()
+			queryIDMap[queryIDStr] = true
+
+			// Also build plan_handle map if plan_handle exists
+			if slowQuery.PlanHandle != nil && !slowQuery.PlanHandle.IsEmpty() {
+				planHandleMap[queryIDStr] = slowQuery.PlanHandle
+			}
+		}
+	}
+
+	// Convert map keys to slice
+	queryIDs := make([]string, 0, len(queryIDMap))
+	for queryID := range queryIDMap {
+		queryIDs = append(queryIDs, queryID)
+	}
+
+	s.logger.Debug("Extracted query data from slow queries in single pass",
+		zap.Int("total_slow_queries", len(slowQueries)),
+		zap.Int("unique_query_ids", len(queryIDs)),
+		zap.Int("mapped_plan_handles", len(planHandleMap)))
+
+	return queryIDs, planHandleMap
 }
