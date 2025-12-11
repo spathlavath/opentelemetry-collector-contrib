@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/godror/godror"
+	_ "github.com/sijms/go-ora/v2"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/receiver"
@@ -29,10 +29,10 @@ func NewFactory() receiver.Factory {
 		metadata.Type,
 		createDefaultConfig,
 		receiver.WithMetrics(createMetricsReceiverFunc(func(dataSourceName string) (*sql.DB, error) {
-			return sql.Open("godror", dataSourceName)
+			return sql.Open("oracle", dataSourceName)
 		}), metadata.MetricsStability),
 		receiver.WithLogs(createLogsReceiverFunc(func(dataSourceName string) (*sql.DB, error) {
-			return sql.Open("godror", dataSourceName)
+			return sql.Open("oracle", dataSourceName)
 		}), metadata.LogsStability))
 }
 
@@ -192,33 +192,47 @@ func getDataSource(cfg Config) string {
 		return cfg.DataSource
 	}
 
-	// Build godror connection string format
-	// Format: user/password@host:port/service_name
+	// Build go-ora connection string format
+	// Format: oracle://user:password@host:port/service_name
 	host, portStr, _ := net.SplitHostPort(cfg.Endpoint)
 	port, _ := strconv.ParseInt(portStr, 10, 32)
 
-	return fmt.Sprintf("%s/%s@%s:%d/%s", cfg.Username, cfg.Password, host, port, cfg.Service)
+	return fmt.Sprintf("oracle://%s:%s@%s:%d/%s", cfg.Username, cfg.Password, host, port, cfg.Service)
 }
 
 func getInstanceName(datasource string) (string, error) {
-	// For godror format: user/password@host:port/service_name
+	// For go-ora format: oracle://user:password@host:port/service_name
+	// Try URL parsing first
+	if strings.HasPrefix(datasource, "oracle://") {
+		datasourceURL, err := url.Parse(datasource)
+		if err != nil {
+			return "", err
+		}
+		instanceName := datasourceURL.Host + datasourceURL.Path
+		return instanceName, nil
+	}
+
+	// Fallback for godror format: user/password@host:port/service_name
 	// Extract the part after @
 	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
 		return datasource[atIndex+1:], nil
 	}
 
-	// Fallback to URL parsing for oracle:// format
-	datasourceURL, err := url.Parse(datasource)
-	if err != nil {
-		return "", err
-	}
-
-	instanceName := datasourceURL.Host + datasourceURL.Path
-	return instanceName, nil
+	return "", fmt.Errorf("invalid datasource format: %s", datasource)
 }
 
 func getHostName(datasource string) (string, error) {
-	// For godror format: user/password@host:port/service_name
+	// For go-ora format: oracle://user:password@host:port/service_name
+	// Try URL parsing first
+	if strings.HasPrefix(datasource, "oracle://") {
+		datasourceURL, err := url.Parse(datasource)
+		if err != nil {
+			return "", err
+		}
+		return datasourceURL.Host, nil
+	}
+
+	// Fallback for godror format: user/password@host:port/service_name
 	// Extract the host:port part
 	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
 		hostPart := datasource[atIndex+1:]
@@ -228,10 +242,5 @@ func getHostName(datasource string) (string, error) {
 		return hostPart, nil
 	}
 
-	// Fallback to URL parsing for oracle:// format
-	datasourceURL, err := url.Parse(datasource)
-	if err != nil {
-		return "", err
-	}
-	return datasourceURL.Host, nil
+	return "", fmt.Errorf("invalid datasource format: %s", datasource)
 }
