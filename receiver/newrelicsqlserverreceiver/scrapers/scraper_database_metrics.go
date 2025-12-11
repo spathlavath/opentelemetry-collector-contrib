@@ -112,7 +112,7 @@ func (s *DatabaseScraper) processDatabaseBufferMetrics(result models.DatabaseBuf
 	}
 
 	now := pcommon.NewTimestampFromTime(time.Now())
-	s.mb.RecordSqlserverDatabaseBufferpoolSizePerDatabaseInBytesDataPoint(now, *result.BufferPoolSizeBytes, result.DatabaseName, "sys.dm_os_buffer_descriptors", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+	s.mb.RecordSqlserverDatabaseBufferpoolSizePerDatabaseBytesDataPoint(now, *result.BufferPoolSizeBytes, result.DatabaseName, "sys.dm_os_buffer_descriptors", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 
 	s.logger.Debug("Successfully recorded database buffer metric",
 		zap.String("database_name", result.DatabaseName),
@@ -191,7 +191,7 @@ func (s *DatabaseScraper) ScrapeDatabaseDiskMetrics(ctx context.Context) error {
 func (s *DatabaseScraper) processDatabaseDiskMetrics(result models.DatabaseDiskMetrics) error {
 	if result.MaxDiskSizeBytes != nil {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		s.mb.RecordSqlserverDatabaseMaxDiskSizeInBytesDataPoint(now, *result.MaxDiskSizeBytes, result.DatabaseName, "DATABASEPROPERTYEX", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabaseMaxDiskSizeBytesDataPoint(now, *result.MaxDiskSizeBytes, result.DatabaseName, "DATABASEPROPERTYEX", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 
 		s.logger.Debug("Recorded database disk metric",
 			zap.String("database_name", result.DatabaseName),
@@ -266,7 +266,7 @@ func (s *DatabaseScraper) ScrapeDatabaseIOMetrics(ctx context.Context) error {
 func (s *DatabaseScraper) processDatabaseIOMetrics(result models.DatabaseIOMetrics) error {
 	if result.IOStallTimeMs != nil {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		s.mb.RecordSqlserverDatabaseIoStallInMillisecondsDataPoint(now, *result.IOStallTimeMs, result.DatabaseName, "sys.dm_io_virtual_file_stats", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabaseIoStallMsDataPoint(now, *result.IOStallTimeMs, result.DatabaseName, "sys.dm_io_virtual_file_stats", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 
 		s.logger.Debug("Recorded database IO stall metric",
 			zap.String("database_name", result.DatabaseName),
@@ -553,7 +553,7 @@ func (s *DatabaseScraper) scrapeDatabasePageFileTotalWithIteration(ctx context.C
 func (s *DatabaseScraper) processDatabasePageFileMetrics(result models.DatabasePageFileMetrics) error {
 	if result.PageFileAvailableBytes != nil {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		s.mb.RecordSqlserverDatabasePageFileAvailableDataPoint(now, *result.PageFileAvailableBytes, result.DatabaseName, "sys.partitions_sys.allocation_units", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabasePageFileAvailableBytesDataPoint(now, *result.PageFileAvailableBytes, result.DatabaseName, "sys.partitions_sys.allocation_units", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 
 		s.logger.Debug("Recorded database page file available metric",
 			zap.String("database_name", result.DatabaseName),
@@ -567,7 +567,7 @@ func (s *DatabaseScraper) processDatabasePageFileMetrics(result models.DatabaseP
 func (s *DatabaseScraper) processDatabasePageFileTotalMetrics(result models.DatabasePageFileTotalMetrics) error {
 	if result.PageFileTotalBytes != nil {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		s.mb.RecordSqlserverDatabasePageFileTotalDataPoint(now, *result.PageFileTotalBytes, result.DatabaseName, "sys.partitions_sys.allocation_units", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabasePageFileTotalBytesDataPoint(now, *result.PageFileTotalBytes, result.DatabaseName, "sys.partitions_sys.allocation_units", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 
 		s.logger.Debug("Recorded database page file total metric",
 			zap.String("database_name", result.DatabaseName),
@@ -685,13 +685,13 @@ func (s *DatabaseScraper) processDatabaseSizeMetrics(result models.DatabaseSizeM
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	if result.TotalSizeMB != nil {
-		s.mb.RecordSqlserverDatabaseSizeTotalSizeMBDataPoint(now, *result.TotalSizeMB, result.DatabaseName, "sys.dm_os_performance_counters", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabaseSizeTotalMbDataPoint(now, *result.TotalSizeMB, result.DatabaseName, "sys.dm_os_performance_counters", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 		s.logger.Debug("Recorded database total size metric",
 			zap.String("database_name", result.DatabaseName),
 			zap.Float64("total_size_mb", *result.TotalSizeMB))
 	}
 	if result.DataSizeMB != nil {
-		s.mb.RecordSqlserverDatabaseSizeDataSizeMBDataPoint(now, *result.DataSizeMB, result.DatabaseName, "sys.dm_os_performance_counters", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabaseSizeDataMbDataPoint(now, *result.DataSizeMB, result.DatabaseName, "sys.dm_os_performance_counters", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 		s.logger.Debug("Recorded database data size metric",
 			zap.String("database_name", result.DatabaseName),
 			zap.Float64("data_size_mb", *result.DataSizeMB))
@@ -756,7 +756,7 @@ func (s *DatabaseScraper) processDatabaseTransactionLogMetrics(result models.Dat
 			zap.Int64("log_flushes_per_sec", *result.LogFlushesPerSec))
 	}
 	if result.LogBytesFlushesPerSec != nil {
-		s.mb.RecordSqlserverDatabaseLogBytesFlushesPerSecDataPoint(now, *result.LogBytesFlushesPerSec, "sys.dm_os_performance_counters", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabaseLogBytesFlushedPerSecDataPoint(now, *result.LogBytesFlushesPerSec, "sys.dm_os_performance_counters", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 		s.logger.Debug("Recorded log bytes flushes per sec metric",
 			zap.Int64("log_bytes_flushes_per_sec", *result.LogBytesFlushesPerSec))
 	}
@@ -900,7 +900,7 @@ func (s *DatabaseScraper) processDatabaseLogSpaceUsageMetrics(result models.Data
 func (s *DatabaseScraper) processDatabaseLogSpaceUsageMetricsWithDBName(result models.DatabaseLogSpaceUsageMetrics, databaseName string) error {
 	if result.UsedLogSpaceMB != nil {
 		now := pcommon.NewTimestampFromTime(time.Now())
-		s.mb.RecordSqlserverDatabaseLogUsedSpaceMBDataPoint(now, *result.UsedLogSpaceMB, databaseName, "sys.dm_os_sys_memory", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
+		s.mb.RecordSqlserverDatabaseLogUsedSpaceMbDataPoint(now, *result.UsedLogSpaceMB, databaseName, "sys.dm_os_sys_memory", queries.GetEngineTypeName(s.engineEdition), int64(s.engineEdition))
 
 		s.logger.Debug("Recorded database log space usage metric",
 			zap.String("database_name", databaseName),

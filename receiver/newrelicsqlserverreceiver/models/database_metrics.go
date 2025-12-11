@@ -166,12 +166,12 @@ type DatabaseSizeMetrics struct {
 	// TotalSizeMB represents the total database size including data and log files in MB
 	// This metric corresponds to total database size
 	// Query source: sys.master_files aggregated by database (data + log files)
-	TotalSizeMB *float64 `db:"TotalSizeMB" metric_name:"sqlserver.database.size.totalSizeMB" source_type:"gauge"`
+	TotalSizeMB *float64 `db:"TotalSizeMB" metric_name:"sqlserver.database.size.total_mb" source_type:"gauge"`
 
 	// DataSizeMB represents the total data file size in MB (excluding log files)
 	// This metric corresponds to data file size
 	// Query source: sys.master_files filtered for ROWS type files only
-	DataSizeMB *float64 `db:"DataSizeMB" metric_name:"sqlserver.database.size.dataSizeMB" source_type:"gauge"`
+	DataSizeMB *float64 `db:"DataSizeMB" metric_name:"sqlserver.database.size.data_mb" source_type:"gauge"`
 }
 
 // DatabaseBufferMetrics represents buffer pool metrics for a specific database
@@ -183,7 +183,7 @@ type DatabaseBufferMetrics struct {
 	// BufferPoolSizeBytes represents the size of buffer pool allocated for this database in bytes
 	// This metric corresponds to bufferpool.sizePerDatabaseInBytes
 	// Query source: sys.dm_os_buffer_descriptors with database-specific filtering
-	BufferPoolSizeBytes *int64 `db:"buffer_pool_size" metric_name:"sqlserver.database.bufferpool.sizePerDatabaseInBytes" source_type:"gauge"`
+	BufferPoolSizeBytes *int64 `db:"buffer_pool_size" metric_name:"sqlserver.database.bufferpool.size_per_database_bytes" source_type:"gauge"`
 }
 
 // DatabaseDiskMetrics represents disk-related metrics for a specific database
@@ -195,7 +195,7 @@ type DatabaseDiskMetrics struct {
 	// MaxDiskSizeBytes represents the maximum size allowed for the database in bytes
 	// This metric corresponds to maxDiskSizeInBytes
 	// Query source: DATABASEPROPERTYEX function for Azure SQL Database compatibility
-	MaxDiskSizeBytes *int64 `db:"max_disk_space" metric_name:"sqlserver.database.maxDiskSizeInBytes" source_type:"gauge"`
+	MaxDiskSizeBytes *int64 `db:"max_disk_space" metric_name:"sqlserver.database.max_disk_size_bytes" source_type:"gauge"`
 }
 
 // DatabaseIOMetrics represents IO stall metrics for a specific database
@@ -207,7 +207,7 @@ type DatabaseIOMetrics struct {
 	// IOStallTimeMs represents the total IO stall time for the database in milliseconds
 	// This metric corresponds to io.stallInMilliseconds
 	// Query source: sys.dm_io_virtual_file_stats for database-specific IO statistics
-	IOStallTimeMs *int64 `db:"io_stalls" metric_name:"sqlserver.database.io.stallInMilliseconds" source_type:"gauge"`
+	IOStallTimeMs *int64 `db:"io_stalls" metric_name:"sqlserver.database.io.stall_ms" source_type:"gauge"`
 }
 
 // DatabaseLogGrowthMetrics represents log growth metrics for a specific database
@@ -219,7 +219,7 @@ type DatabaseLogGrowthMetrics struct {
 	// LogGrowthCount represents the number of log growth events for the database
 	// This metric corresponds to log.transactionGrowth
 	// Query source: sys.dm_os_performance_counters for 'Log Growths' counter
-	LogGrowthCount *int64 `db:"log_growth" metric_name:"sqlserver.database.log.transactionGrowth" source_type:"gauge"`
+	LogGrowthCount *int64 `db:"log_growth" metric_name:"sqlserver.database.log.transaction_growth" source_type:"gauge"`
 }
 
 // DatabasePageFileMetrics represents page file metrics for a specific database
@@ -231,7 +231,7 @@ type DatabasePageFileMetrics struct {
 	// PageFileAvailableBytes represents the reserved space not used (available page file) in bytes
 	// This metric corresponds to pageFileAvailable
 	// Query source: sys.partitions and sys.allocation_units for space allocation statistics
-	PageFileAvailableBytes *float64 `db:"reserved_space_not_used" metric_name:"sqlserver.database.pageFileAvailable" source_type:"gauge"`
+	PageFileAvailableBytes *float64 `db:"reserved_space_not_used" metric_name:"sqlserver.database.page_file_available_bytes" source_type:"gauge"`
 }
 
 // DatabasePageFileTotalMetrics represents page file total metrics for a specific database
@@ -243,7 +243,7 @@ type DatabasePageFileTotalMetrics struct {
 	// PageFileTotalBytes represents the total reserved space (page file total) in bytes
 	// This metric corresponds to pageFileTotal
 	// Query source: sys.partitions and sys.allocation_units for total space allocation statistics
-	PageFileTotalBytes *float64 `db:"reserved_space" metric_name:"sqlserver.database.pageFileTotal" source_type:"gauge"`
+	PageFileTotalBytes *float64 `db:"reserved_space" metric_name:"sqlserver.database.page_file_total_bytes" source_type:"gauge"`
 }
 
 // DatabaseMemoryMetrics represents comprehensive memory metrics
@@ -253,17 +253,17 @@ type DatabaseMemoryMetrics struct {
 	// TotalPhysicalMemoryBytes represents the total physical memory on the system in bytes
 	// This metric corresponds to memoryTotal
 	// Query source: sys.dm_os_sys_memory for system memory statistics
-	TotalPhysicalMemoryBytes *float64 `db:"total_physical_memory" metric_name:"sqlserver.instance.memoryTotal" source_type:"gauge"`
+	TotalPhysicalMemoryBytes *float64 `db:"total_physical_memory" metric_name:"sqlserver.instance.memory_total" source_type:"gauge"`
 
 	// AvailablePhysicalMemoryBytes represents the available physical memory on the system in bytes
 	// This metric corresponds to memoryAvailable
 	// Query source: sys.dm_os_sys_memory for system memory statistics
-	AvailablePhysicalMemoryBytes *float64 `db:"available_physical_memory" metric_name:"sqlserver.instance.memoryAvailable" source_type:"gauge"`
+	AvailablePhysicalMemoryBytes *float64 `db:"available_physical_memory" metric_name:"sqlserver.instance.memory_available" source_type:"gauge"`
 
 	// MemoryUtilizationPercent represents the percentage of memory utilization
 	// This metric corresponds to memoryUtilization
 	// Query source: calculated from sys.dm_os_process_memory and sys.dm_os_sys_memory
-	MemoryUtilizationPercent *float64 `db:"memory_utilization" metric_name:"sqlserver.instance.memoryUtilization" source_type:"gauge"`
+	MemoryUtilizationPercent *float64 `db:"memory_utilization" metric_name:"sqlserver.instance.memory_utilization_percent" source_type:"gauge"`
 }
 
 // DatabaseTransactionLogMetrics represents transaction log performance metrics for database operations
@@ -272,17 +272,17 @@ type DatabaseTransactionLogMetrics struct {
 	// LogFlushesPerSec represents the number of log flush operations per second
 	// This metric corresponds to log flush rate
 	// Query source: sys.dm_os_performance_counters for 'Log Flushes/sec' counter
-	LogFlushesPerSec *int64 `db:"Log Flushes/sec" metric_name:"sqlserver.database.log.flushesPerSec" source_type:"gauge"`
+	LogFlushesPerSec *int64 `db:"Log Flushes/sec" metric_name:"sqlserver.database.log.flushes_per_sec" source_type:"gauge"`
 
 	// LogBytesFlushesPerSec represents the number of log bytes flushed per second
 	// This metric corresponds to log bytes flush rate
 	// Query source: sys.dm_os_performance_counters for 'Log Bytes Flushed/sec' counter
-	LogBytesFlushesPerSec *int64 `db:"Log Bytes Flushed/sec" metric_name:"sqlserver.database.log.bytesFlushesPerSec" source_type:"gauge"`
+	LogBytesFlushesPerSec *int64 `db:"Log Bytes Flushed/sec" metric_name:"sqlserver.database.log.bytes_flushed_per_sec" source_type:"gauge"`
 
 	// FlushWaitsPerSec represents the number of flush wait operations per second
 	// This metric corresponds to flush wait rate
 	// Query source: sys.dm_os_performance_counters for 'Flush Waits/sec' counter
-	FlushWaitsPerSec *int64 `db:"Flush Waits/sec" metric_name:"sqlserver.database.log.flushWaitsPerSec" source_type:"gauge"`
+	FlushWaitsPerSec *int64 `db:"Flush Waits/sec" metric_name:"sqlserver.database.log.flush_waits_per_sec" source_type:"gauge"`
 
 	// ActiveTransactions represents the number of active transactions
 	// This metric corresponds to active transaction count
@@ -296,5 +296,5 @@ type DatabaseLogSpaceUsageMetrics struct {
 	// UsedLogSpaceMB represents the used log space in megabytes
 	// This metric corresponds to the converted bytes value from sys.dm_db_log_space_usage
 	// Query source: sys.dm_db_log_space_usage.used_log_space_in_bytes / 1024 / 1024.0
-	UsedLogSpaceMB *float64 `db:"used_log_space_mb" metric_name:"sqlserver.database.log.usedSpaceMB" source_type:"gauge"`
+	UsedLogSpaceMB *float64 `db:"used_log_space_mb" metric_name:"sqlserver.database.log.used_space_mb" source_type:"gauge"`
 }
