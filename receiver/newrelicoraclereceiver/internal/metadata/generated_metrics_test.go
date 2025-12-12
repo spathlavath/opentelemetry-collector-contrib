@@ -298,7 +298,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbHostingInfoDataPoint(ts, 1, "db.instance.name-val", "cloud.provider-val", "cloud.platform-val", "deployment.environment-val", "host.arch-val", "platform.name-val")
+			mb.RecordNewrelicoracledbHostingInfoDataPoint(ts, 1, "db.instance.name-val", "host.arch-val", "platform.name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2669,15 +2669,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("db.instance.name")
 					assert.True(t, ok)
 					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cloud.provider")
-					assert.True(t, ok)
-					assert.Equal(t, "cloud.provider-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cloud.platform")
-					assert.True(t, ok)
-					assert.Equal(t, "cloud.platform-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("deployment.environment")
-					assert.True(t, ok)
-					assert.Equal(t, "deployment.environment-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("host.arch")
 					assert.True(t, ok)
 					assert.Equal(t, "host.arch-val", attrVal.Str())

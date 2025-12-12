@@ -954,7 +954,7 @@ Oracle database global name information
 
 Database hosting and platform information
 
-Provides information about the hosting environment including cloud provider, platform, and deployment type
+Provides information about the host architecture and operating system platform
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -965,9 +965,6 @@ Provides information about the hosting environment including cloud provider, pla
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
-| cloud.provider | Name of the cloud provider (aws, azure, gcp, oci) | Any Str | false |
-| cloud.platform | Cloud platform service name (ec2, rds, azure_vm, azure_sql, gcp_compute_engine, oci_compute) | Any Str | false |
-| deployment.environment | Name of the deployment environment (production, staging, development, on-premises) | Any Str | false |
 | host.arch | The CPU architecture the host system is running on | Any Str | false |
 | platform.name | Operating system platform name | Any Str | false |
 

@@ -4394,7 +4394,7 @@ func (m *metricNewrelicoracledbHostingInfo) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbHostingInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, cloudProviderAttributeValue string, cloudPlatformAttributeValue string, deploymentEnvironmentAttributeValue string, hostArchAttributeValue string, platformNameAttributeValue string) {
+func (m *metricNewrelicoracledbHostingInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, hostArchAttributeValue string, platformNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -4403,9 +4403,6 @@ func (m *metricNewrelicoracledbHostingInfo) recordDataPoint(start pcommon.Timest
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("cloud.provider", cloudProviderAttributeValue)
-	dp.Attributes().PutStr("cloud.platform", cloudPlatformAttributeValue)
-	dp.Attributes().PutStr("deployment.environment", deploymentEnvironmentAttributeValue)
 	dp.Attributes().PutStr("host.arch", hostArchAttributeValue)
 	dp.Attributes().PutStr("platform.name", platformNameAttributeValue)
 }
@@ -19859,8 +19856,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.T
 }
 
 // RecordNewrelicoracledbHostingInfoDataPoint adds a data point to newrelicoracledb.hosting.info metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbHostingInfoDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, cloudProviderAttributeValue string, cloudPlatformAttributeValue string, deploymentEnvironmentAttributeValue string, hostArchAttributeValue string, platformNameAttributeValue string) {
-	mb.metricNewrelicoracledbHostingInfo.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, cloudProviderAttributeValue, cloudPlatformAttributeValue, deploymentEnvironmentAttributeValue, hostArchAttributeValue, platformNameAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbHostingInfoDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, hostArchAttributeValue string, platformNameAttributeValue string) {
+	mb.metricNewrelicoracledbHostingInfo.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, hostArchAttributeValue, platformNameAttributeValue)
 }
 
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.
