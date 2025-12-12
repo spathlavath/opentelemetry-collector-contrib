@@ -20,10 +20,11 @@ type MetadataCache struct {
 	partitions      map[int64]PartitionMetadata // partition_id -> partition info
 	allocationUnits map[int64]string            // allocation_unit_id -> container description
 
-	mu              sync.RWMutex
-	lastRefresh     time.Time
-	refreshInterval time.Duration
-	db              *sql.DB
+	mu                 sync.RWMutex
+	lastRefresh        time.Time
+	refreshInterval    time.Duration
+	db                 *sql.DB
+	monitoredDatabases []string // List of databases to monitor for index resolution (empty = all accessible databases)
 }
 
 // ObjectMetadata contains information about a database object
@@ -55,16 +56,17 @@ type FileKey struct {
 }
 
 // NewMetadataCache creates a new metadata cache with the specified refresh interval
-func NewMetadataCache(db *sql.DB, refreshInterval time.Duration) *MetadataCache {
+func NewMetadataCache(db *sql.DB, refreshInterval time.Duration, monitoredDatabases []string) *MetadataCache {
 	return &MetadataCache{
-		databases:       make(map[int]string),
-		objects:         make(map[int]ObjectMetadata),
-		files:           make(map[FileKey]string),
-		hobts:           make(map[int64]HOBTMetadata),
-		partitions:      make(map[int64]PartitionMetadata),
-		allocationUnits: make(map[int64]string),
-		refreshInterval: refreshInterval,
-		db:              db,
+		databases:          make(map[int]string),
+		objects:            make(map[int]ObjectMetadata),
+		files:              make(map[FileKey]string),
+		hobts:              make(map[int64]HOBTMetadata),
+		partitions:         make(map[int64]PartitionMetadata),
+		allocationUnits:    make(map[int64]string),
+		refreshInterval:    refreshInterval,
+		db:                 db,
+		monitoredDatabases: monitoredDatabases,
 	}
 }
 
@@ -230,31 +232,37 @@ func (mc *MetadataCache) refreshFiles(ctx context.Context) error {
 }
 
 func (mc *MetadataCache) refreshHOBTs(ctx context.Context) error {
-	// First, get list of all accessible databases (excluding system databases we can't query)
-	dbQuery := `
-		SELECT name
-		FROM sys.databases
-		WHERE state_desc = 'ONLINE'
-			AND database_id > 4  -- Skip system databases (master, tempdb, model, msdb)
-			AND HAS_DBACCESS(name) = 1  -- Only databases we have access to
-	`
-
-	dbRows, err := mc.db.QueryContext(ctx, dbQuery)
-	if err != nil {
-		return fmt.Errorf("failed to get database list: %w", err)
-	}
-	defer dbRows.Close()
-
 	var databases []string
-	for dbRows.Next() {
-		var dbName string
-		if err := dbRows.Scan(&dbName); err != nil {
-			return fmt.Errorf("failed to scan database name: %w", err)
+
+	// If monitored databases are specified, use them directly
+	if len(mc.monitoredDatabases) > 0 {
+		databases = mc.monitoredDatabases
+	} else {
+		// Otherwise, get list of all accessible databases (excluding system databases we can't query)
+		dbQuery := `
+			SELECT name
+			FROM sys.databases
+			WHERE state_desc = 'ONLINE'
+				AND database_id > 4  -- Skip system databases (master, tempdb, model, msdb)
+				AND HAS_DBACCESS(name) = 1  -- Only databases we have access to
+		`
+
+		dbRows, err := mc.db.QueryContext(ctx, dbQuery)
+		if err != nil {
+			return fmt.Errorf("failed to get database list: %w", err)
 		}
-		databases = append(databases, dbName)
-	}
-	if err := dbRows.Err(); err != nil {
-		return fmt.Errorf("error iterating database list: %w", err)
+		defer dbRows.Close()
+
+		for dbRows.Next() {
+			var dbName string
+			if err := dbRows.Scan(&dbName); err != nil {
+				return fmt.Errorf("failed to scan database name: %w", err)
+			}
+			databases = append(databases, dbName)
+		}
+		if err := dbRows.Err(); err != nil {
+			return fmt.Errorf("error iterating database list: %w", err)
+		}
 	}
 
 	// Now iterate through each database and collect HOBT metadata
@@ -439,4 +447,10 @@ func (mc *MetadataCache) GetCacheStats() map[string]int {
 		"partitions":       len(mc.partitions),
 		"allocation_units": len(mc.allocationUnits),
 	}
+}
+
+// GetMonitoredDatabases returns the list of monitored databases
+// Returns nil if all databases should be monitored
+func (mc *MetadataCache) GetMonitoredDatabases() []string {
+	return mc.monitoredDatabases
 }

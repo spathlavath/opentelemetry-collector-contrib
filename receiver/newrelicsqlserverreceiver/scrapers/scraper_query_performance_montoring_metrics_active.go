@@ -27,9 +27,25 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		return nil, nil
 	}
 
+	// Build database filter for KEY/OBJECT lock resolution from monitored_databases
+	dbFilter := ""
+	if s.metadataCache != nil {
+		monitoredDBs := s.metadataCache.GetMonitoredDatabases()
+		if len(monitoredDBs) > 0 {
+			// Build IN clause with properly escaped database names
+			var quotedDBs []string
+			for _, dbName := range monitoredDBs {
+				// Escape single quotes by doubling them (SQL standard)
+				escapedName := strings.ReplaceAll(dbName, "'", "''")
+				quotedDBs = append(quotedDBs, fmt.Sprintf("'%s'", escapedName))
+			}
+			dbFilter = fmt.Sprintf(" AND name IN (%s)", strings.Join(quotedDBs, ", "))
+		}
+	}
+
 	// Build query with slow query correlation filter
 	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
-	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, limit, textTruncateLimit, elapsedTimeThreshold, queryIDFilter)
+	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, dbFilter, limit, textTruncateLimit, elapsedTimeThreshold, queryIDFilter)
 
 	s.logger.Debug("Executing active running queries fetch",
 		zap.String("query", queries.TruncateQuery(query, 100)),
@@ -388,19 +404,36 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		}
 		return ""
 	}
+	// getWaitTypeDescription returns human-readable wait event name (never blank)
+	// Falls back to raw wait_type if description is unavailable
 	getWaitTypeDescription := func() string {
-		// This would be computed using helpers.DecodeWaitType()
-		if result.WaitType != nil {
-			return helpers.DecodeWaitType(*result.WaitType)
+		waitType := getWaitType()
+		if waitType == "" {
+			waitType = "N/A"
 		}
-		return ""
+		description := helpers.DecodeWaitType(waitType)
+		// DecodeWaitType already handles empty/N/A and returns "Not Waiting"
+		// It also returns the original waitType for unknown types
+		// So this should never be blank, but we double-check
+		if description == "" {
+			return waitType
+		}
+		return description
 	}
+	// getWaitTypeCategory returns wait category (never blank)
+	// Falls back to "Other" if category cannot be determined
 	getWaitTypeCategory := func() string {
-		// This would be computed using helpers.GetWaitTypeCategory()
-		if result.WaitType != nil {
-			return helpers.GetWaitTypeCategory(*result.WaitType)
+		waitType := getWaitType()
+		if waitType == "" {
+			waitType = "N/A"
 		}
-		return ""
+		category := helpers.GetWaitTypeCategory(waitType)
+		// GetWaitTypeCategory returns "None" for empty/N/A and "Other" for unknown
+		// So this should never be blank, but we double-check
+		if category == "" {
+			return "Other"
+		}
+		return category
 	}
 	getWaitResourceType := func() string {
 		// This would be computed from wait_resource parsing

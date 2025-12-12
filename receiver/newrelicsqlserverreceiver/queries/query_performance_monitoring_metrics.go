@@ -1,3 +1,6 @@
+// Copyright The OpenTelemetry Authors
+// SPDX-License-Identifier: Apache-2.0
+
 package queries
 
 const SlowQuery = `DECLARE @IntervalSeconds INT = %d; 		-- Define the interval in seconds
@@ -133,6 +136,51 @@ WHERE qp.query_plan IS NOT NULL;`
 // RCA Enhancement: Includes query_hash for correlation with slow queries, with fallback to text hash
 // when query_hash is NULL (queries not yet cached in dm_exec_query_stats)
 const ActiveRunningQueriesQuery = `
+-- ============================================================================
+-- CROSS-DATABASE KEY LOCK RESOLUTION: Populate partition info from all databases
+-- ============================================================================
+IF OBJECT_ID('tempdb..#all_partitions') IS NOT NULL DROP TABLE #all_partitions;
+
+CREATE TABLE #all_partitions (
+    database_id INT,
+    object_id INT,
+    index_id INT,
+    hobt_id BIGINT,
+    index_name NVARCHAR(128),
+    index_type NVARCHAR(60)
+);
+
+DECLARE @sql NVARCHAR(MAX);
+DECLARE @db_name NVARCHAR(128);
+DECLARE @db_id INT;
+
+DECLARE db_cursor CURSOR FAST_FORWARD FOR
+    SELECT database_id, name
+    FROM sys.databases
+    WHERE database_id > 4 AND state = 0 AND user_access = 0%s;
+
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @db_id, @db_name;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    BEGIN TRY
+        SET @sql = N'INSERT INTO #all_partitions SELECT ' + CAST(@db_id AS NVARCHAR(10)) +
+            ', p.object_id, p.index_id, p.hobt_id, i.name, i.type_desc FROM [' +
+            REPLACE(@db_name, ']', ']]') + '].sys.partitions p INNER JOIN [' +
+            REPLACE(@db_name, ']', ']]') + '].sys.indexes i ON p.object_id = i.object_id AND p.index_id = i.index_id WHERE p.object_id > 100;';
+        EXEC sp_executesql @sql;
+    END TRY
+    BEGIN CATCH END CATCH;
+    FETCH NEXT FROM db_cursor INTO @db_id, @db_name;
+END;
+
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
+
+-- ============================================================================
+-- MAIN QUERY: Active running queries with cross-database KEY lock resolution
+-- ============================================================================
 DECLARE @Limit INT = %d; -- Set the maximum number of rows to return
 DECLARE @TextTruncateLimit INT = %d; -- Set the maximum length for query text
 DECLARE @ElapsedTimeThresholdMs INT = %d; -- Minimum elapsed time threshold in milliseconds
@@ -171,9 +219,10 @@ SELECT TOP (@Limit)
     r_wait.wait_resource AS wait_resource,
     r_wait.last_wait_type AS last_wait_type,
 
-    -- C2. WAIT RESOURCE DECODED (Lightweight - only resolve what's guaranteed to work)
-    -- Extracts object name for OBJECT locks using fast built-in OBJECT_NAME function
+    -- C2. WAIT RESOURCE DECODED (Works across all databases)
+    -- Extracts object name for OBJECT locks and KEY locks
     CASE
+        -- OBJECT locks: Direct object_id extraction using OBJECT_NAME
         WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
             OBJECT_NAME(
                 TRY_CAST(
@@ -189,6 +238,16 @@ SELECT TOP (@Limit)
                 ),
                 r_wait.database_id
             )
+        -- KEY locks: Include index name in format: "TableName (IndexName)"
+        WHEN r_wait.wait_resource LIKE 'KEY:%%' AND idx_key.index_name IS NOT NULL THEN
+            OBJECT_NAME(idx_key.object_id, r_wait.database_id) +
+            CASE
+                WHEN idx_key.index_name IS NOT NULL THEN ' (' + idx_key.index_name + ')'
+                ELSE ''
+            END
+        -- KEY locks without index info: Just show table name
+        WHEN r_wait.wait_resource LIKE 'KEY:%%' AND idx_key.object_id IS NOT NULL THEN
+            OBJECT_NAME(idx_key.object_id, r_wait.database_id)
         ELSE NULL
     END AS wait_resource_object_name,
 
@@ -268,15 +327,78 @@ SELECT TOP (@Limit)
         ELSE 'N/A'
     END AS blocking_query_statement_text,
     -- L. ENHANCED WAIT RESOURCE DECODING (OBJECT locks - table-level locks)
-    SCHEMA_NAME(obj_lock.schema_id) AS wait_resource_schema_name_object,
+    -- Cross-database schema name resolution using OBJECT_SCHEMA_NAME
+    CASE
+        WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
+            OBJECT_SCHEMA_NAME(
+                TRY_CAST(
+                    SUBSTRING(
+                        r_wait.wait_resource,
+                        CHARINDEX(':', r_wait.wait_resource, 8) + 1,
+                        CASE
+                            WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
+                            THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
+                            ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
+                        END
+                    ) AS INT
+                ),
+                r_wait.database_id
+            )
+        ELSE NULL
+    END AS wait_resource_schema_name_object,
     obj_lock.type_desc AS wait_resource_object_type,
 
     -- M. ENHANCED WAIT RESOURCE DECODING (INDEX locks - KEY locks, row-level locks)
-    -- Cannot reliably decode KEY locks across databases without dynamic SQL
-    NULL AS wait_resource_schema_name_index,
-    NULL AS wait_resource_table_name_index,
-    NULL AS wait_resource_index_name,
-    NULL AS wait_resource_index_type
+    -- Resolved via sys.partitions subquery with cross-database OBJECT_NAME functions
+    OBJECT_SCHEMA_NAME(idx_key.object_id, r_wait.database_id) AS wait_resource_schema_name_index,
+    OBJECT_NAME(idx_key.object_id, r_wait.database_id) AS wait_resource_table_name_index,
+    idx_key.index_name AS wait_resource_index_name,
+    idx_key.index_type AS wait_resource_index_type,
+
+    -- N. UNIFIED WAIT RESOURCE FIELDS (works for both OBJECT and KEY locks)
+    -- These provide a single set of attributes regardless of lock type
+    COALESCE(
+        CASE
+            WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
+                OBJECT_SCHEMA_NAME(
+                    TRY_CAST(
+                        SUBSTRING(
+                            r_wait.wait_resource,
+                            CHARINDEX(':', r_wait.wait_resource, 8) + 1,
+                            CASE
+                                WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
+                                THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
+                                ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
+                            END
+                        ) AS INT
+                    ),
+                    r_wait.database_id
+                )
+            ELSE NULL
+        END,
+        OBJECT_SCHEMA_NAME(idx_key.object_id, r_wait.database_id)
+    ) AS wait_resource_schema_name,
+    COALESCE(
+        CASE
+            WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
+                OBJECT_NAME(
+                    TRY_CAST(
+                        SUBSTRING(
+                            r_wait.wait_resource,
+                            CHARINDEX(':', r_wait.wait_resource, 8) + 1,
+                            CASE
+                                WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
+                                THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
+                                ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
+                            END
+                        ) AS INT
+                    ),
+                    r_wait.database_id
+                )
+            ELSE NULL
+        END,
+        OBJECT_NAME(idx_key.object_id, r_wait.database_id)
+    ) AS wait_resource_table_name
 
 FROM
     sys.dm_exec_requests AS r_wait
@@ -314,12 +436,23 @@ LEFT JOIN sys.objects obj_lock ON
     ) = obj_lock.object_id
     AND r_wait.database_id = DB_ID(DB_NAME(r_wait.database_id))
 
--- Enhanced wait resource decoding: INDEX locks (KEY locks - row-level locks)
--- Note: Cannot reliably resolve INDEX/KEY locks across databases without dynamic SQL
+-- Enhanced wait resource decoding: KEY locks (row-level locks) - CROSS-DATABASE RESOLUTION
 -- KEY lock format: "KEY: database_id:hobt_id (key_hash)"
--- We can only extract database_id and hobt_id, but cannot JOIN to sys.partitions cross-database
--- So we'll leave these as NULL for now (schema_name, table_name, index_name, index_type)
--- The wait_resource_description already shows the parsed HOBT and database info
+-- Uses pre-populated #all_partitions temp table with data from ALL databases
+-- This enables true cross-database index name resolution with a single collector
+LEFT JOIN #all_partitions idx_key ON
+    r_wait.wait_resource LIKE 'KEY:%%'
+    AND idx_key.database_id = r_wait.database_id  -- Match database
+    AND idx_key.hobt_id = TRY_CAST(
+        -- Extract HOBT ID from "KEY: <db_id>:<hobt_id> (<hash>)"
+        -- Example: "KEY: 5:72057594049986560 (0216d1a0d5d2)"
+        SUBSTRING(
+            r_wait.wait_resource,
+            CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1,  -- Start after second colon
+            CHARINDEX(' ', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1) -
+            CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) - 1   -- Length = space position - colon position - 1
+        ) AS BIGINT
+    )
 
 WHERE
     r_wait.session_id > 50
@@ -330,7 +463,10 @@ WHERE
     %s  -- Placeholder for additional query_hash IN filter (injected from Go code)
 ORDER BY
     r_wait.total_elapsed_time DESC  -- Sort by slowest executions first (not wait_time)
-OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values`
+OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values
+
+-- Cleanup temp table
+IF OBJECT_ID('tempdb..#all_partitions') IS NOT NULL DROP TABLE #all_partitions;`
 
 // ExecutionStatsForActivePlanHandleQuery retrieves execution statistics for a specific plan_handle
 // from sys.dm_exec_query_stats - used for active running queries

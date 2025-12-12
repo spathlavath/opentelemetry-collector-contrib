@@ -73,6 +73,10 @@ type Config struct {
 	// Enriches wait_resource with human-readable names (database names, object names, file names, etc.)
 	EnableWaitResourceEnrichment       bool `mapstructure:"enable_wait_resource_enrichment"`        // Enable/disable wait_resource name enrichment
 	WaitResourceMetadataRefreshMinutes int  `mapstructure:"wait_resource_metadata_refresh_minutes"` // Metadata cache refresh interval in minutes (default: 5)
+
+	// KEY lock cross-database resolution configuration
+	// Specify which databases to resolve KEY lock index names from
+	MonitoredDatabases []string `mapstructure:"monitored_databases"` // List of database names for KEY lock resolution (empty = all databases)
 }
 
 // DefaultConfig returns a Config struct with default values

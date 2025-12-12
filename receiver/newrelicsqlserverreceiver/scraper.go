@@ -91,11 +91,12 @@ func (s *sqlServerScraper) Start(ctx context.Context, _ component.Host) error {
 	// Initialize metadata cache for wait resource enrichment if enabled
 	if s.config.EnableWaitResourceEnrichment {
 		refreshInterval := time.Duration(s.config.WaitResourceMetadataRefreshMinutes) * time.Minute
-		s.metadataCache = helpers.NewMetadataCache(s.connection.Connection.DB, refreshInterval)
+		s.metadataCache = helpers.NewMetadataCache(s.connection.Connection.DB, refreshInterval, s.config.MonitoredDatabases)
 
 		// Perform initial cache refresh
 		s.logger.Info("Initializing metadata cache for wait resource enrichment",
-			zap.Int("refresh_interval_minutes", s.config.WaitResourceMetadataRefreshMinutes))
+			zap.Int("refresh_interval_minutes", s.config.WaitResourceMetadataRefreshMinutes),
+			zap.Strings("monitored_databases", s.config.MonitoredDatabases))
 
 		if err := s.metadataCache.Refresh(ctx); err != nil {
 			s.logger.Warn("Failed to perform initial metadata cache refresh",

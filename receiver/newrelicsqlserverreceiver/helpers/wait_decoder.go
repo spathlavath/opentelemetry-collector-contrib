@@ -46,30 +46,117 @@ func GetWaitTypeCategory(waitType string) string {
 	}
 
 	switch {
-	case strings.HasPrefix(waitType, "CXPACKET") || strings.HasPrefix(waitType, "CXSYNC") || strings.HasPrefix(waitType, "CXCONSUMER") || waitType == "EXECSYNC" || waitType == "EXCHANGE":
+	// Parallelism waits
+	case strings.HasPrefix(waitType, "CXPACKET"), strings.HasPrefix(waitType, "CXSYNC"),
+		strings.HasPrefix(waitType, "CXCONSUMER"), strings.HasPrefix(waitType, "CXROWSET"),
+		waitType == "EXECSYNC", waitType == "EXCHANGE":
 		return "Parallelism"
-	case strings.HasPrefix(waitType, "PAGEIOLATCH") || strings.HasPrefix(waitType, "WRITELOG") || strings.HasPrefix(waitType, "LOGBUFFER") || strings.HasPrefix(waitType, "IO_"):
+
+	// Disk I/O waits
+	case strings.HasPrefix(waitType, "PAGEIOLATCH"), strings.HasPrefix(waitType, "WRITELOG"),
+		strings.HasPrefix(waitType, "LOGBUFFER"), strings.HasPrefix(waitType, "IO_"),
+		strings.HasPrefix(waitType, "LOGMGR"), strings.HasPrefix(waitType, "ASYNC_IO"),
+		strings.HasPrefix(waitType, "DISKIO"), strings.HasPrefix(waitType, "BACKUPIO"),
+		waitType == "BACKUPBUFFER", waitType == "BACKUPTHREAD":
 		return "Disk I/O"
+
+	// Locking waits
 	case strings.HasPrefix(waitType, "LCK_M_"):
 		return "Locking"
-	case strings.HasPrefix(waitType, "RESOURCE_SEMAPHORE") || strings.HasPrefix(waitType, "CMEMTHREAD"):
+
+	// Memory waits
+	case strings.HasPrefix(waitType, "RESOURCE_SEMAPHORE"), strings.HasPrefix(waitType, "CMEMTHREAD"),
+		strings.HasPrefix(waitType, "MEMORY_"), waitType == "SOS_RESERVEDMEMBLOCKLIST":
 		return "Memory"
-	case strings.HasPrefix(waitType, "ASYNC_NETWORK_IO") || strings.HasPrefix(waitType, "NETWORK"):
+
+	// Network waits
+	case strings.HasPrefix(waitType, "ASYNC_NETWORK_IO"), strings.HasPrefix(waitType, "NETWORK"),
+		waitType == "NET_WAITFOR_PACKET":
 		return "Network"
-	case waitType == "SOS_SCHEDULER_YIELD" || waitType == "THREADPOOL":
+
+	// CPU waits
+	case waitType == "SOS_SCHEDULER_YIELD", waitType == "THREADPOOL", waitType == "SOS_WORK_DISPATCHER":
 		return "CPU"
-	case strings.HasPrefix(waitType, "LATCH_") || strings.HasPrefix(waitType, "PAGELATCH_"):
+
+	// Latch waits
+	case strings.HasPrefix(waitType, "LATCH_"), strings.HasPrefix(waitType, "PAGELATCH_"):
 		return "Latch"
+
+	// OS Call waits
 	case strings.HasPrefix(waitType, "PREEMPTIVE_"):
 		return "OS Call"
-	case strings.HasPrefix(waitType, "HADR_"):
+
+	// AlwaysOn / High Availability waits
+	case strings.HasPrefix(waitType, "HADR_"), strings.HasPrefix(waitType, "PWAIT_HADR"):
 		return "AlwaysOn"
-	case strings.HasPrefix(waitType, "BACKUP"):
+
+	// Service Broker waits
+	case strings.HasPrefix(waitType, "BROKER_"), strings.HasPrefix(waitType, "SERVICE_BROKER"):
+		return "Service Broker"
+
+	// CLR waits
+	case strings.HasPrefix(waitType, "CLR_"), strings.HasPrefix(waitType, "SQLCLR"):
+		return "CLR"
+
+	// Full-Text Search waits
+	case strings.HasPrefix(waitType, "FT_"), strings.HasPrefix(waitType, "MSSEARCH"):
+		return "Full-Text Search"
+
+	// Query Store waits
+	case strings.HasPrefix(waitType, "QDS_"):
+		return "Query Store"
+
+	// In-Memory OLTP waits
+	case strings.HasPrefix(waitType, "XTP_"), strings.HasPrefix(waitType, "XTPPROC"),
+		strings.HasPrefix(waitType, "WAIT_XTP"):
+		return "In-Memory OLTP"
+
+	// Extended Events waits
+	case strings.HasPrefix(waitType, "XE_"), strings.HasPrefix(waitType, "SQLTRACE"):
+		return "Extended Events"
+
+	// Backup/Restore waits
+	case strings.HasPrefix(waitType, "BACKUP"), strings.HasPrefix(waitType, "RESTORE"):
 		return "Backup"
-	case strings.HasPrefix(waitType, "DTC") || strings.HasPrefix(waitType, "XACT"):
+
+	// Transaction/DTC waits
+	case strings.HasPrefix(waitType, "DTC"), strings.HasPrefix(waitType, "XACT"),
+		strings.HasPrefix(waitType, "TRAN_"):
 		return "Transaction"
-	case waitType == "SLEEP_TASK" || waitType == "SLEEP_BPOOL_STEAL":
+
+	// Replication waits
+	case strings.HasPrefix(waitType, "REPL_"):
+		return "Replication"
+
+	// Sleep waits
+	case strings.HasPrefix(waitType, "SLEEP_"), waitType == "WAITFOR", waitType == "ONDEMAND_TASK_QUEUE":
 		return "Sleep"
+
+	// Internal/System waits
+	case strings.HasPrefix(waitType, "SOS_"), strings.HasPrefix(waitType, "PWAIT_"),
+		strings.Contains(waitType, "_INTERNAL"), strings.Contains(waitType, "Internal use only"):
+		return "Internal"
+
+	// FILESTREAM waits
+	case strings.HasPrefix(waitType, "FS_"), strings.HasPrefix(waitType, "FILESTREAM"):
+		return "FILESTREAM"
+
+	// Audit waits
+	case strings.HasPrefix(waitType, "AUDIT_"):
+		return "Audit"
+
+	// Parallel redo waits
+	case strings.HasPrefix(waitType, "PARALLEL_REDO"):
+		return "Parallel Redo"
+
+	// Batch mode waits (columnstore)
+	case strings.HasPrefix(waitType, "HTBUILD"), strings.HasPrefix(waitType, "HTDELETE"),
+		strings.HasPrefix(waitType, "HTMEMO"), strings.HasPrefix(waitType, "HTREPARTITION"),
+		strings.HasPrefix(waitType, "HTREINIT"), strings.HasPrefix(waitType, "BMPALLOCATION"),
+		strings.HasPrefix(waitType, "BMPBUILD"), strings.HasPrefix(waitType, "BMPREPARTITION"),
+		strings.HasPrefix(waitType, "BMPREPLICATION"), strings.HasPrefix(waitType, "BPSORT"):
+		return "Batch Mode"
+
 	default:
 		return "Other"
 	}

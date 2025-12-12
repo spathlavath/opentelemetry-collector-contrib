@@ -1,3 +1,6 @@
+// Copyright The OpenTelemetry Authors
+// SPDX-License-Identifier: Apache-2.0
+
 package models
 
 // SlowQuery represents slow query performance data collected from SQL Server
@@ -160,6 +163,10 @@ type ActiveRunningQuery struct {
 	WaitResourceTableNameIndex  *string `db:"wait_resource_table_name_index" metric_name:"wait_resource_table_name_index" source_type:"attribute"`
 	WaitResourceIndexName       *string `db:"wait_resource_index_name" metric_name:"wait_resource_index_name" source_type:"attribute"`
 	WaitResourceIndexType       *string `db:"wait_resource_index_type" metric_name:"wait_resource_index_type" source_type:"attribute"`
+
+	// Unified fields that work for both OBJECT and KEY locks (using COALESCE)
+	WaitResourceSchemaName *string `db:"wait_resource_schema_name" metric_name:"wait_resource_schema_name" source_type:"attribute"`
+	WaitResourceTableName  *string `db:"wait_resource_table_name" metric_name:"wait_resource_table_name" source_type:"attribute"`
 
 	CPUTimeMs               *int64  `db:"cpu_time_ms" metric_name:"sqlserver.activequery.cpu_time_ms" source_type:"gauge"`
 	TotalElapsedTimeMs      *int64  `db:"total_elapsed_time_ms" metric_name:"sqlserver.activequery.elapsed_time_ms" source_type:"gauge"`
