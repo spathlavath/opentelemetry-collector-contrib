@@ -111,7 +111,6 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 
 		err := rows.Scan(
 			&slowQuery.CollectionTimestamp,
-			&slowQuery.CDBName,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
@@ -160,7 +159,6 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 
 		err := rows.Scan(
 			&childCursor.CollectionTimestamp,
-			&childCursor.CDBName,
 			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
@@ -205,7 +203,6 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 
 		err := rows.Scan(
 			&w.CollectionTimestamp,
-			&w.CDBName,
 			&w.DatabaseName,
 			&w.Username,
 			&w.SID,
