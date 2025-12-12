@@ -111,7 +111,6 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 
 		err := rows.Scan(
 			&slowQuery.CollectionTimestamp,
-			&slowQuery.CDBName,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
 			&slowQuery.SchemaName,
@@ -160,7 +159,6 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 
 		err := rows.Scan(
 			&childCursor.CollectionTimestamp,
-			&childCursor.CDBName,
 			&childCursor.DatabaseName,
 			&childCursor.SQLID,
 			&childCursor.ChildNumber,
@@ -205,7 +203,6 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 
 		err := rows.Scan(
 			&w.CollectionTimestamp,
-			&w.CDBName,
 			&w.DatabaseName,
 			&w.Username,
 			&w.SID,
@@ -1639,74 +1636,3 @@ func (c *SQLClient) QueryTablespacePDBNonWriteCurrentContainer(ctx context.Conte
 	return tablespaces, nil
 }
 
-// QueryLockCounts executes the lock counts query
-func (c *SQLClient) QueryLockCounts(ctx context.Context) ([]models.LockCount, error) {
-	rows, err := c.db.QueryContext(ctx, queries.LockCountSQL)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var lockCounts []models.LockCount
-	for rows.Next() {
-		var lc models.LockCount
-		if err := rows.Scan(&lc.LockType, &lc.LockMode, &lc.LockCount); err != nil {
-			return nil, err
-		}
-		lockCounts = append(lockCounts, lc)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return lockCounts, nil
-}
-
-// QueryLockSessionCounts executes the lock session counts query
-func (c *SQLClient) QueryLockSessionCounts(ctx context.Context) ([]models.LockSessionCount, error) {
-	rows, err := c.db.QueryContext(ctx, queries.LockSessionCountSQL)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var sessionCounts []models.LockSessionCount
-	for rows.Next() {
-		var lsc models.LockSessionCount
-		if err := rows.Scan(&lsc.LockType, &lsc.SessionCount); err != nil {
-			return nil, err
-		}
-		sessionCounts = append(sessionCounts, lsc)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return sessionCounts, nil
-}
-
-// QueryLockedObjectCounts executes the locked object counts query
-func (c *SQLClient) QueryLockedObjectCounts(ctx context.Context) ([]models.LockedObjectCount, error) {
-	rows, err := c.db.QueryContext(ctx, queries.LockedObjectCountSQL)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var objectCounts []models.LockedObjectCount
-	for rows.Next() {
-		var loc models.LockedObjectCount
-		if err := rows.Scan(&loc.LockType, &loc.ObjectType, &loc.ObjectCount); err != nil {
-			return nil, err
-		}
-		objectCounts = append(objectCounts, loc)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return objectCounts, nil
-}

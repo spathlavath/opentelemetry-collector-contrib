@@ -61,7 +61,6 @@ type newRelicOracleScraper struct {
 	slowQueriesScraper       *scrapers.SlowQueriesScraper
 	executionPlanScraper     *scrapers.ExecutionPlanScraper
 	waitEventBlockingScraper *scrapers.WaitEventBlockingScraper
-	lockScraper              *scrapers.LockScraper
 	childCursorsScraper      *scrapers.ChildCursorsScraper
 
 	// Database and configuration
@@ -246,14 +245,13 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 
 	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
 
-	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
-
 	return nil
 }
 
 // scrape orchestrates the collection of all Oracle database metrics
 func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
-	s.logger.Debug("Begin New Relic Oracle scrape")
+	startTime := time.Now()
+	s.logger.Info("Begin New Relic Oracle scrape", zap.Time("start_time", startTime))
 
 	scrapeCtx := s.createScrapeContext(ctx)
 
@@ -270,6 +268,13 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	s.logScrapeCompletion(scrapeErrors)
 
+	endTime := time.Now()
+	duration := endTime.Sub(startTime)
+	s.logger.Info("Completed New Relic Oracle scrape",
+		zap.Time("end_time", endTime),
+		zap.Duration("total_duration", duration),
+		zap.Int("total_errors", len(scrapeErrors)))
+
 	if len(scrapeErrors) > 0 {
 		return metrics, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
 	}
@@ -278,7 +283,8 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 // scrapeLogs orchestrates the collection of Oracle execution plans as logs
 func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
-	s.logger.Debug("Begin New Relic Oracle logs scrape for execution plans")
+	startTime := time.Now()
+	s.logger.Info("Begin New Relic Oracle logs scrape for execution plans", zap.Time("start_time", startTime))
 
 	logs := plog.NewLogs()
 
@@ -344,6 +350,15 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 		zap.Int("execution_plan_errors", len(executionPlanErrs)))
 
 	logs = s.lb.Emit()
+
+	endTime := time.Now()
+	duration := endTime.Sub(startTime)
+	totalErrors := len(slowQueryErrs) + len(waitEventErrs) + len(executionPlanErrs)
+	s.logger.Info("Completed New Relic Oracle logs scrape",
+		zap.Time("end_time", endTime),
+		zap.Duration("total_duration", duration),
+		zap.Int("total_errors", totalErrors),
+		zap.Int("execution_plans_collected", len(sqlIdentifiers)))
 
 	if len(executionPlanErrs) > 0 {
 		return logs, scrapererror.NewPartialScrapeError(multierr.Combine(executionPlanErrs...), len(executionPlanErrs))
@@ -501,11 +516,6 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 		s.databaseInfoScraper.ScrapeHostingInfo,
 		s.databaseInfoScraper.ScrapeDatabaseRole,
 	}
-
-	// Add lock scraper
-	scraperFuncs = append(scraperFuncs,
-		s.lockScraper.ScrapeLocks,
-	)
 
 	return scraperFuncs
 }

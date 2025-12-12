@@ -78,7 +78,6 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
@@ -151,7 +150,6 @@ Child cursor details including load times
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | child_number | Child cursor number | Any Int | false |
@@ -956,7 +954,7 @@ Oracle database global name information
 
 Database hosting and platform information
 
-Provides information about the hosting environment including cloud provider, platform, and deployment type
+Provides information about the host architecture and operating system platform
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -967,9 +965,6 @@ Provides information about the hosting environment including cloud provider, pla
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
-| cloud.provider | Name of the cloud provider (aws, azure, gcp, oci) | Any Str | false |
-| cloud.platform | Cloud platform service name (ec2, rds, azure_vm, azure_sql, gcp_compute_engine, oci_compute) | Any Str | false |
-| deployment.environment | Name of the deployment environment (production, staging, development, on-premises) | Any Str | false |
 | host.arch | The CPU architecture the host system is running on | Any Str | false |
 | platform.name | Operating system platform name | Any Str | false |
 
@@ -987,38 +982,6 @@ Count of locked user accounts in the database
 | ---- | ----------- | ------ | -------- |
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.locks.blocked_sessions
-
-Number of sessions blocked by locks
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| object.type | Oracle object type (TABLE, INDEX, etc.) | Any Str | false |
-
-### newrelicoracledb.locks.count
-
-Number of locks by type and mode
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {locks} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| lock.mode | Oracle lock mode (Exclusive, Share, etc.) | Any Str | false |
 
 ### newrelicoracledb.long_running_queries
 
@@ -2768,7 +2731,6 @@ Slow Query Details
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | query_text | SQL query text | Any Str | false |
@@ -5126,7 +5088,6 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |

@@ -22,9 +22,6 @@ attributes:
   collection_timestamp:
     description: Timestamp when the query metrics were collected from Oracle
     type: string
-  cdb_name:
-    description: Oracle Container Database (CDB) name
-    type: string
   database_name:
     description: Oracle database name
     type: string
@@ -330,18 +327,7 @@ attributes:
   db.compatible:
     description: Oracle database compatible parameter setting
     type: string
-  
-  # Cloud and Hosting Attributes (OpenTelemetry semantic conventions)
-  cloud.provider:
-    description: Name of the cloud provider (aws, azure, gcp, oci)
-    type: string
-  cloud.platform:
-    description: Cloud platform service name (ec2, rds, azure_vm, azure_sql, gcp_compute_engine, oci_compute)
-    type: string
-  deployment.environment:
-    description: Name of the deployment environment (production, staging, development, on-premises)
-    type: string
-  
+
   # Platform Attributes
   host.arch:
     description: The CPU architecture the host system is running on
@@ -362,15 +348,6 @@ attributes:
     type: string
   db.protection_level:
     description: Oracle Data Guard protection level
-    type: string
-  lock.type:
-    description: Oracle lock type (TX, TM, DX, etc.)
-    type: string
-  lock.mode:
-    description: Oracle lock mode (Exclusive, Share, etc.)
-    type: string
-  object.type:
-    description: Oracle object type (TABLE, INDEX, etc.)
     type: string
 
 events:
@@ -413,28 +390,6 @@ metrics:
     unit: "{sessions}"
     attributes:
       - db.instance.name
-
-  newrelicoracledb.locks.count:
-    description: Number of locks by type and mode
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{locks}"
-    attributes:
-      - db.instance.name
-      - lock.type
-      - lock.mode
-
-  newrelicoracledb.locks.blocked_sessions:
-    description: Number of sessions blocked by locks
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{sessions}"
-    attributes:
-      - db.instance.name
-      - lock.type
-      - object.type
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace
@@ -3694,7 +3649,6 @@ metrics:
     unit: "{count}"
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - query_id
       - query_text
@@ -3828,7 +3782,6 @@ metrics:
     unit: "{count}"
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3851,7 +3804,6 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - user_name
       - session_id
@@ -3906,16 +3858,13 @@ metrics:
   # Database Hosting and Platform Information
   newrelicoracledb.hosting.info:
     description: Database hosting and platform information
-    extended_documentation: Provides information about the hosting environment including cloud provider, platform, and deployment type
+    extended_documentation: Provides information about the host architecture and operating system platform
     enabled: true
     gauge:
       value_type: int
     unit: "1"
     attributes:
       - db.instance.name
-      - cloud.provider
-      - cloud.platform
-      - deployment.environment
       - host.arch
       - platform.name
 
@@ -3948,7 +3897,6 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - user_name
       - session_id

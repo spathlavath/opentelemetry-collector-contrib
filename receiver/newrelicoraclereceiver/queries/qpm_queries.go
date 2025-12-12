@@ -24,8 +24,7 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			d.name AS cdb_name,
-			p.name AS database_name,
+			COALESCE(p.name, d.name) AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,
@@ -43,7 +42,8 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			v$sqlarea sa
 		INNER JOIN
 			ALL_USERS au ON sa.parsing_user_id = au.user_id
-		INNER JOIN
+		-- Use LEFT JOIN for Non-CDB compatibility
+		LEFT JOIN
 			v$pdbs p ON sa.con_id = p.con_id
 		CROSS JOIN
 			v$database d
@@ -57,7 +57,7 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			AND sa.sql_text NOT LIKE '%%gv$sqlarea%%'
 			AND sa.sql_text NOT LIKE '%%v$lock%%'
 			AND sa.sql_text NOT LIKE '%%gv$instance%%'
-			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS','C##JS_USER','C##OTEL_MONITOR')
+			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS')
 			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
 		ORDER BY
 			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) DESC`, intervalSeconds)
@@ -88,8 +88,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			d.name AS cdb_name,
-			p.name AS database_name,
+			COALESCE(p.name, d.name) AS database_name,
 			s.username,
 			s.sid,
 			s.serial#,
@@ -121,8 +120,9 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			s.FINAL_BLOCKING_SESSION AS final_blocker_sid,
 			final_blocker.username AS final_blocker_user,
 			final_blocker.serial# AS final_blocker_serial,
-			final_blocker.sql_id AS final_blocker_query_id,
-			final_blocker_sql.sql_text AS final_blocker_query_text
+			-- Enhanced: Prioritize SQL_ID, fallback to PREV_SQL_ID
+			COALESCE(final_blocker.sql_id, final_blocker.prev_sql_id) AS final_blocker_query_id,
+			COALESCE(final_blocker_sql.sql_text, prev_final_blocker_sql.sql_text) AS final_blocker_query_text
 		FROM
 			v$session s
 		LEFT JOIN
@@ -131,7 +131,11 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
 		LEFT JOIN
 			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
-		INNER JOIN
+		-- NEW JOIN: Join to V$SQLAREA using the FINAL BLOCKER'S PREV_SQL_ID
+		LEFT JOIN
+			v$sqlarea prev_final_blocker_sql ON final_blocker.prev_sql_id = prev_final_blocker_sql.sql_id
+		-- Use LEFT JOIN for Non-CDB compatibility
+		LEFT JOIN
     		v$pdbs p ON s.con_id = p.con_id
 		CROSS JOIN
 			v$database d
@@ -157,8 +161,7 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			d.name AS cdb_name,
-			p.name AS database_name,
+			COALESCE(p.name, d.name) AS database_name,
 			s.sql_id,
 			s.child_number,
 			s.plan_hash_value,
@@ -173,7 +176,8 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 			s.last_load_time
 		FROM
 			v$sql s
-		INNER JOIN
+		-- Use LEFT JOIN for Non-CDB compatibility
+		LEFT JOIN
     		v$pdbs p ON s.con_id = p.con_id	
 		CROSS JOIN
 			v$database d

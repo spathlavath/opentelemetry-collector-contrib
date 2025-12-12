@@ -82,7 +82,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -94,7 +94,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val", "first_load_time-val", "last_load_time-val")
+			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val", "first_load_time-val", "last_load_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -298,19 +298,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbHostingInfoDataPoint(ts, 1, "db.instance.name-val", "cloud.provider-val", "cloud.platform-val", "deployment.environment-val", "host.arch-val", "platform.name-val")
+			mb.RecordNewrelicoracledbHostingInfoDataPoint(ts, 1, "db.instance.name-val", "host.arch-val", "platform.name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbLockedAccountsDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbLocksBlockedSessionsDataPoint(ts, 1, "db.instance.name-val", "lock.type-val", "object.type-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbLocksCountDataPoint(ts, 1, "db.instance.name-val", "lock.type-val", "lock.mode-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -750,7 +742,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1374,7 +1366,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -1470,9 +1462,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -1608,9 +1597,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -2683,15 +2669,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("db.instance.name")
 					assert.True(t, ok)
 					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cloud.provider")
-					assert.True(t, ok)
-					assert.Equal(t, "cloud.provider-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cloud.platform")
-					assert.True(t, ok)
-					assert.Equal(t, "cloud.platform-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("deployment.environment")
-					assert.True(t, ok)
-					assert.Equal(t, "deployment.environment-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("host.arch")
 					assert.True(t, ok)
 					assert.Equal(t, "host.arch-val", attrVal.Str())
@@ -2716,48 +2693,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
-				case "newrelicoracledb.locks.blocked_sessions":
-					assert.False(t, validatedMetrics["newrelicoracledb.locks.blocked_sessions"], "Found a duplicate in the metrics slice: newrelicoracledb.locks.blocked_sessions")
-					validatedMetrics["newrelicoracledb.locks.blocked_sessions"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of sessions blocked by locks", ms.At(i).Description())
-					assert.Equal(t, "{sessions}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.instance.name")
-					assert.True(t, ok)
-					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("lock.type")
-					assert.True(t, ok)
-					assert.Equal(t, "lock.type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("object.type")
-					assert.True(t, ok)
-					assert.Equal(t, "object.type-val", attrVal.Str())
-				case "newrelicoracledb.locks.count":
-					assert.False(t, validatedMetrics["newrelicoracledb.locks.count"], "Found a duplicate in the metrics slice: newrelicoracledb.locks.count")
-					validatedMetrics["newrelicoracledb.locks.count"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of locks by type and mode", ms.At(i).Description())
-					assert.Equal(t, "{locks}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.instance.name")
-					assert.True(t, ok)
-					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("lock.type")
-					assert.True(t, ok)
-					assert.Equal(t, "lock.type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("lock.mode")
-					assert.True(t, ok)
-					assert.Equal(t, "lock.mode-val", attrVal.Str())
 				case "newrelicoracledb.long_running_queries":
 					assert.False(t, validatedMetrics["newrelicoracledb.long_running_queries"], "Found a duplicate in the metrics slice: newrelicoracledb.long_running_queries")
 					validatedMetrics["newrelicoracledb.long_running_queries"] = true
@@ -5035,9 +4970,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -7876,9 +7808,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
