@@ -12,51 +12,6 @@ metrics:
     enabled: false
 ```
 
-### newrelicoracledb.asm.diskgroup.free_mb
-
-Available free space in the ASM disk group in MB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MB | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| diskgroup.name | ASM disk group name | Any Str | false |
-
-### newrelicoracledb.asm.diskgroup.offline_disks
-
-Number of offline disks in the ASM disk group
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {disks} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| diskgroup.name | ASM disk group name | Any Str | false |
-
-### newrelicoracledb.asm.diskgroup.total_mb
-
-Total capacity of the ASM disk group in MB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MB | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| diskgroup.name | ASM disk group name | Any Str | false |
-
 ### newrelicoracledb.blocking_queries.wait_time_ms
 
 Wait time in milliseconds for blocked queries
@@ -249,6 +204,515 @@ Average user I/O wait time per execution for this child cursor (in milliseconds)
 | child_number | Child cursor number | Any Int | false |
 | plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
+### newrelicoracledb.connection.execute_count
+
+Number of SQL executions
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
+| ---- | ----------- | ---------- | ----------------------- | --------- |
+| {executions} | Sum | Double | Cumulative | true |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+
+### newrelicoracledb.memory.pga_max_size_bytes
+
+Global memory bound for PGA in bytes
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.sessions.count
+
+Total number of active Oracle database sessions
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_cpu_time
+
+Average CPU time per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_disk_reads
+
+Average disk reads per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_disk_writes
+
+Average disk writes per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {writes} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_elapsed_time
+
+Average elapsed time per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_lock_time
+
+Average lock/concurrency wait time per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_rows_examined
+
+Average rows examined per execution for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.execution_count
+
+Number of executions for slow queries
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_avg_elapsed_time
+
+Average elapsed time per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_execution_count
+
+Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+
+### newrelicoracledb.slow_queries.query_details
+
+Slow Query Details
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| schema_name | Schema name where the query is executed | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| last_active_time | Last active time for the SQL query | Any Str | false |
+
+### newrelicoracledb.system.average_active_sessions
+
+Average Active Sessions
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.buffer_cache_hit_ratio
+
+Buffer Cache Hit Ratio
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.database_cpu_time_ratio
+
+Database CPU Time Ratio
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.enqueue_waits_per_second
+
+Enqueue Waits Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.executions_per_second
+
+Executions Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.hard_parse_count_per_second
+
+Hard Parse Count Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.host_cpu_utilization
+
+Host CPU Utilization (%)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| % | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.io_megabytes_per_second
+
+I/O Megabytes per Second
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| MBy/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.physical_reads_per_second
+
+Physical Reads Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.physical_writes_per_second
+
+Physical Writes Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.redo_generated_bytes_per_second
+
+Redo Generated Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| By/s | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.response_time_per_transaction
+
+Response Time Per Txn
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.system.transactions_per_second
+
+User Transaction Per Sec
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.wait_events.current_wait_time_ms
+
+Current wait time in milliseconds for active wait events
+
+Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
+Collected alongside blocking information in a single optimized query from v$session.
+Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
+Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', state='WAITING', wait_time_micro>0).
+Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
+
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
+| session_program | Program name of the session | Any Str | false |
+| session_machine | Machine name where the session is running | Any Str | false |
+| wait_object_owner | Owner of the database object being waited on | Any Str | false |
+| wait_object_name | Name of the database object being waited on | Any Str | false |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+| row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
+| row_wait_file_id | File ID of the row being waited on | Any Str | false |
+| row_wait_block_id | Block ID of the row being waited on | Any Str | false |
+
+## Optional Metrics
+
+The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: true
+```
+
+### newrelicoracledb.asm.diskgroup.free_mb
+
+Available free space in the ASM disk group in MB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| MB | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
+
+### newrelicoracledb.asm.diskgroup.offline_disks
+
+Number of offline disks in the ASM disk group
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {disks} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
+
+### newrelicoracledb.asm.diskgroup.total_mb
+
+Total capacity of the ASM disk group in MB
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| MB | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
+
 ### newrelicoracledb.connection.active_sessions
 
 Number of active Oracle database sessions
@@ -331,20 +795,6 @@ Number of dispatchers
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {dispatchers} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-
-### newrelicoracledb.connection.execute_count
-
-Number of SQL executions
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {executions} | Sum | Double | Cumulative | true |
 
 #### Attributes
 
@@ -1068,21 +1518,6 @@ Total freeable PGA memory in bytes
 ### newrelicoracledb.memory.pga_in_use_bytes
 
 Total PGA memory currently in use in bytes
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.memory.pga_max_size_bytes
-
-Global memory bound for PGA in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2393,20 +2828,6 @@ Oracle service status (1=active, 0=inactive)
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | service.name | Oracle database service name | Any Str | false |
 
-### newrelicoracledb.sessions.count
-
-Total number of active Oracle database sessions
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-
 ### newrelicoracledb.sga_buffer_busy_waits
 
 Number of buffer busy waits events
@@ -2602,180 +3023,6 @@ SGA shared pool library cache reload ratio (reloads/pins)
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.slow_queries.avg_cpu_time
-
-Average CPU time per execution for slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.avg_disk_reads
-
-Average disk reads per execution for slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.avg_disk_writes
-
-Average disk writes per execution for slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.avg_elapsed_time
-
-Average elapsed time per execution for slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.avg_lock_time
-
-Average lock/concurrency wait time per execution for slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.avg_rows_examined
-
-Average rows examined per execution for slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.execution_count
-
-Number of executions for slow queries
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.interval_avg_elapsed_time
-
-Average elapsed time per execution in the last polling interval (delta metric)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.interval_execution_count
-
-Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-
-### newrelicoracledb.slow_queries.query_details
-
-Slow Query Details
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {count} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| query_text | SQL query text | Any Str | false |
-| schema_name | Schema name where the query is executed | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| last_active_time | Last active time for the SQL query | Any Str | false |
-
 ### newrelicoracledb.sorts_disk
 
 Number of sorts performed on disk from sysstat
@@ -2824,21 +3071,6 @@ Active Parallel Sessions
 ### newrelicoracledb.system.active_serial_sessions
 
 Active Serial Sessions
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.average_active_sessions
-
-Average Active Sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2918,21 +3150,6 @@ Branch Node Splits Per Txn
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.buffer_cache_hit_ratio
-
-Buffer Cache Hit Ratio
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
 
 #### Attributes
 
@@ -3154,21 +3371,6 @@ Current OS Load
 ### newrelicoracledb.system.cursor_cache_hit_ratio
 
 Cursor Cache Hit Ratio
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.database_cpu_time_ratio
-
-Database CPU Time Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3436,21 +3638,6 @@ Enqueue Timeouts Per Txn
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.enqueue_waits_per_second
-
-Enqueue Waits Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.enqueue_waits_per_transaction
 
 Enqueue Waits Per Txn
@@ -3473,21 +3660,6 @@ Execute Without Parse Ratio
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | % | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.executions_per_second
-
-Executions Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
 
 #### Attributes
 
@@ -3676,21 +3848,6 @@ Global Cache Blocks Lost
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.hard_parse_count_per_second
-
-Hard Parse Count Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.hard_parse_count_per_transaction
 
 Hard Parse Count Per Txn
@@ -3713,36 +3870,6 @@ Host CPU Usage Per Sec
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.host_cpu_utilization
-
-Host CPU Utilization (%)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.io_megabytes_per_second
-
-I/O Megabytes per Second
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MBy/s | Gauge | Double |
 
 #### Attributes
 
@@ -4186,21 +4313,6 @@ Physical Reads Direct Per Txn
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.physical_reads_per_second
-
-Physical Reads Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.physical_reads_per_transaction
 
 Physical Reads Per Txn
@@ -4306,21 +4418,6 @@ Physical Writes Direct Per Txn
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.physical_writes_per_second
-
-Physical Writes Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.physical_writes_per_transaction
 
 Physical Writes Per Txn
@@ -4396,21 +4493,6 @@ Redo Allocation Hit Ratio
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.system.redo_generated_bytes_per_second
-
-Redo Generated Per Sec
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
 ### newrelicoracledb.system.redo_generated_bytes_per_transaction
 
 Redo Generated Per Txn
@@ -4448,21 +4530,6 @@ Redo Writes Per Txn
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.response_time_per_transaction
-
-Response Time Per Txn
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
 
 #### Attributes
 
@@ -4744,21 +4811,6 @@ Total Table Scans Per User Call
 ### newrelicoracledb.system.transactions_per_logon
 
 Txns Per Logon
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.system.transactions_per_second
-
-User Transaction Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -5106,48 +5158,6 @@ Used percentage of tablespace
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
-### newrelicoracledb.wait_events.current_wait_time_ms
-
-Current wait time in milliseconds for active wait events
-
-Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
-Collected alongside blocking information in a single optimized query from v$session.
-Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
-Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', state='WAITING', wait_time_micro>0).
-Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| cdb_name | Oracle Container Database (CDB) name | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| session_serial | Oracle session serial number | Any Int | false |
-| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
-| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| sql_child_number | SQL child cursor number | Any Int | false |
-| wait_event_name | Oracle wait event name for wait events | Any Str | false |
-| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
-| session_program | Program name of the session | Any Str | false |
-| session_machine | Machine name where the session is running | Any Str | false |
-| wait_object_owner | Owner of the database object being waited on | Any Str | false |
-| wait_object_name | Name of the database object being waited on | Any Str | false |
-| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
-| row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
-| row_wait_file_id | File ID of the row being waited on | Any Str | false |
-| row_wait_block_id | Block ID of the row being waited on | Any Str | false |
-
 ## Default Events
 
 The following events are emitted by default. Each of them can be disabled by applying the following configuration:
@@ -5196,5 +5206,5 @@ Oracle SQL execution plan data with individual fields for each plan step. Contai
 
 | Name | Description | Values | Enabled |
 | ---- | ----------- | ------ | ------- |
-| host.name | The host name of Oracle Server | Any Str | true |
-| newrelicoracledb.instance.name | The name of the Oracle instance that data is coming from. | Any Str | true |
+| host.name | The host name of Oracle Server | Any Str | false |
+| newrelicoracledb.instance.name | The name of the Oracle instance that data is coming from. | Any Str | false |
