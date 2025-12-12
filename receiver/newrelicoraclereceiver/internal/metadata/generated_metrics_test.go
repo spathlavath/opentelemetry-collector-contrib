@@ -82,7 +82,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -94,7 +94,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val", "first_load_time-val", "last_load_time-val")
+			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val", "first_load_time-val", "last_load_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -750,7 +750,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1374,7 +1374,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "cdb_name-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
@@ -1470,9 +1470,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -1608,9 +1605,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -5035,9 +5029,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -7876,9 +7867,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("cdb_name")
-					assert.True(t, ok)
-					assert.Equal(t, "cdb_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())

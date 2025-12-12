@@ -22,9 +22,6 @@ attributes:
   collection_timestamp:
     description: Timestamp when the query metrics were collected from Oracle
     type: string
-  cdb_name:
-    description: Oracle Container Database (CDB) name
-    type: string
   database_name:
     description: Oracle database name
     type: string
@@ -3694,7 +3691,6 @@ metrics:
     unit: "{count}"
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - query_id
       - query_text
@@ -3828,7 +3824,6 @@ metrics:
     unit: "{count}"
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - query_id
       - child_number
@@ -3851,7 +3846,6 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - user_name
       - session_id
@@ -3948,7 +3942,6 @@ metrics:
     unit: ms
     attributes:
       - collection_timestamp
-      - cdb_name
       - database_name
       - user_name
       - session_id
