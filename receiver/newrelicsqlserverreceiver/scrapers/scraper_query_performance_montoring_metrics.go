@@ -240,113 +240,91 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 	return resultsToProcess, nil
 }
 
-func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanHandleMap map[string]*models.QueryID) error {
+func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
 	if len(activeQueries) == 0 {
-		s.logger.Debug("No active queries to fetch execution statistics for")
+		s.logger.Debug("No active queries to emit execution statistics for")
 		return nil
 	}
 
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
-	totalStatsFound := 0
-
-	// Collect unique plan_handles from SLOW QUERIES (not active queries) to avoid duplicate fetches
-	// We use the slow query plan_handle for each active query based on query_id matching
-	uniquePlanHandles := make(map[string]models.ActiveRunningQuery)
+	totalStatsEmitted := 0
 	skippedNoSlowQueryMatch := 0
 
+	// Use lightweight plan data already in memory (NO database query needed)
+	// Only uses the 5 fields needed for sqlserver.plan.* metrics
 	for _, activeQuery := range activeQueries {
-		// Get plan_handle from slow query map using query_id
-		var planHandle *models.QueryID
+		// Get lightweight plan data using query_hash
+		var planData models.SlowQueryPlanData
+		var found bool
 		if activeQuery.QueryID != nil && !activeQuery.QueryID.IsEmpty() {
 			queryIDStr := activeQuery.QueryID.String()
-			planHandle = slowQueryPlanHandleMap[queryIDStr]
+			planData, found = slowQueryPlanDataMap[queryIDStr]
 		}
 
-		// Skip if no matching slow query plan_handle found
-		if planHandle == nil || planHandle.IsEmpty() {
+		// Skip if no matching plan data found
+		if !found {
 			skippedNoSlowQueryMatch++
 			continue
 		}
 
-		planHandleStr := planHandle.String()
-		// Keep first occurrence for correlation attributes
-		if _, exists := uniquePlanHandles[planHandleStr]; !exists {
-			uniquePlanHandles[planHandleStr] = activeQuery
-		}
-	}
-
-	s.logger.Info("Fetching execution statistics using plan_handles statistics",
-		zap.Int("active_query_count", len(activeQueries)),
-		zap.Int("unique_plan_handle_count", len(uniquePlanHandles)),
-		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch))
-
-	// Fetch execution statistics for each unique plan_handle from slow queries
-	for planHandleStr, activeQuery := range uniquePlanHandles {
-		// Extract correlation attributes for logging
-		sessionID := int64(0)
-		if activeQuery.CurrentSessionID != nil {
-			sessionID = *activeQuery.CurrentSessionID
-		}
-		requestID := int64(0)
-		if activeQuery.RequestID != nil {
-			requestID = *activeQuery.RequestID
-		}
-
-		// Use plan_handle from slow queries (planHandleStr from map key)
-		planHandleHex := planHandleStr
-		query := fmt.Sprintf(queries.ExecutionStatsForActivePlanHandleQuery, "'"+planHandleHex+"'")
-
-		s.logger.Debug("Fetching execution statistics for active query plan_handle",
-			zap.String("plan_handle", planHandleHex),
-			zap.Int64("session_id", sessionID),
-			zap.Int64("request_id", requestID))
-
-		var planResults []models.PlanHandleResult
-		if err := s.connection.Query(ctx, &planResults, query); err != nil {
-			s.logger.Warn("Failed to fetch execution statistics for active query plan_handle - continuing with others",
-				zap.Error(err),
-				zap.String("plan_handle", planHandleHex),
-				zap.Int64("session_id", sessionID))
+		// Skip if plan data has no plan_handle
+		if planData.PlanHandle == nil || planData.PlanHandle.IsEmpty() {
+			skippedNoSlowQueryMatch++
 			continue
 		}
 
-		if len(planResults) == 0 {
-			s.logger.Debug("No execution statistics found for active query plan_handle",
-				zap.String("plan_handle", planHandleHex),
-				zap.Int64("session_id", sessionID))
-			continue
-		}
+		// Convert lightweight plan data to PlanHandleResult format for metrics emission
+		planResult := s.convertPlanDataToPlanHandleResult(planData)
 
-		// Should only be 1 result (query by plan_handle, not query_hash)
-		if len(planResults) > 1 {
-			s.logger.Warn("Expected 1 result for plan_handle query, got multiple - using first",
-				zap.String("plan_handle", planHandleHex),
-				zap.Int("result_count", len(planResults)))
-		}
-
-		// Emit metrics for this plan_handle WITH active query correlation
-		planResult := planResults[0]
+		// Emit metrics with active query correlation (session_id, request_id, start_time)
 		s.emitActiveQueryPlanMetrics(planResult, activeQuery, timestamp)
 
-		totalStatsFound++
-		s.logger.Debug("Fetched and emitted execution statistics for active query plan_handle",
-			zap.String("plan_handle", planHandleHex),
-			zap.Int64("session_id", sessionID))
+		totalStatsEmitted++
 	}
 
-	s.logger.Info("Successfully fetched execution statistics for active running query plan_handles",
+	s.logger.Info("Emitted execution plan statistics from slow query data (NO database query)",
 		zap.Int("active_query_count", len(activeQueries)),
-		zap.Int("unique_plan_handles", len(uniquePlanHandles)),
-		zap.Int("stats_found", totalStatsFound))
+		zap.Int("stats_emitted", totalStatsEmitted),
+		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch))
 
 	return nil
 }
 
+// convertPlanDataToPlanHandleResult converts SlowQueryPlanData (5 fields) to PlanHandleResult format
+// This allows us to reuse existing metrics emission code without database query
+// Only the 5 essential fields are populated, rest are nil
+func (s *QueryPerformanceScraper) convertPlanDataToPlanHandleResult(planData models.SlowQueryPlanData) models.PlanHandleResult {
+	return models.PlanHandleResult{
+		// The 5 fields we actually have from lightweight plan data
+		PlanHandle:         planData.PlanHandle,
+		QueryID:            planData.QueryID,
+		CreationTime:       planData.CreationTime,
+		LastExecutionTime:  planData.LastExecutionTime,
+		TotalElapsedTimeMs: planData.TotalElapsedTimeMs,
+		// All other fields are nil (not needed for plan metrics)
+		ExecutionCount:    nil,
+		AvgElapsedTimeMs:  nil,
+		MinElapsedTimeMs:  nil,
+		MaxElapsedTimeMs:  nil,
+		LastElapsedTimeMs: nil,
+		AvgWorkerTimeMs:   nil,
+		TotalWorkerTimeMs: nil,
+		AvgLogicalReads:   nil,
+		AvgLogicalWrites:  nil,
+		AvgRows:           nil,
+		LastGrantKB:       nil,
+		LastUsedGrantKB:   nil,
+		LastSpills:        nil,
+		MaxSpills:         nil,
+		LastDOP:           nil,
+	}
+}
+
 // emitActiveQueryPlanMetrics emits execution plan metrics for an active running query
-// These metrics represent HISTORICAL statistics from dm_exec_query_stats (same as slow query plans)
+// ONLY emits 2 metrics: avg_elapsed_time_ms and total_elapsed_time_ms
+// These metrics have attributes: query_id, plan_handle, creation_time, last_execution_time (for NRQL queries)
 // Uses namespace: sqlserver.plan.* (SAME as slow query plans)
 // Context: Active query drill-down (WITH session_id/request_id/request_start_time for correlation)
-// The key difference from slow query plans is the presence of session correlation attributes
 func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
 	// Helper functions to safely get attribute values
 	getQueryID := func() string {
@@ -419,25 +397,7 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		return ""
 	}
 
-	// Metric 1: Execution count
-	if planResult.ExecutionCount != nil {
-		s.mb.RecordSqlserverPlanExecutionCountDataPoint(
-			timestamp,
-			*planResult.ExecutionCount,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 2: Average elapsed time
+	// Metric 1: Average elapsed time (for NRQL: latest(sqlserver.plan.avg_elapsed_time_ms))
 	if planResult.AvgElapsedTimeMs != nil {
 		s.mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(
 			timestamp,
@@ -455,154 +415,11 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		)
 	}
 
-	// Metric 3: Total elapsed time
+	// Metric 2: Total elapsed time
 	if planResult.TotalElapsedTimeMs != nil {
 		s.mb.RecordSqlserverPlanTotalElapsedTimeMsDataPoint(
 			timestamp,
 			*planResult.TotalElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 4: Min/Max elapsed time
-	if planResult.MinElapsedTimeMs != nil {
-		s.mb.RecordSqlserverPlanMinElapsedTimeMsDataPoint(
-			timestamp,
-			*planResult.MinElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	if planResult.MaxElapsedTimeMs != nil {
-		s.mb.RecordSqlserverPlanMaxElapsedTimeMsDataPoint(
-			timestamp,
-			*planResult.MaxElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 5: Average worker time (CPU)
-	if planResult.AvgWorkerTimeMs != nil {
-		s.mb.RecordSqlserverPlanAvgWorkerTimeMsDataPoint(
-			timestamp,
-			*planResult.AvgWorkerTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 6: Average logical reads
-	if planResult.AvgLogicalReads != nil {
-		s.mb.RecordSqlserverPlanAvgLogicalReadsDataPoint(
-			timestamp,
-			*planResult.AvgLogicalReads,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 7: Average logical writes
-	if planResult.AvgLogicalWrites != nil {
-		s.mb.RecordSqlserverPlanAvgLogicalWritesDataPoint(
-			timestamp,
-			*planResult.AvgLogicalWrites,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 8: Last DOP (degree of parallelism)
-	if planResult.LastDOP != nil {
-		s.mb.RecordSqlserverPlanLastDopDataPoint(
-			timestamp,
-			int64(*planResult.LastDOP),
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 9: Last grant KB (memory grant)
-	if planResult.LastGrantKB != nil {
-		s.mb.RecordSqlserverPlanLastGrantKbDataPoint(
-			timestamp,
-			*planResult.LastGrantKB,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
-		)
-	}
-
-	// Metric 10: Last spills (tempdb spills)
-	if planResult.LastSpills != nil {
-		s.mb.RecordSqlserverPlanLastSpillsDataPoint(
-			timestamp,
-			int64(*planResult.LastSpills),
 			getQueryID(),
 			getPlanHandle(),
 			getQueryPlanHash(),
@@ -1194,21 +1011,26 @@ func (s *QueryPerformanceScraper) formatPlanHandlesForSQL(planHandles []string) 
 	return planHandlesString
 }
 
-// ExtractQueryDataFromSlowQueries extracts both query IDs and plan_handle map from slow queries in a single pass
-// This is more efficient than iterating over the slice twice
-// Returns: (queryIDs []string, planHandleMap map[string]*models.QueryID)
-func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []models.SlowQuery) ([]string, map[string]*models.QueryID) {
-	queryIDMap := make(map[string]bool) // For deduplication
-	planHandleMap := make(map[string]*models.QueryID)
+// Returns: (queryIDs []string, slowQueryPlanDataMap map[string]models.SlowQueryPlanData)
+// Only extracts the 5 fields needed for sqlserver.plan.* metrics
+func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []models.SlowQuery) ([]string, map[string]models.SlowQueryPlanData) {
+	queryIDMap := make(map[string]bool)                               // For deduplication
+	slowQueryPlanDataMap := make(map[string]models.SlowQueryPlanData) // Lightweight plan data (ONLY 5 fields)
 
 	for _, slowQuery := range slowQueries {
 		if slowQuery.QueryID != nil && !slowQuery.QueryID.IsEmpty() {
 			queryIDStr := slowQuery.QueryID.String()
 			queryIDMap[queryIDStr] = true
 
-			// Also build plan_handle map if plan_handle exists
+			// Store ONLY the 5 fields needed for plan metrics (not the entire SlowQuery struct)
 			if slowQuery.PlanHandle != nil && !slowQuery.PlanHandle.IsEmpty() {
-				planHandleMap[queryIDStr] = slowQuery.PlanHandle
+				slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
+					QueryID:            slowQuery.QueryID,
+					PlanHandle:         slowQuery.PlanHandle,
+					CreationTime:       slowQuery.CreationTime,
+					LastExecutionTime:  slowQuery.LastExecutionTimestamp,
+					TotalElapsedTimeMs: slowQuery.TotalElapsedTimeMS,
+				}
 			}
 		}
 	}
@@ -1219,10 +1041,10 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 		queryIDs = append(queryIDs, queryID)
 	}
 
-	s.logger.Debug("Extracted query data from slow queries in single pass",
+	s.logger.Debug("Extracted query IDs and lightweight plan data (5 fields only)",
 		zap.Int("total_slow_queries", len(slowQueries)),
 		zap.Int("unique_query_ids", len(queryIDs)),
-		zap.Int("mapped_plan_handles", len(planHandleMap)))
+		zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
 
-	return queryIDs, planHandleMap
+	return queryIDs, slowQueryPlanDataMap
 }

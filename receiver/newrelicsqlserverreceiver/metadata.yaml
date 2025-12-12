@@ -10,24 +10,24 @@ status:
     active: [pkulkarni,avadla,pkudikyala]
 
 resource_attributes:
-  server.address:
-    description: SQL Server hostname or IP address
-    type: string
-    enabled: true
-  server.port:
-    description: SQL Server port number
+  database_name:
+    description: Name of the database
     type: string
     enabled: true
   db.system:
     description: Database system identifier
     type: string
     enabled: true
-  database_name:
-    description: Name of the database
-    type: string
-    enabled: true
   engine_edition:
     description: SQL Server engine edition (e.g., Enterprise, Standard, Azure SQL Database)
+    type: string
+    enabled: true
+  server.address:
+    description: SQL Server hostname or IP address
+    type: string
+    enabled: true
+  server.port:
+    description: SQL Server port number
     type: string
     enabled: true
 
@@ -1606,30 +1606,10 @@ metrics:
         query_text,
       ]
 
-  # Execution Plan Metrics
-  sqlserver.plan.execution_count:
-    enabled: true
-    description: Total number of executions for this execution plan (historical)
-    unit: "{executions}"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
+  # Execution Plan Metrics (ONLY 2 metrics needed for NRQL queries)
   sqlserver.plan.avg_elapsed_time_ms:
     enabled: true
-    description: Average elapsed time per execution of this plan (historical)
+    description: Average elapsed time per execution of this plan (historical) - Used in NRQL queries
     unit: ms
     gauge:
       value_type: double
@@ -1653,166 +1633,6 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.min_elapsed_time_ms:
-    enabled: true
-    description: Minimum elapsed time for this plan (historical)
-    unit: ms
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.max_elapsed_time_ms:
-    enabled: true
-    description: Maximum elapsed time for this plan (historical)
-    unit: ms
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.avg_worker_time_ms:
-    enabled: true
-    description: Average CPU time per execution of this plan (historical)
-    unit: ms
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.avg_logical_reads:
-    enabled: true
-    description: Average logical reads per execution of this plan (historical)
-    unit: "{reads}"
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.avg_logical_writes:
-    enabled: true
-    description: Average logical writes per execution of this plan (historical)
-    unit: "{writes}"
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.last_dop:
-    enabled: true
-    description: Degree of parallelism for last execution of this plan
-    unit: "{threads}"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.last_grant_kb:
-    enabled: true
-    description: Memory grant for last execution of this plan
-    unit: KB
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.last_spills:
-    enabled: true
-    description: TempDB spills for last execution of this plan
-    unit: "{pages}"
-    gauge:
-      value_type: int
     attributes:
       [
         query_id,

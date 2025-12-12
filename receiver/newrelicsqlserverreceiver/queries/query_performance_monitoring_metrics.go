@@ -27,6 +27,7 @@ WITH StatementDetails AS (
 		), @TextTruncateLimit) AS query_text,
 		-- query_id: SQL Server's query_hash - used for correlating with active query metrics
 		qs.query_hash AS query_id,
+		qs.creation_time,
 		qs.last_execution_time,
 		qs.execution_count,
         -- Historical average metrics (reflecting all runs since caching)
@@ -99,6 +100,7 @@ SELECT
         OBJECT_SCHEMA_NAME(s.objectid, s.database_id),
         'N/A'
     ) AS schema_name,
+    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_timestamp,
     s.execution_count,
     s.avg_cpu_time_ms,
@@ -124,10 +126,11 @@ FROM
 
 // ActiveQueryExecutionPlanQuery fetches the execution plan for an active query using its plan_handle
 // NOTE: This is used only for active running queries, NOT for slow queries from dm_exec_query_stats
+// The plan_handle hex string is converted to VARBINARY(64) format that sys.dm_exec_query_plan expects
 const ActiveQueryExecutionPlanQuery = `
 SELECT
     CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
-FROM sys.dm_exec_query_plan(%s) AS qp
+FROM sys.dm_exec_query_plan(CONVERT(VARBINARY(64), '%s', 1)) AS qp
 WHERE qp.query_plan IS NOT NULL;`
 
 // ActiveRunningQueriesQuery retrieves currently executing queries with wait and blocking details
@@ -310,6 +313,7 @@ SELECT TOP (@Limit)
         WHEN r_wait.blocking_session_id = 0 THEN NULL
         ELSE r_wait.blocking_session_id
     END AS blocking_session_id,
+ 
 
     ISNULL(s_blocker.login_name, 'N/A') AS blocker_login_name,
     ISNULL(s_blocker.host_name, 'N/A') AS blocker_host_name,
@@ -467,46 +471,3 @@ OPTION (RECOMPILE);  -- OPTIMIZED: Recompile for current parameter values
 
 -- Cleanup temp table
 IF OBJECT_ID('tempdb..#all_partitions') IS NOT NULL DROP TABLE #all_partitions;`
-
-// ExecutionStatsForActivePlanHandleQuery retrieves execution statistics for a specific plan_handle
-// from sys.dm_exec_query_stats - used for active running queries
-// This provides historical performance data for the exact plan currently executing
-// Parameters: plan_handle (hex string with 0x prefix, e.g., '0x060005...')
-// Returns: Execution statistics WITHOUT XML execution plan (plan already available in ActiveRunningQueriesQuery)
-const ExecutionStatsForActivePlanHandleQuery = `
-DECLARE @PlanHandle VARBINARY(MAX) = CONVERT(VARBINARY(MAX), %s, 1);
-
-SELECT
-    qs.plan_handle,
-    qs.query_hash AS query_id,
-    qs.query_plan_hash,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_time,
-    CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(qs.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
-    qs.execution_count,
-    qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
-    (qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
-    qs.min_elapsed_time / 1000.0 AS min_elapsed_time_ms,
-    qs.max_elapsed_time / 1000.0 AS max_elapsed_time_ms,
-    qs.last_elapsed_time / 1000.0 AS last_elapsed_time_ms,
-    qs.total_worker_time / 1000.0 AS total_worker_time_ms,
-    (qs.total_worker_time / qs.execution_count) / 1000.0 AS avg_worker_time_ms,
-    qs.total_logical_reads,
-    qs.total_logical_writes,
-    qs.total_physical_reads,
-    (qs.total_logical_reads / qs.execution_count) AS avg_logical_reads,
-    (qs.total_logical_writes / qs.execution_count) AS avg_logical_writes,
-    (qs.total_physical_reads / qs.execution_count) AS avg_physical_reads,
-    (qs.total_rows / qs.execution_count) AS avg_rows,
-    qs.last_grant_kb,
-    qs.last_used_grant_kb,
-    qs.min_grant_kb,
-    qs.max_grant_kb,
-    qs.last_spills,
-    qs.max_spills,
-    qs.last_dop,
-    qs.min_dop,
-    qs.max_dop
-FROM sys.dm_exec_query_stats qs
-WHERE
-    qs.plan_handle = @PlanHandle
-OPTION (RECOMPILE);`

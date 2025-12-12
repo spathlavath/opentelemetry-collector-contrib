@@ -12,6 +12,7 @@ type SlowQuery struct {
 	DatabaseName           *string  `db:"database_name" metric_name:"database_name" source_type:"attribute"`
 	SchemaName             *string  `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
 	ObjectName             *string  `db:"object_name" metric_name:"object_name" source_type:"attribute"`
+	CreationTime           *string  `db:"creation_time" metric_name:"creation_time" source_type:"attribute"`
 	LastExecutionTimestamp *string  `db:"last_execution_timestamp" metric_name:"last_execution_timestamp" source_type:"attribute"`
 	ExecutionCount         *int64   `db:"execution_count" metric_name:"execution_count" source_type:"gauge"`
 	AvgCPUTimeMS           *float64 `db:"avg_cpu_time_ms" metric_name:"sqlserver.slowquery.avg_cpu_time_ms" source_type:"gauge"`
@@ -232,6 +233,17 @@ type LockedObject struct {
 
 	// Metadata
 	CollectionTimestamp *string `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
+}
+
+// SlowQueryPlanData represents lightweight plan data extracted from slow queries
+// Used for in-memory correlation with active queries (NO database query needed)
+// Contains ONLY the fields needed for sqlserver.plan.* metrics
+type SlowQueryPlanData struct {
+	QueryID            *QueryID // query_hash - for correlation
+	PlanHandle         *QueryID // plan_handle - for fetching XML
+	CreationTime       *string  // When plan was created
+	LastExecutionTime  *string  // Last execution timestamp
+	TotalElapsedTimeMs *float64 // Total elapsed time in milliseconds
 }
 
 // PlanHandleResult represents a plan_handle and its associated execution plan for an active query

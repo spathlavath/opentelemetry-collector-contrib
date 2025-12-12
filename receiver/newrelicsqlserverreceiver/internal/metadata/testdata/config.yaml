@@ -231,24 +231,6 @@ all_set:
       enabled: true
     sqlserver.plan.avg_elapsed_time_ms:
       enabled: true
-    sqlserver.plan.avg_logical_reads:
-      enabled: true
-    sqlserver.plan.avg_logical_writes:
-      enabled: true
-    sqlserver.plan.avg_worker_time_ms:
-      enabled: true
-    sqlserver.plan.execution_count:
-      enabled: true
-    sqlserver.plan.last_dop:
-      enabled: true
-    sqlserver.plan.last_grant_kb:
-      enabled: true
-    sqlserver.plan.last_spills:
-      enabled: true
-    sqlserver.plan.max_elapsed_time_ms:
-      enabled: true
-    sqlserver.plan.min_elapsed_time_ms:
-      enabled: true
     sqlserver.plan.total_elapsed_time_ms:
       enabled: true
     sqlserver.security.server_principals_count:
@@ -636,24 +618,6 @@ none_set:
     sqlserver.memory.total:
       enabled: false
     sqlserver.plan.avg_elapsed_time_ms:
-      enabled: false
-    sqlserver.plan.avg_logical_reads:
-      enabled: false
-    sqlserver.plan.avg_logical_writes:
-      enabled: false
-    sqlserver.plan.avg_worker_time_ms:
-      enabled: false
-    sqlserver.plan.execution_count:
-      enabled: false
-    sqlserver.plan.last_dop:
-      enabled: false
-    sqlserver.plan.last_grant_kb:
-      enabled: false
-    sqlserver.plan.last_spills:
-      enabled: false
-    sqlserver.plan.max_elapsed_time_ms:
-      enabled: false
-    sqlserver.plan.min_elapsed_time_ms:
       enabled: false
     sqlserver.plan.total_elapsed_time_ms:
       enabled: false

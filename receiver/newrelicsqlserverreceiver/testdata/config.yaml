@@ -58,8 +58,11 @@ processors:
       - key: service.version
         value: "1.0.0"
         action: upsert
-      - key: entity.name
-        value: "sqlserver.execution_plan_operator"
+      - key: server.address
+        value: "sqlserver-av"
+        action: upsert
+      - key: server.port
+        value: "1433"
         action: upsert
 
 # Receivers collect telemetry data
@@ -68,7 +71,7 @@ receivers:
   newrelicsqlserver:
     # SQL Server connection configuration
     # ⚠️  REPLACE THESE WITH YOUR ACTUAL VALUES ⚠️
-    hostname: "74.225.3.34"                    # e.g., "your-sql-server.com" or "192.168.1.100"
+    hostname: "20.235.181.93"                    # e.g., "your-sql-server.com" or "192.168.1.100"
     port: "1433"                # Default SQL Server port
     username: "sa"              # e.g., "monitoring_user"
     password: "AbAnTaPassword@123"              # Your SQL Server password
@@ -146,7 +149,7 @@ exporters:
     # Headers for authentication
     headers:
       # ⚠️  REPLACE WITH YOUR ACTUAL NEW RELIC LICENSE KEY ⚠️
-      api-key: "abc7b84730116eb478ad6b79719e4d64FFFFNRAL"
+      api-key: ""
     
     # TLS configuration
     tls:

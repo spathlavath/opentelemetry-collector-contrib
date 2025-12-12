@@ -67,7 +67,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 // EmitActiveRunningQueriesMetrics emits metrics for active running queries
 // This processes the active queries and emits metrics (no execution plans)
-func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanHandleMap map[string]*models.QueryID) error {
+func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
 	if len(activeQueries) == 0 {
 		s.logger.Info("No active queries to emit metrics for")
 		return nil
@@ -93,11 +93,13 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 			continue
 		}
 
-		// Get plan_handle from slow query map using query_id
+		// Get plan_handle from lightweight plan data using query_id
 		var slowQueryPlanHandle *models.QueryID
 		if result.QueryID != nil && !result.QueryID.IsEmpty() {
 			queryIDStr := result.QueryID.String()
-			slowQueryPlanHandle = slowQueryPlanHandleMap[queryIDStr]
+			if planData, found := slowQueryPlanDataMap[queryIDStr]; found {
+				slowQueryPlanHandle = planData.PlanHandle
+			}
 		}
 
 		// Skip if no matching slow query plan_handle found
@@ -129,7 +131,7 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 // EmitActiveRunningExecutionPlansAsLogs fetches execution plans for active queries and emits as OTLP logs
 // This is called from ScrapeLogs to emit execution plans with slow query correlation
 // Uses plan_handle from slow queries instead of active query plan_handle
-func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx context.Context, logs plog.Logs, activeQueries []models.ActiveRunningQuery, slowQueryPlanHandleMap map[string]*models.QueryID) error {
+func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx context.Context, logs plog.Logs, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
 	if len(activeQueries) == 0 {
 		s.logger.Info("No active queries to fetch execution plans for")
 		return nil
@@ -140,19 +142,39 @@ func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx cont
 	skippedNoSlowQueryMatch := 0
 
 	for i, result := range activeQueries {
-		// Get plan_handle from slow query map using query_id
+		// Get plan_handle from lightweight plan data using query_id
+		// This ensures we only show plans for queries that exist in dm_exec_query_stats
 		var planHandle *models.QueryID
+		var queryIDStr string
 		if result.QueryID != nil && !result.QueryID.IsEmpty() {
-			queryIDStr := result.QueryID.String()
-			planHandle = slowQueryPlanHandleMap[queryIDStr]
+			queryIDStr = result.QueryID.String()
+			if planData, found := slowQueryPlanDataMap[queryIDStr]; found {
+				planHandle = planData.PlanHandle
+			}
+			s.logger.Info(fmt.Sprintf("[%d/%d] Processing active query for execution plan", i+1, len(activeQueries)),
+				zap.Any("session_id", result.CurrentSessionID),
+				zap.String("query_hash", queryIDStr),
+				zap.Bool("found_in_slow_query_map", planHandle != nil),
+				zap.String("plan_handle", func() string {
+					if planHandle != nil {
+						return planHandle.String()
+					}
+					return "NULL"
+				}()))
+		} else {
+			s.logger.Warn("Active query has NULL/empty query_hash - cannot correlate with slow query",
+				zap.Any("session_id", result.CurrentSessionID))
 		}
 
 		// Skip if no matching slow query plan_handle found
+		// The warmup phase ensures all operations are cached in dm_exec_query_stats first
 		if planHandle == nil || planHandle.IsEmpty() {
 			skippedNoSlowQueryMatch++
-			s.logger.Debug("No matching slow query plan_handle found for active query, skipping",
+			s.logger.Warn("No matching slow query plan_handle found for active query, skipping execution plan fetch",
 				zap.Any("session_id", result.CurrentSessionID),
-				zap.Any("query_id", result.QueryID))
+				zap.Any("query_id", result.QueryID),
+				zap.String("query_hash", queryIDStr),
+				zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
 			continue
 		}
 
@@ -164,15 +186,18 @@ func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx cont
 		executionPlanXML, err := s.fetchExecutionPlanXML(ctx, planHandle)
 		if err != nil {
 			errorCount++
-			s.logger.Warn("Failed to fetch execution plan XML for active query",
+			s.logger.Error("Failed to fetch execution plan XML for active query",
 				zap.Error(err),
-				zap.Any("session_id", result.CurrentSessionID))
+				zap.Any("session_id", result.CurrentSessionID),
+				zap.String("plan_handle", planHandle.String()))
 			continue
 		}
 
 		if executionPlanXML == "" {
-			s.logger.Debug("Empty execution plan XML returned",
-				zap.Any("session_id", result.CurrentSessionID))
+			s.logger.Warn("Empty execution plan XML returned for active query (plan evicted or not available)",
+				zap.Any("session_id", result.CurrentSessionID),
+				zap.String("plan_handle", planHandle.String()),
+				zap.String("query_hash", queryIDStr))
 			continue
 		}
 
@@ -180,8 +205,8 @@ func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx cont
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int("xml_length", len(executionPlanXML)))
 
-		// Parse and emit execution plan as logs
-		if err := s.parseAndEmitExecutionPlanAsLogs(ctx, result, executionPlanXML, logs); err != nil {
+		// Parse and emit execution plan as logs (pass the slow query plan_handle we used to fetch XML)
+		if err := s.parseAndEmitExecutionPlanAsLogs(ctx, result, executionPlanXML, planHandle, logs); err != nil {
 			errorCount++
 			s.logger.Error("Failed to parse and emit execution plan as logs",
 				zap.Error(err),
@@ -194,10 +219,19 @@ func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx cont
 	}
 
 	s.logger.Info("Execution plans emission complete",
-		zap.Int("total_queries", len(activeQueries)),
-		zap.Int("plans_fetched", fetchedCount),
-		zap.Int("errors", errorCount),
-		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch))
+		zap.Int("total_active_queries", len(activeQueries)),
+		zap.Int("plans_successfully_fetched_and_emitted", fetchedCount),
+		zap.Int("errors_during_fetch_or_parse", errorCount),
+		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch),
+		zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
+
+	// Warning if no execution plans were emitted
+	if fetchedCount == 0 && len(activeQueries) > 0 {
+		s.logger.Warn("⚠️  NO EXECUTION PLANS EMITTED - Check logs above for reasons:",
+			zap.Int("active_queries_found", len(activeQueries)),
+			zap.Int("skipped_no_plan_handle_match", skippedNoSlowQueryMatch),
+			zap.Int("errors", errorCount))
+	}
 
 	return nil
 }
@@ -954,26 +988,49 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 // Simple wrapper for use by logs endpoint
 func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, planHandle *models.QueryID) (string, error) {
 	if planHandle == nil || planHandle.IsEmpty() {
+		s.logger.Warn("fetchExecutionPlanXML called with NULL/empty plan_handle")
 		return "", nil
 	}
 
 	planHandleHex := planHandle.String()
 	query := fmt.Sprintf(queries.ActiveQueryExecutionPlanQuery, planHandleHex)
 
-	s.logger.Debug("Fetching execution plan XML",
-		zap.String("plan_handle", planHandleHex))
+	s.logger.Debug("Fetching execution plan XML from sys.dm_exec_query_plan",
+		zap.String("plan_handle", planHandleHex),
+		zap.String("query", query))
 
 	var results []struct {
 		ExecutionPlanXML *string `db:"execution_plan_xml"`
 	}
 
 	if err := s.connection.Query(ctx, &results, query); err != nil {
+		s.logger.Error("SQL query failed when fetching execution plan XML",
+			zap.Error(err),
+			zap.String("plan_handle", planHandleHex),
+			zap.String("query", query))
 		return "", fmt.Errorf("failed to fetch execution plan: %w", err)
 	}
 
-	if len(results) == 0 || results[0].ExecutionPlanXML == nil {
+	s.logger.Debug("Execution plan query returned",
+		zap.Int("result_count", len(results)),
+		zap.Bool("xml_is_null", len(results) == 0 || results[0].ExecutionPlanXML == nil))
+
+	if len(results) == 0 {
+		s.logger.Warn("sys.dm_exec_query_plan returned 0 rows (plan not in cache or invalid plan_handle)",
+			zap.String("plan_handle", planHandleHex))
 		return "", nil
 	}
+
+	if results[0].ExecutionPlanXML == nil {
+		s.logger.Warn("sys.dm_exec_query_plan returned NULL for query_plan (plan evicted from cache or not available)",
+			zap.String("plan_handle", planHandleHex))
+		return "", nil
+	}
+
+	xmlLength := len(*results[0].ExecutionPlanXML)
+	s.logger.Info("Successfully fetched execution plan XML",
+		zap.String("plan_handle", planHandleHex),
+		zap.Int("xml_length_bytes", xmlLength))
 
 	return *results[0].ExecutionPlanXML, nil
 }
@@ -984,6 +1041,7 @@ func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
 	ctx context.Context,
 	activeQuery models.ActiveRunningQuery,
 	executionPlanXML string,
+	slowQueryPlanHandle *models.QueryID,
 	logs plog.Logs,
 ) error {
 	// Build execution plan analysis with metadata
@@ -991,9 +1049,12 @@ func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
 	if activeQuery.QueryID != nil {
 		queryID = activeQuery.QueryID.String()
 	}
+
+	// Use the slow query plan_handle (this is what we used to fetch the XML)
+	// NOT the active query's plan_handle
 	var planHandle string
-	if activeQuery.PlanHandle != nil {
-		planHandle = activeQuery.PlanHandle.String()
+	if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
+		planHandle = slowQueryPlanHandle.String()
 	}
 
 	// Parse the XML execution plan
