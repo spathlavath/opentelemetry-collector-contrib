@@ -190,12 +190,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbLockedAccounts: metricInfo{
 		Name: "newrelicoracledb.locked_accounts",
 	},
-	NewrelicoracledbLocksBlockedSessions: metricInfo{
-		Name: "newrelicoracledb.locks.blocked_sessions",
-	},
-	NewrelicoracledbLocksCount: metricInfo{
-		Name: "newrelicoracledb.locks.count",
-	},
 	NewrelicoracledbLongRunningQueries: metricInfo{
 		Name: "newrelicoracledb.long_running_queries",
 	},
@@ -1056,8 +1050,6 @@ type metricsInfo struct {
 	NewrelicoracledbGlobalName                                         metricInfo
 	NewrelicoracledbHostingInfo                                        metricInfo
 	NewrelicoracledbLockedAccounts                                     metricInfo
-	NewrelicoracledbLocksBlockedSessions                               metricInfo
-	NewrelicoracledbLocksCount                                         metricInfo
 	NewrelicoracledbLongRunningQueries                                 metricInfo
 	NewrelicoracledbMemoryPgaAllocatedBytes                            metricInfo
 	NewrelicoracledbMemoryPgaFreeableBytes                             metricInfo
@@ -4488,112 +4480,6 @@ func (m *metricNewrelicoracledbLockedAccounts) emit(metrics pmetric.MetricSlice)
 
 func newMetricNewrelicoracledbLockedAccounts(cfg MetricConfig) metricNewrelicoracledbLockedAccounts {
 	m := metricNewrelicoracledbLockedAccounts{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbLocksBlockedSessions struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.locks.blocked_sessions metric with initial data.
-func (m *metricNewrelicoracledbLocksBlockedSessions) init() {
-	m.data.SetName("newrelicoracledb.locks.blocked_sessions")
-	m.data.SetDescription("Number of sessions blocked by locks")
-	m.data.SetUnit("{sessions}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbLocksBlockedSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, lockTypeAttributeValue string, objectTypeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("lock.type", lockTypeAttributeValue)
-	dp.Attributes().PutStr("object.type", objectTypeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbLocksBlockedSessions) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbLocksBlockedSessions) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbLocksBlockedSessions(cfg MetricConfig) metricNewrelicoracledbLocksBlockedSessions {
-	m := metricNewrelicoracledbLocksBlockedSessions{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbLocksCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.locks.count metric with initial data.
-func (m *metricNewrelicoracledbLocksCount) init() {
-	m.data.SetName("newrelicoracledb.locks.count")
-	m.data.SetDescription("Number of locks by type and mode")
-	m.data.SetUnit("{locks}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbLocksCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, lockTypeAttributeValue string, lockModeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.instance.name", dbInstanceNameAttributeValue)
-	dp.Attributes().PutStr("lock.type", lockTypeAttributeValue)
-	dp.Attributes().PutStr("lock.mode", lockModeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbLocksCount) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbLocksCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbLocksCount(cfg MetricConfig) metricNewrelicoracledbLocksCount {
-	m := metricNewrelicoracledbLocksCount{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18631,8 +18517,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbGlobalName                                         metricNewrelicoracledbGlobalName
 	metricNewrelicoracledbHostingInfo                                        metricNewrelicoracledbHostingInfo
 	metricNewrelicoracledbLockedAccounts                                     metricNewrelicoracledbLockedAccounts
-	metricNewrelicoracledbLocksBlockedSessions                               metricNewrelicoracledbLocksBlockedSessions
-	metricNewrelicoracledbLocksCount                                         metricNewrelicoracledbLocksCount
 	metricNewrelicoracledbLongRunningQueries                                 metricNewrelicoracledbLongRunningQueries
 	metricNewrelicoracledbMemoryPgaAllocatedBytes                            metricNewrelicoracledbMemoryPgaAllocatedBytes
 	metricNewrelicoracledbMemoryPgaFreeableBytes                             metricNewrelicoracledbMemoryPgaFreeableBytes
@@ -18983,8 +18867,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbGlobalName:                                         newMetricNewrelicoracledbGlobalName(mbc.Metrics.NewrelicoracledbGlobalName),
 		metricNewrelicoracledbHostingInfo:                                        newMetricNewrelicoracledbHostingInfo(mbc.Metrics.NewrelicoracledbHostingInfo),
 		metricNewrelicoracledbLockedAccounts:                                     newMetricNewrelicoracledbLockedAccounts(mbc.Metrics.NewrelicoracledbLockedAccounts),
-		metricNewrelicoracledbLocksBlockedSessions:                               newMetricNewrelicoracledbLocksBlockedSessions(mbc.Metrics.NewrelicoracledbLocksBlockedSessions),
-		metricNewrelicoracledbLocksCount:                                         newMetricNewrelicoracledbLocksCount(mbc.Metrics.NewrelicoracledbLocksCount),
 		metricNewrelicoracledbLongRunningQueries:                                 newMetricNewrelicoracledbLongRunningQueries(mbc.Metrics.NewrelicoracledbLongRunningQueries),
 		metricNewrelicoracledbMemoryPgaAllocatedBytes:                            newMetricNewrelicoracledbMemoryPgaAllocatedBytes(mbc.Metrics.NewrelicoracledbMemoryPgaAllocatedBytes),
 		metricNewrelicoracledbMemoryPgaFreeableBytes:                             newMetricNewrelicoracledbMemoryPgaFreeableBytes(mbc.Metrics.NewrelicoracledbMemoryPgaFreeableBytes),
@@ -19394,8 +19276,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbGlobalName.emit(ils.Metrics())
 	mb.metricNewrelicoracledbHostingInfo.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLockedAccounts.emit(ils.Metrics())
-	mb.metricNewrelicoracledbLocksBlockedSessions.emit(ils.Metrics())
-	mb.metricNewrelicoracledbLocksCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLongRunningQueries.emit(ils.Metrics())
 	mb.metricNewrelicoracledbMemoryPgaAllocatedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbMemoryPgaFreeableBytes.emit(ils.Metrics())
@@ -19986,16 +19866,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbHostingInfoDataPoint(ts pcommon.
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbLockedAccountsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbLockedAccounts.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
-}
-
-// RecordNewrelicoracledbLocksBlockedSessionsDataPoint adds a data point to newrelicoracledb.locks.blocked_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLocksBlockedSessionsDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, lockTypeAttributeValue string, objectTypeAttributeValue string) {
-	mb.metricNewrelicoracledbLocksBlockedSessions.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, lockTypeAttributeValue, objectTypeAttributeValue)
-}
-
-// RecordNewrelicoracledbLocksCountDataPoint adds a data point to newrelicoracledb.locks.count metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbLocksCountDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, lockTypeAttributeValue string, lockModeAttributeValue string) {
-	mb.metricNewrelicoracledbLocksCount.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, lockTypeAttributeValue, lockModeAttributeValue)
 }
 
 // RecordNewrelicoracledbLongRunningQueriesDataPoint adds a data point to newrelicoracledb.long_running_queries metric.

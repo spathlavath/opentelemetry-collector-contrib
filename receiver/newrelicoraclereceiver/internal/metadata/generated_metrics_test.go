@@ -306,14 +306,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbLocksBlockedSessionsDataPoint(ts, 1, "db.instance.name-val", "lock.type-val", "object.type-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbLocksCountDataPoint(ts, 1, "db.instance.name-val", "lock.type-val", "lock.mode-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordNewrelicoracledbLongRunningQueriesDataPoint(ts, 1, "db.instance.name-val", "instance.id-val")
 
 			defaultMetricsCount++
@@ -2710,48 +2702,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
-				case "newrelicoracledb.locks.blocked_sessions":
-					assert.False(t, validatedMetrics["newrelicoracledb.locks.blocked_sessions"], "Found a duplicate in the metrics slice: newrelicoracledb.locks.blocked_sessions")
-					validatedMetrics["newrelicoracledb.locks.blocked_sessions"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of sessions blocked by locks", ms.At(i).Description())
-					assert.Equal(t, "{sessions}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.instance.name")
-					assert.True(t, ok)
-					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("lock.type")
-					assert.True(t, ok)
-					assert.Equal(t, "lock.type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("object.type")
-					assert.True(t, ok)
-					assert.Equal(t, "object.type-val", attrVal.Str())
-				case "newrelicoracledb.locks.count":
-					assert.False(t, validatedMetrics["newrelicoracledb.locks.count"], "Found a duplicate in the metrics slice: newrelicoracledb.locks.count")
-					validatedMetrics["newrelicoracledb.locks.count"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of locks by type and mode", ms.At(i).Description())
-					assert.Equal(t, "{locks}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.instance.name")
-					assert.True(t, ok)
-					assert.Equal(t, "db.instance.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("lock.type")
-					assert.True(t, ok)
-					assert.Equal(t, "lock.type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("lock.mode")
-					assert.True(t, ok)
-					assert.Equal(t, "lock.mode-val", attrVal.Str())
 				case "newrelicoracledb.long_running_queries":
 					assert.False(t, validatedMetrics["newrelicoracledb.long_running_queries"], "Found a duplicate in the metrics slice: newrelicoracledb.long_running_queries")
 					validatedMetrics["newrelicoracledb.long_running_queries"] = true

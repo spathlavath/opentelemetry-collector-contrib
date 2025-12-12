@@ -360,15 +360,6 @@ attributes:
   db.protection_level:
     description: Oracle Data Guard protection level
     type: string
-  lock.type:
-    description: Oracle lock type (TX, TM, DX, etc.)
-    type: string
-  lock.mode:
-    description: Oracle lock mode (Exclusive, Share, etc.)
-    type: string
-  object.type:
-    description: Oracle object type (TABLE, INDEX, etc.)
-    type: string
 
 events:
   newrelicoracledb.execution_plan:
@@ -410,28 +401,6 @@ metrics:
     unit: "{sessions}"
     attributes:
       - db.instance.name
-
-  newrelicoracledb.locks.count:
-    description: Number of locks by type and mode
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{locks}"
-    attributes:
-      - db.instance.name
-      - lock.type
-      - lock.mode
-
-  newrelicoracledb.locks.blocked_sessions:
-    description: Number of sessions blocked by locks
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{sessions}"
-    attributes:
-      - db.instance.name
-      - lock.type
-      - object.type
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace

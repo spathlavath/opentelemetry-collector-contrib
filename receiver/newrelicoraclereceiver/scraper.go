@@ -61,7 +61,6 @@ type newRelicOracleScraper struct {
 	slowQueriesScraper       *scrapers.SlowQueriesScraper
 	executionPlanScraper     *scrapers.ExecutionPlanScraper
 	waitEventBlockingScraper *scrapers.WaitEventBlockingScraper
-	lockScraper              *scrapers.LockScraper
 	childCursorsScraper      *scrapers.ChildCursorsScraper
 
 	// Database and configuration
@@ -245,8 +244,6 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	}
 
 	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-
-	s.lockScraper = scrapers.NewLockScraper(s.logger, s.client, s.mb, s.instanceName)
 
 	return nil
 }
@@ -501,11 +498,6 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 		s.databaseInfoScraper.ScrapeHostingInfo,
 		s.databaseInfoScraper.ScrapeDatabaseRole,
 	}
-
-	// Add lock scraper
-	scraperFuncs = append(scraperFuncs,
-		s.lockScraper.ScrapeLocks,
-	)
 
 	return scraperFuncs
 }

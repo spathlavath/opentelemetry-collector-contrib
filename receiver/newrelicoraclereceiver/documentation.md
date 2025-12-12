@@ -986,38 +986,6 @@ Count of locked user accounts in the database
 | db.instance.name | Oracle database instance name | Any Str | false |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.locks.blocked_sessions
-
-Number of sessions blocked by locks
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| object.type | Oracle object type (TABLE, INDEX, etc.) | Any Str | false |
-
-### newrelicoracledb.locks.count
-
-Number of locks by type and mode
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {locks} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.instance.name | Oracle database instance name | Any Str | false |
-| lock.type | Oracle lock type (TX, TM, DX, etc.) | Any Str | false |
-| lock.mode | Oracle lock mode (Exclusive, Share, etc.) | Any Str | false |
-
 ### newrelicoracledb.long_running_queries
 
 Number of long running queries (active sessions running for more than 60 seconds)
