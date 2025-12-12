@@ -33,16 +33,6 @@ type SQLAuthConnector struct{}
 
 func (s SQLAuthConnector) Connect(cfg *Config, dbName string) (*sqlx.DB, error) {
 	connectionURL := cfg.CreateConnectionURL(dbName)
-	// Debug: Log connection string (mask password)
-	maskedURL := connectionURL
-	if cfg.Password != "" {
-		maskedURL = strings.Replace(connectionURL, cfg.Password, "***MASKED***", -1)
-	}
-	fmt.Printf("DEBUG: Connection URL: %s\n", maskedURL)
-	fmt.Printf("DEBUG: Config Username: %q\n", cfg.Username)
-	fmt.Printf("DEBUG: Config Password length: %d\n", len(cfg.Password))
-	fmt.Printf("DEBUG: Config Hostname: %q\n", cfg.Hostname)
-	fmt.Printf("DEBUG: Config Port: %q\n", cfg.Port)
 	return sqlx.Connect("mssql", connectionURL)
 }
 

@@ -71,16 +71,18 @@ receivers:
   newrelicsqlserver:
     # SQL Server connection configuration
     # ⚠️  REPLACE THESE WITH YOUR ACTUAL VALUES ⚠️
-    hostname: "20.235.181.93"                    # e.g., "your-sql-server.com" or "192.168.1.100"
+    hostname: "74.225.3.34"                    # e.g., "your-sql-server.com" or "192.168.1.100"
     port: "1433"                # Default SQL Server port
     username: "sa"              # e.g., "monitoring_user"
     password: "AbAnTaPassword@123"              # Your SQL Server password
+    monitored_databases: ["AdventureWorks2022", "LoadTestDB"]
+
 
     # Optional: Named instance (if using SQL Server named instances)
     # instance: "${SQLSERVER_INSTANCE}"            # e.g., "SQLEXPRESS" 
     
     # Query execution timeout (increased for slow queries on busy systems)
-    timeout: 300s
+    timeout: 600s
     
     # Collection interval (how often to collect metrics)
     collection_interval: 60s
