@@ -7,7 +7,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"strings"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/microsoft/go-mssqldb"

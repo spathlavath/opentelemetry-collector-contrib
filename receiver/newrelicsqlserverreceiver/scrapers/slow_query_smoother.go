@@ -211,7 +211,7 @@ func (s *SlowQuerySmoother) Smooth(rawQueries []models.SlowQuery) []models.SlowQ
 // applyExponentialSmoothing applies EWMA to smooth metric values
 // Formula: smoothed = α * current + (1 - α) * previous
 // where α is the smoothing factor
-func (s *SlowQuerySmoother) applyExponentialSmoothing(previous *models.SlowQuery, current *models.SlowQuery) *models.SlowQuery {
+func (s *SlowQuerySmoother) applyExponentialSmoothing(previous, current *models.SlowQuery) *models.SlowQuery {
 	α := s.smoothingFactor
 	β := 1.0 - α
 

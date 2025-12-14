@@ -208,8 +208,9 @@ type ActiveRunningQuery struct {
 	BlockerOpenTransactionCount *int64  `db:"blocker_open_transaction_count" metric_name:"blocker_open_transaction_count" source_type:"gauge"`
 
 	// J. Query Text
-	QueryStatementText         *string `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
-	BlockingQueryStatementText *string `db:"blocking_query_statement_text" metric_name:"blocking_query_statement_text" source_type:"attribute"`
+	QueryStatementText         *string  `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
+	BlockingQueryStatementText *string  `db:"blocking_query_statement_text" metric_name:"blocking_query_statement_text" source_type:"attribute"`
+	BlockingQueryHash          *QueryID `db:"blocking_query_hash" metric_name:"blocking_query_hash" source_type:"attribute"`
 }
 
 // LockedObject represents detailed information about database objects locked by a session

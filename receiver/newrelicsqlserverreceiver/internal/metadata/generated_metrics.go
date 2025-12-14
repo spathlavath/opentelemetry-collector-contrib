@@ -358,33 +358,6 @@ var MetricsInfo = metricsInfo{
 	SqlserverPlanAvgElapsedTimeMs: metricInfo{
 		Name: "sqlserver.plan.avg_elapsed_time_ms",
 	},
-	SqlserverPlanAvgLogicalReads: metricInfo{
-		Name: "sqlserver.plan.avg_logical_reads",
-	},
-	SqlserverPlanAvgLogicalWrites: metricInfo{
-		Name: "sqlserver.plan.avg_logical_writes",
-	},
-	SqlserverPlanAvgWorkerTimeMs: metricInfo{
-		Name: "sqlserver.plan.avg_worker_time_ms",
-	},
-	SqlserverPlanExecutionCount: metricInfo{
-		Name: "sqlserver.plan.execution_count",
-	},
-	SqlserverPlanLastDop: metricInfo{
-		Name: "sqlserver.plan.last_dop",
-	},
-	SqlserverPlanLastGrantKb: metricInfo{
-		Name: "sqlserver.plan.last_grant_kb",
-	},
-	SqlserverPlanLastSpills: metricInfo{
-		Name: "sqlserver.plan.last_spills",
-	},
-	SqlserverPlanMaxElapsedTimeMs: metricInfo{
-		Name: "sqlserver.plan.max_elapsed_time_ms",
-	},
-	SqlserverPlanMinElapsedTimeMs: metricInfo{
-		Name: "sqlserver.plan.min_elapsed_time_ms",
-	},
 	SqlserverPlanTotalElapsedTimeMs: metricInfo{
 		Name: "sqlserver.plan.total_elapsed_time_ms",
 	},
@@ -716,15 +689,6 @@ type metricsInfo struct {
 	SqlserverMemoryTarget                                     metricInfo
 	SqlserverMemoryTotal                                      metricInfo
 	SqlserverPlanAvgElapsedTimeMs                             metricInfo
-	SqlserverPlanAvgLogicalReads                              metricInfo
-	SqlserverPlanAvgLogicalWrites                             metricInfo
-	SqlserverPlanAvgWorkerTimeMs                              metricInfo
-	SqlserverPlanExecutionCount                               metricInfo
-	SqlserverPlanLastDop                                      metricInfo
-	SqlserverPlanLastGrantKb                                  metricInfo
-	SqlserverPlanLastSpills                                   metricInfo
-	SqlserverPlanMaxElapsedTimeMs                             metricInfo
-	SqlserverPlanMinElapsedTimeMs                             metricInfo
 	SqlserverPlanTotalElapsedTimeMs                           metricInfo
 	SqlserverSecurityServerPrincipalsCount                    metricInfo
 	SqlserverSecurityServerRoleMembersCount                   metricInfo
@@ -866,7 +830,7 @@ func (m *metricSqlserverActivequeryCPUTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryCPUTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryCPUTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -906,13 +870,15 @@ func (m *metricSqlserverActivequeryCPUTimeMs) recordDataPoint(start pcommon.Time
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -958,7 +924,7 @@ func (m *metricSqlserverActivequeryElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -998,13 +964,15 @@ func (m *metricSqlserverActivequeryElapsedTimeMs) recordDataPoint(start pcommon.
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -1050,7 +1018,7 @@ func (m *metricSqlserverActivequeryGrantedQueryMemoryPages) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryGrantedQueryMemoryPages) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryGrantedQueryMemoryPages) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1090,13 +1058,15 @@ func (m *metricSqlserverActivequeryGrantedQueryMemoryPages) recordDataPoint(star
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -1142,7 +1112,7 @@ func (m *metricSqlserverActivequeryLogicalReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1182,13 +1152,15 @@ func (m *metricSqlserverActivequeryLogicalReads) recordDataPoint(start pcommon.T
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -1234,7 +1206,7 @@ func (m *metricSqlserverActivequeryReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1274,13 +1246,15 @@ func (m *metricSqlserverActivequeryReads) recordDataPoint(start pcommon.Timestam
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -1326,7 +1300,7 @@ func (m *metricSqlserverActivequeryRowCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryRowCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryRowCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1366,13 +1340,15 @@ func (m *metricSqlserverActivequeryRowCount) recordDataPoint(start pcommon.Times
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -1418,7 +1394,7 @@ func (m *metricSqlserverActivequeryWaitTimeSeconds) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryWaitTimeSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryWaitTimeSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1458,13 +1434,15 @@ func (m *metricSqlserverActivequeryWaitTimeSeconds) recordDataPoint(start pcommo
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -1510,7 +1488,7 @@ func (m *metricSqlserverActivequeryWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+func (m *metricSqlserverActivequeryWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -1550,13 +1528,15 @@ func (m *metricSqlserverActivequeryWrites) recordDataPoint(start pcommon.Timesta
 	dp.Attributes().PutInt("transaction_isolation_level", transactionIsolationLevelAttributeValue)
 	dp.Attributes().PutInt("degree_of_parallelism", degreeOfParallelismAttributeValue)
 	dp.Attributes().PutInt("parallel_worker_count", parallelWorkerCountAttributeValue)
-	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutStr("blocking_host_name", blockingHostNameAttributeValue)
-	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
-	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutInt("blocking_isolation_level", blockingIsolationLevelAttributeValue)
+	dp.Attributes().PutStr("blocking_login_name", blockingLoginNameAttributeValue)
 	dp.Attributes().PutInt("blocking_open_transaction_count", blockingOpenTransactionCountAttributeValue)
+	dp.Attributes().PutStr("blocking_program_name", blockingProgramNameAttributeValue)
+	dp.Attributes().PutStr("blocking_query_hash", blockingQueryHashAttributeValue)
+	dp.Attributes().PutStr("blocking_query_text", blockingQueryTextAttributeValue)
+	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
+	dp.Attributes().PutStr("blocking_status", blockingStatusAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
@@ -6957,7 +6937,7 @@ type metricSqlserverPlanAvgElapsedTimeMs struct {
 // init fills sqlserver.plan.avg_elapsed_time_ms metric with initial data.
 func (m *metricSqlserverPlanAvgElapsedTimeMs) init() {
 	m.data.SetName("sqlserver.plan.avg_elapsed_time_ms")
-	m.data.SetDescription("Average elapsed time per execution of this plan (historical)")
+	m.data.SetDescription("Average elapsed time per execution of this plan (historical) - Used in NRQL queries")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7001,546 +6981,6 @@ func (m *metricSqlserverPlanAvgElapsedTimeMs) emit(metrics pmetric.MetricSlice) 
 
 func newMetricSqlserverPlanAvgElapsedTimeMs(cfg MetricConfig) metricSqlserverPlanAvgElapsedTimeMs {
 	m := metricSqlserverPlanAvgElapsedTimeMs{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanAvgLogicalReads struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.avg_logical_reads metric with initial data.
-func (m *metricSqlserverPlanAvgLogicalReads) init() {
-	m.data.SetName("sqlserver.plan.avg_logical_reads")
-	m.data.SetDescription("Average logical reads per execution of this plan (historical)")
-	m.data.SetUnit("{reads}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanAvgLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanAvgLogicalReads) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanAvgLogicalReads) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanAvgLogicalReads(cfg MetricConfig) metricSqlserverPlanAvgLogicalReads {
-	m := metricSqlserverPlanAvgLogicalReads{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanAvgLogicalWrites struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.avg_logical_writes metric with initial data.
-func (m *metricSqlserverPlanAvgLogicalWrites) init() {
-	m.data.SetName("sqlserver.plan.avg_logical_writes")
-	m.data.SetDescription("Average logical writes per execution of this plan (historical)")
-	m.data.SetUnit("{writes}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanAvgLogicalWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanAvgLogicalWrites) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanAvgLogicalWrites) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanAvgLogicalWrites(cfg MetricConfig) metricSqlserverPlanAvgLogicalWrites {
-	m := metricSqlserverPlanAvgLogicalWrites{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanAvgWorkerTimeMs struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.avg_worker_time_ms metric with initial data.
-func (m *metricSqlserverPlanAvgWorkerTimeMs) init() {
-	m.data.SetName("sqlserver.plan.avg_worker_time_ms")
-	m.data.SetDescription("Average CPU time per execution of this plan (historical)")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanAvgWorkerTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanAvgWorkerTimeMs) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanAvgWorkerTimeMs) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanAvgWorkerTimeMs(cfg MetricConfig) metricSqlserverPlanAvgWorkerTimeMs {
-	m := metricSqlserverPlanAvgWorkerTimeMs{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanExecutionCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.execution_count metric with initial data.
-func (m *metricSqlserverPlanExecutionCount) init() {
-	m.data.SetName("sqlserver.plan.execution_count")
-	m.data.SetDescription("Total number of executions for this execution plan (historical)")
-	m.data.SetUnit("{executions}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanExecutionCount) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanExecutionCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanExecutionCount(cfg MetricConfig) metricSqlserverPlanExecutionCount {
-	m := metricSqlserverPlanExecutionCount{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanLastDop struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.last_dop metric with initial data.
-func (m *metricSqlserverPlanLastDop) init() {
-	m.data.SetName("sqlserver.plan.last_dop")
-	m.data.SetDescription("Degree of parallelism for last execution of this plan")
-	m.data.SetUnit("{threads}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanLastDop) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanLastDop) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanLastDop) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanLastDop(cfg MetricConfig) metricSqlserverPlanLastDop {
-	m := metricSqlserverPlanLastDop{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanLastGrantKb struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.last_grant_kb metric with initial data.
-func (m *metricSqlserverPlanLastGrantKb) init() {
-	m.data.SetName("sqlserver.plan.last_grant_kb")
-	m.data.SetDescription("Memory grant for last execution of this plan")
-	m.data.SetUnit("KB")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanLastGrantKb) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanLastGrantKb) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanLastGrantKb) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanLastGrantKb(cfg MetricConfig) metricSqlserverPlanLastGrantKb {
-	m := metricSqlserverPlanLastGrantKb{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanLastSpills struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.last_spills metric with initial data.
-func (m *metricSqlserverPlanLastSpills) init() {
-	m.data.SetName("sqlserver.plan.last_spills")
-	m.data.SetDescription("TempDB spills for last execution of this plan")
-	m.data.SetUnit("{pages}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanLastSpills) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanLastSpills) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanLastSpills) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanLastSpills(cfg MetricConfig) metricSqlserverPlanLastSpills {
-	m := metricSqlserverPlanLastSpills{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanMaxElapsedTimeMs struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.max_elapsed_time_ms metric with initial data.
-func (m *metricSqlserverPlanMaxElapsedTimeMs) init() {
-	m.data.SetName("sqlserver.plan.max_elapsed_time_ms")
-	m.data.SetDescription("Maximum elapsed time for this plan (historical)")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanMaxElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanMaxElapsedTimeMs) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanMaxElapsedTimeMs) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanMaxElapsedTimeMs(cfg MetricConfig) metricSqlserverPlanMaxElapsedTimeMs {
-	m := metricSqlserverPlanMaxElapsedTimeMs{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanMinElapsedTimeMs struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.min_elapsed_time_ms metric with initial data.
-func (m *metricSqlserverPlanMinElapsedTimeMs) init() {
-	m.data.SetName("sqlserver.plan.min_elapsed_time_ms")
-	m.data.SetDescription("Minimum elapsed time for this plan (historical)")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanMinElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanMinElapsedTimeMs) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanMinElapsedTimeMs) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanMinElapsedTimeMs(cfg MetricConfig) metricSqlserverPlanMinElapsedTimeMs {
-	m := metricSqlserverPlanMinElapsedTimeMs{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -11370,15 +10810,6 @@ type MetricsBuilder struct {
 	metricSqlserverMemoryTarget                                     metricSqlserverMemoryTarget
 	metricSqlserverMemoryTotal                                      metricSqlserverMemoryTotal
 	metricSqlserverPlanAvgElapsedTimeMs                             metricSqlserverPlanAvgElapsedTimeMs
-	metricSqlserverPlanAvgLogicalReads                              metricSqlserverPlanAvgLogicalReads
-	metricSqlserverPlanAvgLogicalWrites                             metricSqlserverPlanAvgLogicalWrites
-	metricSqlserverPlanAvgWorkerTimeMs                              metricSqlserverPlanAvgWorkerTimeMs
-	metricSqlserverPlanExecutionCount                               metricSqlserverPlanExecutionCount
-	metricSqlserverPlanLastDop                                      metricSqlserverPlanLastDop
-	metricSqlserverPlanLastGrantKb                                  metricSqlserverPlanLastGrantKb
-	metricSqlserverPlanLastSpills                                   metricSqlserverPlanLastSpills
-	metricSqlserverPlanMaxElapsedTimeMs                             metricSqlserverPlanMaxElapsedTimeMs
-	metricSqlserverPlanMinElapsedTimeMs                             metricSqlserverPlanMinElapsedTimeMs
 	metricSqlserverPlanTotalElapsedTimeMs                           metricSqlserverPlanTotalElapsedTimeMs
 	metricSqlserverSecurityServerPrincipalsCount                    metricSqlserverSecurityServerPrincipalsCount
 	metricSqlserverSecurityServerRoleMembersCount                   metricSqlserverSecurityServerRoleMembersCount
@@ -11590,15 +11021,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverMemoryTarget:                                     newMetricSqlserverMemoryTarget(mbc.Metrics.SqlserverMemoryTarget),
 		metricSqlserverMemoryTotal:                                      newMetricSqlserverMemoryTotal(mbc.Metrics.SqlserverMemoryTotal),
 		metricSqlserverPlanAvgElapsedTimeMs:                             newMetricSqlserverPlanAvgElapsedTimeMs(mbc.Metrics.SqlserverPlanAvgElapsedTimeMs),
-		metricSqlserverPlanAvgLogicalReads:                              newMetricSqlserverPlanAvgLogicalReads(mbc.Metrics.SqlserverPlanAvgLogicalReads),
-		metricSqlserverPlanAvgLogicalWrites:                             newMetricSqlserverPlanAvgLogicalWrites(mbc.Metrics.SqlserverPlanAvgLogicalWrites),
-		metricSqlserverPlanAvgWorkerTimeMs:                              newMetricSqlserverPlanAvgWorkerTimeMs(mbc.Metrics.SqlserverPlanAvgWorkerTimeMs),
-		metricSqlserverPlanExecutionCount:                               newMetricSqlserverPlanExecutionCount(mbc.Metrics.SqlserverPlanExecutionCount),
-		metricSqlserverPlanLastDop:                                      newMetricSqlserverPlanLastDop(mbc.Metrics.SqlserverPlanLastDop),
-		metricSqlserverPlanLastGrantKb:                                  newMetricSqlserverPlanLastGrantKb(mbc.Metrics.SqlserverPlanLastGrantKb),
-		metricSqlserverPlanLastSpills:                                   newMetricSqlserverPlanLastSpills(mbc.Metrics.SqlserverPlanLastSpills),
-		metricSqlserverPlanMaxElapsedTimeMs:                             newMetricSqlserverPlanMaxElapsedTimeMs(mbc.Metrics.SqlserverPlanMaxElapsedTimeMs),
-		metricSqlserverPlanMinElapsedTimeMs:                             newMetricSqlserverPlanMinElapsedTimeMs(mbc.Metrics.SqlserverPlanMinElapsedTimeMs),
 		metricSqlserverPlanTotalElapsedTimeMs:                           newMetricSqlserverPlanTotalElapsedTimeMs(mbc.Metrics.SqlserverPlanTotalElapsedTimeMs),
 		metricSqlserverSecurityServerPrincipalsCount:                    newMetricSqlserverSecurityServerPrincipalsCount(mbc.Metrics.SqlserverSecurityServerPrincipalsCount),
 		metricSqlserverSecurityServerRoleMembersCount:                   newMetricSqlserverSecurityServerRoleMembersCount(mbc.Metrics.SqlserverSecurityServerRoleMembersCount),
@@ -11887,15 +11309,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverMemoryTarget.emit(ils.Metrics())
 	mb.metricSqlserverMemoryTotal.emit(ils.Metrics())
 	mb.metricSqlserverPlanAvgElapsedTimeMs.emit(ils.Metrics())
-	mb.metricSqlserverPlanAvgLogicalReads.emit(ils.Metrics())
-	mb.metricSqlserverPlanAvgLogicalWrites.emit(ils.Metrics())
-	mb.metricSqlserverPlanAvgWorkerTimeMs.emit(ils.Metrics())
-	mb.metricSqlserverPlanExecutionCount.emit(ils.Metrics())
-	mb.metricSqlserverPlanLastDop.emit(ils.Metrics())
-	mb.metricSqlserverPlanLastGrantKb.emit(ils.Metrics())
-	mb.metricSqlserverPlanLastSpills.emit(ils.Metrics())
-	mb.metricSqlserverPlanMaxElapsedTimeMs.emit(ils.Metrics())
-	mb.metricSqlserverPlanMinElapsedTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverPlanTotalElapsedTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverSecurityServerPrincipalsCount.emit(ils.Metrics())
 	mb.metricSqlserverSecurityServerRoleMembersCount.emit(ils.Metrics())
@@ -12004,43 +11417,43 @@ func (mb *MetricsBuilder) RecordSqlserverAccessPageSplitsPerSecDataPoint(ts pcom
 }
 
 // RecordSqlserverActivequeryCPUTimeMsDataPoint adds a data point to sqlserver.activequery.cpu_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryCPUTimeMsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryCPUTimeMs.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryCPUTimeMsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryCPUTimeMs.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverActivequeryElapsedTimeMsDataPoint adds a data point to sqlserver.activequery.elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryElapsedTimeMsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryElapsedTimeMsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint adds a data point to sqlserver.activequery.granted_query_memory_pages metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryGrantedQueryMemoryPages.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryGrantedQueryMemoryPages.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverActivequeryLogicalReadsDataPoint adds a data point to sqlserver.activequery.logical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryLogicalReadsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryLogicalReads.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryLogicalReadsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryLogicalReads.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverActivequeryReadsDataPoint adds a data point to sqlserver.activequery.reads metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryReadsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryReads.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryReadsDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryReads.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverActivequeryRowCountDataPoint adds a data point to sqlserver.activequery.row_count metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryRowCountDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryRowCount.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryRowCountDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryRowCount.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverActivequeryWaitTimeSecondsDataPoint adds a data point to sqlserver.activequery.wait_time_seconds metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryWaitTimeSeconds.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryWaitTimeSeconds.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverActivequeryWritesDataPoint adds a data point to sqlserver.activequery.writes metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryWritesDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingHostNameAttributeValue string, blockingProgramNameAttributeValue string, blockingStatusAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingOpenTransactionCountAttributeValue int64, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
-	mb.metricSqlserverActivequeryWrites.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingHostNameAttributeValue, blockingProgramNameAttributeValue, blockingStatusAttributeValue, blockingIsolationLevelAttributeValue, blockingOpenTransactionCountAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryWritesDataPoint(ts pcommon.Timestamp, val int64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, programNameAttributeValue string, requestCommandAttributeValue string, requestStatusAttributeValue string, sessionStatusAttributeValue string, clientInterfaceNameAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceObjectNameAttributeValue string, waitResourceDatabaseNameAttributeValue string, waitResourceTypeAttributeValue string, waitResourceDescriptionAttributeValue string, waitResourceSchemaNameAttributeValue string, waitResourceTableNameAttributeValue string, waitResourceObjectTypeAttributeValue string, waitResourceIndexNameAttributeValue string, waitResourceIndexTypeAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, transactionIsolationLevelAttributeValue int64, degreeOfParallelismAttributeValue int64, parallelWorkerCountAttributeValue int64, blockingHostNameAttributeValue string, blockingIsolationLevelAttributeValue int64, blockingLoginNameAttributeValue string, blockingOpenTransactionCountAttributeValue int64, blockingProgramNameAttributeValue string, blockingQueryHashAttributeValue string, blockingQueryTextAttributeValue string, blockingSessionIDAttributeValue int64, blockingStatusAttributeValue string, queryTextAttributeValue string, queryIDAttributeValue string, planHandleAttributeValue string) {
+	mb.metricSqlserverActivequeryWrites.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, programNameAttributeValue, requestCommandAttributeValue, requestStatusAttributeValue, sessionStatusAttributeValue, clientInterfaceNameAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceObjectNameAttributeValue, waitResourceDatabaseNameAttributeValue, waitResourceTypeAttributeValue, waitResourceDescriptionAttributeValue, waitResourceSchemaNameAttributeValue, waitResourceTableNameAttributeValue, waitResourceObjectTypeAttributeValue, waitResourceIndexNameAttributeValue, waitResourceIndexTypeAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, transactionIsolationLevelAttributeValue, degreeOfParallelismAttributeValue, parallelWorkerCountAttributeValue, blockingHostNameAttributeValue, blockingIsolationLevelAttributeValue, blockingLoginNameAttributeValue, blockingOpenTransactionCountAttributeValue, blockingProgramNameAttributeValue, blockingQueryHashAttributeValue, blockingQueryTextAttributeValue, blockingSessionIDAttributeValue, blockingStatusAttributeValue, queryTextAttributeValue, queryIDAttributeValue, planHandleAttributeValue)
 }
 
 // RecordSqlserverBufferCacheHitRatioDataPoint adds a data point to sqlserver.buffer.cache_hit_ratio metric.
@@ -12571,51 +11984,6 @@ func (mb *MetricsBuilder) RecordSqlserverMemoryTotalDataPoint(ts pcommon.Timesta
 // RecordSqlserverPlanAvgElapsedTimeMsDataPoint adds a data point to sqlserver.plan.avg_elapsed_time_ms metric.
 func (mb *MetricsBuilder) RecordSqlserverPlanAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	mb.metricSqlserverPlanAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanAvgLogicalReadsDataPoint adds a data point to sqlserver.plan.avg_logical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanAvgLogicalReadsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanAvgLogicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanAvgLogicalWritesDataPoint adds a data point to sqlserver.plan.avg_logical_writes metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanAvgLogicalWritesDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanAvgLogicalWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanAvgWorkerTimeMsDataPoint adds a data point to sqlserver.plan.avg_worker_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanAvgWorkerTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanAvgWorkerTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanExecutionCountDataPoint adds a data point to sqlserver.plan.execution_count metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanLastDopDataPoint adds a data point to sqlserver.plan.last_dop metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanLastDopDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanLastDop.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanLastGrantKbDataPoint adds a data point to sqlserver.plan.last_grant_kb metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanLastGrantKbDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanLastGrantKb.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanLastSpillsDataPoint adds a data point to sqlserver.plan.last_spills metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanLastSpillsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanLastSpills.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanMaxElapsedTimeMsDataPoint adds a data point to sqlserver.plan.max_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanMaxElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanMaxElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanMinElapsedTimeMsDataPoint adds a data point to sqlserver.plan.min_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanMinElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanMinElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverPlanTotalElapsedTimeMsDataPoint adds a data point to sqlserver.plan.total_elapsed_time_ms metric.

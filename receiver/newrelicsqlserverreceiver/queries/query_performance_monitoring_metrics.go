@@ -330,6 +330,10 @@ SELECT TOP (@Limit)
         WHEN st_blocker.text IS NOT NULL THEN LEFT(st_blocker.text, @TextTruncateLimit)
         ELSE 'N/A'
     END AS blocking_query_statement_text,
+
+    -- J2. QUERY HASH - Blocking Session (for correlation)
+    r_blocker.query_hash AS blocking_query_hash,
+
     -- L. ENHANCED WAIT RESOURCE DECODING (OBJECT locks - table-level locks)
     -- Cross-database schema name resolution using OBJECT_SCHEMA_NAME
     CASE

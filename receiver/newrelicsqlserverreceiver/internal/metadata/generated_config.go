@@ -143,15 +143,6 @@ type MetricsConfig struct {
 	SqlserverMemoryTarget                                     MetricConfig `mapstructure:"sqlserver.memory.target"`
 	SqlserverMemoryTotal                                      MetricConfig `mapstructure:"sqlserver.memory.total"`
 	SqlserverPlanAvgElapsedTimeMs                             MetricConfig `mapstructure:"sqlserver.plan.avg_elapsed_time_ms"`
-	SqlserverPlanAvgLogicalReads                              MetricConfig `mapstructure:"sqlserver.plan.avg_logical_reads"`
-	SqlserverPlanAvgLogicalWrites                             MetricConfig `mapstructure:"sqlserver.plan.avg_logical_writes"`
-	SqlserverPlanAvgWorkerTimeMs                              MetricConfig `mapstructure:"sqlserver.plan.avg_worker_time_ms"`
-	SqlserverPlanExecutionCount                               MetricConfig `mapstructure:"sqlserver.plan.execution_count"`
-	SqlserverPlanLastDop                                      MetricConfig `mapstructure:"sqlserver.plan.last_dop"`
-	SqlserverPlanLastGrantKb                                  MetricConfig `mapstructure:"sqlserver.plan.last_grant_kb"`
-	SqlserverPlanLastSpills                                   MetricConfig `mapstructure:"sqlserver.plan.last_spills"`
-	SqlserverPlanMaxElapsedTimeMs                             MetricConfig `mapstructure:"sqlserver.plan.max_elapsed_time_ms"`
-	SqlserverPlanMinElapsedTimeMs                             MetricConfig `mapstructure:"sqlserver.plan.min_elapsed_time_ms"`
 	SqlserverPlanTotalElapsedTimeMs                           MetricConfig `mapstructure:"sqlserver.plan.total_elapsed_time_ms"`
 	SqlserverSecurityServerPrincipalsCount                    MetricConfig `mapstructure:"sqlserver.security.server_principals_count"`
 	SqlserverSecurityServerRoleMembersCount                   MetricConfig `mapstructure:"sqlserver.security.server_role_members_count"`
@@ -570,33 +561,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverPlanAvgElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanAvgLogicalReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanAvgLogicalWrites: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanAvgWorkerTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanExecutionCount: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanLastDop: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanLastGrantKb: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanLastSpills: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanMaxElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanMinElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverPlanTotalElapsedTimeMs: MetricConfig{
