@@ -6,6 +6,7 @@ package newrelicsqlserverreceiver // import "github.com/open-telemetry/opentelem
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -21,6 +22,16 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/queries"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/scrapers"
 )
+
+// activeQueryCache holds cached active queries for correlation between metrics and logs pipelines
+type activeQueryCache struct {
+	queries           []models.ActiveRunningQuery
+	slowQueryPlanData map[string]models.SlowQueryPlanData
+	slowQueryIDs      []string
+	timestamp         time.Time
+	mutex             sync.RWMutex
+	maxAge            time.Duration // Maximum age before cache is considered stale
+}
 
 // sqlServerScraper handles SQL Server metrics collection
 type sqlServerScraper struct {
@@ -45,6 +56,7 @@ type sqlServerScraper struct {
 	tempdbContentionScraper       *scrapers.TempDBContentionScraper // TempDB contention monitoring
 	metadataCache                 *helpers.MetadataCache            // Metadata cache for wait resource enrichment
 	engineEdition                 int                               // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
+	activeQueryCache              *activeQueryCache                 // Shared cache for active queries correlation between metrics and logs
 }
 
 // newSqlServerScraper creates a new SQL Server scraper with structured approach
@@ -113,6 +125,14 @@ func (s *sqlServerScraper) Start(ctx context.Context, _ component.Host) error {
 	} else {
 		s.logger.Info("Wait resource enrichment disabled, skipping metadata cache initialization")
 	}
+
+	// Initialize active query cache for correlation between metrics and logs pipelines
+	// Cache is valid for 10 seconds to handle parallel pipeline execution
+	s.activeQueryCache = &activeQueryCache{
+		maxAge: 10 * time.Second,
+	}
+	s.logger.Info("Active query cache initialized for metrics/logs correlation",
+		zap.Duration("max_cache_age", s.activeQueryCache.maxAge))
 
 	// Initialize instance scraper with engine edition for engine-specific queries
 	// Create instance scraper for instance-level metrics
@@ -248,20 +268,37 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 		zap.Int("elapsed_time_threshold_ms", activeElapsedTimeThreshold),
 		zap.Int("slow_query_id_filter_count", len(slowQueryIDs)))
 
-	// Step 1: Fetch active queries from database
-	activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
-	if err != nil {
-		s.logger.Error("Failed to fetch active running queries", zap.Error(err))
-		return logs, err
-	}
+	// Step 1: Try to get active queries from cache first (for correlation with metrics pipeline)
+	// If cache is fresh (<10s old), reuse it. Otherwise fetch new queries from database.
+	var activeQueries []models.ActiveRunningQuery
 
-	if len(activeQueries) == 0 {
-		s.logger.Info("No active queries found matching slow query IDs")
-		return logs, nil
-	}
+	cachedQueries, cachedPlanData, cachedIDs, found := s.getActiveQueryCache()
+	if found {
+		// Cache hit! Reuse cached data for perfect correlation
+		activeQueries = cachedQueries
+		slowQueryPlanDataMap = cachedPlanData // Override with cached plan data
+		slowQueryIDs = cachedIDs              // Override with cached slow query IDs
+		s.logger.Info("Using cached active queries for logs pipeline (cache hit for correlation)",
+			zap.Int("active_query_count", len(activeQueries)),
+			zap.Int("plan_data_count", len(slowQueryPlanDataMap)))
+	} else {
+		// Cache miss - fetch fresh active queries from database
+		s.logger.Info("Cache miss - fetching fresh active queries from database")
+		var err error
+		activeQueries, err = s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
+		if err != nil {
+			s.logger.Error("Failed to fetch active running queries", zap.Error(err))
+			return logs, err
+		}
 
-	s.logger.Info("Active queries fetched, emitting metrics",
-		zap.Int("active_query_count", len(activeQueries)))
+		if len(activeQueries) == 0 {
+			s.logger.Info("No active queries found matching slow query IDs")
+			return logs, nil
+		}
+
+		s.logger.Info("Active queries fetched from database (cache miss)",
+			zap.Int("active_query_count", len(activeQueries)))
+	}
 
 	// Step 2: Emit execution plan statistics using lightweight plan data from memory (5 fields only, NO database query)
 	if err := s.queryPerformanceScraper.ScrapeActiveQueryPlanStatistics(ctx, activeQueries, slowQueryPlanDataMap); err != nil {
@@ -712,6 +749,10 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		} else {
 			s.logger.Info("Active queries fetched, emitting metrics",
 				zap.Int("active_query_count", len(activeQueries)))
+
+			// Cache active queries for correlation with logs pipeline (runs in parallel)
+			// This ensures logs pipeline can reuse the same snapshot if it runs within cache TTL
+			s.setActiveQueryCache(activeQueries, slowQueryPlanDataMap, slowQueryIDs)
 
 			// Step 2: Emit metrics for active queries (using lightweight plan data from memory)
 			if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries, slowQueryPlanDataMap); err != nil {
@@ -1536,4 +1577,50 @@ func (s *sqlServerScraper) CollectSystemInformation(ctx context.Context) (*model
 		zap.Bool("is_hadr_enabled", getBoolValueFromMap(result.IsHadrEnabled)))
 
 	return &result, nil
+}
+
+// setActiveQueryCache stores active queries in cache with timestamp for correlation between pipelines
+func (s *sqlServerScraper) setActiveQueryCache(queries []models.ActiveRunningQuery, slowQueryPlanData map[string]models.SlowQueryPlanData, slowQueryIDs []string) {
+	s.activeQueryCache.mutex.Lock()
+	defer s.activeQueryCache.mutex.Unlock()
+
+	s.activeQueryCache.queries = queries
+	s.activeQueryCache.slowQueryPlanData = slowQueryPlanData
+	s.activeQueryCache.slowQueryIDs = slowQueryIDs
+	s.activeQueryCache.timestamp = time.Now()
+
+	s.logger.Info("Active query cache updated",
+		zap.Int("query_count", len(queries)),
+		zap.Int("plan_data_count", len(slowQueryPlanData)),
+		zap.Time("timestamp", s.activeQueryCache.timestamp))
+}
+
+// getActiveQueryCache retrieves cached active queries if still fresh (within maxAge)
+// Returns nil if cache is stale or empty
+func (s *sqlServerScraper) getActiveQueryCache() ([]models.ActiveRunningQuery, map[string]models.SlowQueryPlanData, []string, bool) {
+	s.activeQueryCache.mutex.RLock()
+	defer s.activeQueryCache.mutex.RUnlock()
+
+	// Check if cache is empty
+	if len(s.activeQueryCache.queries) == 0 {
+		s.logger.Debug("Active query cache is empty")
+		return nil, nil, nil, false
+	}
+
+	// Check if cache is stale
+	age := time.Since(s.activeQueryCache.timestamp)
+	if age > s.activeQueryCache.maxAge {
+		s.logger.Info("Active query cache is stale, will fetch fresh data",
+			zap.Duration("cache_age", age),
+			zap.Duration("max_age", s.activeQueryCache.maxAge))
+		return nil, nil, nil, false
+	}
+
+	s.logger.Info("Using cached active queries for correlation",
+		zap.Int("query_count", len(s.activeQueryCache.queries)),
+		zap.Int("plan_data_count", len(s.activeQueryCache.slowQueryPlanData)),
+		zap.Duration("cache_age", age),
+		zap.Time("cached_at", s.activeQueryCache.timestamp))
+
+	return s.activeQueryCache.queries, s.activeQueryCache.slowQueryPlanData, s.activeQueryCache.slowQueryIDs, true
 }

@@ -96,7 +96,6 @@ func (s *QueryPerformanceScraper) SetMetricsBuilder(mb *metadata.MetricsBuilder)
 // Returns the processed slow queries for downstream correlation (e.g., filtering active queries by slow query IDs)
 // emitMetrics: if true, emit metrics to MetricsBuilder; if false, only fetch and process data without metric emission
 func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit int, emitMetrics bool) ([]models.SlowQuery, error) {
-
 	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
 
 	s.logger.Debug("Executing slow query metrics collection",
@@ -433,6 +432,7 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		)
 	}
 }
+
 func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, index int) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
