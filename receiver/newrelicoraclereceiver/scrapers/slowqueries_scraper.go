@@ -168,7 +168,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		}
 
 		collectionTimestamp := slowQuery.GetCollectionTimestamp()
-		cdbName := slowQuery.GetCDBName()
 		dbName := slowQuery.GetDatabaseName()
 		qID := slowQuery.GetQueryID()
 		qText := commonutils.AnonymizeAndNormalize(slowQuery.GetQueryText())
@@ -176,7 +175,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		schName := slowQuery.GetSchemaName()
 		lastActiveTime := slowQuery.GetLastActiveTime()
 
-		s.recordMetrics(now, &slowQuery, collectionTimestamp, cdbName, dbName, qID, qText, userName, schName, lastActiveTime)
+		s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime)
 
 		if slowQuery.QueryID.Valid {
 			queryIDs = append(queryIDs, slowQuery.QueryID.String)
@@ -192,7 +191,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	return queryIDs, scrapeErrors
 }
 
-func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, cdbName, dbName, qID, qText, userName, schName, lastActiveTime string) {
+func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime string) {
 	if slowQuery.ExecutionCount.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 			now,
@@ -297,7 +296,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		now,
 		1,
 		collectionTimestamp,
-		cdbName,
 		dbName,
 		qID,
 		qText,

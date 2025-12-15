@@ -119,10 +119,6 @@ all_set:
       enabled: true
     newrelicoracledb.locked_accounts:
       enabled: true
-    newrelicoracledb.locks.blocked_sessions:
-      enabled: true
-    newrelicoracledb.locks.count:
-      enabled: true
     newrelicoracledb.long_running_queries:
       enabled: true
     newrelicoracledb.memory.pga_allocated_bytes:
@@ -782,10 +778,6 @@ none_set:
     newrelicoracledb.hosting.info:
       enabled: false
     newrelicoracledb.locked_accounts:
-      enabled: false
-    newrelicoracledb.locks.blocked_sessions:
-      enabled: false
-    newrelicoracledb.locks.count:
       enabled: false
     newrelicoracledb.long_running_queries:
       enabled: false

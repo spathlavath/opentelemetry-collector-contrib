@@ -83,7 +83,6 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	}
 
 	collectionTimestamp := event.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
-	cdbName := event.GetCDBName()
 	dbName := event.GetDatabaseName()
 	username := event.GetUsername()
 	sid := strconv.FormatInt(event.GetSID(), 10)
@@ -109,7 +108,6 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		now,
 		event.GetCurrentWaitMs(),
 		collectionTimestamp,
-		cdbName,
 		dbName,
 		username,
 		sid,
@@ -230,7 +228,6 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	}
 
 	collectionTimestamp := event.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
-	cdbName := event.GetCDBName()
 	dbName := event.GetDatabaseName()
 	blockedUser := event.GetUsername()
 	queryID := event.GetQueryID()
@@ -261,7 +258,6 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		now,
 		blockedWaitMs,
 		collectionTimestamp,
-		cdbName,
 		dbName,
 		blockedUser,
 		sessionID,

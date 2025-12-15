@@ -11,7 +11,6 @@ import (
 // ChildCursor represents a child cursor from V$SQL with average execution statistics
 type ChildCursor struct {
 	CollectionTimestamp sql.NullTime
-	CDBName             sql.NullString // Container Database name
 	DatabaseName        sql.NullString // PDB (Pluggable Database) name
 	SQLID               sql.NullString
 	ChildNumber         sql.NullInt64
@@ -33,14 +32,6 @@ func (cc *ChildCursor) GetCollectionTimestamp() time.Time {
 		return cc.CollectionTimestamp.Time
 	}
 	return time.Time{}
-}
-
-// GetCDBName returns the Container Database name as a string, empty if null
-func (cc *ChildCursor) GetCDBName() string {
-	if cc.CDBName.Valid {
-		return cc.CDBName.String
-	}
-	return ""
 }
 
 // GetDatabaseName returns the database name as a string, empty if null

@@ -11,79 +11,77 @@ import (
 type WaitEventWithBlocking struct {
 	// 1. COLLECTION_TIMESTAMP
 	CollectionTimestamp sql.NullTime
-	// 2. cdb_name (Container Database name)
-	CDBName sql.NullString
-	// 3. database_name (PDB name)
+	// 2. database_name (PDB name)
 	DatabaseName sql.NullString
 
 	// Session identification (from waiting/blocked session)
-	// 4. username
+	// 3. username
 	Username sql.NullString
-	// 5. sid
+	// 4. sid
 	SID sql.NullInt64
-	// 6. serial#
+	// 5. serial#
 	Serial sql.NullInt64
-	// 7. status
+	// 6. status
 	Status sql.NullString
-	// 8. state
+	// 7. state
 	State sql.NullString
 
 	// SQL identification
-	// 9. sql_id
+	// 8. sql_id
 	SQLID sql.NullString
-	// 10. SQL_CHILD_NUMBER
+	// 9. SQL_CHILD_NUMBER
 	SQLChildNumber sql.NullInt64
 
 	// Wait event information
-	// 11. wait_class
+	// 10. wait_class
 	WaitClass sql.NullString
-	// 12. event
+	// 11. event
 	Event sql.NullString
-	// 13. wait_time_ms (milliseconds the session has been waiting - general wait time)
+	// 12. wait_time_ms (milliseconds the session has been waiting - general wait time)
 	WaitTimeMs sql.NullFloat64
 	// SQL execution context
-	// 14. SQL_EXEC_START
+	// 13. SQL_EXEC_START
 	SQLExecStart sql.NullTime
-	// 15. SQL_EXEC_ID
+	// 14. SQL_EXEC_ID
 	SQLExecID sql.NullInt64
 
 	// Session context
-	// 16. PROGRAM
+	// 15. PROGRAM
 	Program sql.NullString
-	// 17. MACHINE
+	// 16. MACHINE
 	Machine sql.NullString
 
 	// Object being waited on
-	// 18. ROW_WAIT_OBJ#
+	// 17. ROW_WAIT_OBJ#
 	RowWaitObj sql.NullInt64
-	// 19. OWNER
+	// 18. OWNER
 	Owner sql.NullString
-	// 20. OBJECT_NAME
+	// 19. OBJECT_NAME
 	ObjectName sql.NullString
-	// 21. OBJECT_TYPE
+	// 20. OBJECT_TYPE
 	ObjectType sql.NullString
-	// 22. ROW_WAIT_FILE#
+	// 21. ROW_WAIT_FILE#
 	RowWaitFile sql.NullInt64
-	// 23. ROW_WAIT_BLOCK#
+	// 22. ROW_WAIT_BLOCK#
 	RowWaitBlock sql.NullInt64
 
 	// Blocking session context
-	// 24. BLOCKING_SESSION_STATUS
+	// 23. BLOCKING_SESSION_STATUS
 	BlockingSessionStatus sql.NullString
-	// 25. immediate_blocker_sid
+	// 24. immediate_blocker_sid
 	ImmediateBlockerSID sql.NullInt64
-	// 26. FINAL_BLOCKING_SESSION_STATUS
+	// 25. FINAL_BLOCKING_SESSION_STATUS
 	FinalBlockingSessionStatus sql.NullString
-	// 27. final_blocker_sid
+	// 26. final_blocker_sid
 	FinalBlockerSID sql.NullInt64
 	// Final blocker details
-	// 28. final_blocker_user
+	// 27. final_blocker_user
 	FinalBlockerUser sql.NullString
-	// 29. final_blocker_serial
+	// 28. final_blocker_serial
 	FinalBlockerSerial sql.NullInt64
-	// 30. final_blocker_query_id
+	// 29. final_blocker_query_id
 	FinalBlockerQueryID sql.NullString
-	// 31. final_blocker_query_text
+	// 30. final_blocker_query_text
 	FinalBlockerQueryText sql.NullString
 }
 
@@ -242,14 +240,6 @@ func (w *WaitEventWithBlocking) GetCollectionTimestamp() time.Time {
 func (w *WaitEventWithBlocking) GetDatabaseName() string {
 	if w.DatabaseName.Valid {
 		return w.DatabaseName.String
-	}
-	return ""
-}
-
-// GetCDBName returns the Container Database name
-func (w *WaitEventWithBlocking) GetCDBName() string {
-	if w.CDBName.Valid {
-		return w.CDBName.String
 	}
 	return ""
 }
