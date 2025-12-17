@@ -1013,9 +1013,11 @@ func (s *QueryPerformanceScraper) formatPlanHandlesForSQL(planHandles []string) 
 
 // Returns: (queryIDs []string, slowQueryPlanDataMap map[string]models.SlowQueryPlanData)
 // Only extracts the 5 fields needed for sqlserver.plan.* metrics
+// When multiple plan_handles exist for the same query_hash, uses the MOST RECENT one (latest last_execution_time)
 func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []models.SlowQuery) ([]string, map[string]models.SlowQueryPlanData) {
 	queryIDMap := make(map[string]bool)                               // For deduplication
 	slowQueryPlanDataMap := make(map[string]models.SlowQueryPlanData) // Lightweight plan data (ONLY 5 fields)
+	duplicatePlanHandles := 0                                         // Track how many duplicate query_hashes with different plan_handles we find
 
 	for _, slowQuery := range slowQueries {
 		if slowQuery.QueryID != nil && !slowQuery.QueryID.IsEmpty() {
@@ -1024,12 +1026,54 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 
 			// Store ONLY the 5 fields needed for plan metrics (not the entire SlowQuery struct)
 			if slowQuery.PlanHandle != nil && !slowQuery.PlanHandle.IsEmpty() {
-				slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
-					QueryID:            slowQuery.QueryID,
-					PlanHandle:         slowQuery.PlanHandle,
-					CreationTime:       slowQuery.CreationTime,
-					LastExecutionTime:  slowQuery.LastExecutionTimestamp,
-					TotalElapsedTimeMs: slowQuery.TotalElapsedTimeMS,
+				// Check if this query_hash already exists in the map
+				if existingPlanData, exists := slowQueryPlanDataMap[queryIDStr]; exists {
+					// Same query_hash with different plan_handle - keep the most recent one
+					// Compare last_execution_time timestamps (RFC3339 format: "2025-12-16T15:20:55Z")
+					existingTime := ""
+					newTime := ""
+					if existingPlanData.LastExecutionTime != nil {
+						existingTime = *existingPlanData.LastExecutionTime
+					}
+					if slowQuery.LastExecutionTimestamp != nil {
+						newTime = *slowQuery.LastExecutionTimestamp
+					}
+
+					// String comparison works for RFC3339 timestamps (lexicographically sorted)
+					// Only replace if new timestamp is more recent
+					if newTime > existingTime {
+						duplicatePlanHandles++
+						s.logger.Debug("Found multiple plan_handles for same query_hash - using most recent",
+							zap.String("query_hash", queryIDStr),
+							zap.String("existing_plan_handle", existingPlanData.PlanHandle.String()),
+							zap.String("existing_last_execution", existingTime),
+							zap.String("new_plan_handle", slowQuery.PlanHandle.String()),
+							zap.String("new_last_execution", newTime))
+
+						slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
+							QueryID:            slowQuery.QueryID,
+							PlanHandle:         slowQuery.PlanHandle,
+							CreationTime:       slowQuery.CreationTime,
+							LastExecutionTime:  slowQuery.LastExecutionTimestamp,
+							TotalElapsedTimeMs: slowQuery.TotalElapsedTimeMS,
+						}
+					} else {
+						s.logger.Debug("Skipping older plan_handle for same query_hash",
+							zap.String("query_hash", queryIDStr),
+							zap.String("existing_plan_handle", existingPlanData.PlanHandle.String()),
+							zap.String("existing_last_execution", existingTime),
+							zap.String("skipped_plan_handle", slowQuery.PlanHandle.String()),
+							zap.String("skipped_last_execution", newTime))
+					}
+				} else {
+					// First time seeing this query_hash - store it
+					slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
+						QueryID:            slowQuery.QueryID,
+						PlanHandle:         slowQuery.PlanHandle,
+						CreationTime:       slowQuery.CreationTime,
+						LastExecutionTime:  slowQuery.LastExecutionTimestamp,
+						TotalElapsedTimeMs: slowQuery.TotalElapsedTimeMS,
+					}
 				}
 			}
 		}
@@ -1041,10 +1085,11 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 		queryIDs = append(queryIDs, queryID)
 	}
 
-	s.logger.Debug("Extracted query IDs and lightweight plan data (5 fields only)",
+	s.logger.Info("Extracted query IDs and lightweight plan data (5 fields only)",
 		zap.Int("total_slow_queries", len(slowQueries)),
 		zap.Int("unique_query_ids", len(queryIDs)),
-		zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
+		zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)),
+		zap.Int("duplicate_plan_handles_resolved", duplicatePlanHandles))
 
 	return queryIDs, slowQueryPlanDataMap
 }
