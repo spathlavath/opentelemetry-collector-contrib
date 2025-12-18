@@ -60,13 +60,6 @@
 // - Azure SQL Managed Instance: Complete functionality with enterprise features
 package models
 
-// DEPRECATED: DatabaseRoleMembershipMetrics previously captured granular role-member relationships
-// which created high cardinality (one record per role-member pair). Use DatabaseRoleMembershipSummary
-// and DatabaseRoleActivity instead for aggregated metrics.
-type DatabaseRoleMembershipMetrics struct {
-	// All fields removed - granular metrics not useful for customers
-}
-
 // DatabaseRoleMembershipSummary represents aggregated statistics about role memberships
 // This model provides summary metrics for monitoring and alerting on role membership patterns
 type DatabaseRoleMembershipSummary struct {
@@ -96,12 +89,6 @@ type DatabaseRoleMembershipSummary struct {
 	// UserRoleMemberships is the count of user-to-role memberships
 	// Direct user assignments to roles
 	UserRoleMemberships *int64 `db:"user_role_memberships" metric_name:"sqlserver.database.role.memberships.users" source_type:"gauge"`
-}
-
-// DEPRECATED: DatabaseRoleHierarchy previously captured granular role nesting relationships
-// which created high cardinality. Use DatabaseRoleMembershipSummary.NestedRoleMemberships for counts.
-type DatabaseRoleHierarchy struct {
-	// All fields removed - granular metrics not useful for customers
 }
 
 // DatabaseRoleActivity represents role membership activity and changes

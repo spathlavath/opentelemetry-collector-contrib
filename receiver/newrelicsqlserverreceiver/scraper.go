@@ -1177,9 +1177,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape database role membership metrics
 
-	// Skipping database role membership details metrics (disabled - too granular)
-	s.logger.Debug("Skipping database role membership details metrics (disabled - too granular for operational monitoring)")
-
 	// Scrape database role membership summary metrics
 	s.logger.Debug("Starting database role membership summary metrics scraping")
 	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
@@ -1193,9 +1190,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	} else {
 		s.logger.Debug("Successfully scraped database role membership summary metrics")
 	}
-
-	// Skipping database role hierarchy metrics (disabled - too granular)
-	s.logger.Debug("Skipping database role hierarchy metrics (disabled - too granular for operational monitoring)")
 
 	// Scrape database role activity metrics
 	s.logger.Debug("Starting database role activity metrics scraping")
