@@ -1133,9 +1133,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape database principals metrics
 
-	// Skipping database principals details metrics (disabled - too granular)
-	s.logger.Debug("Skipping database principals details metrics (disabled - too granular for operational monitoring)")
-
 	// Scrape database principals summary metrics
 	s.logger.Debug("Starting database principals summary metrics scraping")
 	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
