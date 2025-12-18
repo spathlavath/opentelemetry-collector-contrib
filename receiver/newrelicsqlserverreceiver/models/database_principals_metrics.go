@@ -49,31 +49,11 @@
 // - Azure SQL Managed Instance: Full access with enterprise features
 package models
 
-import "time"
-
 // DatabasePrincipalsMetrics represents database security principals metrics
-// This model captures information about database users, roles, and other security principals
-// as defined by the sys.database_principals system catalog view
+// DEPRECATED: This model previously captured granular principal information which was too detailed
+// for operational monitoring. Use DatabasePrincipalsSummary instead for aggregated security metrics.
 type DatabasePrincipalsMetrics struct {
-	// PrincipalName is the name of the database principal (user, role, etc.)
-	// This corresponds to the 'name' column in sys.database_principals
-	// Examples: "dbo", "db_owner", "MyCustomUser", "MyApplicationRole"
-	PrincipalName string `db:"principal_name" metric_name:"sqlserver.database.principal.name" source_type:"attribute"`
-
-	// TypeDesc describes the type of the principal
-	// This corresponds to the 'type_desc' column in sys.database_principals
-	// Common values: "SQL_USER", "WINDOWS_USER", "DATABASE_ROLE", "APPLICATION_ROLE",
-	//               "CERTIFICATE_MAPPED_USER", "ASYMMETRIC_KEY_MAPPED_USER"
-	TypeDesc string `db:"type_desc" metric_name:"sqlserver.database.principal.type" source_type:"attribute"`
-
-	// CreateDate is when the principal was created
-	// This corresponds to the 'create_date' column in sys.database_principals
-	// Useful for tracking principal lifecycle and security auditing
-	CreateDate *time.Time `db:"create_date" metric_name:"sqlserver.database.principal.createDate" source_type:"gauge"`
-
-	// DatabaseName is the name of the database containing this principal
-	// This is added as context since principals are database-scoped
-	DatabaseName string `db:"database_name" metric_name:"sqlserver.database.name" source_type:"attribute"`
+	// All fields removed - granular metrics not useful for customers
 }
 
 // DatabasePrincipalsSummary represents aggregated statistics about database principals

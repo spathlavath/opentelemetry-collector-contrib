@@ -170,10 +170,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabasePrincipalCreateDateDataPoint(ts, 1, "database_name-val", "principal_name-val", "principal_type-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsApplicationRolesDataPoint(ts, 1, "database_name-val")
 
 			defaultMetricsCount++
@@ -2307,27 +2303,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("engine_edition_id")
 					assert.True(t, ok)
 					assert.EqualValues(t, 17, attrVal.Int())
-				case "sqlserver.database.principal.createDate":
-					assert.False(t, validatedMetrics["sqlserver.database.principal.createDate"], "Found a duplicate in the metrics slice: sqlserver.database.principal.createDate")
-					validatedMetrics["sqlserver.database.principal.createDate"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Database principal creation date as Unix timestamp", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("principal_name")
-					assert.True(t, ok)
-					assert.Equal(t, "principal_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("principal_type")
-					assert.True(t, ok)
-					assert.Equal(t, "principal_type-val", attrVal.Str())
 				case "sqlserver.database.principals.applicationRoles":
 					assert.False(t, validatedMetrics["sqlserver.database.principals.applicationRoles"], "Found a duplicate in the metrics slice: sqlserver.database.principals.applicationRoles")
 					validatedMetrics["sqlserver.database.principals.applicationRoles"] = true

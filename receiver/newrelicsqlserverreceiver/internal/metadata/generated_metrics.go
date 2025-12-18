@@ -88,9 +88,6 @@ var MetricsInfo = metricsInfo{
 	SqlserverDatabasePageFileTotalBytes: metricInfo{
 		Name: "sqlserver.database.page_file_total_bytes",
 	},
-	SqlserverDatabasePrincipalCreateDate: metricInfo{
-		Name: "sqlserver.database.principal.createDate",
-	},
 	SqlserverDatabasePrincipalsApplicationRoles: metricInfo{
 		Name: "sqlserver.database.principals.applicationRoles",
 	},
@@ -599,7 +596,6 @@ type metricsInfo struct {
 	SqlserverDatabaseMaxDiskSizeBytes                         metricInfo
 	SqlserverDatabasePageFileAvailableBytes                   metricInfo
 	SqlserverDatabasePageFileTotalBytes                       metricInfo
-	SqlserverDatabasePrincipalCreateDate                      metricInfo
 	SqlserverDatabasePrincipalsApplicationRoles               metricInfo
 	SqlserverDatabasePrincipalsOld                            metricInfo
 	SqlserverDatabasePrincipalsOrphanedUsers                  metricInfo
@@ -2391,59 +2387,6 @@ func (m *metricSqlserverDatabasePageFileTotalBytes) emit(metrics pmetric.MetricS
 
 func newMetricSqlserverDatabasePageFileTotalBytes(cfg MetricConfig) metricSqlserverDatabasePageFileTotalBytes {
 	m := metricSqlserverDatabasePageFileTotalBytes{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverDatabasePrincipalCreateDate struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.database.principal.createDate metric with initial data.
-func (m *metricSqlserverDatabasePrincipalCreateDate) init() {
-	m.data.SetName("sqlserver.database.principal.createDate")
-	m.data.SetDescription("Database principal creation date as Unix timestamp")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverDatabasePrincipalCreateDate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, principalNameAttributeValue string, principalTypeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("principal_name", principalNameAttributeValue)
-	dp.Attributes().PutStr("principal_type", principalTypeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverDatabasePrincipalCreateDate) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverDatabasePrincipalCreateDate) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverDatabasePrincipalCreateDate(cfg MetricConfig) metricSqlserverDatabasePrincipalCreateDate {
-	m := metricSqlserverDatabasePrincipalCreateDate{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10720,7 +10663,6 @@ type MetricsBuilder struct {
 	metricSqlserverDatabaseMaxDiskSizeBytes                         metricSqlserverDatabaseMaxDiskSizeBytes
 	metricSqlserverDatabasePageFileAvailableBytes                   metricSqlserverDatabasePageFileAvailableBytes
 	metricSqlserverDatabasePageFileTotalBytes                       metricSqlserverDatabasePageFileTotalBytes
-	metricSqlserverDatabasePrincipalCreateDate                      metricSqlserverDatabasePrincipalCreateDate
 	metricSqlserverDatabasePrincipalsApplicationRoles               metricSqlserverDatabasePrincipalsApplicationRoles
 	metricSqlserverDatabasePrincipalsOld                            metricSqlserverDatabasePrincipalsOld
 	metricSqlserverDatabasePrincipalsOrphanedUsers                  metricSqlserverDatabasePrincipalsOrphanedUsers
@@ -10931,7 +10873,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverDatabaseMaxDiskSizeBytes:                         newMetricSqlserverDatabaseMaxDiskSizeBytes(mbc.Metrics.SqlserverDatabaseMaxDiskSizeBytes),
 		metricSqlserverDatabasePageFileAvailableBytes:                   newMetricSqlserverDatabasePageFileAvailableBytes(mbc.Metrics.SqlserverDatabasePageFileAvailableBytes),
 		metricSqlserverDatabasePageFileTotalBytes:                       newMetricSqlserverDatabasePageFileTotalBytes(mbc.Metrics.SqlserverDatabasePageFileTotalBytes),
-		metricSqlserverDatabasePrincipalCreateDate:                      newMetricSqlserverDatabasePrincipalCreateDate(mbc.Metrics.SqlserverDatabasePrincipalCreateDate),
 		metricSqlserverDatabasePrincipalsApplicationRoles:               newMetricSqlserverDatabasePrincipalsApplicationRoles(mbc.Metrics.SqlserverDatabasePrincipalsApplicationRoles),
 		metricSqlserverDatabasePrincipalsOld:                            newMetricSqlserverDatabasePrincipalsOld(mbc.Metrics.SqlserverDatabasePrincipalsOld),
 		metricSqlserverDatabasePrincipalsOrphanedUsers:                  newMetricSqlserverDatabasePrincipalsOrphanedUsers(mbc.Metrics.SqlserverDatabasePrincipalsOrphanedUsers),
@@ -11219,7 +11160,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverDatabaseMaxDiskSizeBytes.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePageFileAvailableBytes.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePageFileTotalBytes.emit(ils.Metrics())
-	mb.metricSqlserverDatabasePrincipalCreateDate.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePrincipalsApplicationRoles.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePrincipalsOld.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePrincipalsOrphanedUsers.emit(ils.Metrics())
@@ -11534,11 +11474,6 @@ func (mb *MetricsBuilder) RecordSqlserverDatabasePageFileAvailableBytesDataPoint
 // RecordSqlserverDatabasePageFileTotalBytesDataPoint adds a data point to sqlserver.database.page_file_total_bytes metric.
 func (mb *MetricsBuilder) RecordSqlserverDatabasePageFileTotalBytesDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, metricSourceAttributeValue string, engineEditionAttributeValue string, engineEditionIDAttributeValue int64) {
 	mb.metricSqlserverDatabasePageFileTotalBytes.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, metricSourceAttributeValue, engineEditionAttributeValue, engineEditionIDAttributeValue)
-}
-
-// RecordSqlserverDatabasePrincipalCreateDateDataPoint adds a data point to sqlserver.database.principal.createDate metric.
-func (mb *MetricsBuilder) RecordSqlserverDatabasePrincipalCreateDateDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, principalNameAttributeValue string, principalTypeAttributeValue string) {
-	mb.metricSqlserverDatabasePrincipalCreateDate.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, principalNameAttributeValue, principalTypeAttributeValue)
 }
 
 // RecordSqlserverDatabasePrincipalsApplicationRolesDataPoint adds a data point to sqlserver.database.principals.applicationRoles metric.

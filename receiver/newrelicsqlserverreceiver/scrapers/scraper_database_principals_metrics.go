@@ -35,47 +35,6 @@ func NewDatabasePrincipalsScraper(conn SQLConnectionInterface, logger *zap.Logge
 	}
 }
 
-// ScrapeDatabasePrincipalsMetrics collects individual database principals metrics using engine-specific queries
-func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsMetrics(ctx context.Context) error {
-	s.logger.Debug("Scraping SQL Server database principals metrics")
-
-	// Get the appropriate query for this engine edition
-	query, found := s.getQueryForMetric("database_principals")
-	if !found {
-		return fmt.Errorf("no database principals query available for engine edition %d", s.engineEdition)
-	}
-
-	s.logger.Debug("Executing database principals query",
-		zap.String("query", queries.TruncateQuery(query, 100)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	var results []models.DatabasePrincipalsMetrics
-	if err := s.connection.Query(ctx, &results, query); err != nil {
-		s.logger.Error("Failed to execute database principals query",
-			zap.Error(err),
-			zap.String("query", queries.TruncateQuery(query, 100)),
-			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-		return fmt.Errorf("failed to query database principals: %w", err)
-	}
-
-	s.logger.Debug("Database principals query completed",
-		zap.Int("result_count", len(results)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	// Process each principal result
-	for _, result := range results {
-		if err := s.processDatabasePrincipalsMetrics(result); err != nil {
-			s.logger.Error("Failed to process database principals metrics",
-				zap.Error(err),
-				zap.String("principal_name", result.PrincipalName),
-				zap.String("database_name", result.DatabaseName))
-			return err
-		}
-	}
-
-	return nil
-}
-
 // ScrapeDatabasePrincipalsSummaryMetrics collects aggregated database principals statistics
 func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalsSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database principals summary metrics")
@@ -159,17 +118,6 @@ func (s *DatabasePrincipalsScraper) ScrapeDatabasePrincipalActivityMetrics(ctx c
 // getQueryForMetric retrieves the appropriate query for a metric based on engine edition
 func (s *DatabasePrincipalsScraper) getQueryForMetric(metricName string) (string, bool) {
 	queryMap := map[string]map[int]string{
-		"database_principals": {
-			queries.StandardSQLServerEngineEdition:       queries.DatabasePrincipalsQuery,
-			queries.AzureSQLDatabaseEngineEdition:        queries.DatabasePrincipalsQueryAzureSQL,
-			queries.AzureSQLManagedInstanceEngineEdition: queries.DatabasePrincipalsQueryAzureMI,
-			// Add support for other SQL Server editions (Enterprise, Standard, etc.)
-			1: queries.DatabasePrincipalsQuery, // Personal/Desktop
-			2: queries.DatabasePrincipalsQuery, // Standard
-			3: queries.DatabasePrincipalsQuery, // Enterprise
-			4: queries.DatabasePrincipalsQuery, // Express
-			6: queries.DatabasePrincipalsQuery, // Azure Synapse Analytics
-		},
 		"database_principals_summary": {
 			queries.StandardSQLServerEngineEdition:       queries.DatabasePrincipalsSummaryQuery,
 			queries.AzureSQLDatabaseEngineEdition:        queries.DatabasePrincipalsSummaryQueryAzureSQL,
@@ -201,40 +149,6 @@ func (s *DatabasePrincipalsScraper) getQueryForMetric(metricName string) (string
 	}
 
 	return "", false
-}
-
-// processDatabasePrincipalsMetrics processes individual database principals metrics and creates OpenTelemetry metrics
-func (s *DatabasePrincipalsScraper) processDatabasePrincipalsMetrics(result models.DatabasePrincipalsMetrics) error {
-	// Record creation date if available
-	if result.CreateDate != nil {
-		now := pcommon.NewTimestampFromTime(time.Now())
-		timestamp := result.CreateDate.Unix()
-
-		databaseName := ""
-		if result.DatabaseName != "" {
-			databaseName = result.DatabaseName
-		}
-
-		principalName := ""
-		if result.PrincipalName != "" {
-			principalName = result.PrincipalName
-		}
-
-		principalType := ""
-		if result.TypeDesc != "" {
-			principalType = result.TypeDesc
-		}
-
-		s.mb.RecordSqlserverDatabasePrincipalCreateDateDataPoint(now, timestamp, databaseName, principalName, principalType)
-
-		s.logger.Debug("Recorded database principal creation date",
-			zap.String("database_name", result.DatabaseName),
-			zap.String("principal_name", result.PrincipalName),
-			zap.String("principal_type", result.TypeDesc),
-			zap.Int64("create_date_unix", timestamp))
-	}
-
-	return nil
 }
 
 // processDatabasePrincipalsSummaryMetrics processes summary metrics and creates OpenTelemetry metrics

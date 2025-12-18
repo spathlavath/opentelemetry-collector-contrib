@@ -1133,19 +1133,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape database principals metrics
 
-	// Scrape database principals details metrics
-	s.logger.Debug("Starting database principals details metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
-	if err := s.databasePrincipalsScraper.ScrapeDatabasePrincipalsMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape database principals details metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
-	} else {
-		s.logger.Debug("Successfully scraped database principals details metrics")
-	}
+	// Skipping database principals details metrics (disabled - too granular)
+	s.logger.Debug("Skipping database principals details metrics (disabled - too granular for operational monitoring)")
 
 	// Scrape database principals summary metrics
 	s.logger.Debug("Starting database principals summary metrics scraping")

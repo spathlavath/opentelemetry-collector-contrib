@@ -51,8 +51,6 @@ all_set:
       enabled: true
     sqlserver.database.page_file_total_bytes:
       enabled: true
-    sqlserver.database.principal.createDate:
-      enabled: true
     sqlserver.database.principals.applicationRoles:
       enabled: true
     sqlserver.database.principals.old:
@@ -438,8 +436,6 @@ none_set:
     sqlserver.database.page_file_available_bytes:
       enabled: false
     sqlserver.database.page_file_total_bytes:
-      enabled: false
-    sqlserver.database.principal.createDate:
       enabled: false
     sqlserver.database.principals.applicationRoles:
       enabled: false
