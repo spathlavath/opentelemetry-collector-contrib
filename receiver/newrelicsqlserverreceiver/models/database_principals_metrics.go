@@ -49,13 +49,6 @@
 // - Azure SQL Managed Instance: Full access with enterprise features
 package models
 
-// DatabasePrincipalsMetrics represents database security principals metrics
-// DEPRECATED: This model previously captured granular principal information which was too detailed
-// for operational monitoring. Use DatabasePrincipalsSummary instead for aggregated security metrics.
-type DatabasePrincipalsMetrics struct {
-	// All fields removed - granular metrics not useful for customers
-}
-
 // DatabasePrincipalsSummary represents aggregated statistics about database principals
 // This model provides summary metrics for monitoring and alerting on principal counts
 type DatabasePrincipalsSummary struct {
