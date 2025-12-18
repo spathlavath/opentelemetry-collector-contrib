@@ -1177,19 +1177,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape database role membership metrics
 
-	// Scrape database role membership details metrics
-	s.logger.Debug("Starting database role membership details metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
-	if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleMembershipMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape database role membership details metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
-	} else {
-		s.logger.Debug("Successfully scraped database role membership details metrics")
-	}
+	// Skipping database role membership details metrics (disabled - too granular)
+	s.logger.Debug("Skipping database role membership details metrics (disabled - too granular for operational monitoring)")
 
 	// Scrape database role membership summary metrics
 	s.logger.Debug("Starting database role membership summary metrics scraping")
@@ -1205,19 +1194,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Successfully scraped database role membership summary metrics")
 	}
 
-	// Scrape database role hierarchy metrics
-	s.logger.Debug("Starting database role hierarchy metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
-	if err := s.databaseRoleMembershipScraper.ScrapeDatabaseRoleHierarchyMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape database role hierarchy metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
-	} else {
-		s.logger.Debug("Successfully scraped database role hierarchy metrics")
-	}
+	// Skipping database role hierarchy metrics (disabled - too granular)
+	s.logger.Debug("Skipping database role hierarchy metrics (disabled - too granular for operational monitoring)")
 
 	// Scrape database role activity metrics
 	s.logger.Debug("Starting database role activity metrics scraping")

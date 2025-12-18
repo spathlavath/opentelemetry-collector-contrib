@@ -226,10 +226,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseRoleMembershipActiveDataPoint(ts, 1, "database_name-val", "role_name-val", "member_name-val", "role_type-val", "member_type-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembershipsActiveDataPoint(ts, 1, "database_name-val")
 
 			defaultMetricsCount++
@@ -250,19 +246,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverDatabaseRoleNestingLevelDataPoint(ts, 1, "database_name-val", "parent_role_name-val", "child_role_name-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverDatabaseRolePermissionMemberCountDataPoint(ts, 1, "database_name-val", "role_name-val", "permission_scope-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRolePermissionRiskLevelDataPoint(ts, 1, "database_name-val", "role_name-val", "permission_scope-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverDatabaseRolePermissionsInheritedDataPoint(ts, 1, "database_name-val", "parent_role_name-val", "child_role_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2523,33 +2511,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-				case "sqlserver.database.role.membership.active":
-					assert.False(t, validatedMetrics["sqlserver.database.role.membership.active"], "Found a duplicate in the metrics slice: sqlserver.database.role.membership.active")
-					validatedMetrics["sqlserver.database.role.membership.active"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Database role membership active status", ms.At(i).Description())
-					assert.Equal(t, "{status}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("role_name")
-					assert.True(t, ok)
-					assert.Equal(t, "role_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("member_name")
-					assert.True(t, ok)
-					assert.Equal(t, "member_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("role_type")
-					assert.True(t, ok)
-					assert.Equal(t, "role_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("member_type")
-					assert.True(t, ok)
-					assert.Equal(t, "member_type-val", attrVal.Str())
 				case "sqlserver.database.role.memberships.active":
 					assert.False(t, validatedMetrics["sqlserver.database.role.memberships.active"], "Found a duplicate in the metrics slice: sqlserver.database.role.memberships.active")
 					validatedMetrics["sqlserver.database.role.memberships.active"] = true
@@ -2625,27 +2586,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-				case "sqlserver.database.role.nesting.level":
-					assert.False(t, validatedMetrics["sqlserver.database.role.nesting.level"], "Found a duplicate in the metrics slice: sqlserver.database.role.nesting.level")
-					validatedMetrics["sqlserver.database.role.nesting.level"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Role nesting level", ms.At(i).Description())
-					assert.Equal(t, "{level}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("parent_role_name")
-					assert.True(t, ok)
-					assert.Equal(t, "parent_role_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("child_role_name")
-					assert.True(t, ok)
-					assert.Equal(t, "child_role_name-val", attrVal.Str())
 				case "sqlserver.database.role.permission.memberCount":
 					assert.False(t, validatedMetrics["sqlserver.database.role.permission.memberCount"], "Found a duplicate in the metrics slice: sqlserver.database.role.permission.memberCount")
 					validatedMetrics["sqlserver.database.role.permission.memberCount"] = true
@@ -2688,27 +2628,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("permission_scope")
 					assert.True(t, ok)
 					assert.Equal(t, "permission_scope-val", attrVal.Str())
-				case "sqlserver.database.role.permissions.inherited":
-					assert.False(t, validatedMetrics["sqlserver.database.role.permissions.inherited"], "Found a duplicate in the metrics slice: sqlserver.database.role.permissions.inherited")
-					validatedMetrics["sqlserver.database.role.permissions.inherited"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Role permission inheritance status", ms.At(i).Description())
-					assert.Equal(t, "{status}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("database_name")
-					assert.True(t, ok)
-					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("parent_role_name")
-					assert.True(t, ok)
-					assert.Equal(t, "parent_role_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("child_role_name")
-					assert.True(t, ok)
-					assert.Equal(t, "child_role_name-val", attrVal.Str())
 				case "sqlserver.database.role.roles.empty":
 					assert.False(t, validatedMetrics["sqlserver.database.role.roles.empty"], "Found a duplicate in the metrics slice: sqlserver.database.role.roles.empty")
 					validatedMetrics["sqlserver.database.role.roles.empty"] = true
