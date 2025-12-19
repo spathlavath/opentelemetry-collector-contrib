@@ -95,6 +95,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   sqlserver.activequery.elapsed_time_ms:
@@ -151,6 +154,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   sqlserver.activequery.granted_query_memory_pages:
@@ -207,6 +213,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   # Locked Object Metric
@@ -264,6 +273,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   sqlserver.activequery.reads:
@@ -320,6 +332,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   sqlserver.activequery.row_count:
@@ -376,6 +391,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   sqlserver.activequery.wait_time_seconds:
@@ -432,6 +450,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   sqlserver.activequery.writes:
@@ -488,6 +509,9 @@ metrics:
         query_text,
         query_id,
         plan_handle,
+        apm.nr_trace_id,
+        apm.nr_span_id,
+        apm.nr_service,
       ]
 
   sqlserver.buffer.cache_hit_ratio:
@@ -2443,6 +2467,15 @@ metrics:
     attributes: [wait_type]
 
 attributes:
+  apm.nr_service:
+    description: APM service name extracted from SQL query comments for correlation with New Relic APM traces
+    type: string
+  apm.nr_span_id:
+    description: APM span ID extracted from SQL query comments for correlation with New Relic APM spans
+    type: string
+  apm.nr_trace_id:
+    description: APM trace ID extracted from SQL query comments for correlation with New Relic APM traces
+    type: string
   avg_elapsed_time_ms:
     description: Average elapsed time in milliseconds
     type: double

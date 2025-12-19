@@ -345,7 +345,7 @@ func (s *UserConnectionScraper) ScrapeFailedLoginSummaryMetrics(ctx context.Cont
 // processFailedLoginMetrics processes failed login metrics and creates OpenTelemetry metrics
 func (s *UserConnectionScraper) processFailedLoginMetrics(result models.FailedLoginMetrics) error {
 	// Record failed login event count with attributes based on engine edition
-	
+
 	// Initialize all attribute values
 	eventType := ""
 	description := ""
@@ -354,7 +354,7 @@ func (s *UserConnectionScraper) processFailedLoginMetrics(result models.FailedLo
 	logDate := ""
 	processInfo := ""
 	errorText := ""
-	
+
 	// Handle different query formats based on engine edition
 	if s.engineEdition == queries.AzureSQLDatabaseEngineEdition {
 		// Azure SQL Database format
@@ -382,7 +382,7 @@ func (s *UserConnectionScraper) processFailedLoginMetrics(result models.FailedLo
 			errorText = *result.Text
 		}
 	}
-	
+
 	s.mb.RecordSqlserverUserConnectionsAuthenticationFailedLoginEventsDataPoint(
 		pcommon.NewTimestampFromTime(time.Now()),
 		1, // Each record represents one failed login event

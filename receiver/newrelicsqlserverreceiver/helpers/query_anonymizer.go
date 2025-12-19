@@ -29,7 +29,30 @@ var (
 	// statementTextRegex is used to find StatementText attributes in execution plan XML
 	// Matches: StatementText="..." or StatementText='...'
 	statementTextRegex = regexp.MustCompile(`StatementText\s*=\s*("[^"]*"|'[^']*')`)
+
+	// apmTraceIDPattern extracts nr_trace_id from SQL comments
+	// Matches patterns like: /* nr_trace_id=abc123 */ or /* nr_trace_id=abc123,nr_span_id=xyz */
+	// Supports alphanumeric, hyphens, and underscores in trace IDs
+	apmTraceIDPattern = regexp.MustCompile(`/\*[^*]*nr_trace_id\s*=\s*([a-zA-Z0-9_-]+)[^*]*\*/`)
+
+	// apmSpanIDPattern extracts nr_span_id from SQL comments
+	// Matches patterns like: /* nr_span_id=xyz789 */ or /* nr_span_id=xyz789,nr_trace_id=abc */
+	// Supports alphanumeric, hyphens, and underscores in span IDs
+	apmSpanIDPattern = regexp.MustCompile(`/\*[^*]*nr_span_id\s*=\s*([a-zA-Z0-9_-]+)[^*]*\*/`)
+
+	// apmServiceNamePattern extracts nr_service from SQL comments
+	// Matches patterns like: /* nr_service=my-app */ or /* nr_service=Demo Spring Boot APM App (Staging) */
+	// Captures everything until comma or closing comment
+	apmServiceNamePattern = regexp.MustCompile(`/\*[^*]*nr_service\s*=\s*([^,*/]+)[^*]*\*/`)
 )
+
+// APMContext holds extracted APM correlation data from SQL query comments
+type APMContext struct {
+	TraceID     string // APM trace ID (e.g., "0d21e708f750b8aa0146ac8d756d04f5")
+	SpanID      string // APM span ID (e.g., "5df62017d89c6806")
+	ServiceName string // APM service name (e.g., "Demo Spring Boot APM App (Staging)")
+	Found       bool   // Whether any APM context was found in the query
+}
 
 // AnonymizeQueryText anonymizes literal values in SQL query text for privacy and security.
 // This function replaces sensitive data like string literals, numeric values, and quoted content
@@ -199,4 +222,32 @@ func IsQueryTextSafe(query string) bool {
 func IsXMLContentSafe(xmlContent string) bool {
 	const maxSafeLength = 65536 // 64KB limit
 	return len(xmlContent) <= maxSafeLength
+}
+
+// ExtractAPMContext extracts New Relic APM trace/span IDs and service name from SQL query comments.
+// This function MUST be called BEFORE AnonymizeQueryText() to preserve the comment data.
+//
+// Returns APMContext with Found=true if any APM identifiers were extracted.
+func ExtractAPMContext(queryText string) APMContext {
+	ctx := APMContext{}
+
+	// Extract trace ID
+	if matches := apmTraceIDPattern.FindStringSubmatch(queryText); len(matches) > 1 {
+		ctx.TraceID = matches[1]
+		ctx.Found = true
+	}
+
+	// Extract span ID
+	if matches := apmSpanIDPattern.FindStringSubmatch(queryText); len(matches) > 1 {
+		ctx.SpanID = matches[1]
+		ctx.Found = true
+	}
+
+	// Extract service name (trim whitespace)
+	if matches := apmServiceNamePattern.FindStringSubmatch(queryText); len(matches) > 1 {
+		ctx.ServiceName = strings.TrimSpace(matches[1])
+		ctx.Found = true
+	}
+
+	return ctx
 }

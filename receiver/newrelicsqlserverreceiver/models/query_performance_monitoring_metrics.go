@@ -211,6 +211,13 @@ type ActiveRunningQuery struct {
 	QueryStatementText         *string  `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
 	BlockingQueryStatementText *string  `db:"blocking_query_statement_text" metric_name:"blocking_query_statement_text" source_type:"attribute"`
 	BlockingQueryHash          *QueryID `db:"blocking_query_hash" metric_name:"blocking_query_hash" source_type:"attribute"`
+
+	// K. APM Correlation Context (extracted from SQL comments)
+	// These fields enable correlation between database query performance and APM traces
+	// APM agents inject trace/span IDs into SQL comments for distributed tracing
+	APMTraceID     *string `db:"-" metric_name:"apm.nr_trace_id" source_type:"attribute"`
+	APMSpanID      *string `db:"-" metric_name:"apm.nr_span_id" source_type:"attribute"`
+	APMServiceName *string `db:"-" metric_name:"apm.nr_service" source_type:"attribute"`
 }
 
 // LockedObject represents detailed information about database objects locked by a session

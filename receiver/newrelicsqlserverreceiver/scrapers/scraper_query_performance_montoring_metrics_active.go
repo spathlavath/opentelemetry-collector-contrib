@@ -59,8 +59,30 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 		return nil, fmt.Errorf("failed to execute active running queries query: %w", err)
 	}
 
+	// Parse APM correlation context from query text comments
+	// This MUST happen before anonymization to preserve comment data
+	apmContextCount := 0
+	for i := range results {
+		if results[i].QueryStatementText != nil && *results[i].QueryStatementText != "" {
+			apmCtx := helpers.ExtractAPMContext(*results[i].QueryStatementText)
+			if apmCtx.Found {
+				apmContextCount++
+				if apmCtx.TraceID != "" {
+					results[i].APMTraceID = &apmCtx.TraceID
+				}
+				if apmCtx.SpanID != "" {
+					results[i].APMSpanID = &apmCtx.SpanID
+				}
+				if apmCtx.ServiceName != "" {
+					results[i].APMServiceName = &apmCtx.ServiceName
+				}
+			}
+		}
+	}
+
 	s.logger.Info("Active running queries fetched from database",
-		zap.Int("result_count", len(results)))
+		zap.Int("result_count", len(results)),
+		zap.Int("queries_with_apm_context", apmContextCount))
 
 	return results, nil
 }
@@ -533,6 +555,24 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		}
 		return ""
 	}
+	getAPMTraceID := func() string {
+		if result.APMTraceID != nil {
+			return *result.APMTraceID
+		}
+		return ""
+	}
+	getAPMSpanID := func() string {
+		if result.APMSpanID != nil {
+			return *result.APMSpanID
+		}
+		return ""
+	}
+	getAPMServiceName := func() string {
+		if result.APMServiceName != nil {
+			return *result.APMServiceName
+		}
+		return ""
+	}
 
 	// Active query wait time
 	if result.WaitTimeS != nil && *result.WaitTimeS > 0 {
@@ -589,6 +629,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Warn("❌ SKIPPED wait_time metric (wait_time_s <= 0 or nil)",
@@ -650,6 +693,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Debug("SKIPPED cpu_time metric (nil)",
@@ -709,6 +755,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Debug("SKIPPED elapsed_time metric (nil)",
@@ -768,6 +817,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Debug("SKIPPED reads metric (nil)",
@@ -827,6 +879,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Debug("SKIPPED writes metric (nil)",
@@ -886,6 +941,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Debug("SKIPPED logical_reads metric (nil)",
@@ -945,6 +1003,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Debug("SKIPPED row_count metric (nil)",
@@ -1003,6 +1064,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getQueryText(),
 			getQueryID(),
 			getPlanHandle(),
+			getAPMTraceID(),
+			getAPMSpanID(),
+			getAPMServiceName(),
 		)
 	} else {
 		s.logger.Debug("SKIPPED granted_query_memory_pages metric (nil)",

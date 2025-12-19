@@ -74,35 +74,35 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryCPUTimeMsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryCPUTimeMsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryElapsedTimeMsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryElapsedTimeMsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryLogicalReadsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryLogicalReadsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryReadsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryReadsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryRowCountDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryRowCountDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryWritesDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val")
+			mb.RecordSqlserverActivequeryWritesDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "program_name-val", "request_command-val", "request_status-val", "session_status-val", "client_interface_name-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_object_name-val", "wait_resource_database_name-val", "wait_resource_type-val", "wait_resource_description-val", "wait_resource_schema_name-val", "wait_resource_table_name-val", "wait_resource_object_type-val", "wait_resource_index_name-val", "wait_resource_index_type-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, 27, 21, 21, "blocking_host_name-val", 24, "blocking_login_name-val", 31, "blocking_program_name-val", "blocking_query_hash-val", "blocking_query_text-val", 19, "blocking_status-val", "query_text-val", "query_id-val", "plan_handle-val", "apm.nr_trace_id-val", "apm.nr_span_id-val", "apm.nr_service-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -996,6 +996,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.activequery.elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.activequery.elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.activequery.elapsed_time_ms")
 					validatedMetrics["sqlserver.activequery.elapsed_time_ms"] = true
@@ -1140,6 +1149,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.activequery.granted_query_memory_pages":
 					assert.False(t, validatedMetrics["sqlserver.activequery.granted_query_memory_pages"], "Found a duplicate in the metrics slice: sqlserver.activequery.granted_query_memory_pages")
 					validatedMetrics["sqlserver.activequery.granted_query_memory_pages"] = true
@@ -1284,6 +1302,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.activequery.logical_reads":
 					assert.False(t, validatedMetrics["sqlserver.activequery.logical_reads"], "Found a duplicate in the metrics slice: sqlserver.activequery.logical_reads")
 					validatedMetrics["sqlserver.activequery.logical_reads"] = true
@@ -1428,6 +1455,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.activequery.reads":
 					assert.False(t, validatedMetrics["sqlserver.activequery.reads"], "Found a duplicate in the metrics slice: sqlserver.activequery.reads")
 					validatedMetrics["sqlserver.activequery.reads"] = true
@@ -1572,6 +1608,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.activequery.row_count":
 					assert.False(t, validatedMetrics["sqlserver.activequery.row_count"], "Found a duplicate in the metrics slice: sqlserver.activequery.row_count")
 					validatedMetrics["sqlserver.activequery.row_count"] = true
@@ -1716,6 +1761,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.activequery.wait_time_seconds":
 					assert.False(t, validatedMetrics["sqlserver.activequery.wait_time_seconds"], "Found a duplicate in the metrics slice: sqlserver.activequery.wait_time_seconds")
 					validatedMetrics["sqlserver.activequery.wait_time_seconds"] = true
@@ -1860,6 +1914,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.activequery.writes":
 					assert.False(t, validatedMetrics["sqlserver.activequery.writes"], "Found a duplicate in the metrics slice: sqlserver.activequery.writes")
 					validatedMetrics["sqlserver.activequery.writes"] = true
@@ -2004,6 +2067,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plan_handle")
 					assert.True(t, ok)
 					assert.Equal(t, "plan_handle-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_trace_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_trace_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_span_id")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_span_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("apm.nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "apm.nr_service-val", attrVal.Str())
 				case "sqlserver.buffer.cache_hit_ratio":
 					assert.False(t, validatedMetrics["sqlserver.buffer.cache_hit_ratio"], "Found a duplicate in the metrics slice: sqlserver.buffer.cache_hit_ratio")
 					validatedMetrics["sqlserver.buffer.cache_hit_ratio"] = true
