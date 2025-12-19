@@ -22,16 +22,14 @@ type ExecutionPlanScraper struct {
 	client            client.OracleClient
 	lb                *metadata.LogsBuilder
 	logger            *zap.Logger
-	instanceName      string
 	logsBuilderConfig metadata.LogsBuilderConfig
 }
 
-func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, instanceName string, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
+func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
 		client:            oracleClient,
 		lb:                lb,
 		logger:            logger,
-		instanceName:      instanceName,
 		logsBuilderConfig: logsBuilderConfig,
 	}
 }
@@ -43,7 +41,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		return errs
 	}
 
-	// Create a single timeout context for all queries to prevent excessive total runtime
+	// Single timeout context for all queries to prevent excessive total runtime
 	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
 	totalTimeout := 30 * time.Second // Adjust based on your needs
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
@@ -65,10 +63,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
 			continue // Skip this identifier but continue processing others
 		}
-		s.logger.Debug("Retrieved execution plan rows",
-			zap.String("sql_id", identifier.SQLID),
-			zap.Int64("child_number", identifier.ChildNumber),
-			zap.Int("count", len(planRows)))
+		s.logger.Debug("Retrieved execution plan rows")
 
 		successCount := 0
 		for _, row := range planRows {
@@ -87,22 +82,14 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 		}
 
-		s.logger.Debug("Scraped execution plan rows",
-			zap.String("sql_id", identifier.SQLID),
-			zap.Int64("child_number", identifier.ChildNumber),
-			zap.Time("query_timestamp", identifier.Timestamp),
-			zap.Int("total", len(planRows)),
-			zap.Int("success", successCount),
-			zap.Int("failed", len(errs)))
+		s.logger.Debug("Scraped execution plan rows")
 	}
 
 	return errs
 }
 
 // buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
-// Each field from V$SQL_PLAN is sent as a separate attribute for direct querying in New Relic.
-// The queryTimestamp parameter is the timestamp when the query was captured (from wait event or slow query)
-// and is used to correlate execution plans with their actual query execution time.
+
 func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
 	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
@@ -225,8 +212,6 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	}
 
 	// Record the event with all attributes
-	// Use the query timestamp (when the query was captured) instead of time.Now() (scraper time)
-	// This ensures execution plans are correlated with their actual query execution time
 	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
 		context.Background(),
 		pcommon.NewTimestampFromTime(queryTimestamp),
@@ -261,8 +246,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 }
 
 // parseIntSafe safely parses a string to int64, handling overflow cases.
-// If the value exceeds int64 max, it returns the max int64 value.
-// If parsing fails, it returns -1.
+
 func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
 	if value == "" {
 		return -1

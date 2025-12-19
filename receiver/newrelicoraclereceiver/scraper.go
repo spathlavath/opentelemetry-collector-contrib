@@ -232,7 +232,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.IntervalCalculatorCacheTTLMinutes,
 	)
 
-	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
+	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.logsBuilderConfig)
 
 	var err error
 	s.waitEventBlockingScraper, err = scrapers.NewWaitEventBlockingScraper(
@@ -403,7 +403,6 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		s.client,
 		s.lb,
 		s.logger,
-		s.instanceName,
 		s.logsBuilderConfig,
 	)
 	s.executionPlanScraper = executionPlanScraper
