@@ -66,9 +66,6 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 
 	if count != nil {
 		s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, count.Count, s.instanceName)
-
-		s.logger.Debug("Session count scrape completed",
-			zap.Int64("count", count.Count))
 	}
 
 	return errs

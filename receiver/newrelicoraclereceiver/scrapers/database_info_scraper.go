@@ -89,10 +89,6 @@ func (s *DatabaseInfoScraper) ScrapeDatabaseInfo(ctx context.Context) []error {
 		cachedInfo.Compatible,
 	)
 
-	s.logger.Debug("Database info metrics recorded",
-		zap.String("version", cachedInfo.Version),
-		zap.String("edition", cachedInfo.Edition))
-
 	return errs
 }
 
@@ -124,10 +120,6 @@ func (s *DatabaseInfoScraper) ScrapeHostingInfo(ctx context.Context) []error {
 		cachedInfo.Architecture,
 		cachedInfo.OperatingSystem,
 	)
-
-	s.logger.Debug("Hosting info metrics recorded",
-		zap.String("architecture", cachedInfo.Architecture),
-		zap.String("os", cachedInfo.OperatingSystem))
 
 	return errs
 }
@@ -208,13 +200,10 @@ func (s *DatabaseInfoScraper) ensureCacheValid(ctx context.Context) error {
 		return nil
 	}
 
-	s.logger.Debug("Refreshing database info cache")
 	return s.refreshCacheUnsafe(ctx)
 }
 
 func (s *DatabaseInfoScraper) refreshCacheUnsafe(ctx context.Context) error {
-	s.logger.Debug("Executing database info query")
-
 	metrics, err := s.client.QueryDatabaseInfo(ctx)
 	if err != nil {
 		return err
@@ -238,11 +227,6 @@ func (s *DatabaseInfoScraper) processDatabaseInfoMetrics(metrics []models.Databa
 		}
 
 		s.cacheValidUntil = time.Now().Add(s.cacheDuration)
-
-		s.logger.Debug("Database info cache refreshed",
-			zap.String("version", cleanVersion),
-			zap.String("edition", detectedEdition))
-
 		break
 	}
 

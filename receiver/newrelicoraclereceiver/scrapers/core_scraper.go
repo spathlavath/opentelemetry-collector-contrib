@@ -51,8 +51,6 @@ func NewCoreScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *
 // ScrapeCoreMetrics collects Oracle core database metrics
 func (s *CoreScraper) ScrapeCoreMetrics(ctx context.Context) []error {
 	var errors []error
-
-	s.logger.Debug("Scraping Oracle core database metrics")
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Scrape locked accounts metrics

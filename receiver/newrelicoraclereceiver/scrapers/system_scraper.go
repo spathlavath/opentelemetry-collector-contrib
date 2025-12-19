@@ -50,10 +50,6 @@ func (s *SystemScraper) ScrapeSystemMetrics(ctx context.Context) []error {
 		metricCount++
 	}
 
-	s.logger.Debug("System metrics scrape completed",
-		zap.Int("metrics", metricCount),
-		zap.Int("errors", len(scrapeErrors)))
-
 	return scrapeErrors
 }
 
