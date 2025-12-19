@@ -478,23 +478,11 @@ var MetricsInfo = metricsInfo{
 	SqlserverUserConnectionsAuthenticationChurnRate: metricInfo{
 		Name: "sqlserver.user_connections.authentication.churn_rate",
 	},
-	SqlserverUserConnectionsAuthenticationFailedLoginEvents: metricInfo{
-		Name: "sqlserver.user_connections.authentication.failed_login_events",
-	},
 	SqlserverUserConnectionsAuthenticationLoginsPerSec: metricInfo{
 		Name: "sqlserver.user_connections.authentication.logins_per_sec",
 	},
-	SqlserverUserConnectionsAuthenticationLogoutsPerSec: metricInfo{
-		Name: "sqlserver.user_connections.authentication.logouts_per_sec",
-	},
-	SqlserverUserConnectionsAuthenticationRate: metricInfo{
-		Name: "sqlserver.user_connections.authentication.rate",
-	},
 	SqlserverUserConnectionsAuthenticationRecentFailedLogins: metricInfo{
 		Name: "sqlserver.user_connections.authentication.recent_failed_logins",
-	},
-	SqlserverUserConnectionsAuthenticationTotalActivity: metricInfo{
-		Name: "sqlserver.user_connections.authentication.total_activity",
 	},
 	SqlserverUserConnectionsAuthenticationTotalFailedLogins: metricInfo{
 		Name: "sqlserver.user_connections.authentication.total_failed_logins",
@@ -508,26 +496,11 @@ var MetricsInfo = metricsInfo{
 	SqlserverUserConnectionsClientCount: metricInfo{
 		Name: "sqlserver.user_connections.client.count",
 	},
-	SqlserverUserConnectionsClientHostsMultiProgram: metricInfo{
-		Name: "sqlserver.user_connections.client.hosts_multi_program",
-	},
-	SqlserverUserConnectionsClientProgramsMultiHost: metricInfo{
-		Name: "sqlserver.user_connections.client.programs_multi_host",
-	},
-	SqlserverUserConnectionsClientTopHostConnections: metricInfo{
-		Name: "sqlserver.user_connections.client.top_host_connections",
-	},
-	SqlserverUserConnectionsClientTopProgramConnections: metricInfo{
-		Name: "sqlserver.user_connections.client.top_program_connections",
-	},
 	SqlserverUserConnectionsClientUniqueHosts: metricInfo{
 		Name: "sqlserver.user_connections.client.unique_hosts",
 	},
 	SqlserverUserConnectionsClientUniquePrograms: metricInfo{
 		Name: "sqlserver.user_connections.client.unique_programs",
-	},
-	SqlserverUserConnectionsDormant: metricInfo{
-		Name: "sqlserver.user_connections.dormant",
 	},
 	SqlserverUserConnectionsRunnable: metricInfo{
 		Name: "sqlserver.user_connections.runnable",
@@ -538,9 +511,6 @@ var MetricsInfo = metricsInfo{
 	SqlserverUserConnectionsSleeping: metricInfo{
 		Name: "sqlserver.user_connections.sleeping",
 	},
-	SqlserverUserConnectionsStatusCount: metricInfo{
-		Name: "sqlserver.user_connections.status.count",
-	},
 	SqlserverUserConnectionsSuspended: metricInfo{
 		Name: "sqlserver.user_connections.suspended",
 	},
@@ -550,14 +520,8 @@ var MetricsInfo = metricsInfo{
 	SqlserverUserConnectionsUtilizationActiveRatio: metricInfo{
 		Name: "sqlserver.user_connections.utilization.active_ratio",
 	},
-	SqlserverUserConnectionsUtilizationEfficiency: metricInfo{
-		Name: "sqlserver.user_connections.utilization.efficiency",
-	},
 	SqlserverUserConnectionsUtilizationIdleRatio: metricInfo{
 		Name: "sqlserver.user_connections.utilization.idle_ratio",
-	},
-	SqlserverUserConnectionsUtilizationWaitingRatio: metricInfo{
-		Name: "sqlserver.user_connections.utilization.waiting_ratio",
 	},
 	SqlserverWaitStatsLatchWaitTimeMs: metricInfo{
 		Name: "sqlserver.wait_stats.latch.wait_time_ms",
@@ -729,33 +693,21 @@ type metricsInfo struct {
 	SqlserverThreadpoolWaitingTasks                           metricInfo
 	SqlserverThreadpoolWorkQueueCount                         metricInfo
 	SqlserverUserConnectionsAuthenticationChurnRate           metricInfo
-	SqlserverUserConnectionsAuthenticationFailedLoginEvents   metricInfo
 	SqlserverUserConnectionsAuthenticationLoginsPerSec        metricInfo
-	SqlserverUserConnectionsAuthenticationLogoutsPerSec       metricInfo
-	SqlserverUserConnectionsAuthenticationRate                metricInfo
 	SqlserverUserConnectionsAuthenticationRecentFailedLogins  metricInfo
-	SqlserverUserConnectionsAuthenticationTotalActivity       metricInfo
 	SqlserverUserConnectionsAuthenticationTotalFailedLogins   metricInfo
 	SqlserverUserConnectionsAuthenticationUniqueFailedSources metricInfo
 	SqlserverUserConnectionsAuthenticationUniqueFailedUsers   metricInfo
 	SqlserverUserConnectionsClientCount                       metricInfo
-	SqlserverUserConnectionsClientHostsMultiProgram           metricInfo
-	SqlserverUserConnectionsClientProgramsMultiHost           metricInfo
-	SqlserverUserConnectionsClientTopHostConnections          metricInfo
-	SqlserverUserConnectionsClientTopProgramConnections       metricInfo
 	SqlserverUserConnectionsClientUniqueHosts                 metricInfo
 	SqlserverUserConnectionsClientUniquePrograms              metricInfo
-	SqlserverUserConnectionsDormant                           metricInfo
 	SqlserverUserConnectionsRunnable                          metricInfo
 	SqlserverUserConnectionsRunning                           metricInfo
 	SqlserverUserConnectionsSleeping                          metricInfo
-	SqlserverUserConnectionsStatusCount                       metricInfo
 	SqlserverUserConnectionsSuspended                         metricInfo
 	SqlserverUserConnectionsTotal                             metricInfo
 	SqlserverUserConnectionsUtilizationActiveRatio            metricInfo
-	SqlserverUserConnectionsUtilizationEfficiency             metricInfo
 	SqlserverUserConnectionsUtilizationIdleRatio              metricInfo
-	SqlserverUserConnectionsUtilizationWaitingRatio           metricInfo
 	SqlserverWaitStatsLatchWaitTimeMs                         metricInfo
 	SqlserverWaitStatsLatchWaitingTasksCount                  metricInfo
 	SqlserverWaitStatsWaitTimeMs                              metricInfo
@@ -9133,65 +9085,6 @@ func newMetricSqlserverUserConnectionsAuthenticationChurnRate(cfg MetricConfig) 
 	return m
 }
 
-type metricSqlserverUserConnectionsAuthenticationFailedLoginEvents struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.authentication.failed_login_events metric with initial data.
-func (m *metricSqlserverUserConnectionsAuthenticationFailedLoginEvents) init() {
-	m.data.SetName("sqlserver.user_connections.authentication.failed_login_events")
-	m.data.SetDescription("Count of failed login events processed")
-	m.data.SetUnit("{events}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverUserConnectionsAuthenticationFailedLoginEvents) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, eventTypeAttributeValue string, descriptionAttributeValue string, startTimeAttributeValue string, clientIPAttributeValue string, logDateAttributeValue string, processInfoAttributeValue string, errorTextAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("event_type", eventTypeAttributeValue)
-	dp.Attributes().PutStr("description", descriptionAttributeValue)
-	dp.Attributes().PutStr("start_time", startTimeAttributeValue)
-	dp.Attributes().PutStr("client_ip", clientIPAttributeValue)
-	dp.Attributes().PutStr("log_date", logDateAttributeValue)
-	dp.Attributes().PutStr("process_info", processInfoAttributeValue)
-	dp.Attributes().PutStr("error_text", errorTextAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsAuthenticationFailedLoginEvents) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsAuthenticationFailedLoginEvents) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsAuthenticationFailedLoginEvents(cfg MetricConfig) metricSqlserverUserConnectionsAuthenticationFailedLoginEvents {
-	m := metricSqlserverUserConnectionsAuthenticationFailedLoginEvents{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverUserConnectionsAuthenticationLoginsPerSec struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9241,106 +9134,6 @@ func newMetricSqlserverUserConnectionsAuthenticationLoginsPerSec(cfg MetricConfi
 	return m
 }
 
-type metricSqlserverUserConnectionsAuthenticationLogoutsPerSec struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.authentication.logouts_per_sec metric with initial data.
-func (m *metricSqlserverUserConnectionsAuthenticationLogoutsPerSec) init() {
-	m.data.SetName("sqlserver.user_connections.authentication.logouts_per_sec")
-	m.data.SetDescription("Current logout rate per second")
-	m.data.SetUnit("{logouts}/s")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsAuthenticationLogoutsPerSec) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsAuthenticationLogoutsPerSec) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsAuthenticationLogoutsPerSec) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsAuthenticationLogoutsPerSec(cfg MetricConfig) metricSqlserverUserConnectionsAuthenticationLogoutsPerSec {
-	m := metricSqlserverUserConnectionsAuthenticationLogoutsPerSec{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverUserConnectionsAuthenticationRate struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.authentication.rate metric with initial data.
-func (m *metricSqlserverUserConnectionsAuthenticationRate) init() {
-	m.data.SetName("sqlserver.user_connections.authentication.rate")
-	m.data.SetDescription("Login or logout rate per second from performance counters")
-	m.data.SetUnit("{events}/s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverUserConnectionsAuthenticationRate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, counterNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("counter_name", counterNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsAuthenticationRate) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsAuthenticationRate) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsAuthenticationRate(cfg MetricConfig) metricSqlserverUserConnectionsAuthenticationRate {
-	m := metricSqlserverUserConnectionsAuthenticationRate{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverUserConnectionsAuthenticationRecentFailedLogins struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9383,55 +9176,6 @@ func (m *metricSqlserverUserConnectionsAuthenticationRecentFailedLogins) emit(me
 
 func newMetricSqlserverUserConnectionsAuthenticationRecentFailedLogins(cfg MetricConfig) metricSqlserverUserConnectionsAuthenticationRecentFailedLogins {
 	m := metricSqlserverUserConnectionsAuthenticationRecentFailedLogins{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverUserConnectionsAuthenticationTotalActivity struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.authentication.total_activity metric with initial data.
-func (m *metricSqlserverUserConnectionsAuthenticationTotalActivity) init() {
-	m.data.SetName("sqlserver.user_connections.authentication.total_activity")
-	m.data.SetDescription("Sum of logins and logouts per second")
-	m.data.SetUnit("{events}/s")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsAuthenticationTotalActivity) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsAuthenticationTotalActivity) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsAuthenticationTotalActivity) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsAuthenticationTotalActivity(cfg MetricConfig) metricSqlserverUserConnectionsAuthenticationTotalActivity {
-	m := metricSqlserverUserConnectionsAuthenticationTotalActivity{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9638,202 +9382,6 @@ func newMetricSqlserverUserConnectionsClientCount(cfg MetricConfig) metricSqlser
 	return m
 }
 
-type metricSqlserverUserConnectionsClientHostsMultiProgram struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.client.hosts_multi_program metric with initial data.
-func (m *metricSqlserverUserConnectionsClientHostsMultiProgram) init() {
-	m.data.SetName("sqlserver.user_connections.client.hosts_multi_program")
-	m.data.SetDescription("Count of hosts running multiple different programs")
-	m.data.SetUnit("{hosts}")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsClientHostsMultiProgram) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsClientHostsMultiProgram) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsClientHostsMultiProgram) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsClientHostsMultiProgram(cfg MetricConfig) metricSqlserverUserConnectionsClientHostsMultiProgram {
-	m := metricSqlserverUserConnectionsClientHostsMultiProgram{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverUserConnectionsClientProgramsMultiHost struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.client.programs_multi_host metric with initial data.
-func (m *metricSqlserverUserConnectionsClientProgramsMultiHost) init() {
-	m.data.SetName("sqlserver.user_connections.client.programs_multi_host")
-	m.data.SetDescription("Count of programs connecting from multiple hosts")
-	m.data.SetUnit("{programs}")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsClientProgramsMultiHost) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsClientProgramsMultiHost) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsClientProgramsMultiHost) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsClientProgramsMultiHost(cfg MetricConfig) metricSqlserverUserConnectionsClientProgramsMultiHost {
-	m := metricSqlserverUserConnectionsClientProgramsMultiHost{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverUserConnectionsClientTopHostConnections struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.client.top_host_connections metric with initial data.
-func (m *metricSqlserverUserConnectionsClientTopHostConnections) init() {
-	m.data.SetName("sqlserver.user_connections.client.top_host_connections")
-	m.data.SetDescription("Highest number of connections from a single host")
-	m.data.SetUnit("{connections}")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsClientTopHostConnections) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsClientTopHostConnections) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsClientTopHostConnections) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsClientTopHostConnections(cfg MetricConfig) metricSqlserverUserConnectionsClientTopHostConnections {
-	m := metricSqlserverUserConnectionsClientTopHostConnections{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverUserConnectionsClientTopProgramConnections struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.client.top_program_connections metric with initial data.
-func (m *metricSqlserverUserConnectionsClientTopProgramConnections) init() {
-	m.data.SetName("sqlserver.user_connections.client.top_program_connections")
-	m.data.SetDescription("Highest number of connections from a single program")
-	m.data.SetUnit("{connections}")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsClientTopProgramConnections) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsClientTopProgramConnections) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsClientTopProgramConnections) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsClientTopProgramConnections(cfg MetricConfig) metricSqlserverUserConnectionsClientTopProgramConnections {
-	m := metricSqlserverUserConnectionsClientTopProgramConnections{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverUserConnectionsClientUniqueHosts struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9925,55 +9473,6 @@ func (m *metricSqlserverUserConnectionsClientUniquePrograms) emit(metrics pmetri
 
 func newMetricSqlserverUserConnectionsClientUniquePrograms(cfg MetricConfig) metricSqlserverUserConnectionsClientUniquePrograms {
 	m := metricSqlserverUserConnectionsClientUniquePrograms{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverUserConnectionsDormant struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.dormant metric with initial data.
-func (m *metricSqlserverUserConnectionsDormant) init() {
-	m.data.SetName("sqlserver.user_connections.dormant")
-	m.data.SetDescription("Number of dormant user connections")
-	m.data.SetUnit("{connections}")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsDormant) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsDormant) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsDormant) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsDormant(cfg MetricConfig) metricSqlserverUserConnectionsDormant {
-	m := metricSqlserverUserConnectionsDormant{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10128,57 +9627,6 @@ func newMetricSqlserverUserConnectionsSleeping(cfg MetricConfig) metricSqlserver
 	return m
 }
 
-type metricSqlserverUserConnectionsStatusCount struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.status.count metric with initial data.
-func (m *metricSqlserverUserConnectionsStatusCount) init() {
-	m.data.SetName("sqlserver.user_connections.status.count")
-	m.data.SetDescription("Number of user sessions by connection status")
-	m.data.SetUnit("{sessions}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverUserConnectionsStatusCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, statusAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("status", statusAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsStatusCount) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsStatusCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsStatusCount(cfg MetricConfig) metricSqlserverUserConnectionsStatusCount {
-	m := metricSqlserverUserConnectionsStatusCount{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverUserConnectionsSuspended struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -10326,55 +9774,6 @@ func newMetricSqlserverUserConnectionsUtilizationActiveRatio(cfg MetricConfig) m
 	return m
 }
 
-type metricSqlserverUserConnectionsUtilizationEfficiency struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.utilization.efficiency metric with initial data.
-func (m *metricSqlserverUserConnectionsUtilizationEfficiency) init() {
-	m.data.SetName("sqlserver.user_connections.utilization.efficiency")
-	m.data.SetDescription("Connection efficiency metric (active/total ratio adjusted for waiting)")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsUtilizationEfficiency) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsUtilizationEfficiency) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsUtilizationEfficiency) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsUtilizationEfficiency(cfg MetricConfig) metricSqlserverUserConnectionsUtilizationEfficiency {
-	m := metricSqlserverUserConnectionsUtilizationEfficiency{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverUserConnectionsUtilizationIdleRatio struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -10417,55 +9816,6 @@ func (m *metricSqlserverUserConnectionsUtilizationIdleRatio) emit(metrics pmetri
 
 func newMetricSqlserverUserConnectionsUtilizationIdleRatio(cfg MetricConfig) metricSqlserverUserConnectionsUtilizationIdleRatio {
 	m := metricSqlserverUserConnectionsUtilizationIdleRatio{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverUserConnectionsUtilizationWaitingRatio struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.user_connections.utilization.waiting_ratio metric with initial data.
-func (m *metricSqlserverUserConnectionsUtilizationWaitingRatio) init() {
-	m.data.SetName("sqlserver.user_connections.utilization.waiting_ratio")
-	m.data.SetDescription("Ratio of waiting connections to total connections")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-}
-
-func (m *metricSqlserverUserConnectionsUtilizationWaitingRatio) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverUserConnectionsUtilizationWaitingRatio) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverUserConnectionsUtilizationWaitingRatio) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverUserConnectionsUtilizationWaitingRatio(cfg MetricConfig) metricSqlserverUserConnectionsUtilizationWaitingRatio {
-	m := metricSqlserverUserConnectionsUtilizationWaitingRatio{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10850,33 +10200,21 @@ type MetricsBuilder struct {
 	metricSqlserverThreadpoolWaitingTasks                           metricSqlserverThreadpoolWaitingTasks
 	metricSqlserverThreadpoolWorkQueueCount                         metricSqlserverThreadpoolWorkQueueCount
 	metricSqlserverUserConnectionsAuthenticationChurnRate           metricSqlserverUserConnectionsAuthenticationChurnRate
-	metricSqlserverUserConnectionsAuthenticationFailedLoginEvents   metricSqlserverUserConnectionsAuthenticationFailedLoginEvents
 	metricSqlserverUserConnectionsAuthenticationLoginsPerSec        metricSqlserverUserConnectionsAuthenticationLoginsPerSec
-	metricSqlserverUserConnectionsAuthenticationLogoutsPerSec       metricSqlserverUserConnectionsAuthenticationLogoutsPerSec
-	metricSqlserverUserConnectionsAuthenticationRate                metricSqlserverUserConnectionsAuthenticationRate
 	metricSqlserverUserConnectionsAuthenticationRecentFailedLogins  metricSqlserverUserConnectionsAuthenticationRecentFailedLogins
-	metricSqlserverUserConnectionsAuthenticationTotalActivity       metricSqlserverUserConnectionsAuthenticationTotalActivity
 	metricSqlserverUserConnectionsAuthenticationTotalFailedLogins   metricSqlserverUserConnectionsAuthenticationTotalFailedLogins
 	metricSqlserverUserConnectionsAuthenticationUniqueFailedSources metricSqlserverUserConnectionsAuthenticationUniqueFailedSources
 	metricSqlserverUserConnectionsAuthenticationUniqueFailedUsers   metricSqlserverUserConnectionsAuthenticationUniqueFailedUsers
 	metricSqlserverUserConnectionsClientCount                       metricSqlserverUserConnectionsClientCount
-	metricSqlserverUserConnectionsClientHostsMultiProgram           metricSqlserverUserConnectionsClientHostsMultiProgram
-	metricSqlserverUserConnectionsClientProgramsMultiHost           metricSqlserverUserConnectionsClientProgramsMultiHost
-	metricSqlserverUserConnectionsClientTopHostConnections          metricSqlserverUserConnectionsClientTopHostConnections
-	metricSqlserverUserConnectionsClientTopProgramConnections       metricSqlserverUserConnectionsClientTopProgramConnections
 	metricSqlserverUserConnectionsClientUniqueHosts                 metricSqlserverUserConnectionsClientUniqueHosts
 	metricSqlserverUserConnectionsClientUniquePrograms              metricSqlserverUserConnectionsClientUniquePrograms
-	metricSqlserverUserConnectionsDormant                           metricSqlserverUserConnectionsDormant
 	metricSqlserverUserConnectionsRunnable                          metricSqlserverUserConnectionsRunnable
 	metricSqlserverUserConnectionsRunning                           metricSqlserverUserConnectionsRunning
 	metricSqlserverUserConnectionsSleeping                          metricSqlserverUserConnectionsSleeping
-	metricSqlserverUserConnectionsStatusCount                       metricSqlserverUserConnectionsStatusCount
 	metricSqlserverUserConnectionsSuspended                         metricSqlserverUserConnectionsSuspended
 	metricSqlserverUserConnectionsTotal                             metricSqlserverUserConnectionsTotal
 	metricSqlserverUserConnectionsUtilizationActiveRatio            metricSqlserverUserConnectionsUtilizationActiveRatio
-	metricSqlserverUserConnectionsUtilizationEfficiency             metricSqlserverUserConnectionsUtilizationEfficiency
 	metricSqlserverUserConnectionsUtilizationIdleRatio              metricSqlserverUserConnectionsUtilizationIdleRatio
-	metricSqlserverUserConnectionsUtilizationWaitingRatio           metricSqlserverUserConnectionsUtilizationWaitingRatio
 	metricSqlserverWaitStatsLatchWaitTimeMs                         metricSqlserverWaitStatsLatchWaitTimeMs
 	metricSqlserverWaitStatsLatchWaitingTasksCount                  metricSqlserverWaitStatsLatchWaitingTasksCount
 	metricSqlserverWaitStatsWaitTimeMs                              metricSqlserverWaitStatsWaitTimeMs
@@ -11061,33 +10399,21 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverThreadpoolWaitingTasks:                           newMetricSqlserverThreadpoolWaitingTasks(mbc.Metrics.SqlserverThreadpoolWaitingTasks),
 		metricSqlserverThreadpoolWorkQueueCount:                         newMetricSqlserverThreadpoolWorkQueueCount(mbc.Metrics.SqlserverThreadpoolWorkQueueCount),
 		metricSqlserverUserConnectionsAuthenticationChurnRate:           newMetricSqlserverUserConnectionsAuthenticationChurnRate(mbc.Metrics.SqlserverUserConnectionsAuthenticationChurnRate),
-		metricSqlserverUserConnectionsAuthenticationFailedLoginEvents:   newMetricSqlserverUserConnectionsAuthenticationFailedLoginEvents(mbc.Metrics.SqlserverUserConnectionsAuthenticationFailedLoginEvents),
 		metricSqlserverUserConnectionsAuthenticationLoginsPerSec:        newMetricSqlserverUserConnectionsAuthenticationLoginsPerSec(mbc.Metrics.SqlserverUserConnectionsAuthenticationLoginsPerSec),
-		metricSqlserverUserConnectionsAuthenticationLogoutsPerSec:       newMetricSqlserverUserConnectionsAuthenticationLogoutsPerSec(mbc.Metrics.SqlserverUserConnectionsAuthenticationLogoutsPerSec),
-		metricSqlserverUserConnectionsAuthenticationRate:                newMetricSqlserverUserConnectionsAuthenticationRate(mbc.Metrics.SqlserverUserConnectionsAuthenticationRate),
 		metricSqlserverUserConnectionsAuthenticationRecentFailedLogins:  newMetricSqlserverUserConnectionsAuthenticationRecentFailedLogins(mbc.Metrics.SqlserverUserConnectionsAuthenticationRecentFailedLogins),
-		metricSqlserverUserConnectionsAuthenticationTotalActivity:       newMetricSqlserverUserConnectionsAuthenticationTotalActivity(mbc.Metrics.SqlserverUserConnectionsAuthenticationTotalActivity),
 		metricSqlserverUserConnectionsAuthenticationTotalFailedLogins:   newMetricSqlserverUserConnectionsAuthenticationTotalFailedLogins(mbc.Metrics.SqlserverUserConnectionsAuthenticationTotalFailedLogins),
 		metricSqlserverUserConnectionsAuthenticationUniqueFailedSources: newMetricSqlserverUserConnectionsAuthenticationUniqueFailedSources(mbc.Metrics.SqlserverUserConnectionsAuthenticationUniqueFailedSources),
 		metricSqlserverUserConnectionsAuthenticationUniqueFailedUsers:   newMetricSqlserverUserConnectionsAuthenticationUniqueFailedUsers(mbc.Metrics.SqlserverUserConnectionsAuthenticationUniqueFailedUsers),
 		metricSqlserverUserConnectionsClientCount:                       newMetricSqlserverUserConnectionsClientCount(mbc.Metrics.SqlserverUserConnectionsClientCount),
-		metricSqlserverUserConnectionsClientHostsMultiProgram:           newMetricSqlserverUserConnectionsClientHostsMultiProgram(mbc.Metrics.SqlserverUserConnectionsClientHostsMultiProgram),
-		metricSqlserverUserConnectionsClientProgramsMultiHost:           newMetricSqlserverUserConnectionsClientProgramsMultiHost(mbc.Metrics.SqlserverUserConnectionsClientProgramsMultiHost),
-		metricSqlserverUserConnectionsClientTopHostConnections:          newMetricSqlserverUserConnectionsClientTopHostConnections(mbc.Metrics.SqlserverUserConnectionsClientTopHostConnections),
-		metricSqlserverUserConnectionsClientTopProgramConnections:       newMetricSqlserverUserConnectionsClientTopProgramConnections(mbc.Metrics.SqlserverUserConnectionsClientTopProgramConnections),
 		metricSqlserverUserConnectionsClientUniqueHosts:                 newMetricSqlserverUserConnectionsClientUniqueHosts(mbc.Metrics.SqlserverUserConnectionsClientUniqueHosts),
 		metricSqlserverUserConnectionsClientUniquePrograms:              newMetricSqlserverUserConnectionsClientUniquePrograms(mbc.Metrics.SqlserverUserConnectionsClientUniquePrograms),
-		metricSqlserverUserConnectionsDormant:                           newMetricSqlserverUserConnectionsDormant(mbc.Metrics.SqlserverUserConnectionsDormant),
 		metricSqlserverUserConnectionsRunnable:                          newMetricSqlserverUserConnectionsRunnable(mbc.Metrics.SqlserverUserConnectionsRunnable),
 		metricSqlserverUserConnectionsRunning:                           newMetricSqlserverUserConnectionsRunning(mbc.Metrics.SqlserverUserConnectionsRunning),
 		metricSqlserverUserConnectionsSleeping:                          newMetricSqlserverUserConnectionsSleeping(mbc.Metrics.SqlserverUserConnectionsSleeping),
-		metricSqlserverUserConnectionsStatusCount:                       newMetricSqlserverUserConnectionsStatusCount(mbc.Metrics.SqlserverUserConnectionsStatusCount),
 		metricSqlserverUserConnectionsSuspended:                         newMetricSqlserverUserConnectionsSuspended(mbc.Metrics.SqlserverUserConnectionsSuspended),
 		metricSqlserverUserConnectionsTotal:                             newMetricSqlserverUserConnectionsTotal(mbc.Metrics.SqlserverUserConnectionsTotal),
 		metricSqlserverUserConnectionsUtilizationActiveRatio:            newMetricSqlserverUserConnectionsUtilizationActiveRatio(mbc.Metrics.SqlserverUserConnectionsUtilizationActiveRatio),
-		metricSqlserverUserConnectionsUtilizationEfficiency:             newMetricSqlserverUserConnectionsUtilizationEfficiency(mbc.Metrics.SqlserverUserConnectionsUtilizationEfficiency),
 		metricSqlserverUserConnectionsUtilizationIdleRatio:              newMetricSqlserverUserConnectionsUtilizationIdleRatio(mbc.Metrics.SqlserverUserConnectionsUtilizationIdleRatio),
-		metricSqlserverUserConnectionsUtilizationWaitingRatio:           newMetricSqlserverUserConnectionsUtilizationWaitingRatio(mbc.Metrics.SqlserverUserConnectionsUtilizationWaitingRatio),
 		metricSqlserverWaitStatsLatchWaitTimeMs:                         newMetricSqlserverWaitStatsLatchWaitTimeMs(mbc.Metrics.SqlserverWaitStatsLatchWaitTimeMs),
 		metricSqlserverWaitStatsLatchWaitingTasksCount:                  newMetricSqlserverWaitStatsLatchWaitingTasksCount(mbc.Metrics.SqlserverWaitStatsLatchWaitingTasksCount),
 		metricSqlserverWaitStatsWaitTimeMs:                              newMetricSqlserverWaitStatsWaitTimeMs(mbc.Metrics.SqlserverWaitStatsWaitTimeMs),
@@ -11349,33 +10675,21 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverThreadpoolWaitingTasks.emit(ils.Metrics())
 	mb.metricSqlserverThreadpoolWorkQueueCount.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsAuthenticationChurnRate.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsAuthenticationFailedLoginEvents.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsAuthenticationLoginsPerSec.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsAuthenticationLogoutsPerSec.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsAuthenticationRate.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsAuthenticationRecentFailedLogins.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsAuthenticationTotalActivity.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsAuthenticationTotalFailedLogins.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsAuthenticationUniqueFailedSources.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsAuthenticationUniqueFailedUsers.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsClientCount.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsClientHostsMultiProgram.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsClientProgramsMultiHost.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsClientTopHostConnections.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsClientTopProgramConnections.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsClientUniqueHosts.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsClientUniquePrograms.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsDormant.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsRunnable.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsRunning.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsSleeping.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsStatusCount.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsSuspended.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsTotal.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsUtilizationActiveRatio.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsUtilizationEfficiency.emit(ils.Metrics())
 	mb.metricSqlserverUserConnectionsUtilizationIdleRatio.emit(ils.Metrics())
-	mb.metricSqlserverUserConnectionsUtilizationWaitingRatio.emit(ils.Metrics())
 	mb.metricSqlserverWaitStatsLatchWaitTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverWaitStatsLatchWaitingTasksCount.emit(ils.Metrics())
 	mb.metricSqlserverWaitStatsWaitTimeMs.emit(ils.Metrics())
@@ -12186,34 +11500,14 @@ func (mb *MetricsBuilder) RecordSqlserverUserConnectionsAuthenticationChurnRateD
 	mb.metricSqlserverUserConnectionsAuthenticationChurnRate.recordDataPoint(mb.startTime, ts, val)
 }
 
-// RecordSqlserverUserConnectionsAuthenticationFailedLoginEventsDataPoint adds a data point to sqlserver.user_connections.authentication.failed_login_events metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsAuthenticationFailedLoginEventsDataPoint(ts pcommon.Timestamp, val int64, eventTypeAttributeValue string, descriptionAttributeValue string, startTimeAttributeValue string, clientIPAttributeValue string, logDateAttributeValue string, processInfoAttributeValue string, errorTextAttributeValue string) {
-	mb.metricSqlserverUserConnectionsAuthenticationFailedLoginEvents.recordDataPoint(mb.startTime, ts, val, eventTypeAttributeValue, descriptionAttributeValue, startTimeAttributeValue, clientIPAttributeValue, logDateAttributeValue, processInfoAttributeValue, errorTextAttributeValue)
-}
-
 // RecordSqlserverUserConnectionsAuthenticationLoginsPerSecDataPoint adds a data point to sqlserver.user_connections.authentication.logins_per_sec metric.
 func (mb *MetricsBuilder) RecordSqlserverUserConnectionsAuthenticationLoginsPerSecDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricSqlserverUserConnectionsAuthenticationLoginsPerSec.recordDataPoint(mb.startTime, ts, val)
 }
 
-// RecordSqlserverUserConnectionsAuthenticationLogoutsPerSecDataPoint adds a data point to sqlserver.user_connections.authentication.logouts_per_sec metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsAuthenticationLogoutsPerSecDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricSqlserverUserConnectionsAuthenticationLogoutsPerSec.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordSqlserverUserConnectionsAuthenticationRateDataPoint adds a data point to sqlserver.user_connections.authentication.rate metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsAuthenticationRateDataPoint(ts pcommon.Timestamp, val int64, counterNameAttributeValue string) {
-	mb.metricSqlserverUserConnectionsAuthenticationRate.recordDataPoint(mb.startTime, ts, val, counterNameAttributeValue)
-}
-
 // RecordSqlserverUserConnectionsAuthenticationRecentFailedLoginsDataPoint adds a data point to sqlserver.user_connections.authentication.recent_failed_logins metric.
 func (mb *MetricsBuilder) RecordSqlserverUserConnectionsAuthenticationRecentFailedLoginsDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricSqlserverUserConnectionsAuthenticationRecentFailedLogins.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordSqlserverUserConnectionsAuthenticationTotalActivityDataPoint adds a data point to sqlserver.user_connections.authentication.total_activity metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsAuthenticationTotalActivityDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricSqlserverUserConnectionsAuthenticationTotalActivity.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordSqlserverUserConnectionsAuthenticationTotalFailedLoginsDataPoint adds a data point to sqlserver.user_connections.authentication.total_failed_logins metric.
@@ -12236,26 +11530,6 @@ func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientCountDataPoint(ts 
 	mb.metricSqlserverUserConnectionsClientCount.recordDataPoint(mb.startTime, ts, val, hostNameAttributeValue, programNameAttributeValue)
 }
 
-// RecordSqlserverUserConnectionsClientHostsMultiProgramDataPoint adds a data point to sqlserver.user_connections.client.hosts_multi_program metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientHostsMultiProgramDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricSqlserverUserConnectionsClientHostsMultiProgram.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordSqlserverUserConnectionsClientProgramsMultiHostDataPoint adds a data point to sqlserver.user_connections.client.programs_multi_host metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientProgramsMultiHostDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricSqlserverUserConnectionsClientProgramsMultiHost.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordSqlserverUserConnectionsClientTopHostConnectionsDataPoint adds a data point to sqlserver.user_connections.client.top_host_connections metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientTopHostConnectionsDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricSqlserverUserConnectionsClientTopHostConnections.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordSqlserverUserConnectionsClientTopProgramConnectionsDataPoint adds a data point to sqlserver.user_connections.client.top_program_connections metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientTopProgramConnectionsDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricSqlserverUserConnectionsClientTopProgramConnections.recordDataPoint(mb.startTime, ts, val)
-}
-
 // RecordSqlserverUserConnectionsClientUniqueHostsDataPoint adds a data point to sqlserver.user_connections.client.unique_hosts metric.
 func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientUniqueHostsDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricSqlserverUserConnectionsClientUniqueHosts.recordDataPoint(mb.startTime, ts, val)
@@ -12264,11 +11538,6 @@ func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientUniqueHostsDataPoi
 // RecordSqlserverUserConnectionsClientUniqueProgramsDataPoint adds a data point to sqlserver.user_connections.client.unique_programs metric.
 func (mb *MetricsBuilder) RecordSqlserverUserConnectionsClientUniqueProgramsDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricSqlserverUserConnectionsClientUniquePrograms.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordSqlserverUserConnectionsDormantDataPoint adds a data point to sqlserver.user_connections.dormant metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsDormantDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricSqlserverUserConnectionsDormant.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordSqlserverUserConnectionsRunnableDataPoint adds a data point to sqlserver.user_connections.runnable metric.
@@ -12286,11 +11555,6 @@ func (mb *MetricsBuilder) RecordSqlserverUserConnectionsSleepingDataPoint(ts pco
 	mb.metricSqlserverUserConnectionsSleeping.recordDataPoint(mb.startTime, ts, val)
 }
 
-// RecordSqlserverUserConnectionsStatusCountDataPoint adds a data point to sqlserver.user_connections.status.count metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsStatusCountDataPoint(ts pcommon.Timestamp, val int64, statusAttributeValue string) {
-	mb.metricSqlserverUserConnectionsStatusCount.recordDataPoint(mb.startTime, ts, val, statusAttributeValue)
-}
-
 // RecordSqlserverUserConnectionsSuspendedDataPoint adds a data point to sqlserver.user_connections.suspended metric.
 func (mb *MetricsBuilder) RecordSqlserverUserConnectionsSuspendedDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricSqlserverUserConnectionsSuspended.recordDataPoint(mb.startTime, ts, val)
@@ -12306,19 +11570,9 @@ func (mb *MetricsBuilder) RecordSqlserverUserConnectionsUtilizationActiveRatioDa
 	mb.metricSqlserverUserConnectionsUtilizationActiveRatio.recordDataPoint(mb.startTime, ts, val)
 }
 
-// RecordSqlserverUserConnectionsUtilizationEfficiencyDataPoint adds a data point to sqlserver.user_connections.utilization.efficiency metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsUtilizationEfficiencyDataPoint(ts pcommon.Timestamp, val float64) {
-	mb.metricSqlserverUserConnectionsUtilizationEfficiency.recordDataPoint(mb.startTime, ts, val)
-}
-
 // RecordSqlserverUserConnectionsUtilizationIdleRatioDataPoint adds a data point to sqlserver.user_connections.utilization.idle_ratio metric.
 func (mb *MetricsBuilder) RecordSqlserverUserConnectionsUtilizationIdleRatioDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricSqlserverUserConnectionsUtilizationIdleRatio.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordSqlserverUserConnectionsUtilizationWaitingRatioDataPoint adds a data point to sqlserver.user_connections.utilization.waiting_ratio metric.
-func (mb *MetricsBuilder) RecordSqlserverUserConnectionsUtilizationWaitingRatioDataPoint(ts pcommon.Timestamp, val float64) {
-	mb.metricSqlserverUserConnectionsUtilizationWaitingRatio.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordSqlserverWaitStatsLatchWaitTimeMsDataPoint adds a data point to sqlserver.wait_stats.latch.wait_time_ms metric.

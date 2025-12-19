@@ -921,21 +921,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape user connection metrics
 
-	// Scrape user connection status metrics
-	s.logger.Debug("Starting user connection status metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
-
-	if err := s.userConnectionScraper.ScrapeUserConnectionStatusMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape user connection status metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
-	} else {
-		s.logger.Debug("Successfully scraped user connection status metrics")
-	}
-
 	// Scrape user connection summary metrics
 	s.logger.Debug("Starting user connection summary metrics scraping")
 	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
@@ -1013,21 +998,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape authentication metrics
 
-	// Scrape login/logout rate metrics
-	s.logger.Debug("Starting login/logout rate metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
-
-	if err := s.userConnectionScraper.ScrapeLoginLogoutMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape login/logout rate metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
-	} else {
-		s.logger.Debug("Successfully scraped login/logout rate metrics")
-	}
-
 	// Scrape login/logout summary metrics
 	s.logger.Debug("Starting login/logout summary metrics scraping")
 	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
@@ -1041,21 +1011,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		// Don't return here - continue with other metrics
 	} else {
 		s.logger.Debug("Successfully scraped login/logout summary metrics")
-	}
-
-	// Scrape failed login metrics
-	s.logger.Debug("Starting failed login metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
-
-	if err := s.userConnectionScraper.ScrapeFailedLoginMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape failed login metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
-	} else {
-		s.logger.Debug("Successfully scraped failed login metrics")
 	}
 
 	// Scrape failed login summary metrics

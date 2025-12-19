@@ -52,21 +52,6 @@
 // - Azure SQL Managed Instance: Complete functionality with all session states
 package models
 
-// UserConnectionStatusMetrics represents user connection status distribution
-// This model captures the count of user connections grouped by their current status
-// as defined by the sys.dm_exec_sessions system view
-type UserConnectionStatusMetrics struct {
-	// Status represents the current status of the user session
-	// This corresponds to the 'status' column in sys.dm_exec_sessions
-	// Common values: "running", "sleeping", "suspended", "runnable", "dormant"
-	Status string `db:"status" source_type:"attribute"`
-
-	// SessionCount is the number of user sessions in this status
-	// This corresponds to COUNT(session_id) grouped by status
-	// Useful for understanding connection distribution and identifying issues
-	SessionCount *int64 `db:"session_count" metric_name:"sqlserver.user_connections.status.count" source_type:"gauge"`
-}
-
 // UserConnectionStatusSummary represents aggregated statistics about user connection statuses
 // This model provides summary metrics for monitoring and alerting on connection patterns
 type UserConnectionStatusSummary struct {
@@ -89,10 +74,6 @@ type UserConnectionStatusSummary struct {
 	// RunnableConnections is the count of connections ready to run but waiting for CPU
 	// High numbers may indicate CPU pressure or scheduler contention
 	RunnableConnections *int64 `db:"runnable_connections" metric_name:"sqlserver.user_connections.runnable" source_type:"gauge"`
-
-	// DormantConnections is the count of dormant connections
-	// Connections that exist but have no current activity
-	DormantConnections *int64 `db:"dormant_connections" metric_name:"sqlserver.user_connections.dormant" source_type:"gauge"`
 }
 
 // UserConnectionUtilization represents connection utilization metrics
@@ -105,14 +86,6 @@ type UserConnectionUtilization struct {
 	// IdleConnectionRatio is the percentage of connections that are idle
 	// (sleeping + dormant) / total_connections * 100
 	IdleConnectionRatio *float64 `db:"idle_connection_ratio" metric_name:"sqlserver.user_connections.utilization.idle_ratio" source_type:"gauge"`
-
-	// WaitingConnectionRatio is the percentage of connections waiting for resources
-	// suspended / total_connections * 100
-	WaitingConnectionRatio *float64 `db:"waiting_connection_ratio" metric_name:"sqlserver.user_connections.utilization.waiting_ratio" source_type:"gauge"`
-
-	// ConnectionEfficiency is a measure of how efficiently connections are being used
-	// Lower percentages of sleeping connections indicate better efficiency
-	ConnectionEfficiency *float64 `db:"connection_efficiency" metric_name:"sqlserver.user_connections.utilization.efficiency" source_type:"gauge"`
 }
 
 // UserConnectionByClientMetrics represents user connections grouped by client host and program
@@ -145,43 +118,6 @@ type UserConnectionClientSummary struct {
 	// UniquePrograms is the count of distinct programs/applications with active connections
 	// Helps understand application diversity and usage patterns
 	UniquePrograms *int64 `db:"unique_programs" metric_name:"sqlserver.user_connections.client.unique_programs" source_type:"gauge"`
-
-	// TopHostConnectionCount is the highest number of connections from a single host
-	// Useful for identifying potential connection concentration issues
-	TopHostConnectionCount *int64 `db:"top_host_connection_count" metric_name:"sqlserver.user_connections.client.top_host_connections" source_type:"gauge"`
-
-	// TopProgramConnectionCount is the highest number of connections from a single program
-	// Useful for identifying applications that may need connection pool optimization
-	TopProgramConnectionCount *int64 `db:"top_program_connection_count" metric_name:"sqlserver.user_connections.client.top_program_connections" source_type:"gauge"`
-
-	// HostsWithMultiplePrograms is the count of hosts running multiple different programs
-	// Indicates complexity of client environment
-	HostsWithMultiplePrograms *int64 `db:"hosts_with_multiple_programs" metric_name:"sqlserver.user_connections.client.hosts_multi_program" source_type:"gauge"`
-
-	// ProgramsFromMultipleHosts is the count of programs connecting from multiple hosts
-	// Indicates distributed application usage patterns
-	ProgramsFromMultipleHosts *int64 `db:"programs_from_multiple_hosts" metric_name:"sqlserver.user_connections.client.programs_multi_host" source_type:"gauge"`
-}
-
-// LoginLogoutMetrics represents SQL Server login and logout rate metrics
-// These metrics track authentication activity and connection churn patterns
-// from the sys.dm_os_performance_counters system view
-type LoginLogoutMetrics struct {
-	// CounterName represents the name of the performance counter
-	// Values: "Logins/sec", "Logouts/sec"
-	CounterName string `db:"counter_name" source_type:"attribute"`
-
-	// CntrValue is the current counter value representing rate per second
-	// This shows the current authentication activity rate
-	CntrValue *int64 `db:"cntr_value" metric_name:"sqlserver.user_connections.authentication.rate" source_type:"gauge"`
-
-	// Username represents the user performing login/logout activity
-	// Extracted from session information for user-specific tracking
-	Username *string `db:"username" source_type:"attribute"`
-
-	// SourceIP represents the client IP address for the login/logout activity
-	// Extracted from session host information for location tracking
-	SourceIP *string `db:"source_ip" source_type:"attribute"`
 }
 
 // LoginLogoutSummary represents aggregated login/logout statistics
@@ -190,14 +126,6 @@ type LoginLogoutSummary struct {
 	// LoginsPerSec is the current login rate per second
 	// Indicates new connection establishment rate
 	LoginsPerSec *int64 `db:"logins_per_sec" metric_name:"sqlserver.user_connections.authentication.logins_per_sec" source_type:"gauge"`
-
-	// LogoutsPerSec is the current logout rate per second
-	// Indicates connection termination rate
-	LogoutsPerSec *int64 `db:"logouts_per_sec" metric_name:"sqlserver.user_connections.authentication.logouts_per_sec" source_type:"gauge"`
-
-	// TotalAuthActivity is the sum of logins and logouts per second
-	// Provides overall authentication activity metric
-	TotalAuthActivity *int64 `db:"total_auth_activity" metric_name:"sqlserver.user_connections.authentication.total_activity" source_type:"gauge"`
 
 	// ConnectionChurnRate is the logout/login ratio as percentage
 	// High values indicate excessive connection turnover
@@ -209,40 +137,6 @@ type LoginLogoutSummary struct {
 
 	// SourceIP represents the client IP address for grouped statistics
 	// Allows for per-IP authentication analysis
-	SourceIP *string `db:"source_ip" source_type:"attribute"`
-}
-
-// FailedLoginMetrics represents failed login attempts from SQL Server error log or event log
-// This model captures security-related authentication failures for monitoring
-type FailedLoginMetrics struct {
-	// LogDate is the timestamp when the failed login occurred (for standard SQL Server)
-	LogDate *string `db:"LogDate" source_type:"attribute"`
-
-	// ProcessInfo contains process information about the failed login (for standard SQL Server)
-	ProcessInfo *string `db:"ProcessInfo" source_type:"attribute"`
-
-	// Text contains the full error message with details about the failed login (for standard SQL Server)
-	// Typically includes username, source IP, and failure reason
-	Text *string `db:"Text" source_type:"attribute"`
-
-	// EventType contains the type of event from sys.event_log (for Azure SQL Database)
-	EventType *string `db:"event_type" source_type:"attribute"`
-
-	// Description contains the event description from sys.event_log (for Azure SQL Database)
-	Description *string `db:"description" source_type:"attribute"`
-
-	// StartTime contains the event timestamp from sys.event_log (for Azure SQL Database)
-	StartTime *string `db:"start_time" source_type:"attribute"`
-
-	// ClientIP contains the client IP address from sys.event_log (for Azure SQL Database)
-	ClientIP *string `db:"client_ip" source_type:"attribute"`
-
-	// Username extracted from failed login attempts for user-specific tracking
-	// Parsed from Text field for standard SQL Server or available directly for Azure
-	Username *string `db:"username" source_type:"attribute"`
-
-	// SourceIP extracted from failed login attempts for location tracking
-	// Parsed from Text field for standard SQL Server or ClientIP for Azure
 	SourceIP *string `db:"source_ip" source_type:"attribute"`
 }
 

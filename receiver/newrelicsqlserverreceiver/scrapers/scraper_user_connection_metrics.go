@@ -41,53 +41,6 @@ func (s *UserConnectionScraper) SetMetricsBuilder(mb *metadata.MetricsBuilder) {
 	s.mb = mb
 }
 
-// ScrapeUserConnectionStatusMetrics collects user connection status distribution metrics
-// This method retrieves the count of user connections grouped by their current status
-func (s *UserConnectionScraper) ScrapeUserConnectionStatusMetrics(ctx context.Context) error {
-	s.logger.Debug("Scraping SQL Server user connection status metrics")
-
-	// Get the appropriate query for this engine edition
-	query, found := s.getQueryForMetric("sqlserver.user_connections.status.metrics")
-	if !found {
-		return fmt.Errorf("no user connection status metrics query available for engine edition %d", s.engineEdition)
-	}
-
-	s.logger.Debug("Executing user connection status metrics query",
-		zap.String("query", queries.TruncateQuery(query, 100)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	var results []models.UserConnectionStatusMetrics
-	if err := s.connection.Query(ctx, &results, query); err != nil {
-		s.logger.Error("Failed to execute user connection status query",
-			zap.Error(err),
-			zap.String("query", queries.TruncateQuery(query, 100)),
-			zap.Int("engine_edition", s.engineEdition))
-		return fmt.Errorf("failed to execute user connection status query: %w", err)
-	}
-
-	// If no results, this may indicate no user connections or query issues
-	if len(results) == 0 {
-		s.logger.Debug("No user connection status metrics found - may indicate no active user connections")
-		return nil
-	}
-
-	s.logger.Debug("Processing user connection status metrics results",
-		zap.Int("result_count", len(results)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	// Process each status result
-	for _, result := range results {
-		if err := s.processUserConnectionStatusMetrics(result); err != nil {
-			s.logger.Error("Failed to process user connection status metrics",
-				zap.Error(err),
-				zap.String("status", result.Status))
-			return err
-		}
-	}
-
-	return nil
-}
-
 // getQueryForMetric retrieves the appropriate query for a metric based on engine edition with Default fallback
 func (s *UserConnectionScraper) getQueryForMetric(metricName string) (string, bool) {
 	query, found := queries.GetQueryForMetric(queries.UserConnectionQueries, metricName, s.engineEdition)
@@ -97,67 +50,6 @@ func (s *UserConnectionScraper) getQueryForMetric(metricName string) (string, bo
 			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
 	}
 	return query, found
-}
-
-// processUserConnectionStatusMetrics processes user connection status metrics and creates OpenTelemetry metrics
-func (s *UserConnectionScraper) processUserConnectionStatusMetrics(result models.UserConnectionStatusMetrics) error {
-	// Process SessionCount as a gauge metric
-	if result.SessionCount != nil {
-		s.mb.RecordSqlserverUserConnectionsStatusCountDataPoint(
-			pcommon.NewTimestampFromTime(time.Now()),
-			int64(*result.SessionCount),
-			result.Status,
-		)
-	}
-
-	return nil
-}
-
-// ScrapeLoginLogoutMetrics collects login and logout rate metrics
-// This method retrieves authentication activity counters from performance counters
-func (s *UserConnectionScraper) ScrapeLoginLogoutMetrics(ctx context.Context) error {
-	s.logger.Debug("Scraping SQL Server login/logout rate metrics")
-
-	// Get the appropriate query for this engine edition
-	query, found := s.getQueryForMetric("sqlserver.user_connections.authentication.metrics")
-	if !found {
-		return fmt.Errorf("no login/logout rate metrics query available for engine edition %d", s.engineEdition)
-	}
-
-	s.logger.Debug("Executing login/logout rate metrics query",
-		zap.String("query", queries.TruncateQuery(query, 100)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	var results []models.LoginLogoutMetrics
-	if err := s.connection.Query(ctx, &results, query); err != nil {
-		s.logger.Error("Failed to execute login/logout rate query",
-			zap.Error(err),
-			zap.String("query", queries.TruncateQuery(query, 100)),
-			zap.Int("engine_edition", s.engineEdition))
-		return fmt.Errorf("failed to execute login/logout rate query: %w", err)
-	}
-
-	// If no results, this may indicate no authentication activity or query issues
-	if len(results) == 0 {
-		s.logger.Debug("No login/logout rate metrics found - may indicate no recent authentication activity")
-		return nil
-	}
-
-	s.logger.Debug("Processing login/logout rate metrics results",
-		zap.Int("result_count", len(results)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	// Process each authentication result
-	for _, result := range results {
-		if err := s.processLoginLogoutMetrics(result); err != nil {
-			s.logger.Error("Failed to process login/logout rate metrics",
-				zap.Error(err),
-				zap.String("counter_name", result.CounterName))
-			return err
-		}
-	}
-
-	return nil
 }
 
 // ScrapeLoginLogoutSummaryMetrics collects aggregated authentication activity statistics
@@ -205,20 +97,6 @@ func (s *UserConnectionScraper) ScrapeLoginLogoutSummaryMetrics(ctx context.Cont
 	return nil
 }
 
-// processLoginLogoutMetrics processes login/logout rate metrics and creates OpenTelemetry metrics
-func (s *UserConnectionScraper) processLoginLogoutMetrics(result models.LoginLogoutMetrics) error {
-	// Process CntrValue as a gauge metric
-	if result.CntrValue != nil {
-		s.mb.RecordSqlserverUserConnectionsAuthenticationRateDataPoint(
-			pcommon.NewTimestampFromTime(time.Now()),
-			int64(*result.CntrValue),
-			result.CounterName,
-		)
-	}
-
-	return nil
-}
-
 // processLoginLogoutSummaryMetrics processes login/logout summary metrics and creates OpenTelemetry metrics
 func (s *UserConnectionScraper) processLoginLogoutSummaryMetrics(result models.LoginLogoutSummary) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
@@ -231,73 +109,12 @@ func (s *UserConnectionScraper) processLoginLogoutSummaryMetrics(result models.L
 		)
 	}
 
-	// Process LogoutsPerSec
-	if result.LogoutsPerSec != nil && *result.LogoutsPerSec > 0 {
-		s.mb.RecordSqlserverUserConnectionsAuthenticationLogoutsPerSecDataPoint(
-			timestamp,
-			int64(*result.LogoutsPerSec),
-		)
-	}
-
-	// Process TotalAuthActivity
-	if result.TotalAuthActivity != nil && *result.TotalAuthActivity > 0 {
-		s.mb.RecordSqlserverUserConnectionsAuthenticationTotalActivityDataPoint(
-			timestamp,
-			int64(*result.TotalAuthActivity),
-		)
-	}
-
 	// Process ConnectionChurnRate
 	if result.ConnectionChurnRate != nil && *result.ConnectionChurnRate >= 0 {
 		s.mb.RecordSqlserverUserConnectionsAuthenticationChurnRateDataPoint(
 			timestamp,
 			float64(*result.ConnectionChurnRate),
 		)
-	}
-
-	return nil
-}
-
-// ScrapeFailedLoginMetrics collects failed login attempts from SQL Server error log
-// This method retrieves failed login messages from the error log for security monitoring
-func (s *UserConnectionScraper) ScrapeFailedLoginMetrics(ctx context.Context) error {
-	s.logger.Debug("Scraping SQL Server failed login metrics")
-
-	// Get the appropriate query for this engine edition
-	query, found := s.getQueryForMetric("sqlserver.user_connections.failed_logins.metrics")
-	if !found {
-		return fmt.Errorf("no failed login metrics query available for engine edition %d", s.engineEdition)
-	}
-
-	s.logger.Debug("Executing failed login metrics query",
-		zap.String("query", queries.TruncateQuery(query, 100)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	var results []models.FailedLoginMetrics
-	if err := s.connection.Query(ctx, &results, query); err != nil {
-		s.logger.Error("Failed to execute failed login query",
-			zap.Error(err),
-			zap.String("query", queries.TruncateQuery(query, 100)),
-			zap.Int("engine_edition", s.engineEdition))
-		return fmt.Errorf("failed to execute failed login query: %w", err)
-	}
-
-	s.logger.Debug("Processing failed login metrics results",
-		zap.Int("result_count", len(results)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	// Process each failed login result
-	for _, result := range results {
-		if err := s.processFailedLoginMetrics(result); err != nil {
-			logDate := ""
-			if result.LogDate != nil {
-				logDate = *result.LogDate
-			}
-			s.logger.Error("Failed to process failed login metrics",
-				zap.Error(err),
-				zap.String("log_date", logDate))
-			return err
-		}
 	}
 
 	return nil
@@ -338,62 +155,6 @@ func (s *UserConnectionScraper) ScrapeFailedLoginSummaryMetrics(ctx context.Cont
 			return err
 		}
 	}
-
-	return nil
-}
-
-// processFailedLoginMetrics processes failed login metrics and creates OpenTelemetry metrics
-func (s *UserConnectionScraper) processFailedLoginMetrics(result models.FailedLoginMetrics) error {
-	// Record failed login event count with attributes based on engine edition
-	
-	// Initialize all attribute values
-	eventType := ""
-	description := ""
-	startTime := ""
-	clientIP := ""
-	logDate := ""
-	processInfo := ""
-	errorText := ""
-	
-	// Handle different query formats based on engine edition
-	if s.engineEdition == queries.AzureSQLDatabaseEngineEdition {
-		// Azure SQL Database format
-		if result.EventType != nil {
-			eventType = *result.EventType
-		}
-		if result.Description != nil {
-			description = *result.Description
-		}
-		if result.StartTime != nil {
-			startTime = *result.StartTime
-		}
-		if result.ClientIP != nil {
-			clientIP = *result.ClientIP
-		}
-	} else {
-		// Standard SQL Server format using sp_readerrorlog
-		if result.LogDate != nil {
-			logDate = *result.LogDate
-		}
-		if result.ProcessInfo != nil {
-			processInfo = *result.ProcessInfo
-		}
-		if result.Text != nil {
-			errorText = *result.Text
-		}
-	}
-	
-	s.mb.RecordSqlserverUserConnectionsAuthenticationFailedLoginEventsDataPoint(
-		pcommon.NewTimestampFromTime(time.Now()),
-		1, // Each record represents one failed login event
-		eventType,
-		description,
-		startTime,
-		clientIP,
-		logDate,
-		processInfo,
-		errorText,
-	)
 
 	return nil
 }
@@ -656,14 +417,6 @@ func (s *UserConnectionScraper) processUserConnectionSummaryMetrics(result model
 		)
 	}
 
-	// Process dormant connections
-	if result.DormantConnections != nil {
-		s.mb.RecordSqlserverUserConnectionsDormantDataPoint(
-			timestamp,
-			int64(*result.DormantConnections),
-		)
-	}
-
 	return nil
 }
 
@@ -686,22 +439,6 @@ func (s *UserConnectionScraper) processUserConnectionUtilizationMetrics(result m
 		s.mb.RecordSqlserverUserConnectionsUtilizationIdleRatioDataPoint(
 			timestamp,
 			float64(*result.IdleConnectionRatio),
-		)
-	}
-
-	// Process waiting connection ratio
-	if result.WaitingConnectionRatio != nil {
-		s.mb.RecordSqlserverUserConnectionsUtilizationWaitingRatioDataPoint(
-			timestamp,
-			float64(*result.WaitingConnectionRatio),
-		)
-	}
-
-	// Process connection efficiency
-	if result.ConnectionEfficiency != nil {
-		s.mb.RecordSqlserverUserConnectionsUtilizationEfficiencyDataPoint(
-			timestamp,
-			float64(*result.ConnectionEfficiency),
 		)
 	}
 
@@ -745,38 +482,6 @@ func (s *UserConnectionScraper) processUserConnectionClientSummaryMetrics(result
 		s.mb.RecordSqlserverUserConnectionsClientUniqueProgramsDataPoint(
 			timestamp,
 			int64(*result.UniquePrograms),
-		)
-	}
-
-	// Process top host connection count
-	if result.TopHostConnectionCount != nil {
-		s.mb.RecordSqlserverUserConnectionsClientTopHostConnectionsDataPoint(
-			timestamp,
-			int64(*result.TopHostConnectionCount),
-		)
-	}
-
-	// Process top program connection count
-	if result.TopProgramConnectionCount != nil {
-		s.mb.RecordSqlserverUserConnectionsClientTopProgramConnectionsDataPoint(
-			timestamp,
-			int64(*result.TopProgramConnectionCount),
-		)
-	}
-
-	// Process hosts with multiple programs
-	if result.HostsWithMultiplePrograms != nil {
-		s.mb.RecordSqlserverUserConnectionsClientHostsMultiProgramDataPoint(
-			timestamp,
-			int64(*result.HostsWithMultiplePrograms),
-		)
-	}
-
-	// Process programs from multiple hosts
-	if result.ProgramsFromMultipleHosts != nil {
-		s.mb.RecordSqlserverUserConnectionsClientProgramsMultiHostDataPoint(
-			timestamp,
-			int64(*result.ProgramsFromMultipleHosts),
 		)
 	}
 

@@ -690,27 +690,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsAuthenticationFailedLoginEventsDataPoint(ts, 1, "event_type-val", "description-val", "start_time-val", "client_ip-val", "log_date-val", "process_info-val", "error_text-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationLoginsPerSecDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsAuthenticationLogoutsPerSecDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsAuthenticationRateDataPoint(ts, 1, "counter_name-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationRecentFailedLoginsDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsAuthenticationTotalActivityDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -730,31 +714,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsClientHostsMultiProgramDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsClientProgramsMultiHostDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsClientTopHostConnectionsDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsClientTopProgramConnectionsDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsClientUniqueHostsDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsClientUniqueProgramsDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsDormantDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -770,10 +734,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsStatusCountDataPoint(ts, 1, "status-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsSuspendedDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -786,15 +746,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsUtilizationEfficiencyDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsUtilizationIdleRatioDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverUserConnectionsUtilizationWaitingRatioDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4674,41 +4626,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "sqlserver.user_connections.authentication.failed_login_events":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.authentication.failed_login_events"], "Found a duplicate in the metrics slice: sqlserver.user_connections.authentication.failed_login_events")
-					validatedMetrics["sqlserver.user_connections.authentication.failed_login_events"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
-					assert.Equal(t, "Count of failed login events processed", ms.At(i).Description())
-					assert.Equal(t, "{events}", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("event_type")
-					assert.True(t, ok)
-					assert.Equal(t, "event_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("description")
-					assert.True(t, ok)
-					assert.Equal(t, "description-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("start_time")
-					assert.True(t, ok)
-					assert.Equal(t, "start_time-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("client_ip")
-					assert.True(t, ok)
-					assert.Equal(t, "client_ip-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("log_date")
-					assert.True(t, ok)
-					assert.Equal(t, "log_date-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("process_info")
-					assert.True(t, ok)
-					assert.Equal(t, "process_info-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("error_text")
-					assert.True(t, ok)
-					assert.Equal(t, "error_text-val", attrVal.Str())
 				case "sqlserver.user_connections.authentication.logins_per_sec":
 					assert.False(t, validatedMetrics["sqlserver.user_connections.authentication.logins_per_sec"], "Found a duplicate in the metrics slice: sqlserver.user_connections.authentication.logins_per_sec")
 					validatedMetrics["sqlserver.user_connections.authentication.logins_per_sec"] = true
@@ -4721,33 +4638,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.authentication.logouts_per_sec":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.authentication.logouts_per_sec"], "Found a duplicate in the metrics slice: sqlserver.user_connections.authentication.logouts_per_sec")
-					validatedMetrics["sqlserver.user_connections.authentication.logouts_per_sec"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Current logout rate per second", ms.At(i).Description())
-					assert.Equal(t, "{logouts}/s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.authentication.rate":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.authentication.rate"], "Found a duplicate in the metrics slice: sqlserver.user_connections.authentication.rate")
-					validatedMetrics["sqlserver.user_connections.authentication.rate"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Login or logout rate per second from performance counters", ms.At(i).Description())
-					assert.Equal(t, "{events}/s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("counter_name")
-					assert.True(t, ok)
-					assert.Equal(t, "counter_name-val", attrVal.Str())
 				case "sqlserver.user_connections.authentication.recent_failed_logins":
 					assert.False(t, validatedMetrics["sqlserver.user_connections.authentication.recent_failed_logins"], "Found a duplicate in the metrics slice: sqlserver.user_connections.authentication.recent_failed_logins")
 					validatedMetrics["sqlserver.user_connections.authentication.recent_failed_logins"] = true
@@ -4755,18 +4645,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Count of failed logins in the last hour", ms.At(i).Description())
 					assert.Equal(t, "{attempts}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.authentication.total_activity":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.authentication.total_activity"], "Found a duplicate in the metrics slice: sqlserver.user_connections.authentication.total_activity")
-					validatedMetrics["sqlserver.user_connections.authentication.total_activity"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Sum of logins and logouts per second", ms.At(i).Description())
-					assert.Equal(t, "{events}/s", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -4826,54 +4704,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("program_name")
 					assert.True(t, ok)
 					assert.Equal(t, "program_name-val", attrVal.Str())
-				case "sqlserver.user_connections.client.hosts_multi_program":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.client.hosts_multi_program"], "Found a duplicate in the metrics slice: sqlserver.user_connections.client.hosts_multi_program")
-					validatedMetrics["sqlserver.user_connections.client.hosts_multi_program"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Count of hosts running multiple different programs", ms.At(i).Description())
-					assert.Equal(t, "{hosts}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.client.programs_multi_host":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.client.programs_multi_host"], "Found a duplicate in the metrics slice: sqlserver.user_connections.client.programs_multi_host")
-					validatedMetrics["sqlserver.user_connections.client.programs_multi_host"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Count of programs connecting from multiple hosts", ms.At(i).Description())
-					assert.Equal(t, "{programs}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.client.top_host_connections":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.client.top_host_connections"], "Found a duplicate in the metrics slice: sqlserver.user_connections.client.top_host_connections")
-					validatedMetrics["sqlserver.user_connections.client.top_host_connections"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Highest number of connections from a single host", ms.At(i).Description())
-					assert.Equal(t, "{connections}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.client.top_program_connections":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.client.top_program_connections"], "Found a duplicate in the metrics slice: sqlserver.user_connections.client.top_program_connections")
-					validatedMetrics["sqlserver.user_connections.client.top_program_connections"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Highest number of connections from a single program", ms.At(i).Description())
-					assert.Equal(t, "{connections}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
 				case "sqlserver.user_connections.client.unique_hosts":
 					assert.False(t, validatedMetrics["sqlserver.user_connections.client.unique_hosts"], "Found a duplicate in the metrics slice: sqlserver.user_connections.client.unique_hosts")
 					validatedMetrics["sqlserver.user_connections.client.unique_hosts"] = true
@@ -4893,18 +4723,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Count of unique programs with active connections", ms.At(i).Description())
 					assert.Equal(t, "{programs}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.dormant":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.dormant"], "Found a duplicate in the metrics slice: sqlserver.user_connections.dormant")
-					validatedMetrics["sqlserver.user_connections.dormant"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of dormant user connections", ms.At(i).Description())
-					assert.Equal(t, "{connections}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -4946,21 +4764,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-				case "sqlserver.user_connections.status.count":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.status.count"], "Found a duplicate in the metrics slice: sqlserver.user_connections.status.count")
-					validatedMetrics["sqlserver.user_connections.status.count"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Number of user sessions by connection status", ms.At(i).Description())
-					assert.Equal(t, "{sessions}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("status")
-					assert.True(t, ok)
-					assert.Equal(t, "status-val", attrVal.Str())
 				case "sqlserver.user_connections.suspended":
 					assert.False(t, validatedMetrics["sqlserver.user_connections.suspended"], "Found a duplicate in the metrics slice: sqlserver.user_connections.suspended")
 					validatedMetrics["sqlserver.user_connections.suspended"] = true
@@ -4997,36 +4800,12 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "sqlserver.user_connections.utilization.efficiency":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.utilization.efficiency"], "Found a duplicate in the metrics slice: sqlserver.user_connections.utilization.efficiency")
-					validatedMetrics["sqlserver.user_connections.utilization.efficiency"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Connection efficiency metric (active/total ratio adjusted for waiting)", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
 				case "sqlserver.user_connections.utilization.idle_ratio":
 					assert.False(t, validatedMetrics["sqlserver.user_connections.utilization.idle_ratio"], "Found a duplicate in the metrics slice: sqlserver.user_connections.utilization.idle_ratio")
 					validatedMetrics["sqlserver.user_connections.utilization.idle_ratio"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Ratio of idle connections to total connections", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "sqlserver.user_connections.utilization.waiting_ratio":
-					assert.False(t, validatedMetrics["sqlserver.user_connections.utilization.waiting_ratio"], "Found a duplicate in the metrics slice: sqlserver.user_connections.utilization.waiting_ratio")
-					validatedMetrics["sqlserver.user_connections.utilization.waiting_ratio"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Ratio of waiting connections to total connections", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
