@@ -682,11 +682,6 @@ var failoverClusterQueriesAzureManagedInstance = []*QueryDefinition{
 // Database principals query definitions for Standard SQL Server
 var databasePrincipalsQueriesDefault = []*QueryDefinition{
 	{
-		Query:       DatabasePrincipalsQuery,
-		MetricName:  "sqlserver.database.principals.details",
-		Description: "Database security principals information",
-	},
-	{
 		Query:       DatabasePrincipalsSummaryQuery,
 		MetricName:  "sqlserver.database.principals.summary",
 		Description: "Database principals summary statistics",
@@ -701,11 +696,6 @@ var databasePrincipalsQueriesDefault = []*QueryDefinition{
 // Database principals query definitions for Azure SQL Database
 var databasePrincipalsQueriesAzureDatabase = []*QueryDefinition{
 	{
-		Query:       DatabasePrincipalsQueryAzureSQL,
-		MetricName:  "sqlserver.database.principals.details",
-		Description: "Database security principals information (Azure SQL Database)",
-	},
-	{
 		Query:       DatabasePrincipalsSummaryQueryAzureSQL,
 		MetricName:  "sqlserver.database.principals.summary",
 		Description: "Database principals summary statistics (Azure SQL Database)",
@@ -719,11 +709,6 @@ var databasePrincipalsQueriesAzureDatabase = []*QueryDefinition{
 
 // Database principals query definitions for Azure SQL Managed Instance
 var databasePrincipalsQueriesAzureManagedInstance = []*QueryDefinition{
-	{
-		Query:       DatabasePrincipalsQueryAzureMI,
-		MetricName:  "sqlserver.database.principals.details",
-		Description: "Database security principals information (Azure SQL Managed Instance)",
-	},
 	{
 		Query:       DatabasePrincipalsSummaryQueryAzureMI,
 		MetricName:  "sqlserver.database.principals.summary",

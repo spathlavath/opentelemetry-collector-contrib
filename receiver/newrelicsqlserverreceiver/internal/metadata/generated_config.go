@@ -53,7 +53,6 @@ type MetricsConfig struct {
 	SqlserverDatabaseMaxDiskSizeBytes                         MetricConfig `mapstructure:"sqlserver.database.max_disk_size_bytes"`
 	SqlserverDatabasePageFileAvailableBytes                   MetricConfig `mapstructure:"sqlserver.database.page_file_available_bytes"`
 	SqlserverDatabasePageFileTotalBytes                       MetricConfig `mapstructure:"sqlserver.database.page_file_total_bytes"`
-	SqlserverDatabasePrincipalCreateDate                      MetricConfig `mapstructure:"sqlserver.database.principal.createDate"`
 	SqlserverDatabasePrincipalsApplicationRoles               MetricConfig `mapstructure:"sqlserver.database.principals.applicationRoles"`
 	SqlserverDatabasePrincipalsOld                            MetricConfig `mapstructure:"sqlserver.database.principals.old"`
 	SqlserverDatabasePrincipalsOrphanedUsers                  MetricConfig `mapstructure:"sqlserver.database.principals.orphanedUsers"`
@@ -288,9 +287,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverDatabasePageFileTotalBytes: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverDatabasePrincipalCreateDate: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsApplicationRoles: MetricConfig{

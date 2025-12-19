@@ -7,7 +7,7 @@ status:
     development: [logs]
   distributions: [contrib]
   codeowners:
-    active: [pkulkarni,avadla,pkudikyala]
+    active: [pkulkarni, avadla, pkudikyala]
 
 resource_attributes:
   database_name:
@@ -656,15 +656,6 @@ metrics:
       [database_name, metric_source, engine_edition, engine_edition_id]
 
   # Database Transaction Metrics
-  sqlserver.database.principal.createDate:
-    enabled: true
-    stability:
-      level: alpha
-    description: Database principal creation date as Unix timestamp
-    unit: "s"
-    gauge:
-      value_type: int
-    attributes: [database_name, principal_name, principal_type]
 
   sqlserver.database.principals.applicationRoles:
     enabled: true
@@ -2588,12 +2579,7 @@ attributes:
   plan_handle:
     description: Handle to the cached execution plan
     type: string
-  principal_name:
-    description: Database principal name
-    type: string
-  principal_type:
-    description: Principal type description
-    type: string
+  # Removed: principal_name, principal_type attributes (too granular)
   process_info:
     description: Process information
     type: string
