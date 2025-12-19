@@ -797,15 +797,7 @@ metrics:
       value_type: int
     attributes: [database_name]
 
-  sqlserver.database.role.membership.active:
-    enabled: true
-    stability:
-      level: alpha
-    description: Database role membership active status
-    unit: "{status}"
-    gauge:
-      value_type: int
-    attributes: [database_name, role_name, member_name, role_type, member_type]
+  # Removed: sqlserver.database.role.membership.active (too granular - individual role-member records)
 
   sqlserver.database.role.memberships.active:
     enabled: true
@@ -857,15 +849,7 @@ metrics:
       value_type: int
     attributes: [database_name]
 
-  sqlserver.database.role.nesting.level:
-    enabled: true
-    stability:
-      level: alpha
-    description: Role nesting level
-    unit: "{level}"
-    gauge:
-      value_type: int
-    attributes: [database_name, parent_role_name, child_role_name]
+  # Removed: sqlserver.database.role.nesting.level (too granular - individual nesting records)
 
   sqlserver.database.role.permission.memberCount:
     enabled: true
@@ -887,17 +871,9 @@ metrics:
       value_type: int
     attributes: [database_name, role_name, permission_scope]
 
-  # Failover Cluster / Always On Availability Group Metrics
-  sqlserver.database.role.permissions.inherited:
-    enabled: true
-    stability:
-      level: alpha
-    description: Role permission inheritance status
-    unit: "{status}"
-    gauge:
-      value_type: int
-    attributes: [database_name, parent_role_name, child_role_name]
+  # Removed: sqlserver.database.role.permissions.inherited (too granular - individual permission records)
 
+  # Failover Cluster / Always On Availability Group Metrics
   sqlserver.database.role.roles.empty:
     enabled: true
     stability:
@@ -2477,9 +2453,7 @@ attributes:
   blocking_status:
     description: Status of the blocking session
     type: string
-  child_role_name:
-    description: Child role name in hierarchy
-    type: string
+  # Removed: child_role_name (used by removed granular metrics)
   client_interface_name:
     description: Name of the client interface
     type: string
@@ -2579,12 +2553,7 @@ attributes:
   login_name:
     description: SQL Server login name
     type: string
-  member_name:
-    description: Role member name
-    type: string
-  member_type:
-    description: Member type
-    type: string
+  # Removed: member_name, member_type (used by removed granular metrics)
   metric.type:
     description: Metric aggregation type
     type: string
@@ -2609,9 +2578,7 @@ attributes:
   parent_node_id:
     description: Parent node identifier in execution plan tree
     type: int
-  parent_role_name:
-    description: Parent role name in hierarchy
-    type: string
+  # Removed: parent_role_name (used by removed granular metrics)
   permission_scope:
     description: Permission scope
     type: string
@@ -2672,9 +2639,7 @@ attributes:
   role_name:
     description: Database role name
     type: string
-  role_type:
-    description: Role type
-    type: string
+  # Removed: role_type (used by removed granular metrics)
   schema_name:
     description: Schema name of the database object
     type: string

@@ -625,7 +625,6 @@ var failoverClusterQueriesDefault = []*QueryDefinition{
 		MetricName:  "sqlserver.failover_cluster.replica_metrics",
 		Description: "Always On Availability Group replica performance metrics",
 	},
-	
 
 	{
 		Query:       FailoverClusterAvailabilityGroupHealthQuery,
@@ -740,19 +739,9 @@ var databasePrincipalsQueriesAzureManagedInstance = []*QueryDefinition{
 // Database role membership query definitions for Standard SQL Server
 var databaseRoleMembershipQueriesDefault = []*QueryDefinition{
 	{
-		Query:       DatabaseRoleMembershipMetricsQuery,
-		MetricName:  "database_role_membership",
-		Description: "Database role membership relationships",
-	},
-	{
 		Query:       DatabaseRoleMembershipSummaryQuery,
 		MetricName:  "database_role_membership_summary",
 		Description: "Database role membership summary statistics",
-	},
-	{
-		Query:       DatabaseRoleHierarchyQuery,
-		MetricName:  "database_role_hierarchy",
-		Description: "Database role hierarchy and nesting information",
 	},
 	{
 		Query:       DatabaseRoleActivityQuery,
@@ -769,19 +758,9 @@ var databaseRoleMembershipQueriesDefault = []*QueryDefinition{
 // Database role membership query definitions for Azure SQL Database
 var databaseRoleMembershipQueriesAzureDatabase = []*QueryDefinition{
 	{
-		Query:       DatabaseRoleMembershipMetricsQuery,
-		MetricName:  "database_role_membership",
-		Description: "Database role membership relationships (Azure SQL Database)",
-	},
-	{
 		Query:       DatabaseRoleMembershipSummaryQuery,
 		MetricName:  "database_role_membership_summary",
 		Description: "Database role membership summary statistics (Azure SQL Database)",
-	},
-	{
-		Query:       DatabaseRoleHierarchyQuery,
-		MetricName:  "database_role_hierarchy",
-		Description: "Database role hierarchy and nesting information (Azure SQL Database)",
 	},
 	{
 		Query:       DatabaseRoleActivityQuery,
@@ -798,19 +777,9 @@ var databaseRoleMembershipQueriesAzureDatabase = []*QueryDefinition{
 // Database role membership query definitions for Azure SQL Managed Instance
 var databaseRoleMembershipQueriesAzureManagedInstance = []*QueryDefinition{
 	{
-		Query:       DatabaseRoleMembershipMetricsQuery,
-		MetricName:  "database_role_membership",
-		Description: "Database role membership relationships (Azure SQL Managed Instance)",
-	},
-	{
 		Query:       DatabaseRoleMembershipSummaryQuery,
 		MetricName:  "database_role_membership_summary",
 		Description: "Database role membership summary statistics (Azure SQL Managed Instance)",
-	},
-	{
-		Query:       DatabaseRoleHierarchyQuery,
-		MetricName:  "database_role_hierarchy",
-		Description: "Database role hierarchy and nesting information (Azure SQL Managed Instance)",
 	},
 	{
 		Query:       DatabaseRoleActivityQuery,

@@ -60,39 +60,6 @@
 // - Azure SQL Managed Instance: Complete functionality with enterprise features
 package models
 
-import "time"
-
-// DatabaseRoleMembershipMetrics represents database role membership relationships
-// This model captures the relationship between database roles and their members
-// as defined by the sys.database_role_members system view
-type DatabaseRoleMembershipMetrics struct {
-	// RoleName is the name of the database role
-	// This corresponds to roles.name in the query
-	// Examples: "db_owner", "db_datareader", "CustomAppRole", "ReportingRole"
-	RoleName string `db:"role_name" metric_name:"sqlserver.database.role.name" source_type:"attribute"`
-
-	// MemberName is the name of the principal that is a member of the role
-	// This corresponds to members.name in the query
-	// Examples: "AppUser", "ServiceAccount", "DeveloperRole", "john.doe"
-	MemberName string `db:"member_name" metric_name:"sqlserver.database.role.member.name" source_type:"attribute"`
-
-	// DatabaseName is the name of the database containing this role membership
-	// Added as context since role memberships are database-scoped
-	DatabaseName string `db:"database_name" metric_name:"sqlserver.database.name" source_type:"attribute"`
-
-	// RoleType describes the type of the role principal
-	// Examples: "DATABASE_ROLE", "APPLICATION_ROLE"
-	RoleType string `db:"role_type" metric_name:"sqlserver.database.role.type" source_type:"attribute"`
-
-	// MemberType describes the type of the member principal
-	// Examples: "SQL_USER", "WINDOWS_USER", "DATABASE_ROLE", "APPLICATION_ROLE"
-	MemberType string `db:"member_type" metric_name:"sqlserver.database.role.member.type" source_type:"attribute"`
-
-	// MembershipActive indicates if this membership relationship is currently active
-	// Always 1 for active memberships (from sys.database_role_members)
-	MembershipActive *int64 `db:"membership_active" metric_name:"sqlserver.database.role.membership.active" source_type:"gauge"`
-}
-
 // DatabaseRoleMembershipSummary represents aggregated statistics about role memberships
 // This model provides summary metrics for monitoring and alerting on role membership patterns
 type DatabaseRoleMembershipSummary struct {
@@ -124,27 +91,6 @@ type DatabaseRoleMembershipSummary struct {
 	UserRoleMemberships *int64 `db:"user_role_memberships" metric_name:"sqlserver.database.role.memberships.users" source_type:"gauge"`
 }
 
-// DatabaseRoleHierarchy represents the role hierarchy and nesting information
-// This model captures nested role relationships for security analysis
-type DatabaseRoleHierarchy struct {
-	// DatabaseName is the name of the database
-	DatabaseName string `db:"database_name"`
-
-	// ParentRoleName is the name of the role that contains other roles
-	ParentRoleName string `db:"parent_role_name" metric_name:"sqlserver.database.role.parent.name" source_type:"attribute"`
-
-	// ChildRoleName is the name of the role that is a member of the parent role
-	ChildRoleName string `db:"child_role_name" metric_name:"sqlserver.database.role.child.name" source_type:"attribute"`
-
-	// NestingLevel indicates the depth of role nesting
-	// 1 = direct membership, 2 = member of member, etc.
-	NestingLevel *int64 `db:"nesting_level" metric_name:"sqlserver.database.role.nesting.level" source_type:"gauge"`
-
-	// EffectivePermissions indicates if this creates effective permission inheritance
-	// 1 if the child role gains permissions from parent, 0 otherwise
-	EffectivePermissions *int64 `db:"effective_permissions" metric_name:"sqlserver.database.role.permissions.inherited" source_type:"gauge"`
-}
-
 // DatabaseRoleActivity represents role membership activity and changes
 // This model tracks the lifecycle and activity of role memberships
 type DatabaseRoleActivity struct {
@@ -172,26 +118,21 @@ type DatabaseRoleActivity struct {
 }
 
 // DatabaseRolePermissionMatrix represents role-based permission analysis
-// This model provides insights into the permission structure through role memberships
+// Retaining memberCount and riskLevel as they are aggregated per-role summaries
 type DatabaseRolePermissionMatrix struct {
 	// DatabaseName is the name of the database
 	DatabaseName string `db:"database_name"`
 
-	// RoleName is the name of the role
-	RoleName string `db:"role_name" metric_name:"sqlserver.database.role.permission.roleName" source_type:"attribute"`
+	// RoleName is the role being analyzed (kept as required attribute for metrics)
+	RoleName string `db:"role_name"`
+
+	// PermissionScope indicates the scope of permissions (kept as required attribute for metrics)
+	PermissionScope string `db:"permission_scope"`
 
 	// MemberCount is the number of members in this role
 	MemberCount *int64 `db:"member_count" metric_name:"sqlserver.database.role.permission.memberCount" source_type:"gauge"`
 
-	// PermissionScope indicates the scope of permissions this role provides
-	// Examples: "READ", "WRITE", "ADMIN", "MIXED"
-	PermissionScope string `db:"permission_scope" metric_name:"sqlserver.database.role.permission.scope" source_type:"attribute"`
-
 	// RiskLevel indicates the risk level of this role based on its permissions
 	// 1=Low, 2=Medium, 3=High, 4=Critical
 	RiskLevel *int64 `db:"risk_level" metric_name:"sqlserver.database.role.permission.riskLevel" source_type:"gauge"`
-
-	// LastAccessTime represents when this role was last used (if available)
-	// Useful for identifying inactive roles
-	LastAccessTime *time.Time `db:"last_access_time" metric_name:"sqlserver.database.role.permission.lastAccess" source_type:"gauge"`
 }
