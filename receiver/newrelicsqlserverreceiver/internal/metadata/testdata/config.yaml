@@ -303,17 +303,9 @@ all_set:
       enabled: true
     sqlserver.user_connections.authentication.churn_rate:
       enabled: true
-    sqlserver.user_connections.authentication.failed_login_events:
-      enabled: true
     sqlserver.user_connections.authentication.logins_per_sec:
       enabled: true
-    sqlserver.user_connections.authentication.logouts_per_sec:
-      enabled: true
-    sqlserver.user_connections.authentication.rate:
-      enabled: true
     sqlserver.user_connections.authentication.recent_failed_logins:
-      enabled: true
-    sqlserver.user_connections.authentication.total_activity:
       enabled: true
     sqlserver.user_connections.authentication.total_failed_logins:
       enabled: true
@@ -323,19 +315,9 @@ all_set:
       enabled: true
     sqlserver.user_connections.client.count:
       enabled: true
-    sqlserver.user_connections.client.hosts_multi_program:
-      enabled: true
-    sqlserver.user_connections.client.programs_multi_host:
-      enabled: true
-    sqlserver.user_connections.client.top_host_connections:
-      enabled: true
-    sqlserver.user_connections.client.top_program_connections:
-      enabled: true
     sqlserver.user_connections.client.unique_hosts:
       enabled: true
     sqlserver.user_connections.client.unique_programs:
-      enabled: true
-    sqlserver.user_connections.dormant:
       enabled: true
     sqlserver.user_connections.runnable:
       enabled: true
@@ -343,19 +325,13 @@ all_set:
       enabled: true
     sqlserver.user_connections.sleeping:
       enabled: true
-    sqlserver.user_connections.status.count:
-      enabled: true
     sqlserver.user_connections.suspended:
       enabled: true
     sqlserver.user_connections.total:
       enabled: true
     sqlserver.user_connections.utilization.active_ratio:
       enabled: true
-    sqlserver.user_connections.utilization.efficiency:
-      enabled: true
     sqlserver.user_connections.utilization.idle_ratio:
-      enabled: true
-    sqlserver.user_connections.utilization.waiting_ratio:
       enabled: true
     sqlserver.wait_stats.latch.wait_time_ms:
       enabled: true
@@ -683,17 +659,9 @@ none_set:
       enabled: false
     sqlserver.user_connections.authentication.churn_rate:
       enabled: false
-    sqlserver.user_connections.authentication.failed_login_events:
-      enabled: false
     sqlserver.user_connections.authentication.logins_per_sec:
       enabled: false
-    sqlserver.user_connections.authentication.logouts_per_sec:
-      enabled: false
-    sqlserver.user_connections.authentication.rate:
-      enabled: false
     sqlserver.user_connections.authentication.recent_failed_logins:
-      enabled: false
-    sqlserver.user_connections.authentication.total_activity:
       enabled: false
     sqlserver.user_connections.authentication.total_failed_logins:
       enabled: false
@@ -703,19 +671,9 @@ none_set:
       enabled: false
     sqlserver.user_connections.client.count:
       enabled: false
-    sqlserver.user_connections.client.hosts_multi_program:
-      enabled: false
-    sqlserver.user_connections.client.programs_multi_host:
-      enabled: false
-    sqlserver.user_connections.client.top_host_connections:
-      enabled: false
-    sqlserver.user_connections.client.top_program_connections:
-      enabled: false
     sqlserver.user_connections.client.unique_hosts:
       enabled: false
     sqlserver.user_connections.client.unique_programs:
-      enabled: false
-    sqlserver.user_connections.dormant:
       enabled: false
     sqlserver.user_connections.runnable:
       enabled: false
@@ -723,19 +681,13 @@ none_set:
       enabled: false
     sqlserver.user_connections.sleeping:
       enabled: false
-    sqlserver.user_connections.status.count:
-      enabled: false
     sqlserver.user_connections.suspended:
       enabled: false
     sqlserver.user_connections.total:
       enabled: false
     sqlserver.user_connections.utilization.active_ratio:
       enabled: false
-    sqlserver.user_connections.utilization.efficiency:
-      enabled: false
     sqlserver.user_connections.utilization.idle_ratio:
-      enabled: false
-    sqlserver.user_connections.utilization.waiting_ratio:
       enabled: false
     sqlserver.wait_stats.latch.wait_time_ms:
       enabled: false

@@ -2096,28 +2096,6 @@ metrics:
     gauge:
       value_type: double
 
-  # Failed Login Summary Metrics
-  sqlserver.user_connections.authentication.failed_login_events:
-    enabled: true
-    stability:
-      level: alpha
-    description: Count of failed login events processed
-    unit: "{events}"
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-    attributes:
-      [
-        event_type,
-        description,
-        start_time,
-        client_ip,
-        log_date,
-        process_info,
-        error_text,
-      ]
-
   sqlserver.user_connections.authentication.logins_per_sec:
     enabled: true
     stability:
@@ -2127,41 +2105,12 @@ metrics:
     gauge:
       value_type: int
 
-  sqlserver.user_connections.authentication.logouts_per_sec:
-    enabled: true
-    stability:
-      level: alpha
-    description: Current logout rate per second
-    unit: "{logouts}/s"
-    gauge:
-      value_type: int
-
-  sqlserver.user_connections.authentication.rate:
-    enabled: true
-    stability:
-      level: alpha
-    description: Login or logout rate per second from performance counters
-    unit: "{events}/s"
-    gauge:
-      value_type: int
-    attributes: [counter_name]
-
-  # Authentication Summary Metrics
   sqlserver.user_connections.authentication.recent_failed_logins:
     enabled: true
     stability:
       level: alpha
     description: Count of failed logins in the last hour
     unit: "{attempts}"
-    gauge:
-      value_type: int
-
-  sqlserver.user_connections.authentication.total_activity:
-    enabled: true
-    stability:
-      level: alpha
-    description: Sum of logins and logouts per second
-    unit: "{events}/s"
     gauge:
       value_type: int
 
@@ -2202,44 +2151,6 @@ metrics:
       value_type: int
     attributes: [host_name, program_name]
 
-  # User Connection Client Summary Metrics
-  sqlserver.user_connections.client.hosts_multi_program:
-    enabled: true
-    stability:
-      level: alpha
-    description: Count of hosts running multiple different programs
-    unit: "{hosts}"
-    gauge:
-      value_type: int
-
-  sqlserver.user_connections.client.programs_multi_host:
-    enabled: true
-    stability:
-      level: alpha
-    description: Count of programs connecting from multiple hosts
-    unit: "{programs}"
-    gauge:
-      value_type: int
-
-  # Authentication Rate Metrics
-  sqlserver.user_connections.client.top_host_connections:
-    enabled: true
-    stability:
-      level: alpha
-    description: Highest number of connections from a single host
-    unit: "{connections}"
-    gauge:
-      value_type: int
-
-  sqlserver.user_connections.client.top_program_connections:
-    enabled: true
-    stability:
-      level: alpha
-    description: Highest number of connections from a single program
-    unit: "{connections}"
-    gauge:
-      value_type: int
-
   sqlserver.user_connections.client.unique_hosts:
     enabled: true
     stability:
@@ -2258,16 +2169,6 @@ metrics:
     gauge:
       value_type: int
 
-  sqlserver.user_connections.dormant:
-    enabled: true
-    stability:
-      level: alpha
-    description: Number of dormant user connections
-    unit: "{connections}"
-    gauge:
-      value_type: int
-
-  # User Connection Utilization Metrics
   sqlserver.user_connections.runnable:
     enabled: true
     stability:
@@ -2295,17 +2196,6 @@ metrics:
     gauge:
       value_type: int
 
-  sqlserver.user_connections.status.count:
-    enabled: true
-    stability:
-      level: alpha
-    description: Number of user sessions by connection status
-    unit: "{sessions}"
-    gauge:
-      value_type: int
-    attributes: [status]
-
-  # User Connection Status Summary Metrics
   sqlserver.user_connections.suspended:
     enabled: true
     stability:
@@ -2333,30 +2223,11 @@ metrics:
     gauge:
       value_type: double
 
-  sqlserver.user_connections.utilization.efficiency:
-    enabled: true
-    stability:
-      level: alpha
-    description: Connection efficiency metric (active/total ratio adjusted for waiting)
-    unit: "1"
-    gauge:
-      value_type: double
-
-  # User Connection by Client Metrics
   sqlserver.user_connections.utilization.idle_ratio:
     enabled: true
     stability:
       level: alpha
     description: Ratio of idle connections to total connections
-    unit: "1"
-    gauge:
-      value_type: double
-
-  sqlserver.user_connections.utilization.waiting_ratio:
-    enabled: true
-    stability:
-      level: alpha
-    description: Ratio of waiting connections to total connections
     unit: "1"
     gauge:
       value_type: double
@@ -2448,17 +2319,11 @@ attributes:
   client_interface_name:
     description: Name of the client interface
     type: string
-  client_ip:
-    description: Client IP address
-    type: string
   cluster_type_desc:
     description: Cluster type description (WSFC, EXTERNAL, NONE)
     type: string
   collection_timestamp:
     description: Timestamp when the metric was collected
-    type: string
-  counter_name:
-    description: Performance counter name
     type: string
   creation_time:
     description: Timestamp when the plan was created
@@ -2469,18 +2334,12 @@ attributes:
   degree_of_parallelism:
     description: Degree of parallelism for the query
     type: int
-  description:
-    description: Event description
-    type: string
   engine_edition:
     description: SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database)
     type: string
   engine_edition_id:
     description: SQL Server engine edition ID
     type: int
-  error_text:
-    description: Error message text
-    type: string
   estimate_cpu:
     description: Estimated CPU cost
     type: double
@@ -2496,9 +2355,6 @@ attributes:
   estimated_operator_cost:
     description: Estimated cost of this operator alone
     type: double
-  event_type:
-    description: Event type
-    type: string
   execution_count:
     description: Number of times this operator executed
     type: int
@@ -2534,9 +2390,6 @@ attributes:
     type: string
   last_wait_type_description:
     description: Description of the last wait type
-    type: string
-  log_date:
-    description: Log date timestamp
     type: string
   logical_op:
     description: Logical operator name
@@ -2579,7 +2432,12 @@ attributes:
   plan_handle:
     description: Handle to the cached execution plan
     type: string
-  # Removed: principal_name, principal_type attributes (too granular)
+  principal_name:
+    description: Database principal name
+    type: string
+  principal_type:
+    description: Principal type description
+    type: string
   process_info:
     description: Process information
     type: string
@@ -2646,9 +2504,6 @@ attributes:
     type: string
   statement_type:
     description: Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.)
-    type: string
-  status:
-    description: Connection or session status
     type: string
   synchronization_health_desc:
     description: Synchronization health description (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY)

@@ -179,33 +179,21 @@ type MetricsConfig struct {
 	SqlserverThreadpoolWaitingTasks                           MetricConfig `mapstructure:"sqlserver.threadpool.waiting_tasks"`
 	SqlserverThreadpoolWorkQueueCount                         MetricConfig `mapstructure:"sqlserver.threadpool.work_queue_count"`
 	SqlserverUserConnectionsAuthenticationChurnRate           MetricConfig `mapstructure:"sqlserver.user_connections.authentication.churn_rate"`
-	SqlserverUserConnectionsAuthenticationFailedLoginEvents   MetricConfig `mapstructure:"sqlserver.user_connections.authentication.failed_login_events"`
 	SqlserverUserConnectionsAuthenticationLoginsPerSec        MetricConfig `mapstructure:"sqlserver.user_connections.authentication.logins_per_sec"`
-	SqlserverUserConnectionsAuthenticationLogoutsPerSec       MetricConfig `mapstructure:"sqlserver.user_connections.authentication.logouts_per_sec"`
-	SqlserverUserConnectionsAuthenticationRate                MetricConfig `mapstructure:"sqlserver.user_connections.authentication.rate"`
 	SqlserverUserConnectionsAuthenticationRecentFailedLogins  MetricConfig `mapstructure:"sqlserver.user_connections.authentication.recent_failed_logins"`
-	SqlserverUserConnectionsAuthenticationTotalActivity       MetricConfig `mapstructure:"sqlserver.user_connections.authentication.total_activity"`
 	SqlserverUserConnectionsAuthenticationTotalFailedLogins   MetricConfig `mapstructure:"sqlserver.user_connections.authentication.total_failed_logins"`
 	SqlserverUserConnectionsAuthenticationUniqueFailedSources MetricConfig `mapstructure:"sqlserver.user_connections.authentication.unique_failed_sources"`
 	SqlserverUserConnectionsAuthenticationUniqueFailedUsers   MetricConfig `mapstructure:"sqlserver.user_connections.authentication.unique_failed_users"`
 	SqlserverUserConnectionsClientCount                       MetricConfig `mapstructure:"sqlserver.user_connections.client.count"`
-	SqlserverUserConnectionsClientHostsMultiProgram           MetricConfig `mapstructure:"sqlserver.user_connections.client.hosts_multi_program"`
-	SqlserverUserConnectionsClientProgramsMultiHost           MetricConfig `mapstructure:"sqlserver.user_connections.client.programs_multi_host"`
-	SqlserverUserConnectionsClientTopHostConnections          MetricConfig `mapstructure:"sqlserver.user_connections.client.top_host_connections"`
-	SqlserverUserConnectionsClientTopProgramConnections       MetricConfig `mapstructure:"sqlserver.user_connections.client.top_program_connections"`
 	SqlserverUserConnectionsClientUniqueHosts                 MetricConfig `mapstructure:"sqlserver.user_connections.client.unique_hosts"`
 	SqlserverUserConnectionsClientUniquePrograms              MetricConfig `mapstructure:"sqlserver.user_connections.client.unique_programs"`
-	SqlserverUserConnectionsDormant                           MetricConfig `mapstructure:"sqlserver.user_connections.dormant"`
 	SqlserverUserConnectionsRunnable                          MetricConfig `mapstructure:"sqlserver.user_connections.runnable"`
 	SqlserverUserConnectionsRunning                           MetricConfig `mapstructure:"sqlserver.user_connections.running"`
 	SqlserverUserConnectionsSleeping                          MetricConfig `mapstructure:"sqlserver.user_connections.sleeping"`
-	SqlserverUserConnectionsStatusCount                       MetricConfig `mapstructure:"sqlserver.user_connections.status.count"`
 	SqlserverUserConnectionsSuspended                         MetricConfig `mapstructure:"sqlserver.user_connections.suspended"`
 	SqlserverUserConnectionsTotal                             MetricConfig `mapstructure:"sqlserver.user_connections.total"`
 	SqlserverUserConnectionsUtilizationActiveRatio            MetricConfig `mapstructure:"sqlserver.user_connections.utilization.active_ratio"`
-	SqlserverUserConnectionsUtilizationEfficiency             MetricConfig `mapstructure:"sqlserver.user_connections.utilization.efficiency"`
 	SqlserverUserConnectionsUtilizationIdleRatio              MetricConfig `mapstructure:"sqlserver.user_connections.utilization.idle_ratio"`
-	SqlserverUserConnectionsUtilizationWaitingRatio           MetricConfig `mapstructure:"sqlserver.user_connections.utilization.waiting_ratio"`
 	SqlserverWaitStatsLatchWaitTimeMs                         MetricConfig `mapstructure:"sqlserver.wait_stats.latch.wait_time_ms"`
 	SqlserverWaitStatsLatchWaitingTasksCount                  MetricConfig `mapstructure:"sqlserver.wait_stats.latch.waiting_tasks_count"`
 	SqlserverWaitStatsWaitTimeMs                              MetricConfig `mapstructure:"sqlserver.wait_stats.wait_time_ms"`
@@ -667,22 +655,10 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverUserConnectionsAuthenticationChurnRate: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverUserConnectionsAuthenticationFailedLoginEvents: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverUserConnectionsAuthenticationLoginsPerSec: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverUserConnectionsAuthenticationLogoutsPerSec: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverUserConnectionsAuthenticationRate: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverUserConnectionsAuthenticationRecentFailedLogins: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverUserConnectionsAuthenticationTotalActivity: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverUserConnectionsAuthenticationTotalFailedLogins: MetricConfig{
@@ -697,25 +673,10 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverUserConnectionsClientCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverUserConnectionsClientHostsMultiProgram: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverUserConnectionsClientProgramsMultiHost: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverUserConnectionsClientTopHostConnections: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverUserConnectionsClientTopProgramConnections: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverUserConnectionsClientUniqueHosts: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverUserConnectionsClientUniquePrograms: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverUserConnectionsDormant: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverUserConnectionsRunnable: MetricConfig{
@@ -727,9 +688,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverUserConnectionsSleeping: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverUserConnectionsStatusCount: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverUserConnectionsSuspended: MetricConfig{
 			Enabled: true,
 		},
@@ -739,13 +697,7 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverUserConnectionsUtilizationActiveRatio: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverUserConnectionsUtilizationEfficiency: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverUserConnectionsUtilizationIdleRatio: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverUserConnectionsUtilizationWaitingRatio: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverWaitStatsLatchWaitTimeMs: MetricConfig{

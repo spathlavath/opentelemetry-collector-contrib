@@ -474,24 +474,9 @@ var databaseQueriesAzureManagedInstance = []*QueryDefinition{
 // Query definitions for user connection metrics (Default/Standard SQL Server)
 var userConnectionQueriesDefault = []*QueryDefinition{
 	{
-		Query:       UserConnectionStatusQuery,
-		MetricName:  "sqlserver.user_connections.status.metrics",
-		Description: "User connection status distribution",
-	},
-	{
-		Query:       LoginLogoutQuery,
-		MetricName:  "sqlserver.user_connections.authentication.metrics",
-		Description: "Login/logout rate metrics",
-	},
-	{
 		Query:       LoginLogoutSummaryQuery,
 		MetricName:  "sqlserver.user_connections.authentication.summary",
 		Description: "Login/logout summary statistics",
-	},
-	{
-		Query:       FailedLoginQuery,
-		MetricName:  "sqlserver.user_connections.failed_logins.metrics",
-		Description: "Failed login attempts from error log",
 	},
 	{
 		Query:       FailedLoginSummaryQuery,
@@ -523,24 +508,9 @@ var userConnectionQueriesDefault = []*QueryDefinition{
 // Query definitions for user connection metrics (Azure SQL Database)
 var userConnectionQueriesAzureDatabase = []*QueryDefinition{
 	{
-		Query:       UserConnectionStatusQueryAzureSQL,
-		MetricName:  "sqlserver.user_connections.status.metrics",
-		Description: "User connection status distribution (Azure SQL Database)",
-	},
-	{
-		Query:       LoginLogoutQueryAzureSQL,
-		MetricName:  "sqlserver.user_connections.authentication.metrics",
-		Description: "Login/logout rate metrics (Azure SQL Database)",
-	},
-	{
 		Query:       LoginLogoutSummaryQueryAzureSQL,
 		MetricName:  "sqlserver.user_connections.authentication.summary",
 		Description: "Login/logout summary statistics (Azure SQL Database)",
-	},
-	{
-		Query:       FailedLoginQueryAzureSQL,
-		MetricName:  "sqlserver.user_connections.failed_logins.metrics",
-		Description: "Failed login attempts from sys.event_log (Azure SQL Database)",
 	},
 	{
 		Query:       FailedLoginSummaryQueryAzureSQL,
@@ -572,24 +542,9 @@ var userConnectionQueriesAzureDatabase = []*QueryDefinition{
 // Query definitions for user connection metrics (Azure SQL Managed Instance)
 var userConnectionQueriesAzureManagedInstance = []*QueryDefinition{
 	{
-		Query:       UserConnectionStatusQueryAzureMI,
-		MetricName:  "sqlserver.user_connections.status.metrics",
-		Description: "User connection status distribution (Azure SQL Managed Instance)",
-	},
-	{
-		Query:       LoginLogoutQueryAzureMI,
-		MetricName:  "sqlserver.user_connections.authentication.metrics",
-		Description: "Login/logout rate metrics (Azure SQL Managed Instance)",
-	},
-	{
 		Query:       LoginLogoutSummaryQueryAzureMI,
 		MetricName:  "sqlserver.user_connections.authentication.summary",
 		Description: "Login/logout summary statistics (Azure SQL Managed Instance)",
-	},
-	{
-		Query:       FailedLoginQueryAzureMI,
-		MetricName:  "sqlserver.user_connections.failed_logins.metrics",
-		Description: "Failed login attempts from error log (Azure SQL Managed Instance)",
 	},
 	{
 		Query:       FailedLoginSummaryQueryAzureMI,
