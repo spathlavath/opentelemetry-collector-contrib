@@ -88,9 +88,6 @@ var MetricsInfo = metricsInfo{
 	SqlserverDatabasePageFileTotalBytes: metricInfo{
 		Name: "sqlserver.database.page_file_total_bytes",
 	},
-	SqlserverDatabasePrincipalCreateDate: metricInfo{
-		Name: "sqlserver.database.principal.createDate",
-	},
 	SqlserverDatabasePrincipalsApplicationRoles: metricInfo{
 		Name: "sqlserver.database.principals.applicationRoles",
 	},
@@ -130,9 +127,6 @@ var MetricsInfo = metricsInfo{
 	SqlserverDatabaseRoleMembersUnique: metricInfo{
 		Name: "sqlserver.database.role.members.unique",
 	},
-	SqlserverDatabaseRoleMembershipActive: metricInfo{
-		Name: "sqlserver.database.role.membership.active",
-	},
 	SqlserverDatabaseRoleMembershipsActive: metricInfo{
 		Name: "sqlserver.database.role.memberships.active",
 	},
@@ -148,17 +142,11 @@ var MetricsInfo = metricsInfo{
 	SqlserverDatabaseRoleMembershipsUsers: metricInfo{
 		Name: "sqlserver.database.role.memberships.users",
 	},
-	SqlserverDatabaseRoleNestingLevel: metricInfo{
-		Name: "sqlserver.database.role.nesting.level",
-	},
 	SqlserverDatabaseRolePermissionMemberCount: metricInfo{
 		Name: "sqlserver.database.role.permission.memberCount",
 	},
 	SqlserverDatabaseRolePermissionRiskLevel: metricInfo{
 		Name: "sqlserver.database.role.permission.riskLevel",
-	},
-	SqlserverDatabaseRolePermissionsInherited: metricInfo{
-		Name: "sqlserver.database.role.permissions.inherited",
 	},
 	SqlserverDatabaseRoleRolesEmpty: metricInfo{
 		Name: "sqlserver.database.role.roles.empty",
@@ -563,7 +551,6 @@ type metricsInfo struct {
 	SqlserverDatabaseMaxDiskSizeBytes                         metricInfo
 	SqlserverDatabasePageFileAvailableBytes                   metricInfo
 	SqlserverDatabasePageFileTotalBytes                       metricInfo
-	SqlserverDatabasePrincipalCreateDate                      metricInfo
 	SqlserverDatabasePrincipalsApplicationRoles               metricInfo
 	SqlserverDatabasePrincipalsOld                            metricInfo
 	SqlserverDatabasePrincipalsOrphanedUsers                  metricInfo
@@ -577,16 +564,13 @@ type metricsInfo struct {
 	SqlserverDatabaseRoleMembersCrossRole                     metricInfo
 	SqlserverDatabaseRoleMembersHighPrivilege                 metricInfo
 	SqlserverDatabaseRoleMembersUnique                        metricInfo
-	SqlserverDatabaseRoleMembershipActive                     metricInfo
 	SqlserverDatabaseRoleMembershipsActive                    metricInfo
 	SqlserverDatabaseRoleMembershipsCustom                    metricInfo
 	SqlserverDatabaseRoleMembershipsNested                    metricInfo
 	SqlserverDatabaseRoleMembershipsTotal                     metricInfo
 	SqlserverDatabaseRoleMembershipsUsers                     metricInfo
-	SqlserverDatabaseRoleNestingLevel                         metricInfo
 	SqlserverDatabaseRolePermissionMemberCount                metricInfo
 	SqlserverDatabaseRolePermissionRiskLevel                  metricInfo
-	SqlserverDatabaseRolePermissionsInherited                 metricInfo
 	SqlserverDatabaseRoleRolesEmpty                           metricInfo
 	SqlserverDatabaseRoleRolesWithMembers                     metricInfo
 	SqlserverDatabaseSizeDataMb                               metricInfo
@@ -2350,59 +2334,6 @@ func newMetricSqlserverDatabasePageFileTotalBytes(cfg MetricConfig) metricSqlser
 	return m
 }
 
-type metricSqlserverDatabasePrincipalCreateDate struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.database.principal.createDate metric with initial data.
-func (m *metricSqlserverDatabasePrincipalCreateDate) init() {
-	m.data.SetName("sqlserver.database.principal.createDate")
-	m.data.SetDescription("Database principal creation date as Unix timestamp")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverDatabasePrincipalCreateDate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, principalNameAttributeValue string, principalTypeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("principal_name", principalNameAttributeValue)
-	dp.Attributes().PutStr("principal_type", principalTypeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverDatabasePrincipalCreateDate) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverDatabasePrincipalCreateDate) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverDatabasePrincipalCreateDate(cfg MetricConfig) metricSqlserverDatabasePrincipalCreateDate {
-	m := metricSqlserverDatabasePrincipalCreateDate{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverDatabasePrincipalsApplicationRoles struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3066,61 +2997,6 @@ func newMetricSqlserverDatabaseRoleMembersUnique(cfg MetricConfig) metricSqlserv
 	return m
 }
 
-type metricSqlserverDatabaseRoleMembershipActive struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.database.role.membership.active metric with initial data.
-func (m *metricSqlserverDatabaseRoleMembershipActive) init() {
-	m.data.SetName("sqlserver.database.role.membership.active")
-	m.data.SetDescription("Database role membership active status")
-	m.data.SetUnit("{status}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverDatabaseRoleMembershipActive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, roleNameAttributeValue string, memberNameAttributeValue string, roleTypeAttributeValue string, memberTypeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("role_name", roleNameAttributeValue)
-	dp.Attributes().PutStr("member_name", memberNameAttributeValue)
-	dp.Attributes().PutStr("role_type", roleTypeAttributeValue)
-	dp.Attributes().PutStr("member_type", memberTypeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverDatabaseRoleMembershipActive) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverDatabaseRoleMembershipActive) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverDatabaseRoleMembershipActive(cfg MetricConfig) metricSqlserverDatabaseRoleMembershipActive {
-	m := metricSqlserverDatabaseRoleMembershipActive{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverDatabaseRoleMembershipsActive struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3376,59 +3252,6 @@ func newMetricSqlserverDatabaseRoleMembershipsUsers(cfg MetricConfig) metricSqls
 	return m
 }
 
-type metricSqlserverDatabaseRoleNestingLevel struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.database.role.nesting.level metric with initial data.
-func (m *metricSqlserverDatabaseRoleNestingLevel) init() {
-	m.data.SetName("sqlserver.database.role.nesting.level")
-	m.data.SetDescription("Role nesting level")
-	m.data.SetUnit("{level}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverDatabaseRoleNestingLevel) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, parentRoleNameAttributeValue string, childRoleNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("parent_role_name", parentRoleNameAttributeValue)
-	dp.Attributes().PutStr("child_role_name", childRoleNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverDatabaseRoleNestingLevel) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverDatabaseRoleNestingLevel) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverDatabaseRoleNestingLevel(cfg MetricConfig) metricSqlserverDatabaseRoleNestingLevel {
-	m := metricSqlserverDatabaseRoleNestingLevel{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricSqlserverDatabaseRolePermissionMemberCount struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3528,59 +3351,6 @@ func (m *metricSqlserverDatabaseRolePermissionRiskLevel) emit(metrics pmetric.Me
 
 func newMetricSqlserverDatabaseRolePermissionRiskLevel(cfg MetricConfig) metricSqlserverDatabaseRolePermissionRiskLevel {
 	m := metricSqlserverDatabaseRolePermissionRiskLevel{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverDatabaseRolePermissionsInherited struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.database.role.permissions.inherited metric with initial data.
-func (m *metricSqlserverDatabaseRolePermissionsInherited) init() {
-	m.data.SetName("sqlserver.database.role.permissions.inherited")
-	m.data.SetDescription("Role permission inheritance status")
-	m.data.SetUnit("{status}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverDatabaseRolePermissionsInherited) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, parentRoleNameAttributeValue string, childRoleNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("parent_role_name", parentRoleNameAttributeValue)
-	dp.Attributes().PutStr("child_role_name", childRoleNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverDatabaseRolePermissionsInherited) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverDatabaseRolePermissionsInherited) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverDatabaseRolePermissionsInherited(cfg MetricConfig) metricSqlserverDatabaseRolePermissionsInherited {
-	m := metricSqlserverDatabaseRolePermissionsInherited{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10070,7 +9840,6 @@ type MetricsBuilder struct {
 	metricSqlserverDatabaseMaxDiskSizeBytes                         metricSqlserverDatabaseMaxDiskSizeBytes
 	metricSqlserverDatabasePageFileAvailableBytes                   metricSqlserverDatabasePageFileAvailableBytes
 	metricSqlserverDatabasePageFileTotalBytes                       metricSqlserverDatabasePageFileTotalBytes
-	metricSqlserverDatabasePrincipalCreateDate                      metricSqlserverDatabasePrincipalCreateDate
 	metricSqlserverDatabasePrincipalsApplicationRoles               metricSqlserverDatabasePrincipalsApplicationRoles
 	metricSqlserverDatabasePrincipalsOld                            metricSqlserverDatabasePrincipalsOld
 	metricSqlserverDatabasePrincipalsOrphanedUsers                  metricSqlserverDatabasePrincipalsOrphanedUsers
@@ -10084,16 +9853,13 @@ type MetricsBuilder struct {
 	metricSqlserverDatabaseRoleMembersCrossRole                     metricSqlserverDatabaseRoleMembersCrossRole
 	metricSqlserverDatabaseRoleMembersHighPrivilege                 metricSqlserverDatabaseRoleMembersHighPrivilege
 	metricSqlserverDatabaseRoleMembersUnique                        metricSqlserverDatabaseRoleMembersUnique
-	metricSqlserverDatabaseRoleMembershipActive                     metricSqlserverDatabaseRoleMembershipActive
 	metricSqlserverDatabaseRoleMembershipsActive                    metricSqlserverDatabaseRoleMembershipsActive
 	metricSqlserverDatabaseRoleMembershipsCustom                    metricSqlserverDatabaseRoleMembershipsCustom
 	metricSqlserverDatabaseRoleMembershipsNested                    metricSqlserverDatabaseRoleMembershipsNested
 	metricSqlserverDatabaseRoleMembershipsTotal                     metricSqlserverDatabaseRoleMembershipsTotal
 	metricSqlserverDatabaseRoleMembershipsUsers                     metricSqlserverDatabaseRoleMembershipsUsers
-	metricSqlserverDatabaseRoleNestingLevel                         metricSqlserverDatabaseRoleNestingLevel
 	metricSqlserverDatabaseRolePermissionMemberCount                metricSqlserverDatabaseRolePermissionMemberCount
 	metricSqlserverDatabaseRolePermissionRiskLevel                  metricSqlserverDatabaseRolePermissionRiskLevel
-	metricSqlserverDatabaseRolePermissionsInherited                 metricSqlserverDatabaseRolePermissionsInherited
 	metricSqlserverDatabaseRoleRolesEmpty                           metricSqlserverDatabaseRoleRolesEmpty
 	metricSqlserverDatabaseRoleRolesWithMembers                     metricSqlserverDatabaseRoleRolesWithMembers
 	metricSqlserverDatabaseSizeDataMb                               metricSqlserverDatabaseSizeDataMb
@@ -10269,7 +10035,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverDatabaseMaxDiskSizeBytes:                         newMetricSqlserverDatabaseMaxDiskSizeBytes(mbc.Metrics.SqlserverDatabaseMaxDiskSizeBytes),
 		metricSqlserverDatabasePageFileAvailableBytes:                   newMetricSqlserverDatabasePageFileAvailableBytes(mbc.Metrics.SqlserverDatabasePageFileAvailableBytes),
 		metricSqlserverDatabasePageFileTotalBytes:                       newMetricSqlserverDatabasePageFileTotalBytes(mbc.Metrics.SqlserverDatabasePageFileTotalBytes),
-		metricSqlserverDatabasePrincipalCreateDate:                      newMetricSqlserverDatabasePrincipalCreateDate(mbc.Metrics.SqlserverDatabasePrincipalCreateDate),
 		metricSqlserverDatabasePrincipalsApplicationRoles:               newMetricSqlserverDatabasePrincipalsApplicationRoles(mbc.Metrics.SqlserverDatabasePrincipalsApplicationRoles),
 		metricSqlserverDatabasePrincipalsOld:                            newMetricSqlserverDatabasePrincipalsOld(mbc.Metrics.SqlserverDatabasePrincipalsOld),
 		metricSqlserverDatabasePrincipalsOrphanedUsers:                  newMetricSqlserverDatabasePrincipalsOrphanedUsers(mbc.Metrics.SqlserverDatabasePrincipalsOrphanedUsers),
@@ -10283,16 +10048,13 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverDatabaseRoleMembersCrossRole:                     newMetricSqlserverDatabaseRoleMembersCrossRole(mbc.Metrics.SqlserverDatabaseRoleMembersCrossRole),
 		metricSqlserverDatabaseRoleMembersHighPrivilege:                 newMetricSqlserverDatabaseRoleMembersHighPrivilege(mbc.Metrics.SqlserverDatabaseRoleMembersHighPrivilege),
 		metricSqlserverDatabaseRoleMembersUnique:                        newMetricSqlserverDatabaseRoleMembersUnique(mbc.Metrics.SqlserverDatabaseRoleMembersUnique),
-		metricSqlserverDatabaseRoleMembershipActive:                     newMetricSqlserverDatabaseRoleMembershipActive(mbc.Metrics.SqlserverDatabaseRoleMembershipActive),
 		metricSqlserverDatabaseRoleMembershipsActive:                    newMetricSqlserverDatabaseRoleMembershipsActive(mbc.Metrics.SqlserverDatabaseRoleMembershipsActive),
 		metricSqlserverDatabaseRoleMembershipsCustom:                    newMetricSqlserverDatabaseRoleMembershipsCustom(mbc.Metrics.SqlserverDatabaseRoleMembershipsCustom),
 		metricSqlserverDatabaseRoleMembershipsNested:                    newMetricSqlserverDatabaseRoleMembershipsNested(mbc.Metrics.SqlserverDatabaseRoleMembershipsNested),
 		metricSqlserverDatabaseRoleMembershipsTotal:                     newMetricSqlserverDatabaseRoleMembershipsTotal(mbc.Metrics.SqlserverDatabaseRoleMembershipsTotal),
 		metricSqlserverDatabaseRoleMembershipsUsers:                     newMetricSqlserverDatabaseRoleMembershipsUsers(mbc.Metrics.SqlserverDatabaseRoleMembershipsUsers),
-		metricSqlserverDatabaseRoleNestingLevel:                         newMetricSqlserverDatabaseRoleNestingLevel(mbc.Metrics.SqlserverDatabaseRoleNestingLevel),
 		metricSqlserverDatabaseRolePermissionMemberCount:                newMetricSqlserverDatabaseRolePermissionMemberCount(mbc.Metrics.SqlserverDatabaseRolePermissionMemberCount),
 		metricSqlserverDatabaseRolePermissionRiskLevel:                  newMetricSqlserverDatabaseRolePermissionRiskLevel(mbc.Metrics.SqlserverDatabaseRolePermissionRiskLevel),
-		metricSqlserverDatabaseRolePermissionsInherited:                 newMetricSqlserverDatabaseRolePermissionsInherited(mbc.Metrics.SqlserverDatabaseRolePermissionsInherited),
 		metricSqlserverDatabaseRoleRolesEmpty:                           newMetricSqlserverDatabaseRoleRolesEmpty(mbc.Metrics.SqlserverDatabaseRoleRolesEmpty),
 		metricSqlserverDatabaseRoleRolesWithMembers:                     newMetricSqlserverDatabaseRoleRolesWithMembers(mbc.Metrics.SqlserverDatabaseRoleRolesWithMembers),
 		metricSqlserverDatabaseSizeDataMb:                               newMetricSqlserverDatabaseSizeDataMb(mbc.Metrics.SqlserverDatabaseSizeDataMb),
@@ -10545,7 +10307,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverDatabaseMaxDiskSizeBytes.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePageFileAvailableBytes.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePageFileTotalBytes.emit(ils.Metrics())
-	mb.metricSqlserverDatabasePrincipalCreateDate.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePrincipalsApplicationRoles.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePrincipalsOld.emit(ils.Metrics())
 	mb.metricSqlserverDatabasePrincipalsOrphanedUsers.emit(ils.Metrics())
@@ -10559,16 +10320,13 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverDatabaseRoleMembersCrossRole.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleMembersHighPrivilege.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleMembersUnique.emit(ils.Metrics())
-	mb.metricSqlserverDatabaseRoleMembershipActive.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleMembershipsActive.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleMembershipsCustom.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleMembershipsNested.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleMembershipsTotal.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleMembershipsUsers.emit(ils.Metrics())
-	mb.metricSqlserverDatabaseRoleNestingLevel.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRolePermissionMemberCount.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRolePermissionRiskLevel.emit(ils.Metrics())
-	mb.metricSqlserverDatabaseRolePermissionsInherited.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleRolesEmpty.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseRoleRolesWithMembers.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseSizeDataMb.emit(ils.Metrics())
@@ -10850,11 +10608,6 @@ func (mb *MetricsBuilder) RecordSqlserverDatabasePageFileTotalBytesDataPoint(ts 
 	mb.metricSqlserverDatabasePageFileTotalBytes.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, metricSourceAttributeValue, engineEditionAttributeValue, engineEditionIDAttributeValue)
 }
 
-// RecordSqlserverDatabasePrincipalCreateDateDataPoint adds a data point to sqlserver.database.principal.createDate metric.
-func (mb *MetricsBuilder) RecordSqlserverDatabasePrincipalCreateDateDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, principalNameAttributeValue string, principalTypeAttributeValue string) {
-	mb.metricSqlserverDatabasePrincipalCreateDate.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, principalNameAttributeValue, principalTypeAttributeValue)
-}
-
 // RecordSqlserverDatabasePrincipalsApplicationRolesDataPoint adds a data point to sqlserver.database.principals.applicationRoles metric.
 func (mb *MetricsBuilder) RecordSqlserverDatabasePrincipalsApplicationRolesDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string) {
 	mb.metricSqlserverDatabasePrincipalsApplicationRoles.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue)
@@ -10920,11 +10673,6 @@ func (mb *MetricsBuilder) RecordSqlserverDatabaseRoleMembersUniqueDataPoint(ts p
 	mb.metricSqlserverDatabaseRoleMembersUnique.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue)
 }
 
-// RecordSqlserverDatabaseRoleMembershipActiveDataPoint adds a data point to sqlserver.database.role.membership.active metric.
-func (mb *MetricsBuilder) RecordSqlserverDatabaseRoleMembershipActiveDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, roleNameAttributeValue string, memberNameAttributeValue string, roleTypeAttributeValue string, memberTypeAttributeValue string) {
-	mb.metricSqlserverDatabaseRoleMembershipActive.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, roleNameAttributeValue, memberNameAttributeValue, roleTypeAttributeValue, memberTypeAttributeValue)
-}
-
 // RecordSqlserverDatabaseRoleMembershipsActiveDataPoint adds a data point to sqlserver.database.role.memberships.active metric.
 func (mb *MetricsBuilder) RecordSqlserverDatabaseRoleMembershipsActiveDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string) {
 	mb.metricSqlserverDatabaseRoleMembershipsActive.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue)
@@ -10950,11 +10698,6 @@ func (mb *MetricsBuilder) RecordSqlserverDatabaseRoleMembershipsUsersDataPoint(t
 	mb.metricSqlserverDatabaseRoleMembershipsUsers.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue)
 }
 
-// RecordSqlserverDatabaseRoleNestingLevelDataPoint adds a data point to sqlserver.database.role.nesting.level metric.
-func (mb *MetricsBuilder) RecordSqlserverDatabaseRoleNestingLevelDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, parentRoleNameAttributeValue string, childRoleNameAttributeValue string) {
-	mb.metricSqlserverDatabaseRoleNestingLevel.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, parentRoleNameAttributeValue, childRoleNameAttributeValue)
-}
-
 // RecordSqlserverDatabaseRolePermissionMemberCountDataPoint adds a data point to sqlserver.database.role.permission.memberCount metric.
 func (mb *MetricsBuilder) RecordSqlserverDatabaseRolePermissionMemberCountDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, roleNameAttributeValue string, permissionScopeAttributeValue string) {
 	mb.metricSqlserverDatabaseRolePermissionMemberCount.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, roleNameAttributeValue, permissionScopeAttributeValue)
@@ -10963,11 +10706,6 @@ func (mb *MetricsBuilder) RecordSqlserverDatabaseRolePermissionMemberCountDataPo
 // RecordSqlserverDatabaseRolePermissionRiskLevelDataPoint adds a data point to sqlserver.database.role.permission.riskLevel metric.
 func (mb *MetricsBuilder) RecordSqlserverDatabaseRolePermissionRiskLevelDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, roleNameAttributeValue string, permissionScopeAttributeValue string) {
 	mb.metricSqlserverDatabaseRolePermissionRiskLevel.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, roleNameAttributeValue, permissionScopeAttributeValue)
-}
-
-// RecordSqlserverDatabaseRolePermissionsInheritedDataPoint adds a data point to sqlserver.database.role.permissions.inherited metric.
-func (mb *MetricsBuilder) RecordSqlserverDatabaseRolePermissionsInheritedDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, parentRoleNameAttributeValue string, childRoleNameAttributeValue string) {
-	mb.metricSqlserverDatabaseRolePermissionsInherited.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, parentRoleNameAttributeValue, childRoleNameAttributeValue)
 }
 
 // RecordSqlserverDatabaseRoleRolesEmptyDataPoint adds a data point to sqlserver.database.role.roles.empty metric.

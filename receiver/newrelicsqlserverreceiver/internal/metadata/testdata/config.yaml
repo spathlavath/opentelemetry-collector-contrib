@@ -51,8 +51,6 @@ all_set:
       enabled: true
     sqlserver.database.page_file_total_bytes:
       enabled: true
-    sqlserver.database.principal.createDate:
-      enabled: true
     sqlserver.database.principals.applicationRoles:
       enabled: true
     sqlserver.database.principals.old:
@@ -79,8 +77,6 @@ all_set:
       enabled: true
     sqlserver.database.role.members.unique:
       enabled: true
-    sqlserver.database.role.membership.active:
-      enabled: true
     sqlserver.database.role.memberships.active:
       enabled: true
     sqlserver.database.role.memberships.custom:
@@ -91,13 +87,9 @@ all_set:
       enabled: true
     sqlserver.database.role.memberships.users:
       enabled: true
-    sqlserver.database.role.nesting.level:
-      enabled: true
     sqlserver.database.role.permission.memberCount:
       enabled: true
     sqlserver.database.role.permission.riskLevel:
-      enabled: true
-    sqlserver.database.role.permissions.inherited:
       enabled: true
     sqlserver.database.role.roles.empty:
       enabled: true
@@ -415,8 +407,6 @@ none_set:
       enabled: false
     sqlserver.database.page_file_total_bytes:
       enabled: false
-    sqlserver.database.principal.createDate:
-      enabled: false
     sqlserver.database.principals.applicationRoles:
       enabled: false
     sqlserver.database.principals.old:
@@ -443,8 +433,6 @@ none_set:
       enabled: false
     sqlserver.database.role.members.unique:
       enabled: false
-    sqlserver.database.role.membership.active:
-      enabled: false
     sqlserver.database.role.memberships.active:
       enabled: false
     sqlserver.database.role.memberships.custom:
@@ -455,13 +443,9 @@ none_set:
       enabled: false
     sqlserver.database.role.memberships.users:
       enabled: false
-    sqlserver.database.role.nesting.level:
-      enabled: false
     sqlserver.database.role.permission.memberCount:
       enabled: false
     sqlserver.database.role.permission.riskLevel:
-      enabled: false
-    sqlserver.database.role.permissions.inherited:
       enabled: false
     sqlserver.database.role.roles.empty:
       enabled: false

@@ -20,23 +20,6 @@
 // ```
 package queries
 
-// DatabaseRoleMembershipMetricsQuery returns the main query for role membership relationships
-// This implements the core user-provided query with additional context and type information
-const DatabaseRoleMembershipMetricsQuery = `
-	SELECT 
-		roles.name AS role_name,
-		members.name AS member_name,
-		DB_NAME() AS database_name,
-		roles.type_desc AS role_type,
-		members.type_desc AS member_type,
-		1 AS membership_active
-	FROM sys.database_role_members AS drm
-	JOIN sys.database_principals AS roles ON drm.role_principal_id = roles.principal_id
-	JOIN sys.database_principals AS members ON drm.member_principal_id = members.principal_id
-	WHERE roles.type IN ('R', 'A')  -- DATABASE_ROLE, APPLICATION_ROLE
-	AND (members.type <> 'R' OR (members.type = 'R' AND members.name NOT LIKE 'db_%'))  -- Include nested custom roles
-	ORDER BY role_name, member_name`
-
 // DatabaseRoleMembershipSummaryQuery returns aggregated role membership statistics
 // This provides summary metrics for monitoring and alerting purposes
 const DatabaseRoleMembershipSummaryQuery = `
@@ -52,37 +35,6 @@ const DatabaseRoleMembershipSummaryQuery = `
 	JOIN sys.database_principals AS roles ON drm.role_principal_id = roles.principal_id
 	JOIN sys.database_principals AS members ON drm.member_principal_id = members.principal_id
 	WHERE roles.type IN ('R', 'A')`
-
-// DatabaseRoleHierarchyQuery returns role hierarchy and nesting information
-// This identifies nested role relationships for security analysis
-const DatabaseRoleHierarchyQuery = `
-	WITH RoleHierarchy AS (
-		SELECT 
-			DB_NAME() AS database_name,
-			roles.name AS parent_role_name,
-			members.name AS child_role_name,
-			1 AS nesting_level,
-			1 AS effective_permissions
-		FROM sys.database_role_members AS drm
-		JOIN sys.database_principals AS roles ON drm.role_principal_id = roles.principal_id
-		JOIN sys.database_principals AS members ON drm.member_principal_id = members.principal_id
-		WHERE roles.type = 'R' AND members.type = 'R'  -- Role to role memberships only
-		
-		UNION ALL
-		
-		SELECT 
-			rh.database_name,
-			rh.parent_role_name,
-			newmembers.name AS child_role_name,
-			rh.nesting_level + 1,
-			1 AS effective_permissions
-		FROM RoleHierarchy rh
-		JOIN sys.database_principals AS intermediate ON rh.child_role_name = intermediate.name
-		JOIN sys.database_role_members AS newdrm ON intermediate.principal_id = newdrm.role_principal_id
-		JOIN sys.database_principals AS newmembers ON newdrm.member_principal_id = newmembers.principal_id
-		WHERE newmembers.type = 'R' AND rh.nesting_level < 10  -- Prevent infinite recursion
-	)
-	SELECT * FROM RoleHierarchy`
 
 // DatabaseRoleActivityQuery returns role membership activity metrics
 // This provides insights into role usage patterns and potential security issues
@@ -122,8 +74,7 @@ const DatabaseRolePermissionMatrixQuery = `
 			WHEN roles.name IN ('db_securityadmin', 'db_accessadmin') THEN 3
 			WHEN roles.name IN ('db_ddladmin', 'db_backupoperator') THEN 2
 			ELSE 1
-		END AS risk_level,
-		NULL AS last_access_time  -- Would require additional tracking
+		END AS risk_level
 	FROM sys.database_role_members AS drm
 	RIGHT JOIN sys.database_principals AS roles ON drm.role_principal_id = roles.principal_id
 	WHERE roles.type IN ('R', 'A')

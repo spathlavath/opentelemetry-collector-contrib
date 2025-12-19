@@ -37,48 +37,6 @@ func NewDatabaseRoleMembershipScraper(logger *zap.Logger, connection SQLConnecti
 	}
 }
 
-// ScrapeDatabaseRoleMembershipMetrics collects individual database role membership metrics using engine-specific queries
-func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipMetrics(ctx context.Context) error {
-	s.logger.Debug("Scraping SQL Server database role membership metrics")
-
-	// Get the appropriate query for this engine edition
-	query, found := s.getQueryForMetric("database_role_membership")
-	if !found {
-		return fmt.Errorf("no database role membership query available for engine edition %d", s.engineEdition)
-	}
-
-	s.logger.Debug("Executing database role membership query",
-		zap.String("query", queries.TruncateQuery(query, 100)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	var results []models.DatabaseRoleMembershipMetrics
-	if err := s.connection.Query(ctx, &results, query); err != nil {
-		s.logger.Error("Failed to execute database role membership query",
-			zap.Error(err),
-			zap.String("query", queries.TruncateQuery(query, 100)),
-			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-		return fmt.Errorf("failed to query database role membership: %w", err)
-	}
-
-	s.logger.Debug("Database role membership query completed",
-		zap.Int("result_count", len(results)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	// Process each role membership result
-	for _, result := range results {
-		if err := s.processDatabaseRoleMembershipMetrics(result); err != nil {
-			s.logger.Error("Failed to process database role membership metrics",
-				zap.Error(err),
-				zap.String("role_name", result.RoleName),
-				zap.String("member_name", result.MemberName),
-				zap.String("database_name", result.DatabaseName))
-			return err
-		}
-	}
-
-	return nil
-}
-
 // ScrapeDatabaseRoleMembershipSummaryMetrics collects aggregated database role membership statistics
 func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipSummaryMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database role membership summary metrics")
@@ -111,48 +69,6 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleMembershipSummaryMetri
 		if err := s.processDatabaseRoleMembershipSummaryMetrics(result); err != nil {
 			s.logger.Error("Failed to process database role membership summary metrics",
 				zap.Error(err),
-				zap.String("database_name", result.DatabaseName))
-			return err
-		}
-	}
-
-	return nil
-}
-
-// ScrapeDatabaseRoleHierarchyMetrics collects database role hierarchy and nesting information
-func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleHierarchyMetrics(ctx context.Context) error {
-	s.logger.Debug("Scraping SQL Server database role hierarchy metrics")
-
-	// Get the appropriate hierarchy query for this engine edition
-	query, found := s.getQueryForMetric("database_role_hierarchy")
-	if !found {
-		return fmt.Errorf("no database role hierarchy query available for engine edition %d", s.engineEdition)
-	}
-
-	s.logger.Debug("Executing database role hierarchy query",
-		zap.String("query", queries.TruncateQuery(query, 100)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	var results []models.DatabaseRoleHierarchy
-	if err := s.connection.Query(ctx, &results, query); err != nil {
-		s.logger.Error("Failed to execute database role hierarchy query",
-			zap.Error(err),
-			zap.String("query", queries.TruncateQuery(query, 100)),
-			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-		return fmt.Errorf("failed to query database role hierarchy: %w", err)
-	}
-
-	s.logger.Debug("Database role hierarchy query completed",
-		zap.Int("result_count", len(results)),
-		zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
-
-	// Process each hierarchy result
-	for _, result := range results {
-		if err := s.processDatabaseRoleHierarchyMetrics(result); err != nil {
-			s.logger.Error("Failed to process database role hierarchy metrics",
-				zap.Error(err),
-				zap.String("parent_role", result.ParentRoleName),
-				zap.String("child_role", result.ChildRoleName),
 				zap.String("database_name", result.DatabaseName))
 			return err
 		}
@@ -202,6 +118,7 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRoleActivityMetrics(ctx co
 }
 
 // ScrapeDatabaseRolePermissionMatrixMetrics collects database role permission analysis
+// Keeping memberCount and riskLevel metrics as they are aggregated summaries
 func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRolePermissionMatrixMetrics(ctx context.Context) error {
 	s.logger.Debug("Scraping SQL Server database role permission matrix metrics")
 
@@ -233,7 +150,6 @@ func (s *DatabaseRoleMembershipScraper) ScrapeDatabaseRolePermissionMatrixMetric
 		if err := s.processDatabaseRolePermissionMatrixMetrics(result); err != nil {
 			s.logger.Error("Failed to process database role permission matrix metrics",
 				zap.Error(err),
-				zap.String("role_name", result.RoleName),
 				zap.String("database_name", result.DatabaseName))
 			return err
 		}
@@ -251,47 +167,6 @@ func (s *DatabaseRoleMembershipScraper) getQueryForMetric(metricName string) (st
 			zap.String("engine_type", queries.GetEngineTypeName(s.engineEdition)))
 	}
 	return query, found
-}
-
-// processDatabaseRoleMembershipMetrics processes individual role membership metrics and adds them to the scope
-func (s *DatabaseRoleMembershipScraper) processDatabaseRoleMembershipMetrics(result models.DatabaseRoleMembershipMetrics) error {
-	if result.MembershipActive != nil {
-		now := pcommon.NewTimestampFromTime(time.Now())
-
-		databaseName := ""
-		if result.DatabaseName != "" {
-			databaseName = result.DatabaseName
-		}
-
-		roleName := ""
-		if result.RoleName != "" {
-			roleName = result.RoleName
-		}
-
-		memberName := ""
-		if result.MemberName != "" {
-			memberName = result.MemberName
-		}
-
-		roleType := ""
-		if result.RoleType != "" {
-			roleType = result.RoleType
-		}
-
-		memberType := ""
-		if result.MemberType != "" {
-			memberType = result.MemberType
-		}
-
-		s.mb.RecordSqlserverDatabaseRoleMembershipActiveDataPoint(now, *result.MembershipActive, databaseName, roleName, memberName, roleType, memberType)
-
-		s.logger.Debug("Recorded database role membership active status",
-			zap.String("database_name", result.DatabaseName),
-			zap.String("role_name", result.RoleName),
-			zap.String("member_name", result.MemberName))
-	}
-
-	return nil
 }
 
 // processDatabaseRoleMembershipSummaryMetrics processes summary metrics and adds them to the scope
@@ -324,40 +199,6 @@ func (s *DatabaseRoleMembershipScraper) processDatabaseRoleMembershipSummaryMetr
 
 	s.logger.Debug("Recorded database role membership summary metrics",
 		zap.String("database_name", result.DatabaseName))
-
-	return nil
-}
-
-// processDatabaseRoleHierarchyMetrics processes hierarchy metrics and adds them to the scope
-func (s *DatabaseRoleMembershipScraper) processDatabaseRoleHierarchyMetrics(result models.DatabaseRoleHierarchy) error {
-	now := pcommon.NewTimestampFromTime(time.Now())
-
-	databaseName := ""
-	if result.DatabaseName != "" {
-		databaseName = result.DatabaseName
-	}
-
-	parentRoleName := ""
-	if result.ParentRoleName != "" {
-		parentRoleName = result.ParentRoleName
-	}
-
-	childRoleName := ""
-	if result.ChildRoleName != "" {
-		childRoleName = result.ChildRoleName
-	}
-
-	if result.NestingLevel != nil {
-		s.mb.RecordSqlserverDatabaseRoleNestingLevelDataPoint(now, *result.NestingLevel, databaseName, parentRoleName, childRoleName)
-	}
-	if result.EffectivePermissions != nil {
-		s.mb.RecordSqlserverDatabaseRolePermissionsInheritedDataPoint(now, *result.EffectivePermissions, databaseName, parentRoleName, childRoleName)
-	}
-
-	s.logger.Debug("Recorded database role hierarchy metrics",
-		zap.String("database_name", result.DatabaseName),
-		zap.String("parent_role", result.ParentRoleName),
-		zap.String("child_role", result.ChildRoleName))
 
 	return nil
 }

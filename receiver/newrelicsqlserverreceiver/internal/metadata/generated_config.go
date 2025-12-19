@@ -53,7 +53,6 @@ type MetricsConfig struct {
 	SqlserverDatabaseMaxDiskSizeBytes                         MetricConfig `mapstructure:"sqlserver.database.max_disk_size_bytes"`
 	SqlserverDatabasePageFileAvailableBytes                   MetricConfig `mapstructure:"sqlserver.database.page_file_available_bytes"`
 	SqlserverDatabasePageFileTotalBytes                       MetricConfig `mapstructure:"sqlserver.database.page_file_total_bytes"`
-	SqlserverDatabasePrincipalCreateDate                      MetricConfig `mapstructure:"sqlserver.database.principal.createDate"`
 	SqlserverDatabasePrincipalsApplicationRoles               MetricConfig `mapstructure:"sqlserver.database.principals.applicationRoles"`
 	SqlserverDatabasePrincipalsOld                            MetricConfig `mapstructure:"sqlserver.database.principals.old"`
 	SqlserverDatabasePrincipalsOrphanedUsers                  MetricConfig `mapstructure:"sqlserver.database.principals.orphanedUsers"`
@@ -67,16 +66,13 @@ type MetricsConfig struct {
 	SqlserverDatabaseRoleMembersCrossRole                     MetricConfig `mapstructure:"sqlserver.database.role.members.crossRole"`
 	SqlserverDatabaseRoleMembersHighPrivilege                 MetricConfig `mapstructure:"sqlserver.database.role.members.highPrivilege"`
 	SqlserverDatabaseRoleMembersUnique                        MetricConfig `mapstructure:"sqlserver.database.role.members.unique"`
-	SqlserverDatabaseRoleMembershipActive                     MetricConfig `mapstructure:"sqlserver.database.role.membership.active"`
 	SqlserverDatabaseRoleMembershipsActive                    MetricConfig `mapstructure:"sqlserver.database.role.memberships.active"`
 	SqlserverDatabaseRoleMembershipsCustom                    MetricConfig `mapstructure:"sqlserver.database.role.memberships.custom"`
 	SqlserverDatabaseRoleMembershipsNested                    MetricConfig `mapstructure:"sqlserver.database.role.memberships.nested"`
 	SqlserverDatabaseRoleMembershipsTotal                     MetricConfig `mapstructure:"sqlserver.database.role.memberships.total"`
 	SqlserverDatabaseRoleMembershipsUsers                     MetricConfig `mapstructure:"sqlserver.database.role.memberships.users"`
-	SqlserverDatabaseRoleNestingLevel                         MetricConfig `mapstructure:"sqlserver.database.role.nesting.level"`
 	SqlserverDatabaseRolePermissionMemberCount                MetricConfig `mapstructure:"sqlserver.database.role.permission.memberCount"`
 	SqlserverDatabaseRolePermissionRiskLevel                  MetricConfig `mapstructure:"sqlserver.database.role.permission.riskLevel"`
-	SqlserverDatabaseRolePermissionsInherited                 MetricConfig `mapstructure:"sqlserver.database.role.permissions.inherited"`
 	SqlserverDatabaseRoleRolesEmpty                           MetricConfig `mapstructure:"sqlserver.database.role.roles.empty"`
 	SqlserverDatabaseRoleRolesWithMembers                     MetricConfig `mapstructure:"sqlserver.database.role.roles.withMembers"`
 	SqlserverDatabaseSizeDataMb                               MetricConfig `mapstructure:"sqlserver.database.size.data_mb"`
@@ -281,9 +277,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverDatabasePageFileTotalBytes: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabasePrincipalCreateDate: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverDatabasePrincipalsApplicationRoles: MetricConfig{
 			Enabled: true,
 		},
@@ -323,9 +316,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverDatabaseRoleMembersUnique: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseRoleMembershipActive: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverDatabaseRoleMembershipsActive: MetricConfig{
 			Enabled: true,
 		},
@@ -341,16 +331,10 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverDatabaseRoleMembershipsUsers: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverDatabaseRoleNestingLevel: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverDatabaseRolePermissionMemberCount: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabaseRolePermissionRiskLevel: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverDatabaseRolePermissionsInherited: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverDatabaseRoleRolesEmpty: MetricConfig{
