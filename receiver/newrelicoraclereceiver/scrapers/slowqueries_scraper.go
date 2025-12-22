@@ -83,7 +83,8 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 
 			// Skip queries with no new executions
 			if !metrics.HasNewExecutions {
-				s.logger.Debug("Skipping query with no new executions")
+				s.logger.Debug("Skipping query with no new executions",
+					zap.String("query_id", slowQuery.GetQueryID()))
 				continue
 			}
 
@@ -91,7 +92,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			// First scrape: interval = historical (no baseline), filter still applies
 			// Subsequent scrapes: interval = delta, filter on delta performance
 			if metrics.IntervalAvgElapsedTimeMs < float64(s.queryMonitoringResponseTimeThreshold) {
-				s.logger.Debug("Skipping query below interval threshold")
 				continue
 			}
 
@@ -128,7 +128,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 
 			// Take top N queries after sorting
 			if len(queriesToProcess) > s.queryMonitoringCountThreshold {
-				s.logger.Debug("Applying top N selection")
 				queriesToProcess = queriesToProcess[:s.queryMonitoringCountThreshold]
 			}
 		}
@@ -141,7 +140,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 
 	for _, slowQuery := range queriesToProcess {
 		if !slowQuery.IsValidForMetrics() {
-			s.logger.Debug("Skipping invalid slow query")
 			continue
 		}
 
@@ -313,7 +311,7 @@ func (s *SlowQueriesScraper) GetSlowQueryIDs(ctx context.Context) ([]string, []e
 		}
 	}
 
-	s.logger.Debug("Fetched slow query IDs (no metrics emitted)")
+	s.logger.Debug("Fetched slow query IDs")
 
 	return queryIDs, nil
 }

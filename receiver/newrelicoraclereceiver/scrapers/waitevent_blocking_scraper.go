@@ -3,7 +3,6 @@ package scrapers
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -14,24 +13,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
-
-const timestampFormat = "2006-01-02 15:04:05"
-
-// Helper functions
-func formatTimestamp(t time.Time) string {
-	if t.IsZero() {
-		return ""
-	}
-	return t.Format(timestampFormat)
-}
-
-func formatInt64(val int64) string {
-	return strconv.FormatInt(val, 10)
-}
-
-func generateSQLIdentifierKey(sqlID string, childNumber int64) string {
-	return fmt.Sprintf("%s#%d", sqlID, childNumber)
-}
 
 // WaitEventBlockingScraper collects both Oracle wait events and blocking query metrics
 type WaitEventBlockingScraper struct {
@@ -95,10 +76,10 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		return
 	}
 
-	collectionTimestamp := formatTimestamp(event.GetCollectionTimestamp())
+	collectionTimestamp := commonutils.FormatTimestamp(event.GetCollectionTimestamp())
 	dbName := event.GetDatabaseName()
 	username := event.GetUsername()
-	sid := formatInt64(event.GetSID())
+	sid := commonutils.FormatInt64(event.GetSID())
 	serial := event.GetSerial()
 	status := event.GetStatus()
 	state := event.GetState()
@@ -111,11 +92,11 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	waitObjectOwner := event.GetObjectOwner()
 	waitObjectName := event.GetObjectNameWaitedOn()
 	waitObjectType := event.GetObjectTypeWaitedOn()
-	sqlExecStart := formatTimestamp(event.GetSQLExecStart())
+	sqlExecStart := commonutils.FormatTimestamp(event.GetSQLExecStart())
 	sqlExecID := event.GetSQLExecID()
-	rowWaitObjID := formatInt64(event.GetLockedObjectID())
-	rowWaitFileID := formatInt64(event.GetLockedFileID())
-	rowWaitBlockID := formatInt64(event.GetLockedBlockID())
+	rowWaitObjID := commonutils.FormatInt64(event.GetLockedObjectID())
+	rowWaitFileID := commonutils.FormatInt64(event.GetLockedFileID())
+	rowWaitBlockID := commonutils.FormatInt64(event.GetLockedBlockID())
 
 	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(
 		now,
@@ -199,7 +180,7 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 
 		sqlID := event.GetQueryID()
 		childNumber := event.GetSQLChildNumber()
-		key := generateSQLIdentifierKey(sqlID, childNumber)
+		key := commonutils.GenerateSQLIdentifierKey(sqlID, childNumber)
 
 		if _, exists := identifiersMap[key]; !exists {
 			timestamp := event.GetCollectionTimestamp()
@@ -230,26 +211,26 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		return
 	}
 
-	collectionTimestamp := formatTimestamp(event.GetCollectionTimestamp())
+	collectionTimestamp := commonutils.FormatTimestamp(event.GetCollectionTimestamp())
 	dbName := event.GetDatabaseName()
 	blockedUser := event.GetUsername()
 	queryID := event.GetQueryID()
-	sessionID := formatInt64(event.GetSID())
+	sessionID := commonutils.FormatInt64(event.GetSID())
 	blockedSerial := event.GetSerial()
 	state := event.GetState()
 	sqlChildNumber := event.GetSQLChildNumber()
 	sqlExecID := event.GetSQLExecID()
-	sqlExecStart := formatTimestamp(event.GetSQLExecStart())
+	sqlExecStart := commonutils.FormatTimestamp(event.GetSQLExecStart())
 	waitEventName := event.GetWaitEventName()
 	waitCategory := event.GetWaitCategory()
 	waitObjectName := event.GetObjectNameWaitedOn()
 	waitObjectOwner := event.GetObjectOwner()
 	waitObjectType := event.GetObjectTypeWaitedOn()
 	blockingSessionStatus := event.GetBlockingSessionStatus()
-	immediateBlockerSID := formatInt64(event.GetImmediateBlockerSID())
+	immediateBlockerSID := commonutils.FormatInt64(event.GetImmediateBlockerSID())
 	finalBlockingSessionStatus := event.GetFinalBlockingSessionStatus()
-	finalBlockerSID := formatInt64(event.GetFinalBlockerSID())
-	finalBlockerSerial := formatInt64(event.GetFinalBlockerSerial())
+	finalBlockerSID := commonutils.FormatInt64(event.GetFinalBlockerSID())
+	finalBlockerSerial := commonutils.FormatInt64(event.GetFinalBlockerSerial())
 	finalBlockerUser := event.GetFinalBlockerUser()
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
 	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
