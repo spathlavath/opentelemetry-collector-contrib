@@ -2,6 +2,7 @@ package scrapers
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"time"
 
@@ -19,7 +20,6 @@ type SlowQueriesScraper struct {
 	client                               client.OracleClient
 	mb                                   *metadata.MetricsBuilder
 	logger                               *zap.Logger
-	instanceName                         string
 	metricsBuilderConfig                 metadata.MetricsBuilderConfig
 	queryMonitoringResponseTimeThreshold int
 	queryMonitoringCountThreshold        int
@@ -27,15 +27,14 @@ type SlowQueriesScraper struct {
 	intervalCalculator                   *OracleIntervalCalculator // Delta-based interval calculator
 }
 
-func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig, responseTimeThreshold, countThreshold, intervalSeconds int, enableIntervalCalculator bool, intervalCalculatorCacheTTLMinutes int) *SlowQueriesScraper {
+func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig, responseTimeThreshold, countThreshold, intervalSeconds int, enableIntervalCalculator bool, intervalCalculatorCacheTTLMinutes int) *SlowQueriesScraper {
 	var intervalCalc *OracleIntervalCalculator
 
 	// Initialize interval-based calculator if enabled
 	if enableIntervalCalculator {
 		cacheTTL := time.Duration(intervalCalculatorCacheTTLMinutes) * time.Minute
 		intervalCalc = NewOracleIntervalCalculator(logger, cacheTTL)
-		logger.Info("Oracle interval-based delta calculator enabled",
-			zap.Int("cache_ttl_minutes", intervalCalculatorCacheTTLMinutes))
+		logger.Info("Oracle interval-based delta calculator enabled")
 	} else {
 		logger.Info("Oracle interval-based delta calculator disabled - using cumulative averages")
 	}
@@ -44,7 +43,6 @@ func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.Metric
 		client:                               oracleClient,
 		mb:                                   mb,
 		logger:                               logger,
-		instanceName:                         instanceName,
 		metricsBuilderConfig:                 metricsBuilderConfig,
 		queryMonitoringResponseTimeThreshold: responseTimeThreshold,
 		queryMonitoringCountThreshold:        countThreshold,
@@ -66,11 +64,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		return nil, []error{err}
 	}
 
-	s.logger.Debug("Raw slow query metrics fetched",
-		zap.Int("raw_result_count", len(slowQueries)),
-		zap.Int("interval_seconds", s.queryMonitoringIntervalSeconds),
-		zap.Bool("interval_calc_enabled", s.intervalCalculator != nil))
-
 	// Apply interval-based delta calculation if enabled
 	var queriesToProcess []models.SlowQuery
 	if s.intervalCalculator != nil {
@@ -91,8 +84,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			// Skip queries with no new executions
 			if !metrics.HasNewExecutions {
 				s.logger.Debug("Skipping query with no new executions",
-					zap.String("query_id", slowQuery.GetQueryID()),
-					zap.Float64("time_since_last_exec_sec", metrics.TimeSinceLastExecSec))
+					zap.String("query_id", slowQuery.GetQueryID()))
 				continue
 			}
 
@@ -100,12 +92,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			// First scrape: interval = historical (no baseline), filter still applies
 			// Subsequent scrapes: interval = delta, filter on delta performance
 			if metrics.IntervalAvgElapsedTimeMs < float64(s.queryMonitoringResponseTimeThreshold) {
-				s.logger.Debug("Skipping query below interval threshold",
-					zap.String("query_id", slowQuery.GetQueryID()),
-					zap.Float64("interval_avg_ms", metrics.IntervalAvgElapsedTimeMs),
-					zap.Float64("historical_avg_ms", metrics.HistoricalAvgElapsedTimeMs),
-					zap.Int("threshold_ms", s.queryMonitoringResponseTimeThreshold),
-					zap.Bool("is_first_scrape", metrics.IsFirstScrape))
 				continue
 			}
 
@@ -119,10 +105,6 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 
 		// Cleanup stale entries periodically (TTL-based only)
 		s.intervalCalculator.CleanupStaleEntries(now)
-
-		s.logger.Debug("Interval-based delta calculation applied",
-			zap.Int("raw_count", len(slowQueries)),
-			zap.Int("processed_count", len(queriesToProcess)))
 
 		// Log calculator statistics
 		stats := s.intervalCalculator.GetCacheStats()
@@ -144,14 +126,8 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 				return *queriesToProcess[i].IntervalAvgElapsedTimeMS > *queriesToProcess[j].IntervalAvgElapsedTimeMS
 			})
 
-			s.logger.Debug("Sorted queries by interval average elapsed time (delta)",
-				zap.Int("total_count", len(queriesToProcess)))
-
 			// Take top N queries after sorting
 			if len(queriesToProcess) > s.queryMonitoringCountThreshold {
-				s.logger.Debug("Applying top N selection",
-					zap.Int("before_count", len(queriesToProcess)),
-					zap.Int("top_n", s.queryMonitoringCountThreshold))
 				queriesToProcess = queriesToProcess[:s.queryMonitoringCountThreshold]
 			}
 		}
@@ -175,7 +151,13 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		schName := slowQuery.GetSchemaName()
 		lastActiveTime := slowQuery.GetLastActiveTime()
 
-		s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime)
+		if err := s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime); err != nil {
+			s.logger.Warn("Failed to record metrics for slow query",
+				zap.String("sql_id", qID),
+				zap.Error(err))
+			scrapeErrors = append(scrapeErrors, err)
+			continue
+		}
 
 		if slowQuery.QueryID.Valid {
 			queryIDs = append(queryIDs, slowQuery.QueryID.String)
@@ -183,15 +165,16 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	}
 
 	s.logger.Debug("Slow queries scrape completed",
-		zap.Int("rows", len(slowQueries)),
-		zap.Int("processed_rows", len(queriesToProcess)),
-		zap.Int("query_ids", len(queryIDs)),
 		zap.Int("errors", len(scrapeErrors)))
 
 	return queryIDs, scrapeErrors
 }
 
-func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime string) {
+func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime string) error {
+	if slowQuery == nil {
+		s.logger.Warn("Attempted to record metrics for nil slow query")
+		return fmt.Errorf("slow query is nil")
+	}
 	if slowQuery.ExecutionCount.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 			now,
@@ -303,6 +286,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		userName,
 		lastActiveTime,
 	)
+
+	return nil
 }
 
 // GetSlowQueryIDs returns only the query IDs without emitting metrics
@@ -326,9 +311,7 @@ func (s *SlowQueriesScraper) GetSlowQueryIDs(ctx context.Context) ([]string, []e
 		}
 	}
 
-	s.logger.Debug("Fetched slow query IDs (no metrics emitted)",
-		zap.Int("rows", len(slowQueries)),
-		zap.Int("query_ids", len(queryIDs)))
+	s.logger.Debug("Fetched slow query IDs")
 
 	return queryIDs, nil
 }

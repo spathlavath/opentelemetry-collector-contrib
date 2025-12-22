@@ -224,7 +224,7 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 
 func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
-		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.client, s.mb, s.logger, s.metricsBuilderConfig,
 		s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
 		s.config.QueryMonitoringIntervalSeconds,
@@ -232,18 +232,18 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.IntervalCalculatorCacheTTLMinutes,
 	)
 
-	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.instanceName, s.logsBuilderConfig)
+	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.lb, s.logger, s.logsBuilderConfig)
 
 	var err error
 	s.waitEventBlockingScraper, err = scrapers.NewWaitEventBlockingScraper(
-		s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig,
+		s.client, s.mb, s.logger, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create wait event blocking scraper: %w", err)
 	}
 
-	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 
 	return nil
 }
@@ -390,7 +390,6 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		s.client,
 		tempMb,
 		s.logger,
-		s.instanceName,
 		metadata.DefaultMetricsBuilderConfig(),
 		s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
@@ -404,7 +403,6 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		s.client,
 		s.lb,
 		s.logger,
-		s.instanceName,
 		s.logsBuilderConfig,
 	)
 	s.executionPlanScraper = executionPlanScraper
@@ -413,7 +411,6 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		s.client,
 		tempMb,
 		s.logger,
-		s.instanceName,
 		metadata.DefaultMetricsBuilderConfig(),
 		s.config.QueryMonitoringCountThreshold,
 	)

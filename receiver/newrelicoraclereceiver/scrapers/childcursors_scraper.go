@@ -21,26 +21,23 @@ type ChildCursorsScraper struct {
 	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
-	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
 // NewChildCursorsScraper creates a new child cursors scraper
-func NewChildCursorsScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *ChildCursorsScraper {
+func NewChildCursorsScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *ChildCursorsScraper {
 	return &ChildCursorsScraper{
 		client:               oracleClient,
 		mb:                   mb,
 		logger:               logger,
-		instanceName:         instanceName,
 		metricsBuilderConfig: metricsBuilderConfig,
 	}
 }
+
 func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Context, identifiers []models.SQLIdentifier, childLimit int) []error {
 	var errs []error
 
-	s.logger.Debug("Starting child cursors scrape",
-		zap.Int("identifiers", len(identifiers)),
-		zap.Int("child_limit", childLimit))
+	s.logger.Debug("Starting child cursors scrape")
 
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricsEmitted := 0
@@ -64,9 +61,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 		}
 	}
 
-	s.logger.Debug("Child cursors scrape completed",
-		zap.Int("metrics_emitted", metricsEmitted),
-		zap.Int("errors", len(errs)))
+	s.logger.Debug("Child cursors scrape completed")
 
 	return errs
 }

@@ -9,80 +9,36 @@ import (
 // This model is populated by the combined GetWaitEventsAndBlockingSQL query
 // Field order matches SQL column order from GetWaitEventsAndBlockingSQL
 type WaitEventWithBlocking struct {
-	// 1. COLLECTION_TIMESTAMP
-	CollectionTimestamp sql.NullTime
-	// 2. database_name (PDB name)
-	DatabaseName sql.NullString
-
-	// Session identification (from waiting/blocked session)
-	// 3. username
-	Username sql.NullString
-	// 4. sid
-	SID sql.NullInt64
-	// 5. serial#
-	Serial sql.NullInt64
-	// 6. status
-	Status sql.NullString
-	// 7. state
-	State sql.NullString
-
-	// SQL identification
-	// 8. sql_id
-	SQLID sql.NullString
-	// 9. SQL_CHILD_NUMBER
-	SQLChildNumber sql.NullInt64
-
-	// Wait event information
-	// 10. wait_class
-	WaitClass sql.NullString
-	// 11. event
-	Event sql.NullString
-	// 12. wait_time_ms (milliseconds the session has been waiting - general wait time)
-	WaitTimeMs sql.NullFloat64
-	// SQL execution context
-	// 13. SQL_EXEC_START
-	SQLExecStart sql.NullTime
-	// 14. SQL_EXEC_ID
-	SQLExecID sql.NullInt64
-
-	// Session context
-	// 15. PROGRAM
-	Program sql.NullString
-	// 16. MACHINE
-	Machine sql.NullString
-
-	// Object being waited on
-	// 17. ROW_WAIT_OBJ#
-	RowWaitObj sql.NullInt64
-	// 18. OWNER
-	Owner sql.NullString
-	// 19. OBJECT_NAME
-	ObjectName sql.NullString
-	// 20. OBJECT_TYPE
-	ObjectType sql.NullString
-	// 21. ROW_WAIT_FILE#
-	RowWaitFile sql.NullInt64
-	// 22. ROW_WAIT_BLOCK#
-	RowWaitBlock sql.NullInt64
-
-	// Blocking session context
-	// 23. BLOCKING_SESSION_STATUS
-	BlockingSessionStatus sql.NullString
-	// 24. immediate_blocker_sid
-	ImmediateBlockerSID sql.NullInt64
-	// 25. FINAL_BLOCKING_SESSION_STATUS
+	CollectionTimestamp        sql.NullTime
+	DatabaseName               sql.NullString
+	Username                   sql.NullString
+	SID                        sql.NullInt64
+	Serial                     sql.NullInt64
+	Status                     sql.NullString
+	State                      sql.NullString
+	SQLID                      sql.NullString
+	SQLChildNumber             sql.NullInt64
+	WaitClass                  sql.NullString
+	Event                      sql.NullString
+	WaitTimeMs                 sql.NullFloat64
+	SQLExecStart               sql.NullTime
+	SQLExecID                  sql.NullInt64
+	Program                    sql.NullString
+	Machine                    sql.NullString
+	RowWaitObj                 sql.NullInt64
+	Owner                      sql.NullString
+	ObjectName                 sql.NullString
+	ObjectType                 sql.NullString
+	RowWaitFile                sql.NullInt64
+	RowWaitBlock               sql.NullInt64
+	BlockingSessionStatus      sql.NullString
+	ImmediateBlockerSID        sql.NullInt64
 	FinalBlockingSessionStatus sql.NullString
-	// 26. final_blocker_sid
-	FinalBlockerSID sql.NullInt64
-	// Final blocker details
-	// 27. final_blocker_user
-	FinalBlockerUser sql.NullString
-	// 28. final_blocker_serial
-	FinalBlockerSerial sql.NullInt64
-	// 29. final_blocker_query_id
-	FinalBlockerQueryID sql.NullString
-	// 30. final_blocker_query_text
-	FinalBlockerQueryText sql.NullString
+	FinalBlockerSID            sql.NullInt64
+	FinalBlockerUser           sql.NullString
+	FinalBlockerSerial         sql.NullInt64
+	FinalBlockerQueryID        sql.NullString
+	FinalBlockerQueryText      sql.NullString
 }
 
 // ========================================
