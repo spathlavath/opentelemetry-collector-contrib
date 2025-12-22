@@ -1331,7 +1331,7 @@ type metricNewrelicoracledbAsmDiskgroupFreeMb struct {
 // init fills newrelicoracledb.asm.diskgroup.free_mb metric with initial data.
 func (m *metricNewrelicoracledbAsmDiskgroupFreeMb) init() {
 	m.data.SetName("newrelicoracledb.asm.diskgroup.free_mb")
-	m.data.SetDescription("Available free space in the ASM disk group in MB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("MB")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1383,7 +1383,7 @@ type metricNewrelicoracledbAsmDiskgroupOfflineDisks struct {
 // init fills newrelicoracledb.asm.diskgroup.offline_disks metric with initial data.
 func (m *metricNewrelicoracledbAsmDiskgroupOfflineDisks) init() {
 	m.data.SetName("newrelicoracledb.asm.diskgroup.offline_disks")
-	m.data.SetDescription("Number of offline disks in the ASM disk group")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{disks}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1435,7 +1435,7 @@ type metricNewrelicoracledbAsmDiskgroupTotalMb struct {
 // init fills newrelicoracledb.asm.diskgroup.total_mb metric with initial data.
 func (m *metricNewrelicoracledbAsmDiskgroupTotalMb) init() {
 	m.data.SetName("newrelicoracledb.asm.diskgroup.total_mb")
-	m.data.SetDescription("Total capacity of the ASM disk group in MB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("MB")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1487,7 +1487,7 @@ type metricNewrelicoracledbBlockingQueriesWaitTimeMs struct {
 // init fills newrelicoracledb.blocking_queries.wait_time_ms metric with initial data.
 func (m *metricNewrelicoracledbBlockingQueriesWaitTimeMs) init() {
 	m.data.SetName("newrelicoracledb.blocking_queries.wait_time_ms")
-	m.data.SetDescription("Wait time in milliseconds for blocked queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1560,7 +1560,7 @@ type metricNewrelicoracledbChildCursorsBufferGets struct {
 // init fills newrelicoracledb.child_cursors.buffer_gets metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsBufferGets) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.buffer_gets")
-	m.data.SetDescription("Average number of buffer gets per execution for this child cursor")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{gets}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1615,7 +1615,7 @@ type metricNewrelicoracledbChildCursorsCPUTime struct {
 // init fills newrelicoracledb.child_cursors.cpu_time metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsCPUTime) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.cpu_time")
-	m.data.SetDescription("Average CPU time per execution for this child cursor (in milliseconds)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1670,7 +1670,7 @@ type metricNewrelicoracledbChildCursorsDetails struct {
 // init fills newrelicoracledb.child_cursors.details metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsDetails) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.details")
-	m.data.SetDescription("Child cursor details including load times")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{count}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1727,7 +1727,7 @@ type metricNewrelicoracledbChildCursorsDiskReads struct {
 // init fills newrelicoracledb.child_cursors.disk_reads metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsDiskReads) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.disk_reads")
-	m.data.SetDescription("Average number of disk reads per execution for this child cursor")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{reads}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1782,7 +1782,7 @@ type metricNewrelicoracledbChildCursorsElapsedTime struct {
 // init fills newrelicoracledb.child_cursors.elapsed_time metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsElapsedTime) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.elapsed_time")
-	m.data.SetDescription("Average elapsed time per execution for this child cursor (in milliseconds)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1837,7 +1837,7 @@ type metricNewrelicoracledbChildCursorsExecutions struct {
 // init fills newrelicoracledb.child_cursors.executions metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsExecutions) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.executions")
-	m.data.SetDescription("Total number of executions of this child cursor")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{executions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1892,7 +1892,7 @@ type metricNewrelicoracledbChildCursorsInvalidations struct {
 // init fills newrelicoracledb.child_cursors.invalidations metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsInvalidations) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.invalidations")
-	m.data.SetDescription("Number of times this child cursor was invalidated")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{invalidations}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -1947,7 +1947,7 @@ type metricNewrelicoracledbChildCursorsUserIoWaitTime struct {
 // init fills newrelicoracledb.child_cursors.user_io_wait_time metric with initial data.
 func (m *metricNewrelicoracledbChildCursorsUserIoWaitTime) init() {
 	m.data.SetName("newrelicoracledb.child_cursors.user_io_wait_time")
-	m.data.SetDescription("Average user I/O wait time per execution for this child cursor (in milliseconds)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2002,7 +2002,7 @@ type metricNewrelicoracledbConnectionActiveSessions struct {
 // init fills newrelicoracledb.connection.active_sessions metric with initial data.
 func (m *metricNewrelicoracledbConnectionActiveSessions) init() {
 	m.data.SetName("newrelicoracledb.connection.active_sessions")
-	m.data.SetDescription("Number of active Oracle database sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2053,7 +2053,7 @@ type metricNewrelicoracledbConnectionBlockingSessions struct {
 // init fills newrelicoracledb.connection.blocking_sessions metric with initial data.
 func (m *metricNewrelicoracledbConnectionBlockingSessions) init() {
 	m.data.SetName("newrelicoracledb.connection.blocking_sessions")
-	m.data.SetDescription("Sessions blocked by other sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2109,7 +2109,7 @@ type metricNewrelicoracledbConnectionBytesReceived struct {
 // init fills newrelicoracledb.connection.bytes_received metric with initial data.
 func (m *metricNewrelicoracledbConnectionBytesReceived) init() {
 	m.data.SetName("newrelicoracledb.connection.bytes_received")
-	m.data.SetDescription("Bytes received via SQL*Net from client")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -2162,7 +2162,7 @@ type metricNewrelicoracledbConnectionBytesSent struct {
 // init fills newrelicoracledb.connection.bytes_sent metric with initial data.
 func (m *metricNewrelicoracledbConnectionBytesSent) init() {
 	m.data.SetName("newrelicoracledb.connection.bytes_sent")
-	m.data.SetDescription("Bytes sent via SQL*Net to client")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -2215,7 +2215,7 @@ type metricNewrelicoracledbConnectionCircuits struct {
 // init fills newrelicoracledb.connection.circuits metric with initial data.
 func (m *metricNewrelicoracledbConnectionCircuits) init() {
 	m.data.SetName("newrelicoracledb.connection.circuits")
-	m.data.SetDescription("Number of active circuits")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{circuits}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2266,7 +2266,7 @@ type metricNewrelicoracledbConnectionDispatchers struct {
 // init fills newrelicoracledb.connection.dispatchers metric with initial data.
 func (m *metricNewrelicoracledbConnectionDispatchers) init() {
 	m.data.SetName("newrelicoracledb.connection.dispatchers")
-	m.data.SetDescription("Number of dispatchers")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{dispatchers}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2317,7 +2317,7 @@ type metricNewrelicoracledbConnectionExecuteCount struct {
 // init fills newrelicoracledb.connection.execute_count metric with initial data.
 func (m *metricNewrelicoracledbConnectionExecuteCount) init() {
 	m.data.SetName("newrelicoracledb.connection.execute_count")
-	m.data.SetDescription("Number of SQL executions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{executions}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -2370,7 +2370,7 @@ type metricNewrelicoracledbConnectionInactiveSessions struct {
 // init fills newrelicoracledb.connection.inactive_sessions metric with initial data.
 func (m *metricNewrelicoracledbConnectionInactiveSessions) init() {
 	m.data.SetName("newrelicoracledb.connection.inactive_sessions")
-	m.data.SetDescription("Number of inactive Oracle database sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2421,7 +2421,7 @@ type metricNewrelicoracledbConnectionLogonsCumulative struct {
 // init fills newrelicoracledb.connection.logons_cumulative metric with initial data.
 func (m *metricNewrelicoracledbConnectionLogonsCumulative) init() {
 	m.data.SetName("newrelicoracledb.connection.logons_cumulative")
-	m.data.SetDescription("Cumulative number of logons since instance startup")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{logons}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -2474,7 +2474,7 @@ type metricNewrelicoracledbConnectionLogonsCurrent struct {
 // init fills newrelicoracledb.connection.logons_current metric with initial data.
 func (m *metricNewrelicoracledbConnectionLogonsCurrent) init() {
 	m.data.SetName("newrelicoracledb.connection.logons_current")
-	m.data.SetDescription("Current number of active logons")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{logons}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2525,7 +2525,7 @@ type metricNewrelicoracledbConnectionParseCountHard struct {
 // init fills newrelicoracledb.connection.parse_count_hard metric with initial data.
 func (m *metricNewrelicoracledbConnectionParseCountHard) init() {
 	m.data.SetName("newrelicoracledb.connection.parse_count_hard")
-	m.data.SetDescription("Number of hard parse calls")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{parses}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -2578,7 +2578,7 @@ type metricNewrelicoracledbConnectionParseCountTotal struct {
 // init fills newrelicoracledb.connection.parse_count_total metric with initial data.
 func (m *metricNewrelicoracledbConnectionParseCountTotal) init() {
 	m.data.SetName("newrelicoracledb.connection.parse_count_total")
-	m.data.SetDescription("Total number of parse calls")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{parses}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -2631,7 +2631,7 @@ type metricNewrelicoracledbConnectionResourceCurrentUtilization struct {
 // init fills newrelicoracledb.connection.resource_current_utilization metric with initial data.
 func (m *metricNewrelicoracledbConnectionResourceCurrentUtilization) init() {
 	m.data.SetName("newrelicoracledb.connection.resource_current_utilization")
-	m.data.SetDescription("Current utilization of Oracle resources")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{resources}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2683,7 +2683,7 @@ type metricNewrelicoracledbConnectionResourceLimit struct {
 // init fills newrelicoracledb.connection.resource_limit metric with initial data.
 func (m *metricNewrelicoracledbConnectionResourceLimit) init() {
 	m.data.SetName("newrelicoracledb.connection.resource_limit")
-	m.data.SetDescription("Limit value for Oracle resources")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{resources}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2735,7 +2735,7 @@ type metricNewrelicoracledbConnectionResourceMaxUtilization struct {
 // init fills newrelicoracledb.connection.resource_max_utilization metric with initial data.
 func (m *metricNewrelicoracledbConnectionResourceMaxUtilization) init() {
 	m.data.SetName("newrelicoracledb.connection.resource_max_utilization")
-	m.data.SetDescription("Maximum utilization of Oracle resources since startup")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{resources}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2787,7 +2787,7 @@ type metricNewrelicoracledbConnectionSessionCPUUsage struct {
 // init fills newrelicoracledb.connection.session_cpu_usage metric with initial data.
 func (m *metricNewrelicoracledbConnectionSessionCPUUsage) init() {
 	m.data.SetName("newrelicoracledb.connection.session_cpu_usage")
-	m.data.SetDescription("CPU usage by session in seconds")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2842,7 +2842,7 @@ type metricNewrelicoracledbConnectionSessionIdleTime struct {
 // init fills newrelicoracledb.connection.session_idle_time metric with initial data.
 func (m *metricNewrelicoracledbConnectionSessionIdleTime) init() {
 	m.data.SetName("newrelicoracledb.connection.session_idle_time")
-	m.data.SetDescription("Session idle time in seconds")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2897,7 +2897,7 @@ type metricNewrelicoracledbConnectionSessionLogicalReads struct {
 // init fills newrelicoracledb.connection.session_logical_reads metric with initial data.
 func (m *metricNewrelicoracledbConnectionSessionLogicalReads) init() {
 	m.data.SetName("newrelicoracledb.connection.session_logical_reads")
-	m.data.SetDescription("Logical reads by session")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{reads}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -2952,7 +2952,7 @@ type metricNewrelicoracledbConnectionSessionPgaMemory struct {
 // init fills newrelicoracledb.connection.session_pga_memory metric with initial data.
 func (m *metricNewrelicoracledbConnectionSessionPgaMemory) init() {
 	m.data.SetName("newrelicoracledb.connection.session_pga_memory")
-	m.data.SetDescription("PGA memory usage by session")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3007,7 +3007,7 @@ type metricNewrelicoracledbConnectionSessionsByStatus struct {
 // init fills newrelicoracledb.connection.sessions_by_status metric with initial data.
 func (m *metricNewrelicoracledbConnectionSessionsByStatus) init() {
 	m.data.SetName("newrelicoracledb.connection.sessions_by_status")
-	m.data.SetDescription("Number of sessions grouped by status")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3059,7 +3059,7 @@ type metricNewrelicoracledbConnectionSessionsByType struct {
 // init fills newrelicoracledb.connection.sessions_by_type metric with initial data.
 func (m *metricNewrelicoracledbConnectionSessionsByType) init() {
 	m.data.SetName("newrelicoracledb.connection.sessions_by_type")
-	m.data.SetDescription("Number of sessions grouped by type")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3111,7 +3111,7 @@ type metricNewrelicoracledbConnectionSharedServers struct {
 // init fills newrelicoracledb.connection.shared_servers metric with initial data.
 func (m *metricNewrelicoracledbConnectionSharedServers) init() {
 	m.data.SetName("newrelicoracledb.connection.shared_servers")
-	m.data.SetDescription("Number of shared servers")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{servers}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3162,7 +3162,7 @@ type metricNewrelicoracledbConnectionSqlnetRoundtrips struct {
 // init fills newrelicoracledb.connection.sqlnet_roundtrips metric with initial data.
 func (m *metricNewrelicoracledbConnectionSqlnetRoundtrips) init() {
 	m.data.SetName("newrelicoracledb.connection.sqlnet_roundtrips")
-	m.data.SetDescription("Number of SQL*Net roundtrips to/from client")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{roundtrips}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -3215,7 +3215,7 @@ type metricNewrelicoracledbConnectionTotalSessions struct {
 // init fills newrelicoracledb.connection.total_sessions metric with initial data.
 func (m *metricNewrelicoracledbConnectionTotalSessions) init() {
 	m.data.SetName("newrelicoracledb.connection.total_sessions")
-	m.data.SetDescription("Total number of Oracle database sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3266,7 +3266,7 @@ type metricNewrelicoracledbConnectionUserCommits struct {
 // init fills newrelicoracledb.connection.user_commits metric with initial data.
 func (m *metricNewrelicoracledbConnectionUserCommits) init() {
 	m.data.SetName("newrelicoracledb.connection.user_commits")
-	m.data.SetDescription("Number of user commits")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{commits}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -3319,7 +3319,7 @@ type metricNewrelicoracledbConnectionUserRollbacks struct {
 // init fills newrelicoracledb.connection.user_rollbacks metric with initial data.
 func (m *metricNewrelicoracledbConnectionUserRollbacks) init() {
 	m.data.SetName("newrelicoracledb.connection.user_rollbacks")
-	m.data.SetDescription("Number of user rollbacks")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{rollbacks}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -3372,7 +3372,7 @@ type metricNewrelicoracledbConnectionWaitEventAvgWaitTime struct {
 // init fills newrelicoracledb.connection.wait_event_avg_wait_time metric with initial data.
 func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) init() {
 	m.data.SetName("newrelicoracledb.connection.wait_event_avg_wait_time")
-	m.data.SetDescription("Average wait time for each wait event")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3425,7 +3425,7 @@ type metricNewrelicoracledbConnectionWaitEventTimeWaited struct {
 // init fills newrelicoracledb.connection.wait_event_time_waited metric with initial data.
 func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) init() {
 	m.data.SetName("newrelicoracledb.connection.wait_event_time_waited")
-	m.data.SetDescription("Total time waited for each wait event")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -3480,7 +3480,7 @@ type metricNewrelicoracledbConnectionWaitEventTotalWaits struct {
 // init fills newrelicoracledb.connection.wait_event_total_waits metric with initial data.
 func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) init() {
 	m.data.SetName("newrelicoracledb.connection.wait_event_total_waits")
-	m.data.SetDescription("Total number of waits for each wait event")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{waits}")
 	m.data.SetEmptySum()
 	m.data.Sum().SetIsMonotonic(true)
@@ -3535,7 +3535,7 @@ type metricNewrelicoracledbConnectionWaitEvents struct {
 // init fills newrelicoracledb.connection.wait_events metric with initial data.
 func (m *metricNewrelicoracledbConnectionWaitEvents) init() {
 	m.data.SetName("newrelicoracledb.connection.wait_events")
-	m.data.SetDescription("Current wait events and wait time")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3591,7 +3591,7 @@ type metricNewrelicoracledbContainerRestricted struct {
 // init fills newrelicoracledb.container.restricted metric with initial data.
 func (m *metricNewrelicoracledbContainerRestricted) init() {
 	m.data.SetName("newrelicoracledb.container.restricted")
-	m.data.SetDescription("Oracle container restricted status (1=YES, 0=NO)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3645,7 +3645,7 @@ type metricNewrelicoracledbContainerStatus struct {
 // init fills newrelicoracledb.container.status metric with initial data.
 func (m *metricNewrelicoracledbContainerStatus) init() {
 	m.data.SetName("newrelicoracledb.container.status")
-	m.data.SetDescription("Oracle container status (1=READ WRITE, 0=other)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3699,7 +3699,7 @@ type metricNewrelicoracledbDatabaseInfo struct {
 // init fills newrelicoracledb.database.info metric with initial data.
 func (m *metricNewrelicoracledbDatabaseInfo) init() {
 	m.data.SetName("newrelicoracledb.database.info")
-	m.data.SetDescription("Database version and configuration information")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3754,7 +3754,7 @@ type metricNewrelicoracledbDatabaseRole struct {
 // init fills newrelicoracledb.database.role metric with initial data.
 func (m *metricNewrelicoracledbDatabaseRole) init() {
 	m.data.SetName("newrelicoracledb.database.role")
-	m.data.SetDescription("Database role and Data Guard configuration")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3809,7 +3809,7 @@ type metricNewrelicoracledbDatafileAutoextensible struct {
 // init fills newrelicoracledb.datafile.autoextensible metric with initial data.
 func (m *metricNewrelicoracledbDatafileAutoextensible) init() {
 	m.data.SetName("newrelicoracledb.datafile.autoextensible")
-	m.data.SetDescription("Data file autoextensible status (1=YES, 0=NO)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3864,7 +3864,7 @@ type metricNewrelicoracledbDatafileSizeBytes struct {
 // init fills newrelicoracledb.datafile.size_bytes metric with initial data.
 func (m *metricNewrelicoracledbDatafileSizeBytes) init() {
 	m.data.SetName("newrelicoracledb.datafile.size_bytes")
-	m.data.SetDescription("Size of data file in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3918,7 +3918,7 @@ type metricNewrelicoracledbDatafileUsedBytes struct {
 // init fills newrelicoracledb.datafile.used_bytes metric with initial data.
 func (m *metricNewrelicoracledbDatafileUsedBytes) init() {
 	m.data.SetName("newrelicoracledb.datafile.used_bytes")
-	m.data.SetDescription("Used bytes in data file")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -3972,7 +3972,7 @@ type metricNewrelicoracledbDbID struct {
 // init fills newrelicoracledb.db_id metric with initial data.
 func (m *metricNewrelicoracledbDbID) init() {
 	m.data.SetName("newrelicoracledb.db_id")
-	m.data.SetDescription("Oracle database ID information")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4024,7 +4024,7 @@ type metricNewrelicoracledbDiskBlocksRead struct {
 // init fills newrelicoracledb.disk.blocks_read metric with initial data.
 func (m *metricNewrelicoracledbDiskBlocksRead) init() {
 	m.data.SetName("newrelicoracledb.disk.blocks_read")
-	m.data.SetDescription("Number of physical blocks read from disk")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4076,7 +4076,7 @@ type metricNewrelicoracledbDiskBlocksWritten struct {
 // init fills newrelicoracledb.disk.blocks_written metric with initial data.
 func (m *metricNewrelicoracledbDiskBlocksWritten) init() {
 	m.data.SetName("newrelicoracledb.disk.blocks_written")
-	m.data.SetDescription("Number of physical blocks written to disk")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4128,7 +4128,7 @@ type metricNewrelicoracledbDiskReadTimeMilliseconds struct {
 // init fills newrelicoracledb.disk.read_time_milliseconds metric with initial data.
 func (m *metricNewrelicoracledbDiskReadTimeMilliseconds) init() {
 	m.data.SetName("newrelicoracledb.disk.read_time_milliseconds")
-	m.data.SetDescription("Time spent reading from disk in milliseconds")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4180,7 +4180,7 @@ type metricNewrelicoracledbDiskReads struct {
 // init fills newrelicoracledb.disk.reads metric with initial data.
 func (m *metricNewrelicoracledbDiskReads) init() {
 	m.data.SetName("newrelicoracledb.disk.reads")
-	m.data.SetDescription("Number of physical disk reads")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4232,7 +4232,7 @@ type metricNewrelicoracledbDiskWriteTimeMilliseconds struct {
 // init fills newrelicoracledb.disk.write_time_milliseconds metric with initial data.
 func (m *metricNewrelicoracledbDiskWriteTimeMilliseconds) init() {
 	m.data.SetName("newrelicoracledb.disk.write_time_milliseconds")
-	m.data.SetDescription("Time spent writing to disk in milliseconds")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4284,7 +4284,7 @@ type metricNewrelicoracledbDiskWrites struct {
 // init fills newrelicoracledb.disk.writes metric with initial data.
 func (m *metricNewrelicoracledbDiskWrites) init() {
 	m.data.SetName("newrelicoracledb.disk.writes")
-	m.data.SetDescription("Number of physical disk writes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4336,7 +4336,7 @@ type metricNewrelicoracledbGlobalName struct {
 // init fills newrelicoracledb.global_name metric with initial data.
 func (m *metricNewrelicoracledbGlobalName) init() {
 	m.data.SetName("newrelicoracledb.global_name")
-	m.data.SetDescription("Oracle database global name information")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4388,7 +4388,7 @@ type metricNewrelicoracledbHostingInfo struct {
 // init fills newrelicoracledb.hosting.info metric with initial data.
 func (m *metricNewrelicoracledbHostingInfo) init() {
 	m.data.SetName("newrelicoracledb.hosting.info")
-	m.data.SetDescription("Database hosting and platform information")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4441,7 +4441,7 @@ type metricNewrelicoracledbLockedAccounts struct {
 // init fills newrelicoracledb.locked_accounts metric with initial data.
 func (m *metricNewrelicoracledbLockedAccounts) init() {
 	m.data.SetName("newrelicoracledb.locked_accounts")
-	m.data.SetDescription("Count of locked user accounts in the database")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4493,7 +4493,7 @@ type metricNewrelicoracledbLongRunningQueries struct {
 // init fills newrelicoracledb.long_running_queries metric with initial data.
 func (m *metricNewrelicoracledbLongRunningQueries) init() {
 	m.data.SetName("newrelicoracledb.long_running_queries")
-	m.data.SetDescription("Number of long running queries (active sessions running for more than 60 seconds)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4545,7 +4545,7 @@ type metricNewrelicoracledbMemoryPgaAllocatedBytes struct {
 // init fills newrelicoracledb.memory.pga_allocated_bytes metric with initial data.
 func (m *metricNewrelicoracledbMemoryPgaAllocatedBytes) init() {
 	m.data.SetName("newrelicoracledb.memory.pga_allocated_bytes")
-	m.data.SetDescription("Total PGA memory allocated in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4597,7 +4597,7 @@ type metricNewrelicoracledbMemoryPgaFreeableBytes struct {
 // init fills newrelicoracledb.memory.pga_freeable_bytes metric with initial data.
 func (m *metricNewrelicoracledbMemoryPgaFreeableBytes) init() {
 	m.data.SetName("newrelicoracledb.memory.pga_freeable_bytes")
-	m.data.SetDescription("Total freeable PGA memory in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4649,7 +4649,7 @@ type metricNewrelicoracledbMemoryPgaInUseBytes struct {
 // init fills newrelicoracledb.memory.pga_in_use_bytes metric with initial data.
 func (m *metricNewrelicoracledbMemoryPgaInUseBytes) init() {
 	m.data.SetName("newrelicoracledb.memory.pga_in_use_bytes")
-	m.data.SetDescription("Total PGA memory currently in use in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4701,7 +4701,7 @@ type metricNewrelicoracledbMemoryPgaMaxSizeBytes struct {
 // init fills newrelicoracledb.memory.pga_max_size_bytes metric with initial data.
 func (m *metricNewrelicoracledbMemoryPgaMaxSizeBytes) init() {
 	m.data.SetName("newrelicoracledb.memory.pga_max_size_bytes")
-	m.data.SetDescription("Global memory bound for PGA in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4753,7 +4753,7 @@ type metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes struct {
 // init fills newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes metric with initial data.
 func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytes) init() {
 	m.data.SetName("newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes")
-	m.data.SetDescription("SGA shared pool library cache sharable memory in bytes for statements with more than 5 executions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4805,7 +4805,7 @@ type metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes struct {
 // init fills newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes metric with initial data.
 func (m *metricNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytes) init() {
 	m.data.SetName("newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes")
-	m.data.SetDescription("SGA shared pool library cache shareable memory per user in bytes (250 * users_opening)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4857,7 +4857,7 @@ type metricNewrelicoracledbMemorySgaUgaTotalBytes struct {
 // init fills newrelicoracledb.memory.sga_uga_total_bytes metric with initial data.
 func (m *metricNewrelicoracledbMemorySgaUgaTotalBytes) init() {
 	m.data.SetName("newrelicoracledb.memory.sga_uga_total_bytes")
-	m.data.SetDescription("Total SGA UGA memory in bytes (session uga memory max)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4909,7 +4909,7 @@ type metricNewrelicoracledbPdbActiveParallelSessions struct {
 // init fills newrelicoracledb.pdb.active_parallel_sessions metric with initial data.
 func (m *metricNewrelicoracledbPdbActiveParallelSessions) init() {
 	m.data.SetName("newrelicoracledb.pdb.active_parallel_sessions")
-	m.data.SetDescription("Number of active parallel sessions in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -4962,7 +4962,7 @@ type metricNewrelicoracledbPdbActiveSerialSessions struct {
 // init fills newrelicoracledb.pdb.active_serial_sessions metric with initial data.
 func (m *metricNewrelicoracledbPdbActiveSerialSessions) init() {
 	m.data.SetName("newrelicoracledb.pdb.active_serial_sessions")
-	m.data.SetDescription("Number of active serial sessions in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5015,7 +5015,7 @@ type metricNewrelicoracledbPdbAverageActiveSessions struct {
 // init fills newrelicoracledb.pdb.average_active_sessions metric with initial data.
 func (m *metricNewrelicoracledbPdbAverageActiveSessions) init() {
 	m.data.SetName("newrelicoracledb.pdb.average_active_sessions")
-	m.data.SetDescription("Average number of active sessions in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5068,7 +5068,7 @@ type metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond struct {
 // init fills newrelicoracledb.pdb.background_cpu_usage_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbBackgroundCPUUsagePerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.background_cpu_usage_per_second")
-	m.data.SetDescription("Background CPU usage per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5121,7 +5121,7 @@ type metricNewrelicoracledbPdbBackgroundTimePerSecond struct {
 // init fills newrelicoracledb.pdb.background_time_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbBackgroundTimePerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.background_time_per_second")
-	m.data.SetDescription("Background time per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5174,7 +5174,7 @@ type metricNewrelicoracledbPdbBlockChangesPerSecond struct {
 // init fills newrelicoracledb.pdb.block_changes_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbBlockChangesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.block_changes_per_second")
-	m.data.SetDescription("DB block changes per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5227,7 +5227,7 @@ type metricNewrelicoracledbPdbBlockChangesPerTransaction struct {
 // init fills newrelicoracledb.pdb.block_changes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbBlockChangesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.block_changes_per_transaction")
-	m.data.SetDescription("DB block changes per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5280,7 +5280,7 @@ type metricNewrelicoracledbPdbCPUTimeRatio struct {
 // init fills newrelicoracledb.pdb.cpu_time_ratio metric with initial data.
 func (m *metricNewrelicoracledbPdbCPUTimeRatio) init() {
 	m.data.SetName("newrelicoracledb.pdb.cpu_time_ratio")
-	m.data.SetDescription("Database CPU time ratio in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5333,7 +5333,7 @@ type metricNewrelicoracledbPdbCPUUsagePerSecond struct {
 // init fills newrelicoracledb.pdb.cpu_usage_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbCPUUsagePerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.cpu_usage_per_second")
-	m.data.SetDescription("CPU usage per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5386,7 +5386,7 @@ type metricNewrelicoracledbPdbCPUUsagePerTransaction struct {
 // init fills newrelicoracledb.pdb.cpu_usage_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbCPUUsagePerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.cpu_usage_per_transaction")
-	m.data.SetDescription("CPU usage per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5439,7 +5439,7 @@ type metricNewrelicoracledbPdbCurrentLogons struct {
 // init fills newrelicoracledb.pdb.current_logons metric with initial data.
 func (m *metricNewrelicoracledbPdbCurrentLogons) init() {
 	m.data.SetName("newrelicoracledb.pdb.current_logons")
-	m.data.SetDescription("Current number of logons in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5492,7 +5492,7 @@ type metricNewrelicoracledbPdbCurrentOpenCursors struct {
 // init fills newrelicoracledb.pdb.current_open_cursors metric with initial data.
 func (m *metricNewrelicoracledbPdbCurrentOpenCursors) init() {
 	m.data.SetName("newrelicoracledb.pdb.current_open_cursors")
-	m.data.SetDescription("Current number of open cursors in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5545,7 +5545,7 @@ type metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond struct {
 // init fills newrelicoracledb.pdb.db_physical_read_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbDbPhysicalReadBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.db_physical_read_bytes_per_second")
-	m.data.SetDescription("Physical read bytes per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5598,7 +5598,7 @@ type metricNewrelicoracledbPdbDbPhysicalReadsPerSecond struct {
 // init fills newrelicoracledb.pdb.db_physical_reads_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbDbPhysicalReadsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.db_physical_reads_per_second")
-	m.data.SetDescription("Physical reads per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5651,7 +5651,7 @@ type metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond struct {
 // init fills newrelicoracledb.pdb.db_physical_write_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbDbPhysicalWriteBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.db_physical_write_bytes_per_second")
-	m.data.SetDescription("Physical write bytes per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5704,7 +5704,7 @@ type metricNewrelicoracledbPdbDbPhysicalWritesPerSecond struct {
 // init fills newrelicoracledb.pdb.db_physical_writes_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbDbPhysicalWritesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.db_physical_writes_per_second")
-	m.data.SetDescription("Physical writes per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5757,7 +5757,7 @@ type metricNewrelicoracledbPdbExecuteWithoutParseRatio struct {
 // init fills newrelicoracledb.pdb.execute_without_parse_ratio metric with initial data.
 func (m *metricNewrelicoracledbPdbExecuteWithoutParseRatio) init() {
 	m.data.SetName("newrelicoracledb.pdb.execute_without_parse_ratio")
-	m.data.SetDescription("Execute without parse ratio in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5810,7 +5810,7 @@ type metricNewrelicoracledbPdbExecutionsPerSecond struct {
 // init fills newrelicoracledb.pdb.executions_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbExecutionsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.executions_per_second")
-	m.data.SetDescription("Executions per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5863,7 +5863,7 @@ type metricNewrelicoracledbPdbExecutionsPerTransaction struct {
 // init fills newrelicoracledb.pdb.executions_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbExecutionsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.executions_per_transaction")
-	m.data.SetDescription("Executions per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5916,7 +5916,7 @@ type metricNewrelicoracledbPdbHardParseCountPerSecond struct {
 // init fills newrelicoracledb.pdb.hard_parse_count_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbHardParseCountPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.hard_parse_count_per_second")
-	m.data.SetDescription("Hard parse count per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -5969,7 +5969,7 @@ type metricNewrelicoracledbPdbHardParseCountPerTransaction struct {
 // init fills newrelicoracledb.pdb.hard_parse_count_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbHardParseCountPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.hard_parse_count_per_transaction")
-	m.data.SetDescription("Hard parse count per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6022,7 +6022,7 @@ type metricNewrelicoracledbPdbLogicalReadsPerSecond struct {
 // init fills newrelicoracledb.pdb.logical_reads_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbLogicalReadsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.logical_reads_per_second")
-	m.data.SetDescription("Logical reads per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6075,7 +6075,7 @@ type metricNewrelicoracledbPdbLogicalReadsPerTransaction struct {
 // init fills newrelicoracledb.pdb.logical_reads_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbLogicalReadsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.logical_reads_per_transaction")
-	m.data.SetDescription("Logical reads per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6128,7 +6128,7 @@ type metricNewrelicoracledbPdbLogonsPerSecond struct {
 // init fills newrelicoracledb.pdb.logons_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbLogonsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.logons_per_second")
-	m.data.SetDescription("Logons per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6181,7 +6181,7 @@ type metricNewrelicoracledbPdbLogonsPerTransaction struct {
 // init fills newrelicoracledb.pdb.logons_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbLogonsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.logons_per_transaction")
-	m.data.SetDescription("Logons per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6234,7 +6234,7 @@ type metricNewrelicoracledbPdbNetworkTrafficBytePerSecond struct {
 // init fills newrelicoracledb.pdb.network_traffic_byte_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbNetworkTrafficBytePerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.network_traffic_byte_per_second")
-	m.data.SetDescription("Network traffic volume per second in bytes in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6287,7 +6287,7 @@ type metricNewrelicoracledbPdbOpenCursorsPerSecond struct {
 // init fills newrelicoracledb.pdb.open_cursors_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbOpenCursorsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.open_cursors_per_second")
-	m.data.SetDescription("Open cursors per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6340,7 +6340,7 @@ type metricNewrelicoracledbPdbOpenCursorsPerTransaction struct {
 // init fills newrelicoracledb.pdb.open_cursors_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbOpenCursorsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.open_cursors_per_transaction")
-	m.data.SetDescription("Open cursors per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6393,7 +6393,7 @@ type metricNewrelicoracledbPdbOpenMode struct {
 // init fills newrelicoracledb.pdb.open_mode metric with initial data.
 func (m *metricNewrelicoracledbPdbOpenMode) init() {
 	m.data.SetName("newrelicoracledb.pdb.open_mode")
-	m.data.SetDescription("Oracle PDB open mode (1=READ WRITE, 0=other)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6447,7 +6447,7 @@ type metricNewrelicoracledbPdbParseFailureCountPerSecond struct {
 // init fills newrelicoracledb.pdb.parse_failure_count_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbParseFailureCountPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.parse_failure_count_per_second")
-	m.data.SetDescription("Parse failure count per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6500,7 +6500,7 @@ type metricNewrelicoracledbPdbPhysicalReadBytesPerSecond struct {
 // init fills newrelicoracledb.pdb.physical_read_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbPhysicalReadBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.physical_read_bytes_per_second")
-	m.data.SetDescription("Physical read total bytes per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6553,7 +6553,7 @@ type metricNewrelicoracledbPdbPhysicalReadsPerTransaction struct {
 // init fills newrelicoracledb.pdb.physical_reads_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbPhysicalReadsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.physical_reads_per_transaction")
-	m.data.SetDescription("Physical reads per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6606,7 +6606,7 @@ type metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond struct {
 // init fills newrelicoracledb.pdb.physical_write_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbPhysicalWriteBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.physical_write_bytes_per_second")
-	m.data.SetDescription("Physical write total bytes per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6659,7 +6659,7 @@ type metricNewrelicoracledbPdbPhysicalWritesPerTransaction struct {
 // init fills newrelicoracledb.pdb.physical_writes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbPhysicalWritesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.physical_writes_per_transaction")
-	m.data.SetDescription("Physical writes per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6712,7 +6712,7 @@ type metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond struct {
 // init fills newrelicoracledb.pdb.redo_generated_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.redo_generated_bytes_per_second")
-	m.data.SetDescription("Redo generated per second in bytes in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6765,7 +6765,7 @@ type metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction struct {
 // init fills newrelicoracledb.pdb.redo_generated_bytes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbRedoGeneratedBytesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.redo_generated_bytes_per_transaction")
-	m.data.SetDescription("Redo generated per transaction in bytes in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6818,7 +6818,7 @@ type metricNewrelicoracledbPdbResponseTimePerTransaction struct {
 // init fills newrelicoracledb.pdb.response_time_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbResponseTimePerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.response_time_per_transaction")
-	m.data.SetDescription("Response time per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6871,7 +6871,7 @@ type metricNewrelicoracledbPdbSessionCount struct {
 // init fills newrelicoracledb.pdb.session_count metric with initial data.
 func (m *metricNewrelicoracledbPdbSessionCount) init() {
 	m.data.SetName("newrelicoracledb.pdb.session_count")
-	m.data.SetDescription("Session count in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6924,7 +6924,7 @@ type metricNewrelicoracledbPdbSoftParseRatio struct {
 // init fills newrelicoracledb.pdb.soft_parse_ratio metric with initial data.
 func (m *metricNewrelicoracledbPdbSoftParseRatio) init() {
 	m.data.SetName("newrelicoracledb.pdb.soft_parse_ratio")
-	m.data.SetDescription("Soft parse ratio in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -6977,7 +6977,7 @@ type metricNewrelicoracledbPdbSQLServiceResponseTime struct {
 // init fills newrelicoracledb.pdb.sql_service_response_time metric with initial data.
 func (m *metricNewrelicoracledbPdbSQLServiceResponseTime) init() {
 	m.data.SetName("newrelicoracledb.pdb.sql_service_response_time")
-	m.data.SetDescription("SQL service response time in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7030,7 +7030,7 @@ type metricNewrelicoracledbPdbTotalParseCountPerSecond struct {
 // init fills newrelicoracledb.pdb.total_parse_count_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbTotalParseCountPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.total_parse_count_per_second")
-	m.data.SetDescription("Total parse count per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7083,7 +7083,7 @@ type metricNewrelicoracledbPdbTotalParseCountPerTransaction struct {
 // init fills newrelicoracledb.pdb.total_parse_count_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbTotalParseCountPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.total_parse_count_per_transaction")
-	m.data.SetDescription("Total parse count per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7136,7 +7136,7 @@ type metricNewrelicoracledbPdbTotalSizeBytes struct {
 // init fills newrelicoracledb.pdb.total_size_bytes metric with initial data.
 func (m *metricNewrelicoracledbPdbTotalSizeBytes) init() {
 	m.data.SetName("newrelicoracledb.pdb.total_size_bytes")
-	m.data.SetDescription("Total size of PDB in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7189,7 +7189,7 @@ type metricNewrelicoracledbPdbTransactionsPerSecond struct {
 // init fills newrelicoracledb.pdb.transactions_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbTransactionsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.transactions_per_second")
-	m.data.SetDescription("User transactions per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7242,7 +7242,7 @@ type metricNewrelicoracledbPdbUserCallsPerSecond struct {
 // init fills newrelicoracledb.pdb.user_calls_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbUserCallsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.user_calls_per_second")
-	m.data.SetDescription("User calls per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7295,7 +7295,7 @@ type metricNewrelicoracledbPdbUserCallsPerTransaction struct {
 // init fills newrelicoracledb.pdb.user_calls_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbPdbUserCallsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.pdb.user_calls_per_transaction")
-	m.data.SetDescription("User calls per transaction in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7348,7 +7348,7 @@ type metricNewrelicoracledbPdbUserCommitsPerSecond struct {
 // init fills newrelicoracledb.pdb.user_commits_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbUserCommitsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.user_commits_per_second")
-	m.data.SetDescription("User commits per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7401,7 +7401,7 @@ type metricNewrelicoracledbPdbUserCommitsPercentage struct {
 // init fills newrelicoracledb.pdb.user_commits_percentage metric with initial data.
 func (m *metricNewrelicoracledbPdbUserCommitsPercentage) init() {
 	m.data.SetName("newrelicoracledb.pdb.user_commits_percentage")
-	m.data.SetDescription("User commits percentage in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7454,7 +7454,7 @@ type metricNewrelicoracledbPdbUserRollbacksPerSecond struct {
 // init fills newrelicoracledb.pdb.user_rollbacks_per_second metric with initial data.
 func (m *metricNewrelicoracledbPdbUserRollbacksPerSecond) init() {
 	m.data.SetName("newrelicoracledb.pdb.user_rollbacks_per_second")
-	m.data.SetDescription("User rollbacks per second in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7507,7 +7507,7 @@ type metricNewrelicoracledbPdbUserRollbacksPercentage struct {
 // init fills newrelicoracledb.pdb.user_rollbacks_percentage metric with initial data.
 func (m *metricNewrelicoracledbPdbUserRollbacksPercentage) init() {
 	m.data.SetName("newrelicoracledb.pdb.user_rollbacks_percentage")
-	m.data.SetDescription("User rollbacks percentage in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7560,7 +7560,7 @@ type metricNewrelicoracledbPdbWaitTimeRatio struct {
 // init fills newrelicoracledb.pdb.wait_time_ratio metric with initial data.
 func (m *metricNewrelicoracledbPdbWaitTimeRatio) init() {
 	m.data.SetName("newrelicoracledb.pdb.wait_time_ratio")
-	m.data.SetDescription("Database wait time ratio in PDB")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7613,7 +7613,7 @@ type metricNewrelicoracledbRacInstanceActiveState struct {
 // init fills newrelicoracledb.rac.instance.active_state metric with initial data.
 func (m *metricNewrelicoracledbRacInstanceActiveState) init() {
 	m.data.SetName("newrelicoracledb.rac.instance.active_state")
-	m.data.SetDescription("Instance active state indicator (1=NORMAL, 0=other)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7668,7 +7668,7 @@ type metricNewrelicoracledbRacInstanceArchiverStarted struct {
 // init fills newrelicoracledb.rac.instance.archiver_started metric with initial data.
 func (m *metricNewrelicoracledbRacInstanceArchiverStarted) init() {
 	m.data.SetName("newrelicoracledb.rac.instance.archiver_started")
-	m.data.SetDescription("Archiver status indicator (1=STARTED, 0=STOPPED)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7723,7 +7723,7 @@ type metricNewrelicoracledbRacInstanceDatabaseStatus struct {
 // init fills newrelicoracledb.rac.instance.database_status metric with initial data.
 func (m *metricNewrelicoracledbRacInstanceDatabaseStatus) init() {
 	m.data.SetName("newrelicoracledb.rac.instance.database_status")
-	m.data.SetDescription("Database status indicator (1=ACTIVE, 0=other)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7778,7 +7778,7 @@ type metricNewrelicoracledbRacInstanceLoginsAllowed struct {
 // init fills newrelicoracledb.rac.instance.logins_allowed metric with initial data.
 func (m *metricNewrelicoracledbRacInstanceLoginsAllowed) init() {
 	m.data.SetName("newrelicoracledb.rac.instance.logins_allowed")
-	m.data.SetDescription("Instance login status indicator (1=ALLOWED, 0=RESTRICTED)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7833,7 +7833,7 @@ type metricNewrelicoracledbRacInstanceStatus struct {
 // init fills newrelicoracledb.rac.instance.status metric with initial data.
 func (m *metricNewrelicoracledbRacInstanceStatus) init() {
 	m.data.SetName("newrelicoracledb.rac.instance.status")
-	m.data.SetDescription("RAC instance status (1=OPEN, 0=other)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7888,7 +7888,7 @@ type metricNewrelicoracledbRacInstanceUptimeSeconds struct {
 // init fills newrelicoracledb.rac.instance.uptime_seconds metric with initial data.
 func (m *metricNewrelicoracledbRacInstanceUptimeSeconds) init() {
 	m.data.SetName("newrelicoracledb.rac.instance.uptime_seconds")
-	m.data.SetDescription("Instance uptime in seconds since startup")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7942,7 +7942,7 @@ type metricNewrelicoracledbRacInstanceVersionInfo struct {
 // init fills newrelicoracledb.rac.instance.version_info metric with initial data.
 func (m *metricNewrelicoracledbRacInstanceVersionInfo) init() {
 	m.data.SetName("newrelicoracledb.rac.instance.version_info")
-	m.data.SetDescription("Oracle database version information (always 1, version in attributes)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -7996,7 +7996,7 @@ type metricNewrelicoracledbRacServiceBlockedStatus struct {
 // init fills newrelicoracledb.rac.service.blocked_status metric with initial data.
 func (m *metricNewrelicoracledbRacServiceBlockedStatus) init() {
 	m.data.SetName("newrelicoracledb.rac.service.blocked_status")
-	m.data.SetDescription("Service blocked indicator (1=blocked, 0=not blocked)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8049,7 +8049,7 @@ type metricNewrelicoracledbRacServiceClbConfig struct {
 // init fills newrelicoracledb.rac.service.clb_config metric with initial data.
 func (m *metricNewrelicoracledbRacServiceClbConfig) init() {
 	m.data.SetName("newrelicoracledb.rac.service.clb_config")
-	m.data.SetDescription("Connection load balancing configuration (always 1, config in attributes)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8102,7 +8102,7 @@ type metricNewrelicoracledbRacServiceDrainTimeoutSeconds struct {
 // init fills newrelicoracledb.rac.service.drain_timeout_seconds metric with initial data.
 func (m *metricNewrelicoracledbRacServiceDrainTimeoutSeconds) init() {
 	m.data.SetName("newrelicoracledb.rac.service.drain_timeout_seconds")
-	m.data.SetDescription("Session drain timeout in seconds before service stop")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8155,7 +8155,7 @@ type metricNewrelicoracledbRacServiceFanEnabled struct {
 // init fills newrelicoracledb.rac.service.fan_enabled metric with initial data.
 func (m *metricNewrelicoracledbRacServiceFanEnabled) init() {
 	m.data.SetName("newrelicoracledb.rac.service.fan_enabled")
-	m.data.SetDescription("Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8208,7 +8208,7 @@ type metricNewrelicoracledbRacServiceGoalConfig struct {
 // init fills newrelicoracledb.rac.service.goal_config metric with initial data.
 func (m *metricNewrelicoracledbRacServiceGoalConfig) init() {
 	m.data.SetName("newrelicoracledb.rac.service.goal_config")
-	m.data.SetDescription("Service goal configuration (always 1, goal in attributes)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8261,7 +8261,7 @@ type metricNewrelicoracledbRacServiceInstanceID struct {
 // init fills newrelicoracledb.rac.service.instance_id metric with initial data.
 func (m *metricNewrelicoracledbRacServiceInstanceID) init() {
 	m.data.SetName("newrelicoracledb.rac.service.instance_id")
-	m.data.SetDescription("Instance ID where the service is currently running")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8314,7 +8314,7 @@ type metricNewrelicoracledbRacServiceNetworkConfig struct {
 // init fills newrelicoracledb.rac.service.network_config metric with initial data.
 func (m *metricNewrelicoracledbRacServiceNetworkConfig) init() {
 	m.data.SetName("newrelicoracledb.rac.service.network_config")
-	m.data.SetDescription("Service network configuration (always 1, config in attributes)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8367,7 +8367,7 @@ type metricNewrelicoracledbRacServiceReplayTimeoutSeconds struct {
 // init fills newrelicoracledb.rac.service.replay_timeout_seconds metric with initial data.
 func (m *metricNewrelicoracledbRacServiceReplayTimeoutSeconds) init() {
 	m.data.SetName("newrelicoracledb.rac.service.replay_timeout_seconds")
-	m.data.SetDescription("Application Continuity replay initiation timeout in seconds")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8420,7 +8420,7 @@ type metricNewrelicoracledbRacServiceTransactionGuardEnabled struct {
 // init fills newrelicoracledb.rac.service.transaction_guard_enabled metric with initial data.
 func (m *metricNewrelicoracledbRacServiceTransactionGuardEnabled) init() {
 	m.data.SetName("newrelicoracledb.rac.service.transaction_guard_enabled")
-	m.data.SetDescription("Transaction Guard enabled indicator (1=enabled, 0=disabled)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8473,7 +8473,7 @@ type metricNewrelicoracledbRacTotalWaits struct {
 // init fills newrelicoracledb.rac.total_waits metric with initial data.
 func (m *metricNewrelicoracledbRacTotalWaits) init() {
 	m.data.SetName("newrelicoracledb.rac.total_waits")
-	m.data.SetDescription("Total number of cluster wait events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{waits}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8526,7 +8526,7 @@ type metricNewrelicoracledbRacWaitTime struct {
 // init fills newrelicoracledb.rac.wait_time metric with initial data.
 func (m *metricNewrelicoracledbRacWaitTime) init() {
 	m.data.SetName("newrelicoracledb.rac.wait_time")
-	m.data.SetDescription("Rate of cluster wait time in microseconds per second")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("us/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8579,7 +8579,7 @@ type metricNewrelicoracledbRedoLogParallelWriteWaits struct {
 // init fills newrelicoracledb.redo_log_parallel_write_waits metric with initial data.
 func (m *metricNewrelicoracledbRedoLogParallelWriteWaits) init() {
 	m.data.SetName("newrelicoracledb.redo_log_parallel_write_waits")
-	m.data.SetDescription("Number of waits for log file parallel write events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8631,7 +8631,7 @@ type metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits struct {
 // init fills newrelicoracledb.redo_log_switch_archiving_needed_waits metric with initial data.
 func (m *metricNewrelicoracledbRedoLogSwitchArchivingNeededWaits) init() {
 	m.data.SetName("newrelicoracledb.redo_log_switch_archiving_needed_waits")
-	m.data.SetDescription("Number of waits for log file switch (archiving needed) events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8683,7 +8683,7 @@ type metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits struct {
 // init fills newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits metric with initial data.
 func (m *metricNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaits) init() {
 	m.data.SetName("newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits")
-	m.data.SetDescription("Number of waits for log file switch (checkpoint incomplete) events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8735,7 +8735,7 @@ type metricNewrelicoracledbRedoLogSwitchCompletionWaits struct {
 // init fills newrelicoracledb.redo_log_switch_completion_waits metric with initial data.
 func (m *metricNewrelicoracledbRedoLogSwitchCompletionWaits) init() {
 	m.data.SetName("newrelicoracledb.redo_log_switch_completion_waits")
-	m.data.SetDescription("Number of waits for log file switch completion events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8787,7 +8787,7 @@ type metricNewrelicoracledbRollbackSegmentsGets struct {
 // init fills newrelicoracledb.rollback_segments_gets metric with initial data.
 func (m *metricNewrelicoracledbRollbackSegmentsGets) init() {
 	m.data.SetName("newrelicoracledb.rollback_segments_gets")
-	m.data.SetDescription("Number of gets on rollback segments")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8839,7 +8839,7 @@ type metricNewrelicoracledbRollbackSegmentsWaitRatio struct {
 // init fills newrelicoracledb.rollback_segments_wait_ratio metric with initial data.
 func (m *metricNewrelicoracledbRollbackSegmentsWaitRatio) init() {
 	m.data.SetName("newrelicoracledb.rollback_segments_wait_ratio")
-	m.data.SetDescription("Rollback segments wait ratio (waits/gets)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8891,7 +8891,7 @@ type metricNewrelicoracledbRollbackSegmentsWaits struct {
 // init fills newrelicoracledb.rollback_segments_waits metric with initial data.
 func (m *metricNewrelicoracledbRollbackSegmentsWaits) init() {
 	m.data.SetName("newrelicoracledb.rollback_segments_waits")
-	m.data.SetDescription("Number of waits on rollback segments")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8943,7 +8943,7 @@ type metricNewrelicoracledbServiceCount struct {
 // init fills newrelicoracledb.service.count metric with initial data.
 func (m *metricNewrelicoracledbServiceCount) init() {
 	m.data.SetName("newrelicoracledb.service.count")
-	m.data.SetDescription("Count of services per container")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{services}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -8995,7 +8995,7 @@ type metricNewrelicoracledbServiceStatus struct {
 // init fills newrelicoracledb.service.status metric with initial data.
 func (m *metricNewrelicoracledbServiceStatus) init() {
 	m.data.SetName("newrelicoracledb.service.status")
-	m.data.SetDescription("Oracle service status (1=active, 0=inactive)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9048,7 +9048,7 @@ type metricNewrelicoracledbSessionsCount struct {
 // init fills newrelicoracledb.sessions.count metric with initial data.
 func (m *metricNewrelicoracledbSessionsCount) init() {
 	m.data.SetName("newrelicoracledb.sessions.count")
-	m.data.SetDescription("Total number of active Oracle database sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9099,7 +9099,7 @@ type metricNewrelicoracledbSgaBufferBusyWaits struct {
 // init fills newrelicoracledb.sga_buffer_busy_waits metric with initial data.
 func (m *metricNewrelicoracledbSgaBufferBusyWaits) init() {
 	m.data.SetName("newrelicoracledb.sga_buffer_busy_waits")
-	m.data.SetDescription("Number of buffer busy waits events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9151,7 +9151,7 @@ type metricNewrelicoracledbSgaFixedSizeBytes struct {
 // init fills newrelicoracledb.sga_fixed_size_bytes metric with initial data.
 func (m *metricNewrelicoracledbSgaFixedSizeBytes) init() {
 	m.data.SetName("newrelicoracledb.sga_fixed_size_bytes")
-	m.data.SetDescription("SGA fixed size memory in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9203,7 +9203,7 @@ type metricNewrelicoracledbSgaFreeBufferInspectedWaits struct {
 // init fills newrelicoracledb.sga_free_buffer_inspected_waits metric with initial data.
 func (m *metricNewrelicoracledbSgaFreeBufferInspectedWaits) init() {
 	m.data.SetName("newrelicoracledb.sga_free_buffer_inspected_waits")
-	m.data.SetDescription("Number of free buffer inspected waits events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9255,7 +9255,7 @@ type metricNewrelicoracledbSgaFreeBufferWaits struct {
 // init fills newrelicoracledb.sga_free_buffer_waits metric with initial data.
 func (m *metricNewrelicoracledbSgaFreeBufferWaits) init() {
 	m.data.SetName("newrelicoracledb.sga_free_buffer_waits")
-	m.data.SetDescription("Number of free buffer waits events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9307,7 +9307,7 @@ type metricNewrelicoracledbSgaHitRatio struct {
 // init fills newrelicoracledb.sga_hit_ratio metric with initial data.
 func (m *metricNewrelicoracledbSgaHitRatio) init() {
 	m.data.SetName("newrelicoracledb.sga_hit_ratio")
-	m.data.SetDescription("SGA hit ratio (session logical reads minus physical reads / session logical reads)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9359,7 +9359,7 @@ type metricNewrelicoracledbSgaLogAllocationRetriesRatio struct {
 // init fills newrelicoracledb.sga_log_allocation_retries_ratio metric with initial data.
 func (m *metricNewrelicoracledbSgaLogAllocationRetriesRatio) init() {
 	m.data.SetName("newrelicoracledb.sga_log_allocation_retries_ratio")
-	m.data.SetDescription("SGA log allocation retries ratio (redo buffer allocation retries / redo entries)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9411,7 +9411,7 @@ type metricNewrelicoracledbSgaLogBufferRedoAllocationRetries struct {
 // init fills newrelicoracledb.sga_log_buffer_redo_allocation_retries metric with initial data.
 func (m *metricNewrelicoracledbSgaLogBufferRedoAllocationRetries) init() {
 	m.data.SetName("newrelicoracledb.sga_log_buffer_redo_allocation_retries")
-	m.data.SetDescription("Number of redo buffer allocation retries from sysstat")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9463,7 +9463,7 @@ type metricNewrelicoracledbSgaLogBufferRedoEntries struct {
 // init fills newrelicoracledb.sga_log_buffer_redo_entries metric with initial data.
 func (m *metricNewrelicoracledbSgaLogBufferRedoEntries) init() {
 	m.data.SetName("newrelicoracledb.sga_log_buffer_redo_entries")
-	m.data.SetDescription("Number of redo entries from sysstat")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9515,7 +9515,7 @@ type metricNewrelicoracledbSgaLogBufferSpaceWaits struct {
 // init fills newrelicoracledb.sga_log_buffer_space_waits metric with initial data.
 func (m *metricNewrelicoracledbSgaLogBufferSpaceWaits) init() {
 	m.data.SetName("newrelicoracledb.sga_log_buffer_space_waits")
-	m.data.SetDescription("Number of sessions waiting for log buffer space")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9567,7 +9567,7 @@ type metricNewrelicoracledbSgaRedoBuffersBytes struct {
 // init fills newrelicoracledb.sga_redo_buffers_bytes metric with initial data.
 func (m *metricNewrelicoracledbSgaRedoBuffersBytes) init() {
 	m.data.SetName("newrelicoracledb.sga_redo_buffers_bytes")
-	m.data.SetDescription("SGA redo buffers memory in bytes")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9619,7 +9619,7 @@ type metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio struct {
 // init fills newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio metric with initial data.
 func (m *metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio) init() {
 	m.data.SetName("newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio")
-	m.data.SetDescription("SGA shared pool dictionary cache miss ratio (getmisses/gets)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9671,7 +9671,7 @@ type metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio struct {
 // init fills newrelicoracledb.sga_shared_pool_library_cache_hit_ratio metric with initial data.
 func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio) init() {
 	m.data.SetName("newrelicoracledb.sga_shared_pool_library_cache_hit_ratio")
-	m.data.SetDescription("SGA shared pool library cache hit ratio for SQL AREA namespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9723,7 +9723,7 @@ type metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio struct {
 // init fills newrelicoracledb.sga_shared_pool_library_cache_reload_ratio metric with initial data.
 func (m *metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio) init() {
 	m.data.SetName("newrelicoracledb.sga_shared_pool_library_cache_reload_ratio")
-	m.data.SetDescription("SGA shared pool library cache reload ratio (reloads/pins)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9775,7 +9775,7 @@ type metricNewrelicoracledbSlowQueriesAvgCPUTime struct {
 // init fills newrelicoracledb.slow_queries.avg_cpu_time metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.avg_cpu_time")
-	m.data.SetDescription("Average CPU time per execution for slow queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9829,7 +9829,7 @@ type metricNewrelicoracledbSlowQueriesAvgDiskReads struct {
 // init fills newrelicoracledb.slow_queries.avg_disk_reads metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.avg_disk_reads")
-	m.data.SetDescription("Average disk reads per execution for slow queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{reads}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9883,7 +9883,7 @@ type metricNewrelicoracledbSlowQueriesAvgDiskWrites struct {
 // init fills newrelicoracledb.slow_queries.avg_disk_writes metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.avg_disk_writes")
-	m.data.SetDescription("Average disk writes per execution for slow queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{writes}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9937,7 +9937,7 @@ type metricNewrelicoracledbSlowQueriesAvgElapsedTime struct {
 // init fills newrelicoracledb.slow_queries.avg_elapsed_time metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.avg_elapsed_time")
-	m.data.SetDescription("Average elapsed time per execution for slow queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -9991,7 +9991,7 @@ type metricNewrelicoracledbSlowQueriesAvgLockTime struct {
 // init fills newrelicoracledb.slow_queries.avg_lock_time metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesAvgLockTime) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.avg_lock_time")
-	m.data.SetDescription("Average lock/concurrency wait time per execution for slow queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10045,7 +10045,7 @@ type metricNewrelicoracledbSlowQueriesAvgRowsExamined struct {
 // init fills newrelicoracledb.slow_queries.avg_rows_examined metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesAvgRowsExamined) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.avg_rows_examined")
-	m.data.SetDescription("Average rows examined per execution for slow queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{rows}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10099,7 +10099,7 @@ type metricNewrelicoracledbSlowQueriesExecutionCount struct {
 // init fills newrelicoracledb.slow_queries.execution_count metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesExecutionCount) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.execution_count")
-	m.data.SetDescription("Number of executions for slow queries")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{executions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10153,7 +10153,7 @@ type metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime struct {
 // init fills newrelicoracledb.slow_queries.interval_avg_elapsed_time metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.interval_avg_elapsed_time")
-	m.data.SetDescription("Average elapsed time per execution in the last polling interval (delta metric)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10207,7 +10207,7 @@ type metricNewrelicoracledbSlowQueriesIntervalExecutionCount struct {
 // init fills newrelicoracledb.slow_queries.interval_execution_count metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesIntervalExecutionCount) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.interval_execution_count")
-	m.data.SetDescription("Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{executions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10261,7 +10261,7 @@ type metricNewrelicoracledbSlowQueriesQueryDetails struct {
 // init fills newrelicoracledb.slow_queries.query_details metric with initial data.
 func (m *metricNewrelicoracledbSlowQueriesQueryDetails) init() {
 	m.data.SetName("newrelicoracledb.slow_queries.query_details")
-	m.data.SetDescription("Slow Query Details")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("{count}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10318,7 +10318,7 @@ type metricNewrelicoracledbSortsDisk struct {
 // init fills newrelicoracledb.sorts_disk metric with initial data.
 func (m *metricNewrelicoracledbSortsDisk) init() {
 	m.data.SetName("newrelicoracledb.sorts_disk")
-	m.data.SetDescription("Number of sorts performed on disk from sysstat")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10370,7 +10370,7 @@ type metricNewrelicoracledbSortsMemory struct {
 // init fills newrelicoracledb.sorts_memory metric with initial data.
 func (m *metricNewrelicoracledbSortsMemory) init() {
 	m.data.SetName("newrelicoracledb.sorts_memory")
-	m.data.SetDescription("Number of sorts performed in memory from sysstat")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10422,7 +10422,7 @@ type metricNewrelicoracledbSystemActiveParallelSessions struct {
 // init fills newrelicoracledb.system.active_parallel_sessions metric with initial data.
 func (m *metricNewrelicoracledbSystemActiveParallelSessions) init() {
 	m.data.SetName("newrelicoracledb.system.active_parallel_sessions")
-	m.data.SetDescription("Active Parallel Sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10474,7 +10474,7 @@ type metricNewrelicoracledbSystemActiveSerialSessions struct {
 // init fills newrelicoracledb.system.active_serial_sessions metric with initial data.
 func (m *metricNewrelicoracledbSystemActiveSerialSessions) init() {
 	m.data.SetName("newrelicoracledb.system.active_serial_sessions")
-	m.data.SetDescription("Active Serial Sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10526,7 +10526,7 @@ type metricNewrelicoracledbSystemAverageActiveSessions struct {
 // init fills newrelicoracledb.system.average_active_sessions metric with initial data.
 func (m *metricNewrelicoracledbSystemAverageActiveSessions) init() {
 	m.data.SetName("newrelicoracledb.system.average_active_sessions")
-	m.data.SetDescription("Average Active Sessions")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10578,7 +10578,7 @@ type metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond struct {
 // init fills newrelicoracledb.system.background_checkpoints_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemBackgroundCheckpointsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.background_checkpoints_per_second")
-	m.data.SetDescription("Background Checkpoints Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10630,7 +10630,7 @@ type metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond struct {
 // init fills newrelicoracledb.system.background_cpu_usage_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemBackgroundCPUUsagePerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.background_cpu_usage_per_second")
-	m.data.SetDescription("Background CPU Usage Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10682,7 +10682,7 @@ type metricNewrelicoracledbSystemBackgroundTimePerSecond struct {
 // init fills newrelicoracledb.system.background_time_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemBackgroundTimePerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.background_time_per_second")
-	m.data.SetDescription("Background Time Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10734,7 +10734,7 @@ type metricNewrelicoracledbSystemBranchNodeSplitsPerSecond struct {
 // init fills newrelicoracledb.system.branch_node_splits_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.branch_node_splits_per_second")
-	m.data.SetDescription("Branch Node Splits Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10786,7 +10786,7 @@ type metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction struct {
 // init fills newrelicoracledb.system.branch_node_splits_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemBranchNodeSplitsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.branch_node_splits_per_transaction")
-	m.data.SetDescription("Branch Node Splits Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10838,7 +10838,7 @@ type metricNewrelicoracledbSystemBufferCacheHitRatio struct {
 // init fills newrelicoracledb.system.buffer_cache_hit_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemBufferCacheHitRatio) init() {
 	m.data.SetName("newrelicoracledb.system.buffer_cache_hit_ratio")
-	m.data.SetDescription("Buffer Cache Hit Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10890,7 +10890,7 @@ type metricNewrelicoracledbSystemCapturedUserCalls struct {
 // init fills newrelicoracledb.system.captured_user_calls metric with initial data.
 func (m *metricNewrelicoracledbSystemCapturedUserCalls) init() {
 	m.data.SetName("newrelicoracledb.system.captured_user_calls")
-	m.data.SetDescription("Captured user calls")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10942,7 +10942,7 @@ type metricNewrelicoracledbSystemConsistentReadChangesPerSecond struct {
 // init fills newrelicoracledb.system.consistent_read_changes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemConsistentReadChangesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.consistent_read_changes_per_second")
-	m.data.SetDescription("Consistent Read Changes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -10994,7 +10994,7 @@ type metricNewrelicoracledbSystemConsistentReadChangesPerTransaction struct {
 // init fills newrelicoracledb.system.consistent_read_changes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemConsistentReadChangesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.consistent_read_changes_per_transaction")
-	m.data.SetDescription("Consistent Read Changes Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11046,7 +11046,7 @@ type metricNewrelicoracledbSystemConsistentReadGetsPerSecond struct {
 // init fills newrelicoracledb.system.consistent_read_gets_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemConsistentReadGetsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.consistent_read_gets_per_second")
-	m.data.SetDescription("Consistent Read Gets Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11098,7 +11098,7 @@ type metricNewrelicoracledbSystemConsistentReadGetsPerTransaction struct {
 // init fills newrelicoracledb.system.consistent_read_gets_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemConsistentReadGetsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.consistent_read_gets_per_transaction")
-	m.data.SetDescription("Consistent Read Gets Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11150,7 +11150,7 @@ type metricNewrelicoracledbSystemCPUUsagePerSecond struct {
 // init fills newrelicoracledb.system.cpu_usage_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemCPUUsagePerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.cpu_usage_per_second")
-	m.data.SetDescription("CPU Usage Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11202,7 +11202,7 @@ type metricNewrelicoracledbSystemCPUUsagePerTransaction struct {
 // init fills newrelicoracledb.system.cpu_usage_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemCPUUsagePerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.cpu_usage_per_transaction")
-	m.data.SetDescription("CPU Usage Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11254,7 +11254,7 @@ type metricNewrelicoracledbSystemCrBlocksCreatedPerSecond struct {
 // init fills newrelicoracledb.system.cr_blocks_created_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.cr_blocks_created_per_second")
-	m.data.SetDescription("CR Blocks Created Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11306,7 +11306,7 @@ type metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction struct {
 // init fills newrelicoracledb.system.cr_blocks_created_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemCrBlocksCreatedPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.cr_blocks_created_per_transaction")
-	m.data.SetDescription("CR Blocks Created Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11358,7 +11358,7 @@ type metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond struct {
 // init fills newrelicoracledb.system.cr_undo_records_applied_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.cr_undo_records_applied_per_second")
-	m.data.SetDescription("CR Undo Records Applied Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11410,7 +11410,7 @@ type metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction struct {
 // init fills newrelicoracledb.system.cr_undo_records_applied_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemCrUndoRecordsAppliedPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.cr_undo_records_applied_per_transaction")
-	m.data.SetDescription("CR Undo Records Applied Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11462,7 +11462,7 @@ type metricNewrelicoracledbSystemCurrentLogonsCount struct {
 // init fills newrelicoracledb.system.current_logons_count metric with initial data.
 func (m *metricNewrelicoracledbSystemCurrentLogonsCount) init() {
 	m.data.SetName("newrelicoracledb.system.current_logons_count")
-	m.data.SetDescription("Current Logons Count")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11514,7 +11514,7 @@ type metricNewrelicoracledbSystemCurrentOpenCursorsCount struct {
 // init fills newrelicoracledb.system.current_open_cursors_count metric with initial data.
 func (m *metricNewrelicoracledbSystemCurrentOpenCursorsCount) init() {
 	m.data.SetName("newrelicoracledb.system.current_open_cursors_count")
-	m.data.SetDescription("Current Open Cursors Count")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11566,7 +11566,7 @@ type metricNewrelicoracledbSystemCurrentOsLoad struct {
 // init fills newrelicoracledb.system.current_os_load metric with initial data.
 func (m *metricNewrelicoracledbSystemCurrentOsLoad) init() {
 	m.data.SetName("newrelicoracledb.system.current_os_load")
-	m.data.SetDescription("Current OS Load")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11618,7 +11618,7 @@ type metricNewrelicoracledbSystemCursorCacheHitRatio struct {
 // init fills newrelicoracledb.system.cursor_cache_hit_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemCursorCacheHitRatio) init() {
 	m.data.SetName("newrelicoracledb.system.cursor_cache_hit_ratio")
-	m.data.SetDescription("Cursor Cache Hit Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11670,7 +11670,7 @@ type metricNewrelicoracledbSystemDatabaseCPUTimeRatio struct {
 // init fills newrelicoracledb.system.database_cpu_time_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemDatabaseCPUTimeRatio) init() {
 	m.data.SetName("newrelicoracledb.system.database_cpu_time_ratio")
-	m.data.SetDescription("Database CPU Time Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11722,7 +11722,7 @@ type metricNewrelicoracledbSystemDatabaseTimePerSecond struct {
 // init fills newrelicoracledb.system.database_time_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemDatabaseTimePerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.database_time_per_second")
-	m.data.SetDescription("Database Time Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11774,7 +11774,7 @@ type metricNewrelicoracledbSystemDatabaseWaitTimeRatio struct {
 // init fills newrelicoracledb.system.database_wait_time_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemDatabaseWaitTimeRatio) init() {
 	m.data.SetName("newrelicoracledb.system.database_wait_time_ratio")
-	m.data.SetDescription("Database Wait Time Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11826,7 +11826,7 @@ type metricNewrelicoracledbSystemDbBlockChangesPerSecond struct {
 // init fills newrelicoracledb.system.db_block_changes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemDbBlockChangesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.db_block_changes_per_second")
-	m.data.SetDescription("DB Block Changes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11878,7 +11878,7 @@ type metricNewrelicoracledbSystemDbBlockChangesPerTransaction struct {
 // init fills newrelicoracledb.system.db_block_changes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemDbBlockChangesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.db_block_changes_per_transaction")
-	m.data.SetDescription("DB Block Changes Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11930,7 +11930,7 @@ type metricNewrelicoracledbSystemDbBlockChangesPerUserCall struct {
 // init fills newrelicoracledb.system.db_block_changes_per_user_call metric with initial data.
 func (m *metricNewrelicoracledbSystemDbBlockChangesPerUserCall) init() {
 	m.data.SetName("newrelicoracledb.system.db_block_changes_per_user_call")
-	m.data.SetDescription("DB Block Changes Per User Call")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -11982,7 +11982,7 @@ type metricNewrelicoracledbSystemDbBlockGetsPerSecond struct {
 // init fills newrelicoracledb.system.db_block_gets_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemDbBlockGetsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.db_block_gets_per_second")
-	m.data.SetDescription("DB Block Gets Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12034,7 +12034,7 @@ type metricNewrelicoracledbSystemDbBlockGetsPerTransaction struct {
 // init fills newrelicoracledb.system.db_block_gets_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemDbBlockGetsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.db_block_gets_per_transaction")
-	m.data.SetDescription("DB Block Gets Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12086,7 +12086,7 @@ type metricNewrelicoracledbSystemDbBlockGetsPerUserCall struct {
 // init fills newrelicoracledb.system.db_block_gets_per_user_call metric with initial data.
 func (m *metricNewrelicoracledbSystemDbBlockGetsPerUserCall) init() {
 	m.data.SetName("newrelicoracledb.system.db_block_gets_per_user_call")
-	m.data.SetDescription("DB Block Gets Per User Call")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12138,7 +12138,7 @@ type metricNewrelicoracledbSystemDbwrCheckpointsPerSecond struct {
 // init fills newrelicoracledb.system.dbwr_checkpoints_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemDbwrCheckpointsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.dbwr_checkpoints_per_second")
-	m.data.SetDescription("DBWR Checkpoints Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12190,7 +12190,7 @@ type metricNewrelicoracledbSystemDiskSortPerSecond struct {
 // init fills newrelicoracledb.system.disk_sort_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemDiskSortPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.disk_sort_per_second")
-	m.data.SetDescription("Disk Sort Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12242,7 +12242,7 @@ type metricNewrelicoracledbSystemDiskSortPerTransaction struct {
 // init fills newrelicoracledb.system.disk_sort_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemDiskSortPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.disk_sort_per_transaction")
-	m.data.SetDescription("Disk Sort Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12294,7 +12294,7 @@ type metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond struct {
 // init fills newrelicoracledb.system.enqueue_deadlocks_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_deadlocks_per_second")
-	m.data.SetDescription("Enqueue Deadlocks Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12346,7 +12346,7 @@ type metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction struct {
 // init fills newrelicoracledb.system.enqueue_deadlocks_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueDeadlocksPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_deadlocks_per_transaction")
-	m.data.SetDescription("Enqueue Deadlocks Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12398,7 +12398,7 @@ type metricNewrelicoracledbSystemEnqueueRequestsPerSecond struct {
 // init fills newrelicoracledb.system.enqueue_requests_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueRequestsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_requests_per_second")
-	m.data.SetDescription("Enqueue Requests Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12450,7 +12450,7 @@ type metricNewrelicoracledbSystemEnqueueRequestsPerTransaction struct {
 // init fills newrelicoracledb.system.enqueue_requests_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueRequestsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_requests_per_transaction")
-	m.data.SetDescription("Enqueue Requests Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12502,7 +12502,7 @@ type metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond struct {
 // init fills newrelicoracledb.system.enqueue_timeouts_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_timeouts_per_second")
-	m.data.SetDescription("Enqueue Timeouts Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12554,7 +12554,7 @@ type metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction struct {
 // init fills newrelicoracledb.system.enqueue_timeouts_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueTimeoutsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_timeouts_per_transaction")
-	m.data.SetDescription("Enqueue Timeouts Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12606,7 +12606,7 @@ type metricNewrelicoracledbSystemEnqueueWaitsPerSecond struct {
 // init fills newrelicoracledb.system.enqueue_waits_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueWaitsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_waits_per_second")
-	m.data.SetDescription("Enqueue Waits Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12658,7 +12658,7 @@ type metricNewrelicoracledbSystemEnqueueWaitsPerTransaction struct {
 // init fills newrelicoracledb.system.enqueue_waits_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemEnqueueWaitsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.enqueue_waits_per_transaction")
-	m.data.SetDescription("Enqueue Waits Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12710,7 +12710,7 @@ type metricNewrelicoracledbSystemExecuteWithoutParseRatio struct {
 // init fills newrelicoracledb.system.execute_without_parse_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemExecuteWithoutParseRatio) init() {
 	m.data.SetName("newrelicoracledb.system.execute_without_parse_ratio")
-	m.data.SetDescription("Execute Without Parse Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12762,7 +12762,7 @@ type metricNewrelicoracledbSystemExecutionsPerSecond struct {
 // init fills newrelicoracledb.system.executions_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemExecutionsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.executions_per_second")
-	m.data.SetDescription("Executions Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12814,7 +12814,7 @@ type metricNewrelicoracledbSystemExecutionsPerTransaction struct {
 // init fills newrelicoracledb.system.executions_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemExecutionsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.executions_per_transaction")
-	m.data.SetDescription("Executions Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12866,7 +12866,7 @@ type metricNewrelicoracledbSystemExecutionsPerUserCall struct {
 // init fills newrelicoracledb.system.executions_per_user_call metric with initial data.
 func (m *metricNewrelicoracledbSystemExecutionsPerUserCall) init() {
 	m.data.SetName("newrelicoracledb.system.executions_per_user_call")
-	m.data.SetDescription("Executions Per User Call")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12918,7 +12918,7 @@ type metricNewrelicoracledbSystemFullIndexScansPerSecond struct {
 // init fills newrelicoracledb.system.full_index_scans_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemFullIndexScansPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.full_index_scans_per_second")
-	m.data.SetDescription("Full Index Scans Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -12970,7 +12970,7 @@ type metricNewrelicoracledbSystemFullIndexScansPerTransaction struct {
 // init fills newrelicoracledb.system.full_index_scans_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemFullIndexScansPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.full_index_scans_per_transaction")
-	m.data.SetDescription("Full Index Scans Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13022,7 +13022,7 @@ type metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond struct {
 // init fills newrelicoracledb.system.gc_cr_block_received_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.gc_cr_block_received_per_second")
-	m.data.SetDescription("GC CR Block Received Per Second")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13074,7 +13074,7 @@ type metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction struct {
 // init fills newrelicoracledb.system.gc_cr_block_received_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemGcCrBlockReceivedPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.gc_cr_block_received_per_transaction")
-	m.data.SetDescription("GC CR Block Received Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13126,7 +13126,7 @@ type metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond struct {
 // init fills newrelicoracledb.system.gc_current_block_received_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.gc_current_block_received_per_second")
-	m.data.SetDescription("GC Current Block Received Per Second")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13178,7 +13178,7 @@ type metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction struct {
 // init fills newrelicoracledb.system.gc_current_block_received_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemGcCurrentBlockReceivedPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.gc_current_block_received_per_transaction")
-	m.data.SetDescription("GC Current Block Received Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13230,7 +13230,7 @@ type metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime struct {
 // init fills newrelicoracledb.system.global_cache_average_cr_get_time metric with initial data.
 func (m *metricNewrelicoracledbSystemGlobalCacheAverageCrGetTime) init() {
 	m.data.SetName("newrelicoracledb.system.global_cache_average_cr_get_time")
-	m.data.SetDescription("Global Cache Average CR Get Time")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13282,7 +13282,7 @@ type metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime struct {
 // init fills newrelicoracledb.system.global_cache_average_current_get_time metric with initial data.
 func (m *metricNewrelicoracledbSystemGlobalCacheAverageCurrentGetTime) init() {
 	m.data.SetName("newrelicoracledb.system.global_cache_average_current_get_time")
-	m.data.SetDescription("Global Cache Average Current Get Time")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13334,7 +13334,7 @@ type metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted struct {
 // init fills newrelicoracledb.system.global_cache_blocks_corrupted metric with initial data.
 func (m *metricNewrelicoracledbSystemGlobalCacheBlocksCorrupted) init() {
 	m.data.SetName("newrelicoracledb.system.global_cache_blocks_corrupted")
-	m.data.SetDescription("Global Cache Blocks Corrupted")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13386,7 +13386,7 @@ type metricNewrelicoracledbSystemGlobalCacheBlocksLost struct {
 // init fills newrelicoracledb.system.global_cache_blocks_lost metric with initial data.
 func (m *metricNewrelicoracledbSystemGlobalCacheBlocksLost) init() {
 	m.data.SetName("newrelicoracledb.system.global_cache_blocks_lost")
-	m.data.SetDescription("Global Cache Blocks Lost")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13438,7 +13438,7 @@ type metricNewrelicoracledbSystemHardParseCountPerSecond struct {
 // init fills newrelicoracledb.system.hard_parse_count_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemHardParseCountPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.hard_parse_count_per_second")
-	m.data.SetDescription("Hard Parse Count Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13490,7 +13490,7 @@ type metricNewrelicoracledbSystemHardParseCountPerTransaction struct {
 // init fills newrelicoracledb.system.hard_parse_count_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemHardParseCountPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.hard_parse_count_per_transaction")
-	m.data.SetDescription("Hard Parse Count Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13542,7 +13542,7 @@ type metricNewrelicoracledbSystemHostCPUUsagePerSecond struct {
 // init fills newrelicoracledb.system.host_cpu_usage_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemHostCPUUsagePerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.host_cpu_usage_per_second")
-	m.data.SetDescription("Host CPU Usage Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13594,7 +13594,7 @@ type metricNewrelicoracledbSystemHostCPUUtilization struct {
 // init fills newrelicoracledb.system.host_cpu_utilization metric with initial data.
 func (m *metricNewrelicoracledbSystemHostCPUUtilization) init() {
 	m.data.SetName("newrelicoracledb.system.host_cpu_utilization")
-	m.data.SetDescription("Host CPU Utilization (%)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13646,7 +13646,7 @@ type metricNewrelicoracledbSystemIoMegabytesPerSecond struct {
 // init fills newrelicoracledb.system.io_megabytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemIoMegabytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.io_megabytes_per_second")
-	m.data.SetDescription("I/O Megabytes per Second")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("MBy/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13698,7 +13698,7 @@ type metricNewrelicoracledbSystemIoRequestsPerSecond struct {
 // init fills newrelicoracledb.system.io_requests_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemIoRequestsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.io_requests_per_second")
-	m.data.SetDescription("I/O Requests per Second")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13750,7 +13750,7 @@ type metricNewrelicoracledbSystemLeafNodeSplitsPerSecond struct {
 // init fills newrelicoracledb.system.leaf_node_splits_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.leaf_node_splits_per_second")
-	m.data.SetDescription("Leaf Node Splits Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13802,7 +13802,7 @@ type metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction struct {
 // init fills newrelicoracledb.system.leaf_node_splits_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemLeafNodeSplitsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.leaf_node_splits_per_transaction")
-	m.data.SetDescription("Leaf Node Splits Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13854,7 +13854,7 @@ type metricNewrelicoracledbSystemLibraryCacheHitRatio struct {
 // init fills newrelicoracledb.system.library_cache_hit_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemLibraryCacheHitRatio) init() {
 	m.data.SetName("newrelicoracledb.system.library_cache_hit_ratio")
-	m.data.SetDescription("Library Cache Hit Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13906,7 +13906,7 @@ type metricNewrelicoracledbSystemLibraryCacheMissRatio struct {
 // init fills newrelicoracledb.system.library_cache_miss_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemLibraryCacheMissRatio) init() {
 	m.data.SetName("newrelicoracledb.system.library_cache_miss_ratio")
-	m.data.SetDescription("Library Cache Miss Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -13958,7 +13958,7 @@ type metricNewrelicoracledbSystemLogicalReadsPerSecond struct {
 // init fills newrelicoracledb.system.logical_reads_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemLogicalReadsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.logical_reads_per_second")
-	m.data.SetDescription("Logical Reads Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14010,7 +14010,7 @@ type metricNewrelicoracledbSystemLogicalReadsPerTransaction struct {
 // init fills newrelicoracledb.system.logical_reads_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemLogicalReadsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.logical_reads_per_transaction")
-	m.data.SetDescription("Logical Reads Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14062,7 +14062,7 @@ type metricNewrelicoracledbSystemLogicalReadsPerUserCall struct {
 // init fills newrelicoracledb.system.logical_reads_per_user_call metric with initial data.
 func (m *metricNewrelicoracledbSystemLogicalReadsPerUserCall) init() {
 	m.data.SetName("newrelicoracledb.system.logical_reads_per_user_call")
-	m.data.SetDescription("Logical Reads Per User Call")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14114,7 +14114,7 @@ type metricNewrelicoracledbSystemLogonsPerSecond struct {
 // init fills newrelicoracledb.system.logons_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemLogonsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.logons_per_second")
-	m.data.SetDescription("Logons Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14166,7 +14166,7 @@ type metricNewrelicoracledbSystemLogonsPerTransaction struct {
 // init fills newrelicoracledb.system.logons_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemLogonsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.logons_per_transaction")
-	m.data.SetDescription("Logons Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14218,7 +14218,7 @@ type metricNewrelicoracledbSystemLongTableScansPerSecond struct {
 // init fills newrelicoracledb.system.long_table_scans_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemLongTableScansPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.long_table_scans_per_second")
-	m.data.SetDescription("Long Table Scans Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14270,7 +14270,7 @@ type metricNewrelicoracledbSystemLongTableScansPerTransaction struct {
 // init fills newrelicoracledb.system.long_table_scans_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemLongTableScansPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.long_table_scans_per_transaction")
-	m.data.SetDescription("Long Table Scans Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14322,7 +14322,7 @@ type metricNewrelicoracledbSystemMemorySortsRatio struct {
 // init fills newrelicoracledb.system.memory_sorts_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemMemorySortsRatio) init() {
 	m.data.SetName("newrelicoracledb.system.memory_sorts_ratio")
-	m.data.SetDescription("Memory Sorts Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14374,7 +14374,7 @@ type metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond struct {
 // init fills newrelicoracledb.system.network_traffic_volume_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemNetworkTrafficVolumePerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.network_traffic_volume_per_second")
-	m.data.SetDescription("Network Traffic Volume Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14426,7 +14426,7 @@ type metricNewrelicoracledbSystemOpenCursorsPerSecond struct {
 // init fills newrelicoracledb.system.open_cursors_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemOpenCursorsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.open_cursors_per_second")
-	m.data.SetDescription("Open Cursors Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14478,7 +14478,7 @@ type metricNewrelicoracledbSystemOpenCursorsPerTransaction struct {
 // init fills newrelicoracledb.system.open_cursors_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemOpenCursorsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.open_cursors_per_transaction")
-	m.data.SetDescription("Open Cursors Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14530,7 +14530,7 @@ type metricNewrelicoracledbSystemParseFailureCountPerSecond struct {
 // init fills newrelicoracledb.system.parse_failure_count_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemParseFailureCountPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.parse_failure_count_per_second")
-	m.data.SetDescription("Parse Failure Count Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14582,7 +14582,7 @@ type metricNewrelicoracledbSystemParseFailureCountPerTransaction struct {
 // init fills newrelicoracledb.system.parse_failure_count_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemParseFailureCountPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.parse_failure_count_per_transaction")
-	m.data.SetDescription("Parse Failure Count Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14634,7 +14634,7 @@ type metricNewrelicoracledbSystemPgaCacheHitPercentage struct {
 // init fills newrelicoracledb.system.pga_cache_hit_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemPgaCacheHitPercentage) init() {
 	m.data.SetName("newrelicoracledb.system.pga_cache_hit_percentage")
-	m.data.SetDescription("PGA Cache Hit %")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14686,7 +14686,7 @@ type metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond struct {
 // init fills newrelicoracledb.system.physical_lobs_reads_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_lobs_reads_per_second")
-	m.data.SetDescription("Physical Reads Direct Lobs Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14738,7 +14738,7 @@ type metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction struct {
 // init fills newrelicoracledb.system.physical_lobs_reads_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalLobsReadsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.physical_lobs_reads_per_transaction")
-	m.data.SetDescription("Physical Reads Direct Lobs Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14790,7 +14790,7 @@ type metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond struct {
 // init fills newrelicoracledb.system.physical_lobs_writes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_lobs_writes_per_second")
-	m.data.SetDescription("Physical Writes Direct Lobs Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14842,7 +14842,7 @@ type metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction struct {
 // init fills newrelicoracledb.system.physical_lobs_writes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalLobsWritesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.physical_lobs_writes_per_transaction")
-	m.data.SetDescription("Physical Writes Direct Lobs Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14894,7 +14894,7 @@ type metricNewrelicoracledbSystemPhysicalReadBytesPerSecond struct {
 // init fills newrelicoracledb.system.physical_read_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_read_bytes_per_second")
-	m.data.SetDescription("Physical Read Bytes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14946,7 +14946,7 @@ type metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond struct {
 // init fills newrelicoracledb.system.physical_read_io_requests_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadIoRequestsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_read_io_requests_per_second")
-	m.data.SetDescription("Physical Read IO Requests Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -14998,7 +14998,7 @@ type metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond struct {
 // init fills newrelicoracledb.system.physical_read_total_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadTotalBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_read_total_bytes_per_second")
-	m.data.SetDescription("Physical Read Total Bytes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15050,7 +15050,7 @@ type metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond struct {
 // init fills newrelicoracledb.system.physical_read_total_io_requests_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadTotalIoRequestsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_read_total_io_requests_per_second")
-	m.data.SetDescription("Physical Read Total IO Requests Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15102,7 +15102,7 @@ type metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond struct {
 // init fills newrelicoracledb.system.physical_reads_direct_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_reads_direct_per_second")
-	m.data.SetDescription("Physical Reads Direct Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15154,7 +15154,7 @@ type metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction struct {
 // init fills newrelicoracledb.system.physical_reads_direct_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadsDirectPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.physical_reads_direct_per_transaction")
-	m.data.SetDescription("Physical Reads Direct Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15206,7 +15206,7 @@ type metricNewrelicoracledbSystemPhysicalReadsPerSecond struct {
 // init fills newrelicoracledb.system.physical_reads_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_reads_per_second")
-	m.data.SetDescription("Physical Reads Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15258,7 +15258,7 @@ type metricNewrelicoracledbSystemPhysicalReadsPerTransaction struct {
 // init fills newrelicoracledb.system.physical_reads_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalReadsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.physical_reads_per_transaction")
-	m.data.SetDescription("Physical Reads Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15310,7 +15310,7 @@ type metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond struct {
 // init fills newrelicoracledb.system.physical_write_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWriteBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_write_bytes_per_second")
-	m.data.SetDescription("Physical Write Bytes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15362,7 +15362,7 @@ type metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond struct {
 // init fills newrelicoracledb.system.physical_write_io_requests_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWriteIoRequestsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_write_io_requests_per_second")
-	m.data.SetDescription("Physical Write IO Requests Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15414,7 +15414,7 @@ type metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond struct {
 // init fills newrelicoracledb.system.physical_write_total_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWriteTotalBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_write_total_bytes_per_second")
-	m.data.SetDescription("Physical Write Total Bytes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15466,7 +15466,7 @@ type metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond struct {
 // init fills newrelicoracledb.system.physical_write_total_io_requests_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWriteTotalIoRequestsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_write_total_io_requests_per_second")
-	m.data.SetDescription("Physical Write Total IO Requests Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15518,7 +15518,7 @@ type metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond struct {
 // init fills newrelicoracledb.system.physical_writes_direct_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_writes_direct_per_second")
-	m.data.SetDescription("Physical Writes Direct Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15570,7 +15570,7 @@ type metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction struct {
 // init fills newrelicoracledb.system.physical_writes_direct_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWritesDirectPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.physical_writes_direct_per_transaction")
-	m.data.SetDescription("Physical Writes Direct Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15622,7 +15622,7 @@ type metricNewrelicoracledbSystemPhysicalWritesPerSecond struct {
 // init fills newrelicoracledb.system.physical_writes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWritesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.physical_writes_per_second")
-	m.data.SetDescription("Physical Writes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15674,7 +15674,7 @@ type metricNewrelicoracledbSystemPhysicalWritesPerTransaction struct {
 // init fills newrelicoracledb.system.physical_writes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemPhysicalWritesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.physical_writes_per_transaction")
-	m.data.SetDescription("Physical Writes Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15726,7 +15726,7 @@ type metricNewrelicoracledbSystemProcessLimitPercentage struct {
 // init fills newrelicoracledb.system.process_limit_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemProcessLimitPercentage) init() {
 	m.data.SetName("newrelicoracledb.system.process_limit_percentage")
-	m.data.SetDescription("Process Limit %")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15778,7 +15778,7 @@ type metricNewrelicoracledbSystemRecursiveCallsPerSecond struct {
 // init fills newrelicoracledb.system.recursive_calls_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemRecursiveCallsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.recursive_calls_per_second")
-	m.data.SetDescription("Recursive Calls Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15830,7 +15830,7 @@ type metricNewrelicoracledbSystemRecursiveCallsPerTransaction struct {
 // init fills newrelicoracledb.system.recursive_calls_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemRecursiveCallsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.recursive_calls_per_transaction")
-	m.data.SetDescription("Recursive Calls Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15882,7 +15882,7 @@ type metricNewrelicoracledbSystemRedoAllocationHitRatio struct {
 // init fills newrelicoracledb.system.redo_allocation_hit_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemRedoAllocationHitRatio) init() {
 	m.data.SetName("newrelicoracledb.system.redo_allocation_hit_ratio")
-	m.data.SetDescription("Redo Allocation Hit Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15934,7 +15934,7 @@ type metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond struct {
 // init fills newrelicoracledb.system.redo_generated_bytes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.redo_generated_bytes_per_second")
-	m.data.SetDescription("Redo Generated Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By/s")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -15986,7 +15986,7 @@ type metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction struct {
 // init fills newrelicoracledb.system.redo_generated_bytes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemRedoGeneratedBytesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.redo_generated_bytes_per_transaction")
-	m.data.SetDescription("Redo Generated Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16038,7 +16038,7 @@ type metricNewrelicoracledbSystemRedoWritesPerSecond struct {
 // init fills newrelicoracledb.system.redo_writes_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemRedoWritesPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.redo_writes_per_second")
-	m.data.SetDescription("Redo Writes Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16090,7 +16090,7 @@ type metricNewrelicoracledbSystemRedoWritesPerTransaction struct {
 // init fills newrelicoracledb.system.redo_writes_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemRedoWritesPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.redo_writes_per_transaction")
-	m.data.SetDescription("Redo Writes Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16142,7 +16142,7 @@ type metricNewrelicoracledbSystemResponseTimePerTransaction struct {
 // init fills newrelicoracledb.system.response_time_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemResponseTimePerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.response_time_per_transaction")
-	m.data.SetDescription("Response Time Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16194,7 +16194,7 @@ type metricNewrelicoracledbSystemRowCacheHitRatio struct {
 // init fills newrelicoracledb.system.row_cache_hit_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemRowCacheHitRatio) init() {
 	m.data.SetName("newrelicoracledb.system.row_cache_hit_ratio")
-	m.data.SetDescription("Row Cache Hit Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16246,7 +16246,7 @@ type metricNewrelicoracledbSystemRowCacheMissRatio struct {
 // init fills newrelicoracledb.system.row_cache_miss_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemRowCacheMissRatio) init() {
 	m.data.SetName("newrelicoracledb.system.row_cache_miss_ratio")
-	m.data.SetDescription("Row Cache Miss Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16298,7 +16298,7 @@ type metricNewrelicoracledbSystemRowsPerSort struct {
 // init fills newrelicoracledb.system.rows_per_sort metric with initial data.
 func (m *metricNewrelicoracledbSystemRowsPerSort) init() {
 	m.data.SetName("newrelicoracledb.system.rows_per_sort")
-	m.data.SetDescription("Rows Per Sort")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16350,7 +16350,7 @@ type metricNewrelicoracledbSystemSessionCount struct {
 // init fills newrelicoracledb.system.session_count metric with initial data.
 func (m *metricNewrelicoracledbSystemSessionCount) init() {
 	m.data.SetName("newrelicoracledb.system.session_count")
-	m.data.SetDescription("Session Count")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16402,7 +16402,7 @@ type metricNewrelicoracledbSystemSessionLimitPercentage struct {
 // init fills newrelicoracledb.system.session_limit_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemSessionLimitPercentage) init() {
 	m.data.SetName("newrelicoracledb.system.session_limit_percentage")
-	m.data.SetDescription("Session Limit %")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16454,7 +16454,7 @@ type metricNewrelicoracledbSystemSharedPoolFreePercentage struct {
 // init fills newrelicoracledb.system.shared_pool_free_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemSharedPoolFreePercentage) init() {
 	m.data.SetName("newrelicoracledb.system.shared_pool_free_percentage")
-	m.data.SetDescription("Shared Pool Free %")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16506,7 +16506,7 @@ type metricNewrelicoracledbSystemSoftParseRatio struct {
 // init fills newrelicoracledb.system.soft_parse_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemSoftParseRatio) init() {
 	m.data.SetName("newrelicoracledb.system.soft_parse_ratio")
-	m.data.SetDescription("Soft Parse Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16558,7 +16558,7 @@ type metricNewrelicoracledbSystemSQLServiceResponseTime struct {
 // init fills newrelicoracledb.system.sql_service_response_time metric with initial data.
 func (m *metricNewrelicoracledbSystemSQLServiceResponseTime) init() {
 	m.data.SetName("newrelicoracledb.system.sql_service_response_time")
-	m.data.SetDescription("SQL Service Response Time")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16610,7 +16610,7 @@ type metricNewrelicoracledbSystemStreamsPoolUsagePercentage struct {
 // init fills newrelicoracledb.system.streams_pool_usage_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemStreamsPoolUsagePercentage) init() {
 	m.data.SetName("newrelicoracledb.system.streams_pool_usage_percentage")
-	m.data.SetDescription("Streams Pool Usage Percentage")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16662,7 +16662,7 @@ type metricNewrelicoracledbSystemTempSpaceUsed struct {
 // init fills newrelicoracledb.system.temp_space_used metric with initial data.
 func (m *metricNewrelicoracledbSystemTempSpaceUsed) init() {
 	m.data.SetName("newrelicoracledb.system.temp_space_used")
-	m.data.SetDescription("Temp Space Used")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16714,7 +16714,7 @@ type metricNewrelicoracledbSystemTotalIndexScansPerSecond struct {
 // init fills newrelicoracledb.system.total_index_scans_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalIndexScansPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.total_index_scans_per_second")
-	m.data.SetDescription("Total Index Scans Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16766,7 +16766,7 @@ type metricNewrelicoracledbSystemTotalIndexScansPerTransaction struct {
 // init fills newrelicoracledb.system.total_index_scans_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalIndexScansPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.total_index_scans_per_transaction")
-	m.data.SetDescription("Total Index Scans Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16818,7 +16818,7 @@ type metricNewrelicoracledbSystemTotalParseCountPerSecond struct {
 // init fills newrelicoracledb.system.total_parse_count_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalParseCountPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.total_parse_count_per_second")
-	m.data.SetDescription("Total Parse Count Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16870,7 +16870,7 @@ type metricNewrelicoracledbSystemTotalParseCountPerTransaction struct {
 // init fills newrelicoracledb.system.total_parse_count_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalParseCountPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.total_parse_count_per_transaction")
-	m.data.SetDescription("Total Parse Count Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16922,7 +16922,7 @@ type metricNewrelicoracledbSystemTotalSortsPerUserCall struct {
 // init fills newrelicoracledb.system.total_sorts_per_user_call metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalSortsPerUserCall) init() {
 	m.data.SetName("newrelicoracledb.system.total_sorts_per_user_call")
-	m.data.SetDescription("Total Sorts Per User Call")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -16974,7 +16974,7 @@ type metricNewrelicoracledbSystemTotalTableScansPerSecond struct {
 // init fills newrelicoracledb.system.total_table_scans_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalTableScansPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.total_table_scans_per_second")
-	m.data.SetDescription("Total Table Scans Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17026,7 +17026,7 @@ type metricNewrelicoracledbSystemTotalTableScansPerTransaction struct {
 // init fills newrelicoracledb.system.total_table_scans_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalTableScansPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.total_table_scans_per_transaction")
-	m.data.SetDescription("Total Table Scans Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17078,7 +17078,7 @@ type metricNewrelicoracledbSystemTotalTableScansPerUserCall struct {
 // init fills newrelicoracledb.system.total_table_scans_per_user_call metric with initial data.
 func (m *metricNewrelicoracledbSystemTotalTableScansPerUserCall) init() {
 	m.data.SetName("newrelicoracledb.system.total_table_scans_per_user_call")
-	m.data.SetDescription("Total Table Scans Per User Call")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17130,7 +17130,7 @@ type metricNewrelicoracledbSystemTransactionsPerLogon struct {
 // init fills newrelicoracledb.system.transactions_per_logon metric with initial data.
 func (m *metricNewrelicoracledbSystemTransactionsPerLogon) init() {
 	m.data.SetName("newrelicoracledb.system.transactions_per_logon")
-	m.data.SetDescription("Txns Per Logon")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17182,7 +17182,7 @@ type metricNewrelicoracledbSystemTransactionsPerSecond struct {
 // init fills newrelicoracledb.system.transactions_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemTransactionsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.transactions_per_second")
-	m.data.SetDescription("User Transaction Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17234,7 +17234,7 @@ type metricNewrelicoracledbSystemUserCallsPerSecond struct {
 // init fills newrelicoracledb.system.user_calls_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemUserCallsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.user_calls_per_second")
-	m.data.SetDescription("User Calls Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17286,7 +17286,7 @@ type metricNewrelicoracledbSystemUserCallsPerTransaction struct {
 // init fills newrelicoracledb.system.user_calls_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemUserCallsPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.user_calls_per_transaction")
-	m.data.SetDescription("User Calls Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17338,7 +17338,7 @@ type metricNewrelicoracledbSystemUserCallsRatio struct {
 // init fills newrelicoracledb.system.user_calls_ratio metric with initial data.
 func (m *metricNewrelicoracledbSystemUserCallsRatio) init() {
 	m.data.SetName("newrelicoracledb.system.user_calls_ratio")
-	m.data.SetDescription("User Calls Ratio")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17390,7 +17390,7 @@ type metricNewrelicoracledbSystemUserCommitsPerSecond struct {
 // init fills newrelicoracledb.system.user_commits_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemUserCommitsPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.user_commits_per_second")
-	m.data.SetDescription("User Commits Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17442,7 +17442,7 @@ type metricNewrelicoracledbSystemUserCommitsPercentage struct {
 // init fills newrelicoracledb.system.user_commits_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemUserCommitsPercentage) init() {
 	m.data.SetName("newrelicoracledb.system.user_commits_percentage")
-	m.data.SetDescription("User Commits Percentage")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17494,7 +17494,7 @@ type metricNewrelicoracledbSystemUserLimitPercentage struct {
 // init fills newrelicoracledb.system.user_limit_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemUserLimitPercentage) init() {
 	m.data.SetName("newrelicoracledb.system.user_limit_percentage")
-	m.data.SetDescription("User Limit %")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17546,7 +17546,7 @@ type metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond struct 
 // init fills newrelicoracledb.system.user_rollback_undo_records_applied_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.user_rollback_undo_records_applied_per_second")
-	m.data.SetDescription("User Rollback UndoRec Applied Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17598,7 +17598,7 @@ type metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction st
 // init fills newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction metric with initial data.
 func (m *metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction) init() {
 	m.data.SetName("newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction")
-	m.data.SetDescription("User Rollback Undo Records Applied Per Txn")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17650,7 +17650,7 @@ type metricNewrelicoracledbSystemUserRollbacksPerSecond struct {
 // init fills newrelicoracledb.system.user_rollbacks_per_second metric with initial data.
 func (m *metricNewrelicoracledbSystemUserRollbacksPerSecond) init() {
 	m.data.SetName("newrelicoracledb.system.user_rollbacks_per_second")
-	m.data.SetDescription("User Rollbacks Per Sec")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17702,7 +17702,7 @@ type metricNewrelicoracledbSystemUserRollbacksPercentage struct {
 // init fills newrelicoracledb.system.user_rollbacks_percentage metric with initial data.
 func (m *metricNewrelicoracledbSystemUserRollbacksPercentage) init() {
 	m.data.SetName("newrelicoracledb.system.user_rollbacks_percentage")
-	m.data.SetDescription("User Rollbacks Percentage")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17754,7 +17754,7 @@ type metricNewrelicoracledbTablespaceDbID struct {
 // init fills newrelicoracledb.tablespace.db_id metric with initial data.
 func (m *metricNewrelicoracledbTablespaceDbID) init() {
 	m.data.SetName("newrelicoracledb.tablespace.db_id")
-	m.data.SetDescription("Database ID information for tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17807,7 +17807,7 @@ type metricNewrelicoracledbTablespaceGlobalName struct {
 // init fills newrelicoracledb.tablespace.global_name metric with initial data.
 func (m *metricNewrelicoracledbTablespaceGlobalName) init() {
 	m.data.SetName("newrelicoracledb.tablespace.global_name")
-	m.data.SetDescription("Global name information for tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17860,7 +17860,7 @@ type metricNewrelicoracledbTablespaceIsOffline struct {
 // init fills newrelicoracledb.tablespace.is_offline metric with initial data.
 func (m *metricNewrelicoracledbTablespaceIsOffline) init() {
 	m.data.SetName("newrelicoracledb.tablespace.is_offline")
-	m.data.SetDescription("Whether the tablespace is offline (1) or online (0)")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17912,7 +17912,7 @@ type metricNewrelicoracledbTablespaceOfflineCdbDatafiles struct {
 // init fills newrelicoracledb.tablespace.offline_cdb_datafiles metric with initial data.
 func (m *metricNewrelicoracledbTablespaceOfflineCdbDatafiles) init() {
 	m.data.SetName("newrelicoracledb.tablespace.offline_cdb_datafiles")
-	m.data.SetDescription("Count of offline CDB datafiles by tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -17964,7 +17964,7 @@ type metricNewrelicoracledbTablespaceOfflinePdbDatafiles struct {
 // init fills newrelicoracledb.tablespace.offline_pdb_datafiles metric with initial data.
 func (m *metricNewrelicoracledbTablespaceOfflinePdbDatafiles) init() {
 	m.data.SetName("newrelicoracledb.tablespace.offline_pdb_datafiles")
-	m.data.SetDescription("Count of offline PDB datafiles by tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18016,7 +18016,7 @@ type metricNewrelicoracledbTablespacePdbNonWriteMode struct {
 // init fills newrelicoracledb.tablespace.pdb_non_write_mode metric with initial data.
 func (m *metricNewrelicoracledbTablespacePdbNonWriteMode) init() {
 	m.data.SetName("newrelicoracledb.tablespace.pdb_non_write_mode")
-	m.data.SetDescription("Count of PDB datafiles in non-write mode by tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18068,7 +18068,7 @@ type metricNewrelicoracledbTablespaceSpaceConsumedBytes struct {
 // init fills newrelicoracledb.tablespace.space_consumed_bytes metric with initial data.
 func (m *metricNewrelicoracledbTablespaceSpaceConsumedBytes) init() {
 	m.data.SetName("newrelicoracledb.tablespace.space_consumed_bytes")
-	m.data.SetDescription("Total bytes consumed by the tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18120,7 +18120,7 @@ type metricNewrelicoracledbTablespaceSpaceReservedBytes struct {
 // init fills newrelicoracledb.tablespace.space_reserved_bytes metric with initial data.
 func (m *metricNewrelicoracledbTablespaceSpaceReservedBytes) init() {
 	m.data.SetName("newrelicoracledb.tablespace.space_reserved_bytes")
-	m.data.SetDescription("Total bytes reserved by the tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18172,7 +18172,7 @@ type metricNewrelicoracledbTablespaceSpaceUsedPercentage struct {
 // init fills newrelicoracledb.tablespace.space_used_percentage metric with initial data.
 func (m *metricNewrelicoracledbTablespaceSpaceUsedPercentage) init() {
 	m.data.SetName("newrelicoracledb.tablespace.space_used_percentage")
-	m.data.SetDescription("Percentage of tablespace space currently used")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18224,7 +18224,7 @@ type metricNewrelicoracledbTablespaceTotalBytes struct {
 // init fills newrelicoracledb.tablespace.total_bytes metric with initial data.
 func (m *metricNewrelicoracledbTablespaceTotalBytes) init() {
 	m.data.SetName("newrelicoracledb.tablespace.total_bytes")
-	m.data.SetDescription("Total bytes in tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18277,7 +18277,7 @@ type metricNewrelicoracledbTablespaceUsedBytes struct {
 // init fills newrelicoracledb.tablespace.used_bytes metric with initial data.
 func (m *metricNewrelicoracledbTablespaceUsedBytes) init() {
 	m.data.SetName("newrelicoracledb.tablespace.used_bytes")
-	m.data.SetDescription("Used bytes in tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("By")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18330,7 +18330,7 @@ type metricNewrelicoracledbTablespaceUsedPercent struct {
 // init fills newrelicoracledb.tablespace.used_percent metric with initial data.
 func (m *metricNewrelicoracledbTablespaceUsedPercent) init() {
 	m.data.SetName("newrelicoracledb.tablespace.used_percent")
-	m.data.SetDescription("Used percentage of tablespace")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("%")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
@@ -18383,7 +18383,7 @@ type metricNewrelicoracledbWaitEventsCurrentWaitTimeMs struct {
 // init fills newrelicoracledb.wait_events.current_wait_time_ms metric with initial data.
 func (m *metricNewrelicoracledbWaitEventsCurrentWaitTimeMs) init() {
 	m.data.SetName("newrelicoracledb.wait_events.current_wait_time_ms")
-	m.data.SetDescription("Current wait time in milliseconds for active wait events")
+	m.data.SetDescription(" ")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
