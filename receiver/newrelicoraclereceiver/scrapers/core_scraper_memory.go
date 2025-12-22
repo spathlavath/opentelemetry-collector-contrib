@@ -46,6 +46,8 @@ func (s *CoreScraper) scrapePGAMetrics(ctx context.Context, now pcommon.Timestam
 		metricCount++
 	}
 
+	s.logger.Debug("PGA memory metrics scrape completed")
+
 	return nil
 }
 
@@ -62,6 +64,8 @@ func (s *CoreScraper) scrapeSGAUGATotalMemoryMetrics(ctx context.Context, now pc
 		s.mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(now, metric.Sum, s.instanceName, instanceID)
 		metricCount++
 	}
+
+	s.logger.Debug("SGA UGA total memory metrics scrape completed")
 
 	return nil
 }
@@ -80,6 +84,8 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheMetrics(ctx context.Context
 		metricCount++
 	}
 
+	s.logger.Debug("SGA shared pool library cache metrics scrape completed")
+
 	return nil
 }
 
@@ -96,6 +102,8 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheUserMetrics(ctx context.Con
 		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(now, metric.Sum, s.instanceName, instanceID)
 		metricCount++
 	}
+
+	s.logger.Debug("SGA shared pool library cache user metrics scrape completed")
 
 	return nil
 }
@@ -127,6 +135,8 @@ func (s *CoreScraper) scrapeSGAMetrics(ctx context.Context, now pcommon.Timestam
 
 		metricCount++
 	}
+
+	s.logger.Debug("SGA metrics scrape completed")
 
 	return nil
 }

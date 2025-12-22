@@ -24,6 +24,8 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(ctx cont
 		metricCount++
 	}
 
+	s.logger.Debug("SGA shared pool library cache reload ratio metrics scrape completed")
+
 	return nil
 }
 
@@ -40,6 +42,8 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheHitRatioMetrics(ctx context
 		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(now, metric.Ratio, s.instanceName, instanceID)
 		metricCount++
 	}
+
+	s.logger.Debug("SGA shared pool library cache hit ratio metrics scrape completed")
 
 	return nil
 }
@@ -58,6 +62,8 @@ func (s *CoreScraper) scrapeSGASharedPoolDictCacheMissRatioMetrics(ctx context.C
 		metricCount++
 	}
 
+	s.logger.Debug("SGA shared pool dictionary cache miss ratio metrics scrape completed")
+
 	return nil
 }
 
@@ -74,6 +80,8 @@ func (s *CoreScraper) scrapeSGALogBufferSpaceWaitsMetrics(ctx context.Context, n
 		s.mb.RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(now, metric.Count, s.instanceName, instanceID)
 		metricCount++
 	}
+
+	s.logger.Debug("SGA log buffer space waits metrics scrape completed")
 
 	return nil
 }
@@ -98,6 +106,8 @@ func (s *CoreScraper) scrapeSGALogAllocRetriesMetrics(ctx context.Context, now p
 		metricCount++
 	}
 
+	s.logger.Debug("SGA log allocation retries metrics scrape completed")
+
 	return nil
 }
 
@@ -120,6 +130,8 @@ func (s *CoreScraper) scrapeSGAHitRatioMetrics(ctx context.Context, now pcommon.
 		s.mb.RecordNewrelicoracledbSgaHitRatioDataPoint(now, ratioValue, s.instanceName, instanceID)
 		metricCount++
 	}
+
+	s.logger.Debug("SGA hit ratio metrics scrape completed")
 
 	return nil
 }

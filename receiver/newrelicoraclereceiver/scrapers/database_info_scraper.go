@@ -200,10 +200,13 @@ func (s *DatabaseInfoScraper) ensureCacheValid(ctx context.Context) error {
 		return nil
 	}
 
+	s.logger.Debug("Refreshing database info cache")
 	return s.refreshCacheUnsafe(ctx)
 }
 
 func (s *DatabaseInfoScraper) refreshCacheUnsafe(ctx context.Context) error {
+	s.logger.Debug("Executing database info query")
+
 	metrics, err := s.client.QueryDatabaseInfo(ctx)
 	if err != nil {
 		return err

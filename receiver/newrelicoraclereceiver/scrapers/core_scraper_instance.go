@@ -28,6 +28,8 @@ func (s *CoreScraper) scrapeLockedAccountsMetrics(ctx context.Context, now pcomm
 		metricCount++
 	}
 
+	s.logger.Debug("Locked accounts metrics scrape completed")
+
 	return nil
 }
 
@@ -43,6 +45,8 @@ func (s *CoreScraper) scrapeGlobalNameInstanceMetrics(ctx context.Context, now p
 		s.mb.RecordNewrelicoracledbGlobalNameDataPoint(now, 1, s.instanceName, metric.GlobalName)
 		metricCount++
 	}
+
+	s.logger.Debug("Global name metrics scrape completed")
 
 	return nil
 }
@@ -60,6 +64,8 @@ func (s *CoreScraper) scrapeDBIDInstanceMetrics(ctx context.Context, now pcommon
 		metricCount++
 	}
 
+	s.logger.Debug("Database ID metrics scrape completed")
+
 	return nil
 }
 
@@ -76,6 +82,8 @@ func (s *CoreScraper) scrapeLongRunningQueriesMetrics(ctx context.Context, now p
 		s.mb.RecordNewrelicoracledbLongRunningQueriesDataPoint(now, metric.Total, s.instanceName, instanceID)
 		metricCount++
 	}
+
+	s.logger.Debug("Long running queries metrics scrape completed")
 
 	return nil
 }

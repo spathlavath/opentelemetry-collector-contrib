@@ -52,5 +52,7 @@ func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Ti
 		metricCount++
 	}
 
+	s.logger.Debug("Disk I/O metrics scrape completed")
+
 	return nil
 }

@@ -71,6 +71,7 @@ func NewContainerScraper(
 // ScrapeContainerMetrics collects Oracle CDB/PDB container metrics
 func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 	var errors []error
+	s.logger.Debug("Scraping Oracle CDB/PDB container metrics")
 
 	// Check environment capability first
 	if err := s.checkEnvironmentCapability(ctx); err != nil {
@@ -80,6 +81,7 @@ func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 
 	// Skip if CDB/PDB features are not supported
 	if !s.isCDBSupported() {
+		s.logger.Debug("CDB features not supported, skipping container metrics")
 		return errors
 	}
 
@@ -94,26 +96,36 @@ func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 	// Scrape container status metrics (only from CDB$ROOT)
 	if s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeContainerStatus(ctx, now)...)
+	} else {
+		s.logger.Debug("Not connected to CDB$ROOT, skipping container status metrics")
 	}
 
 	// Scrape PDB status metrics (only if PDB is supported and connected to CDB$ROOT)
 	if s.isPDBSupported() && s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapePDBStatus(ctx, now)...)
+	} else {
+		s.logger.Debug("PDB features not supported or not in CDB$ROOT, skipping PDB metrics")
 	}
 
 	// Scrape CDB tablespace usage (only from CDB$ROOT)
 	if s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeCDBTablespaceUsage(ctx, now)...)
+	} else {
+		s.logger.Debug("Not connected to CDB$ROOT, skipping CDB tablespace metrics")
 	}
 
 	// Scrape CDB data files (only from CDB$ROOT)
 	if s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeCDBDataFiles(ctx, now)...)
+	} else {
+		s.logger.Debug("Not connected to CDB$ROOT, skipping CDB data file metrics")
 	}
 
 	// Scrape CDB services (only from CDB$ROOT)
 	if s.isConnectedToCDBRoot() {
 		errors = append(errors, s.scrapeCDBServices(ctx, now)...)
+	} else {
+		s.logger.Debug("Not connected to CDB$ROOT, skipping CDB service metrics")
 	}
 
 	return errors
@@ -180,14 +192,17 @@ func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommo
 
 // scrapePDBStatus scrapes PDB status from GV$PDBS
 func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Timestamp) []error {
+	s.logger.Info("Starting PDB status scraping")
 	pdbs, err := s.client.QueryPDBStatus(ctx)
 	if err != nil {
 		s.logger.Error("Failed to execute PDB status query", zap.Error(err))
 		return []error{err}
 	}
+	s.logger.Info("Successfully queried PDB status")
 
 	for _, pdb := range pdbs {
 		if !pdb.ConID.Valid || !pdb.PDBName.Valid {
+			s.logger.Warn("Skipping PDB with invalid ConID or PDBName")
 			continue
 		}
 
@@ -208,8 +223,11 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 		// PDB total size metric
 		if pdb.TotalSize.Valid {
 			s.mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(now, pdb.TotalSize.Int64, s.instanceName, conIDStr, pdbNameStr)
+		} else {
+			s.logger.Warn("PDB total size is NULL, skipping metric")
 		}
 	}
+	s.logger.Info("Completed PDB status scraping")
 	return nil
 }
 
