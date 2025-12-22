@@ -43,7 +43,7 @@ func (s *CoreScraper) scrapeSysstatMetrics(ctx context.Context, now pcommon.Time
 		metricCount++
 	}
 
-	s.logger.Debug("Sysstat metrics scrape completed", zap.Int("metrics", metricCount))
+	s.logger.Debug("Sysstat metrics scrape completed")
 
 	return nil
 }
@@ -81,7 +81,7 @@ func (s *CoreScraper) scrapeRollbackSegmentsMetrics(ctx context.Context, now pco
 		metricCount++
 	}
 
-	s.logger.Debug("Rollback segments metrics scrape completed", zap.Int("metrics", metricCount))
+	s.logger.Debug("Rollback segments metrics scrape completed")
 
 	return nil
 }
@@ -124,7 +124,7 @@ func (s *CoreScraper) scrapeRedoLogWaitsMetrics(ctx context.Context, now pcommon
 		metricCount++
 	}
 
-	s.logger.Debug("Redo log waits metrics scrape completed", zap.Int("metrics", metricCount))
+	s.logger.Debug("Redo log waits metrics scrape completed")
 
 	return nil
 }
