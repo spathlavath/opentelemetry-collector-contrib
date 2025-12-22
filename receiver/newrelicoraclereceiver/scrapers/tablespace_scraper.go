@@ -76,9 +76,7 @@ func (s *TablespaceScraper) ScrapeTablespaceMetrics(ctx context.Context) []error
 		}
 	}
 
-	s.logger.Debug("Tablespace metrics scrape completed",
-		zap.Int("metrics", metricCount),
-		zap.Int("errors", len(errors)))
+	s.logger.Debug("Tablespace metrics scrape completed")
 
 	return errors
 }
