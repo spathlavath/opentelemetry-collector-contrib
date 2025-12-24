@@ -17,7 +17,6 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/receiver"
-	"go.opentelemetry.io/collector/scraper"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
@@ -30,10 +29,7 @@ func NewFactory() receiver.Factory {
 		createDefaultConfig,
 		receiver.WithMetrics(createMetricsReceiverFunc(func(dataSourceName string) (*sql.DB, error) {
 			return sql.Open("godror", dataSourceName)
-		}), metadata.MetricsStability),
-		receiver.WithLogs(createLogsReceiverFunc(func(dataSourceName string) (*sql.DB, error) {
-			return sql.Open("godror", dataSourceName)
-		}), metadata.LogsStability))
+		}), metadata.MetricsStability))
 }
 
 func createDefaultConfig() component.Config {
@@ -44,7 +40,6 @@ func createDefaultConfig() component.Config {
 	config := &Config{
 		ControllerConfig:      cfg,
 		MetricsBuilderConfig:  metadata.DefaultMetricsBuilderConfig(),
-		LogsBuilderConfig:     metadata.DefaultLogsBuilderConfig(),
 		DisableConnectionPool: false,
 	}
 
@@ -72,7 +67,6 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 		}
 
 		metricsBuilder := metadata.NewMetricsBuilder(sqlCfg.MetricsBuilderConfig, settings)
-		logsBuilder := metadata.NewLogsBuilder(sqlCfg.LogsBuilderConfig, settings)
 
 		instanceName, err := getInstanceName(getDataSource(*sqlCfg))
 		if err != nil {
@@ -83,7 +77,7 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			return nil, hostNameErr
 		}
 
-		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, logsBuilder, sqlCfg.LogsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
+		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
 			db, err := sqlOpenerFunc(getDataSource(*sqlCfg))
 			if err != nil {
 				return nil, err
@@ -113,72 +107,6 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 		opt := scraperhelper.AddScraper(metadata.Type, mp)
 
 		return scraperhelper.NewMetricsController(
-			&sqlCfg.ControllerConfig,
-			settings,
-			consumer,
-			opt,
-		)
-	}
-}
-
-func createLogsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateLogsFunc {
-	return func(
-		_ context.Context,
-		settings receiver.Settings,
-		cfg component.Config,
-		consumer consumer.Logs,
-	) (receiver.Logs, error) {
-		sqlCfg := cfg.(*Config)
-
-		// Ensure defaults are set and configuration is valid
-		sqlCfg.SetDefaults()
-		if err := sqlCfg.Validate(); err != nil {
-			return nil, fmt.Errorf("invalid configuration: %w", err)
-		}
-
-		logsBuilder := metadata.NewLogsBuilder(sqlCfg.LogsBuilderConfig, settings)
-
-		instanceName, err := getInstanceName(getDataSource(*sqlCfg))
-		if err != nil {
-			return nil, err
-		}
-		hostName, hostNameErr := getHostName(getDataSource(*sqlCfg))
-		if hostNameErr != nil {
-			return nil, hostNameErr
-		}
-
-		lp, err := newLogsScraper(logsBuilder, sqlCfg.LogsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
-			db, err := sqlOpenerFunc(getDataSource(*sqlCfg))
-			if err != nil {
-				return nil, err
-			}
-
-			// Configure connection pool settings
-			if !sqlCfg.DisableConnectionPool {
-				db.SetMaxOpenConns(sqlCfg.MaxOpenConnections)
-			} else {
-				// Disable connection pooling
-				db.SetMaxOpenConns(1)
-			}
-
-			// Set connection timeouts to ensure proper cancellation
-			db.SetMaxIdleConns(2)
-			db.SetConnMaxLifetime(10 * time.Minute)
-			db.SetConnMaxIdleTime(30 * time.Second)
-
-			return db, nil
-		}, instanceName, hostName)
-		if err != nil {
-			return nil, err
-		}
-
-		f := scraper.NewFactory(metadata.Type, nil,
-			scraper.WithLogs(func(context.Context, scraper.Settings, component.Config) (scraper.Logs, error) {
-				return lp, nil
-			}, metadata.LogsStability))
-		opt := scraperhelper.AddFactoryWithConfig(f, nil)
-
-		return scraperhelper.NewLogsController(
 			&sqlCfg.ControllerConfig,
 			settings,
 			consumer,

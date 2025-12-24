@@ -83,6 +83,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbDiskReads:                                          MetricConfig{Enabled: true},
 					NewrelicoracledbDiskWriteTimeMilliseconds:                          MetricConfig{Enabled: true},
 					NewrelicoracledbDiskWrites:                                         MetricConfig{Enabled: true},
+					NewrelicoracledbExecutionPlan:                                      MetricConfig{Enabled: true},
 					NewrelicoracledbGlobalName:                                         MetricConfig{Enabled: true},
 					NewrelicoracledbHostingInfo:                                        MetricConfig{Enabled: true},
 					NewrelicoracledbLockedAccounts:                                     MetricConfig{Enabled: true},
@@ -419,6 +420,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					NewrelicoracledbDiskReads:                                          MetricConfig{Enabled: false},
 					NewrelicoracledbDiskWriteTimeMilliseconds:                          MetricConfig{Enabled: false},
 					NewrelicoracledbDiskWrites:                                         MetricConfig{Enabled: false},
+					NewrelicoracledbExecutionPlan:                                      MetricConfig{Enabled: false},
 					NewrelicoracledbGlobalName:                                         MetricConfig{Enabled: false},
 					NewrelicoracledbHostingInfo:                                        MetricConfig{Enabled: false},
 					NewrelicoracledbLockedAccounts:                                     MetricConfig{Enabled: false},
@@ -711,16 +713,6 @@ func loadMetricsBuilderConfig(t *testing.T, name string) MetricsBuilderConfig {
 	sub, err := cm.Sub(name)
 	require.NoError(t, err)
 	cfg := DefaultMetricsBuilderConfig()
-	require.NoError(t, sub.Unmarshal(&cfg, confmap.WithIgnoreUnused()))
-	return cfg
-}
-
-func loadLogsBuilderConfig(t *testing.T, name string) LogsBuilderConfig {
-	cm, err := confmaptest.LoadConf(filepath.Join("testdata", "config.yaml"))
-	require.NoError(t, err)
-	sub, err := cm.Sub(name)
-	require.NoError(t, err)
-	cfg := DefaultLogsBuilderConfig()
 	require.NoError(t, sub.Unmarshal(&cfg, confmap.WithIgnoreUnused()))
 	return cfg
 }

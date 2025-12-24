@@ -116,11 +116,7 @@ attributes:
     type: int
   filter_predicates:
     description: " "
-    type: string
-  newrelic.event.type:
-    description: " "
-    type: string
-  
+    type: string 
   wait_event_name:
     description: " "
     type: string
@@ -350,15 +346,17 @@ attributes:
     description: " "
     type: string
 
-events:
+metrics:
+  # Execution Plan Metrics (from V$SQL_PLAN) - Represents each step in a query execution plan
   newrelicoracledb.execution_plan:
-    enabled: true
     description: " "
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{count}"
     attributes:
-      - newrelic.event.type
       - query_id
       - plan_hash_value
-      - query_text
       - child_number
       - plan_id
       - parent_id
@@ -381,7 +379,6 @@ events:
       - time
       - filter_predicates
 
-metrics:
   newrelicoracledb.sessions.count:
     description: " "
     enabled: true
