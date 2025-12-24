@@ -116,11 +116,7 @@ attributes:
     type: int
   filter_predicates:
     description: " "
-    type: string
-  newrelic.event.type:
-    description: " "
-    type: string
-  
+    type: string 
   wait_event_name:
     description: " "
     type: string
@@ -351,10 +347,13 @@ attributes:
     type: string
 
 metrics:
-  newrelicoracledb.sessions.count:
-    description: Total number of active Oracle database sessions
-    enabled: true
+  # Execution Plan Metrics (from V$SQL_PLAN) - Represents each step in a query execution plan
+  newrelicoracledb.execution_plan:
     description: " "
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{count}"
     attributes:
       - query_id
       - plan_hash_value
@@ -379,6 +378,15 @@ metrics:
       - projection
       - time
       - filter_predicates
+
+  newrelicoracledb.sessions.count:
+    description: " "
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{sessions}"
+    attributes:
+      - db.instance.name
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: " "

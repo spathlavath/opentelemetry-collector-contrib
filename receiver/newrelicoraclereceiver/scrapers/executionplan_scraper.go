@@ -94,9 +94,34 @@ func (s *ExecutionPlanScraper) recordExecutionPlanMetrics(row *models.ExecutionP
 		queryID = row.SQLID.String
 	}
 
-	planHashValue := ""
-	if row.PlanHashValue.Valid {
-		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
+	planGeneratedTimestamp := ""
+	if row.Timestamp.Valid {
+		planGeneratedTimestamp = row.Timestamp.String
+	}
+
+	tempSpace := int64(-1)
+	if row.TempSpace.Valid && row.TempSpace.String != "" {
+		tempSpace = commonutils.ParseIntSafe(row.TempSpace.String, s.logger)
+	}
+
+	accessPredicates := ""
+	if row.AccessPredicates.Valid {
+		accessPredicates = row.AccessPredicates.String
+	}
+
+	projection := ""
+	if row.Projection.Valid {
+		projection = row.Projection.String
+	}
+
+	timeVal := int64(-1)
+	if row.Time.Valid && row.Time.String != "" {
+		timeVal = commonutils.ParseIntSafe(row.Time.String, s.logger)
+	}
+
+	filterPredicates := ""
+	if row.FilterPredicates.Valid {
+		filterPredicates = row.FilterPredicates.String
 	}
 
 	childNumber := int64(-1)
@@ -144,6 +169,11 @@ func (s *ExecutionPlanScraper) recordExecutionPlanMetrics(row *models.ExecutionP
 		position = row.Position.Int64
 	}
 
+	planHashValue := ""
+	if row.PlanHashValue.Valid {
+		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
+	}
+
 	cost := int64(-1)
 	if row.Cost.Valid && row.Cost.String != "" {
 		cost = commonutils.ParseIntSafe(row.Cost.String, s.logger)
@@ -169,42 +199,19 @@ func (s *ExecutionPlanScraper) recordExecutionPlanMetrics(row *models.ExecutionP
 		ioCost = commonutils.ParseIntSafe(row.IOCost.String, s.logger)
 	}
 
-	planGeneratedTimestamp := ""
-	if row.Timestamp.Valid {
-		planGeneratedTimestamp = row.Timestamp.String
-	}
-
-	tempSpace := int64(-1)
-	if row.TempSpace.Valid && row.TempSpace.String != "" {
-		tempSpace = commonutils.ParseIntSafe(row.TempSpace.String, s.logger)
-	}
-
-	accessPredicates := ""
-	if row.AccessPredicates.Valid {
-		accessPredicates = row.AccessPredicates.String
-	}
-
-	projection := ""
-	if row.Projection.Valid {
-		projection = row.Projection.String
-	}
-
-	timeVal := int64(-1)
-	if row.Time.Valid && row.Time.String != "" {
-		timeVal = commonutils.ParseIntSafe(row.Time.String, s.logger)
-	}
-
-	filterPredicates := ""
-	if row.FilterPredicates.Valid {
-		filterPredicates = row.FilterPredicates.String
-	}
-
 	// Convert query timestamp to string for attribute
 	queryTimestampStr := queryTimestamp.Format(time.RFC3339)
 
+	// Use cpuCost as the metric value; if not available, use 0
+	metricValue := int64(0)
+	if cpuCost >= 0 {
+		metricValue = cpuCost
+	}
+
+
 	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),
-		1,
+		metricValue,
 		queryID,
 		planHashValue,
 		childNumber,

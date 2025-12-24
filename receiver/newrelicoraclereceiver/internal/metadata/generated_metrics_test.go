@@ -2645,8 +2645,8 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.execution_plan"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Oracle SQL execution plan step information from V$SQL_PLAN. Each data point represents one step in an execution plan tree.", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.Equal(t, " ", ms.At(i).Description())
+					assert.Equal(t, "{count}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
