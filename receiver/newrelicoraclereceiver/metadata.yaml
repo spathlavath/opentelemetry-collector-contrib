@@ -117,9 +117,6 @@ attributes:
   filter_predicates:
     description: Filter predicates applied after accessing rows
     type: string
-  newrelic.event.type:
-    description: New Relic event type for log categorization
-    type: string
   
   wait_event_name:
     description: Oracle wait event name for wait events
@@ -350,15 +347,25 @@ attributes:
     description: Oracle Data Guard protection level
     type: string
 
-events:
-  newrelicoracledb.execution_plan:
+metrics:
+  newrelicoracledb.sessions.count:
+    description: Total number of active Oracle database sessions
     enabled: true
-    description: Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
+    gauge:
+      value_type: int
+    unit: "{sessions}"
     attributes:
-      - newrelic.event.type
+      - db.instance.name
+
+  newrelicoracledb.execution_plan:
+    description: Oracle SQL execution plan step information from V$SQL_PLAN. Each data point represents one step in an execution plan tree.
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
+    attributes:
       - query_id
       - plan_hash_value
-      - query_text
       - child_number
       - plan_id
       - parent_id
@@ -380,16 +387,6 @@ events:
       - projection
       - time
       - filter_predicates
-
-metrics:
-  newrelicoracledb.sessions.count:
-    description: Total number of active Oracle database sessions
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "{sessions}"
-    attributes:
-      - db.instance.name
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace

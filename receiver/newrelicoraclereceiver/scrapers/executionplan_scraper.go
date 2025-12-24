@@ -6,7 +6,6 @@ package scrapers
 import (
 	"context"
 	"fmt"
-	"math"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -19,18 +18,18 @@ import (
 )
 
 type ExecutionPlanScraper struct {
-	client            client.OracleClient
-	lb                *metadata.LogsBuilder
-	logger            *zap.Logger
-	logsBuilderConfig metadata.LogsBuilderConfig
+	client               client.OracleClient
+	mb                   *metadata.MetricsBuilder
+	logger               *zap.Logger
+	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
+func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
-		client:            oracleClient,
-		lb:                lb,
-		logger:            logger,
-		logsBuilderConfig: logsBuilderConfig,
+		client:               oracleClient,
+		mb:                   mb,
+		logger:               logger,
+		metricsBuilderConfig: metricsBuilderConfig,
 	}
 }
 
@@ -72,8 +71,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 
 			// Pass the timestamp from the identifier (when the query was captured)
-			if err := s.buildExecutionPlanLogs(&row, identifier.Timestamp); err != nil {
-				s.logger.Warn("Failed to build logs for execution plan row",
+			if err := s.recordExecutionPlanMetrics(&row, identifier.Timestamp); err != nil {
+				s.logger.Warn("Failed to record metrics for execution plan row",
 					zap.String("sql_id", row.SQLID.String),
 					zap.Error(err))
 				errs = append(errs, err)
@@ -88,14 +87,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	return errs
 }
 
-// buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
-
-func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
-	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
-		return nil
-	}
-
-	// Extract values with defaults for null fields
+// recordExecutionPlanMetrics converts an execution plan row to metrics with individual attributes.
+func (s *ExecutionPlanScraper) recordExecutionPlanMetrics(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
 	queryID := ""
 	if row.SQLID.Valid {
 		queryID = row.SQLID.String
@@ -105,8 +98,6 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	if row.PlanHashValue.Valid {
 		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
 	}
-
-	queryText := "" // Empty for now, should be provided by caller
 
 	childNumber := int64(-1)
 	if row.ChildNumber.Valid {
@@ -155,27 +146,27 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	cost := int64(-1)
 	if row.Cost.Valid && row.Cost.String != "" {
-		cost = s.parseIntSafe(row.Cost.String)
+		cost = commonutils.ParseIntSafe(row.Cost.String, s.logger)
 	}
 
 	cardinality := int64(-1)
 	if row.Cardinality.Valid && row.Cardinality.String != "" {
-		cardinality = s.parseIntSafe(row.Cardinality.String)
+		cardinality = commonutils.ParseIntSafe(row.Cardinality.String, s.logger)
 	}
 
 	bytes := int64(-1)
 	if row.Bytes.Valid && row.Bytes.String != "" {
-		bytes = s.parseIntSafe(row.Bytes.String)
+		bytes = commonutils.ParseIntSafe(row.Bytes.String, s.logger)
 	}
 
 	cpuCost := int64(-1)
 	if row.CPUCost.Valid && row.CPUCost.String != "" {
-		cpuCost = s.parseIntSafe(row.CPUCost.String)
+		cpuCost = commonutils.ParseIntSafe(row.CPUCost.String, s.logger)
 	}
 
 	ioCost := int64(-1)
 	if row.IOCost.Valid && row.IOCost.String != "" {
-		ioCost = s.parseIntSafe(row.IOCost.String)
+		ioCost = commonutils.ParseIntSafe(row.IOCost.String, s.logger)
 	}
 
 	planGeneratedTimestamp := ""
@@ -183,17 +174,14 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		planGeneratedTimestamp = row.Timestamp.String
 	}
 
-	// Convert queryTimestamp to string for the timestamp attribute
-	queryTimestampStr := queryTimestamp.Format(time.RFC3339)
-
 	tempSpace := int64(-1)
 	if row.TempSpace.Valid && row.TempSpace.String != "" {
-		tempSpace = s.parseIntSafe(row.TempSpace.String)
+		tempSpace = commonutils.ParseIntSafe(row.TempSpace.String, s.logger)
 	}
 
 	accessPredicates := ""
 	if row.AccessPredicates.Valid {
-		accessPredicates = commonutils.AnonymizeAndNormalize(row.AccessPredicates.String)
+		accessPredicates = row.AccessPredicates.String
 	}
 
 	projection := ""
@@ -203,22 +191,22 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	timeVal := int64(-1)
 	if row.Time.Valid && row.Time.String != "" {
-		timeVal = s.parseIntSafe(row.Time.String)
+		timeVal = commonutils.ParseIntSafe(row.Time.String, s.logger)
 	}
 
 	filterPredicates := ""
 	if row.FilterPredicates.Valid {
-		filterPredicates = commonutils.AnonymizeAndNormalize(row.FilterPredicates.String)
+		filterPredicates = row.FilterPredicates.String
 	}
 
-	// Record the event with all attributes
-	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
-		context.Background(),
+	// Convert query timestamp to string for attribute
+	queryTimestampStr := queryTimestamp.Format(time.RFC3339)
+
+	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),
-		"OracleExecutionPlan",
+		1,
 		queryID,
 		planHashValue,
-		queryText,
 		childNumber,
 		planID,
 		parentID,
@@ -242,28 +230,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		filterPredicates,
 	)
 
+	s.logger.Debug("Execution plan collected")
+
 	return nil
-}
-
-// parseIntSafe safely parses a string to int64, handling overflow cases.
-
-func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
-	if value == "" {
-		return -1
-	}
-
-	// Try to parse as int64
-	var result int64
-	_, err := fmt.Sscanf(value, "%d", &result)
-	if err != nil {
-		// If parsing fails, it's likely a very large number that exceeds int64 max
-		// Oracle can return values that exceed int64 max (e.g., 18446744073709551615)
-		// In such cases, we'll use int64 max value to indicate an extremely high cost
-		s.logger.Debug("Failed to parse large numeric value, using int64 max",
-			zap.String("value", value),
-			zap.Error(err))
-		return math.MaxInt64
-	}
-
-	return result
 }

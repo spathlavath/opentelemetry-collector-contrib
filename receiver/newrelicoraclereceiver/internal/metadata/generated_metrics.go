@@ -181,6 +181,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbDiskWrites: metricInfo{
 		Name: "newrelicoracledb.disk.writes",
 	},
+	NewrelicoracledbExecutionPlan: metricInfo{
+		Name: "newrelicoracledb.execution_plan",
+	},
 	NewrelicoracledbGlobalName: metricInfo{
 		Name: "newrelicoracledb.global_name",
 	},
@@ -1047,6 +1050,7 @@ type metricsInfo struct {
 	NewrelicoracledbDiskReads                                          metricInfo
 	NewrelicoracledbDiskWriteTimeMilliseconds                          metricInfo
 	NewrelicoracledbDiskWrites                                         metricInfo
+	NewrelicoracledbExecutionPlan                                      metricInfo
 	NewrelicoracledbGlobalName                                         metricInfo
 	NewrelicoracledbHostingInfo                                        metricInfo
 	NewrelicoracledbLockedAccounts                                     metricInfo
@@ -4320,6 +4324,79 @@ func (m *metricNewrelicoracledbDiskWrites) emit(metrics pmetric.MetricSlice) {
 
 func newMetricNewrelicoracledbDiskWrites(cfg MetricConfig) metricNewrelicoracledbDiskWrites {
 	m := metricNewrelicoracledbDiskWrites{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbExecutionPlan struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.execution_plan metric with initial data.
+func (m *metricNewrelicoracledbExecutionPlan) init() {
+	m.data.SetName("newrelicoracledb.execution_plan")
+	m.data.SetDescription("Oracle SQL execution plan step information from V$SQL_PLAN. Each data point represents one step in an execution plan tree.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbExecutionPlan) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHashValueAttributeValue string, childNumberAttributeValue int64, planIDAttributeValue int64, parentIDAttributeValue int64, depthAttributeValue int64, operationAttributeValue string, optionsAttributeValue string, objectOwnerAttributeValue string, objectNameAttributeValue string, positionAttributeValue int64, costAttributeValue int64, cardinalityAttributeValue int64, bytesAttributeValue int64, cpuCostAttributeValue int64, ioCostAttributeValue int64, timestampAttributeValue string, planGeneratedTimestampAttributeValue string, tempSpaceAttributeValue int64, accessPredicatesAttributeValue string, projectionAttributeValue string, timeAttributeValue int64, filterPredicatesAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("plan_hash_value", planHashValueAttributeValue)
+	dp.Attributes().PutInt("child_number", childNumberAttributeValue)
+	dp.Attributes().PutInt("plan_id", planIDAttributeValue)
+	dp.Attributes().PutInt("parent_id", parentIDAttributeValue)
+	dp.Attributes().PutInt("depth", depthAttributeValue)
+	dp.Attributes().PutStr("operation", operationAttributeValue)
+	dp.Attributes().PutStr("options", optionsAttributeValue)
+	dp.Attributes().PutStr("object_owner", objectOwnerAttributeValue)
+	dp.Attributes().PutStr("object_name", objectNameAttributeValue)
+	dp.Attributes().PutInt("position", positionAttributeValue)
+	dp.Attributes().PutInt("cost", costAttributeValue)
+	dp.Attributes().PutInt("cardinality", cardinalityAttributeValue)
+	dp.Attributes().PutInt("bytes", bytesAttributeValue)
+	dp.Attributes().PutInt("cpu_cost", cpuCostAttributeValue)
+	dp.Attributes().PutInt("io_cost", ioCostAttributeValue)
+	dp.Attributes().PutStr("timestamp", timestampAttributeValue)
+	dp.Attributes().PutStr("plan_generated_timestamp", planGeneratedTimestampAttributeValue)
+	dp.Attributes().PutInt("temp_space", tempSpaceAttributeValue)
+	dp.Attributes().PutStr("access_predicates", accessPredicatesAttributeValue)
+	dp.Attributes().PutStr("projection", projectionAttributeValue)
+	dp.Attributes().PutInt("time", timeAttributeValue)
+	dp.Attributes().PutStr("filter_predicates", filterPredicatesAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbExecutionPlan) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbExecutionPlan) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbExecutionPlan(cfg MetricConfig) metricNewrelicoracledbExecutionPlan {
+	m := metricNewrelicoracledbExecutionPlan{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18511,6 +18588,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbDiskReads                                          metricNewrelicoracledbDiskReads
 	metricNewrelicoracledbDiskWriteTimeMilliseconds                          metricNewrelicoracledbDiskWriteTimeMilliseconds
 	metricNewrelicoracledbDiskWrites                                         metricNewrelicoracledbDiskWrites
+	metricNewrelicoracledbExecutionPlan                                      metricNewrelicoracledbExecutionPlan
 	metricNewrelicoracledbGlobalName                                         metricNewrelicoracledbGlobalName
 	metricNewrelicoracledbHostingInfo                                        metricNewrelicoracledbHostingInfo
 	metricNewrelicoracledbLockedAccounts                                     metricNewrelicoracledbLockedAccounts
@@ -18861,6 +18939,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbDiskReads:                                          newMetricNewrelicoracledbDiskReads(mbc.Metrics.NewrelicoracledbDiskReads),
 		metricNewrelicoracledbDiskWriteTimeMilliseconds:                          newMetricNewrelicoracledbDiskWriteTimeMilliseconds(mbc.Metrics.NewrelicoracledbDiskWriteTimeMilliseconds),
 		metricNewrelicoracledbDiskWrites:                                         newMetricNewrelicoracledbDiskWrites(mbc.Metrics.NewrelicoracledbDiskWrites),
+		metricNewrelicoracledbExecutionPlan:                                      newMetricNewrelicoracledbExecutionPlan(mbc.Metrics.NewrelicoracledbExecutionPlan),
 		metricNewrelicoracledbGlobalName:                                         newMetricNewrelicoracledbGlobalName(mbc.Metrics.NewrelicoracledbGlobalName),
 		metricNewrelicoracledbHostingInfo:                                        newMetricNewrelicoracledbHostingInfo(mbc.Metrics.NewrelicoracledbHostingInfo),
 		metricNewrelicoracledbLockedAccounts:                                     newMetricNewrelicoracledbLockedAccounts(mbc.Metrics.NewrelicoracledbLockedAccounts),
@@ -19270,6 +19349,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbDiskReads.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskWriteTimeMilliseconds.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskWrites.emit(ils.Metrics())
+	mb.metricNewrelicoracledbExecutionPlan.emit(ils.Metrics())
 	mb.metricNewrelicoracledbGlobalName.emit(ils.Metrics())
 	mb.metricNewrelicoracledbHostingInfo.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLockedAccounts.emit(ils.Metrics())
@@ -19848,6 +19928,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoi
 // RecordNewrelicoracledbDiskWritesDataPoint adds a data point to newrelicoracledb.disk.writes metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbDiskWritesDataPoint(ts pcommon.Timestamp, val int64, dbInstanceNameAttributeValue string, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbDiskWrites.recordDataPoint(mb.startTime, ts, val, dbInstanceNameAttributeValue, instanceIDAttributeValue)
+}
+
+// RecordNewrelicoracledbExecutionPlanDataPoint adds a data point to newrelicoracledb.execution_plan metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbExecutionPlanDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHashValueAttributeValue string, childNumberAttributeValue int64, planIDAttributeValue int64, parentIDAttributeValue int64, depthAttributeValue int64, operationAttributeValue string, optionsAttributeValue string, objectOwnerAttributeValue string, objectNameAttributeValue string, positionAttributeValue int64, costAttributeValue int64, cardinalityAttributeValue int64, bytesAttributeValue int64, cpuCostAttributeValue int64, ioCostAttributeValue int64, timestampAttributeValue string, planGeneratedTimestampAttributeValue string, tempSpaceAttributeValue int64, accessPredicatesAttributeValue string, projectionAttributeValue string, timeAttributeValue int64, filterPredicatesAttributeValue string) {
+	mb.metricNewrelicoracledbExecutionPlan.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHashValueAttributeValue, childNumberAttributeValue, planIDAttributeValue, parentIDAttributeValue, depthAttributeValue, operationAttributeValue, optionsAttributeValue, objectOwnerAttributeValue, objectNameAttributeValue, positionAttributeValue, costAttributeValue, cardinalityAttributeValue, bytesAttributeValue, cpuCostAttributeValue, ioCostAttributeValue, timestampAttributeValue, planGeneratedTimestampAttributeValue, tempSpaceAttributeValue, accessPredicatesAttributeValue, projectionAttributeValue, timeAttributeValue, filterPredicatesAttributeValue)
 }
 
 // RecordNewrelicoracledbGlobalNameDataPoint adds a data point to newrelicoracledb.global_name metric.
