@@ -149,18 +149,11 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	if !exists {
 		// Handle edge case: execution_count = 0
 		if currentExecCount == 0 {
-			oic.logger.Warn("Query with zero execution count - skipping",
-				zap.String("query_id", queryID),
-				zap.Float64("total_elapsed_ms", currentTotalElapsedMs),
-				zap.Float64("historical_avg_ms", historicalAvgElapsedMs))
+			oic.logger.Warn("Query with zero execution count - skipping")
 			return nil
 		}
 
-		oic.logger.Debug("First scrape for query - using historical average",
-			zap.String("query_id", queryID),
-			zap.Int64("execution_count", currentExecCount),
-			zap.Float64("historical_avg_ms", historicalAvgElapsedMs),
-			zap.Float64("total_elapsed_ms", currentTotalElapsedMs))
+		oic.logger.Debug("First scrape for query - using historical average")
 
 		// Add to cache for next scrape
 		oic.stateCache[queryID] = &OracleQueryState{
@@ -193,9 +186,7 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 	// Handle no new executions
 	if deltaExecCount == 0 {
-		oic.logger.Debug("No new executions for query",
-			zap.String("query_id", queryID),
-			zap.Float64("time_since_last_exec_sec", timeSinceLastExec))
+		oic.logger.Debug("No new executions for query")
 
 		// Update last seen timestamp (query is still in Oracle results)
 		state.LastSeenTimestamp = now
@@ -217,18 +208,10 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	// Handle plan cache reset (execution count decreased) OR stats corruption (negative delta elapsed)
 	if deltaExecCount < 0 || deltaElapsedMs < 0 {
 		if deltaExecCount < 0 {
-			oic.logger.Warn("Plan cache reset detected - execution count decreased, cannot calculate valid interval delta",
-				zap.String("query_id", queryID),
-				zap.Int64("current_exec_count", currentExecCount),
-				zap.Int64("prev_exec_count", state.PrevExecutionCount),
-				zap.Int64("delta_exec_count", deltaExecCount))
+			oic.logger.Warn("Plan cache reset detected - execution count decreased, cannot calculate valid interval delta")
 		}
 		if deltaElapsedMs < 0 {
-			oic.logger.Warn("Negative delta elapsed time detected - possible stats corruption",
-				zap.String("query_id", queryID),
-				zap.Float64("current_total_ms", currentTotalElapsedMs),
-				zap.Float64("prev_total_ms", state.PrevTotalElapsedTimeMs),
-				zap.Float64("delta_ms", deltaElapsedMs))
+			oic.logger.Warn("Negative delta elapsed time detected - possible stats corruption")
 		}
 
 		// Reset state - treat as first scrape but PRESERVE FirstSeenTimestamp
@@ -259,20 +242,9 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 	// Warn if we have executions but zero elapsed time
 	if deltaElapsedMs == 0 && deltaExecCount > 0 {
-		oic.logger.Warn("Zero elapsed time with non-zero executions - possible data issue or extremely fast query",
-			zap.String("query_id", queryID),
-			zap.Int64("delta_exec_count", deltaExecCount),
-			zap.Float64("delta_elapsed_ms", deltaElapsedMs),
-			zap.Float64("current_total_ms", currentTotalElapsedMs),
-			zap.Float64("prev_total_ms", state.PrevTotalElapsedTimeMs))
+		oic.logger.Warn("Zero elapsed time with non-zero executions - possible data issue or extremely fast query")
+		oic.logger.Debug("Delta calculation for query")
 	}
-
-	oic.logger.Debug("Delta calculation for query",
-		zap.String("query_id", queryID),
-		zap.Int64("delta_exec_count", deltaExecCount),
-		zap.Float64("delta_elapsed_ms", deltaElapsedMs),
-		zap.Float64("interval_avg_elapsed_ms", intervalAvgElapsedMs),
-		zap.Float64("historical_avg_elapsed_ms", historicalAvgElapsedMs))
 
 	// Update state for next scrape
 	state.PrevExecutionCount = currentExecCount
@@ -313,10 +285,7 @@ func (oic *OracleIntervalCalculator) CleanupStaleEntries(now time.Time) {
 	}
 
 	if removedCount > 0 {
-		oic.logger.Info("Cleaned up stale queries from cache",
-			zap.Int("removed_count", removedCount),
-			zap.Int("remaining_count", len(oic.stateCache)),
-			zap.Duration("cache_ttl", oic.cacheTTL))
+		oic.logger.Info("Cleaned up stale queries from cache")
 	}
 }
 

@@ -75,7 +75,7 @@ func (s *RacScraper) isASMAvailable(ctx context.Context) (bool, error) {
 	}
 
 	asmAvailable := detection.ASMCount > 0
-	s.logger.Debug("ASM detection", zap.Bool("available", asmAvailable), zap.Int("diskgroups", detection.ASMCount))
+	s.logger.Debug("ASM detection")
 
 	return asmAvailable, nil
 }
