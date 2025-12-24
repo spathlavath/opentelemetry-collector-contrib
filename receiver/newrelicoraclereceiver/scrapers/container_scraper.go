@@ -347,12 +347,7 @@ func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Ti
 		}
 		s.mb.RecordNewrelicoracledbServiceStatusDataPoint(now, serviceStatus, s.instanceName, conIDStr, serviceName)
 
-		s.logger.Debug("Processed CDB service",
-			zap.String("con_id", conIDStr),
-			zap.String("service_name", serviceName),
-			zap.String("pdb", svc.PDB.String),
-			zap.String("enabled", svc.Enabled.String),
-			zap.Int64("status", serviceStatus))
+		s.logger.Debug("Processed CDB service")
 	}
 
 	// Record service count per container
@@ -374,9 +369,7 @@ func (s *ContainerScraper) checkEnvironmentCapability(ctx context.Context) error
 	if err != nil {
 		if errors.IsPermanentError(err) {
 			// Likely an older Oracle version that doesn't support CDB
-			s.logger.Info("Database does not support CDB features",
-				zap.String("instance", s.instanceName),
-				zap.Error(err))
+			s.logger.Info("Database does not support CDB features")
 			cdbCapable := false
 			pdbCapable := false
 			s.isCDBCapable = &cdbCapable
@@ -404,10 +397,7 @@ func (s *ContainerScraper) checkEnvironmentCapability(ctx context.Context) error
 	}
 
 	s.environmentChecked = true
-	s.logger.Info("Detected Oracle environment capabilities",
-		zap.String("instance", s.instanceName),
-		zap.Bool("cdb_capable", *s.isCDBCapable),
-		zap.Bool("pdb_capable", *s.isPDBCapable))
+	s.logger.Info("Detected Oracle environment capabilities")
 
 	return nil
 }
@@ -428,8 +418,7 @@ func (s *ContainerScraper) checkCurrentContext(ctx context.Context) error {
 		return nil
 	}
 
-	s.logger.Debug("Checking current Oracle container context",
-		zap.String("instance", s.instanceName))
+	s.logger.Debug("Checking current Oracle container context")
 
 	// Query current container context
 	containerContext, err := s.client.CheckCurrentContainer(ctx)
@@ -445,10 +434,7 @@ func (s *ContainerScraper) checkCurrentContext(ctx context.Context) error {
 	}
 	s.contextChecked = true
 
-	s.logger.Info("Detected Oracle container context",
-		zap.String("instance", s.instanceName),
-		zap.String("container_name", s.currentContainer),
-		zap.String("container_id", s.currentContainerID))
+	s.logger.Info("Detected Oracle container context")
 
 	return nil
 }

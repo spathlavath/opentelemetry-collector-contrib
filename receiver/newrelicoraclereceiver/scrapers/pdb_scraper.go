@@ -67,7 +67,7 @@ func (s *PdbScraper) scrapePDBSysMetrics(ctx context.Context, now pcommon.Timest
 		metricCount++
 	}
 
-	s.logger.Debug("Collected PDB sys metrics", zap.Int("count", metricCount))
+	s.logger.Debug("Collected PDB sys metrics")
 
 	return nil
 }
