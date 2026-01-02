@@ -84,6 +84,7 @@ type MetricsConfig struct {
 	NewrelicoracledbDiskReads                                          MetricConfig `mapstructure:"newrelicoracledb.disk.reads"`
 	NewrelicoracledbDiskWriteTimeMilliseconds                          MetricConfig `mapstructure:"newrelicoracledb.disk.write_time_milliseconds"`
 	NewrelicoracledbDiskWrites                                         MetricConfig `mapstructure:"newrelicoracledb.disk.writes"`
+	NewrelicoracledbExecutionPlan                                      MetricConfig `mapstructure:"newrelicoracledb.execution_plan"`
 	NewrelicoracledbGlobalName                                         MetricConfig `mapstructure:"newrelicoracledb.global_name"`
 	NewrelicoracledbHostingInfo                                        MetricConfig `mapstructure:"newrelicoracledb.hosting.info"`
 	NewrelicoracledbLockedAccounts                                     MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
@@ -523,6 +524,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbDiskWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbExecutionPlan: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbGlobalName: MetricConfig{

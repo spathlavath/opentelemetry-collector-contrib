@@ -935,6 +935,42 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 | db.instance.name |   | Any Str | false |
 | instance.id |   | Any Str | false |
 
+### newrelicoracledb.execution_plan
+
+Oracle SQL execution plan details with cost and cardinality information
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id |   | Any Str | false |
+| plan_hash_value |   | Any Str | false |
+| child_number |   | Any Int | false |
+| plan_id |   | Any Int | false |
+| parent_id |   | Any Int | false |
+| depth |   | Any Int | false |
+| operation |   | Any Str | false |
+| options |   | Any Str | false |
+| object_owner |   | Any Str | false |
+| object_name |   | Any Str | false |
+| position |   | Any Int | false |
+| cost |   | Any Int | false |
+| cardinality |   | Any Int | false |
+| bytes |   | Any Int | false |
+| cpu_cost |   | Any Int | false |
+| io_cost |   | Any Int | false |
+| timestamp |   | Any Str | false |
+| plan_generated_timestamp |   | Any Str | false |
+| temp_space |   | Any Int | false |
+| access_predicates |   | Any Str | false |
+| projection |   | Any Str | false |
+| time |   | Any Int | false |
+| filter_predicates |   | Any Str | false |
+
 ### newrelicoracledb.global_name
 
  

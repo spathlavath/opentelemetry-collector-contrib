@@ -19,18 +19,18 @@ import (
 )
 
 type ExecutionPlanScraper struct {
-	client            client.OracleClient
-	lb                *metadata.LogsBuilder
-	logger            *zap.Logger
-	logsBuilderConfig metadata.LogsBuilderConfig
+	client               client.OracleClient
+	mb                   *metadata.MetricsBuilder
+	logger               *zap.Logger
+	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
-func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
+func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
-		client:            oracleClient,
-		lb:                lb,
-		logger:            logger,
-		logsBuilderConfig: logsBuilderConfig,
+		client:               oracleClient,
+		mb:                   mb,
+		logger:               logger,
+		metricsBuilderConfig: metricsBuilderConfig,
 	}
 }
 
@@ -72,8 +72,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 
 			// Pass the timestamp from the identifier (when the query was captured)
-			if err := s.buildExecutionPlanLogs(&row, identifier.Timestamp); err != nil {
-				s.logger.Warn("Failed to build logs for execution plan row",
+			if err := s.buildExecutionPlanMetrics(&row, identifier.Timestamp); err != nil {
+				s.logger.Warn("Failed to build metrics for execution plan row",
 					zap.String("sql_id", row.SQLID.String),
 					zap.Error(err))
 				errs = append(errs, err)
@@ -88,10 +88,9 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	return errs
 }
 
-// buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
-
-func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
-	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+// buildExecutionPlanMetrics converts an execution plan row to a metric data point with all attributes.
+func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
+	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
 	}
 
@@ -105,8 +104,6 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	if row.PlanHashValue.Valid {
 		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
 	}
-
-	queryText := "" // Empty for now, should be provided by caller
 
 	childNumber := int64(-1)
 	if row.ChildNumber.Valid {
@@ -211,14 +208,11 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		filterPredicates = commonutils.AnonymizeAndNormalize(row.FilterPredicates.String)
 	}
 
-	// Record the event with all attributes
-	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
-		context.Background(),
+	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),
-		"OracleExecutionPlan",
+		int64(1), // Value of 1 to indicate this execution plan step exists
 		queryID,
 		planHashValue,
-		queryText,
 		childNumber,
 		planID,
 		parentID,
