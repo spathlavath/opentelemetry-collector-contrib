@@ -937,7 +937,7 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 ### newrelicoracledb.execution_plan
 
-Oracle SQL execution plan details with cost and cardinality information
+ 
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |

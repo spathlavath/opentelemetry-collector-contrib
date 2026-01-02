@@ -349,7 +349,7 @@ attributes:
 
 metrics:
   newrelicoracledb.execution_plan:
-    description: "Oracle SQL execution plan details with cost and cardinality information"
+    description: " "
     enabled: true
     gauge:
       value_type: int
