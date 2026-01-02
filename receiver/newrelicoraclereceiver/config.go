@@ -101,7 +101,6 @@ type Config struct {
 
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
-	metadata.LogsBuilderConfig     `mapstructure:",squash"`
 }
 
 // SetDefaults sets default values for configuration fields that are not explicitly set
