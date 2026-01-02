@@ -279,9 +279,32 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 
 	if len(waitEventSQLIdentifiers) > 0 {
 		s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
+		s.executeExecutionPlans(ctx, errChan, waitEventSQLIdentifiers)
 	} else {
-		s.logger.Debug("No SQL identifiers from wait events, skipping child cursor scraping")
+		s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
 	}
+}
+
+// executeExecutionPlans executes execution plan scraper for SQL identifiers from wait events
+func (s *newRelicOracleScraper) executeExecutionPlans(ctx context.Context, errChan chan<- error, sqlIdentifiers []models.SQLIdentifier) {
+	s.logger.Debug("Starting execution plan scraping as metrics",
+		zap.Int("sql_identifiers", len(sqlIdentifiers)))
+
+	if len(sqlIdentifiers) == 0 {
+		s.logger.Debug("No SQL identifiers from wait events")
+		return
+	}
+
+	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
+	if len(executionPlanErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping execution plan metrics",
+			zap.Int("error_count", len(executionPlanErrs)))
+		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
+	}
+
+	s.logger.Info("Execution plan scraping completed",
+		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+		zap.Int("errors", len(executionPlanErrs)))
 }
 
 // executeChildCursors executes child cursor scraper for SQL identifiers from wait events
@@ -305,20 +328,6 @@ func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan
 		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
 		zap.Int("errors", len(childCursorErrs)))
 
-	// Scrape execution plans as metrics after child cursors
-	s.logger.Debug("Starting execution plan scraping as metrics",
-		zap.Int("sql_identifiers", len(sqlIdentifiers)))
-
-	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
-	if len(executionPlanErrs) > 0 {
-		s.logger.Warn("Errors occurred while scraping execution plan metrics",
-			zap.Int("error_count", len(executionPlanErrs)))
-		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
-	}
-
-	s.logger.Info("Execution plan scraping completed",
-		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
-		zap.Int("errors", len(executionPlanErrs)))
 }
 
 // executeIndependentScrapers launches concurrent scrapers for independent metrics

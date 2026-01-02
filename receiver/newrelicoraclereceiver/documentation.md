@@ -5145,50 +5145,6 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_file_id |   | Any Str | false |
 | row_wait_block_id |   | Any Str | false |
 
-## Default Events
-
-The following events are emitted by default. Each of them can be disabled by applying the following configuration:
-
-```yaml
-events:
-  <event_name>:
-    enabled: false
-```
-
-### newrelicoracledb.execution_plan
-
- 
-
-#### Attributes
-
-| Name | Description | Values |
-| ---- | ----------- | ------ |
-| newrelic.event.type |   | Any Str |
-| query_id |   | Any Str |
-| plan_hash_value |   | Any Str |
-| query_text |   | Any Str |
-| child_number |   | Any Int |
-| plan_id |   | Any Int |
-| parent_id |   | Any Int |
-| depth |   | Any Int |
-| operation |   | Any Str |
-| options |   | Any Str |
-| object_owner |   | Any Str |
-| object_name |   | Any Str |
-| position |   | Any Int |
-| cost |   | Any Int |
-| cardinality |   | Any Int |
-| bytes |   | Any Int |
-| cpu_cost |   | Any Int |
-| io_cost |   | Any Int |
-| timestamp |   | Any Str |
-| plan_generated_timestamp |   | Any Str |
-| temp_space |   | Any Int |
-| access_predicates |   | Any Str |
-| projection |   | Any Str |
-| time |   | Any Int |
-| filter_predicates |   | Any Str |
-
 ## Resource Attributes
 
 | Name | Description | Values | Enabled |
