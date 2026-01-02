@@ -44,6 +44,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 
 	if len(identifiers) > 0 {
 		for _, identifier := range identifiers {
+
 			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifier.SQLID, identifier.ChildNumber)
 			if err != nil {
 				s.logger.Warn("Failed to fetch specific child cursor from V$SQL",
@@ -61,7 +62,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 		}
 	}
 
-	s.logger.Debug("Child cursors scrape completed")
+	s.logger.Info("Child cursors scrape completed")
 
 	return errs
 }

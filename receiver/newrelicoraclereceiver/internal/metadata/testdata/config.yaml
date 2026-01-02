@@ -113,6 +113,8 @@ all_set:
       enabled: true
     newrelicoracledb.disk.writes:
       enabled: true
+    newrelicoracledb.execution_plan:
+      enabled: true
     newrelicoracledb.global_name:
       enabled: true
     newrelicoracledb.hosting.info:
@@ -650,9 +652,6 @@ all_set:
     newrelicoracledb.tablespace.used_percent:
       enabled: true
     newrelicoracledb.wait_events.current_wait_time_ms:
-      enabled: true
-  events:
-    newrelicoracledb.execution_plan:
       enabled: true
   resource_attributes:
     host.name:
@@ -773,6 +772,8 @@ none_set:
       enabled: false
     newrelicoracledb.disk.writes:
       enabled: false
+    newrelicoracledb.execution_plan:
+      enabled: false
     newrelicoracledb.global_name:
       enabled: false
     newrelicoracledb.hosting.info:
@@ -1311,9 +1312,6 @@ none_set:
       enabled: false
     newrelicoracledb.wait_events.current_wait_time_ms:
       enabled: false
-  events:
-    newrelicoracledb.execution_plan:
-      enabled: false
   resource_attributes:
     host.name:
       enabled: false
@@ -1325,13 +1323,9 @@ filter_set_include:
       enabled: true
       metrics_include:
         - regexp: ".*"
-      events_include:
-        - regexp: ".*"
     newrelicoracledb.instance.name:
       enabled: true
       metrics_include:
-        - regexp: ".*"
-      events_include:
         - regexp: ".*"
 filter_set_exclude:
   resource_attributes:
@@ -1339,11 +1333,7 @@ filter_set_exclude:
       enabled: true
       metrics_exclude:
         - strict: "host.name-val"
-      events_exclude:
-        - strict: "host.name-val"
     newrelicoracledb.instance.name:
       enabled: true
       metrics_exclude:
-        - strict: "newrelicoracledb.instance.name-val"
-      events_exclude:
         - strict: "newrelicoracledb.instance.name-val"

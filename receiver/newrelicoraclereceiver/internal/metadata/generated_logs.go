@@ -3,85 +3,18 @@
 package metadata
 
 import (
-	"context"
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/filter"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/plog"
 	"go.opentelemetry.io/collector/receiver"
-	"go.opentelemetry.io/otel/trace"
 )
-
-type eventNewrelicoracledbExecutionPlan struct {
-	data   plog.LogRecordSlice // data buffer for generated log records.
-	config EventConfig         // event config provided by user.
-}
-
-func (e *eventNewrelicoracledbExecutionPlan) recordEvent(ctx context.Context, timestamp pcommon.Timestamp, newrelicEventTypeAttributeValue string, queryIDAttributeValue string, planHashValueAttributeValue string, queryTextAttributeValue string, childNumberAttributeValue int64, planIDAttributeValue int64, parentIDAttributeValue int64, depthAttributeValue int64, operationAttributeValue string, optionsAttributeValue string, objectOwnerAttributeValue string, objectNameAttributeValue string, positionAttributeValue int64, costAttributeValue int64, cardinalityAttributeValue int64, bytesAttributeValue int64, cpuCostAttributeValue int64, ioCostAttributeValue int64, timestampAttributeValue string, planGeneratedTimestampAttributeValue string, tempSpaceAttributeValue int64, accessPredicatesAttributeValue string, projectionAttributeValue string, timeAttributeValue int64, filterPredicatesAttributeValue string) {
-	if !e.config.Enabled {
-		return
-	}
-	dp := e.data.AppendEmpty()
-	dp.SetEventName("newrelicoracledb.execution_plan")
-	dp.SetTimestamp(timestamp)
-
-	if span := trace.SpanContextFromContext(ctx); span.IsValid() {
-		dp.SetTraceID(pcommon.TraceID(span.TraceID()))
-		dp.SetSpanID(pcommon.SpanID(span.SpanID()))
-	}
-	dp.Attributes().PutStr("newrelic.event.type", newrelicEventTypeAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_hash_value", planHashValueAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
-	dp.Attributes().PutInt("child_number", childNumberAttributeValue)
-	dp.Attributes().PutInt("plan_id", planIDAttributeValue)
-	dp.Attributes().PutInt("parent_id", parentIDAttributeValue)
-	dp.Attributes().PutInt("depth", depthAttributeValue)
-	dp.Attributes().PutStr("operation", operationAttributeValue)
-	dp.Attributes().PutStr("options", optionsAttributeValue)
-	dp.Attributes().PutStr("object_owner", objectOwnerAttributeValue)
-	dp.Attributes().PutStr("object_name", objectNameAttributeValue)
-	dp.Attributes().PutInt("position", positionAttributeValue)
-	dp.Attributes().PutInt("cost", costAttributeValue)
-	dp.Attributes().PutInt("cardinality", cardinalityAttributeValue)
-	dp.Attributes().PutInt("bytes", bytesAttributeValue)
-	dp.Attributes().PutInt("cpu_cost", cpuCostAttributeValue)
-	dp.Attributes().PutInt("io_cost", ioCostAttributeValue)
-	dp.Attributes().PutStr("timestamp", timestampAttributeValue)
-	dp.Attributes().PutStr("plan_generated_timestamp", planGeneratedTimestampAttributeValue)
-	dp.Attributes().PutInt("temp_space", tempSpaceAttributeValue)
-	dp.Attributes().PutStr("access_predicates", accessPredicatesAttributeValue)
-	dp.Attributes().PutStr("projection", projectionAttributeValue)
-	dp.Attributes().PutInt("time", timeAttributeValue)
-	dp.Attributes().PutStr("filter_predicates", filterPredicatesAttributeValue)
-
-}
-
-// emit appends recorded event data to a events slice and prepares it for recording another set of log records.
-func (e *eventNewrelicoracledbExecutionPlan) emit(lrs plog.LogRecordSlice) {
-	if e.config.Enabled && e.data.Len() > 0 {
-		e.data.MoveAndAppendTo(lrs)
-	}
-}
-
-func newEventNewrelicoracledbExecutionPlan(cfg EventConfig) eventNewrelicoracledbExecutionPlan {
-	e := eventNewrelicoracledbExecutionPlan{config: cfg}
-	if cfg.Enabled {
-		e.data = plog.NewLogRecordSlice()
-	}
-	return e
-}
 
 // LogsBuilder provides an interface for scrapers to report logs while taking care of all the transformations
 // required to produce log representation defined in metadata and user config.
 type LogsBuilder struct {
-	config                             LogsBuilderConfig // config of the logs builder.
-	logsBuffer                         plog.Logs
-	logRecordsBuffer                   plog.LogRecordSlice
-	buildInfo                          component.BuildInfo // contains version information.
-	resourceAttributeIncludeFilter     map[string]filter.Filter
-	resourceAttributeExcludeFilter     map[string]filter.Filter
-	eventNewrelicoracledbExecutionPlan eventNewrelicoracledbExecutionPlan
+	logsBuffer       plog.Logs
+	logRecordsBuffer plog.LogRecordSlice
+	buildInfo        component.BuildInfo // contains version information.
 }
 
 // LogBuilderOption applies changes to default logs builder.
@@ -89,27 +22,11 @@ type LogBuilderOption interface {
 	apply(*LogsBuilder)
 }
 
-func NewLogsBuilder(lbc LogsBuilderConfig, settings receiver.Settings) *LogsBuilder {
+func NewLogsBuilder(settings receiver.Settings) *LogsBuilder {
 	lb := &LogsBuilder{
-		config:                             lbc,
-		logsBuffer:                         plog.NewLogs(),
-		logRecordsBuffer:                   plog.NewLogRecordSlice(),
-		buildInfo:                          settings.BuildInfo,
-		eventNewrelicoracledbExecutionPlan: newEventNewrelicoracledbExecutionPlan(lbc.Events.NewrelicoracledbExecutionPlan),
-		resourceAttributeIncludeFilter:     make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:     make(map[string]filter.Filter),
-	}
-	if lbc.ResourceAttributes.HostName.EventsInclude != nil {
-		lb.resourceAttributeIncludeFilter["host.name"] = filter.CreateFilter(lbc.ResourceAttributes.HostName.EventsInclude)
-	}
-	if lbc.ResourceAttributes.HostName.EventsExclude != nil {
-		lb.resourceAttributeExcludeFilter["host.name"] = filter.CreateFilter(lbc.ResourceAttributes.HostName.EventsExclude)
-	}
-	if lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsInclude != nil {
-		lb.resourceAttributeIncludeFilter["newrelicoracledb.instance.name"] = filter.CreateFilter(lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsInclude)
-	}
-	if lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsExclude != nil {
-		lb.resourceAttributeExcludeFilter["newrelicoracledb.instance.name"] = filter.CreateFilter(lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsExclude)
+		logsBuffer:       plog.NewLogs(),
+		logRecordsBuffer: plog.NewLogRecordSlice(),
+		buildInfo:        settings.BuildInfo,
 	}
 
 	return lb
@@ -117,7 +34,7 @@ func NewLogsBuilder(lbc LogsBuilderConfig, settings receiver.Settings) *LogsBuil
 
 // NewResourceBuilder returns a new resource builder that should be used to build a resource associated with for the emitted logs.
 func (lb *LogsBuilder) NewResourceBuilder() *ResourceBuilder {
-	return NewResourceBuilder(lb.config.ResourceAttributes)
+	return NewResourceBuilder(ResourceAttributesConfig{})
 }
 
 // ResourceLogsOption applies changes to provided resource logs.
@@ -154,7 +71,6 @@ func (lb *LogsBuilder) EmitForResource(options ...ResourceLogsOption) {
 	ils := rl.ScopeLogs().AppendEmpty()
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(lb.buildInfo.Version)
-	lb.eventNewrelicoracledbExecutionPlan.emit(ils.LogRecords())
 
 	for _, op := range options {
 		op.apply(rl)
@@ -163,17 +79,6 @@ func (lb *LogsBuilder) EmitForResource(options ...ResourceLogsOption) {
 	if lb.logRecordsBuffer.Len() > 0 {
 		lb.logRecordsBuffer.MoveAndAppendTo(ils.LogRecords())
 		lb.logRecordsBuffer = plog.NewLogRecordSlice()
-	}
-
-	for attr, filter := range lb.resourceAttributeIncludeFilter {
-		if val, ok := rl.Resource().Attributes().Get(attr); ok && !filter.Matches(val.AsString()) {
-			return
-		}
-	}
-	for attr, filter := range lb.resourceAttributeExcludeFilter {
-		if val, ok := rl.Resource().Attributes().Get(attr); ok && filter.Matches(val.AsString()) {
-			return
-		}
 	}
 
 	if ils.LogRecords().Len() > 0 {
@@ -189,9 +94,4 @@ func (lb *LogsBuilder) Emit(options ...ResourceLogsOption) plog.Logs {
 	logs := lb.logsBuffer
 	lb.logsBuffer = plog.NewLogs()
 	return logs
-}
-
-// RecordNewrelicoracledbExecutionPlanEvent adds a log record of newrelicoracledb.execution_plan event.
-func (lb *LogsBuilder) RecordNewrelicoracledbExecutionPlanEvent(ctx context.Context, timestamp pcommon.Timestamp, newrelicEventTypeAttributeValue string, queryIDAttributeValue string, planHashValueAttributeValue string, queryTextAttributeValue string, childNumberAttributeValue int64, planIDAttributeValue int64, parentIDAttributeValue int64, depthAttributeValue int64, operationAttributeValue string, optionsAttributeValue string, objectOwnerAttributeValue string, objectNameAttributeValue string, positionAttributeValue int64, costAttributeValue int64, cardinalityAttributeValue int64, bytesAttributeValue int64, cpuCostAttributeValue int64, ioCostAttributeValue int64, timestampAttributeValue string, planGeneratedTimestampAttributeValue string, tempSpaceAttributeValue int64, accessPredicatesAttributeValue string, projectionAttributeValue string, timeAttributeValue int64, filterPredicatesAttributeValue string) {
-	lb.eventNewrelicoracledbExecutionPlan.recordEvent(ctx, timestamp, newrelicEventTypeAttributeValue, queryIDAttributeValue, planHashValueAttributeValue, queryTextAttributeValue, childNumberAttributeValue, planIDAttributeValue, parentIDAttributeValue, depthAttributeValue, operationAttributeValue, optionsAttributeValue, objectOwnerAttributeValue, objectNameAttributeValue, positionAttributeValue, costAttributeValue, cardinalityAttributeValue, bytesAttributeValue, cpuCostAttributeValue, ioCostAttributeValue, timestampAttributeValue, planGeneratedTimestampAttributeValue, tempSpaceAttributeValue, accessPredicatesAttributeValue, projectionAttributeValue, timeAttributeValue, filterPredicatesAttributeValue)
 }

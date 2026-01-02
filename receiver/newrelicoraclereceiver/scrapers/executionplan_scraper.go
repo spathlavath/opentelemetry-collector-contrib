@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"sync"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -18,19 +19,29 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
-type ExecutionPlanScraper struct {
-	client            client.OracleClient
-	lb                *metadata.LogsBuilder
-	logger            *zap.Logger
-	logsBuilderConfig metadata.LogsBuilderConfig
+// sqlIdentifierCacheEntry stores when a SQL identifier was last scraped
+type sqlIdentifierCacheEntry struct {
+	lastScraped time.Time
 }
 
-func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
+type ExecutionPlanScraper struct {
+	client               client.OracleClient
+	mb                   *metadata.MetricsBuilder
+	logger               *zap.Logger
+	metricsBuilderConfig metadata.MetricsBuilderConfig
+	cache                map[string]*sqlIdentifierCacheEntry // key: "sql_id:child_number"
+	cacheMutex           sync.RWMutex
+	cacheTTL             time.Duration
+}
+
+func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
-		client:            oracleClient,
-		lb:                lb,
-		logger:            logger,
-		logsBuilderConfig: logsBuilderConfig,
+		client:               oracleClient,
+		mb:                   mb,
+		logger:               logger,
+		metricsBuilderConfig: metricsBuilderConfig,
+		cache:                make(map[string]*sqlIdentifierCacheEntry),
+		cacheTTL:             10 * time.Minute, // 10-minute window
 	}
 }
 
@@ -41,13 +52,47 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		return errs
 	}
 
+	now := time.Now()
+
+	// Filter out cached SQL identifiers (already scraped within TTL window)
+	var newIdentifiers []models.SQLIdentifier
+	var skippedCount int
+
+	s.cacheMutex.RLock()
+	for _, identifier := range sqlIdentifiers {
+		cacheKey := s.getCacheKey(identifier.SQLID, identifier.ChildNumber)
+		if entry, exists := s.cache[cacheKey]; exists {
+			// Check if entry is still within TTL window
+			if now.Sub(entry.lastScraped) < s.cacheTTL {
+				skippedCount++
+				s.logger.Debug("Skipping cached SQL identifier",
+					zap.String("sql_id", identifier.SQLID),
+					zap.Int64("child_number", identifier.ChildNumber),
+					zap.Duration("age", now.Sub(entry.lastScraped)))
+				continue
+			}
+		}
+		newIdentifiers = append(newIdentifiers, identifier)
+	}
+	s.cacheMutex.RUnlock()
+
+	s.logger.Info("Execution plan cache filtering",
+		zap.Int("total_identifiers", len(sqlIdentifiers)),
+		zap.Int("cached_skipped", skippedCount),
+		zap.Int("new_to_scrape", len(newIdentifiers)))
+
+	if len(newIdentifiers) == 0 {
+		s.logger.Debug("All SQL identifiers are cached, skipping execution plan scraping")
+		return errs
+	}
+
 	// Single timeout context for all queries to prevent excessive total runtime
 	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
 	totalTimeout := 30 * time.Second // Adjust based on your needs
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, identifier := range sqlIdentifiers {
+	for _, identifier := range newIdentifiers {
 		// Check if context is already cancelled/timed out before proceeding
 		select {
 		case <-queryCtx.Done():
@@ -57,23 +102,22 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			// Continue processing
 		}
 
-		// Query execution plan for specific SQL_ID and CHILD_NUMBER
 		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
 			continue // Skip this identifier but continue processing others
 		}
-		s.logger.Debug("Retrieved execution plan rows")
 
 		successCount := 0
 		for _, row := range planRows {
 			if !row.SQLID.Valid || row.SQLID.String == "" {
+				s.logger.Debug("Skipping row with invalid SQL_ID")
 				continue
 			}
 
 			// Pass the timestamp from the identifier (when the query was captured)
-			if err := s.buildExecutionPlanLogs(&row, identifier.Timestamp); err != nil {
-				s.logger.Warn("Failed to build logs for execution plan row",
+			if err := s.buildExecutionPlanMetrics(&row, identifier.Timestamp); err != nil {
+				s.logger.Warn("Failed to build metrics for execution plan row",
 					zap.String("sql_id", row.SQLID.String),
 					zap.Error(err))
 				errs = append(errs, err)
@@ -82,16 +126,26 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 		}
 
-		s.logger.Debug("Scraped execution plan rows")
+		// Add to cache after successful scraping
+		cacheKey := s.getCacheKey(identifier.SQLID, identifier.ChildNumber)
+		s.cacheMutex.Lock()
+		s.cache[cacheKey] = &sqlIdentifierCacheEntry{
+			lastScraped: now,
+		}
+		s.cacheMutex.Unlock()
+
+		s.logger.Info("Scraped execution plan rows for SQL_ID")
 	}
+
+	// Clean up stale cache entries (older than TTL)
+	s.cleanupCache(now)
 
 	return errs
 }
 
-// buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
-
-func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
-	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+// buildExecutionPlanMetrics converts an execution plan row to a metric data point with all attributes.
+func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
+	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
 	}
 
@@ -105,8 +159,6 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	if row.PlanHashValue.Valid {
 		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
 	}
-
-	queryText := "" // Empty for now, should be provided by caller
 
 	childNumber := int64(-1)
 	if row.ChildNumber.Valid {
@@ -211,14 +263,11 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		filterPredicates = commonutils.AnonymizeAndNormalize(row.FilterPredicates.String)
 	}
 
-	// Record the event with all attributes
-	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
-		context.Background(),
+	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),
-		"OracleExecutionPlan",
+		int64(1), // Value of 1 to indicate this execution plan step exists
 		queryID,
 		planHashValue,
-		queryText,
 		childNumber,
 		planID,
 		parentID,
@@ -266,4 +315,32 @@ func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
 	}
 
 	return result
+}
+
+// getCacheKey generates a unique cache key for a SQL identifier
+func (s *ExecutionPlanScraper) getCacheKey(sqlID string, childNumber int64) string {
+	return fmt.Sprintf("%s:%d", sqlID, childNumber)
+}
+
+// cleanupCache removes stale entries from the cache (older than TTL)
+func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
+	s.cacheMutex.Lock()
+	defer s.cacheMutex.Unlock()
+
+	var keysToDelete []string
+	for key, entry := range s.cache {
+		if now.Sub(entry.lastScraped) >= s.cacheTTL {
+			keysToDelete = append(keysToDelete, key)
+		}
+	}
+
+	for _, key := range keysToDelete {
+		delete(s.cache, key)
+	}
+
+	if len(keysToDelete) > 0 {
+		s.logger.Debug("Cleaned up stale cache entries",
+			zap.Int("removed_entries", len(keysToDelete)),
+			zap.Int("remaining_entries", len(s.cache)))
+	}
 }
