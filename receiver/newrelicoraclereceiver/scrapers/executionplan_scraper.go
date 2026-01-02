@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"sync"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -18,11 +19,19 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
+// sqlIdentifierCacheEntry stores when a SQL identifier was last scraped
+type sqlIdentifierCacheEntry struct {
+	lastScraped time.Time
+}
+
 type ExecutionPlanScraper struct {
 	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
 	metricsBuilderConfig metadata.MetricsBuilderConfig
+	cache                map[string]*sqlIdentifierCacheEntry // key: "sql_id:child_number"
+	cacheMutex           sync.RWMutex
+	cacheTTL             time.Duration
 }
 
 func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
@@ -31,6 +40,8 @@ func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.Metr
 		mb:                   mb,
 		logger:               logger,
 		metricsBuilderConfig: metricsBuilderConfig,
+		cache:                make(map[string]*sqlIdentifierCacheEntry),
+		cacheTTL:             10 * time.Minute, // 10-minute window
 	}
 }
 
@@ -41,13 +52,47 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		return errs
 	}
 
+	now := time.Now()
+
+	// Filter out cached SQL identifiers (already scraped within TTL window)
+	var newIdentifiers []models.SQLIdentifier
+	var skippedCount int
+
+	s.cacheMutex.RLock()
+	for _, identifier := range sqlIdentifiers {
+		cacheKey := s.getCacheKey(identifier.SQLID, identifier.ChildNumber)
+		if entry, exists := s.cache[cacheKey]; exists {
+			// Check if entry is still within TTL window
+			if now.Sub(entry.lastScraped) < s.cacheTTL {
+				skippedCount++
+				s.logger.Debug("Skipping cached SQL identifier",
+					zap.String("sql_id", identifier.SQLID),
+					zap.Int64("child_number", identifier.ChildNumber),
+					zap.Duration("age", now.Sub(entry.lastScraped)))
+				continue
+			}
+		}
+		newIdentifiers = append(newIdentifiers, identifier)
+	}
+	s.cacheMutex.RUnlock()
+
+	s.logger.Info("Execution plan cache filtering",
+		zap.Int("total_identifiers", len(sqlIdentifiers)),
+		zap.Int("cached_skipped", skippedCount),
+		zap.Int("new_to_scrape", len(newIdentifiers)))
+
+	if len(newIdentifiers) == 0 {
+		s.logger.Debug("All SQL identifiers are cached, skipping execution plan scraping")
+		return errs
+	}
+
 	// Single timeout context for all queries to prevent excessive total runtime
 	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
 	totalTimeout := 30 * time.Second // Adjust based on your needs
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, identifier := range sqlIdentifiers {
+	for _, identifier := range newIdentifiers {
 		// Check if context is already cancelled/timed out before proceeding
 		select {
 		case <-queryCtx.Done():
@@ -95,12 +140,23 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 		}
 
+		// Add to cache after successful scraping
+		cacheKey := s.getCacheKey(identifier.SQLID, identifier.ChildNumber)
+		s.cacheMutex.Lock()
+		s.cache[cacheKey] = &sqlIdentifierCacheEntry{
+			lastScraped: now,
+		}
+		s.cacheMutex.Unlock()
+
 		s.logger.Info("Scraped execution plan rows for SQL_ID",
 			zap.String("sql_id", identifier.SQLID),
 			zap.Int64("child_number", identifier.ChildNumber),
 			zap.Int("total_rows", len(planRows)),
 			zap.Int("successful_metrics", successCount))
 	}
+
+	// Clean up stale cache entries (older than TTL)
+	s.cleanupCache(now)
 
 	return errs
 }
@@ -277,4 +333,32 @@ func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
 	}
 
 	return result
+}
+
+// getCacheKey generates a unique cache key for a SQL identifier
+func (s *ExecutionPlanScraper) getCacheKey(sqlID string, childNumber int64) string {
+	return fmt.Sprintf("%s:%d", sqlID, childNumber)
+}
+
+// cleanupCache removes stale entries from the cache (older than TTL)
+func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
+	s.cacheMutex.Lock()
+	defer s.cacheMutex.Unlock()
+
+	var keysToDelete []string
+	for key, entry := range s.cache {
+		if now.Sub(entry.lastScraped) >= s.cacheTTL {
+			keysToDelete = append(keysToDelete, key)
+		}
+	}
+
+	for _, key := range keysToDelete {
+		delete(s.cache, key)
+	}
+
+	if len(keysToDelete) > 0 {
+		s.logger.Debug("Cleaned up stale cache entries",
+			zap.Int("removed_entries", len(keysToDelete)),
+			zap.Int("remaining_entries", len(s.cache)))
+	}
 }
