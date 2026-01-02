@@ -57,12 +57,22 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		}
 
 		// Query execution plan for specific SQL_ID and CHILD_NUMBER
+		s.logger.Debug("Querying execution plan",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber))
+
 		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
+			s.logger.Error("Failed to query execution plan",
+				zap.String("sql_id", identifier.SQLID),
+				zap.Int64("child_number", identifier.ChildNumber),
+				zap.Error(err))
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
 			continue // Skip this identifier but continue processing others
 		}
-		s.logger.Debug("Retrieved execution plan rows")
+		s.logger.Debug("Retrieved execution plan rows",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int("row_count", len(planRows)))
 
 		successCount := 0
 		for _, row := range planRows {
@@ -207,7 +217,6 @@ func (s *ExecutionPlanScraper) recordExecutionPlanMetrics(row *models.ExecutionP
 	if cpuCost >= 0 {
 		metricValue = cpuCost
 	}
-
 
 	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),

@@ -312,7 +312,8 @@ func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan
 	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
 	if len(executionPlanErrs) > 0 {
 		s.logger.Warn("Errors occurred while scraping execution plans",
-			zap.Int("error_count", len(executionPlanErrs)))
+			zap.Int("error_count", len(executionPlanErrs)),
+			zap.Errors("errors", executionPlanErrs))
 		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
 	}
 
