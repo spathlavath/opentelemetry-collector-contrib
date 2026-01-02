@@ -278,8 +278,11 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
 	if len(waitEventSQLIdentifiers) > 0 {
-		s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
+		// Scrape execution plans first as separate metrics
 		s.executeExecutionPlans(ctx, errChan, waitEventSQLIdentifiers)
+
+		// Then scrape child cursors as separate metrics
+		s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
 	} else {
 		s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
 	}
@@ -299,6 +302,11 @@ func (s *newRelicOracleScraper) executeExecutionPlans(ctx context.Context, errCh
 	if len(executionPlanErrs) > 0 {
 		s.logger.Warn("Errors occurred while scraping execution plan metrics",
 			zap.Int("error_count", len(executionPlanErrs)))
+		for i, err := range executionPlanErrs {
+			s.logger.Warn("Execution plan error detail",
+				zap.Int("error_index", i),
+				zap.Error(err))
+		}
 		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
 	}
 
@@ -321,6 +329,11 @@ func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan
 	if len(childCursorErrs) > 0 {
 		s.logger.Warn("Errors occurred while scraping child cursor metrics",
 			zap.Int("error_count", len(childCursorErrs)))
+		for i, err := range childCursorErrs {
+			s.logger.Warn("Child cursor error detail",
+				zap.Int("error_index", i),
+				zap.Error(err))
+		}
 		s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
 	}
 

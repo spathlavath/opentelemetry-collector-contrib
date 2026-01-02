@@ -58,16 +58,29 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		}
 
 		// Query execution plan for specific SQL_ID and CHILD_NUMBER
+		s.logger.Debug("Querying execution plan",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber))
+
 		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
+			s.logger.Warn("Failed to query execution plan",
+				zap.String("sql_id", identifier.SQLID),
+				zap.Int64("child_number", identifier.ChildNumber),
+				zap.Error(err))
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
 			continue // Skip this identifier but continue processing others
 		}
-		s.logger.Debug("Retrieved execution plan rows")
+
+		s.logger.Debug("Retrieved execution plan rows",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber),
+			zap.Int("row_count", len(planRows)))
 
 		successCount := 0
 		for _, row := range planRows {
 			if !row.SQLID.Valid || row.SQLID.String == "" {
+				s.logger.Debug("Skipping row with invalid SQL_ID")
 				continue
 			}
 
@@ -82,7 +95,11 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 		}
 
-		s.logger.Debug("Scraped execution plan rows")
+		s.logger.Info("Scraped execution plan rows for SQL_ID",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber),
+			zap.Int("total_rows", len(planRows)),
+			zap.Int("successful_metrics", successCount))
 	}
 
 	return errs
