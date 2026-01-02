@@ -40,17 +40,24 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		return errs
 	}
 
-	// Single timeout context for all queries to prevent excessive total runtime
-	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
-	totalTimeout := 30 * time.Second // Adjust based on your needs
+	// Timeout for all execution plan queries - allow more time for multiple queries
+	// Each query can take a few seconds, so budget accordingly
+	totalTimeout := 2 * time.Minute // Allow 2 minutes total for all execution plans
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, identifier := range sqlIdentifiers {
+	s.logger.Info("Starting execution plan scraping",
+		zap.Int("total_identifiers", len(sqlIdentifiers)),
+		zap.Duration("timeout", totalTimeout))
+
+	for i, identifier := range sqlIdentifiers {
 		// Check if context is already cancelled/timed out before proceeding
 		select {
 		case <-queryCtx.Done():
-			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
+			s.logger.Warn("Context timeout reached during execution plan scraping",
+				zap.Int("processed", i),
+				zap.Int("total", len(sqlIdentifiers)))
+			errs = append(errs, fmt.Errorf("context cancelled/timed out after processing %d of %d identifiers", i, len(sqlIdentifiers)))
 			return errs
 		default:
 			// Continue processing
@@ -58,6 +65,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 
 		// Query execution plan for specific SQL_ID and CHILD_NUMBER
 		s.logger.Debug("Querying execution plan",
+			zap.Int("progress", i+1),
+			zap.Int("total", len(sqlIdentifiers)),
 			zap.String("sql_id", identifier.SQLID),
 			zap.Int64("child_number", identifier.ChildNumber))
 
@@ -91,8 +100,14 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 		}
 
-		s.logger.Debug("Scraped execution plan rows")
+		s.logger.Debug("Scraped execution plan rows",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int("success_count", successCount))
 	}
+
+	s.logger.Info("Execution plan scraping completed",
+		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+		zap.Int("errors", len(errs)))
 
 	return errs
 }
