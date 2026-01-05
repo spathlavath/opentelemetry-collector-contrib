@@ -19,12 +19,6 @@ service:
       receivers: [newrelicsqlserver]
       processors: [memory_limiter, batch, resource]
       exporters: [otlphttp, debug]
-    
-    # Logs pipeline: receiver -> processor -> exporter (for execution plans)
-    logs:
-      receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch, resource]
-      exporters: [otlphttp/logs, debug]
   
   # Telemetry configuration for the collector itself
   telemetry:
@@ -143,43 +137,10 @@ exporters:
     # Timeout for HTTP requests
     timeout: 30s
   
-  # New Relic OTLP HTTP Exporter for Logs (Execution Plans)
-  otlphttp/logs:
-    # New Relic OTLP logs endpoint (HTTP uses port 4318, not 4317)
-    endpoint: "https://staging-otlp.nr-data.net:4318"
-    
-    # Headers for authentication
-    headers:
-      # ⚠️  REPLACE WITH YOUR ACTUAL NEW RELIC LICENSE KEY ⚠️
-      api-key: ""
-    
-    # TLS configuration
-    tls:
-      insecure: false
-    
-    # Retry configuration
-    retry_on_failure:
-      enabled: true
-      initial_interval: 1s
-      max_interval: 30s
-      max_elapsed_time: 300s
-    
-    # Queue configuration for handling bursts
-    sending_queue:
-      enabled: true
-      num_consumers: 2
-      queue_size: 100
-    
-    # Compression (gzip is recommended)
-    compression: gzip
-    
-    # Timeout for HTTP requests
-    timeout: 30s
-  
   # Debug exporter for debugging (outputs to console)
   debug:
     verbosity: detailed
-    # Output ALL metrics and logs without sampling for troubleshooting
+    # Output ALL metrics without sampling for troubleshooting
     sampling_initial: 10000  # Increased to capture more initial data
     sampling_thereafter: 10000  # Increased to see all metrics continuously
 

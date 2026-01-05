@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/plog"
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
@@ -128,10 +127,10 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 	return nil
 }
 
-// EmitActiveRunningExecutionPlansAsLogs fetches execution plans for active queries and emits as OTLP logs
-// This is called from ScrapeLogs to emit execution plans with slow query correlation
+// EmitActiveRunningExecutionPlansAsMetrics fetches execution plans for active queries and emits as metrics
+// This is called from scrape() to emit execution plans with slow query correlation
 // Uses plan_handle from slow queries instead of active query plan_handle
-func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx context.Context, logs plog.Logs, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
+func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsMetrics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
 	if len(activeQueries) == 0 {
 		s.logger.Info("No active queries to fetch execution plans for")
 		return nil
@@ -205,10 +204,10 @@ func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx cont
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Int("xml_length", len(executionPlanXML)))
 
-		// Parse and emit execution plan as logs (pass the slow query plan_handle we used to fetch XML)
-		if err := s.parseAndEmitExecutionPlanAsLogs(ctx, result, executionPlanXML, planHandle, logs); err != nil {
+		// Parse and emit execution plan as metrics (pass the slow query plan_handle we used to fetch XML)
+		if err := s.parseAndEmitExecutionPlanAsMetrics(ctx, result, executionPlanXML, planHandle); err != nil {
 			errorCount++
-			s.logger.Error("Failed to parse and emit execution plan as logs",
+			s.logger.Error("Failed to parse and emit execution plan as metrics",
 				zap.Error(err),
 				zap.Any("session_id", result.CurrentSessionID),
 				zap.Int("index", i))
@@ -1063,14 +1062,13 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, pla
 	return *results[0].ExecutionPlanXML, nil
 }
 
-// parseAndEmitExecutionPlanAsLogs parses execution plan XML and emits as OTLP logs
-// Converts XML execution plan to custom events using attributes (not JSON body)
-func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
+// parseAndEmitExecutionPlanAsMetrics parses execution plan XML and emits as metrics
+// Emits one metric per operator node
+func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsMetrics(
 	ctx context.Context,
 	activeQuery models.ActiveRunningQuery,
 	executionPlanXML string,
 	slowQueryPlanHandle *models.QueryID,
-	logs plog.Logs,
 ) error {
 	// Build execution plan analysis with metadata
 	var queryID string
@@ -1091,100 +1089,85 @@ func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
 		return fmt.Errorf("failed to parse execution plan XML: %w", err)
 	}
 
-	// Emit as OTLP logs
-	resourceLogs := logs.ResourceLogs().AppendEmpty()
-	scopeLogs := resourceLogs.ScopeLogs().AppendEmpty()
-
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Emit one log record per operator node using ATTRIBUTES (not JSON body)
+	// Emit one metric per operator node
 	for i := range analysis.Nodes {
 		node := &analysis.Nodes[i]
-		logRecord := scopeLogs.LogRecords().AppendEmpty()
-		logRecord.SetTimestamp(timestamp)
-		logRecord.SetObservedTimestamp(timestamp)
-		logRecord.SetSeverityNumber(plog.SeverityNumberInfo)
-		logRecord.SetSeverityText("INFO")
 
-		// Set body as simple string (not JSON)
-		logRecord.Body().SetStr(fmt.Sprintf("Execution Plan Node: %s (NodeID=%d, Parent=%d)",
-			node.PhysicalOp, node.NodeID, node.ParentNodeID))
-
-		// Set ALL fields as ATTRIBUTES (this is what makes it a proper custom event)
-		attrs := logRecord.Attributes()
-
-		// IMPORTANT: Signal New Relic to ingest this as a Custom Event
-		attrs.PutStr("newrelic.event.type", "SqlServerActiveQueryExecutionPlan")
-
-		// Correlation keys
-		attrs.PutStr("query_id", node.QueryID)
-		attrs.PutStr("plan_handle", node.PlanHandle)
-		if activeQuery.CurrentSessionID != nil {
-			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
+		// Helper functions for safe attribute extraction
+		getQueryID := func() string {
+			return node.QueryID
 		}
-		if activeQuery.RequestID != nil {
-			attrs.PutInt("request_id", *activeQuery.RequestID)
+		getPlanHandle := func() string {
+			return node.PlanHandle
 		}
-		if activeQuery.DatabaseName != nil {
-			attrs.PutStr("database_name", *activeQuery.DatabaseName)
+		getSessionID := func() int64 {
+			if activeQuery.CurrentSessionID != nil {
+				return *activeQuery.CurrentSessionID
+			}
+			return 0
 		}
-		if activeQuery.RequestStartTime != nil {
-			attrs.PutStr("start_time", *activeQuery.RequestStartTime)
+		getRequestID := func() int64 {
+			if activeQuery.RequestID != nil {
+				return *activeQuery.RequestID
+			}
+			return 0
 		}
-
-		// Node structure
-		attrs.PutInt("node_id", int64(node.NodeID))
-		attrs.PutInt("parent_node_id", int64(node.ParentNodeID))
-		attrs.PutStr("input_type", node.InputType)
-
-		// Operator information
-		attrs.PutStr("physical_op", node.PhysicalOp)
-		attrs.PutStr("logical_op", node.LogicalOp)
-		attrs.PutStr("sql_text", node.SQLText)
-
-		// Object information (for Index Scan/Seek operators)
-		if node.SchemaName != "" {
-			attrs.PutStr("schema_name", node.SchemaName)
+		getDatabaseName := func() string {
+			if activeQuery.DatabaseName != nil {
+				return *activeQuery.DatabaseName
+			}
+			return ""
 		}
-		if node.TableName != "" {
-			attrs.PutStr("table_name", node.TableName)
-		}
-		if node.IndexName != "" {
-			attrs.PutStr("index_name", node.IndexName)
-		}
-		if node.ReferencedColumns != "" {
-			attrs.PutStr("referenced_columns", node.ReferencedColumns)
+		getStartTime := func() string {
+			if activeQuery.RequestStartTime != nil {
+				return *activeQuery.RequestStartTime
+			}
+			return ""
 		}
 
-		// Cost estimates
-		attrs.PutDouble("estimate_rows", node.EstimateRows)
-		attrs.PutDouble("estimate_io", node.EstimateIO)
-		attrs.PutDouble("estimate_cpu", node.EstimateCPU)
-		attrs.PutDouble("avg_row_size", node.AvgRowSize)
-		attrs.PutDouble("total_subtree_cost", node.TotalSubtreeCost)
-		attrs.PutDouble("estimated_operator_cost", node.EstimatedOperatorCost)
-
-		// Execution details
-		attrs.PutStr("estimated_execution_mode", node.EstimatedExecutionMode)
-		attrs.PutInt("granted_memory_kb", node.GrantedMemoryKb)
-		attrs.PutBool("spill_occurred", node.SpillOccurred)
-		attrs.PutBool("no_join_predicate", node.NoJoinPredicate)
-
-		// Performance metrics
-		attrs.PutDouble("total_worker_time", node.TotalWorkerTime)
-		attrs.PutDouble("total_elapsed_time", node.TotalElapsedTime)
-		attrs.PutInt("total_logical_reads", node.TotalLogicalReads)
-		attrs.PutInt("total_logical_writes", node.TotalLogicalWrites)
-		attrs.PutInt("execution_count", node.ExecutionCount)
-		attrs.PutDouble("avg_elapsed_time_ms", node.AvgElapsedTimeMs)
-
-		// Timestamps
-		if node.LastExecutionTime != "" {
-			attrs.PutStr("last_execution_time", node.LastExecutionTime)
-		}
+		// Emit the metric with all operator details
+		s.mb.RecordSqlserverExecutionPlanOperatorDataPoint(
+			timestamp,
+			1, // Value is always 1, this is a dimensional metric
+			getQueryID(),
+			getPlanHandle(),
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getStartTime(),
+			int64(node.NodeID),
+			int64(node.ParentNodeID),
+			node.InputType,
+			node.PhysicalOp,
+			node.LogicalOp,
+			node.SQLText,
+			node.SchemaName,
+			node.TableName,
+			node.IndexName,
+			node.ReferencedColumns,
+			node.EstimateRows,
+			node.EstimateIO,
+			node.EstimateCPU,
+			node.AvgRowSize,
+			node.TotalSubtreeCost,
+			node.EstimatedOperatorCost,
+			node.EstimatedExecutionMode,
+			node.GrantedMemoryKb,
+			node.SpillOccurred,
+			node.NoJoinPredicate,
+			node.TotalWorkerTime,
+			node.TotalElapsedTime,
+			node.TotalLogicalReads,
+			node.TotalLogicalWrites,
+			int64(node.ExecutionCount),
+			node.AvgElapsedTimeMs,
+			node.LastExecutionTime,
+		)
 	}
 
-	s.logger.Info("Emitted execution plan as OTLP logs with attributes",
+	s.logger.Info("Emitted execution plan as metrics",
 		zap.String("query_id", queryID),
 		zap.String("plan_handle", planHandle),
 		zap.Int("operator_count", len(analysis.Nodes)))

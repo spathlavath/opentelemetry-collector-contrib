@@ -918,6 +918,51 @@ metrics:
       value_type: int
     attributes: [metric_source, engine_edition, engine_edition_id]
 
+  sqlserver.execution_plan_operator:
+    enabled: true
+    stability:
+      level: alpha
+    description: SQL Server execution plan operator details
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes:
+      [
+        query_id,
+        plan_handle,
+        session_id,
+        request_id,
+        database_name,
+        start_time,
+        node_id,
+        parent_node_id,
+        input_type,
+        physical_op,
+        logical_op,
+        sql_text,
+        schema_name,
+        table_name,
+        index_name,
+        referenced_columns,
+        estimate_rows,
+        estimate_io,
+        estimate_cpu,
+        avg_row_size,
+        total_subtree_cost,
+        estimated_operator_cost,
+        estimated_execution_mode,
+        granted_memory_kb,
+        spill_occurred,
+        no_join_predicate,
+        total_worker_time,
+        total_elapsed_time,
+        total_logical_reads,
+        total_logical_writes,
+        execution_count,
+        avg_elapsed_time_ms,
+        last_execution_time,
+      ]
+
   # Instance Memory Metrics
   sqlserver.failover_cluster.ag_cluster_type:
     enabled: true
@@ -2498,6 +2543,9 @@ attributes:
     type: bool
   sql_hostname:
     description: SQL Server hostname
+    type: string
+  sql_text:
+    description: SQL query text (anonymized)
     type: string
   start_time:
     description: Event start time
