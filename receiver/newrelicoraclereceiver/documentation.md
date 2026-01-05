@@ -14,7 +14,7 @@ metrics:
 
 ### newrelicoracledb.asm.diskgroup.free_mb
 
- 
+Available free space in the ASM disk group in MB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -24,12 +24,12 @@ metrics:
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| diskgroup.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
 
 ### newrelicoracledb.asm.diskgroup.offline_disks
 
- 
+Number of offline disks in the ASM disk group
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -39,12 +39,12 @@ metrics:
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| diskgroup.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
 
 ### newrelicoracledb.asm.diskgroup.total_mb
 
- 
+Total capacity of the ASM disk group in MB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -54,12 +54,12 @@ metrics:
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| diskgroup.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | false |
 
 ### newrelicoracledb.blocking_queries.wait_time_ms
 
- 
+Wait time in milliseconds for blocked queries
 
 Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
 Collected alongside wait events in a single optimized query from v$session.
@@ -77,33 +77,33 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| user_name |   | Any Str | false |
-| session_id |   | Any Str | false |
-| session_serial |   | Any Int | false |
-| session_state |   | Any Str | false |
-| query_id |   | Any Str | false |
-| sql_child_number |   | Any Int | false |
-| sql_exec_id |   | Any Int | false |
-| sql_exec_start |   | Any Str | false |
-| wait_event_name |   | Any Str | false |
-| wait_category |   | Any Str | false |
-| wait_object_name |   | Any Str | false |
-| wait_object_owner |   | Any Str | false |
-| wait_object_type |   | Any Str | false |
-| blocking_session_status |   | Any Str | false |
-| immediate_blocker_sid |   | Any Str | false |
-| final_blocking_session_status |   | Any Str | false |
-| final_blocker_user |   | Any Str | false |
-| final_blocker_sid |   | Any Str | false |
-| final_blocker_serial |   | Any Str | false |
-| final_blocker_query_id |   | Any Str | false |
-| final_blocker_query_text |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
+| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
+| wait_object_name | Name of the database object being waited on | Any Str | false |
+| wait_object_owner | Owner of the database object being waited on | Any Str | false |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
+| blocking_session_status | Status of the blocking session (VALID, NO HOLDER, etc.) | Any Str | false |
+| immediate_blocker_sid | Session ID of the immediate blocking session (not necessarily the root cause) | Any Str | false |
+| final_blocking_session_status | Status of the final blocking session (VALID, NO HOLDER, etc.) | Any Str | false |
+| final_blocker_user | Username of the final blocking session (root cause) | Any Str | false |
+| final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | false |
+| final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |
+| final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | false |
+| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | false |
 
 ### newrelicoracledb.child_cursors.buffer_gets
 
- 
+Average number of buffer gets per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -113,15 +113,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.cpu_time
 
- 
+Average CPU time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -131,15 +131,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.details
 
- 
+Child cursor details including load times
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -149,17 +149,17 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
-| first_load_time |   | Any Str | false |
-| last_load_time |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
+| last_load_time | Time at which the query plan was loaded into the library cache | Any Str | false |
 
 ### newrelicoracledb.child_cursors.disk_reads
 
- 
+Average number of disk reads per execution for this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -169,15 +169,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.elapsed_time
 
- 
+Average elapsed time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -187,15 +187,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.executions
 
- 
+Total number of executions of this child cursor
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -205,15 +205,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.invalidations
 
- 
+Number of times this child cursor was invalidated
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -223,15 +223,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.child_cursors.user_io_wait_time
 
- 
+Average user I/O wait time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -241,15 +241,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| child_number |   | Any Int | false |
-| plan_hash_value |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ### newrelicoracledb.connection.active_sessions
 
- 
+Number of active Oracle database sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -259,11 +259,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.blocking_sessions
 
- 
+Sessions blocked by other sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -273,16 +273,16 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.id |   | Any Str | false |
-| blocking.session.id |   | Any Str | false |
-| username |   | Any Str | false |
-| wait.event |   | Any Str | false |
-| program |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.id | Oracle session identifier (SID) | Any Str | false |
+| blocking.session.id | Oracle blocking session identifier | Any Str | false |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
+| program | Program or application name | Any Str | false |
 
 ### newrelicoracledb.connection.bytes_received
 
- 
+Bytes received via SQL*Net from client
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -292,11 +292,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.bytes_sent
 
- 
+Bytes sent via SQL*Net to client
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -306,11 +306,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.circuits
 
- 
+Number of active circuits
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -320,11 +320,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.dispatchers
 
- 
+Number of dispatchers
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -334,11 +334,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.execute_count
 
- 
+Number of SQL executions
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -348,11 +348,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.inactive_sessions
 
- 
+Number of inactive Oracle database sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -362,11 +362,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.logons_cumulative
 
- 
+Cumulative number of logons since instance startup
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -376,11 +376,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.logons_current
 
- 
+Current number of active logons
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -390,11 +390,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.parse_count_hard
 
- 
+Number of hard parse calls
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -404,11 +404,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.parse_count_total
 
- 
+Total number of parse calls
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -418,11 +418,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.resource_current_utilization
 
- 
+Current utilization of Oracle resources
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -432,12 +432,12 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| resource.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| resource.name | Oracle resource name | Any Str | false |
 
 ### newrelicoracledb.connection.resource_limit
 
- 
+Limit value for Oracle resources
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -447,12 +447,12 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| resource.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| resource.name | Oracle resource name | Any Str | false |
 
 ### newrelicoracledb.connection.resource_max_utilization
 
- 
+Maximum utilization of Oracle resources since startup
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -462,12 +462,12 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| resource.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| resource.name | Oracle resource name | Any Str | false |
 
 ### newrelicoracledb.connection.session_cpu_usage
 
- 
+CPU usage by session in seconds
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -477,15 +477,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.id |   | Any Str | false |
-| username |   | Any Str | false |
-| session.status |   | Any Str | false |
-| program |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.id | Oracle session identifier (SID) | Any Str | false |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| program | Program or application name | Any Str | false |
 
 ### newrelicoracledb.connection.session_idle_time
 
- 
+Session idle time in seconds
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -495,15 +495,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.id |   | Any Str | false |
-| username |   | Any Str | false |
-| session.status |   | Any Str | false |
-| program |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.id | Oracle session identifier (SID) | Any Str | false |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| program | Program or application name | Any Str | false |
 
 ### newrelicoracledb.connection.session_logical_reads
 
- 
+Logical reads by session
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -513,15 +513,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.id |   | Any Str | false |
-| username |   | Any Str | false |
-| session.status |   | Any Str | false |
-| program |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.id | Oracle session identifier (SID) | Any Str | false |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| program | Program or application name | Any Str | false |
 
 ### newrelicoracledb.connection.session_pga_memory
 
- 
+PGA memory usage by session
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -531,15 +531,15 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.id |   | Any Str | false |
-| username |   | Any Str | false |
-| session.status |   | Any Str | false |
-| program |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.id | Oracle session identifier (SID) | Any Str | false |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| program | Program or application name | Any Str | false |
 
 ### newrelicoracledb.connection.sessions_by_status
 
- 
+Number of sessions grouped by status
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -549,12 +549,12 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.status |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 
 ### newrelicoracledb.connection.sessions_by_type
 
- 
+Number of sessions grouped by type
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -564,12 +564,12 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.type |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.type | Oracle session type (USER, BACKGROUND, etc.) | Any Str | false |
 
 ### newrelicoracledb.connection.shared_servers
 
- 
+Number of shared servers
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -579,11 +579,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.sqlnet_roundtrips
 
- 
+Number of SQL*Net roundtrips to/from client
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -593,11 +593,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.total_sessions
 
- 
+Total number of Oracle database sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -607,11 +607,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.user_commits
 
- 
+Number of user commits
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -621,11 +621,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.user_rollbacks
 
- 
+Number of user rollbacks
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -635,11 +635,11 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.connection.wait_event_avg_wait_time
 
- 
+Average wait time for each wait event
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -649,13 +649,13 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| wait.event |   | Any Str | false |
-| wait.class |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
+| wait.class | Oracle wait event class | Any Str | false |
 
 ### newrelicoracledb.connection.wait_event_time_waited
 
- 
+Total time waited for each wait event
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -665,13 +665,13 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| wait.event |   | Any Str | false |
-| wait.class |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
+| wait.class | Oracle wait event class | Any Str | false |
 
 ### newrelicoracledb.connection.wait_event_total_waits
 
- 
+Total number of waits for each wait event
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
@@ -681,13 +681,13 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| wait.event |   | Any Str | false |
-| wait.class |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
+| wait.class | Oracle wait event class | Any Str | false |
 
 ### newrelicoracledb.connection.wait_events
 
- 
+Current wait events and wait time
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -697,16 +697,16 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| session.id |   | Any Str | false |
-| username |   | Any Str | false |
-| wait.event |   | Any Str | false |
-| wait.state |   | Any Str | false |
-| wait.class |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| session.id | Oracle session identifier (SID) | Any Str | false |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
+| wait.state | Oracle wait event state | Any Str | false |
+| wait.class | Oracle wait event class | Any Str | false |
 
 ### newrelicoracledb.container.restricted
 
- 
+Oracle container restricted status (1=YES, 0=NO)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -716,14 +716,14 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| container.name |   | Any Str | false |
-| restricted.status |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| container.name | Oracle container name | Any Str | false |
+| restricted.status | Oracle container restricted status (YES, NO) | Any Str | false |
 
 ### newrelicoracledb.container.status
 
- 
+Oracle container status (1=READ WRITE, 0=other)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -733,14 +733,14 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| container.name |   | Any Str | false |
-| open.mode |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| container.name | Oracle container name | Any Str | false |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
 
 ### newrelicoracledb.database.info
 
- 
+Database version and configuration information
 
 Provides database version, edition, and configuration details following OpenTelemetry semantic conventions
 
@@ -752,15 +752,15 @@ Provides database version, edition, and configuration details following OpenTele
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| db.version |   | Any Str | false |
-| db.version.full |   | Any Str | false |
-| db.edition |   | Any Str | false |
-| db.compatible |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| db.version | The version of the database management system (DBMS) product | Any Str | false |
+| db.version.full | Full version string of the database including patch information | Any Str | false |
+| db.edition | Oracle database edition (Enterprise, Standard, Express) | Any Str | false |
+| db.compatible | Oracle database compatible parameter setting | Any Str | false |
 
 ### newrelicoracledb.database.role
 
- 
+Database role and Data Guard configuration
 
 Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY), open mode, and protection mode for Oracle Data Guard configurations
 
@@ -772,15 +772,15 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| db.role |   | Any Str | false |
-| db.open_mode |   | Any Str | false |
-| db.protection_mode |   | Any Str | false |
-| db.protection_level |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| db.role | Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY) | Any Str | false |
+| db.open_mode | Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.) | Any Str | false |
+| db.protection_mode | Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE) | Any Str | false |
+| db.protection_level | Oracle Data Guard protection level | Any Str | false |
 
 ### newrelicoracledb.datafile.autoextensible
 
- 
+Data file autoextensible status (1=YES, 0=NO)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -790,15 +790,15 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
-| file.name |   | Any Str | false |
-| container.status |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| file.name | Oracle data file name | Any Str | false |
+| container.status | Oracle container status (NORMAL, RESTRICTED, etc.) | Any Str | false |
 
 ### newrelicoracledb.datafile.size_bytes
 
- 
+Size of data file in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -808,14 +808,14 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
-| file.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| file.name | Oracle data file name | Any Str | false |
 
 ### newrelicoracledb.datafile.used_bytes
 
- 
+Used bytes in data file
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -825,14 +825,14 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
-| file.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| file.name | Oracle data file name | Any Str | false |
 
 ### newrelicoracledb.db_id
 
- 
+Oracle database ID information
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -842,12 +842,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| db.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| db.id | Oracle database ID | Any Str | false |
 
 ### newrelicoracledb.disk.blocks_read
 
- 
+Number of physical blocks read from disk
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -857,12 +857,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.blocks_written
 
- 
+Number of physical blocks written to disk
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -872,12 +872,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.read_time_milliseconds
 
- 
+Time spent reading from disk in milliseconds
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -887,12 +887,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.reads
 
- 
+Number of physical disk reads
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -902,12 +902,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.write_time_milliseconds
 
- 
+Time spent writing to disk in milliseconds
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -917,12 +917,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.disk.writes
 
- 
+Number of physical disk writes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -932,12 +932,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.global_name
 
- 
+Oracle database global name information
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -947,12 +947,12 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| global.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| global.name | Oracle database global name | Any Str | false |
 
 ### newrelicoracledb.hosting.info
 
- 
+Database hosting and platform information
 
 Provides information about the host architecture and operating system platform
 
@@ -964,13 +964,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| host.arch |   | Any Str | false |
-| platform.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| host.arch | The CPU architecture the host system is running on | Any Str | false |
+| platform.name | Operating system platform name | Any Str | false |
 
 ### newrelicoracledb.locked_accounts
 
- 
+Count of locked user accounts in the database
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -980,12 +980,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.long_running_queries
 
- 
+Number of long running queries (active sessions running for more than 60 seconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -995,12 +995,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_allocated_bytes
 
- 
+Total PGA memory allocated in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1010,12 +1010,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_freeable_bytes
 
- 
+Total freeable PGA memory in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1025,12 +1025,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_in_use_bytes
 
- 
+Total PGA memory currently in use in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1040,12 +1040,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_max_size_bytes
 
- 
+Global memory bound for PGA in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1055,12 +1055,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes
 
- 
+SGA shared pool library cache sharable memory in bytes for statements with more than 5 executions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1070,12 +1070,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes
 
- 
+SGA shared pool library cache shareable memory per user in bytes (250 * users_opening)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1085,12 +1085,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.sga_uga_total_bytes
 
- 
+Total SGA UGA memory in bytes (session uga memory max)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1100,12 +1100,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.pdb.active_parallel_sessions
 
- 
+Number of active parallel sessions in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1115,13 +1115,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.active_serial_sessions
 
- 
+Number of active serial sessions in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1131,13 +1131,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.average_active_sessions
 
- 
+Average number of active sessions in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1147,13 +1147,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.background_cpu_usage_per_second
 
- 
+Background CPU usage per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1163,13 +1163,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.background_time_per_second
 
- 
+Background time per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1179,13 +1179,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.block_changes_per_second
 
- 
+DB block changes per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1195,13 +1195,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.block_changes_per_transaction
 
- 
+DB block changes per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1211,13 +1211,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_time_ratio
 
- 
+Database CPU time ratio in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1227,13 +1227,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_usage_per_second
 
- 
+CPU usage per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1243,13 +1243,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.cpu_usage_per_transaction
 
- 
+CPU usage per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1259,13 +1259,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.current_logons
 
- 
+Current number of logons in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1275,13 +1275,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.current_open_cursors
 
- 
+Current number of open cursors in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1291,13 +1291,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_read_bytes_per_second
 
- 
+Physical read bytes per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1307,13 +1307,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_reads_per_second
 
- 
+Physical reads per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1323,13 +1323,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_write_bytes_per_second
 
- 
+Physical write bytes per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1339,13 +1339,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.db_physical_writes_per_second
 
- 
+Physical writes per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1355,13 +1355,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.execute_without_parse_ratio
 
- 
+Execute without parse ratio in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1371,13 +1371,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.executions_per_second
 
- 
+Executions per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1387,13 +1387,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.executions_per_transaction
 
- 
+Executions per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1403,13 +1403,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_second
 
- 
+Hard parse count per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1419,13 +1419,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_transaction
 
- 
+Hard parse count per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1435,13 +1435,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logical_reads_per_second
 
- 
+Logical reads per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1451,13 +1451,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logical_reads_per_transaction
 
- 
+Logical reads per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1467,13 +1467,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logons_per_second
 
- 
+Logons per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1483,13 +1483,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.logons_per_transaction
 
- 
+Logons per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1499,13 +1499,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.network_traffic_byte_per_second
 
- 
+Network traffic volume per second in bytes in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1515,13 +1515,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.open_cursors_per_second
 
- 
+Open cursors per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1531,13 +1531,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.open_cursors_per_transaction
 
- 
+Open cursors per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1547,13 +1547,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.open_mode
 
- 
+Oracle PDB open mode (1=READ WRITE, 0=other)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1563,14 +1563,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| database_name |   | Any Str | false |
-| open.mode |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
 
 ### newrelicoracledb.pdb.parse_failure_count_per_second
 
- 
+Parse failure count per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1580,13 +1580,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_read_bytes_per_second
 
- 
+Physical read total bytes per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1596,13 +1596,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_reads_per_transaction
 
- 
+Physical reads per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1612,13 +1612,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_write_bytes_per_second
 
- 
+Physical write total bytes per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1628,13 +1628,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.physical_writes_per_transaction
 
- 
+Physical writes per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1644,13 +1644,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_second
 
- 
+Redo generated per second in bytes in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1660,13 +1660,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_transaction
 
- 
+Redo generated per transaction in bytes in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1676,13 +1676,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.response_time_per_transaction
 
- 
+Response time per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1692,13 +1692,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.session_count
 
- 
+Session count in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1708,13 +1708,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.soft_parse_ratio
 
- 
+Soft parse ratio in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1724,13 +1724,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.sql_service_response_time
 
- 
+SQL service response time in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1740,13 +1740,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.total_parse_count_per_second
 
- 
+Total parse count per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1756,13 +1756,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.total_parse_count_per_transaction
 
- 
+Total parse count per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1772,13 +1772,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.total_size_bytes
 
- 
+Total size of PDB in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1788,13 +1788,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.transactions_per_second
 
- 
+User transactions per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1804,13 +1804,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_calls_per_second
 
- 
+User calls per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1820,13 +1820,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_calls_per_transaction
 
- 
+User calls per transaction in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1836,13 +1836,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_commits_per_second
 
- 
+User commits per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1852,13 +1852,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_commits_percentage
 
- 
+User commits percentage in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1868,13 +1868,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_rollbacks_per_second
 
- 
+User rollbacks per second in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1884,13 +1884,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.user_rollbacks_percentage
 
- 
+User rollbacks percentage in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1900,13 +1900,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.pdb.wait_time_ratio
 
- 
+Database wait time ratio in PDB
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1916,13 +1916,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| database_name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
 
 ### newrelicoracledb.rac.instance.active_state
 
- 
+Instance active state indicator (1=NORMAL, 0=other)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1932,15 +1932,15 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| rac.instance.name |   | Any Str | false |
-| host.name.rac |   | Any Str | false |
-| active.state |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| active.state | Oracle instance active state (NORMAL, QUIESCING, etc.) | Any Str | false |
 
 ### newrelicoracledb.rac.instance.archiver_started
 
- 
+Archiver status indicator (1=STARTED, 0=STOPPED)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1950,15 +1950,15 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| rac.instance.name |   | Any Str | false |
-| host.name.rac |   | Any Str | false |
-| archiver.status |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| archiver.status | Oracle archiver status (STARTED, STOPPED) | Any Str | false |
 
 ### newrelicoracledb.rac.instance.database_status
 
- 
+Database status indicator (1=ACTIVE, 0=other)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1968,15 +1968,15 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| rac.instance.name |   | Any Str | false |
-| host.name.rac |   | Any Str | false |
-| database.status |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| database.status | Oracle database status (ACTIVE, SUSPENDED, etc.) | Any Str | false |
 
 ### newrelicoracledb.rac.instance.logins_allowed
 
- 
+Instance login status indicator (1=ALLOWED, 0=RESTRICTED)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -1986,15 +1986,15 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| rac.instance.name |   | Any Str | false |
-| host.name.rac |   | Any Str | false |
-| logins.status |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| logins.status | Oracle instance login status (ALLOWED, RESTRICTED) | Any Str | false |
 
 ### newrelicoracledb.rac.instance.status
 
- 
+RAC instance status (1=OPEN, 0=other)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2004,15 +2004,15 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| rac.instance.name |   | Any Str | false |
-| host.name.rac |   | Any Str | false |
-| instance.status |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| instance.status | Oracle RAC instance status | Any Str | false |
 
 ### newrelicoracledb.rac.instance.uptime_seconds
 
- 
+Instance uptime in seconds since startup
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2022,14 +2022,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| rac.instance.name |   | Any Str | false |
-| host.name.rac |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
 
 ### newrelicoracledb.rac.instance.version_info
 
- 
+Oracle database version information (always 1, version in attributes)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2039,14 +2039,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| rac.instance.name |   | Any Str | false |
-| host.name.rac |   | Any Str | false |
-| oracle.version |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | false |
+| host.name.rac | Oracle RAC host name | Any Str | false |
+| oracle.version | Oracle database version | Any Str | false |
 
 ### newrelicoracledb.rac.service.blocked_status
 
- 
+Service blocked indicator (1=blocked, 0=not blocked)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2056,13 +2056,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| service.blocked |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.blocked | Service blocked status (YES/NO) | Any Str | false |
 
 ### newrelicoracledb.rac.service.clb_config
 
- 
+Connection load balancing configuration (always 1, config in attributes)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2072,13 +2072,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| clb.goal |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| clb.goal | Oracle service connection load balancing goal | Any Str | false |
 
 ### newrelicoracledb.rac.service.drain_timeout_seconds
 
- 
+Session drain timeout in seconds before service stop
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2088,13 +2088,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| service.drain_timeout |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.drain_timeout | Session drain timeout in seconds | Any Str | false |
 
 ### newrelicoracledb.rac.service.fan_enabled
 
- 
+Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2104,13 +2104,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| service.fan_enabled |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.fan_enabled | Fast Application Notification (FAN) enabled status (YES/NO) | Any Str | false |
 
 ### newrelicoracledb.rac.service.goal_config
 
- 
+Service goal configuration (always 1, goal in attributes)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2120,13 +2120,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| service.goal |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.goal | Oracle service goal (THROUGHPUT or SERVICE_TIME) | Any Str | false |
 
 ### newrelicoracledb.rac.service.instance_id
 
- 
+Instance ID where the service is currently running
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2136,13 +2136,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rac.service.network_config
 
- 
+Service network configuration (always 1, config in attributes)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2152,13 +2152,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| network.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| network.name | Oracle service network name | Any Str | false |
 
 ### newrelicoracledb.rac.service.replay_timeout_seconds
 
- 
+Application Continuity replay initiation timeout in seconds
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2168,13 +2168,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| service.replay_timeout |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.replay_timeout | Application Continuity replay initiation timeout in seconds | Any Str | false |
 
 ### newrelicoracledb.rac.service.transaction_guard_enabled
 
- 
+Transaction Guard enabled indicator (1=enabled, 0=disabled)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2184,13 +2184,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| service.name |   | Any Str | false |
-| service.transaction_guard |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
+| service.transaction_guard | Transaction Guard (COMMIT_OUTCOME) enabled status (TRUE/FALSE) | Any Str | false |
 
 ### newrelicoracledb.rac.total_waits
 
- 
+Total number of cluster wait events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2200,13 +2200,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| wait.event |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
 
 ### newrelicoracledb.rac.wait_time
 
- 
+Rate of cluster wait time in microseconds per second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2216,13 +2216,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
-| wait.event |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
+| wait.event | Oracle wait event name | Any Str | false |
 
 ### newrelicoracledb.redo_log_parallel_write_waits
 
- 
+Number of waits for log file parallel write events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2232,12 +2232,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.redo_log_switch_archiving_needed_waits
 
- 
+Number of waits for log file switch (archiving needed) events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2247,12 +2247,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits
 
- 
+Number of waits for log file switch (checkpoint incomplete) events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2262,12 +2262,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.redo_log_switch_completion_waits
 
- 
+Number of waits for log file switch completion events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2277,12 +2277,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rollback_segments_gets
 
- 
+Number of gets on rollback segments
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2292,12 +2292,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rollback_segments_wait_ratio
 
- 
+Rollback segments wait ratio (waits/gets)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2307,12 +2307,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.rollback_segments_waits
 
- 
+Number of waits on rollback segments
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2322,12 +2322,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.service.count
 
- 
+Count of services per container
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2337,12 +2337,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 
 ### newrelicoracledb.service.status
 
- 
+Oracle service status (1=active, 0=inactive)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2352,13 +2352,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| service.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| service.name | Oracle database service name | Any Str | false |
 
 ### newrelicoracledb.sessions.count
 
- 
+Total number of active Oracle database sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2368,11 +2368,11 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
 
 ### newrelicoracledb.sga_buffer_busy_waits
 
- 
+Number of buffer busy waits events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2382,12 +2382,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_fixed_size_bytes
 
- 
+SGA fixed size memory in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2397,12 +2397,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_free_buffer_inspected_waits
 
- 
+Number of free buffer inspected waits events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2412,12 +2412,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_free_buffer_waits
 
- 
+Number of free buffer waits events
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2427,12 +2427,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_hit_ratio
 
- 
+SGA hit ratio (session logical reads minus physical reads / session logical reads)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2442,12 +2442,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_allocation_retries_ratio
 
- 
+SGA log allocation retries ratio (redo buffer allocation retries / redo entries)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2457,12 +2457,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_buffer_redo_allocation_retries
 
- 
+Number of redo buffer allocation retries from sysstat
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2472,12 +2472,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_buffer_redo_entries
 
- 
+Number of redo entries from sysstat
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2487,12 +2487,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_log_buffer_space_waits
 
- 
+Number of sessions waiting for log buffer space
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2502,12 +2502,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_redo_buffers_bytes
 
- 
+SGA redo buffers memory in bytes
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2517,12 +2517,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio
 
- 
+SGA shared pool dictionary cache miss ratio (getmisses/gets)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2532,12 +2532,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_shared_pool_library_cache_hit_ratio
 
- 
+SGA shared pool library cache hit ratio for SQL AREA namespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2547,12 +2547,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sga_shared_pool_library_cache_reload_ratio
 
- 
+SGA shared pool library cache reload ratio (reloads/pins)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2562,12 +2562,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_cpu_time
 
- 
+Average CPU time per execution for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2577,14 +2577,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_reads
 
- 
+Average disk reads per execution for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2594,14 +2594,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_writes
 
- 
+Average disk writes per execution for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2611,14 +2611,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_elapsed_time
 
- 
+Average elapsed time per execution for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2628,14 +2628,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_lock_time
 
- 
+Average lock/concurrency wait time per execution for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2645,14 +2645,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_rows_examined
 
- 
+Average rows examined per execution for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2662,14 +2662,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.execution_count
 
- 
+Number of executions for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2679,14 +2679,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_elapsed_time
 
- 
+Average elapsed time per execution in the last polling interval (delta metric)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2696,14 +2696,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_execution_count
 
- 
+Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2713,14 +2713,14 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| user_name |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
 
 ### newrelicoracledb.slow_queries.query_details
 
- 
+Slow Query Details
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2730,17 +2730,17 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| query_id |   | Any Str | false |
-| query_text |   | Any Str | false |
-| schema_name |   | Any Str | false |
-| user_name |   | Any Str | false |
-| last_active_time |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| query_text | SQL query text | Any Str | false |
+| schema_name | Schema name where the query is executed | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| last_active_time | Last active time for the SQL query | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
 
- 
+Number of sorts performed on disk from sysstat
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2750,12 +2750,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.sorts_memory
 
- 
+Number of sorts performed in memory from sysstat
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2765,12 +2765,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.active_parallel_sessions
 
- 
+Active Parallel Sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2780,12 +2780,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.active_serial_sessions
 
- 
+Active Serial Sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2795,12 +2795,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.average_active_sessions
 
- 
+Average Active Sessions
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2810,12 +2810,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.background_checkpoints_per_second
 
- 
+Background Checkpoints Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2825,12 +2825,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.background_cpu_usage_per_second
 
- 
+Background CPU Usage Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2840,12 +2840,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.background_time_per_second
 
- 
+Background Time Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2855,12 +2855,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.branch_node_splits_per_second
 
- 
+Branch Node Splits Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2870,12 +2870,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.branch_node_splits_per_transaction
 
- 
+Branch Node Splits Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2885,12 +2885,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.buffer_cache_hit_ratio
 
- 
+Buffer Cache Hit Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2900,12 +2900,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.captured_user_calls
 
- 
+Captured user calls
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2915,12 +2915,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_changes_per_second
 
- 
+Consistent Read Changes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2930,12 +2930,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_changes_per_transaction
 
- 
+Consistent Read Changes Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2945,12 +2945,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_gets_per_second
 
- 
+Consistent Read Gets Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2960,12 +2960,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.consistent_read_gets_per_transaction
 
- 
+Consistent Read Gets Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2975,12 +2975,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cpu_usage_per_second
 
- 
+CPU Usage Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2990,12 +2990,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cpu_usage_per_transaction
 
- 
+CPU Usage Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3005,12 +3005,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_blocks_created_per_second
 
- 
+CR Blocks Created Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3020,12 +3020,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_blocks_created_per_transaction
 
- 
+CR Blocks Created Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3035,12 +3035,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_undo_records_applied_per_second
 
- 
+CR Undo Records Applied Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3050,12 +3050,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cr_undo_records_applied_per_transaction
 
- 
+CR Undo Records Applied Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3065,12 +3065,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.current_logons_count
 
- 
+Current Logons Count
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3080,12 +3080,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.current_open_cursors_count
 
- 
+Current Open Cursors Count
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3095,12 +3095,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.current_os_load
 
- 
+Current OS Load
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3110,12 +3110,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.cursor_cache_hit_ratio
 
- 
+Cursor Cache Hit Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3125,12 +3125,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.database_cpu_time_ratio
 
- 
+Database CPU Time Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3140,12 +3140,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.database_time_per_second
 
- 
+Database Time Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3155,12 +3155,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.database_wait_time_ratio
 
- 
+Database Wait Time Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3170,12 +3170,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_changes_per_second
 
- 
+DB Block Changes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3185,12 +3185,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_changes_per_transaction
 
- 
+DB Block Changes Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3200,12 +3200,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_changes_per_user_call
 
- 
+DB Block Changes Per User Call
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3215,12 +3215,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_gets_per_second
 
- 
+DB Block Gets Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3230,12 +3230,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_gets_per_transaction
 
- 
+DB Block Gets Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3245,12 +3245,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.db_block_gets_per_user_call
 
- 
+DB Block Gets Per User Call
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3260,12 +3260,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.dbwr_checkpoints_per_second
 
- 
+DBWR Checkpoints Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3275,12 +3275,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.disk_sort_per_second
 
- 
+Disk Sort Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3290,12 +3290,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.disk_sort_per_transaction
 
- 
+Disk Sort Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3305,12 +3305,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_deadlocks_per_second
 
- 
+Enqueue Deadlocks Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3320,12 +3320,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_deadlocks_per_transaction
 
- 
+Enqueue Deadlocks Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3335,12 +3335,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_requests_per_second
 
- 
+Enqueue Requests Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3350,12 +3350,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_requests_per_transaction
 
- 
+Enqueue Requests Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3365,12 +3365,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_timeouts_per_second
 
- 
+Enqueue Timeouts Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3380,12 +3380,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_timeouts_per_transaction
 
- 
+Enqueue Timeouts Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3395,12 +3395,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_waits_per_second
 
- 
+Enqueue Waits Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3410,12 +3410,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.enqueue_waits_per_transaction
 
- 
+Enqueue Waits Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3425,12 +3425,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.execute_without_parse_ratio
 
- 
+Execute Without Parse Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3440,12 +3440,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.executions_per_second
 
- 
+Executions Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3455,12 +3455,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.executions_per_transaction
 
- 
+Executions Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3470,12 +3470,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.executions_per_user_call
 
- 
+Executions Per User Call
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3485,12 +3485,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.full_index_scans_per_second
 
- 
+Full Index Scans Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3500,12 +3500,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.full_index_scans_per_transaction
 
- 
+Full Index Scans Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3515,12 +3515,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_cr_block_received_per_second
 
- 
+GC CR Block Received Per Second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3530,12 +3530,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_cr_block_received_per_transaction
 
- 
+GC CR Block Received Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3545,12 +3545,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_current_block_received_per_second
 
- 
+GC Current Block Received Per Second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3560,12 +3560,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.gc_current_block_received_per_transaction
 
- 
+GC Current Block Received Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3575,12 +3575,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_average_cr_get_time
 
- 
+Global Cache Average CR Get Time
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3590,12 +3590,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_average_current_get_time
 
- 
+Global Cache Average Current Get Time
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3605,12 +3605,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_blocks_corrupted
 
- 
+Global Cache Blocks Corrupted
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3620,12 +3620,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.global_cache_blocks_lost
 
- 
+Global Cache Blocks Lost
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3635,12 +3635,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.hard_parse_count_per_second
 
- 
+Hard Parse Count Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3650,12 +3650,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.hard_parse_count_per_transaction
 
- 
+Hard Parse Count Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3665,12 +3665,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.host_cpu_usage_per_second
 
- 
+Host CPU Usage Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3680,12 +3680,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.host_cpu_utilization
 
- 
+Host CPU Utilization (%)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3695,12 +3695,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.io_megabytes_per_second
 
- 
+I/O Megabytes per Second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3710,12 +3710,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.io_requests_per_second
 
- 
+I/O Requests per Second
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3725,12 +3725,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.leaf_node_splits_per_second
 
- 
+Leaf Node Splits Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3740,12 +3740,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.leaf_node_splits_per_transaction
 
- 
+Leaf Node Splits Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3755,12 +3755,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.library_cache_hit_ratio
 
- 
+Library Cache Hit Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3770,12 +3770,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.library_cache_miss_ratio
 
- 
+Library Cache Miss Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3785,12 +3785,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logical_reads_per_second
 
- 
+Logical Reads Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3800,12 +3800,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logical_reads_per_transaction
 
- 
+Logical Reads Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3815,12 +3815,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logical_reads_per_user_call
 
- 
+Logical Reads Per User Call
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3830,12 +3830,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logons_per_second
 
- 
+Logons Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3845,12 +3845,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.logons_per_transaction
 
- 
+Logons Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3860,12 +3860,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.long_table_scans_per_second
 
- 
+Long Table Scans Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3875,12 +3875,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.long_table_scans_per_transaction
 
- 
+Long Table Scans Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3890,12 +3890,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.memory_sorts_ratio
 
- 
+Memory Sorts Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3905,12 +3905,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.network_traffic_volume_per_second
 
- 
+Network Traffic Volume Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3920,12 +3920,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.open_cursors_per_second
 
- 
+Open Cursors Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3935,12 +3935,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.open_cursors_per_transaction
 
- 
+Open Cursors Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3950,12 +3950,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.parse_failure_count_per_second
 
- 
+Parse Failure Count Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3965,12 +3965,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.parse_failure_count_per_transaction
 
- 
+Parse Failure Count Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3980,12 +3980,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.pga_cache_hit_percentage
 
- 
+PGA Cache Hit %
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -3995,12 +3995,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_reads_per_second
 
- 
+Physical Reads Direct Lobs Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4010,12 +4010,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_reads_per_transaction
 
- 
+Physical Reads Direct Lobs Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4025,12 +4025,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_writes_per_second
 
- 
+Physical Writes Direct Lobs Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4040,12 +4040,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_lobs_writes_per_transaction
 
- 
+Physical Writes Direct Lobs Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4055,12 +4055,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_bytes_per_second
 
- 
+Physical Read Bytes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4070,12 +4070,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_io_requests_per_second
 
- 
+Physical Read IO Requests Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4085,12 +4085,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_total_bytes_per_second
 
- 
+Physical Read Total Bytes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4100,12 +4100,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_read_total_io_requests_per_second
 
- 
+Physical Read Total IO Requests Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4115,12 +4115,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_direct_per_second
 
- 
+Physical Reads Direct Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4130,12 +4130,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_direct_per_transaction
 
- 
+Physical Reads Direct Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4145,12 +4145,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_per_second
 
- 
+Physical Reads Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4160,12 +4160,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_reads_per_transaction
 
- 
+Physical Reads Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4175,12 +4175,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_bytes_per_second
 
- 
+Physical Write Bytes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4190,12 +4190,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_io_requests_per_second
 
- 
+Physical Write IO Requests Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4205,12 +4205,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_total_bytes_per_second
 
- 
+Physical Write Total Bytes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4220,12 +4220,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_write_total_io_requests_per_second
 
- 
+Physical Write Total IO Requests Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4235,12 +4235,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_direct_per_second
 
- 
+Physical Writes Direct Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4250,12 +4250,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_direct_per_transaction
 
- 
+Physical Writes Direct Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4265,12 +4265,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_per_second
 
- 
+Physical Writes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4280,12 +4280,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.physical_writes_per_transaction
 
- 
+Physical Writes Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4295,12 +4295,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.process_limit_percentage
 
- 
+Process Limit %
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4310,12 +4310,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.recursive_calls_per_second
 
- 
+Recursive Calls Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4325,12 +4325,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.recursive_calls_per_transaction
 
- 
+Recursive Calls Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4340,12 +4340,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_allocation_hit_ratio
 
- 
+Redo Allocation Hit Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4355,12 +4355,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_generated_bytes_per_second
 
- 
+Redo Generated Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4370,12 +4370,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_generated_bytes_per_transaction
 
- 
+Redo Generated Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4385,12 +4385,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_writes_per_second
 
- 
+Redo Writes Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4400,12 +4400,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.redo_writes_per_transaction
 
- 
+Redo Writes Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4415,12 +4415,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.response_time_per_transaction
 
- 
+Response Time Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4430,12 +4430,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.row_cache_hit_ratio
 
- 
+Row Cache Hit Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4445,12 +4445,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.row_cache_miss_ratio
 
- 
+Row Cache Miss Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4460,12 +4460,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.rows_per_sort
 
- 
+Rows Per Sort
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4475,12 +4475,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.session_count
 
- 
+Session Count
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4490,12 +4490,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.session_limit_percentage
 
- 
+Session Limit %
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4505,12 +4505,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.shared_pool_free_percentage
 
- 
+Shared Pool Free %
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4520,12 +4520,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.soft_parse_ratio
 
- 
+Soft Parse Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4535,12 +4535,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.sql_service_response_time
 
- 
+SQL Service Response Time
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4550,12 +4550,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.streams_pool_usage_percentage
 
- 
+Streams Pool Usage Percentage
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4565,12 +4565,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.temp_space_used
 
- 
+Temp Space Used
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4580,12 +4580,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_index_scans_per_second
 
- 
+Total Index Scans Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4595,12 +4595,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_index_scans_per_transaction
 
- 
+Total Index Scans Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4610,12 +4610,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_parse_count_per_second
 
- 
+Total Parse Count Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4625,12 +4625,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_parse_count_per_transaction
 
- 
+Total Parse Count Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4640,12 +4640,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_sorts_per_user_call
 
- 
+Total Sorts Per User Call
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4655,12 +4655,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_table_scans_per_second
 
- 
+Total Table Scans Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4670,12 +4670,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_table_scans_per_transaction
 
- 
+Total Table Scans Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4685,12 +4685,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.total_table_scans_per_user_call
 
- 
+Total Table Scans Per User Call
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4700,12 +4700,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.transactions_per_logon
 
- 
+Txns Per Logon
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4715,12 +4715,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.transactions_per_second
 
- 
+User Transaction Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4730,12 +4730,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_calls_per_second
 
- 
+User Calls Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4745,12 +4745,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_calls_per_transaction
 
- 
+User Calls Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4760,12 +4760,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_calls_ratio
 
- 
+User Calls Ratio
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4775,12 +4775,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_commits_per_second
 
- 
+User Commits Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4790,12 +4790,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_commits_percentage
 
- 
+User Commits Percentage
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4805,12 +4805,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_limit_percentage
 
- 
+User Limit %
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4820,12 +4820,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollback_undo_records_applied_per_second
 
- 
+User Rollback UndoRec Applied Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4835,12 +4835,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction
 
- 
+User Rollback Undo Records Applied Per Txn
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4850,12 +4850,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollbacks_per_second
 
- 
+User Rollbacks Per Sec
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4865,12 +4865,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.system.user_rollbacks_percentage
 
- 
+User Rollbacks Percentage
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4880,12 +4880,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| instance.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.tablespace.db_id
 
- 
+Database ID information for tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4895,13 +4895,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
-| db.id |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| db.id | Oracle database ID | Any Str | false |
 
 ### newrelicoracledb.tablespace.global_name
 
- 
+Global name information for tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4911,13 +4911,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
-| global.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| global.name | Oracle database global name | Any Str | false |
 
 ### newrelicoracledb.tablespace.is_offline
 
- 
+Whether the tablespace is offline (1) or online (0)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4927,12 +4927,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.offline_cdb_datafiles
 
- 
+Count of offline CDB datafiles by tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4942,12 +4942,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.offline_pdb_datafiles
 
- 
+Count of offline PDB datafiles by tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4957,12 +4957,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.pdb_non_write_mode
 
- 
+Count of PDB datafiles in non-write mode by tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4972,12 +4972,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.space_consumed_bytes
 
- 
+Total bytes consumed by the tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4987,12 +4987,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.space_reserved_bytes
 
- 
+Total bytes reserved by the tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -5002,12 +5002,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.space_used_percentage
 
- 
+Percentage of tablespace space currently used
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -5017,12 +5017,12 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.total_bytes
 
- 
+Total bytes in tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -5032,13 +5032,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.used_bytes
 
- 
+Used bytes in tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -5048,13 +5048,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.tablespace.used_percent
 
- 
+Used percentage of tablespace
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -5064,13 +5064,13 @@ Provides information about the host architecture and operating system platform
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| db.instance.name |   | Any Str | false |
-| con.id |   | Any Str | false |
-| tablespace.name |   | Any Str | false |
+| db.instance.name | Oracle database instance name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
 ### newrelicoracledb.wait_events.current_wait_time_ms
 
- 
+Current wait time in milliseconds for active wait events
 
 Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
 Collected alongside blocking information in a single optimized query from v$session.
@@ -5087,27 +5087,27 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp |   | Any Str | false |
-| database_name |   | Any Str | false |
-| user_name |   | Any Str | false |
-| session_id |   | Any Str | false |
-| session_serial |   | Any Int | false |
-| session_status |   | Any Str | false |
-| session_state |   | Any Str | false |
-| query_id |   | Any Str | false |
-| sql_child_number |   | Any Int | false |
-| wait_event_name |   | Any Str | false |
-| wait_category |   | Any Str | false |
-| session_program |   | Any Str | false |
-| session_machine |   | Any Str | false |
-| wait_object_owner |   | Any Str | false |
-| wait_object_name |   | Any Str | false |
-| wait_object_type |   | Any Str | false |
-| sql_exec_start |   | Any Str | false |
-| sql_exec_id |   | Any Int | false |
-| row_wait_obj_id |   | Any Str | false |
-| row_wait_file_id |   | Any Str | false |
-| row_wait_block_id |   | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| sql_child_number | SQL child cursor number | Any Int | false |
+| wait_event_name | Oracle wait event name for wait events | Any Str | false |
+| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
+| session_program | Program name of the session | Any Str | false |
+| session_machine | Machine name where the session is running | Any Str | false |
+| wait_object_owner | Owner of the database object being waited on | Any Str | false |
+| wait_object_name | Name of the database object being waited on | Any Str | false |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
+| sql_exec_id | SQL execution identifier | Any Int | false |
+| row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
+| row_wait_file_id | File ID of the row being waited on | Any Str | false |
+| row_wait_block_id | Block ID of the row being waited on | Any Str | false |
 
 ## Default Events
 
@@ -5121,41 +5121,41 @@ events:
 
 ### newrelicoracledb.execution_plan
 
- 
+Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
 
 #### Attributes
 
 | Name | Description | Values |
 | ---- | ----------- | ------ |
-| newrelic.event.type |   | Any Str |
-| query_id |   | Any Str |
-| plan_hash_value |   | Any Str |
-| query_text |   | Any Str |
-| child_number |   | Any Int |
-| plan_id |   | Any Int |
-| parent_id |   | Any Int |
-| depth |   | Any Int |
-| operation |   | Any Str |
-| options |   | Any Str |
-| object_owner |   | Any Str |
-| object_name |   | Any Str |
-| position |   | Any Int |
-| cost |   | Any Int |
-| cardinality |   | Any Int |
-| bytes |   | Any Int |
-| cpu_cost |   | Any Int |
-| io_cost |   | Any Int |
-| timestamp |   | Any Str |
-| plan_generated_timestamp |   | Any Str |
-| temp_space |   | Any Int |
-| access_predicates |   | Any Str |
-| projection |   | Any Str |
-| time |   | Any Int |
-| filter_predicates |   | Any Str |
+| newrelic.event.type | New Relic event type for log categorization | Any Str |
+| query_id | SQL query identifier | Any Str |
+| plan_hash_value | Oracle execution plan hash value | Any Str |
+| query_text | SQL query text | Any Str |
+| child_number | Child cursor number | Any Int |
+| plan_id | Step ID in the execution plan | Any Int |
+| parent_id | Parent step ID in the execution plan | Any Int |
+| depth | Depth level in the execution plan tree | Any Int |
+| operation | Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN) | Any Str |
+| options | Options for the operation (e.g., FULL, RANGE) | Any Str |
+| object_owner | Owner of the database object being accessed | Any Str |
+| object_name | Name of the database object being accessed | Any Str |
+| position | Order of execution for steps at the same depth level | Any Int |
+| cost | Estimated cost of the operation | Any Int |
+| cardinality | Estimated number of rows the operation will return | Any Int |
+| bytes | Estimated number of bytes the operation will return | Any Int |
+| cpu_cost | Estimated CPU cost of the operation | Any Int |
+| io_cost | Estimated I/O cost of the operation | Any Int |
+| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str |
+| plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str |
+| temp_space | Estimated temporary space required for the operation (in bytes) | Any Int |
+| access_predicates | Access predicates used to locate rows in an access structure | Any Str |
+| projection | Column projection information from the operation | Any Str |
+| time | Estimated elapsed time for the operation (in seconds) | Any Int |
+| filter_predicates | Filter predicates applied after accessing rows | Any Str |
 
 ## Resource Attributes
 
 | Name | Description | Values | Enabled |
 | ---- | ----------- | ------ | ------- |
-| host.name |   | Any Str | true |
-| newrelicoracledb.instance.name |   | Any Str | true |
+| host.name | The host name of Oracle Server | Any Str | true |
+| newrelicoracledb.instance.name | The name of the Oracle instance that data is coming from. | Any Str | true |
