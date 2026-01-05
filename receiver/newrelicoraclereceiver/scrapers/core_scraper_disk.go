@@ -8,15 +8,110 @@ import (
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
+// diskIOMetricRecorder defines a metric recorder for disk I/O metrics
+type diskIOMetricRecorder struct {
+	isEnabled func(metadata.MetricsBuilderConfig) bool
+	getValue  func(*models.DiskIOMetrics) int64
+	record    func(*CoreScraper, pcommon.Timestamp, int64, string, string)
+}
+
+// diskIOMetricRegistry contains all disk I/O metric recorders
+var diskIOMetricRegistry = []diskIOMetricRecorder{
+	{
+		isEnabled: func(cfg metadata.MetricsBuilderConfig) bool {
+			return cfg.Metrics.NewrelicoracledbDiskReads.Enabled
+		},
+		getValue: func(m *models.DiskIOMetrics) int64 {
+			return m.PhysicalReads
+		},
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, value, instanceName, instanceID)
+		},
+	},
+	{
+		isEnabled: func(cfg metadata.MetricsBuilderConfig) bool {
+			return cfg.Metrics.NewrelicoracledbDiskWrites.Enabled
+		},
+		getValue: func(m *models.DiskIOMetrics) int64 {
+			return m.PhysicalWrites
+		},
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, value, instanceName, instanceID)
+		},
+	},
+	{
+		isEnabled: func(cfg metadata.MetricsBuilderConfig) bool {
+			return cfg.Metrics.NewrelicoracledbDiskBlocksRead.Enabled
+		},
+		getValue: func(m *models.DiskIOMetrics) int64 {
+			return m.PhysicalBlockReads
+		},
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, value, instanceName, instanceID)
+		},
+	},
+	{
+		isEnabled: func(cfg metadata.MetricsBuilderConfig) bool {
+			return cfg.Metrics.NewrelicoracledbDiskBlocksWritten.Enabled
+		},
+		getValue: func(m *models.DiskIOMetrics) int64 {
+			return m.PhysicalBlockWrites
+		},
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, value, instanceName, instanceID)
+		},
+	},
+	{
+		isEnabled: func(cfg metadata.MetricsBuilderConfig) bool {
+			return cfg.Metrics.NewrelicoracledbDiskReadTimeMilliseconds.Enabled
+		},
+		getValue: func(m *models.DiskIOMetrics) int64 {
+			return m.ReadTime
+		},
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, value, instanceName, instanceID)
+		},
+	},
+	{
+		isEnabled: func(cfg metadata.MetricsBuilderConfig) bool {
+			return cfg.Metrics.NewrelicoracledbDiskWriteTimeMilliseconds.Enabled
+		},
+		getValue: func(m *models.DiskIOMetrics) int64 {
+			return m.WriteTime
+		},
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, value, instanceName, instanceID)
+		},
+	},
+}
+
+// hasAnyDiskIOMetricEnabled checks if any disk I/O metric is enabled
+func (s *CoreScraper) hasAnyDiskIOMetricEnabled() bool {
+	for _, recorder := range diskIOMetricRegistry {
+		if recorder.isEnabled(s.config) {
+			return true
+		}
+	}
+	return false
+}
+
+// recordDiskIOMetrics records all enabled disk I/O metrics for a single metric
+func (s *CoreScraper) recordDiskIOMetrics(now pcommon.Timestamp, metric *models.DiskIOMetrics, instanceID string) {
+	for _, recorder := range diskIOMetricRegistry {
+		if recorder.isEnabled(s.config) {
+			value := recorder.getValue(metric)
+			recorder.record(s, now, value, s.instanceName, instanceID)
+		}
+	}
+}
+
 func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Timestamp) []error {
-	if !s.config.Metrics.NewrelicoracledbDiskReads.Enabled &&
-		!s.config.Metrics.NewrelicoracledbDiskWrites.Enabled &&
-		!s.config.Metrics.NewrelicoracledbDiskBlocksRead.Enabled &&
-		!s.config.Metrics.NewrelicoracledbDiskBlocksWritten.Enabled &&
-		!s.config.Metrics.NewrelicoracledbDiskReadTimeMilliseconds.Enabled &&
-		!s.config.Metrics.NewrelicoracledbDiskWriteTimeMilliseconds.Enabled {
+	if !s.hasAnyDiskIOMetricEnabled() {
 		return nil
 	}
 
@@ -26,30 +121,9 @@ func (s *CoreScraper) scrapeReadWriteMetrics(ctx context.Context, now pcommon.Ti
 		return []error{err}
 	}
 
-	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-
-		if s.config.Metrics.NewrelicoracledbDiskReads.Enabled {
-			s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, metric.PhysicalReads, s.instanceName, instanceID)
-		}
-		if s.config.Metrics.NewrelicoracledbDiskWrites.Enabled {
-			s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, metric.PhysicalWrites, s.instanceName, instanceID)
-		}
-		if s.config.Metrics.NewrelicoracledbDiskBlocksRead.Enabled {
-			s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, metric.PhysicalBlockReads, s.instanceName, instanceID)
-		}
-		if s.config.Metrics.NewrelicoracledbDiskBlocksWritten.Enabled {
-			s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, metric.PhysicalBlockWrites, s.instanceName, instanceID)
-		}
-		if s.config.Metrics.NewrelicoracledbDiskReadTimeMilliseconds.Enabled {
-			s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, metric.ReadTime, s.instanceName, instanceID)
-		}
-		if s.config.Metrics.NewrelicoracledbDiskWriteTimeMilliseconds.Enabled {
-			s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, metric.WriteTime, s.instanceName, instanceID)
-		}
-
-		metricCount++
+		s.recordDiskIOMetrics(now, &metric, instanceID)
 	}
 
 	s.logger.Debug("Disk I/O metrics scrape completed")
