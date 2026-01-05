@@ -132,14 +132,35 @@ func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 }
 
 // scrapeContainerStatus scrapes container status from GV$CONTAINERS
-func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommon.Timestamp) []error {
-	var errs []error
+// hasAnyContainerStatusMetricEnabled checks if any container status metric is enabled
+func (s *ContainerScraper) hasAnyContainerStatusMetricEnabled() bool {
+	return s.config.Metrics.NewrelicoracledbContainerStatus.Enabled ||
+		s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled
+}
 
-	// Check if this metric is enabled in config
-	if !s.config.Metrics.NewrelicoracledbContainerStatus.Enabled &&
-		!s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled {
+// recordContainerStatusMetrics records container status and restricted metrics
+func (s *ContainerScraper) recordContainerStatusMetrics(now pcommon.Timestamp, conIDStr, containerNameStr, openModeStr, restrictedStr string) {
+	if s.config.Metrics.NewrelicoracledbContainerStatus.Enabled {
+		statusValue := int64(0)
+		if strings.ToUpper(openModeStr) == "READ WRITE" {
+			statusValue = 1
+		}
+		s.mb.RecordNewrelicoracledbContainerStatusDataPoint(now, statusValue, s.instanceName, conIDStr, containerNameStr, openModeStr)
+	}
+
+	if s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled {
+		restrictedValue := int64(0)
+		if strings.ToUpper(restrictedStr) == "YES" {
+			restrictedValue = 1
+		}
+		s.mb.RecordNewrelicoracledbContainerRestrictedDataPoint(now, restrictedValue, s.instanceName, conIDStr, containerNameStr, restrictedStr)
+	}
+}
+
+func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommon.Timestamp) []error {
+	if !s.hasAnyContainerStatusMetricEnabled() {
 		s.logger.Debug("Container status metrics disabled, skipping")
-		return errs
+		return nil
 	}
 
 	containers, err := s.client.QueryContainerStatus(ctx)
@@ -149,45 +170,27 @@ func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommo
 	}
 
 	for _, container := range containers {
-		// Validate required fields
 		if !container.ConID.Valid || !container.ContainerName.Valid {
 			continue
 		}
 
 		conIDStr := strconv.FormatInt(container.ConID.Int64, 10)
 		containerNameStr := container.ContainerName.String
-		openModeStr := ""
-		restrictedStr := ""
 
+		openModeStr := ""
 		if container.OpenMode.Valid {
 			openModeStr = container.OpenMode.String
 		}
+
+		restrictedStr := ""
 		if container.Restricted.Valid {
 			restrictedStr = container.Restricted.String
 		}
 
-		// Record metrics only if enabled
-		if s.config.Metrics.NewrelicoracledbContainerStatus.Enabled {
-			// Container status metric (1=READ WRITE, 0=other)
-			var statusValue int64 = 0
-			if strings.ToUpper(openModeStr) == "READ WRITE" {
-				statusValue = 1
-			}
-			s.mb.RecordNewrelicoracledbContainerStatusDataPoint(now, statusValue, s.instanceName, conIDStr, containerNameStr, openModeStr)
-		}
-
-		if s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled {
-			// Container restricted metric (1=YES, 0=NO)
-			var restrictedValue int64 = 0
-			if strings.ToUpper(restrictedStr) == "YES" {
-				restrictedValue = 1
-			}
-			s.mb.RecordNewrelicoracledbContainerRestrictedDataPoint(now, restrictedValue, s.instanceName, conIDStr, containerNameStr, restrictedStr)
-		}
-
+		s.recordContainerStatusMetrics(now, conIDStr, containerNameStr, openModeStr, restrictedStr)
 	}
 
-	return errs
+	return nil
 }
 
 // scrapePDBStatus scrapes PDB status from GV$PDBS
