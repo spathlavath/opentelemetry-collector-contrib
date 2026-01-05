@@ -10,350 +10,350 @@ status:
 
 resource_attributes:
   newrelicoracledb.instance.name:
-    description: " "
+    description: The name of the Oracle instance that data is coming from.
     enabled: true
     type: string
   host.name:
-    description: " "
+    description: The host name of Oracle Server
     enabled: true
     type: string
 
 attributes:
   collection_timestamp:
-    description: " "
+    description: Timestamp when the query metrics were collected from Oracle
     type: string
   database_name:
-    description: " "
+    description: Oracle database name
     type: string
   query_id:
-    description: " "
+    description: SQL query identifier
     type: string
   query_text:
-    description: " "
+    description: SQL query text
     type: string
   schema_name:
-    description: " "
+    description: Schema name where the query is executed
     type: string
   username:
-    description: " "
+    description: Oracle username who parsed the SQL
     type: string
   user_name:
-    description: " "
+    description: Oracle username for slow queries
     type: string
   last_active_time:
-    description: " "
+    description: Last active time for the SQL query
     type: string
   plan_hash_value:
-    description: " "
+    description: Oracle execution plan hash value
     type: string
   first_load_time:
-    description: " "
+    description: Time when the SQL statement was first loaded into the library cache
     type: string
   last_load_time:
-    description: " "
+    description: Time at which the query plan was loaded into the library cache
     type: string
 
   # Execution Plan Row Attributes (from V$SQL_PLAN)
   child_number:
-    description: " "
+    description: Child cursor number
     type: int
   plan_id:
-    description: " "
+    description: Step ID in the execution plan
     type: int
   parent_id:
-    description: " "
+    description: Parent step ID in the execution plan
     type: int
   depth:
-    description: " "
+    description: Depth level in the execution plan tree
     type: int
   operation:
-    description: " "
+    description: Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN)
     type: string
   options:
-    description: " "
+    description: Options for the operation (e.g., FULL, RANGE)
     type: string
   object_owner:
-    description: " "
+    description: Owner of the database object being accessed
     type: string
   object_name:
-    description: " "
+    description: Name of the database object being accessed
     type: string
   position:
-    description: " "
+    description: Order of execution for steps at the same depth level
     type: int
   cost:
-    description: " "
+    description: Estimated cost of the operation
     type: int
   cardinality:
-    description: " "
+    description: Estimated number of rows the operation will return
     type: int
   bytes:
-    description: " "
+    description: Estimated number of bytes the operation will return
     type: int
   cpu_cost:
-    description: " "
+    description: Estimated CPU cost of the operation
     type: int
   io_cost:
-    description: " "
+    description: Estimated I/O cost of the operation
     type: int
   timestamp:
-    description: " "
+    description: Timestamp when the query was captured/observed (from wait event or slow query)
     type: string
   plan_generated_timestamp:
-    description: " "
+    description: Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP)
     type: string
   temp_space:
-    description: " "
+    description: Estimated temporary space required for the operation (in bytes)
     type: int
   access_predicates:
-    description: " "
+    description: Access predicates used to locate rows in an access structure
     type: string
   projection:
-    description: " "
+    description: Column projection information from the operation
     type: string
   time:
-    description: " "
+    description: Estimated elapsed time for the operation (in seconds)
     type: int
   filter_predicates:
-    description: " "
+    description: Filter predicates applied after accessing rows
     type: string
   newrelic.event.type:
-    description: " "
+    description: New Relic event type for log categorization
     type: string
   
   wait_event_name:
-    description: " "
+    description: Oracle wait event name for wait events
     type: string
   wait_category:
-    description: " "
+    description: Oracle wait event category/class for wait events and active sessions
     type: string
   session_id:
-    description: " "
+    description: Oracle session ID (SID)
     type: string
   session_status:
-    description: " "
+    description: Oracle session status (ACTIVE, INACTIVE, etc.)
     type: string
   session_state:
-    description: " "
+    description: Oracle session state (WAITING or not WAITING)
     type: string
   session_program:
-    description: " "
+    description: Program name of the session
     type: string
   session_machine:
-    description: " "
+    description: Machine name where the session is running
     type: string
   wait_object_owner:
-    description: " "
+    description: Owner of the database object being waited on
     type: string
   wait_object_name:
-    description: " "
+    description: Name of the database object being waited on
     type: string
   wait_object_type:
-    description: " "
+    description: Type of the database object being waited on (TABLE, INDEX, etc.)
     type: string
   sql_exec_start:
-    description: " "
+    description: Timestamp when the SQL execution started
     type: string
   row_wait_obj_id:
-    description: " "
+    description: Object ID of the row being waited on
     type: string
   row_wait_file_id:
-    description: " "
+    description: File ID of the row being waited on
     type: string
   row_wait_block_id:
-    description: " "
+    description: Block ID of the row being waited on
     type: string
 
   session_serial:
-    description: " "
+    description: Oracle session serial number
     type: int
   sql_child_number:
-    description: " "
+    description: SQL child cursor number
     type: int
   sql_exec_id:
-    description: " "
+    description: SQL execution identifier
     type: int
 
   final_blocker_user:
-    description: " "
+    description: Username of the final blocking session (root cause)
     type: string
   final_blocker_sid:
-    description: " "
+    description: Session ID of the final blocking session (root cause)
     type: string
   final_blocker_serial:
-    description: " "
+    description: Serial number of the final blocking session (root cause)
     type: string
   final_blocker_query_id:
-    description: " "
+    description: SQL query ID of the final blocking session's query
     type: string
   final_blocker_query_text:
-    description: " "
+    description: SQL query text of the final blocking session's query
     type: string
   blocking_session_status:
-    description: " "
+    description: Status of the blocking session (VALID, NO HOLDER, etc.)
     type: string
   immediate_blocker_sid:
-    description: " "
+    description: Session ID of the immediate blocking session (not necessarily the root cause)
     type: string
   final_blocking_session_status:
-    description: " "
+    description: Status of the final blocking session (VALID, NO HOLDER, etc.)
     type: string
 
   db.instance.name:
-    description: " "
+    description: Oracle database instance name
     type: string
   tablespace.name:
-    description: " "
+    description: Name of the Oracle tablespace
     type: string
   instance.id:
-    description: " "
+    description: Oracle database instance ID
     type: string
   global.name:
-    description: " "
+    description: Oracle database global name
     type: string
   db.id:
-    description: " "
+    description: Oracle database ID
     type: string
   session.status:
-    description: " "
+    description: Oracle session status (ACTIVE, INACTIVE, etc.)
     type: string
   session.type:
-    description: " "
+    description: Oracle session type (USER, BACKGROUND, etc.)
     type: string
   session.id:
-    description: " "
+    description: Oracle session identifier (SID)
     type: string
   program:
-    description: " "
+    description: Program or application name
     type: string
   wait.event:
-    description: " "
+    description: Oracle wait event name
     type: string
   wait.state:
-    description: " "
+    description: Oracle wait event state
     type: string
   wait.class:
-    description: " "
+    description: Oracle wait event class
     type: string
   blocking.session.id:
-    description: " "
+    description: Oracle blocking session identifier
     type: string
   resource.name:
-    description: " "
+    description: Oracle resource name
     type: string
   con.id:
-    description: " "
+    description: Oracle container ID (CDB/PDB)
     type: string
   container.name:
-    description: " "
+    description: Oracle container name
     type: string
   open.mode:
-    description: " "
+    description: Oracle container open mode (READ WRITE, READ ONLY, etc.)
     type: string
   container.status:
-    description: " "
+    description: Oracle container status (NORMAL, RESTRICTED, etc.)
     type: string
   restricted.status:
-    description: " "
+    description: Oracle container restricted status (YES, NO)
     type: string
   file.name:
-    description: " "
+    description: Oracle data file name
     type: string
   service.name:
-    description: " "
+    description: Oracle database service name
     type: string
   diskgroup.name:
-    description: " "
+    description: ASM disk group name
     type: string
   rac.instance.name:
-    description: " "
+    description: Oracle RAC instance name
     type: string
   host.name.rac:
-    description: " "
+    description: Oracle RAC host name
     type: string
   instance.status:
-    description: " "
+    description: Oracle RAC instance status
     type: string
   database.status:
-    description: " "
+    description: Oracle database status (ACTIVE, SUSPENDED, etc.)
     type: string
   active.state:
-    description: " "
+    description: Oracle instance active state (NORMAL, QUIESCING, etc.)
     type: string
   logins.status:
-    description: " "
+    description: Oracle instance login status (ALLOWED, RESTRICTED)
     type: string
   archiver.status:
-    description: " "
+    description: Oracle archiver status (STARTED, STOPPED)
     type: string
   oracle.version:
-    description: " "
+    description: Oracle database version
     type: string
   network.name:
-    description: " "
+    description: Oracle service network name
     type: string
   clb.goal:
-    description: " "
+    description: Oracle service connection load balancing goal
     type: string
   service.goal:
-    description: " "
+    description: Oracle service goal (THROUGHPUT or SERVICE_TIME)
     type: string
   service.blocked:
-    description: " "
+    description: Service blocked status (YES/NO)
     type: string
   service.fan_enabled:
-    description: " "
+    description: Fast Application Notification (FAN) enabled status (YES/NO)
     type: string
   service.transaction_guard:
-    description: " "
+    description: Transaction Guard (COMMIT_OUTCOME) enabled status (TRUE/FALSE)
     type: string
   service.drain_timeout:
-    description: " "
+    description: Session drain timeout in seconds
     type: string
   service.replay_timeout:
-    description: " "
+    description: Application Continuity replay initiation timeout in seconds
     type: string
 
   # Database Version Attributes (OpenTelemetry semantic conventions)
   db.version:
-    description: " "
+    description: The version of the database management system (DBMS) product
     type: string
   db.version.full:
-    description: " "
+    description: Full version string of the database including patch information
     type: string
   db.edition:
-    description: " "
+    description: Oracle database edition (Enterprise, Standard, Express)
     type: string
   db.compatible:
-    description: " "
+    description: Oracle database compatible parameter setting
     type: string
 
   # Platform Attributes
   host.arch:
-    description: " "
+    description: The CPU architecture the host system is running on
     type: string
   platform.name:
-    description: " "
+    description: Operating system platform name
     type: string
   
   # Database Role and Data Guard Attributes
   db.role:
-    description: " "
+    description: Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY)
     type: string
   db.open_mode:
-    description: " "
+    description: Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.)
     type: string
   db.protection_mode:
-    description: " "
+    description: Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE)
     type: string
   db.protection_level:
-    description: " "
+    description: Oracle Data Guard protection level
     type: string
 
 events:
   newrelicoracledb.execution_plan:
     enabled: true
-    description: " "
+    description: Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
     attributes:
       - newrelic.event.type
       - query_id
@@ -383,7 +383,7 @@ events:
 
 metrics:
   newrelicoracledb.sessions.count:
-    description: " "
+    description: Total number of active Oracle database sessions
     enabled: true
     gauge:
       value_type: int
@@ -392,7 +392,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.tablespace.space_consumed_bytes:
-    description: " "
+    description: Total bytes consumed by the tablespace
     enabled: true
     gauge:
       value_type: int
@@ -402,7 +402,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.space_reserved_bytes:
-    description: " "
+    description: Total bytes reserved by the tablespace
     enabled: true
     gauge:
       value_type: int
@@ -412,7 +412,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.space_used_percentage:
-    description: " "
+    description: Percentage of tablespace space currently used
     enabled: true
     gauge:
       value_type: int
@@ -422,7 +422,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.is_offline:
-    description: " "
+    description: Whether the tablespace is offline (1) or online (0)
     enabled: true
     gauge:
       value_type: int
@@ -432,7 +432,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.global_name:
-    description: " "
+    description: Global name information for tablespace
     enabled: true
     gauge:
       value_type: int
@@ -443,7 +443,7 @@ metrics:
       - global.name
 
   newrelicoracledb.tablespace.db_id:
-    description: " "
+    description: Database ID information for tablespace
     enabled: true
     gauge:
       value_type: int
@@ -454,7 +454,7 @@ metrics:
       - db.id
 
   newrelicoracledb.tablespace.offline_cdb_datafiles:
-    description: " "
+    description: Count of offline CDB datafiles by tablespace
     enabled: true
     gauge:
       value_type: int
@@ -464,7 +464,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.offline_pdb_datafiles:
-    description: " "
+    description: Count of offline PDB datafiles by tablespace
     enabled: true
     gauge:
       value_type: int
@@ -474,7 +474,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.pdb_non_write_mode:
-    description: " "
+    description: Count of PDB datafiles in non-write mode by tablespace
     enabled: true
     gauge:
       value_type: int
@@ -484,7 +484,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.locked_accounts:
-    description: " "
+    description: Count of locked user accounts in the database
     enabled: true
     gauge:
       value_type: int
@@ -494,7 +494,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.disk.reads:
-    description: " "
+    description: Number of physical disk reads
     enabled: true
     gauge:
       value_type: int
@@ -504,7 +504,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.disk.writes:
-    description: " "
+    description: Number of physical disk writes
     enabled: true
     gauge:
       value_type: int
@@ -514,7 +514,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.disk.blocks_read:
-    description: " "
+    description: Number of physical blocks read from disk
     enabled: true
     gauge:
       value_type: int
@@ -524,7 +524,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.disk.blocks_written:
-    description: " "
+    description: Number of physical blocks written to disk
     enabled: true
     gauge:
       value_type: int
@@ -534,7 +534,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.disk.read_time_milliseconds:
-    description: " "
+    description: Time spent reading from disk in milliseconds
     enabled: true
     gauge:
       value_type: int
@@ -544,7 +544,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.disk.write_time_milliseconds:
-    description: " "
+    description: Time spent writing to disk in milliseconds
     enabled: true
     gauge:
       value_type: int
@@ -554,7 +554,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.memory.pga_in_use_bytes:
-    description: " "
+    description: Total PGA memory currently in use in bytes
     enabled: true
     gauge:
       value_type: int
@@ -564,7 +564,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.memory.pga_allocated_bytes:
-    description: " "
+    description: Total PGA memory allocated in bytes
     enabled: true
     gauge:
       value_type: int
@@ -574,7 +574,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.memory.pga_freeable_bytes:
-    description: " "
+    description: Total freeable PGA memory in bytes
     enabled: true
     gauge:
       value_type: int
@@ -584,7 +584,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.memory.pga_max_size_bytes:
-    description: " "
+    description: Global memory bound for PGA in bytes
     enabled: true
     gauge:
       value_type: int
@@ -594,7 +594,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.global_name:
-    description: " "
+    description: Oracle database global name information
     enabled: true
     gauge:
       value_type: int
@@ -604,7 +604,7 @@ metrics:
       - global.name
 
   newrelicoracledb.db_id:
-    description: " "
+    description: Oracle database ID information
     enabled: true
     gauge:
       value_type: int
@@ -614,7 +614,7 @@ metrics:
       - db.id
 
   newrelicoracledb.long_running_queries:
-    description: " "
+    description: Number of long running queries (active sessions running for more than 60 seconds)
     enabled: true
     gauge:
       value_type: int
@@ -624,7 +624,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.memory.sga_uga_total_bytes:
-    description: " "
+    description: Total SGA UGA memory in bytes (session uga memory max)
     enabled: true
     gauge:
       value_type: int
@@ -634,7 +634,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes:
-    description: " "
+    description: SGA shared pool library cache sharable memory in bytes for statements with more than 5 executions
     enabled: true
     gauge:
       value_type: int
@@ -644,7 +644,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes:
-    description: " "
+    description: SGA shared pool library cache shareable memory per user in bytes (250 * users_opening)
     enabled: true
     gauge:
       value_type: int
@@ -654,7 +654,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
-    description: " "
+    description: SGA shared pool library cache reload ratio (reloads/pins)
     enabled: true
     gauge:
       value_type: double
@@ -664,7 +664,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_shared_pool_library_cache_hit_ratio:
-    description: " "
+    description: SGA shared pool library cache hit ratio for SQL AREA namespace
     enabled: true
     gauge:
       value_type: double
@@ -674,7 +674,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio:
-    description: " "
+    description: SGA shared pool dictionary cache miss ratio (getmisses/gets)
     enabled: true
     gauge:
       value_type: double
@@ -684,7 +684,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_log_buffer_space_waits:
-    description: " "
+    description: Number of sessions waiting for log buffer space
     enabled: true
     gauge:
       value_type: int
@@ -694,7 +694,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_log_allocation_retries_ratio:
-    description: " "
+    description: SGA log allocation retries ratio (redo buffer allocation retries / redo entries)
     enabled: true
     gauge:
       value_type: double
@@ -704,7 +704,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_hit_ratio:
-    description: " "
+    description: SGA hit ratio (session logical reads minus physical reads / session logical reads)
     enabled: true
     gauge:
       value_type: double
@@ -714,7 +714,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_log_buffer_redo_allocation_retries:
-    description: " "
+    description: Number of redo buffer allocation retries from sysstat
     enabled: true
     gauge:
       value_type: int
@@ -724,7 +724,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_log_buffer_redo_entries:
-    description: " "
+    description: Number of redo entries from sysstat
     enabled: true
     gauge:
       value_type: int
@@ -734,7 +734,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sorts_memory:
-    description: " "
+    description: Number of sorts performed in memory from sysstat
     enabled: true
     gauge:
       value_type: int
@@ -744,7 +744,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sorts_disk:
-    description: " "
+    description: Number of sorts performed on disk from sysstat
     enabled: true
     gauge:
       value_type: int
@@ -754,7 +754,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_fixed_size_bytes:
-    description: " "
+    description: SGA fixed size memory in bytes
     enabled: true
     gauge:
       value_type: int
@@ -764,7 +764,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_redo_buffers_bytes:
-    description: " "
+    description: SGA redo buffers memory in bytes
     enabled: true
     gauge:
       value_type: int
@@ -774,7 +774,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.rollback_segments_gets:
-    description: " "
+    description: Number of gets on rollback segments
     enabled: true
     gauge:
       value_type: int
@@ -784,7 +784,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.rollback_segments_waits:
-    description: " "
+    description: Number of waits on rollback segments
     enabled: true
     gauge:
       value_type: int
@@ -794,7 +794,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.rollback_segments_wait_ratio:
-    description: " "
+    description: Rollback segments wait ratio (waits/gets)
     enabled: true
     gauge:
       value_type: double
@@ -804,7 +804,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.redo_log_parallel_write_waits:
-    description: " "
+    description: Number of waits for log file parallel write events
     enabled: true
     gauge:
       value_type: int
@@ -814,7 +814,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.redo_log_switch_completion_waits:
-    description: " "
+    description: Number of waits for log file switch completion events
     enabled: true
     gauge:
       value_type: int
@@ -824,7 +824,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits:
-    description: " "
+    description: Number of waits for log file switch (checkpoint incomplete) events
     enabled: true
     gauge:
       value_type: int
@@ -834,7 +834,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.redo_log_switch_archiving_needed_waits:
-    description: " "
+    description: Number of waits for log file switch (archiving needed) events
     enabled: true
     gauge:
       value_type: int
@@ -844,7 +844,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_buffer_busy_waits:
-    description: " "
+    description: Number of buffer busy waits events
     enabled: true
     gauge:
       value_type: int
@@ -854,7 +854,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_free_buffer_waits:
-    description: " "
+    description: Number of free buffer waits events
     enabled: true
     gauge:
       value_type: int
@@ -864,7 +864,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.sga_free_buffer_inspected_waits:
-    description: " "
+    description: Number of free buffer inspected waits events
     enabled: true
     gauge:
       value_type: int
@@ -874,7 +874,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.pdb.active_parallel_sessions:
-    description: " "
+    description: Number of active parallel sessions in PDB
     enabled: true
     gauge:
       value_type: double
@@ -885,7 +885,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.active_serial_sessions:
-    description: " "
+    description: Number of active serial sessions in PDB
     enabled: true
     gauge:
       value_type: double
@@ -896,7 +896,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.average_active_sessions:
-    description: " "
+    description: Average number of active sessions in PDB
     enabled: true
     gauge:
       value_type: double
@@ -907,7 +907,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.background_cpu_usage_per_second:
-    description: " "
+    description: Background CPU usage per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -918,7 +918,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.background_time_per_second:
-    description: " "
+    description: Background time per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -929,7 +929,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.cpu_usage_per_second:
-    description: " "
+    description: CPU usage per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -940,7 +940,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.cpu_usage_per_transaction:
-    description: " "
+    description: CPU usage per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -951,7 +951,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.current_logons:
-    description: " "
+    description: Current number of logons in PDB
     enabled: true
     gauge:
       value_type: double
@@ -962,7 +962,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.current_open_cursors:
-    description: " "
+    description: Current number of open cursors in PDB
     enabled: true
     gauge:
       value_type: double
@@ -973,7 +973,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.cpu_time_ratio:
-    description: " "
+    description: Database CPU time ratio in PDB
     enabled: true
     gauge:
       value_type: double
@@ -984,7 +984,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.wait_time_ratio:
-    description: " "
+    description: Database wait time ratio in PDB
     enabled: true
     gauge:
       value_type: double
@@ -995,7 +995,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.block_changes_per_second:
-    description: " "
+    description: DB block changes per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1006,7 +1006,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.block_changes_per_transaction:
-    description: " "
+    description: DB block changes per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1017,7 +1017,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.executions_per_second:
-    description: " "
+    description: Executions per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1028,7 +1028,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.executions_per_transaction:
-    description: " "
+    description: Executions per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1039,7 +1039,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.hard_parse_count_per_second:
-    description: " "
+    description: Hard parse count per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1050,7 +1050,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.hard_parse_count_per_transaction:
-    description: " "
+    description: Hard parse count per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1061,7 +1061,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.logical_reads_per_second:
-    description: " "
+    description: Logical reads per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1072,7 +1072,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.logical_reads_per_transaction:
-    description: " "
+    description: Logical reads per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1083,7 +1083,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.logons_per_transaction:
-    description: " "
+    description: Logons per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1094,7 +1094,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.network_traffic_byte_per_second:
-    description: " "
+    description: Network traffic volume per second in bytes in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1105,7 +1105,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.open_cursors_per_second:
-    description: " "
+    description: Open cursors per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1116,7 +1116,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.open_cursors_per_transaction:
-    description: " "
+    description: Open cursors per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1127,7 +1127,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.parse_failure_count_per_second:
-    description: " "
+    description: Parse failure count per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1138,7 +1138,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.physical_read_bytes_per_second:
-    description: " "
+    description: Physical read total bytes per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1149,7 +1149,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.physical_reads_per_transaction:
-    description: " "
+    description: Physical reads per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1160,7 +1160,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.physical_write_bytes_per_second:
-    description: " "
+    description: Physical write total bytes per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1171,7 +1171,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.physical_writes_per_transaction:
-    description: " "
+    description: Physical writes per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1182,7 +1182,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.redo_generated_bytes_per_second:
-    description: " "
+    description: Redo generated per second in bytes in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1193,7 +1193,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.redo_generated_bytes_per_transaction:
-    description: " "
+    description: Redo generated per transaction in bytes in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1204,7 +1204,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.response_time_per_transaction:
-    description: " "
+    description: Response time per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1215,7 +1215,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.session_count:
-    description: " "
+    description: Session count in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1226,7 +1226,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.soft_parse_ratio:
-    description: " "
+    description: Soft parse ratio in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1237,7 +1237,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.sql_service_response_time:
-    description: " "
+    description: SQL service response time in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1248,7 +1248,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.total_parse_count_per_second:
-    description: " "
+    description: Total parse count per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1259,7 +1259,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.total_parse_count_per_transaction:
-    description: " "
+    description: Total parse count per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1270,7 +1270,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.user_calls_per_second:
-    description: " "
+    description: User calls per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1281,7 +1281,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.user_calls_per_transaction:
-    description: " "
+    description: User calls per transaction in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1292,7 +1292,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.user_commits_per_second:
-    description: " "
+    description: User commits per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1303,7 +1303,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.user_commits_percentage:
-    description: " "
+    description: User commits percentage in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1314,7 +1314,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.user_rollbacks_per_second:
-    description: " "
+    description: User rollbacks per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1325,7 +1325,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.user_rollbacks_percentage:
-    description: " "
+    description: User rollbacks percentage in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1336,7 +1336,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.transactions_per_second:
-    description: " "
+    description: User transactions per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1347,7 +1347,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.execute_without_parse_ratio:
-    description: " "
+    description: Execute without parse ratio in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1358,7 +1358,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.logons_per_second:
-    description: " "
+    description: Logons per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1369,7 +1369,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.db_physical_read_bytes_per_second:
-    description: " "
+    description: Physical read bytes per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1380,7 +1380,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.db_physical_reads_per_second:
-    description: " "
+    description: Physical reads per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1391,7 +1391,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.db_physical_write_bytes_per_second:
-    description: " "
+    description: Physical write bytes per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1402,7 +1402,7 @@ metrics:
       - database_name
 
   newrelicoracledb.pdb.db_physical_writes_per_second:
-    description: " "
+    description: Physical writes per second in PDB
     enabled: true
     gauge:
       value_type: double
@@ -1414,7 +1414,7 @@ metrics:
 
   # System metrics from gv$sysmetric
   newrelicoracledb.system.buffer_cache_hit_ratio:
-    description: " "
+    description: Buffer Cache Hit Ratio
     enabled: true
     gauge:
       value_type: double
@@ -1424,7 +1424,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.memory_sorts_ratio:
-    description: " "
+    description: Memory Sorts Ratio
     enabled: true
     gauge:
       value_type: double
@@ -1434,7 +1434,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.redo_allocation_hit_ratio:
-    description: " "
+    description: Redo Allocation Hit Ratio
     enabled: true
     gauge:
       value_type: double
@@ -1444,7 +1444,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.transactions_per_second:
-    description: " "
+    description: User Transaction Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1454,7 +1454,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_reads_per_transaction:
-    description: " "
+    description: Physical Reads Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1464,7 +1464,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_writes_per_transaction:
-    description: " "
+    description: Physical Writes Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1474,7 +1474,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_reads_direct_per_second:
-    description: " "
+    description: Physical Reads Direct Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1484,7 +1484,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_reads_direct_per_transaction:
-    description: " "
+    description: Physical Reads Direct Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1494,7 +1494,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_writes_direct_per_second:
-    description: " "
+    description: Physical Writes Direct Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1504,7 +1504,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_writes_direct_per_transaction:
-    description: " "
+    description: Physical Writes Direct Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1514,7 +1514,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_lobs_reads_per_second:
-    description: " "
+    description: Physical Reads Direct Lobs Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1524,7 +1524,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_lobs_reads_per_transaction:
-    description: " "
+    description: Physical Reads Direct Lobs Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1534,7 +1534,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_lobs_writes_per_second:
-    description: " "
+    description: Physical Writes Direct Lobs Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1544,7 +1544,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_lobs_writes_per_transaction:
-    description: " "
+    description: Physical Writes Direct Lobs Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1554,7 +1554,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.redo_generated_bytes_per_second:
-    description: " "
+    description: Redo Generated Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1564,7 +1564,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.redo_generated_bytes_per_transaction:
-    description: " "
+    description: Redo Generated Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1574,7 +1574,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.logons_per_transaction:
-    description: " "
+    description: Logons Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1584,7 +1584,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.open_cursors_per_second:
-    description: " "
+    description: Open Cursors Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1594,7 +1594,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.open_cursors_per_transaction:
-    description: " "
+    description: Open Cursors Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1604,7 +1604,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_commits_per_second:
-    description: " "
+    description: User Commits Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1614,7 +1614,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_commits_percentage:
-    description: " "
+    description: User Commits Percentage
     enabled: true
     gauge:
       value_type: double
@@ -1624,7 +1624,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_rollbacks_per_second:
-    description: " "
+    description: User Rollbacks Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1634,7 +1634,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_rollbacks_percentage:
-    description: " "
+    description: User Rollbacks Percentage
     enabled: true
     gauge:
       value_type: double
@@ -1644,7 +1644,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_calls_per_second:
-    description: " "
+    description: User Calls Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1654,7 +1654,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_calls_per_transaction:
-    description: " "
+    description: User Calls Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1664,7 +1664,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.recursive_calls_per_second:
-    description: " "
+    description: Recursive Calls Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1674,7 +1674,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.recursive_calls_per_transaction:
-    description: " "
+    description: Recursive Calls Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1684,7 +1684,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.logical_reads_per_second:
-    description: " "
+    description: Logical Reads Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1694,7 +1694,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.logical_reads_per_transaction:
-    description: " "
+    description: Logical Reads Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1704,7 +1704,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.dbwr_checkpoints_per_second:
-    description: " "
+    description: DBWR Checkpoints Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1714,7 +1714,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.background_checkpoints_per_second:
-    description: " "
+    description: Background Checkpoints Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1724,7 +1724,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.redo_writes_per_second:
-    description: " "
+    description: Redo Writes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1734,7 +1734,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.redo_writes_per_transaction:
-    description: " "
+    description: Redo Writes Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1744,7 +1744,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.long_table_scans_per_second:
-    description: " "
+    description: Long Table Scans Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1754,7 +1754,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.long_table_scans_per_transaction:
-    description: " "
+    description: Long Table Scans Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1764,7 +1764,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_table_scans_per_second:
-    description: " "
+    description: Total Table Scans Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1774,7 +1774,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_table_scans_per_transaction:
-    description: " "
+    description: Total Table Scans Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1784,7 +1784,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.full_index_scans_per_second:
-    description: " "
+    description: Full Index Scans Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1794,7 +1794,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.full_index_scans_per_transaction:
-    description: " "
+    description: Full Index Scans Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1804,7 +1804,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_index_scans_per_second:
-    description: " "
+    description: Total Index Scans Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1814,7 +1814,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_index_scans_per_transaction:
-    description: " "
+    description: Total Index Scans Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1824,7 +1824,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_parse_count_per_second:
-    description: " "
+    description: Total Parse Count Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1834,7 +1834,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_parse_count_per_transaction:
-    description: " "
+    description: Total Parse Count Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1844,7 +1844,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.hard_parse_count_per_second:
-    description: " "
+    description: Hard Parse Count Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1854,7 +1854,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.hard_parse_count_per_transaction:
-    description: " "
+    description: Hard Parse Count Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1864,7 +1864,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.parse_failure_count_per_second:
-    description: " "
+    description: Parse Failure Count Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1874,7 +1874,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.parse_failure_count_per_transaction:
-    description: " "
+    description: Parse Failure Count Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1884,7 +1884,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.cursor_cache_hit_ratio:
-    description: " "
+    description: Cursor Cache Hit Ratio
     enabled: true
     gauge:
       value_type: double
@@ -1894,7 +1894,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.disk_sort_per_second:
-    description: " "
+    description: Disk Sort Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1904,7 +1904,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.disk_sort_per_transaction:
-    description: " "
+    description: Disk Sort Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1914,7 +1914,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.rows_per_sort:
-    description: " "
+    description: Rows Per Sort
     enabled: true
     gauge:
       value_type: double
@@ -1924,7 +1924,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.soft_parse_ratio:
-    description: " "
+    description: Soft Parse Ratio
     enabled: true
     gauge:
       value_type: double
@@ -1934,7 +1934,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_calls_ratio:
-    description: " "
+    description: User Calls Ratio
     enabled: true
     gauge:
       value_type: double
@@ -1944,7 +1944,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.host_cpu_utilization:
-    description: " "
+    description: Host CPU Utilization (%)
     enabled: true
     gauge:
       value_type: double
@@ -1954,7 +1954,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.network_traffic_volume_per_second:
-    description: " "
+    description: Network Traffic Volume Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1964,7 +1964,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_timeouts_per_second:
-    description: " "
+    description: Enqueue Timeouts Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1974,7 +1974,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_timeouts_per_transaction:
-    description: " "
+    description: Enqueue Timeouts Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -1984,7 +1984,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_waits_per_second:
-    description: " "
+    description: Enqueue Waits Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -1994,7 +1994,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_waits_per_transaction:
-    description: " "
+    description: Enqueue Waits Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2004,7 +2004,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_deadlocks_per_second:
-    description: " "
+    description: Enqueue Deadlocks Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2014,7 +2014,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_deadlocks_per_transaction:
-    description: " "
+    description: Enqueue Deadlocks Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2024,7 +2024,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_requests_per_second:
-    description: " "
+    description: Enqueue Requests Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2034,7 +2034,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.enqueue_requests_per_transaction:
-    description: " "
+    description: Enqueue Requests Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2044,7 +2044,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.db_block_gets_per_second:
-    description: " "
+    description: DB Block Gets Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2054,7 +2054,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.db_block_gets_per_transaction:
-    description: " "
+    description: DB Block Gets Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2064,7 +2064,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.consistent_read_gets_per_second:
-    description: " "
+    description: Consistent Read Gets Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2074,7 +2074,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.db_block_changes_per_second:
-    description: " "
+    description: DB Block Changes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2084,7 +2084,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.consistent_read_gets_per_transaction:
-    description: " "
+    description: Consistent Read Gets Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2094,7 +2094,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.db_block_changes_per_transaction:
-    description: " "
+    description: DB Block Changes Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2104,7 +2104,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.consistent_read_changes_per_second:
-    description: " "
+    description: Consistent Read Changes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2114,7 +2114,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.consistent_read_changes_per_transaction:
-    description: " "
+    description: Consistent Read Changes Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2124,7 +2124,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.cpu_usage_per_second:
-    description: " "
+    description: CPU Usage Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2134,7 +2134,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.cpu_usage_per_transaction:
-    description: " "
+    description: CPU Usage Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2144,7 +2144,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.cr_blocks_created_per_second:
-    description: " "
+    description: CR Blocks Created Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2154,7 +2154,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.cr_blocks_created_per_transaction:
-    description: " "
+    description: CR Blocks Created Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2164,7 +2164,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.cr_undo_records_applied_per_second:
-    description: " "
+    description: CR Undo Records Applied Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2174,7 +2174,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.cr_undo_records_applied_per_transaction:
-    description: " "
+    description: CR Undo Records Applied Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2184,7 +2184,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_rollback_undo_records_applied_per_second:
-    description: " "
+    description: User Rollback UndoRec Applied Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2194,7 +2194,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction:
-    description: " "
+    description: User Rollback Undo Records Applied Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2204,7 +2204,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.leaf_node_splits_per_second:
-    description: " "
+    description: Leaf Node Splits Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2214,7 +2214,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.leaf_node_splits_per_transaction:
-    description: " "
+    description: Leaf Node Splits Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2224,7 +2224,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.branch_node_splits_per_second:
-    description: " "
+    description: Branch Node Splits Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2234,7 +2234,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.branch_node_splits_per_transaction:
-    description: " "
+    description: Branch Node Splits Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2244,7 +2244,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_read_total_io_requests_per_second:
-    description: " "
+    description: Physical Read Total IO Requests Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2254,7 +2254,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_read_total_bytes_per_second:
-    description: " "
+    description: Physical Read Total Bytes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2264,7 +2264,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.gc_cr_block_received_per_second:
-    description: " "
+    description: GC CR Block Received Per Second
     enabled: true
     gauge:
       value_type: double
@@ -2274,7 +2274,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.gc_cr_block_received_per_transaction:
-    description: " "
+    description: GC CR Block Received Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2284,7 +2284,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.gc_current_block_received_per_second:
-    description: " "
+    description: GC Current Block Received Per Second
     enabled: true
     gauge:
       value_type: double
@@ -2294,7 +2294,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.gc_current_block_received_per_transaction:
-    description: " "
+    description: GC Current Block Received Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2304,7 +2304,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.global_cache_average_cr_get_time:
-    description: " "
+    description: Global Cache Average CR Get Time
     enabled: true
     gauge:
       value_type: double
@@ -2314,7 +2314,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.global_cache_average_current_get_time:
-    description: " "
+    description: Global Cache Average Current Get Time
     enabled: true
     gauge:
       value_type: double
@@ -2324,7 +2324,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_write_total_io_requests_per_second:
-    description: " "
+    description: Physical Write Total IO Requests Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2334,7 +2334,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.global_cache_blocks_corrupted:
-    description: " "
+    description: Global Cache Blocks Corrupted
     enabled: true
     gauge:
       value_type: double
@@ -2344,7 +2344,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.global_cache_blocks_lost:
-    description: " "
+    description: Global Cache Blocks Lost
     enabled: true
     gauge:
       value_type: double
@@ -2354,7 +2354,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.current_logons_count:
-    description: " "
+    description: Current Logons Count
     enabled: true
     gauge:
       value_type: double
@@ -2364,7 +2364,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.current_open_cursors_count:
-    description: " "
+    description: Current Open Cursors Count
     enabled: true
     gauge:
       value_type: double
@@ -2374,7 +2374,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.user_limit_percentage:
-    description: " "
+    description: User Limit %
     enabled: true
     gauge:
       value_type: double
@@ -2384,7 +2384,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.sql_service_response_time:
-    description: " "
+    description: SQL Service Response Time
     enabled: true
     gauge:
       value_type: double
@@ -2394,7 +2394,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.database_wait_time_ratio:
-    description: " "
+    description: Database Wait Time Ratio
     enabled: true
     gauge:
       value_type: double
@@ -2404,7 +2404,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.database_cpu_time_ratio:
-    description: " "
+    description: Database CPU Time Ratio
     enabled: true
     gauge:
       value_type: double
@@ -2414,7 +2414,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.response_time_per_transaction:
-    description: " "
+    description: Response Time Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2424,7 +2424,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.row_cache_hit_ratio:
-    description: " "
+    description: Row Cache Hit Ratio
     enabled: true
     gauge:
       value_type: double
@@ -2434,7 +2434,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.row_cache_miss_ratio:
-    description: " "
+    description: Row Cache Miss Ratio
     enabled: true
     gauge:
       value_type: double
@@ -2444,7 +2444,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.library_cache_hit_ratio:
-    description: " "
+    description: Library Cache Hit Ratio
     enabled: true
     gauge:
       value_type: double
@@ -2454,7 +2454,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.library_cache_miss_ratio:
-    description: " "
+    description: Library Cache Miss Ratio
     enabled: true
     gauge:
       value_type: double
@@ -2464,7 +2464,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.shared_pool_free_percentage:
-    description: " "
+    description: Shared Pool Free %
     enabled: true
     gauge:
       value_type: double
@@ -2474,7 +2474,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.pga_cache_hit_percentage:
-    description: " "
+    description: PGA Cache Hit %
     enabled: true
     gauge:
       value_type: double
@@ -2484,7 +2484,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.process_limit_percentage:
-    description: " "
+    description: Process Limit %
     enabled: true
     gauge:
       value_type: double
@@ -2494,7 +2494,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.session_limit_percentage:
-    description: " "
+    description: Session Limit %
     enabled: true
     gauge:
       value_type: double
@@ -2504,7 +2504,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.executions_per_transaction:
-    description: " "
+    description: Executions Per Txn
     enabled: true
     gauge:
       value_type: double
@@ -2514,7 +2514,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.executions_per_second:
-    description: " "
+    description: Executions Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2524,7 +2524,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.transactions_per_logon:
-    description: " "
+    description: Txns Per Logon
     enabled: true
     gauge:
       value_type: double
@@ -2534,7 +2534,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.database_time_per_second:
-    description: " "
+    description: Database Time Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2544,7 +2544,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_write_total_bytes_per_second:
-    description: " "
+    description: Physical Write Total Bytes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2554,7 +2554,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_write_io_requests_per_second:
-    description: " "
+    description: Physical Write IO Requests Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2564,7 +2564,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.db_block_changes_per_user_call:
-    description: " "
+    description: DB Block Changes Per User Call
     enabled: true
     gauge:
       value_type: double
@@ -2574,7 +2574,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.db_block_gets_per_user_call:
-    description: " "
+    description: DB Block Gets Per User Call
     enabled: true
     gauge:
       value_type: double
@@ -2584,7 +2584,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.executions_per_user_call:
-    description: " "
+    description: Executions Per User Call
     enabled: true
     gauge:
       value_type: double
@@ -2594,7 +2594,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.logical_reads_per_user_call:
-    description: " "
+    description: Logical Reads Per User Call
     enabled: true
     gauge:
       value_type: double
@@ -2604,7 +2604,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_sorts_per_user_call:
-    description: " "
+    description: Total Sorts Per User Call
     enabled: true
     gauge:
       value_type: double
@@ -2614,7 +2614,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.total_table_scans_per_user_call:
-    description: " "
+    description: Total Table Scans Per User Call
     enabled: true
     gauge:
       value_type: double
@@ -2624,7 +2624,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.current_os_load:
-    description: " "
+    description: Current OS Load
     enabled: true
     gauge:
       value_type: double
@@ -2634,7 +2634,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.streams_pool_usage_percentage:
-    description: " "
+    description: Streams Pool Usage Percentage
     enabled: true
     gauge:
       value_type: double
@@ -2644,7 +2644,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.io_megabytes_per_second:
-    description: " "
+    description: I/O Megabytes per Second
     enabled: true
     gauge:
       value_type: double
@@ -2654,7 +2654,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.io_requests_per_second:
-    description: " "
+    description: I/O Requests per Second
     enabled: true
     gauge:
       value_type: double
@@ -2664,7 +2664,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.average_active_sessions:
-    description: " "
+    description: Average Active Sessions
     enabled: true
     gauge:
       value_type: double
@@ -2674,7 +2674,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.active_serial_sessions:
-    description: " "
+    description: Active Serial Sessions
     enabled: true
     gauge:
       value_type: double
@@ -2684,7 +2684,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.active_parallel_sessions:
-    description: " "
+    description: Active Parallel Sessions
     enabled: true
     gauge:
       value_type: double
@@ -2694,7 +2694,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.background_cpu_usage_per_second:
-    description: " "
+    description: Background CPU Usage Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2704,7 +2704,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.background_time_per_second:
-    description: " "
+    description: Background Time Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2714,7 +2714,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.host_cpu_usage_per_second:
-    description: " "
+    description: Host CPU Usage Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2724,7 +2724,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.temp_space_used:
-    description: " "
+    description: Temp Space Used
     enabled: true
     gauge:
       value_type: double
@@ -2734,7 +2734,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.session_count:
-    description: " "
+    description: Session Count
     enabled: true
     gauge:
       value_type: double
@@ -2744,7 +2744,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.captured_user_calls:
-    description: " "
+    description: Captured user calls
     enabled: true
     gauge:
       value_type: double
@@ -2754,7 +2754,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.execute_without_parse_ratio:
-    description: " "
+    description: Execute Without Parse Ratio
     enabled: true
     gauge:
       value_type: double
@@ -2764,7 +2764,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.logons_per_second:
-    description: " "
+    description: Logons Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2774,7 +2774,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_read_bytes_per_second:
-    description: " "
+    description: Physical Read Bytes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2784,7 +2784,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_read_io_requests_per_second:
-    description: " "
+    description: Physical Read IO Requests Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2794,7 +2794,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_reads_per_second:
-    description: " "
+    description: Physical Reads Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2804,7 +2804,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_write_bytes_per_second:
-    description: " "
+    description: Physical Write Bytes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2814,7 +2814,7 @@ metrics:
       - instance.id
 
   newrelicoracledb.system.physical_writes_per_second:
-    description: " "
+    description: Physical Writes Per Sec
     enabled: true
     gauge:
       value_type: double
@@ -2825,7 +2825,7 @@ metrics:
 
   # Core Connection Metrics
   newrelicoracledb.connection.total_sessions:
-    description: " "
+    description: Total number of Oracle database sessions
     enabled: true
     gauge:
       value_type: double
@@ -2834,7 +2834,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.active_sessions:
-    description: " "
+    description: Number of active Oracle database sessions
     enabled: true
     gauge:
       value_type: double
@@ -2843,7 +2843,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.inactive_sessions:
-    description: " "
+    description: Number of inactive Oracle database sessions
     enabled: true
     gauge:
       value_type: double
@@ -2852,7 +2852,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.sessions_by_status:
-    description: " "
+    description: Number of sessions grouped by status
     enabled: true
     gauge:
       value_type: double
@@ -2862,7 +2862,7 @@ metrics:
       - session.status
 
   newrelicoracledb.connection.sessions_by_type:
-    description: " "
+    description: Number of sessions grouped by type
     enabled: true
     gauge:
       value_type: double
@@ -2873,7 +2873,7 @@ metrics:
 
   # Logon Statistics
   newrelicoracledb.connection.logons_cumulative:
-    description: " "
+    description: Cumulative number of logons since instance startup
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -2884,7 +2884,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.logons_current:
-    description: " "
+    description: Current number of active logons
     enabled: true
     gauge:
       value_type: double
@@ -2894,7 +2894,7 @@ metrics:
 
   # Session Resource Consumption
   newrelicoracledb.connection.session_cpu_usage:
-    description: " "
+    description: CPU usage by session in seconds
     enabled: true
     gauge:
       value_type: double
@@ -2907,7 +2907,7 @@ metrics:
       - program
 
   newrelicoracledb.connection.session_pga_memory:
-    description: " "
+    description: PGA memory usage by session
     enabled: true
     gauge:
       value_type: double
@@ -2920,7 +2920,7 @@ metrics:
       - program
 
   newrelicoracledb.connection.session_logical_reads:
-    description: " "
+    description: Logical reads by session
     enabled: true
     gauge:
       value_type: double
@@ -2933,7 +2933,7 @@ metrics:
       - program
 
   newrelicoracledb.connection.session_idle_time:
-    description: " "
+    description: Session idle time in seconds
     enabled: true
     gauge:
       value_type: double
@@ -2947,7 +2947,7 @@ metrics:
 
   # Wait Events
   newrelicoracledb.connection.wait_events:
-    description: " "
+    description: Current wait events and wait time
     enabled: true
     gauge:
       value_type: double
@@ -2961,7 +2961,7 @@ metrics:
       - wait.class
 
   newrelicoracledb.connection.blocking_sessions:
-    description: " "
+    description: Sessions blocked by other sessions
     enabled: true
     gauge:
       value_type: double
@@ -2976,7 +2976,7 @@ metrics:
 
   # Wait Event Summary
   newrelicoracledb.connection.wait_event_total_waits:
-    description: " "
+    description: Total number of waits for each wait event
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -2989,7 +2989,7 @@ metrics:
       - wait.class
 
   newrelicoracledb.connection.wait_event_time_waited:
-    description: " "
+    description: Total time waited for each wait event
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3002,7 +3002,7 @@ metrics:
       - wait.class
 
   newrelicoracledb.connection.wait_event_avg_wait_time:
-    description: " "
+    description: Average wait time for each wait event
     enabled: true
     gauge:
       value_type: double
@@ -3014,7 +3014,7 @@ metrics:
 
   # Connection Pool Metrics
   newrelicoracledb.connection.shared_servers:
-    description: " "
+    description: Number of shared servers
     enabled: true
     gauge:
       value_type: double
@@ -3023,7 +3023,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.dispatchers:
-    description: " "
+    description: Number of dispatchers
     enabled: true
     gauge:
       value_type: double
@@ -3032,7 +3032,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.circuits:
-    description: " "
+    description: Number of active circuits
     enabled: true
     gauge:
       value_type: double
@@ -3042,7 +3042,7 @@ metrics:
 
   # Resource Limits
   newrelicoracledb.connection.resource_current_utilization:
-    description: " "
+    description: Current utilization of Oracle resources
     enabled: true
     gauge:
       value_type: double
@@ -3052,7 +3052,7 @@ metrics:
       - resource.name
 
   newrelicoracledb.connection.resource_max_utilization:
-    description: " "
+    description: Maximum utilization of Oracle resources since startup
     enabled: true
     gauge:
       value_type: double
@@ -3062,7 +3062,7 @@ metrics:
       - resource.name
 
   newrelicoracledb.connection.resource_limit:
-    description: " "
+    description: Limit value for Oracle resources
     enabled: true
     gauge:
       value_type: double
@@ -3073,7 +3073,7 @@ metrics:
 
   # Connection Quality Metrics
   newrelicoracledb.connection.user_commits:
-    description: " "
+    description: Number of user commits
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3084,7 +3084,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.user_rollbacks:
-    description: " "
+    description: Number of user rollbacks
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3095,7 +3095,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.parse_count_total:
-    description: " "
+    description: Total number of parse calls
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3106,7 +3106,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.parse_count_hard:
-    description: " "
+    description: Number of hard parse calls
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3117,7 +3117,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.execute_count:
-    description: " "
+    description: Number of SQL executions
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3128,7 +3128,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.sqlnet_roundtrips:
-    description: " "
+    description: Number of SQL*Net roundtrips to/from client
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3139,7 +3139,7 @@ metrics:
       - db.instance.name
 
   newrelicoracledb.connection.bytes_sent:
-    description: " "
+    description: Bytes sent via SQL*Net to client
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3151,7 +3151,7 @@ metrics:
 
   # Container/CDB/PDB Status Metrics
   newrelicoracledb.container.status:
-    description: " "
+    description: Oracle container status (1=READ WRITE, 0=other)
     enabled: true
     gauge:
       value_type: int
@@ -3163,7 +3163,7 @@ metrics:
       - open.mode
 
   newrelicoracledb.container.restricted:
-    description: " "
+    description: Oracle container restricted status (1=YES, 0=NO)
     enabled: true
     gauge:
       value_type: int
@@ -3175,7 +3175,7 @@ metrics:
       - restricted.status
 
   newrelicoracledb.pdb.open_mode:
-    description: " "
+    description: Oracle PDB open mode (1=READ WRITE, 0=other)
     enabled: true
     gauge:
       value_type: int
@@ -3187,7 +3187,7 @@ metrics:
       - open.mode
 
   newrelicoracledb.pdb.total_size_bytes:
-    description: " "
+    description: Total size of PDB in bytes
     enabled: true
     gauge:
       value_type: int
@@ -3199,7 +3199,7 @@ metrics:
 
   # Tablespace metrics with container awareness
   newrelicoracledb.tablespace.used_bytes:
-    description: " "
+    description: Used bytes in tablespace
     enabled: true
     gauge:
       value_type: int
@@ -3210,7 +3210,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.total_bytes:
-    description: " "
+    description: Total bytes in tablespace
     enabled: true
     gauge:
       value_type: int
@@ -3221,7 +3221,7 @@ metrics:
       - tablespace.name
 
   newrelicoracledb.tablespace.used_percent:
-    description: " "
+    description: Used percentage of tablespace
     enabled: true
     gauge:
       value_type: double
@@ -3233,7 +3233,7 @@ metrics:
 
   # Data file metrics
   newrelicoracledb.datafile.size_bytes:
-    description: " "
+    description: Size of data file in bytes
     enabled: true
     gauge:
       value_type: int
@@ -3245,7 +3245,7 @@ metrics:
       - file.name
 
   newrelicoracledb.datafile.used_bytes:
-    description: " "
+    description: Used bytes in data file
     enabled: true
     gauge:
       value_type: int
@@ -3257,7 +3257,7 @@ metrics:
       - file.name
 
   newrelicoracledb.datafile.autoextensible:
-    description: " "
+    description: Data file autoextensible status (1=YES, 0=NO)
     enabled: true
     gauge:
       value_type: int
@@ -3271,7 +3271,7 @@ metrics:
 
   # Service metrics
   newrelicoracledb.service.status:
-    description: " "
+    description: Oracle service status (1=active, 0=inactive)
     enabled: true
     gauge:
       value_type: int
@@ -3282,7 +3282,7 @@ metrics:
       - service.name
 
   newrelicoracledb.service.count:
-    description: " "
+    description: Count of services per container
     enabled: true
     gauge:
       value_type: int
@@ -3292,7 +3292,7 @@ metrics:
       - con.id
 
   newrelicoracledb.connection.bytes_received:
-    description: " "
+    description: Bytes received via SQL*Net from client
     enabled: true
     sum:
       aggregation_temporality: cumulative
@@ -3304,7 +3304,7 @@ metrics:
 
   # RAC-specific metrics for Feature 1: ASM Monitoring
   newrelicoracledb.asm.diskgroup.total_mb:
-    description: " "
+    description: Total capacity of the ASM disk group in MB
     enabled: true
     gauge:
       value_type: double
@@ -3314,7 +3314,7 @@ metrics:
       - diskgroup.name
 
   newrelicoracledb.asm.diskgroup.free_mb:
-    description: " "
+    description: Available free space in the ASM disk group in MB
     enabled: true
     gauge:
       value_type: double
@@ -3324,7 +3324,7 @@ metrics:
       - diskgroup.name
 
   newrelicoracledb.asm.diskgroup.offline_disks:
-    description: " "
+    description: Number of offline disks in the ASM disk group
     enabled: true
     gauge:
       value_type: int
@@ -3335,7 +3335,7 @@ metrics:
 
   # RAC-specific metrics for Feature 2: Cluster Wait Events
   newrelicoracledb.rac.wait_time:
-    description: " "
+    description: Rate of cluster wait time in microseconds per second
     enabled: true
     gauge:
       value_type: double
@@ -3346,7 +3346,7 @@ metrics:
       - wait.event
 
   newrelicoracledb.rac.total_waits:
-    description: " "
+    description: Total number of cluster wait events
     enabled: true
     gauge:
       value_type: int
@@ -3358,7 +3358,7 @@ metrics:
 
   # RAC-specific metrics for Feature 3A: Instance Status
   newrelicoracledb.rac.instance.status:
-    description: " "
+    description: RAC instance status (1=OPEN, 0=other)
     enabled: true
     gauge:
       value_type: int
@@ -3372,7 +3372,7 @@ metrics:
 
   # RAC-specific metrics for Feature 3B: Service Failover
   newrelicoracledb.rac.service.instance_id:
-    description: " "
+    description: Instance ID where the service is currently running
     enabled: true
     gauge:
       value_type: double
@@ -3384,7 +3384,7 @@ metrics:
 
   # Additional RAC Instance Health Metrics
   newrelicoracledb.rac.instance.uptime_seconds:
-    description: " "
+    description: Instance uptime in seconds since startup
     enabled: true
     gauge:
       value_type: int
@@ -3396,7 +3396,7 @@ metrics:
       - host.name.rac
 
   newrelicoracledb.rac.instance.database_status:
-    description: " "
+    description: Database status indicator (1=ACTIVE, 0=other)
     enabled: true
     gauge:
       value_type: int
@@ -3409,7 +3409,7 @@ metrics:
       - database.status
 
   newrelicoracledb.rac.instance.active_state:
-    description: " "
+    description: Instance active state indicator (1=NORMAL, 0=other)
     enabled: true
     gauge:
       value_type: int
@@ -3422,7 +3422,7 @@ metrics:
       - active.state
 
   newrelicoracledb.rac.instance.logins_allowed:
-    description: " "
+    description: Instance login status indicator (1=ALLOWED, 0=RESTRICTED)
     enabled: true
     gauge:
       value_type: int
@@ -3435,7 +3435,7 @@ metrics:
       - logins.status
 
   newrelicoracledb.rac.instance.archiver_started:
-    description: " "
+    description: Archiver status indicator (1=STARTED, 0=STOPPED)
     enabled: true
     gauge:
       value_type: int
@@ -3453,7 +3453,7 @@ metrics:
 
   # Oracle Database Version Metric
   newrelicoracledb.rac.instance.version_info:
-    description: " "
+    description: Oracle database version information (always 1, version in attributes)
     enabled: true
     gauge:
       value_type: int
@@ -3466,7 +3466,7 @@ metrics:
 
   # Enhanced Service Configuration Metrics
   newrelicoracledb.rac.service.network_config:
-    description: " "
+    description: Service network configuration (always 1, config in attributes)
     enabled: true
     gauge:
       value_type: int
@@ -3481,7 +3481,7 @@ metrics:
   # in Oracle 12c/19c/21c - these were causing ORA-00904 errors
 
   newrelicoracledb.rac.service.clb_config:
-    description: " "
+    description: Connection load balancing configuration (always 1, config in attributes)
     enabled: true
     gauge:
       value_type: int
@@ -3492,7 +3492,7 @@ metrics:
       - clb.goal
 
   newrelicoracledb.rac.service.goal_config:
-    description: " "
+    description: Service goal configuration (always 1, goal in attributes)
     enabled: true
     gauge:
       value_type: int
@@ -3503,7 +3503,7 @@ metrics:
       - service.goal
 
   newrelicoracledb.rac.service.blocked_status:
-    description: " "
+    description: Service blocked indicator (1=blocked, 0=not blocked)
     enabled: true
     gauge:
       value_type: int
@@ -3514,7 +3514,7 @@ metrics:
       - service.blocked
 
   newrelicoracledb.rac.service.fan_enabled:
-    description: " "
+    description: Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)
     enabled: true
     gauge:
       value_type: int
@@ -3525,7 +3525,7 @@ metrics:
       - service.fan_enabled
 
   newrelicoracledb.rac.service.transaction_guard_enabled:
-    description: " "
+    description: Transaction Guard enabled indicator (1=enabled, 0=disabled)
     enabled: true
     gauge:
       value_type: int
@@ -3536,7 +3536,7 @@ metrics:
       - service.transaction_guard
 
   newrelicoracledb.rac.service.drain_timeout_seconds:
-    description: " "
+    description: Session drain timeout in seconds before service stop
     enabled: true
     gauge:
       value_type: int
@@ -3547,7 +3547,7 @@ metrics:
       - service.drain_timeout
 
   newrelicoracledb.rac.service.replay_timeout_seconds:
-    description: " "
+    description: Application Continuity replay initiation timeout in seconds
     enabled: true
     gauge:
       value_type: int
@@ -3558,7 +3558,7 @@ metrics:
       - service.replay_timeout
 
   newrelicoracledb.slow_queries.execution_count:
-    description: " "
+    description: Number of executions for slow queries
     enabled: true
     gauge:
       value_type: double
@@ -3570,7 +3570,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.avg_cpu_time:
-    description: " "
+    description: Average CPU time per execution for slow queries
     enabled: true
     gauge:
       value_type: double
@@ -3582,7 +3582,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.avg_disk_reads:
-    description: " "
+    description: Average disk reads per execution for slow queries
     enabled: true
     gauge:
       value_type: double
@@ -3594,7 +3594,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.avg_disk_writes:
-    description: " "
+    description: Average disk writes per execution for slow queries
     enabled: true
     gauge:
       value_type: double
@@ -3606,7 +3606,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
-    description: " "
+    description: Average elapsed time per execution for slow queries
     enabled: true
     gauge:
       value_type: double
@@ -3618,7 +3618,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.avg_rows_examined:
-    description: " "
+    description: Average rows examined per execution for slow queries
     enabled: true
     gauge:
       value_type: double
@@ -3630,7 +3630,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.avg_lock_time:
-    description: " "
+    description: Average lock/concurrency wait time per execution for slow queries
     enabled: true
     gauge:
       value_type: double
@@ -3642,7 +3642,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.query_details:
-    description: " "
+    description: Slow Query Details
     enabled: true
     gauge:
       value_type: int
@@ -3659,7 +3659,7 @@ metrics:
   # Interval-based (delta) metrics - showing what happened in the LAST polling interval
   # These metrics provide real-time visibility into query performance changes
   newrelicoracledb.slow_queries.interval_avg_elapsed_time:
-    description: " "
+    description: Average elapsed time per execution in the last polling interval (delta metric)
     enabled: true
     gauge:
       value_type: double
@@ -3671,7 +3671,7 @@ metrics:
       - user_name
 
   newrelicoracledb.slow_queries.interval_execution_count:
-    description: " "
+    description: Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
     enabled: true
     gauge:
       value_type: double
@@ -3684,7 +3684,7 @@ metrics:
 
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
-    description: " "
+    description: Average CPU time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
       value_type: double
@@ -3697,7 +3697,7 @@ metrics:
       - plan_hash_value
 
   newrelicoracledb.child_cursors.elapsed_time:
-    description: " "
+    description: Average elapsed time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
       value_type: double
@@ -3710,7 +3710,7 @@ metrics:
       - plan_hash_value
 
   newrelicoracledb.child_cursors.user_io_wait_time:
-    description: " "
+    description: Average user I/O wait time per execution for this child cursor (in milliseconds)
     enabled: true
     gauge:
       value_type: double
@@ -3723,7 +3723,7 @@ metrics:
       - plan_hash_value
 
   newrelicoracledb.child_cursors.disk_reads:
-    description: " "
+    description: Average number of disk reads per execution for this child cursor
     enabled: true
     gauge:
       value_type: double
@@ -3736,7 +3736,7 @@ metrics:
       - plan_hash_value
 
   newrelicoracledb.child_cursors.buffer_gets:
-    description: " "
+    description: Average number of buffer gets per execution for this child cursor
     enabled: true
     gauge:
       value_type: double
@@ -3749,7 +3749,7 @@ metrics:
       - plan_hash_value
 
   newrelicoracledb.child_cursors.executions:
-    description: " "
+    description: Total number of executions of this child cursor
     enabled: true
     gauge:
       value_type: int
@@ -3762,7 +3762,7 @@ metrics:
       - plan_hash_value
 
   newrelicoracledb.child_cursors.invalidations:
-    description: " "
+    description: Number of times this child cursor was invalidated
     enabled: true
     gauge:
       value_type: int
@@ -3775,7 +3775,7 @@ metrics:
       - plan_hash_value
 
   newrelicoracledb.child_cursors.details:
-    description: " "
+    description: Child cursor details including load times
     enabled: true
     gauge:
       value_type: int
@@ -3790,7 +3790,7 @@ metrics:
       - last_load_time
 
   newrelicoracledb.blocking_queries.wait_time_ms:
-    description: " "
+    description: Wait time in milliseconds for blocked queries
     extended_documentation: |
       Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
       Collected alongside wait events in a single optimized query from v$session.
@@ -3842,7 +3842,7 @@ metrics:
 
   # Database Version and Configuration Information
   newrelicoracledb.database.info:
-    description: " "
+    description: Database version and configuration information
     extended_documentation: Provides database version, edition, and configuration details following OpenTelemetry semantic conventions
     enabled: true
     gauge:
@@ -3857,7 +3857,7 @@ metrics:
 
   # Database Hosting and Platform Information
   newrelicoracledb.hosting.info:
-    description: " "
+    description: Database hosting and platform information
     extended_documentation: Provides information about the host architecture and operating system platform
     enabled: true
     gauge:
@@ -3870,7 +3870,7 @@ metrics:
 
   # Database Role and Protection Information
   newrelicoracledb.database.role:
-    description: " "
+    description: Database role and Data Guard configuration
     extended_documentation: Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY), open mode, and protection mode for Oracle Data Guard configurations
     enabled: true
     gauge:
@@ -3884,7 +3884,7 @@ metrics:
       - db.protection_level
 
   newrelicoracledb.wait_events.current_wait_time_ms:
-    description: " "
+    description: Current wait time in milliseconds for active wait events
     extended_documentation: |
       Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
       Collected alongside blocking information in a single optimized query from v$session.
