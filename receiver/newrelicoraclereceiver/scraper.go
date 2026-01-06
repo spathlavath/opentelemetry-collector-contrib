@@ -278,27 +278,28 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
 	if len(waitEventSQLIdentifiers) > 0 {
-		// Scrape execution plans
-		s.executeExecutionPlans(ctx, errChan, waitEventSQLIdentifiers)
+		// First scrape child cursors to get plan hash values
+		planHashValues := s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
 
-		// Then scrape child cursors
-		s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
+		// Then scrape execution plans using the plan hash values for caching
+		s.executeExecutionPlans(ctx, errChan, waitEventSQLIdentifiers, planHashValues)
 	} else {
 		s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
 	}
 }
 
 // executeExecutionPlans executes execution plan scraper for SQL identifiers from wait events
-func (s *newRelicOracleScraper) executeExecutionPlans(ctx context.Context, errChan chan<- error, sqlIdentifiers []models.SQLIdentifier) {
+func (s *newRelicOracleScraper) executeExecutionPlans(ctx context.Context, errChan chan<- error, sqlIdentifiers []models.SQLIdentifier, planHashValues []string) {
 	s.logger.Debug("Starting execution plan scraping as metrics",
-		zap.Int("sql_identifiers", len(sqlIdentifiers)))
+		zap.Int("sql_identifiers", len(sqlIdentifiers)),
+		zap.Int("plan_hash_values", len(planHashValues)))
 
 	if len(sqlIdentifiers) == 0 {
 		s.logger.Debug("No SQL identifiers from wait events")
 		return
 	}
 
-	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
+	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers, planHashValues)
 	if len(executionPlanErrs) > 0 {
 		s.logger.Warn("Errors occurred while scraping execution plan metrics",
 			zap.Int("error_count", len(executionPlanErrs)))
@@ -311,16 +312,16 @@ func (s *newRelicOracleScraper) executeExecutionPlans(ctx context.Context, errCh
 }
 
 // executeChildCursors executes child cursor scraper for SQL identifiers from wait events
-func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan chan<- error, sqlIdentifiers []models.SQLIdentifier) {
+func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan chan<- error, sqlIdentifiers []models.SQLIdentifier) []string {
 	s.logger.Debug("Starting child cursor scraping from wait events",
 		zap.Int("sql_identifiers", len(sqlIdentifiers)))
 
 	if len(sqlIdentifiers) == 0 {
 		s.logger.Debug("No SQL identifiers from wait events")
-		return
+		return []string{}
 	}
 
-	childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
+	planHashValues, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
 	if len(childCursorErrs) > 0 {
 		s.logger.Warn("Errors occurred while scraping child cursor metrics",
 			zap.Int("error_count", len(childCursorErrs)))
@@ -329,8 +330,10 @@ func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan
 
 	s.logger.Info("Child cursor scraping completed",
 		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+		zap.Int("plan_hash_values_found", len(planHashValues)),
 		zap.Int("errors", len(childCursorErrs)))
 
+	return planHashValues
 }
 
 // executeIndependentScrapers launches concurrent scrapers for independent metrics

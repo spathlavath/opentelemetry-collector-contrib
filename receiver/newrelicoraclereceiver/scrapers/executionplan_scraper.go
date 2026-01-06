@@ -19,8 +19,8 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
-// sqlIdentifierCacheEntry stores when a SQL identifier was last scraped
-type sqlIdentifierCacheEntry struct {
+// planHashCacheEntry stores when a plan hash value was last scraped
+type planHashCacheEntry struct {
 	lastScraped time.Time
 }
 
@@ -29,7 +29,7 @@ type ExecutionPlanScraper struct {
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
 	metricsBuilderConfig metadata.MetricsBuilderConfig
-	cache                map[string]*sqlIdentifierCacheEntry // key: "sql_id:child_number"
+	cache                map[string]*planHashCacheEntry // key: plan_hash_value
 	cacheMutex           sync.RWMutex
 	cacheTTL             time.Duration
 }
@@ -40,49 +40,73 @@ func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.Metr
 		mb:                   mb,
 		logger:               logger,
 		metricsBuilderConfig: metricsBuilderConfig,
-		cache:                make(map[string]*sqlIdentifierCacheEntry),
-		cacheTTL:             10 * time.Minute, // 10-minute window
+		cache:                make(map[string]*planHashCacheEntry),
+		cacheTTL:             60 * time.Minute, // 60-minute window
 	}
 }
 
-func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIdentifiers []models.SQLIdentifier) []error {
+func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIdentifiers []models.SQLIdentifier, planHashValues []string) []error {
 	var errs []error
 
 	if len(sqlIdentifiers) == 0 {
 		return errs
 	}
 
+	// Validate that we have matching plan hash values
+	if len(planHashValues) != len(sqlIdentifiers) {
+		s.logger.Warn("Mismatch between SQL identifiers and plan hash values",
+			zap.Int("sql_identifiers", len(sqlIdentifiers)),
+			zap.Int("plan_hash_values", len(planHashValues)))
+		return []error{fmt.Errorf("plan hash values count (%d) does not match SQL identifiers count (%d)", len(planHashValues), len(sqlIdentifiers))}
+	}
+
 	now := time.Now()
 
-	// Filter out cached SQL identifiers (already scraped within TTL window)
-	var newIdentifiers []models.SQLIdentifier
-	var skippedCount int
+	// Group SQL identifiers by plan hash value to avoid duplicate execution plans
+	planHashToIdentifier := make(map[string]models.SQLIdentifier)
+	planHashToAllIdentifiers := make(map[string][]models.SQLIdentifier)
+
+	for i, identifier := range sqlIdentifiers {
+		planHashValue := planHashValues[i]
+
+		// Keep track of all identifiers for each plan hash (for logging)
+		planHashToAllIdentifiers[planHashValue] = append(planHashToAllIdentifiers[planHashValue], identifier)
+
+		// Store only the first identifier for each unique plan hash value
+		if _, exists := planHashToIdentifier[planHashValue]; !exists {
+			planHashToIdentifier[planHashValue] = identifier
+		}
+	}
+
+	// Filter out cached plan hash values (already scraped within TTL window)
+	type identifierWithPlanHash struct {
+		identifier    models.SQLIdentifier
+		planHashValue string
+	}
+	var newIdentifiers []identifierWithPlanHash
+	var skippedPlanHashes int
+	var skippedIdentifiersCount int
 
 	s.cacheMutex.RLock()
-	for _, identifier := range sqlIdentifiers {
-		cacheKey := s.getCacheKey(identifier.SQLID, identifier.ChildNumber)
-		if entry, exists := s.cache[cacheKey]; exists {
+	for planHashValue, identifier := range planHashToIdentifier {
+		if entry, exists := s.cache[planHashValue]; exists {
 			// Check if entry is still within TTL window
 			if now.Sub(entry.lastScraped) < s.cacheTTL {
-				skippedCount++
-				s.logger.Debug("Skipping cached SQL identifier",
-					zap.String("sql_id", identifier.SQLID),
-					zap.Int64("child_number", identifier.ChildNumber),
-					zap.Duration("age", now.Sub(entry.lastScraped)))
+				skippedPlanHashes++
+				skippedIdentifiersCount += len(planHashToAllIdentifiers[planHashValue])
 				continue
 			}
 		}
-		newIdentifiers = append(newIdentifiers, identifier)
+		// Only add one representative identifier per plan hash value
+		newIdentifiers = append(newIdentifiers, identifierWithPlanHash{
+			identifier:    identifier,
+			planHashValue: planHashValue,
+		})
 	}
 	s.cacheMutex.RUnlock()
 
-	s.logger.Info("Execution plan cache filtering",
-		zap.Int("total_identifiers", len(sqlIdentifiers)),
-		zap.Int("cached_skipped", skippedCount),
-		zap.Int("new_to_scrape", len(newIdentifiers)))
-
 	if len(newIdentifiers) == 0 {
-		s.logger.Debug("All SQL identifiers are cached, skipping execution plan scraping")
+		s.logger.Debug("All plan hash values are cached, skipping execution plan scraping")
 		return errs
 	}
 
@@ -92,7 +116,10 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, identifier := range newIdentifiers {
+	for _, item := range newIdentifiers {
+		identifier := item.identifier
+		planHashValue := item.planHashValue
+
 		// Check if context is already cancelled/timed out before proceeding
 		select {
 		case <-queryCtx.Done():
@@ -126,15 +153,14 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			}
 		}
 
-		// Add to cache after successful scraping
-		cacheKey := s.getCacheKey(identifier.SQLID, identifier.ChildNumber)
+		// Add plan hash value to cache after successful scraping
 		s.cacheMutex.Lock()
-		s.cache[cacheKey] = &sqlIdentifierCacheEntry{
+		s.cache[planHashValue] = &planHashCacheEntry{
 			lastScraped: now,
 		}
 		s.cacheMutex.Unlock()
 
-		s.logger.Info("Scraped execution plan rows for SQL_ID")
+		s.logger.Info("Scraped execution plan")
 	}
 
 	// Clean up stale cache entries (older than TTL)
@@ -315,11 +341,6 @@ func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
 	}
 
 	return result
-}
-
-// getCacheKey generates a unique cache key for a SQL identifier
-func (s *ExecutionPlanScraper) getCacheKey(sqlID string, childNumber int64) string {
-	return fmt.Sprintf("%s:%d", sqlID, childNumber)
 }
 
 // cleanupCache removes stale entries from the cache (older than TTL)
