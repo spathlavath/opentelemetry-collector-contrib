@@ -19,16 +19,19 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
+// RacScraper handles metrics collection for Oracle Real Application Clusters (RAC)
+// and Automatic Storage Management (ASM) configurations.
 type RacScraper struct {
 	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
 	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
-	isRacMode            *bool
+	isRacMode            *bool // Cached result of RAC detection to avoid repeated queries
 	racModeMutex         sync.RWMutex
 }
 
+// NewRacScraper creates a new RacScraper instance for collecting RAC and ASM metrics.
 func NewRacScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *RacScraper {
 	return &RacScraper{
 		client:               c,
@@ -39,6 +42,8 @@ func NewRacScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *z
 	}
 }
 
+// isRacEnabled checks if Oracle RAC is enabled. The result is cached after the first check
+// to avoid repeated queries to the database. Uses double-checked locking for thread safety.
 func (s *RacScraper) isRacEnabled(ctx context.Context) (bool, error) {
 	s.racModeMutex.RLock()
 	if s.isRacMode != nil {
@@ -67,6 +72,8 @@ func (s *RacScraper) isRacEnabled(ctx context.Context) (bool, error) {
 	return racEnabled, nil
 }
 
+// isASMAvailable checks if Automatic Storage Management (ASM) is configured and available.
+// Returns false with no error if ASM is simply not configured.
 func (s *RacScraper) isASMAvailable(ctx context.Context) (bool, error) {
 	detection, err := s.client.QueryASMDetection(ctx)
 	if err != nil {
@@ -80,6 +87,9 @@ func (s *RacScraper) isASMAvailable(ctx context.Context) (bool, error) {
 	return asmAvailable, nil
 }
 
+// ScrapeRacMetrics collects all RAC and ASM related metrics concurrently.
+// It first checks if RAC and ASM are enabled/available, then executes the appropriate
+// scraping functions in parallel for efficiency.
 func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 	racEnabled, err := s.isRacEnabled(ctx)
 	if err != nil {
@@ -160,6 +170,8 @@ func (s *RacScraper) ScrapeRacMetrics(ctx context.Context) []error {
 	return allErrors
 }
 
+// nullStringToString converts a sql.NullString to a regular string.
+// Returns an empty string if the NullString is not valid.
 func nullStringToString(ns sql.NullString) string {
 	if ns.Valid {
 		return ns.String
@@ -167,6 +179,8 @@ func nullStringToString(ns sql.NullString) string {
 	return ""
 }
 
+// stringStatusToBinary converts a status string to a binary value (1 or 0).
+// Returns 1 if the status matches the expected value (case-insensitive), otherwise 0.
 func stringStatusToBinary(status, expectedValue string) int64 {
 	if strings.ToUpper(status) == strings.ToUpper(expectedValue) {
 		return 1
@@ -174,6 +188,24 @@ func stringStatusToBinary(status, expectedValue string) int64 {
 	return 0
 }
 
+// formatTimeout converts a sql.NullFloat64 to a string representation for timeout values
+func formatTimeout(timeout sql.NullFloat64) string {
+	if !timeout.Valid {
+		return "0"
+	}
+	return fmt.Sprintf("%.0f", timeout.Float64)
+}
+
+// getTimeoutValue extracts an int64 value from a sql.NullFloat64, defaulting to 0 if invalid
+func getTimeoutValue(timeout sql.NullFloat64) int64 {
+	if !timeout.Valid {
+		return 0
+	}
+	return int64(timeout.Float64)
+}
+
+// scrapeASMDiskGroups collects metrics for ASM disk groups including total space,
+// free space, and offline disk counts.
 func (s *RacScraper) scrapeASMDiskGroups(ctx context.Context) []error {
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupFreeMb.Enabled &&
@@ -188,27 +220,33 @@ func (s *RacScraper) scrapeASMDiskGroups(ctx context.Context) []error {
 		return []error{err}
 	}
 
+	// Generate timestamp once for all metrics in this scrape cycle for consistency
+	// and performance. All disk groups are collected at the same moment.
+	now := pcommon.NewTimestampFromTime(time.Now())
+
 	for _, diskGroup := range diskGroups {
 		if !diskGroup.Name.Valid {
 			continue
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now())
+		diskGroupName := diskGroup.Name.String
 
 		if diskGroup.TotalMB.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled {
-			s.mb.RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(now, diskGroup.TotalMB.Float64, s.instanceName, diskGroup.Name.String)
+			s.mb.RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(now, diskGroup.TotalMB.Float64, s.instanceName, diskGroupName)
 		}
 		if diskGroup.FreeMB.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupFreeMb.Enabled {
-			s.mb.RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(now, diskGroup.FreeMB.Float64, s.instanceName, diskGroup.Name.String)
+			s.mb.RecordNewrelicoracledbAsmDiskgroupFreeMbDataPoint(now, diskGroup.FreeMB.Float64, s.instanceName, diskGroupName)
 		}
 		if diskGroup.OfflineDisks.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupOfflineDisks.Enabled {
-			s.mb.RecordNewrelicoracledbAsmDiskgroupOfflineDisksDataPoint(now, int64(diskGroup.OfflineDisks.Float64), s.instanceName, diskGroup.Name.String)
+			s.mb.RecordNewrelicoracledbAsmDiskgroupOfflineDisksDataPoint(now, int64(diskGroup.OfflineDisks.Float64), s.instanceName, diskGroupName)
 		}
 	}
 
 	return scrapeErrors
 }
 
+// scrapeClusterWaitEvents collects RAC cluster-wide wait event statistics
+// including wait times and total wait counts.
 func (s *RacScraper) scrapeClusterWaitEvents(ctx context.Context) []error {
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacWaitTime.Enabled &&
 		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacTotalWaits.Enabled {
@@ -222,12 +260,15 @@ func (s *RacScraper) scrapeClusterWaitEvents(ctx context.Context) []error {
 		return []error{err}
 	}
 
+	// Generate timestamp once for all metrics in this scrape cycle for consistency
+	// and performance. All wait events are collected at the same moment.
+	now := pcommon.NewTimestampFromTime(time.Now())
+
 	for _, event := range events {
 		if !event.InstID.Valid || !event.Event.Valid {
 			continue
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now())
 		instanceIDStr := event.InstID.String
 		eventName := event.Event.String
 
@@ -242,15 +283,12 @@ func (s *RacScraper) scrapeClusterWaitEvents(ctx context.Context) []error {
 	return scrapeErrors
 }
 
+// scrapeInstanceStatus collects status metrics for all RAC instances including
+// instance status, uptime, database status, active state, logins allowed, archiver status,
+// and version information.
 func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 	// Check if any instance status metrics are enabled
-	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceStatus.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceUptimeSeconds.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceDatabaseStatus.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceActiveState.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceLoginsAllowed.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceArchiverStarted.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceVersionInfo.Enabled {
+	if !s.isAnyInstanceMetricEnabled() {
 		return nil
 	}
 
@@ -261,12 +299,15 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 		return []error{err}
 	}
 
+	// Generate timestamp once for all metrics in this scrape cycle for consistency
+	// and performance. All instances are queried and collected at the same moment.
+	now := pcommon.NewTimestampFromTime(time.Now())
+
 	for _, instance := range instances {
 		if !instance.InstID.Valid || !instance.Status.Valid {
 			continue
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now())
 		instanceIDStr := instance.InstID.String
 		statusStr := instance.Status.String
 		instanceNameStr := nullStringToString(instance.InstanceName)
@@ -315,10 +356,29 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 	return scrapeErrors
 }
 
+// isAnyInstanceMetricEnabled checks if any RAC instance status metric is enabled
+func (s *RacScraper) isAnyInstanceMetricEnabled() bool {
+	return s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceStatus.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceUptimeSeconds.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceDatabaseStatus.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceActiveState.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceLoginsAllowed.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceArchiverStarted.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacInstanceVersionInfo.Enabled
+}
+
+// isAnyServiceMetricEnabled checks if any RAC service metric is enabled
+func (s *RacScraper) isAnyServiceMetricEnabled() bool {
+	return s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceInstanceID.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled ||
+		s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled
+}
+
+// scrapeActiveServices collects metrics for active RAC services including
+// instance assignments, network configuration, connection load balancing, service goals,
+// blocked status, FAN enablement, Transaction Guard, and timeout settings.
 func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
-	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceInstanceID.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceNetworkConfig.Enabled &&
-		!s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceClbConfig.Enabled {
+	if !s.isAnyServiceMetricEnabled() {
 		return nil
 	}
 
@@ -329,12 +389,15 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 		return []error{err}
 	}
 
+	// Generate timestamp once for all metrics in this scrape cycle for consistency
+	// and performance. All services are queried and collected at the same moment.
+	now := pcommon.NewTimestampFromTime(time.Now())
+
 	for _, service := range services {
 		if !service.ServiceName.Valid || !service.InstID.Valid {
 			continue
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now())
 		serviceNameStr := service.ServiceName.String
 		instanceIDStr := service.InstID.String
 
@@ -377,27 +440,15 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 
 		// Session drain timeout in seconds
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceDrainTimeoutSeconds.Enabled {
-			var drainTimeout int64
-			if service.DrainTimeout.Valid {
-				drainTimeout = int64(service.DrainTimeout.Float64)
-			}
-			drainTimeoutStr := fmt.Sprintf("%.0f", service.DrainTimeout.Float64)
-			if !service.DrainTimeout.Valid {
-				drainTimeoutStr = "0"
-			}
+			drainTimeout := getTimeoutValue(service.DrainTimeout)
+			drainTimeoutStr := formatTimeout(service.DrainTimeout)
 			s.mb.RecordNewrelicoracledbRacServiceDrainTimeoutSecondsDataPoint(now, drainTimeout, s.instanceName, serviceNameStr, drainTimeoutStr)
 		}
 
 		// Application Continuity replay initiation timeout in seconds
 		if s.metricsBuilderConfig.Metrics.NewrelicoracledbRacServiceReplayTimeoutSeconds.Enabled {
-			var replayTimeout int64
-			if service.ReplayInitiationTimeout.Valid {
-				replayTimeout = int64(service.ReplayInitiationTimeout.Float64)
-			}
-			replayTimeoutStr := fmt.Sprintf("%.0f", service.ReplayInitiationTimeout.Float64)
-			if !service.ReplayInitiationTimeout.Valid {
-				replayTimeoutStr = "0"
-			}
+			replayTimeout := getTimeoutValue(service.ReplayInitiationTimeout)
+			replayTimeoutStr := formatTimeout(service.ReplayInitiationTimeout)
 			s.mb.RecordNewrelicoracledbRacServiceReplayTimeoutSecondsDataPoint(now, replayTimeout, s.instanceName, serviceNameStr, replayTimeoutStr)
 		}
 	}

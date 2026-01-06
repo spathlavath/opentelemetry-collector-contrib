@@ -41,6 +41,17 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
+const (
+	// DefaultCacheTTL is the default time-to-live for inactive queries in the cache
+	DefaultCacheTTL = 10 * time.Minute
+
+	// CleanupInterval is how often we run cache cleanup to prevent unbounded memory growth
+	CleanupInterval = 5 * time.Minute
+
+	// OracleDateFormat is the date format used by Oracle DATE type for last_active_time
+	OracleDateFormat = "2006-01-02/15:04:05"
+)
+
 // OracleQueryState tracks previous scrape data for delta calculation
 type OracleQueryState struct {
 	// Previous cumulative values from Oracle V$SQLAREA
@@ -83,11 +94,14 @@ type OracleIntervalCalculator struct {
 	lastCacheCleanup time.Time
 }
 
-// NewOracleIntervalCalculator creates a new Oracle interval calculator
+// NewOracleIntervalCalculator creates a new Oracle interval calculator.
+// If cacheTTL is invalid (<= 0), it defaults to DefaultCacheTTL (10 minutes).
 func NewOracleIntervalCalculator(logger *zap.Logger, cacheTTL time.Duration) *OracleIntervalCalculator {
 	if cacheTTL <= 0 {
-		logger.Warn("Invalid cache TTL, using default 10 minutes", zap.Duration("provided", cacheTTL))
-		cacheTTL = 10 * time.Minute
+		logger.Warn("Invalid cache TTL, using default",
+			zap.Duration("provided", cacheTTL),
+			zap.Duration("default", DefaultCacheTTL))
+		cacheTTL = DefaultCacheTTL
 	}
 
 	return &OracleIntervalCalculator{
@@ -132,8 +146,8 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	// Calculate time since last execution from Oracle timestamp
 	timeSinceLastExec := 0.0
 	if query.LastActiveTime.Valid {
-		// Oracle last_active_time is a DATE type, parse as RFC3339
-		if lastExecTime, err := time.Parse("2006-01-02/15:04:05", query.LastActiveTime.String); err == nil {
+		// Oracle last_active_time is a DATE type
+		if lastExecTime, err := time.Parse(OracleDateFormat, query.LastActiveTime.String); err == nil {
 			timeSinceLastExec = now.Sub(lastExecTime).Seconds()
 		}
 	}
@@ -149,11 +163,11 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	if !exists {
 		// Handle edge case: execution_count = 0
 		if currentExecCount == 0 {
-			oic.logger.Warn("Query with zero execution count - skipping")
+			oic.logger.Warn("Query with zero execution count - skipping", zap.String("query_id", queryID))
 			return nil
 		}
 
-		oic.logger.Debug("First scrape for query - using historical average")
+		oic.logger.Debug("First scrape for query - using historical average", zap.String("query_id", queryID))
 
 		// Add to cache for next scrape
 		oic.stateCache[queryID] = &OracleQueryState{
@@ -186,7 +200,7 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 	// Handle no new executions
 	if deltaExecCount == 0 {
-		oic.logger.Debug("No new executions for query")
+		oic.logger.Debug("No new executions for query", zap.String("query_id", queryID))
 
 		// Update last seen timestamp (query is still in Oracle results)
 		state.LastSeenTimestamp = now
@@ -208,10 +222,14 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	// Handle plan cache reset (execution count decreased) OR stats corruption (negative delta elapsed)
 	if deltaExecCount < 0 || deltaElapsedMs < 0 {
 		if deltaExecCount < 0 {
-			oic.logger.Warn("Plan cache reset detected - execution count decreased, cannot calculate valid interval delta")
+			oic.logger.Warn("Plan cache reset detected - execution count decreased",
+				zap.String("query_id", queryID),
+				zap.Int64("delta", deltaExecCount))
 		}
 		if deltaElapsedMs < 0 {
-			oic.logger.Warn("Negative delta elapsed time detected - possible stats corruption")
+			oic.logger.Warn("Negative delta elapsed time detected - possible stats corruption",
+				zap.String("query_id", queryID),
+				zap.Float64("delta_ms", deltaElapsedMs))
 		}
 
 		// Reset state - treat as first scrape but PRESERVE FirstSeenTimestamp
@@ -242,8 +260,9 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 	// Warn if we have executions but zero elapsed time
 	if deltaElapsedMs == 0 && deltaExecCount > 0 {
-		oic.logger.Warn("Zero elapsed time with non-zero executions - possible data issue or extremely fast query")
-		oic.logger.Debug("Delta calculation for query")
+		oic.logger.Warn("Zero elapsed time with non-zero executions - possible data issue or extremely fast query",
+			zap.String("query_id", queryID),
+			zap.Int64("execution_count", deltaExecCount))
 	}
 
 	// Update state for next scrape
@@ -263,13 +282,14 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	}
 }
 
-// CleanupStaleEntries removes entries based on TTL (inactivity) ONLY
+// CleanupStaleEntries removes entries based on TTL (inactivity) ONLY.
+// This runs periodically to prevent unbounded memory growth.
 func (oic *OracleIntervalCalculator) CleanupStaleEntries(now time.Time) {
 	oic.stateCacheMutex.Lock()
 	defer oic.stateCacheMutex.Unlock()
 
 	// Only run cleanup periodically
-	if now.Sub(oic.lastCacheCleanup) < 5*time.Minute {
+	if now.Sub(oic.lastCacheCleanup) < CleanupInterval {
 		return
 	}
 
@@ -285,11 +305,13 @@ func (oic *OracleIntervalCalculator) CleanupStaleEntries(now time.Time) {
 	}
 
 	if removedCount > 0 {
-		oic.logger.Info("Cleaned up stale queries from cache")
+		oic.logger.Info("Cleaned up stale queries from cache",
+			zap.Int("removed_count", removedCount),
+			zap.Int("remaining_count", len(oic.stateCache)))
 	}
 }
 
-// GetCacheStats returns cache statistics
+// GetCacheStats returns cache statistics for monitoring and debugging.
 func (oic *OracleIntervalCalculator) GetCacheStats() map[string]interface{} {
 	oic.stateCacheMutex.RLock()
 	defer oic.stateCacheMutex.RUnlock()
@@ -300,7 +322,8 @@ func (oic *OracleIntervalCalculator) GetCacheStats() map[string]interface{} {
 	}
 }
 
-// Reset clears all state (useful for testing)
+// Reset clears all state from the cache. This is primarily useful for testing,
+// but can also be used to force a fresh start if needed.
 func (oic *OracleIntervalCalculator) Reset() {
 	oic.stateCacheMutex.Lock()
 	defer oic.stateCacheMutex.Unlock()
