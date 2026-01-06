@@ -52,22 +52,31 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		return errs
 	}
 
-	// Validate that we have matching plan hash values
-	if len(planHashValues) != len(sqlIdentifiers) {
-		s.logger.Warn("Mismatch between SQL identifiers and plan hash values",
-			zap.Int("sql_identifiers", len(sqlIdentifiers)),
-			zap.Int("plan_hash_values", len(planHashValues)))
-		return []error{fmt.Errorf("plan hash values count (%d) does not match SQL identifiers count (%d)", len(planHashValues), len(sqlIdentifiers))}
-	}
-
 	now := time.Now()
 
 	// Group SQL identifiers by plan hash value to avoid duplicate execution plans
 	planHashToIdentifier := make(map[string]models.SQLIdentifier)
 	planHashToAllIdentifiers := make(map[string][]models.SQLIdentifier)
+	skippedDueToMissingPlanHash := 0
+
+	// Build a map of available plan hash values for safe lookup
+	planHashMap := make(map[int]string)
+	for i, planHash := range planHashValues {
+		if planHash != "" {
+			planHashMap[i] = planHash
+		}
+	}
 
 	for i, identifier := range sqlIdentifiers {
-		planHashValue := planHashValues[i]
+		// Get plan hash value if available, skip if not
+		planHashValue, hasPlanHash := planHashMap[i]
+		if !hasPlanHash || planHashValue == "" {
+			skippedDueToMissingPlanHash++
+			s.logger.Debug("Skipping identifier without plan hash value",
+				zap.String("sql_id", identifier.SQLID),
+				zap.Int64("child_number", identifier.ChildNumber))
+			continue
+		}
 
 		// Keep track of all identifiers for each plan hash (for logging)
 		planHashToAllIdentifiers[planHashValue] = append(planHashToAllIdentifiers[planHashValue], identifier)
@@ -78,22 +87,24 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		}
 	}
 
+	if skippedDueToMissingPlanHash > 0 {
+		s.logger.Info("Skipped SQL identifiers without plan hash values",
+			zap.Int("skipped_count", skippedDueToMissingPlanHash),
+			zap.Int("total_identifiers", len(sqlIdentifiers)))
+	}
+
 	// Filter out cached plan hash values (already scraped within TTL window)
 	type identifierWithPlanHash struct {
 		identifier    models.SQLIdentifier
 		planHashValue string
 	}
 	var newIdentifiers []identifierWithPlanHash
-	var skippedPlanHashes int
-	var skippedIdentifiersCount int
 
 	s.cacheMutex.RLock()
 	for planHashValue, identifier := range planHashToIdentifier {
 		if entry, exists := s.cache[planHashValue]; exists {
 			// Check if entry is still within TTL window
-			if now.Sub(entry.lastScraped) < s.cacheTTL {
-				skippedPlanHashes++
-				skippedIdentifiersCount += len(planHashToAllIdentifiers[planHashValue])
+			if now.Sub(entry.lastScraped) < s.cacheTTL {				
 				continue
 			}
 		}
@@ -134,8 +145,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
 			continue // Skip this identifier but continue processing others
 		}
-
-		successCount := 0
+		
 		for _, row := range planRows {
 			if !row.SQLID.Valid || row.SQLID.String == "" {
 				s.logger.Debug("Skipping row with invalid SQL_ID")
@@ -148,8 +158,6 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 					zap.String("sql_id", row.SQLID.String),
 					zap.Error(err))
 				errs = append(errs, err)
-			} else {
-				successCount++
 			}
 		}
 
