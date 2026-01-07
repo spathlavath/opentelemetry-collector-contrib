@@ -1,0 +1,79 @@
+default:
+all_set:
+  metrics:
+    newrelicmysql.bytes.received:
+      enabled: true
+    newrelicmysql.bytes.sent:
+      enabled: true
+    newrelicmysql.commands:
+      enabled: true
+    newrelicmysql.connections:
+      enabled: true
+    newrelicmysql.connections.max:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool.pages.data:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool.pages.free:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool.read_requests:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool.reads:
+      enabled: true
+    newrelicmysql.innodb.row_lock.time:
+      enabled: true
+    newrelicmysql.innodb.row_lock.waits:
+      enabled: true
+    newrelicmysql.queries:
+      enabled: true
+    newrelicmysql.slow_queries:
+      enabled: true
+    newrelicmysql.threads.running:
+      enabled: true
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: true
+none_set:
+  metrics:
+    newrelicmysql.bytes.received:
+      enabled: false
+    newrelicmysql.bytes.sent:
+      enabled: false
+    newrelicmysql.commands:
+      enabled: false
+    newrelicmysql.connections:
+      enabled: false
+    newrelicmysql.connections.max:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool.pages.data:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool.pages.free:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool.read_requests:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool.reads:
+      enabled: false
+    newrelicmysql.innodb.row_lock.time:
+      enabled: false
+    newrelicmysql.innodb.row_lock.waits:
+      enabled: false
+    newrelicmysql.queries:
+      enabled: false
+    newrelicmysql.slow_queries:
+      enabled: false
+    newrelicmysql.threads.running:
+      enabled: false
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: false
+filter_set_include:
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+filter_set_exclude:
+  resource_attributes:
+    mysql.instance.endpoint:
+      enabled: true
+      metrics_exclude:
+        - strict: "mysql.instance.endpoint-val"
