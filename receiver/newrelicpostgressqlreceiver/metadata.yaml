@@ -1,0 +1,39 @@
+type: newrelicpostgresql
+
+status:
+  class: receiver
+  stability:
+    alpha: [metrics]
+    development: [logs]
+  distributions: [contrib]
+  codeowners:
+    active: [pkudikyala]
+
+resource_attributes:
+  database_name:
+    description: Name of the PostgreSQL database
+    type: string
+    enabled: true
+  db.system:
+    description: Database system identifier
+    type: string
+    enabled: true
+  postgresql.version:
+    description: PostgreSQL version
+    type: string
+    enabled: true
+  server.address:
+    description: PostgreSQL hostname or IP address
+    type: string
+    enabled: true
+  server.port:
+    description: PostgreSQL port number
+    type: string
+    enabled: true
+
+tests:
+  config:
+    hostname: ""
+    port: ""
+    username: ""
+    database: ""
