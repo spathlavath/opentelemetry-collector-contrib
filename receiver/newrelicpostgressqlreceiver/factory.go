@@ -30,14 +30,15 @@ func createDefaultConfig() component.Config {
 	cfg.CollectionInterval = 10 * time.Second
 
 	return &Config{
-		ControllerConfig: cfg,
-		Hostname:         "localhost",
-		Port:             "5432",
-		Username:         "postgres",
-		Password:         "",
-		Database:         "postgres",
-		Timeout:          30 * time.Second,
-		SSLMode:          "disable",
+		ControllerConfig:      cfg,
+		MetricsBuilderConfig:  metadata.DefaultMetricsBuilderConfig(),
+		Hostname:              "localhost",
+		Port:                  "5432",
+		Username:              "postgres",
+		Password:              "",
+		Database:              "postgres",
+		Timeout:               30 * time.Second,
+		SSLMode:               "disable",
 	}
 }
 
