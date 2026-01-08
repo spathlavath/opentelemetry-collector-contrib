@@ -41,6 +41,17 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
+const (
+	// DefaultCacheTTL is the default time-to-live for inactive queries in the cache
+	DefaultCacheTTL = 10 * time.Minute
+
+	// CleanupInterval is how often we run cache cleanup to prevent unbounded memory growth
+	CleanupInterval = 5 * time.Minute
+
+	// OracleDateFormat is the date format used by Oracle DATE type for last_active_time
+	OracleDateFormat = "2006-01-02/15:04:05"
+)
+
 // OracleQueryState tracks previous scrape data for delta calculation
 type OracleQueryState struct {
 	// Previous cumulative values from Oracle V$SQLAREA
@@ -83,11 +94,12 @@ type OracleIntervalCalculator struct {
 	lastCacheCleanup time.Time
 }
 
-// NewOracleIntervalCalculator creates a new Oracle interval calculator
+// NewOracleIntervalCalculator creates a new Oracle interval calculator.
+// If cacheTTL is invalid (<= 0), it defaults to DefaultCacheTTL (10 minutes).
 func NewOracleIntervalCalculator(logger *zap.Logger, cacheTTL time.Duration) *OracleIntervalCalculator {
 	if cacheTTL <= 0 {
 		logger.Warn("Invalid cache TTL, using default 10 minutes", zap.Duration("provided", cacheTTL))
-		cacheTTL = 10 * time.Minute
+		cacheTTL = DefaultCacheTTL
 	}
 
 	return &OracleIntervalCalculator{
@@ -132,8 +144,8 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	// Calculate time since last execution from Oracle timestamp
 	timeSinceLastExec := 0.0
 	if query.LastActiveTime.Valid {
-		// Oracle last_active_time is a DATE type, parse as RFC3339
-		if lastExecTime, err := time.Parse("2006-01-02/15:04:05", query.LastActiveTime.String); err == nil {
+		// Oracle last_active_time is a DATE type
+		if lastExecTime, err := time.Parse(OracleDateFormat, query.LastActiveTime.String); err == nil {
 			timeSinceLastExec = now.Sub(lastExecTime).Seconds()
 		}
 	}
@@ -263,13 +275,14 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	}
 }
 
-// CleanupStaleEntries removes entries based on TTL (inactivity) ONLY
+// CleanupStaleEntries removes entries based on TTL (inactivity) ONLY.
+// This runs periodically to prevent unbounded memory growth.
 func (oic *OracleIntervalCalculator) CleanupStaleEntries(now time.Time) {
 	oic.stateCacheMutex.Lock()
 	defer oic.stateCacheMutex.Unlock()
 
 	// Only run cleanup periodically
-	if now.Sub(oic.lastCacheCleanup) < 5*time.Minute {
+	if now.Sub(oic.lastCacheCleanup) < CleanupInterval {
 		return
 	}
 
@@ -289,7 +302,7 @@ func (oic *OracleIntervalCalculator) CleanupStaleEntries(now time.Time) {
 	}
 }
 
-// GetCacheStats returns cache statistics
+// GetCacheStats returns cache statistics for monitoring and debugging.
 func (oic *OracleIntervalCalculator) GetCacheStats() map[string]interface{} {
 	oic.stateCacheMutex.RLock()
 	defer oic.stateCacheMutex.RUnlock()
@@ -300,7 +313,8 @@ func (oic *OracleIntervalCalculator) GetCacheStats() map[string]interface{} {
 	}
 }
 
-// Reset clears all state (useful for testing)
+// Reset clears all state from the cache. This is primarily useful for testing,
+// but can also be used to force a fresh start if needed.
 func (oic *OracleIntervalCalculator) Reset() {
 	oic.stateCacheMutex.Lock()
 	defer oic.stateCacheMutex.Unlock()
