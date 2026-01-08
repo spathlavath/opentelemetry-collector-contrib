@@ -503,6 +503,7 @@ func (s *newRelicOracleScraper) executeChildCursorsAndExecutionPlans(ctx context
 
 	// Execute execution plans in parallel (only if logs scraper is enabled and execution plan scraper exists)
 	if s.executionPlanScraper != nil && s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+		s.logger.Debug("Execution plan scraper condition met, starting parallel execution")
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -528,7 +529,9 @@ func (s *newRelicOracleScraper) executeChildCursorsAndExecutionPlans(ctx context
 				zap.Int("errors", len(executionPlanErrs)))
 		}()
 	} else {
-		s.logger.Debug("Execution plan scraper not available or disabled, skipping parallel execution plan scraping")
+		s.logger.Debug("Execution plan scraper not available or disabled, skipping parallel execution plan scraping",
+			zap.Bool("scraper_exists", s.executionPlanScraper != nil),
+			zap.Bool("execution_plan_enabled", s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled))
 	}
 
 	wg.Wait()

@@ -47,7 +47,8 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 
 		for i, identifier := range identifiers {
 			// Create a shorter timeout for individual queries to prevent blocking the entire batch
-			queryCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+			// Use a more aggressive timeout to fail fast on problematic queries
+			queryCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 
 			cursor, err := s.client.QuerySpecificChildCursor(queryCtx, identifier.SQLID, identifier.ChildNumber)
 			cancel() // Always cancel to free resources
@@ -60,6 +61,8 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 					zap.Int("total_identifiers", len(identifiers)),
 					zap.Error(err))
 				errs = append(errs, err)
+
+				// Continue processing other identifiers instead of failing completely
 				continue
 			}
 
