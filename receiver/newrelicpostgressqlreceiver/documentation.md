@@ -2,6 +2,24 @@
 
 # newrelicpostgresql
 
+## Default Metrics
+
+The following metrics are emitted by default. Each of them can be disabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: false
+```
+
+### postgresql.connection.count
+
+Number of active connections to the PostgreSQL database
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {connections} | Sum | Int | Cumulative | false | Alpha |
+
 ## Resource Attributes
 
 | Name | Description | Values | Enabled |

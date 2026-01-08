@@ -10,11 +10,14 @@ import (
 
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgressqlreceiver/internal/metadata"
 )
 
 // Config represents the receiver config settings within the collector's config.yaml
 type Config struct {
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
+	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
 
 	// Connection configuration
 	Username string `mapstructure:"username"`

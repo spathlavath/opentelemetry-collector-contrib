@@ -31,6 +31,18 @@ resource_attributes:
     type: string
     enabled: true
 
+metrics:
+  postgresql.connection.count:
+    description: Number of active connections to the PostgreSQL database
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: false
+      value_type: int
+    stability:
+      level: alpha
+    unit: "{connections}"
+
 tests:
   config:
     hostname: ""

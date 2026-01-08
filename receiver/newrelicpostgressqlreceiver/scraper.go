@@ -17,6 +17,8 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.opentelemetry.io/collector/receiver"
 	"go.uber.org/zap"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgressqlreceiver/internal/metadata"
 )
 
 // postgreSQLScraper handles PostgreSQL metrics collection
@@ -95,14 +97,35 @@ func (s *postgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics, error)
 		return pmetric.NewMetrics(), nil
 	}
 
-	// TODO: Add metric collection logic here
-	// Example:
-	// 1. Query PostgreSQL for metrics
-	// 2. Parse the results
-	// 3. Build metrics using pmetric package
-	// 4. Return the metrics
+	mb := metadata.NewMetricsBuilder(s.config.MetricsBuilderConfig, s.settings)
+	now := pcommon.NewTimestampFromTime(time.Now())
 
-	return pmetric.NewMetrics(), nil
+	// Collect connection count metric
+	var connectionCount int64
+	query := "SELECT count(*) FROM pg_stat_activity WHERE datname = $1"
+	err := s.db.QueryRowContext(ctx, query, s.config.Database).Scan(&connectionCount)
+	if err != nil {
+		s.logger.Error("Failed to query connection count", zap.Error(err))
+		return pmetric.NewMetrics(), err
+	}
+
+	mb.RecordPostgresqlConnectionCountDataPoint(now, connectionCount)
+
+	// Build resource attributes
+	rb := mb.NewResourceBuilder()
+	rb.SetDatabaseName(s.config.Database)
+	rb.SetDbSystem("postgresql")
+	rb.SetServerAddress(s.config.Hostname)
+	rb.SetServerPort(s.config.Port)
+
+	// Get PostgreSQL version
+	var version string
+	versionQuery := "SELECT version()"
+	if err := s.db.QueryRowContext(ctx, versionQuery).Scan(&version); err == nil {
+		rb.SetPostgresqlVersion(version)
+	}
+
+	return mb.Emit(metadata.WithResource(rb.Emit())), nil
 }
 
 // ScrapeLogs collects logs from PostgreSQL (placeholder for future implementation)
