@@ -6,8 +6,11 @@ package newrelicmysqlreceiver // import "github.com/open-telemetry/opentelemetry
 import (
 	"context"
 	"errors"
+	"strconv"
+	"time"
 
 	"go.opentelemetry.io/collector/component"
+	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.opentelemetry.io/collector/receiver"
 	"go.uber.org/zap"
@@ -63,15 +66,33 @@ func (n *newRelicMySQLScraper) scrape(ctx context.Context) (pmetric.Metrics, err
 		return pmetric.Metrics{}, errors.New("failed to connect to database client")
 	}
 
-	// TODO: Implement metric collection logic here
-	// Example:
-	// stats, err := n.sqlclient.getGlobalStats()
-	// if err != nil {
-	//     n.logger.Error("Failed to fetch global stats", zap.Error(err))
-	//     return pmetric.Metrics{}, err
-	// }
-
 	n.logger.Info("Scraping New Relic MySQL metrics")
 
+	// 1. Get the data from the MySQL client
+	stats, err := n.sqlclient.getGlobalStats()
+	if err != nil {
+		n.logger.Error("Failed to fetch global stats", zap.Error(err))
+		return pmetric.Metrics{}, err
+	}
+
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// 2. Helper function to parse MySQL strings to int64
+	parseInt := func(key string) int64 {
+		if val, ok := stats[key]; ok {
+			i, _ := strconv.ParseInt(val, 10, 64)
+			return i
+		}
+		return 0
+	}
+
+	// 3. Record core metrics for testing
+	// The method names below are generated based on your metadata.yaml
+	n.mb.RecordNewrelicmysqlConnectionsDataPoint(now, parseInt("Threads_connected"))
+	n.mb.RecordNewrelicmysqlBytesReceivedDataPoint(now, parseInt("Bytes_received"))
+
+	n.logger.Info("Successfully scraped and recorded 2 metrics")
+
+	// 4. Emit the collected metrics
 	return n.mb.Emit(), nil
 }
