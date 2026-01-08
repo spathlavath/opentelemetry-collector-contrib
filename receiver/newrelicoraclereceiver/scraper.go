@@ -14,7 +14,6 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/plog"
 	"go.opentelemetry.io/collector/pdata/pmetric"
-	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/scraper"
 	"go.opentelemetry.io/collector/scraper/scrapererror"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
@@ -43,6 +42,58 @@ type (
 	// dbProviderFunc represents a function that provides database connections
 	dbProviderFunc func() (*sql.DB, error)
 )
+
+// SQLIdentifierCache holds cached SQL identifiers with expiration
+type SQLIdentifierCache struct {
+	identifiers []models.SQLIdentifier
+	timestamp   time.Time
+	mutex       sync.RWMutex
+}
+
+// IsExpired checks if the cache is expired (older than 30 seconds)
+func (c *SQLIdentifierCache) IsExpired() bool {
+	c.mutex.RLock()
+	defer c.mutex.RUnlock()
+	return time.Since(c.timestamp) > 30*time.Second
+}
+
+// Get returns the cached SQL identifiers if not expired
+func (c *SQLIdentifierCache) Get() ([]models.SQLIdentifier, bool) {
+	c.mutex.RLock()
+	defer c.mutex.RUnlock()
+	if c.IsExpired() {
+		return nil, false
+	}
+	return c.identifiers, true
+}
+
+// Set merges new SQL identifiers with existing cached identifiers, removing duplicates
+func (c *SQLIdentifierCache) Set(identifiers []models.SQLIdentifier) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	
+	// Create a map to track existing identifiers for deduplication
+	existingMap := make(map[string]bool)
+	for _, existing := range c.identifiers {
+		// Create a unique key based on SQL_ID and CHILD_NUMBER
+		key := fmt.Sprintf("%s_%d", existing.SQLID, existing.ChildNumber)
+		existingMap[key] = true
+	}
+	
+	// Add new identifiers that don't already exist
+	for _, newID := range identifiers {
+		key := fmt.Sprintf("%s_%d", newID.SQLID, newID.ChildNumber)
+		if !existingMap[key] {
+			c.identifiers = append(c.identifiers, newID)
+			existingMap[key] = true
+		}
+	}
+	
+	c.timestamp = time.Now()
+}
+
+// Global cache for sharing SQL identifiers between metrics and logs pipelines
+var globalSQLIdentifierCache = &SQLIdentifierCache{}
 
 // newRelicOracleScraper orchestrates all metric collection scrapers for Oracle database monitoring
 type newRelicOracleScraper struct {
@@ -281,88 +332,61 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	return metrics, nil
 }
 
-// scrapeLogs orchestrates the collection of Oracle execution plans as logs
+// scrapeLogs collects execution plan logs by reusing SQL identifiers from metrics pipeline cache
+// If no cached SQL identifiers are available, the logs scrape is skipped
 func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
 	startTime := time.Now()
-	s.logger.Info("Begin New Relic Oracle logs scrape for execution plans", zap.Time("start_time", startTime))
+	s.logger.Info("Begin New Relic Oracle logs scrape", zap.Time("start_time", startTime))
 
-	logs := plog.NewLogs()
-
-	// Only scrape execution plans if event is enabled
+	// Check if execution plan logs are enabled
 	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
 		s.logger.Debug("Execution plan event disabled, skipping logs scrape")
-		return logs, nil
+		return plog.NewLogs(), nil
 	}
 
 	// Check if QPM is enabled
 	if !s.config.EnableQueryMonitoring {
-		s.logger.Debug("Query Performance Monitoring disabled, skipping execution plan scrape")
-		return logs, nil
+		s.logger.Debug("Query Performance Monitoring disabled, skipping logs scrape")
+		return plog.NewLogs(), nil
 	}
 
 	scrapeCtx := s.createScrapeContext(ctx)
 
-	s.logger.Debug("Fetching query IDs for execution plans (no metrics)")
-	queryIDs, slowQueryErrs := s.slowQueriesScraper.GetSlowQueryIDs(scrapeCtx)
+	var sqlIdentifiers []models.SQLIdentifier
+	var totalErrors []error
 
-	if len(slowQueryErrs) > 0 {
-		s.logger.Warn("Errors occurred while getting query IDs for execution plans",
-			zap.Int("error_count", len(slowQueryErrs)),
-			zap.Error(multierr.Combine(slowQueryErrs...)))
+	// Try to get SQL identifiers from cache first
+	if cachedIdentifiers, found := globalSQLIdentifierCache.Get(); found {
+		sqlIdentifiers = cachedIdentifiers
+		s.logger.Info("Using cached SQL identifiers from metrics pipeline",
+			zap.Int("cached_identifiers", len(sqlIdentifiers)))
+	} else {
+		s.logger.Info("No cached SQL identifiers found, skipping logs scrape - logs pipeline depends on metrics pipeline")
 	}
 
-	s.logger.Info("Query IDs fetched for execution plans",
-		zap.Int("query_ids_found", len(queryIDs)),
-		zap.Strings("query_ids", queryIDs))
+	// Execute execution plan scraper with the SQL identifiers
+	if len(sqlIdentifiers) > 0 {
+		s.logger.Debug("Starting execution plan scraping for logs",
+			zap.Int("sql_identifiers", len(sqlIdentifiers)))
 
-	if len(queryIDs) == 0 {
-		s.logger.Debug("No query IDs found, skipping execution plan scrape")
-		return logs, nil
+		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, sqlIdentifiers)
+		totalErrors = append(totalErrors, executionPlanErrs...)
+
+		s.logger.Info("Execution plan scraping completed for logs",
+			zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+			zap.Int("errors", len(executionPlanErrs)))
+	} else {
+		s.logger.Debug("No SQL identifiers available, skipping execution plan scraping for logs")
 	}
 
-	s.logger.Debug("Getting SQL identifiers from wait events for execution plan logs (no metrics)",
-		zap.Strings("query_ids", queryIDs))
-
-	if s.waitEventBlockingScraper == nil {
-		err := fmt.Errorf("waitEventBlockingScraper is not initialized")
-		s.logger.Error("Cannot get SQL identifiers for execution plans", zap.Error(err))
-		return logs, err
-	}
-
-	sqlIdentifiers, waitEventErrs := s.waitEventBlockingScraper.GetSQLIdentifiers(scrapeCtx, queryIDs)
-	if len(waitEventErrs) > 0 {
-		s.logger.Warn("Errors occurred while getting SQL identifiers from wait events for execution plan logs",
-			zap.Int("error_count", len(waitEventErrs)))
-	}
-
-	if len(sqlIdentifiers) == 0 {
-		s.logger.Info("No SQL identifiers found for execution plan logs")
-		return logs, nil
-	}
-
-	s.logger.Debug("Scraping execution plans for logs",
-		zap.Int("sql_identifiers", len(sqlIdentifiers)))
-
-	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, sqlIdentifiers)
-
-	s.logger.Info("Execution plan scraper completed for logs",
-		zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
-		zap.Int("execution_plan_errors", len(executionPlanErrs)))
-
-	logs = s.lb.Emit()
+	logs := s.lb.Emit()
 
 	endTime := time.Now()
 	duration := endTime.Sub(startTime)
-	totalErrors := len(slowQueryErrs) + len(waitEventErrs) + len(executionPlanErrs)
 	s.logger.Info("Completed New Relic Oracle logs scrape",
 		zap.Time("end_time", endTime),
 		zap.Duration("total_duration", duration),
-		zap.Int("total_errors", totalErrors),
-		zap.Int("execution_plans_collected", len(sqlIdentifiers)))
-
-	if len(executionPlanErrs) > 0 {
-		return logs, scrapererror.NewPartialScrapeError(multierr.Combine(executionPlanErrs...), len(executionPlanErrs))
-	}
+		zap.Int("total_errors", len(totalErrors)))
 
 	return logs, nil
 }
@@ -375,29 +399,9 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		return err
 	}
 
-	s.logger.Info("Initializing logs scrapers for execution plans")
+	s.logger.Info("Initializing logs scraper for execution plans")
 
 	s.client = client.NewSQLClient(s.db)
-
-	tempSettings := receiver.Settings{
-		TelemetrySettings: component.TelemetrySettings{
-			Logger: s.logger,
-		},
-	}
-	tempMb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), tempSettings)
-
-	slowQueriesScraper := scrapers.NewSlowQueriesScraper(
-		s.client,
-		tempMb,
-		s.logger,
-		metadata.DefaultMetricsBuilderConfig(),
-		s.config.QueryMonitoringResponseTimeThreshold,
-		s.config.QueryMonitoringCountThreshold,
-		s.config.QueryMonitoringIntervalSeconds,
-		s.config.EnableIntervalBasedAveraging,
-		s.config.IntervalCalculatorCacheTTLMinutes,
-	)
-	s.slowQueriesScraper = slowQueriesScraper
 
 	executionPlanScraper := scrapers.NewExecutionPlanScraper(
 		s.client,
@@ -406,18 +410,6 @@ func (s *newRelicOracleScraper) startLogs(_ context.Context, _ component.Host) e
 		s.logsBuilderConfig,
 	)
 	s.executionPlanScraper = executionPlanScraper
-
-	waitEventBlockingScraper, err := scrapers.NewWaitEventBlockingScraper(
-		s.client,
-		tempMb,
-		s.logger,
-		metadata.DefaultMetricsBuilderConfig(),
-		s.config.QueryMonitoringCountThreshold,
-	)
-	if err != nil {
-		return fmt.Errorf("failed to create wait event blocking scraper for logs: %w", err)
-	}
-	s.waitEventBlockingScraper = waitEventBlockingScraper
 
 	return nil
 }
@@ -459,11 +451,74 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 
 	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
+	// Cache SQL identifiers for logs pipeline to reuse
 	if len(waitEventSQLIdentifiers) > 0 {
-		s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
+		globalSQLIdentifierCache.Set(waitEventSQLIdentifiers)
+		s.logger.Debug("Cached SQL identifiers for logs pipeline reuse",
+			zap.Int("cached_identifiers", len(waitEventSQLIdentifiers)))
+
+		s.executeChildCursorsAndExecutionPlans(ctx, errChan, waitEventSQLIdentifiers)
 	} else {
-		s.logger.Debug("No SQL identifiers from wait events, skipping child cursor scraping")
+		s.logger.Debug("No SQL identifiers from wait events, skipping child cursor and execution plan scraping")
 	}
+}
+
+// executeChildCursorsAndExecutionPlans executes both child cursor and execution plan scrapers in parallel
+func (s *newRelicOracleScraper) executeChildCursorsAndExecutionPlans(ctx context.Context, errChan chan<- error, sqlIdentifiers []models.SQLIdentifier) {
+	s.logger.Debug("Starting parallel execution of child cursor and execution plan scrapers",
+		zap.Int("sql_identifiers", len(sqlIdentifiers)))
+
+	if len(sqlIdentifiers) == 0 {
+		s.logger.Debug("No SQL identifiers from wait events")
+		return
+	}
+
+	var wg sync.WaitGroup
+
+	// Execute child cursors in parallel
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		s.logger.Debug("Starting child cursor scraping from wait events",
+			zap.Int("sql_identifiers", len(sqlIdentifiers)))
+
+		childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
+		if len(childCursorErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping child cursor metrics",
+				zap.Int("error_count", len(childCursorErrs)))
+			s.sendErrorsToChannelWithCancellation(ctx, errChan, childCursorErrs, -1)
+		}
+
+		s.logger.Info("Child cursor scraping completed",
+			zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+			zap.Int("errors", len(childCursorErrs)))
+	}()
+
+	// Execute execution plans in parallel (only if logs scraper is enabled and execution plan scraper exists)
+	if s.executionPlanScraper != nil && s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			s.logger.Debug("Starting execution plan scraping from wait events",
+				zap.Int("sql_identifiers", len(sqlIdentifiers)))
+
+			executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
+			if len(executionPlanErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping execution plans",
+					zap.Int("error_count", len(executionPlanErrs)))
+				s.sendErrorsToChannelWithCancellation(ctx, errChan, executionPlanErrs, -2)
+			}
+
+			s.logger.Info("Execution plan scraping completed",
+				zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+				zap.Int("errors", len(executionPlanErrs)))
+		}()
+	} else {
+		s.logger.Debug("Execution plan scraper not available or disabled, skipping parallel execution plan scraping")
+	}
+
+	wg.Wait()
+	s.logger.Debug("Parallel child cursor and execution plan scraping completed")
 }
 
 // executeChildCursors executes child cursor scraper for SQL identifiers from wait events
