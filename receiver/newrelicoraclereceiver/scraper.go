@@ -71,7 +71,7 @@ func (c *SQLIdentifierCache) Get() ([]models.SQLIdentifier, bool) {
 func (c *SQLIdentifierCache) Set(identifiers []models.SQLIdentifier) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-	
+
 	// Create a map to track existing identifiers for deduplication
 	existingMap := make(map[string]bool)
 	for _, existing := range c.identifiers {
@@ -79,7 +79,7 @@ func (c *SQLIdentifierCache) Set(identifiers []models.SQLIdentifier) {
 		key := fmt.Sprintf("%s_%d", existing.SQLID, existing.ChildNumber)
 		existingMap[key] = true
 	}
-	
+
 	// Add new identifiers that don't already exist
 	for _, newID := range identifiers {
 		key := fmt.Sprintf("%s_%d", newID.SQLID, newID.ChildNumber)
@@ -88,7 +88,7 @@ func (c *SQLIdentifierCache) Set(identifiers []models.SQLIdentifier) {
 			existingMap[key] = true
 		}
 	}
-	
+
 	c.timestamp = time.Now()
 }
 
@@ -482,11 +482,18 @@ func (s *newRelicOracleScraper) executeChildCursorsAndExecutionPlans(ctx context
 		s.logger.Debug("Starting child cursor scraping from wait events",
 			zap.Int("sql_identifiers", len(sqlIdentifiers)))
 
-		childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
+		// Create a separate context with extended timeout for child cursors since they can be slow
+		childCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		defer cancel()
+
+		childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(childCtx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
 		if len(childCursorErrs) > 0 {
 			s.logger.Warn("Errors occurred while scraping child cursor metrics",
-				zap.Int("error_count", len(childCursorErrs)))
+				zap.Int("error_count", len(childCursorErrs)),
+				zap.Int("sql_identifiers_attempted", len(sqlIdentifiers)))
 			s.sendErrorsToChannelWithCancellation(ctx, errChan, childCursorErrs, -1)
+		} else {
+			s.logger.Debug("Child cursor scraping completed successfully with no errors")
 		}
 
 		s.logger.Info("Child cursor scraping completed",
@@ -502,11 +509,18 @@ func (s *newRelicOracleScraper) executeChildCursorsAndExecutionPlans(ctx context
 			s.logger.Debug("Starting execution plan scraping from wait events",
 				zap.Int("sql_identifiers", len(sqlIdentifiers)))
 
-			executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, sqlIdentifiers)
+			// Create a separate context with timeout for execution plans
+			planCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+			defer cancel()
+
+			executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(planCtx, sqlIdentifiers)
 			if len(executionPlanErrs) > 0 {
 				s.logger.Warn("Errors occurred while scraping execution plans",
-					zap.Int("error_count", len(executionPlanErrs)))
+					zap.Int("error_count", len(executionPlanErrs)),
+					zap.Int("sql_identifiers_attempted", len(sqlIdentifiers)))
 				s.sendErrorsToChannelWithCancellation(ctx, errChan, executionPlanErrs, -2)
+			} else {
+				s.logger.Debug("Execution plan scraping completed successfully with no errors")
 			}
 
 			s.logger.Info("Execution plan scraping completed",

@@ -43,12 +43,21 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 	metricsEmitted := 0
 
 	if len(identifiers) > 0 {
-		for _, identifier := range identifiers {
-			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifier.SQLID, identifier.ChildNumber)
+		s.logger.Debug("Processing child cursor identifiers", zap.Int("total_identifiers", len(identifiers)))
+
+		for i, identifier := range identifiers {
+			// Create a shorter timeout for individual queries to prevent blocking the entire batch
+			queryCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+
+			cursor, err := s.client.QuerySpecificChildCursor(queryCtx, identifier.SQLID, identifier.ChildNumber)
+			cancel() // Always cancel to free resources
+
 			if err != nil {
 				s.logger.Warn("Failed to fetch specific child cursor from V$SQL",
 					zap.String("sql_id", identifier.SQLID),
 					zap.Int64("child_number", identifier.ChildNumber),
+					zap.Int("identifier_index", i+1),
+					zap.Int("total_identifiers", len(identifiers)),
 					zap.Error(err))
 				errs = append(errs, err)
 				continue
@@ -57,8 +66,20 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 			if cursor != nil && cursor.HasValidIdentifier() {
 				s.recordChildCursorMetrics(now, cursor)
 				metricsEmitted++
+				s.logger.Debug("Successfully recorded child cursor metrics",
+					zap.String("sql_id", identifier.SQLID),
+					zap.Int64("child_number", identifier.ChildNumber))
+			} else {
+				s.logger.Debug("Skipped child cursor - no valid data",
+					zap.String("sql_id", identifier.SQLID),
+					zap.Int64("child_number", identifier.ChildNumber))
 			}
 		}
+
+		s.logger.Info("Child cursor processing summary",
+			zap.Int("total_identifiers", len(identifiers)),
+			zap.Int("metrics_emitted", metricsEmitted),
+			zap.Int("errors", len(errs)))
 	}
 
 	s.logger.Debug("Child cursors scrape completed")

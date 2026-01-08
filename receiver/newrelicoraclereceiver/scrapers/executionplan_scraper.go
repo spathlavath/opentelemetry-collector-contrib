@@ -38,8 +38,11 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	var errs []error
 
 	if len(sqlIdentifiers) == 0 {
+		s.logger.Debug("No SQL identifiers provided for execution plan scraping")
 		return errs
 	}
+
+	s.logger.Debug("Starting execution plan scraping", zap.Int("total_identifiers", len(sqlIdentifiers)))
 
 	// Single timeout context for all queries to prevent excessive total runtime
 	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
@@ -47,11 +50,17 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, identifier := range sqlIdentifiers {
+	successCount := 0
+
+	for i, identifier := range sqlIdentifiers {
 		// Check if context is already cancelled/timed out before proceeding
 		select {
 		case <-queryCtx.Done():
-			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
+			s.logger.Warn("Context cancelled/timed out during execution plan scraping",
+				zap.Int("processed_count", i),
+				zap.Int("total_identifiers", len(sqlIdentifiers)),
+				zap.Error(queryCtx.Err()))
+			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping: %w", queryCtx.Err()))
 			return errs
 		default:
 			// Continue processing
@@ -60,12 +69,21 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		// Query execution plan for specific SQL_ID and CHILD_NUMBER
 		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
+			s.logger.Warn("Failed to query execution plan",
+				zap.String("sql_id", identifier.SQLID),
+				zap.Int64("child_number", identifier.ChildNumber),
+				zap.Int("identifier_index", i+1),
+				zap.Int("total_identifiers", len(sqlIdentifiers)),
+				zap.Error(err))
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
 			continue // Skip this identifier but continue processing others
 		}
-		s.logger.Debug("Retrieved execution plan rows")
+		s.logger.Debug("Retrieved execution plan rows",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber),
+			zap.Int("plan_rows_count", len(planRows)))
 
-		successCount := 0
+		planSuccessCount := 0
 		for _, row := range planRows {
 			if !row.SQLID.Valid || row.SQLID.String == "" {
 				continue
@@ -78,12 +96,21 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 					zap.Error(err))
 				errs = append(errs, err)
 			} else {
-				successCount++
+				planSuccessCount++
 			}
 		}
 
-		s.logger.Debug("Scraped execution plan rows")
+		s.logger.Debug("Processed execution plan for SQL identifier",
+			zap.String("sql_id", identifier.SQLID),
+			zap.Int64("child_number", identifier.ChildNumber),
+			zap.Int("plan_rows_processed", planSuccessCount))
+		successCount += planSuccessCount
 	}
+
+	s.logger.Info("Execution plan scraping summary",
+		zap.Int("total_identifiers", len(sqlIdentifiers)),
+		zap.Int("total_plan_rows_processed", successCount),
+		zap.Int("errors", len(errs)))
 
 	return errs
 }
