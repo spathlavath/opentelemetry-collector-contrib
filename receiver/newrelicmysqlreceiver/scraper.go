@@ -78,7 +78,7 @@ func (n *newRelicMySQLScraper) scrape(ctx context.Context) (pmetric.Metrics, err
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// 2. Helper function to parse MySQL strings to int64
-	parseInt := func(key string) int64 {
+	getValue := func(key string) int64 {
 		if val, ok := stats[key]; ok {
 			i, _ := strconv.ParseInt(val, 10, 64)
 			return i
@@ -88,10 +88,41 @@ func (n *newRelicMySQLScraper) scrape(ctx context.Context) (pmetric.Metrics, err
 
 	// 3. Record core metrics for testing
 	// The method names below are generated based on your metadata.yaml
-	n.mb.RecordNewrelicmysqlConnectionsDataPoint(now, parseInt("Threads_connected"))
-	n.mb.RecordNewrelicmysqlBytesReceivedDataPoint(now, parseInt("Bytes_received"))
 
-	n.logger.Info("Successfully scraped and recorded 2 metrics")
+	// Network Metrics
+	n.mb.RecordNewrelicmysqlBytesReceivedDataPoint(now, getValue("Bytes_received"))
+	n.mb.RecordNewrelicmysqlBytesSentDataPoint(now, getValue("Bytes_sent"))
+
+	// Connection Metrics
+	n.mb.RecordNewrelicmysqlConnectionsDataPoint(now, getValue("Threads_connected"))
+	n.mb.RecordNewrelicmysqlConnectionsMaxDataPoint(now, getValue("Max_used_connections"))
+
+	// Query Metrics
+	n.mb.RecordNewrelicmysqlQueriesDataPoint(now, getValue("Questions"))
+	n.mb.RecordNewrelicmysqlSlowQueriesDataPoint(now, getValue("Slow_queries"))
+
+	// Command Metrics (Switching for standard attributes)
+	n.mb.RecordNewrelicmysqlCommandsDataPoint(now, getValue("Com_select"), metadata.AttributeCommandSelect)
+	n.mb.RecordNewrelicmysqlCommandsDataPoint(now, getValue("Com_insert"), metadata.AttributeCommandInsert)
+	n.mb.RecordNewrelicmysqlCommandsDataPoint(now, getValue("Com_update"), metadata.AttributeCommandUpdate)
+	n.mb.RecordNewrelicmysqlCommandsDataPoint(now, getValue("Com_delete"), metadata.AttributeCommandDelete)
+	n.mb.RecordNewrelicmysqlCommandsDataPoint(now, getValue("Com_commit"), metadata.AttributeCommandCommit)
+	n.mb.RecordNewrelicmysqlCommandsDataPoint(now, getValue("Com_rollback"), metadata.AttributeCommandRollback)
+
+	// Thread Metrics
+	n.mb.RecordNewrelicmysqlThreadsRunningDataPoint(now, getValue("Threads_running"))
+
+	// InnoDB Buffer Pool Metrics
+	n.mb.RecordNewrelicmysqlInnodbBufferPoolPagesDataDataPoint(now, getValue("Innodb_buffer_pool_pages_data"))
+	n.mb.RecordNewrelicmysqlInnodbBufferPoolPagesFreeDataPoint(now, getValue("Innodb_buffer_pool_pages_free"))
+	n.mb.RecordNewrelicmysqlInnodbBufferPoolReadRequestsDataPoint(now, getValue("Innodb_buffer_pool_read_requests"))
+	n.mb.RecordNewrelicmysqlInnodbBufferPoolReadsDataPoint(now, getValue("Innodb_buffer_pool_reads"))
+
+	// InnoDB Row Lock Metrics
+	n.mb.RecordNewrelicmysqlInnodbRowLockTimeDataPoint(now, getValue("Innodb_row_lock_time"))
+	n.mb.RecordNewrelicmysqlInnodbRowLockWaitsDataPoint(now, getValue("Innodb_row_lock_waits"))
+
+	n.logger.Info("Successfully scraped all 16 New Relic MySQL metrics")
 
 	// 4. Emit the collected metrics
 	return n.mb.Emit(), nil
