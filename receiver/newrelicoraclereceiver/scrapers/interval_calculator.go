@@ -98,9 +98,7 @@ type OracleIntervalCalculator struct {
 // If cacheTTL is invalid (<= 0), it defaults to DefaultCacheTTL (10 minutes).
 func NewOracleIntervalCalculator(logger *zap.Logger, cacheTTL time.Duration) *OracleIntervalCalculator {
 	if cacheTTL <= 0 {
-		logger.Warn("Invalid cache TTL, using default",
-			zap.Duration("provided", cacheTTL),
-			zap.Duration("default", DefaultCacheTTL))
+		logger.Warn("Invalid cache TTL, using default 10 minutes", zap.Duration("provided", cacheTTL))
 		cacheTTL = DefaultCacheTTL
 	}
 
@@ -163,11 +161,11 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	if !exists {
 		// Handle edge case: execution_count = 0
 		if currentExecCount == 0 {
-			oic.logger.Warn("Query with zero execution count - skipping", zap.String("query_id", queryID))
+			oic.logger.Warn("Query with zero execution count - skipping")
 			return nil
 		}
 
-		oic.logger.Debug("First scrape for query - using historical average", zap.String("query_id", queryID))
+		oic.logger.Debug("First scrape for query - using historical average")
 
 		// Add to cache for next scrape
 		oic.stateCache[queryID] = &OracleQueryState{
@@ -200,7 +198,7 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 	// Handle no new executions
 	if deltaExecCount == 0 {
-		oic.logger.Debug("No new executions for query", zap.String("query_id", queryID))
+		oic.logger.Debug("No new executions for query")
 
 		// Update last seen timestamp (query is still in Oracle results)
 		state.LastSeenTimestamp = now
@@ -222,14 +220,10 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	// Handle plan cache reset (execution count decreased) OR stats corruption (negative delta elapsed)
 	if deltaExecCount < 0 || deltaElapsedMs < 0 {
 		if deltaExecCount < 0 {
-			oic.logger.Warn("Plan cache reset detected - execution count decreased",
-				zap.String("query_id", queryID),
-				zap.Int64("delta", deltaExecCount))
+			oic.logger.Warn("Plan cache reset detected - execution count decreased, cannot calculate valid interval delta")
 		}
 		if deltaElapsedMs < 0 {
-			oic.logger.Warn("Negative delta elapsed time detected - possible stats corruption",
-				zap.String("query_id", queryID),
-				zap.Float64("delta_ms", deltaElapsedMs))
+			oic.logger.Warn("Negative delta elapsed time detected - possible stats corruption")
 		}
 
 		// Reset state - treat as first scrape but PRESERVE FirstSeenTimestamp
@@ -260,9 +254,8 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 	// Warn if we have executions but zero elapsed time
 	if deltaElapsedMs == 0 && deltaExecCount > 0 {
-		oic.logger.Warn("Zero elapsed time with non-zero executions - possible data issue or extremely fast query",
-			zap.String("query_id", queryID),
-			zap.Int64("execution_count", deltaExecCount))
+		oic.logger.Warn("Zero elapsed time with non-zero executions - possible data issue or extremely fast query")
+		oic.logger.Debug("Delta calculation for query")
 	}
 
 	// Update state for next scrape
@@ -305,9 +298,7 @@ func (oic *OracleIntervalCalculator) CleanupStaleEntries(now time.Time) {
 	}
 
 	if removedCount > 0 {
-		oic.logger.Info("Cleaned up stale queries from cache",
-			zap.Int("removed_count", removedCount),
-			zap.Int("remaining_count", len(oic.stateCache)))
+		oic.logger.Info("Cleaned up stale queries from cache")
 	}
 }
 
