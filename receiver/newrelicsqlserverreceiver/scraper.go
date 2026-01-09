@@ -6,6 +6,7 @@ package newrelicsqlserverreceiver // import "github.com/open-telemetry/opentelem
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -45,6 +46,11 @@ type sqlServerScraper struct {
 	tempdbContentionScraper       *scrapers.TempDBContentionScraper // TempDB contention monitoring
 	metadataCache                 *helpers.MetadataCache            // Metadata cache for wait resource enrichment
 	engineEdition                 int                               // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
+	// Plan handle cache and synchronization for metric/log pipeline coordination
+	planHandleCache    *helpers.PlanHandleCache // Shared cache for plan handles from metric to log pipeline
+	metricScrapeDone   chan struct{}            // Signal channel to notify log pipeline that metric scrape is complete
+	metricScrapeMu     sync.Mutex               // Protects the signal channel operations
+	metricScrapeActive bool                     // Flag to track if metric scrape has occurred
 }
 
 // newSqlServerScraper creates a new SQL Server scraper with structured approach
@@ -113,6 +119,12 @@ func (s *sqlServerScraper) Start(ctx context.Context, _ component.Host) error {
 	} else {
 		s.logger.Info("Wait resource enrichment disabled, skipping metadata cache initialization")
 	}
+
+	// Initialize plan handle cache and synchronization for metric/log pipeline coordination
+	s.planHandleCache = helpers.NewPlanHandleCache()
+	s.metricScrapeDone = make(chan struct{})
+	s.metricScrapeActive = false
+	s.logger.Info("Plan handle cache initialized for metric/log pipeline coordination")
 
 	// Initialize instance scraper with engine edition for engine-specific queries
 	// Create instance scraper for instance-level metrics
@@ -204,76 +216,63 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 
 	s.logger.Info("Query monitoring is ENABLED, collecting execution plans for ACTIVE running queries")
 
-	// First, fetch slow query IDs for correlation with active queries
-	// This ensures we only fetch execution plans for slow queries selected by the user
-	intervalSeconds := s.config.QueryMonitoringFetchInterval
-	topN := s.config.QueryMonitoringCountThreshold
-	elapsedTimeThreshold := s.config.QueryMonitoringResponseTimeThreshold
-	textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit
-
-	s.logger.Info("Fetching slow queries for active query correlation",
-		zap.Int("interval_seconds", intervalSeconds),
-		zap.Int("top_n", topN),
-		zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
-
-	slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(ctx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit, false)
-	if err != nil {
-		s.logger.Warn("Failed to fetch slow queries for correlation, will skip execution plan collection",
-			zap.Error(err))
-		return logs, nil // Return empty logs, don't fail
-	}
-
-	// Extract query IDs and lightweight plan data (5 fields only) from slow queries in a single pass
+	// Declare variables needed for the rest of the function
 	var slowQueryIDs []string
 	var slowQueryPlanDataMap map[string]models.SlowQueryPlanData
-	if len(slowQueries) > 0 {
-		slowQueryIDs, slowQueryPlanDataMap = s.queryPerformanceScraper.ExtractQueryDataFromSlowQueries(slowQueries)
-		s.logger.Info("Extracted query IDs and lightweight plan data (5 fields: plan_handle, query_hash, creation_time, last_execution_time, total_elapsed_time)",
-			zap.Int("slow_query_count", len(slowQueries)),
-			zap.Int("unique_query_id_count", len(slowQueryIDs)),
-			zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
-	} else {
-		s.logger.Info("No slow queries found, skipping execution plan collection")
+	var activeQueries []models.ActiveRunningQuery
+
+	// Wait for metric pipeline to complete and populate the cache
+	// NO FALLBACK - If metric pipeline hasn't completed, log pipeline must wait
+	s.logger.Info("Waiting for current metric scrape to complete before retrieving cached plan handles")
+
+	waitCtx, waitCancel := context.WithTimeout(ctx, 60*time.Second)
+	defer waitCancel()
+
+	if err := s.waitForMetricScrapeComplete(waitCtx); err != nil {
+		s.logger.Error("Timeout waiting for metric scrape to complete - cannot fetch execution plans without cached data",
+			zap.Error(err))
+		return logs, nil // Return empty logs - no fallback to DB queries
+	}
+
+	// Retrieve EVERYTHING from cache (NO duplicate DB queries!)
+	// Cache contains: plan handles + active queries
+	slowQueryIDs, slowQueryPlanDataMap, activeQueries = s.planHandleCache.GetAll()
+	s.logger.Info("✅ Retrieved from cache: plan handles + active queries (ELIMINATED ALL duplicate DB queries)",
+		zap.Int("unique_query_id_count", len(slowQueryIDs)),
+		zap.Int("cached_plan_handles", len(slowQueryPlanDataMap)),
+		zap.Int("cached_active_queries", len(activeQueries)),
+		zap.Time("cache_last_updated", s.planHandleCache.GetLastUpdateTime()))
+
+	if len(slowQueryIDs) == 0 {
+		s.logger.Info("No slow queries in cache (metric pipeline found 0 slow queries), skipping execution plan collection")
 		return logs, nil // No slow queries, nothing to collect
 	}
 
-	// Scrape active running queries with execution plans
-	// This will fetch, parse, and emit execution plan operators as OTLP logs
-	limit := s.config.QueryMonitoringCountThreshold
-	activeElapsedTimeThreshold := s.config.ActiveRunningQueriesElapsedTimeThreshold // Minimum elapsed time in ms
-
-	s.logger.Info("Collecting active running query execution plans",
-		zap.Int("limit", limit),
-		zap.Int("text_truncate_limit", textTruncateLimit),
-		zap.Int("elapsed_time_threshold_ms", activeElapsedTimeThreshold),
-		zap.Int("slow_query_id_filter_count", len(slowQueryIDs)))
-
-	// Step 1: Fetch active queries from database
-	activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
-	if err != nil {
-		s.logger.Error("Failed to fetch active running queries", zap.Error(err))
-		return logs, err
-	}
-
 	if len(activeQueries) == 0 {
-		s.logger.Info("No active queries found matching slow query IDs")
-		return logs, nil
+		s.logger.Warn("⚠️  No active queries in cache (they finished before log pipeline ran)")
+		return logs, nil // No active queries, no execution plans to fetch
 	}
 
-	s.logger.Info("Active queries fetched, emitting metrics",
-		zap.Int("active_query_count", len(activeQueries)))
-
-	// Step 2: Emit execution plan statistics using lightweight plan data from memory (5 fields only, NO database query)
-	if err := s.queryPerformanceScraper.ScrapeActiveQueryPlanStatistics(ctx, activeQueries, slowQueryPlanDataMap); err != nil {
-		s.logger.Warn("Failed to scrape active query execution plan statistics - continuing with logs",
-			zap.Error(err))
-		// Don't fail - continue to emit XML logs
-	} else {
-		s.logger.Info("Successfully emitted execution plan statistics as metrics",
-			zap.Int("active_query_count", len(activeQueries)))
+	// Log a few sample query IDs for debugging
+	if len(slowQueryIDs) > 0 {
+		sampleCount := 3
+		if len(slowQueryIDs) < sampleCount {
+			sampleCount = len(slowQueryIDs)
+		}
+		s.logger.Info("Sample query IDs from cache",
+			zap.Strings("sample_query_ids", slowQueryIDs[:sampleCount]))
 	}
 
-	// Step 3: Fetch execution plans and emit as logs (using lightweight plan data)
+	// Now we have everything from cache - no DB queries needed!
+	// activeQueries: from cache (already fetched by metric pipeline)
+	// slowQueryPlanDataMap: from cache (contains plan_handle for each query)
+
+	s.logger.Info("Using cached active queries for execution plan collection",
+		zap.Int("active_query_count", len(activeQueries)),
+		zap.Int("plan_handles_available", len(slowQueryPlanDataMap)))
+
+	// Fetch execution plans and emit as logs (ONLY thing log pipeline does!)
+	// Plan statistics were already emitted as metrics by the metric pipeline
 	if err := s.queryPerformanceScraper.EmitActiveRunningExecutionPlansAsLogs(ctx, logs, activeQueries, slowQueryPlanDataMap); err != nil {
 		s.logger.Error("Failed to emit execution plans as logs", zap.Error(err))
 		return logs, err
@@ -440,6 +439,12 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	s.logger.Debug("Starting SQL Server metrics collection",
 		zap.String("hostname", s.config.Hostname),
 		zap.String("port", s.config.Port))
+
+	// Create a new done channel for this scrape cycle
+	// Log pipeline will wait on this channel
+	s.metricScrapeMu.Lock()
+	s.metricScrapeDone = make(chan struct{})
+	s.metricScrapeMu.Unlock()
 
 	// Track scraping errors but continue with partial results
 	var scrapeErrors []error
@@ -641,6 +646,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	// Store query IDs and lightweight plan data (5 fields only) for correlation with active queries
 	var slowQueryIDs []string
 	var slowQueryPlanDataMap map[string]models.SlowQueryPlanData
+	var activeQueriesForCache []models.ActiveRunningQuery // Cache active queries for log pipeline
 	if s.config.EnableQueryMonitoring {
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
@@ -679,7 +685,6 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			s.logger.Info("Extracted query IDs and lightweight plan data (5 fields only, in-memory)",
 				zap.Int("unique_query_id_count", len(slowQueryIDs)),
 				zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
-
 		}
 	} else {
 		s.logger.Info("Slow query scraping SKIPPED - EnableQueryMonitoring is false")
@@ -710,7 +715,9 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		} else if len(activeQueries) == 0 {
 			s.logger.Info("No active queries found matching slow query IDs")
 		} else {
-			s.logger.Info("Active queries fetched, emitting metrics",
+			// Cache active queries for log pipeline to reuse (eliminates duplicate DB query!)
+			activeQueriesForCache = activeQueries
+			s.logger.Info("Active queries fetched, emitting metrics AND caching for log pipeline",
 				zap.Int("active_query_count", len(activeQueries)))
 
 			// Step 2: Emit metrics for active queries (using lightweight plan data from memory)
@@ -1278,6 +1285,18 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	// Build final metrics using MetricsBuilder (Oracle pattern)
 	metrics := s.buildMetrics(ctx)
 
+	// Populate plan handle cache for log pipeline (eliminates ALL duplicate DB queries!)
+	// Cache: slow query plan handles + active queries
+	// This gives log pipeline everything it needs without any DB queries
+	s.planHandleCache.Update(slowQueryIDs, slowQueryPlanDataMap, activeQueriesForCache)
+	s.logger.Info("✅ Cache updated: plan handles + active queries ready for log pipeline",
+		zap.Int("cached_plan_handles", len(slowQueryPlanDataMap)),
+		zap.Int("cached_active_queries", len(activeQueriesForCache)),
+		zap.Int("unique_query_ids", len(slowQueryIDs)))
+
+	// Signal to log pipeline that metric scrape is complete and cache is populated
+	s.notifyMetricScrapeComplete()
+
 	// Log summary of scraping results
 	if len(scrapeErrors) > 0 {
 		s.logger.Warn("Completed scraping with errors",
@@ -1449,4 +1468,51 @@ func (s *sqlServerScraper) CollectSystemInformation(ctx context.Context) (*model
 		zap.Bool("is_hadr_enabled", getBoolValueFromMap(result.IsHadrEnabled)))
 
 	return &result, nil
+}
+
+// notifyMetricScrapeComplete signals to the log pipeline that the metric scrape is complete
+// and the plan handle cache has been populated
+func (s *sqlServerScraper) notifyMetricScrapeComplete() {
+	s.metricScrapeMu.Lock()
+	defer s.metricScrapeMu.Unlock()
+
+	// Signal completion by closing the channel (all waiters will be unblocked)
+	if s.metricScrapeDone != nil {
+		close(s.metricScrapeDone)
+	}
+	s.metricScrapeActive = true
+
+	s.logger.Debug("Metric scrape completion signal sent, cache ready for log pipeline")
+}
+
+// waitForMetricScrapeComplete blocks until the CURRENT metric pipeline scrape completes
+// or the context times out. This is called at the START of log pipeline to get a channel
+// to wait on for the current scrape cycle.
+func (s *sqlServerScraper) waitForMetricScrapeComplete(ctx context.Context) error {
+	// Get the current scrape's done channel BEFORE the metric scrape starts signaling
+	s.metricScrapeMu.Lock()
+	doneChan := s.metricScrapeDone
+	scrapeActive := s.metricScrapeActive
+	s.metricScrapeMu.Unlock()
+
+	if doneChan == nil {
+		// No channel yet, this shouldn't happen but handle gracefully
+		s.logger.Warn("No metric scrape channel available, log pipeline will proceed without waiting")
+		return fmt.Errorf("no metric scrape signal channel available")
+	}
+
+	// Always wait for the current metric scrape to complete
+	if scrapeActive {
+		s.logger.Debug("Waiting for current metric scrape to complete (cache from previous cycle available)")
+	} else {
+		s.logger.Info("Waiting for first metric scrape to complete before fetching logs")
+	}
+
+	select {
+	case <-doneChan:
+		s.logger.Debug("Metric scrape completed, log pipeline can proceed with fresh cache")
+		return nil
+	case <-ctx.Done():
+		return fmt.Errorf("timeout waiting for metric scrape to complete: %w", ctx.Err())
+	}
 }

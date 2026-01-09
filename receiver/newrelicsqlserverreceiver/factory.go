@@ -5,6 +5,7 @@ package newrelicsqlserverreceiver // import "github.com/open-telemetry/opentelem
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -15,6 +16,11 @@ import (
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 )
+
+// sharedScrapers stores scraper instances to be shared between metrics and logs receivers
+// Key: receiver.Settings.ID (unique per configured receiver instance)
+var sharedScrapers = make(map[component.ID]*sqlServerScraper)
+var scrapersMu sync.Mutex
 
 // NewFactory creates a factory for SQL Server receiver.
 func NewFactory() receiver.Factory {
@@ -48,7 +54,15 @@ func createMetricsReceiver(
 ) (receiver.Metrics, error) {
 	cfg := rConf.(*Config)
 
-	ns := newSqlServerScraper(params, cfg)
+	// Get or create shared scraper instance
+	scrapersMu.Lock()
+	ns, exists := sharedScrapers[params.ID]
+	if !exists {
+		ns = newSqlServerScraper(params, cfg)
+		sharedScrapers[params.ID] = ns
+	}
+	scrapersMu.Unlock()
+
 	s, err := scraper.NewMetrics(
 		ns.scrape,
 		scraper.WithStart(ns.Start),
@@ -71,7 +85,14 @@ func createLogsReceiver(
 ) (receiver.Logs, error) {
 	cfg := rConf.(*Config)
 
-	ns := newSqlServerScraper(params, cfg)
+	// Get or create shared scraper instance (SAME instance as metrics receiver!)
+	scrapersMu.Lock()
+	ns, exists := sharedScrapers[params.ID]
+	if !exists {
+		ns = newSqlServerScraper(params, cfg)
+		sharedScrapers[params.ID] = ns
+	}
+	scrapersMu.Unlock()
 
 	f := scraper.NewFactory(metadata.Type, nil,
 		scraper.WithLogs(func(context.Context, scraper.Settings, component.Config) (scraper.Logs, error) {
