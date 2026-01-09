@@ -30,8 +30,9 @@ func TestLogsBuilderAppendLogRecord(t *testing.T) {
 	lb := NewLogsBuilder(loadLogsBuilderConfig(t, "all_set"), settings)
 
 	rb := lb.NewResourceBuilder()
-	rb.SetHostName("host.name-val")
-	rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
+	rb.SetHostAddress("host.address-val")
+	rb.SetHostPort(9)
+	rb.SetServiceName("service.name-val")
 	res := rb.Emit()
 
 	// append the first log record
@@ -132,8 +133,9 @@ func TestLogsBuilder(t *testing.T) {
 			lb.RecordNewrelicoracledbExecutionPlanEvent(ctx, timestamp, "newrelic.event.type-val", "query_id-val", "plan_hash_value-val", "query_text-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", "plan_generated_timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
 
 			rb := lb.NewResourceBuilder()
-			rb.SetHostName("host.name-val")
-			rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
+			rb.SetHostAddress("host.address-val")
+			rb.SetHostPort(9)
+			rb.SetServiceName("service.name-val")
 			res := rb.Emit()
 			logs := lb.Emit(WithLogsResource(res))
 

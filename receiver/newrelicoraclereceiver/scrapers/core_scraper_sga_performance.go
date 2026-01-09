@@ -20,7 +20,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(ctx cont
 	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(now, metric.Ratio, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatioDataPoint(now, metric.Ratio, instanceID)
 		metricCount++
 	}
 
@@ -39,7 +39,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheHitRatioMetrics(ctx context
 	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(now, metric.Ratio, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaSharedPoolLibraryCacheHitRatioDataPoint(now, metric.Ratio, instanceID)
 		metricCount++
 	}
 
@@ -58,7 +58,7 @@ func (s *CoreScraper) scrapeSGASharedPoolDictCacheMissRatioMetrics(ctx context.C
 	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(now, metric.Ratio, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaSharedPoolDictCacheMissRatioDataPoint(now, metric.Ratio, instanceID)
 		metricCount++
 	}
 
@@ -77,7 +77,7 @@ func (s *CoreScraper) scrapeSGALogBufferSpaceWaitsMetrics(ctx context.Context, n
 	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(now, metric.Count, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaLogBufferSpaceWaitsDataPoint(now, metric.Count, instanceID)
 		metricCount++
 	}
 
@@ -102,7 +102,7 @@ func (s *CoreScraper) scrapeSGALogAllocRetriesMetrics(ctx context.Context, now p
 			ratioValue = metric.Ratio.Float64
 		}
 
-		s.mb.RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(now, ratioValue, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaLogAllocationRetriesRatioDataPoint(now, ratioValue, instanceID)
 		metricCount++
 	}
 
@@ -127,7 +127,7 @@ func (s *CoreScraper) scrapeSGAHitRatioMetrics(ctx context.Context, now pcommon.
 			ratioValue = metric.Ratio.Float64
 		}
 
-		s.mb.RecordNewrelicoracledbSgaHitRatioDataPoint(now, ratioValue, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbSgaHitRatioDataPoint(now, ratioValue, instanceID)
 		metricCount++
 	}
 

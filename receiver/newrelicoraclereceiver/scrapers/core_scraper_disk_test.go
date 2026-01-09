@@ -27,11 +27,10 @@ func TestNewCoreScraper_ValidInputs(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 
 	require.NoError(t, err)
 	assert.NotNil(t, scraper)
-	assert.Equal(t, "test-instance", scraper.instanceName)
 }
 
 func TestNewCoreScraper_NilClient(t *testing.T) {
@@ -39,7 +38,7 @@ func TestNewCoreScraper_NilClient(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(nil, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(nil, mb, zap.NewNop(), config)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -50,7 +49,7 @@ func TestNewCoreScraper_NilMetricsBuilder(t *testing.T) {
 	mockClient := client.NewMockClient()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewCoreScraper(mockClient, nil, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, nil, zap.NewNop(), config)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -63,7 +62,7 @@ func TestNewCoreScraper_NilLogger(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, nil, "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, nil, config)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -76,11 +75,10 @@ func TestNewCoreScraper_EmptyInstanceName(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 
-	assert.Error(t, err)
-	assert.Nil(t, scraper)
-	assert.Contains(t, err.Error(), "instance name cannot be empty")
+	require.NoError(t, err)
+	assert.NotNil(t, scraper)
 }
 
 // Test scrapeReadWriteMetrics with all metrics disabled
@@ -96,7 +94,7 @@ func TestScrapeReadWriteMetrics_AllMetricsDisabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -141,7 +139,7 @@ func TestScrapeReadWriteMetrics_Success_AllMetricsEnabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -177,7 +175,7 @@ func TestScrapeReadWriteMetrics_Success_PartialMetricsEnabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -198,7 +196,7 @@ func TestScrapeReadWriteMetrics_QueryError(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -222,7 +220,7 @@ func TestScrapeReadWriteMetrics_EmptyResultSet(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -253,7 +251,7 @@ func TestScrapeReadWriteMetrics_StringInstanceID(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -284,7 +282,7 @@ func TestScrapeReadWriteMetrics_NilInstanceID(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -320,7 +318,7 @@ func TestScrapeReadWriteMetrics_ZeroValues(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -356,7 +354,7 @@ func TestScrapeReadWriteMetrics_LargeValues(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -410,7 +408,7 @@ func TestScrapeReadWriteMetrics_MultipleInstances(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()

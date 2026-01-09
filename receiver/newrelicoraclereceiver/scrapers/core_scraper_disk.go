@@ -17,7 +17,7 @@ import (
 type diskIOMetricRecorder struct {
 	isEnabled func(metadata.MetricsBuilderConfig) bool
 	getValue  func(*models.DiskIOMetrics) int64
-	record    func(*CoreScraper, pcommon.Timestamp, int64, string, string)
+	record    func(*CoreScraper, pcommon.Timestamp, int64, string)
 }
 
 // diskIOMetricRegistry contains all disk I/O metric recorders
@@ -29,8 +29,8 @@ var diskIOMetricRegistry = []diskIOMetricRecorder{
 		getValue: func(m *models.DiskIOMetrics) int64 {
 			return m.PhysicalReads
 		},
-		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, value, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskReadsDataPoint(now, value, instanceID)
 		},
 	},
 	{
@@ -40,8 +40,8 @@ var diskIOMetricRegistry = []diskIOMetricRecorder{
 		getValue: func(m *models.DiskIOMetrics) int64 {
 			return m.PhysicalWrites
 		},
-		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, value, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskWritesDataPoint(now, value, instanceID)
 		},
 	},
 	{
@@ -51,8 +51,8 @@ var diskIOMetricRegistry = []diskIOMetricRecorder{
 		getValue: func(m *models.DiskIOMetrics) int64 {
 			return m.PhysicalBlockReads
 		},
-		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, value, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(now, value, instanceID)
 		},
 	},
 	{
@@ -62,8 +62,8 @@ var diskIOMetricRegistry = []diskIOMetricRecorder{
 		getValue: func(m *models.DiskIOMetrics) int64 {
 			return m.PhysicalBlockWrites
 		},
-		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, value, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskBlocksWrittenDataPoint(now, value, instanceID)
 		},
 	},
 	{
@@ -73,8 +73,8 @@ var diskIOMetricRegistry = []diskIOMetricRecorder{
 		getValue: func(m *models.DiskIOMetrics) int64 {
 			return m.ReadTime
 		},
-		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, value, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskReadTimeMillisecondsDataPoint(now, value, instanceID)
 		},
 	},
 	{
@@ -84,8 +84,8 @@ var diskIOMetricRegistry = []diskIOMetricRecorder{
 		getValue: func(m *models.DiskIOMetrics) int64 {
 			return m.WriteTime
 		},
-		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, value, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, value int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbDiskWriteTimeMillisecondsDataPoint(now, value, instanceID)
 		},
 	},
 }
@@ -105,7 +105,7 @@ func (s *CoreScraper) recordDiskIOMetrics(now pcommon.Timestamp, metric *models.
 	for _, recorder := range diskIOMetricRegistry {
 		if recorder.isEnabled(s.config) {
 			value := recorder.getValue(metric)
-			recorder.record(s, now, value, s.instanceName, instanceID)
+			recorder.record(s, now, value, instanceID)
 		}
 	}
 }
