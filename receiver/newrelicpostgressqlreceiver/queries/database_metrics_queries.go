@@ -29,7 +29,7 @@ const (
 			sd.temp_bytes,
 			sd.blk_read_time,
 			sd.blk_write_time,
-			(2^31 - age(d.datfrozenxid)) AS before_xid_wraparound,
+			(2^31 - age(d.datfrozenxid))::bigint AS before_xid_wraparound,
 			pg_database_size(sd.datname) AS database_size
 		FROM pg_stat_database sd
 		JOIN pg_database d ON sd.datname = d.datname
