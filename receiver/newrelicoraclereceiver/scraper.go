@@ -457,85 +457,10 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 		s.logger.Debug("Cached SQL identifiers for logs pipeline reuse",
 			zap.Int("cached_identifiers", len(waitEventSQLIdentifiers)))
 
-		s.executeChildCursorsAndExecutionPlans(ctx, errChan, waitEventSQLIdentifiers)
+		s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
 	} else {
 		s.logger.Debug("No SQL identifiers from wait events, skipping child cursor and execution plan scraping")
 	}
-}
-
-// executeChildCursorsAndExecutionPlans executes both child cursor and execution plan scrapers in parallel
-func (s *newRelicOracleScraper) executeChildCursorsAndExecutionPlans(ctx context.Context, errChan chan<- error, sqlIdentifiers []models.SQLIdentifier) {
-	s.logger.Debug("Starting parallel execution of child cursor and execution plan scrapers",
-		zap.Int("sql_identifiers", len(sqlIdentifiers)))
-
-	if len(sqlIdentifiers) == 0 {
-		s.logger.Debug("No SQL identifiers from wait events")
-		return
-	}
-
-	var wg sync.WaitGroup
-
-	// Execute child cursors in parallel
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		s.logger.Debug("Starting child cursor scraping from wait events",
-			zap.Int("sql_identifiers", len(sqlIdentifiers)))
-
-		// Create a separate context with extended timeout for child cursors since they can be slow
-		childCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
-		defer cancel()
-
-		childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(childCtx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
-		if len(childCursorErrs) > 0 {
-			s.logger.Warn("Errors occurred while scraping child cursor metrics",
-				zap.Int("error_count", len(childCursorErrs)),
-				zap.Int("sql_identifiers_attempted", len(sqlIdentifiers)))
-			s.sendErrorsToChannelWithCancellation(ctx, errChan, childCursorErrs, -1)
-		} else {
-			s.logger.Debug("Child cursor scraping completed successfully with no errors")
-		}
-
-		s.logger.Info("Child cursor scraping completed",
-			zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
-			zap.Int("errors", len(childCursorErrs)))
-	}()
-
-	// Execute execution plans in parallel (only if logs scraper is enabled and execution plan scraper exists)
-	if s.executionPlanScraper != nil && s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
-		s.logger.Debug("Execution plan scraper condition met, starting parallel execution")
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			s.logger.Debug("Starting execution plan scraping from wait events",
-				zap.Int("sql_identifiers", len(sqlIdentifiers)))
-
-			// Create a separate context with timeout for execution plans
-			planCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
-			defer cancel()
-
-			executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(planCtx, sqlIdentifiers)
-			if len(executionPlanErrs) > 0 {
-				s.logger.Warn("Errors occurred while scraping execution plans",
-					zap.Int("error_count", len(executionPlanErrs)),
-					zap.Int("sql_identifiers_attempted", len(sqlIdentifiers)))
-				s.sendErrorsToChannelWithCancellation(ctx, errChan, executionPlanErrs, -2)
-			} else {
-				s.logger.Debug("Execution plan scraping completed successfully with no errors")
-			}
-
-			s.logger.Info("Execution plan scraping completed",
-				zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
-				zap.Int("errors", len(executionPlanErrs)))
-		}()
-	} else {
-		s.logger.Debug("Execution plan scraper not available or disabled, skipping parallel execution plan scraping",
-			zap.Bool("scraper_exists", s.executionPlanScraper != nil),
-			zap.Bool("execution_plan_enabled", s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled))
-	}
-
-	wg.Wait()
-	s.logger.Debug("Parallel child cursor and execution plan scraping completed")
 }
 
 // executeChildCursors executes child cursor scraper for SQL identifiers from wait events
@@ -547,6 +472,13 @@ func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan
 		s.logger.Debug("No SQL identifiers from wait events")
 		return
 	}
+
+	// Note: Execution plan scraping is intentionally NOT run during the metrics pipeline.
+	// Execution plan data should be scraped and emitted only through the logs pipeline,
+	// which will reuse the cached SQL identifiers from this metrics pipeline.
+	// This avoids the issue where execution plan logs were built but never emitted.
+	s.logger.Info("Execution plan scraping skipped in metrics pipeline - will be handled by logs pipeline",
+		zap.Int("sql_identifiers_cached", len(sqlIdentifiers)))
 
 	childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
 	if len(childCursorErrs) > 0 {
