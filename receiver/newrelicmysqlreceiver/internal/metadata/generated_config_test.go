@@ -27,7 +27,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
-					NewrelicmysqlPlaceholder: MetricConfig{Enabled: true},
+					NewrelicmysqlCommands:        MetricConfig{Enabled: true},
+					NewrelicmysqlConnectionCount: MetricConfig{Enabled: true},
+					NewrelicmysqlQueryCount:      MetricConfig{Enabled: true},
+					NewrelicmysqlUptime:          MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					MysqlInstanceEndpoint: ResourceAttributeConfig{Enabled: true},
@@ -38,7 +41,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
-					NewrelicmysqlPlaceholder: MetricConfig{Enabled: false},
+					NewrelicmysqlCommands:        MetricConfig{Enabled: false},
+					NewrelicmysqlConnectionCount: MetricConfig{Enabled: false},
+					NewrelicmysqlQueryCount:      MetricConfig{Enabled: false},
+					NewrelicmysqlUptime:          MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					MysqlInstanceEndpoint: ResourceAttributeConfig{Enabled: false},

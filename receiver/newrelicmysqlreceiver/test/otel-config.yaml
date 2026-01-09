@@ -1,0 +1,39 @@
+receivers:
+  newrelicmysql:
+    endpoint: mysql:3306
+    username: monitor
+    password: monitorpass
+    collection_interval: 10s
+    initial_delay: 1s
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+  resource:
+    attributes:
+      - key: service.name
+        value: local-newrelicmysql-monitoring
+        action: upsert
+
+exporters:
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
+  otlphttp:
+    endpoint: "newrelic-otlp-endpoint"
+    headers:
+      api-key: "***"
+    compression: gzip
+
+service:
+  pipelines:
+    metrics:
+      receivers: [newrelicmysql]
+      processors: [batch, resource]
+      exporters: [debug, otlphttp]
+  
+  telemetry:
+    logs:
+      level: info

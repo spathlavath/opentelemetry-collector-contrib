@@ -1,14 +1,26 @@
 default:
 all_set:
   metrics:
-    newrelicmysql.placeholder:
+    newrelicmysql.commands:
+      enabled: true
+    newrelicmysql.connection.count:
+      enabled: true
+    newrelicmysql.query.count:
+      enabled: true
+    newrelicmysql.uptime:
       enabled: true
   resource_attributes:
     mysql.instance.endpoint:
       enabled: true
 none_set:
   metrics:
-    newrelicmysql.placeholder:
+    newrelicmysql.commands:
+      enabled: false
+    newrelicmysql.connection.count:
+      enabled: false
+    newrelicmysql.query.count:
+      enabled: false
+    newrelicmysql.uptime:
       enabled: false
   resource_attributes:
     mysql.instance.endpoint:
