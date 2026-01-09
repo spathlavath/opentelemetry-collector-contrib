@@ -28,11 +28,10 @@ func TestNewContainerScraper_ValidInputs(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 
 	require.NoError(t, err)
 	assert.NotNil(t, scraper)
-	assert.Equal(t, "test-instance", scraper.instanceName)
 	assert.Equal(t, mockClient, scraper.client)
 	assert.Equal(t, mb, scraper.mb)
 	assert.Equal(t, logger, scraper.logger)
@@ -47,7 +46,7 @@ func TestNewContainerScraper_NilClient(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(nil, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(nil, mb, logger, config, nil, nil)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -59,7 +58,7 @@ func TestNewContainerScraper_NilMetricsBuilder(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, nil, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, nil, logger, config, nil, nil)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -72,7 +71,7 @@ func TestNewContainerScraper_NilLogger(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, nil, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, nil, config, nil, nil)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -86,11 +85,10 @@ func TestNewContainerScraper_EmptyInstanceName(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 
-	assert.Error(t, err)
-	assert.Nil(t, scraper)
-	assert.Contains(t, err.Error(), "instance name cannot be empty")
+	require.NoError(t, err)
+	assert.NotNil(t, scraper)
 }
 
 func TestContainerScraper_CheckEnvironmentCapability_CDBCapable(t *testing.T) {
@@ -102,7 +100,7 @@ func TestContainerScraper_CheckEnvironmentCapability_CDBCapable(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -123,7 +121,7 @@ func TestContainerScraper_CheckEnvironmentCapability_NotCapable(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -143,7 +141,7 @@ func TestContainerScraper_CheckEnvironmentCapability_Error(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -164,7 +162,7 @@ func TestContainerScraper_CheckCurrentContext_CDBRoot(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -186,7 +184,7 @@ func TestContainerScraper_CheckCurrentContext_PDB(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -205,7 +203,7 @@ func TestContainerScraper_CheckCurrentContext_Error(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -236,7 +234,7 @@ func TestContainerScraper_ScrapeContainerStatus_Success(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -254,7 +252,7 @@ func TestContainerScraper_ScrapeContainerStatus_Error(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -282,7 +280,7 @@ func TestContainerScraper_ScrapeContainerStatus_InvalidData(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -307,7 +305,7 @@ func TestContainerScraper_ScrapePDBStatus_Success(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -325,7 +323,7 @@ func TestContainerScraper_ScrapePDBStatus_Error(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -352,7 +350,7 @@ func TestContainerScraper_ScrapeCDBTablespaceUsage_Success(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -370,7 +368,7 @@ func TestContainerScraper_ScrapeCDBTablespaceUsage_Error(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -400,7 +398,7 @@ func TestContainerScraper_ScrapeCDBDataFiles_Success(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -418,7 +416,7 @@ func TestContainerScraper_ScrapeCDBDataFiles_Error(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -445,7 +443,7 @@ func TestContainerScraper_ScrapeCDBServices_Success(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -463,7 +461,7 @@ func TestContainerScraper_ScrapeCDBServices_Error(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -481,7 +479,7 @@ func TestContainerScraper_IsCDBSupported(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	// Test nil capability
@@ -505,7 +503,7 @@ func TestContainerScraper_IsPDBSupported(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	// Test nil capability
@@ -529,7 +527,7 @@ func TestContainerScraper_IsConnectedToCDBRoot(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	// Test initial state
@@ -563,7 +561,7 @@ func TestContainerScraper_IsConnectedToPDB(t *testing.T) {
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewContainerScraper(mockClient, mb, logger, "test-instance", config, nil, nil)
+	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
 	// Test initial state

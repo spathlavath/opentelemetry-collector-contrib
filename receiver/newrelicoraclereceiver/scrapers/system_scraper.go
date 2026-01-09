@@ -18,17 +18,15 @@ type SystemScraper struct {
 	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
-	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 	metricRegistry       *SystemMetricRegistry
 }
 
-func NewSystemScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *SystemScraper {
+func NewSystemScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *SystemScraper {
 	return &SystemScraper{
 		client:               c,
 		mb:                   mb,
 		logger:               logger,
-		instanceName:         instanceName,
 		metricsBuilderConfig: metricsBuilderConfig,
 		metricRegistry:       NewSystemMetricRegistry(),
 	}
@@ -54,7 +52,7 @@ func (s *SystemScraper) ScrapeSystemMetrics(ctx context.Context) []error {
 }
 
 func (s *SystemScraper) recordMetric(now pcommon.Timestamp, metricName string, value float64, instanceIDStr string) {
-	if !s.metricRegistry.RecordMetric(s.mb, now, metricName, value, s.instanceName, instanceIDStr) {
+	if !s.metricRegistry.RecordMetric(s.mb, now, metricName, value, instanceIDStr) {
 		s.logger.Debug("Unknown system metric", zap.String("metric_name", metricName))
 	}
 }

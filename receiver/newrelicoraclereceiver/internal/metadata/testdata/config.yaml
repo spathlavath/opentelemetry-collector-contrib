@@ -655,9 +655,11 @@ all_set:
     newrelicoracledb.execution_plan:
       enabled: true
   resource_attributes:
-    host.name:
+    host.address:
       enabled: true
-    newrelicoracledb.instance.name:
+    host.port:
+      enabled: true
+    service.name:
       enabled: true
 none_set:
   metrics:
@@ -1315,19 +1317,27 @@ none_set:
     newrelicoracledb.execution_plan:
       enabled: false
   resource_attributes:
-    host.name:
+    host.address:
       enabled: false
-    newrelicoracledb.instance.name:
+    host.port:
+      enabled: false
+    service.name:
       enabled: false
 filter_set_include:
   resource_attributes:
-    host.name:
+    host.address:
       enabled: true
       metrics_include:
         - regexp: ".*"
       events_include:
         - regexp: ".*"
-    newrelicoracledb.instance.name:
+    host.port:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+      events_include:
+        - regexp: ".*"
+    service.name:
       enabled: true
       metrics_include:
         - regexp: ".*"
@@ -1335,15 +1345,21 @@ filter_set_include:
         - regexp: ".*"
 filter_set_exclude:
   resource_attributes:
-    host.name:
+    host.address:
       enabled: true
       metrics_exclude:
-        - strict: "host.name-val"
+        - strict: "host.address-val"
       events_exclude:
-        - strict: "host.name-val"
-    newrelicoracledb.instance.name:
+        - strict: "host.address-val"
+    host.port:
       enabled: true
       metrics_exclude:
-        - strict: "newrelicoracledb.instance.name-val"
+        - regexp: ".*"
       events_exclude:
-        - strict: "newrelicoracledb.instance.name-val"
+        - regexp: ".*"
+    service.name:
+      enabled: true
+      metrics_exclude:
+        - strict: "service.name-val"
+      events_exclude:
+        - strict: "service.name-val"

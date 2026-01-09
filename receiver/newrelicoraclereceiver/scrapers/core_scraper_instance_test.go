@@ -28,7 +28,7 @@ func TestScrapeLockedAccountsMetrics_Disabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -57,7 +57,7 @@ func TestScrapeLockedAccountsMetrics_Success(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -77,7 +77,7 @@ func TestScrapeLockedAccountsMetrics_QueryError(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -99,7 +99,7 @@ func TestScrapeLockedAccountsMetrics_EmptyResult(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -124,7 +124,7 @@ func TestScrapeLockedAccountsMetrics_ZeroAccounts(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -153,7 +153,7 @@ func TestScrapeGlobalNameInstanceMetrics_Success(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -172,7 +172,7 @@ func TestScrapeGlobalNameInstanceMetrics_QueryError(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -193,7 +193,7 @@ func TestScrapeGlobalNameInstanceMetrics_EmptyResult(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -217,7 +217,7 @@ func TestScrapeGlobalNameInstanceMetrics_StringInstanceID(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -246,7 +246,7 @@ func TestScrapeDBIDInstanceMetrics_Success(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -265,7 +265,7 @@ func TestScrapeDBIDInstanceMetrics_QueryError(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -286,7 +286,7 @@ func TestScrapeDBIDInstanceMetrics_EmptyResult(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -310,7 +310,7 @@ func TestScrapeDBIDInstanceMetrics_NilInstanceID(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -339,7 +339,7 @@ func TestScrapeLongRunningQueriesMetrics_Success(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -358,7 +358,7 @@ func TestScrapeLongRunningQueriesMetrics_QueryError(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -379,7 +379,7 @@ func TestScrapeLongRunningQueriesMetrics_EmptyResult(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -403,7 +403,7 @@ func TestScrapeLongRunningQueriesMetrics_ZeroQueries(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -427,7 +427,7 @@ func TestScrapeLongRunningQueriesMetrics_LargeValue(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -459,7 +459,7 @@ func TestScrapeLongRunningQueriesMetrics_MultipleInstances(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), "test-instance", config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
 	ctx := context.Background()

@@ -23,13 +23,12 @@ func TestNewDatabaseInfoScraper(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
 
 	assert.NotNil(t, scraper)
 	assert.Equal(t, mockClient, scraper.client)
 	assert.Equal(t, mb, scraper.mb)
 	assert.Equal(t, logger, scraper.logger)
-	assert.Equal(t, "test-instance", scraper.instanceName)
 	assert.Equal(t, 1*time.Hour, scraper.cacheDuration)
 }
 
@@ -109,7 +108,7 @@ func TestScrapeDatabaseInfo_MetricDisabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
 	ctx := context.Background()
 
 	errs := scraper.ScrapeDatabaseInfo(ctx)
@@ -124,7 +123,7 @@ func TestScrapeHostingInfo_MetricDisabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
 	ctx := context.Background()
 
 	errs := scraper.ScrapeHostingInfo(ctx)
@@ -138,7 +137,7 @@ func TestEnsureCacheValid_UsesCacheWhenValid(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, "test-instance", config)
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
 
 	scraper.cachedInfo = &DatabaseInfo{
 		Version:     "19.3",
