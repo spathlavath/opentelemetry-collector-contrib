@@ -31,13 +31,13 @@ func (s *CoreScraper) scrapeSysstatMetrics(ctx context.Context, now pcommon.Time
 
 		switch metric.Name {
 		case "redo buffer allocation retries":
-			s.mb.RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaLogBufferRedoAllocationRetriesDataPoint(now, valueInt, instanceID)
 		case "redo entries":
-			s.mb.RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaLogBufferRedoEntriesDataPoint(now, valueInt, instanceID)
 		case "sorts (memory)":
-			s.mb.RecordNewrelicoracledbSortsMemoryDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSortsMemoryDataPoint(now, valueInt, instanceID)
 		case "sorts (disk)":
-			s.mb.RecordNewrelicoracledbSortsDiskDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSortsDiskDataPoint(now, valueInt, instanceID)
 		default:
 			s.logger.Debug("Unknown sysstat metric", zap.String("name", metric.Name))
 		}
@@ -76,9 +76,9 @@ func (s *CoreScraper) scrapeRollbackSegmentsMetrics(ctx context.Context, now pco
 			ratioValue = metric.Ratio.Float64
 		}
 
-		s.mb.RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(now, getsValue, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(now, waitsValue, s.instanceName, instanceID)
-		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(now, ratioValue, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbRollbackSegmentsGetsDataPoint(now, getsValue, instanceID)
+		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitsDataPoint(now, waitsValue, instanceID)
+		s.mb.RecordNewrelicoracledbRollbackSegmentsWaitRatioDataPoint(now, ratioValue, instanceID)
 
 		metricCount++
 	}
@@ -91,51 +91,51 @@ func (s *CoreScraper) scrapeRollbackSegmentsMetrics(ctx context.Context, now pco
 // redoLogWaitEventRecorder defines a metric recorder for redo log wait events
 type redoLogWaitEventRecorder struct {
 	eventPattern string
-	record       func(*CoreScraper, pcommon.Timestamp, int64, string, string)
+	record       func(*CoreScraper, pcommon.Timestamp, int64, string)
 }
 
 // redoLogWaitEventRegistry contains all redo log wait event metric recorders
 var redoLogWaitEventRegistry = []redoLogWaitEventRecorder{
 	{
 		eventPattern: "log file parallel write",
-		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(now, waitsValue, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbRedoLogParallelWriteWaitsDataPoint(now, waitsValue, instanceID)
 		},
 	},
 	{
 		eventPattern: "log file switch completion",
-		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(now, waitsValue, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbRedoLogSwitchCompletionWaitsDataPoint(now, waitsValue, instanceID)
 		},
 	},
 	{
 		eventPattern: "log file switch (check",
-		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(now, waitsValue, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbRedoLogSwitchCheckpointIncompleteWaitsDataPoint(now, waitsValue, instanceID)
 		},
 	},
 	{
 		eventPattern: "log file switch (arch",
-		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(now, waitsValue, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbRedoLogSwitchArchivingNeededWaitsDataPoint(now, waitsValue, instanceID)
 		},
 	},
 	{
 		eventPattern: "buffer busy waits",
-		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(now, waitsValue, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbSgaBufferBusyWaitsDataPoint(now, waitsValue, instanceID)
 		},
 	},
 	{
 		eventPattern: "freeBufferWaits",
-		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(now, waitsValue, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbSgaFreeBufferWaitsDataPoint(now, waitsValue, instanceID)
 		},
 	},
 	{
 		eventPattern: "free buffer inspected",
-		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceName, instanceID string) {
-			s.mb.RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(now, waitsValue, instanceName, instanceID)
+		record: func(s *CoreScraper, now pcommon.Timestamp, waitsValue int64, instanceID string) {
+			s.mb.RecordNewrelicoracledbSgaFreeBufferInspectedWaitsDataPoint(now, waitsValue, instanceID)
 		},
 	},
 }
@@ -150,7 +150,7 @@ func (s *CoreScraper) recordRedoLogWaitMetric(now pcommon.Timestamp, metric mode
 	// Find and record matching metric
 	for _, recorder := range redoLogWaitEventRegistry {
 		if strings.Contains(metric.Event, recorder.eventPattern) {
-			recorder.record(s, now, waitsValue, s.instanceName, instanceID)
+			recorder.record(s, now, waitsValue, instanceID)
 			return
 		}
 	}
