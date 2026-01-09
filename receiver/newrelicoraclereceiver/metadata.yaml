@@ -50,6 +50,15 @@ attributes:
   last_active_time:
     description: Last active time for the SQL query
     type: string
+  obfuscated_query_hash:
+    description: "MD5 hash of normalized SQL query following New Relic Java agent normalization logic"
+    type: string
+  nr_service:
+    description: "New Relic service name extracted from query comment (nr_service)"
+    type: string
+  nr_txn:
+    description: "New Relic transaction name extracted from query comment (nr_txn)"
+    type: string
   plan_hash_value:
     description: Oracle execution plan hash value
     type: string
@@ -3343,6 +3352,9 @@ metrics:
       - schema_name
       - user_name
       - last_active_time
+      - obfuscated_query_hash
+      - nr_service
+      - nr_txn
 
   # Interval-based (delta) metrics - showing what happened in the LAST polling interval
   # These metrics provide real-time visibility into query performance changes

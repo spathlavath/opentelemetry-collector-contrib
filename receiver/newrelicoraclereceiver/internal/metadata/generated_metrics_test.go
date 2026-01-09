@@ -746,7 +746,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.event.type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.event.type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2505,7 +2505,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.execution_plan"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, " ", ms.At(i).Description())
+					assert.Equal(t, "Oracle SQL execution plan details including operation costs, cardinality, and resource estimates", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -4600,6 +4600,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("last_active_time")
 					assert.True(t, ok)
 					assert.Equal(t, "last_active_time-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.sorts_disk":
 					assert.False(t, validatedMetrics["newrelicoracledb.sorts_disk"], "Found a duplicate in the metrics slice: newrelicoracledb.sorts_disk")
 					validatedMetrics["newrelicoracledb.sorts_disk"] = true

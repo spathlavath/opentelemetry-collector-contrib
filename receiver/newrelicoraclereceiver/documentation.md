@@ -810,7 +810,7 @@ Number of physical disk writes
 
 ### newrelicoracledb.execution_plan
 
- 
+Oracle SQL execution plan details including operation costs, cardinality, and resource estimates
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2530,6 +2530,9 @@ Slow Query Details
 | schema_name | Schema name where the query is executed | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | last_active_time | Last active time for the SQL query | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
 
