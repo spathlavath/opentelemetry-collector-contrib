@@ -73,7 +73,7 @@ func (s *PdbScraper) scrapePDBSysMetrics(ctx context.Context, now pcommon.Timest
 }
 
 func (s *PdbScraper) recordMetric(now pcommon.Timestamp, metricName string, value float64, instanceID string, pdbName string) {
-	if !s.metricRegistry.RecordMetric(s.mb, now, metricName, value, s.instanceName, instanceID, pdbName) {
+	if !s.metricRegistry.RecordMetric(s.mb, now, metricName, value, instanceID, pdbName) {
 		s.logger.Debug("Unknown PDB metric", zap.String("metric_name", metricName))
 	}
 }

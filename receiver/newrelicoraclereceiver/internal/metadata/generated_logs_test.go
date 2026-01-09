@@ -32,6 +32,8 @@ func TestLogsBuilderAppendLogRecord(t *testing.T) {
 	rb := lb.NewResourceBuilder()
 	rb.SetHostName("host.name-val")
 	rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
+	rb.SetServerAddress("server.address-val")
+	rb.SetServiceName("service.name-val")
 	res := rb.Emit()
 
 	// append the first log record
@@ -134,6 +136,8 @@ func TestLogsBuilder(t *testing.T) {
 			rb := lb.NewResourceBuilder()
 			rb.SetHostName("host.name-val")
 			rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
+			rb.SetServerAddress("server.address-val")
+			rb.SetServiceName("service.name-val")
 			res := rb.Emit()
 			logs := lb.Emit(WithLogsResource(res))
 

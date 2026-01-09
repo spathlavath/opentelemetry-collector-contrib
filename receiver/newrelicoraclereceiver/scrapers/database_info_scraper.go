@@ -82,7 +82,6 @@ func (s *DatabaseInfoScraper) ScrapeDatabaseInfo(ctx context.Context) []error {
 	s.mb.RecordNewrelicoracledbDatabaseInfoDataPoint(
 		now,
 		int64(1),
-		s.instanceName,
 		cachedInfo.Version,
 		cachedInfo.VersionFull,
 		cachedInfo.Edition,
@@ -116,7 +115,6 @@ func (s *DatabaseInfoScraper) ScrapeHostingInfo(ctx context.Context) []error {
 	s.mb.RecordNewrelicoracledbHostingInfoDataPoint(
 		now,
 		int64(1),
-		s.instanceName,
 		cachedInfo.Architecture,
 		cachedInfo.OperatingSystem,
 	)
@@ -163,7 +161,6 @@ func (s *DatabaseInfoScraper) ScrapeDatabaseRole(ctx context.Context) []error {
 		s.mb.RecordNewrelicoracledbDatabaseRoleDataPoint(
 			now,
 			int64(1),
-			s.instanceName,
 			roleStr,
 			openMode,
 			protectionMode,

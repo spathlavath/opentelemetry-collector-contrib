@@ -82,6 +82,14 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 		if hostNameErr != nil {
 			return nil, hostNameErr
 		}
+		serverAddress, serverAddressErr := getServerAddress(getDataSource(*sqlCfg))
+		if serverAddressErr != nil {
+			return nil, serverAddressErr
+		}
+		serviceName, serviceNameErr := getServiceName(getDataSource(*sqlCfg))
+		if serviceNameErr != nil {
+			return nil, serviceNameErr
+		}
 
 		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, logsBuilder, sqlCfg.LogsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
 			db, err := sqlOpenerFunc(getDataSource(*sqlCfg))
@@ -106,7 +114,7 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			db.SetConnMaxIdleTime(30 * time.Second)
 
 			return db, nil
-		}, instanceName, hostName)
+		}, instanceName, hostName, serverAddress, serviceName)
 		if err != nil {
 			return nil, err
 		}
@@ -146,6 +154,14 @@ func createLogsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateLogsFunc
 		if hostNameErr != nil {
 			return nil, hostNameErr
 		}
+		serverAddress, serverAddressErr := getServerAddress(getDataSource(*sqlCfg))
+		if serverAddressErr != nil {
+			return nil, serverAddressErr
+		}
+		serviceName, serviceNameErr := getServiceName(getDataSource(*sqlCfg))
+		if serviceNameErr != nil {
+			return nil, serviceNameErr
+		}
 
 		lp, err := newLogsScraper(logsBuilder, sqlCfg.LogsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
 			db, err := sqlOpenerFunc(getDataSource(*sqlCfg))
@@ -167,7 +183,7 @@ func createLogsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateLogsFunc
 			db.SetConnMaxIdleTime(30 * time.Second)
 
 			return db, nil
-		}, instanceName, hostName)
+		}, instanceName, hostName, serverAddress, serviceName)
 		if err != nil {
 			return nil, err
 		}
@@ -215,6 +231,46 @@ func getInstanceName(datasource string) (string, error) {
 
 	instanceName := datasourceURL.Host + datasourceURL.Path
 	return instanceName, nil
+}
+
+func getServerAddress(datasource string) (string, error) {
+	// For godror format: user/password@host:port/service_name
+	// Extract the host:port part
+	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
+		hostPart := datasource[atIndex+1:]
+		if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
+			return hostPart[:slashIndex], nil
+		}
+		return hostPart, nil
+	}
+
+	// Fallback to URL parsing for oracle:// format
+	datasourceURL, err := url.Parse(datasource)
+	if err != nil {
+		return "", err
+	}
+	return datasourceURL.Host, nil
+}
+
+func getServiceName(datasource string) (string, error) {
+	// For godror format: user/password@host:port/service_name
+	// Extract the service name part after /
+	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
+		hostPart := datasource[atIndex+1:]
+		if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
+			return hostPart[slashIndex+1:], nil
+		}
+		return "", nil
+	}
+
+	// Fallback to URL parsing for oracle:// format
+	datasourceURL, err := url.Parse(datasource)
+	if err != nil {
+		return "", err
+	}
+	// Remove leading / from path
+	serviceName := strings.TrimPrefix(datasourceURL.Path, "/")
+	return serviceName, nil
 }
 
 func getHostName(datasource string) (string, error) {

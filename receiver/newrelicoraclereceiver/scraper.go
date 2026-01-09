@@ -77,10 +77,12 @@ type newRelicOracleScraper struct {
 	logger               *zap.Logger
 
 	// Runtime configuration
-	instanceName string
-	hostName     string
-	scrapeCfg    scraperhelper.ControllerConfig
-	startTime    pcommon.Timestamp
+	instanceName  string
+	hostName      string
+	serverAddress string
+	serviceName   string
+	scrapeCfg     scraperhelper.ControllerConfig
+	startTime     pcommon.Timestamp
 }
 
 // newScraper creates a new Oracle database metrics scraper
@@ -93,7 +95,7 @@ func newScraper(
 	config *Config,
 	logger *zap.Logger,
 	providerFunc dbProviderFunc,
-	instanceName, hostName string,
+	instanceName, hostName, serverAddress, serviceName string,
 ) (scraper.Metrics, error) {
 	s := &newRelicOracleScraper{
 		// Metrics and configuration
@@ -108,9 +110,11 @@ func newScraper(
 		dbProviderFunc: providerFunc,
 
 		// Runtime info
-		logger:       logger,
-		instanceName: instanceName,
-		hostName:     hostName,
+		logger:        logger,
+		instanceName:  instanceName,
+		hostName:      hostName,
+		serverAddress: serverAddress,
+		serviceName:   serviceName,
 	}
 
 	return scraper.NewMetrics(
@@ -128,7 +132,7 @@ func newLogsScraper(
 	config *Config,
 	logger *zap.Logger,
 	providerFunc dbProviderFunc,
-	instanceName, hostName string,
+	instanceName, hostName, serverAddress, serviceName string,
 ) (scraper.Logs, error) {
 	s := &newRelicOracleScraper{
 		// Logs and configuration
@@ -141,9 +145,11 @@ func newLogsScraper(
 		dbProviderFunc: providerFunc,
 
 		// Runtime info
-		logger:       logger,
-		instanceName: instanceName,
-		hostName:     hostName,
+		logger:        logger,
+		instanceName:  instanceName,
+		hostName:      hostName,
+		serverAddress: serverAddress,
+		serviceName:   serviceName,
 	}
 
 	return scraper.NewLogs(
@@ -584,6 +590,8 @@ func (s *newRelicOracleScraper) buildMetrics() pmetric.Metrics {
 	rb := s.mb.NewResourceBuilder()
 	rb.SetNewrelicoracledbInstanceName(s.instanceName)
 	rb.SetHostName(s.hostName)
+	rb.SetServerAddress(s.serverAddress)
+	rb.SetServiceName(s.serviceName)
 	return s.mb.Emit(metadata.WithResource(rb.Emit()))
 }
 

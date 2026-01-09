@@ -659,6 +659,10 @@ all_set:
       enabled: true
     newrelicoracledb.instance.name:
       enabled: true
+    server.address:
+      enabled: true
+    service.name:
+      enabled: true
 none_set:
   metrics:
     newrelicoracledb.asm.diskgroup.free_mb:
@@ -1319,6 +1323,10 @@ none_set:
       enabled: false
     newrelicoracledb.instance.name:
       enabled: false
+    server.address:
+      enabled: false
+    service.name:
+      enabled: false
 filter_set_include:
   resource_attributes:
     host.name:
@@ -1328,6 +1336,18 @@ filter_set_include:
       events_include:
         - regexp: ".*"
     newrelicoracledb.instance.name:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+      events_include:
+        - regexp: ".*"
+    server.address:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+      events_include:
+        - regexp: ".*"
+    service.name:
       enabled: true
       metrics_include:
         - regexp: ".*"
@@ -1347,3 +1367,15 @@ filter_set_exclude:
         - strict: "newrelicoracledb.instance.name-val"
       events_exclude:
         - strict: "newrelicoracledb.instance.name-val"
+    server.address:
+      enabled: true
+      metrics_exclude:
+        - strict: "server.address-val"
+      events_exclude:
+        - strict: "server.address-val"
+    service.name:
+      enabled: true
+      metrics_exclude:
+        - strict: "service.name-val"
+      events_exclude:
+        - strict: "service.name-val"

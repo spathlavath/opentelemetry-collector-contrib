@@ -105,16 +105,16 @@ func (s *TablespaceScraper) isAnyTablespaceMetricEnabled() bool {
 func (s *TablespaceScraper) processTablespaceUsage(tablespaces []models.TablespaceUsage, now pcommon.Timestamp, metricCount *int) []error {
 	for _, ts := range tablespaces {
 		if s.config.Metrics.NewrelicoracledbTablespaceSpaceConsumedBytes.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(ts.Used), s.instanceName, ts.TablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceSpaceConsumedBytesDataPoint(now, int64(ts.Used), ts.TablespaceName)
 		}
 		if s.config.Metrics.NewrelicoracledbTablespaceSpaceReservedBytes.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(ts.Size), s.instanceName, ts.TablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceSpaceReservedBytesDataPoint(now, int64(ts.Size), ts.TablespaceName)
 		}
 		if s.config.Metrics.NewrelicoracledbTablespaceSpaceUsedPercentage.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(ts.UsedPercent), s.instanceName, ts.TablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceSpaceUsedPercentageDataPoint(now, int64(ts.UsedPercent), ts.TablespaceName)
 		}
 		if s.config.Metrics.NewrelicoracledbTablespaceIsOffline.Enabled {
-			s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(ts.Offline), s.instanceName, ts.TablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(ts.Offline), ts.TablespaceName)
 		}
 
 		*metricCount++
@@ -134,7 +134,7 @@ func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Contex
 	}
 
 	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, s.instanceName, ts.TablespaceName, ts.GlobalName)
+		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, ts.TablespaceName, ts.GlobalName)
 		*metricCount++
 	}
 
@@ -152,7 +152,7 @@ func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now
 	}
 
 	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, ts.DBID, s.instanceName, ts.TablespaceName, strconv.FormatInt(ts.DBID, 10))
+		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, ts.DBID, ts.TablespaceName, strconv.FormatInt(ts.DBID, 10))
 		*metricCount++
 	}
 
@@ -170,7 +170,7 @@ func (s *TablespaceScraper) scrapeCDBDatafilesOfflineTablespaceMetrics(ctx conte
 	}
 
 	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(now, ts.OfflineCount, s.instanceName, ts.TablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceOfflineCdbDatafilesDataPoint(now, ts.OfflineCount, ts.TablespaceName)
 		*metricCount++
 	}
 
@@ -198,7 +198,7 @@ func (s *TablespaceScraper) scrapePDBDatafilesOfflineTablespaceMetrics(ctx conte
 	}
 
 	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(now, ts.OfflineCount, s.instanceName, ts.TablespaceName)
+		s.mb.RecordNewrelicoracledbTablespaceOfflinePdbDatafilesDataPoint(now, ts.OfflineCount, ts.TablespaceName)
 		*metricCount++
 	}
 
@@ -226,7 +226,7 @@ func (s *TablespaceScraper) scrapePDBNonWriteTablespaceMetrics(ctx context.Conte
 	}
 
 	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(now, ts.NonWriteCount, s.instanceName, ts.TablespaceName)
+		s.mb.RecordNewrelicoracledbTablespacePdbNonWriteModeDataPoint(now, ts.NonWriteCount, ts.TablespaceName)
 		*metricCount++
 	}
 

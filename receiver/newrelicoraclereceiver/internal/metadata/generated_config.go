@@ -1404,6 +1404,8 @@ func (rac *ResourceAttributeConfig) Unmarshal(parser *confmap.Conf) error {
 type ResourceAttributesConfig struct {
 	HostName                     ResourceAttributeConfig `mapstructure:"host.name"`
 	NewrelicoracledbInstanceName ResourceAttributeConfig `mapstructure:"newrelicoracledb.instance.name"`
+	ServerAddress                ResourceAttributeConfig `mapstructure:"server.address"`
+	ServiceName                  ResourceAttributeConfig `mapstructure:"service.name"`
 }
 
 func DefaultResourceAttributesConfig() ResourceAttributesConfig {
@@ -1412,6 +1414,12 @@ func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbInstanceName: ResourceAttributeConfig{
+			Enabled: true,
+		},
+		ServerAddress: ResourceAttributeConfig{
+			Enabled: true,
+		},
+		ServiceName: ResourceAttributeConfig{
 			Enabled: true,
 		},
 	}

@@ -54,7 +54,7 @@ func (s *SystemScraper) ScrapeSystemMetrics(ctx context.Context) []error {
 }
 
 func (s *SystemScraper) recordMetric(now pcommon.Timestamp, metricName string, value float64, instanceIDStr string) {
-	if !s.metricRegistry.RecordMetric(s.mb, now, metricName, value, s.instanceName, instanceIDStr) {
+	if !s.metricRegistry.RecordMetric(s.mb, now, metricName, value, instanceIDStr) {
 		s.logger.Debug("Unknown system metric", zap.String("metric_name", metricName))
 	}
 }

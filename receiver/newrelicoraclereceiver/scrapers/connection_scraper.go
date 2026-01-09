@@ -84,7 +84,7 @@ func (s *ConnectionScraper) scrapeCoreConnectionCounts(ctx context.Context, time
 		s.logger.Debug("Failed to query total sessions", zap.Error(err))
 		errors = append(errors, err)
 	} else {
-		s.mb.RecordNewrelicoracledbConnectionTotalSessionsDataPoint(timestamp, float64(totalSessions), s.instanceName)
+		s.mb.RecordNewrelicoracledbConnectionTotalSessionsDataPoint(timestamp, float64(totalSessions))
 	}
 
 	activeSessions, err := s.client.QueryActiveSessions(ctx)
@@ -92,7 +92,7 @@ func (s *ConnectionScraper) scrapeCoreConnectionCounts(ctx context.Context, time
 		s.logger.Debug("Failed to query active sessions", zap.Error(err))
 		errors = append(errors, err)
 	} else {
-		s.mb.RecordNewrelicoracledbConnectionActiveSessionsDataPoint(timestamp, float64(activeSessions), s.instanceName)
+		s.mb.RecordNewrelicoracledbConnectionActiveSessionsDataPoint(timestamp, float64(activeSessions))
 	}
 
 	inactiveSessions, err := s.client.QueryInactiveSessions(ctx)
@@ -100,7 +100,7 @@ func (s *ConnectionScraper) scrapeCoreConnectionCounts(ctx context.Context, time
 		s.logger.Debug("Failed to query inactive sessions", zap.Error(err))
 		errors = append(errors, err)
 	} else {
-		s.mb.RecordNewrelicoracledbConnectionInactiveSessionsDataPoint(timestamp, float64(inactiveSessions), s.instanceName)
+		s.mb.RecordNewrelicoracledbConnectionInactiveSessionsDataPoint(timestamp, float64(inactiveSessions))
 	}
 
 	return errors
@@ -120,7 +120,6 @@ func (s *ConnectionScraper) scrapeSessionBreakdown(ctx context.Context, timestam
 				s.mb.RecordNewrelicoracledbConnectionSessionsByStatusDataPoint(
 					timestamp,
 					float64(status.Count.Int64),
-					s.instanceName,
 					status.Status.String,
 				)
 			}
@@ -137,7 +136,6 @@ func (s *ConnectionScraper) scrapeSessionBreakdown(ctx context.Context, timestam
 				s.mb.RecordNewrelicoracledbConnectionSessionsByTypeDataPoint(
 					timestamp,
 					float64(sessionType.Count.Int64),
-					s.instanceName,
 					sessionType.Type.String,
 				)
 			}
@@ -167,13 +165,11 @@ func (s *ConnectionScraper) scrapeLogonStats(ctx context.Context, timestamp pcom
 			s.mb.RecordNewrelicoracledbConnectionLogonsCumulativeDataPoint(
 				timestamp,
 				stat.Value.Float64,
-				s.instanceName,
 			)
 		case "logons current":
 			s.mb.RecordNewrelicoracledbConnectionLogonsCurrentDataPoint(
 				timestamp,
 				stat.Value.Float64,
-				s.instanceName,
 			)
 		}
 	}
@@ -201,7 +197,6 @@ func (s *ConnectionScraper) scrapeSessionResourceConsumption(ctx context.Context
 			s.mb.RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint(
 				timestamp,
 				resource.CPUUsageSeconds.Float64,
-				s.instanceName,
 				sidStr,
 				userStr,
 				statusStr,
@@ -213,7 +208,6 @@ func (s *ConnectionScraper) scrapeSessionResourceConsumption(ctx context.Context
 			s.mb.RecordNewrelicoracledbConnectionSessionPgaMemoryDataPoint(
 				timestamp,
 				float64(resource.PGAMemoryBytes.Int64),
-				s.instanceName,
 				sidStr,
 				userStr,
 				statusStr,
@@ -225,7 +219,6 @@ func (s *ConnectionScraper) scrapeSessionResourceConsumption(ctx context.Context
 			s.mb.RecordNewrelicoracledbConnectionSessionLogicalReadsDataPoint(
 				timestamp,
 				float64(resource.LogicalReads.Int64),
-				s.instanceName,
 				sidStr,
 				userStr,
 				statusStr,
@@ -237,7 +230,6 @@ func (s *ConnectionScraper) scrapeSessionResourceConsumption(ctx context.Context
 			s.mb.RecordNewrelicoracledbConnectionSessionIdleTimeDataPoint(
 				timestamp,
 				float64(resource.LastCallET.Int64),
-				s.instanceName,
 				sidStr,
 				userStr,
 				statusStr,
@@ -267,7 +259,6 @@ func (s *ConnectionScraper) scrapeWaitEvents(ctx context.Context, timestamp pcom
 		s.mb.RecordNewrelicoracledbConnectionWaitEventsDataPoint(
 			timestamp,
 			float64(event.SecondsInWait.Int64),
-			s.instanceName,
 			s.formatInt64(event.SID),
 			s.formatString(event.Username),
 			event.Event.String,
@@ -297,7 +288,6 @@ func (s *ConnectionScraper) scrapeBlockingSessions(ctx context.Context, timestam
 		s.mb.RecordNewrelicoracledbConnectionBlockingSessionsDataPoint(
 			timestamp,
 			float64(session.SecondsInWait.Int64),
-			s.instanceName,
 			s.formatInt64(session.SID),
 			s.formatInt64(session.BlockingSession),
 			s.formatString(session.Username),
@@ -330,7 +320,6 @@ func (s *ConnectionScraper) scrapeWaitEventSummary(ctx context.Context, timestam
 		s.mb.RecordNewrelicoracledbConnectionWaitEventTotalWaitsDataPoint(
 			timestamp,
 			float64(summary.TotalWaits.Int64),
-			s.instanceName,
 			eventStr,
 			waitClassStr,
 		)
@@ -338,7 +327,6 @@ func (s *ConnectionScraper) scrapeWaitEventSummary(ctx context.Context, timestam
 		s.mb.RecordNewrelicoracledbConnectionWaitEventTimeWaitedDataPoint(
 			timestamp,
 			float64(summary.TimeWaitedMicro.Int64)/1000.0,
-			s.instanceName,
 			eventStr,
 			waitClassStr,
 		)
@@ -347,7 +335,6 @@ func (s *ConnectionScraper) scrapeWaitEventSummary(ctx context.Context, timestam
 			s.mb.RecordNewrelicoracledbConnectionWaitEventAvgWaitTimeDataPoint(
 				timestamp,
 				summary.AverageWaitMicro.Float64/1000.0,
-				s.instanceName,
 				eventStr,
 				waitClassStr,
 			)
@@ -377,19 +364,16 @@ func (s *ConnectionScraper) scrapeConnectionPoolMetrics(ctx context.Context, tim
 			s.mb.RecordNewrelicoracledbConnectionSharedServersDataPoint(
 				timestamp,
 				float64(metric.Value.Int64),
-				s.instanceName,
 			)
 		case "dispatchers":
 			s.mb.RecordNewrelicoracledbConnectionDispatchersDataPoint(
 				timestamp,
 				float64(metric.Value.Int64),
-				s.instanceName,
 			)
 		case "circuits":
 			s.mb.RecordNewrelicoracledbConnectionCircuitsDataPoint(
 				timestamp,
 				float64(metric.Value.Int64),
-				s.instanceName,
 			)
 		}
 	}
@@ -417,7 +401,6 @@ func (s *ConnectionScraper) scrapeSessionLimits(ctx context.Context, timestamp p
 		s.mb.RecordNewrelicoracledbConnectionResourceCurrentUtilizationDataPoint(
 			timestamp,
 			float64(limit.CurrentUtilization.Int64),
-			s.instanceName,
 			resourceStr,
 		)
 
@@ -425,7 +408,6 @@ func (s *ConnectionScraper) scrapeSessionLimits(ctx context.Context, timestamp p
 			s.mb.RecordNewrelicoracledbConnectionResourceMaxUtilizationDataPoint(
 				timestamp,
 				float64(limit.MaxUtilization.Int64),
-				s.instanceName,
 				resourceStr,
 			)
 		}
@@ -435,7 +417,6 @@ func (s *ConnectionScraper) scrapeSessionLimits(ctx context.Context, timestamp p
 				s.mb.RecordNewrelicoracledbConnectionResourceLimitDataPoint(
 					timestamp,
 					float64(limitVal),
-					s.instanceName,
 					resourceStr,
 				)
 			}
@@ -462,21 +443,21 @@ func (s *ConnectionScraper) scrapeConnectionQuality(ctx context.Context, timesta
 
 		switch metric.Name.String {
 		case "user commits":
-			s.mb.RecordNewrelicoracledbConnectionUserCommitsDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionUserCommitsDataPoint(timestamp, metric.Value.Float64)
 		case "user rollbacks":
-			s.mb.RecordNewrelicoracledbConnectionUserRollbacksDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionUserRollbacksDataPoint(timestamp, metric.Value.Float64)
 		case "parse count (total)":
-			s.mb.RecordNewrelicoracledbConnectionParseCountTotalDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionParseCountTotalDataPoint(timestamp, metric.Value.Float64)
 		case "parse count (hard)":
-			s.mb.RecordNewrelicoracledbConnectionParseCountHardDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionParseCountHardDataPoint(timestamp, metric.Value.Float64)
 		case "execute count":
-			s.mb.RecordNewrelicoracledbConnectionExecuteCountDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionExecuteCountDataPoint(timestamp, metric.Value.Float64)
 		case "SQL*Net roundtrips to/from client":
-			s.mb.RecordNewrelicoracledbConnectionSqlnetRoundtripsDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionSqlnetRoundtripsDataPoint(timestamp, metric.Value.Float64)
 		case "bytes sent via SQL*Net to client":
-			s.mb.RecordNewrelicoracledbConnectionBytesSentDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionBytesSentDataPoint(timestamp, metric.Value.Float64)
 		case "bytes received via SQL*Net from client":
-			s.mb.RecordNewrelicoracledbConnectionBytesReceivedDataPoint(timestamp, metric.Value.Float64, s.instanceName)
+			s.mb.RecordNewrelicoracledbConnectionBytesReceivedDataPoint(timestamp, metric.Value.Float64)
 		}
 	}
 
