@@ -23,18 +23,16 @@ type RacScraper struct {
 	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
-	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 	isRacMode            *bool
 	racModeMutex         sync.RWMutex
 }
 
-func NewRacScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *RacScraper {
+func NewRacScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, config metadata.MetricsBuilderConfig) *RacScraper {
 	return &RacScraper{
 		client:               c,
 		mb:                   mb,
 		logger:               logger,
-		instanceName:         instanceName,
 		metricsBuilderConfig: config,
 	}
 }

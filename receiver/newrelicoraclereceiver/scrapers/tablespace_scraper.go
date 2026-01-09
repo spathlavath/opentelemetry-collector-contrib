@@ -23,7 +23,6 @@ type TablespaceScraper struct {
 	client             client.OracleClient
 	mb                 *metadata.MetricsBuilder
 	logger             *zap.Logger
-	instanceName       string
 	config             metadata.MetricsBuilderConfig
 	includeTablespaces []string
 	excludeTablespaces []string
@@ -37,12 +36,11 @@ type TablespaceScraper struct {
 	detectionMutex     sync.RWMutex
 }
 
-func NewTablespaceScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig, includeTablespaces, excludeTablespaces []string) *TablespaceScraper {
+func NewTablespaceScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, config metadata.MetricsBuilderConfig, includeTablespaces, excludeTablespaces []string) *TablespaceScraper {
 	return &TablespaceScraper{
 		client:             c,
 		mb:                 mb,
 		logger:             logger,
-		instanceName:       instanceName,
 		config:             config,
 		includeTablespaces: includeTablespaces,
 		excludeTablespaces: excludeTablespaces,
@@ -252,7 +250,7 @@ func (s *TablespaceScraper) checkEnvironmentCapability(ctx context.Context) erro
 			return nil
 		}
 		return errors.NewQueryError("cdb_capability_check", "CheckCDBFeatureSQL", err,
-			map[string]interface{}{"instance": s.instanceName})
+			map[string]interface{}{})
 	}
 
 	cdbCapable := isCDB == 1
@@ -302,7 +300,7 @@ func (s *TablespaceScraper) checkCurrentContext(ctx context.Context) error {
 	container, err := s.client.CheckCurrentContainer(ctx)
 	if err != nil {
 		return errors.NewQueryError("container_context_check", "CheckCurrentContainerSQL", err,
-			map[string]interface{}{"instance": s.instanceName})
+			map[string]interface{}{})
 	}
 
 	if container.ContainerName.Valid {

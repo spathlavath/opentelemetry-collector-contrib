@@ -99,23 +99,17 @@ func NewLogsBuilder(lbc LogsBuilderConfig, settings receiver.Settings) *LogsBuil
 		resourceAttributeIncludeFilter:     make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:     make(map[string]filter.Filter),
 	}
-	if lbc.ResourceAttributes.HostName.EventsInclude != nil {
-		lb.resourceAttributeIncludeFilter["host.name"] = filter.CreateFilter(lbc.ResourceAttributes.HostName.EventsInclude)
+	if lbc.ResourceAttributes.HostAddress.EventsInclude != nil {
+		lb.resourceAttributeIncludeFilter["host.address"] = filter.CreateFilter(lbc.ResourceAttributes.HostAddress.EventsInclude)
 	}
-	if lbc.ResourceAttributes.HostName.EventsExclude != nil {
-		lb.resourceAttributeExcludeFilter["host.name"] = filter.CreateFilter(lbc.ResourceAttributes.HostName.EventsExclude)
+	if lbc.ResourceAttributes.HostAddress.EventsExclude != nil {
+		lb.resourceAttributeExcludeFilter["host.address"] = filter.CreateFilter(lbc.ResourceAttributes.HostAddress.EventsExclude)
 	}
-	if lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsInclude != nil {
-		lb.resourceAttributeIncludeFilter["newrelicoracledb.instance.name"] = filter.CreateFilter(lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsInclude)
+	if lbc.ResourceAttributes.HostPort.EventsInclude != nil {
+		lb.resourceAttributeIncludeFilter["host.port"] = filter.CreateFilter(lbc.ResourceAttributes.HostPort.EventsInclude)
 	}
-	if lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsExclude != nil {
-		lb.resourceAttributeExcludeFilter["newrelicoracledb.instance.name"] = filter.CreateFilter(lbc.ResourceAttributes.NewrelicoracledbInstanceName.EventsExclude)
-	}
-	if lbc.ResourceAttributes.ServerAddress.EventsInclude != nil {
-		lb.resourceAttributeIncludeFilter["server.address"] = filter.CreateFilter(lbc.ResourceAttributes.ServerAddress.EventsInclude)
-	}
-	if lbc.ResourceAttributes.ServerAddress.EventsExclude != nil {
-		lb.resourceAttributeExcludeFilter["server.address"] = filter.CreateFilter(lbc.ResourceAttributes.ServerAddress.EventsExclude)
+	if lbc.ResourceAttributes.HostPort.EventsExclude != nil {
+		lb.resourceAttributeExcludeFilter["host.port"] = filter.CreateFilter(lbc.ResourceAttributes.HostPort.EventsExclude)
 	}
 	if lbc.ResourceAttributes.ServiceName.EventsInclude != nil {
 		lb.resourceAttributeIncludeFilter["service.name"] = filter.CreateFilter(lbc.ResourceAttributes.ServiceName.EventsInclude)

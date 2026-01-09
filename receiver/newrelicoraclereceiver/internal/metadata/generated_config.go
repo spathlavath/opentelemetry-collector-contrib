@@ -1402,21 +1402,17 @@ func (rac *ResourceAttributeConfig) Unmarshal(parser *confmap.Conf) error {
 
 // ResourceAttributesConfig provides config for newrelicoracledb resource attributes.
 type ResourceAttributesConfig struct {
-	HostName                     ResourceAttributeConfig `mapstructure:"host.name"`
-	NewrelicoracledbInstanceName ResourceAttributeConfig `mapstructure:"newrelicoracledb.instance.name"`
-	ServerAddress                ResourceAttributeConfig `mapstructure:"server.address"`
-	ServiceName                  ResourceAttributeConfig `mapstructure:"service.name"`
+	HostAddress ResourceAttributeConfig `mapstructure:"host.address"`
+	HostPort    ResourceAttributeConfig `mapstructure:"host.port"`
+	ServiceName ResourceAttributeConfig `mapstructure:"service.name"`
 }
 
 func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 	return ResourceAttributesConfig{
-		HostName: ResourceAttributeConfig{
+		HostAddress: ResourceAttributeConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbInstanceName: ResourceAttributeConfig{
-			Enabled: true,
-		},
-		ServerAddress: ResourceAttributeConfig{
+		HostPort: ResourceAttributeConfig{
 			Enabled: true,
 		},
 		ServiceName: ResourceAttributeConfig{

@@ -17,15 +17,14 @@ import (
 
 // CoreScraper handles Oracle core database metrics
 type CoreScraper struct {
-	client       client.OracleClient
-	mb           *metadata.MetricsBuilder
-	logger       *zap.Logger
-	instanceName string
-	config       metadata.MetricsBuilderConfig
+	client client.OracleClient
+	mb     *metadata.MetricsBuilder
+	logger *zap.Logger
+	config metadata.MetricsBuilderConfig
 }
 
 // NewCoreScraper creates a new core scraper
-func NewCoreScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) (*CoreScraper, error) {
+func NewCoreScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, config metadata.MetricsBuilderConfig) (*CoreScraper, error) {
 	if c == nil {
 		return nil, errors.New("client cannot be nil")
 	}
@@ -35,16 +34,12 @@ func NewCoreScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *
 	if logger == nil {
 		return nil, errors.New("logger cannot be nil")
 	}
-	if instanceName == "" {
-		return nil, errors.New("instance name cannot be empty")
-	}
 
 	return &CoreScraper{
-		client:       c,
-		mb:           mb,
-		logger:       logger,
-		instanceName: instanceName,
-		config:       config,
+		client: c,
+		mb:     mb,
+		logger: logger,
+		config: config,
 	}, nil
 }
 

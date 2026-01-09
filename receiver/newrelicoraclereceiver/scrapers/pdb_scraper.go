@@ -21,7 +21,6 @@ type PdbScraper struct {
 	client             client.OracleClient
 	mb                 *metadata.MetricsBuilder
 	logger             *zap.Logger
-	instanceName       string
 	config             metadata.MetricsBuilderConfig
 	isCDBCapable       *bool
 	environmentChecked bool
@@ -30,12 +29,11 @@ type PdbScraper struct {
 }
 
 // NewPdbScraper creates a new PDB scraper
-func NewPdbScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *PdbScraper {
+func NewPdbScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, config metadata.MetricsBuilderConfig) *PdbScraper {
 	return &PdbScraper{
 		client:         c,
 		mb:             mb,
 		logger:         logger,
-		instanceName:   instanceName,
 		config:         config,
 		metricRegistry: NewPdbMetricRegistry(),
 	}

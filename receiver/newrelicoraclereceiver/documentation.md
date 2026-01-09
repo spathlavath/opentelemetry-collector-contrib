@@ -4757,7 +4757,6 @@ Oracle SQL execution plan data with individual fields for each plan step. Contai
 
 | Name | Description | Values | Enabled |
 | ---- | ----------- | ------ | ------- |
-| host.name | The host name of Oracle Server | Any Str | true |
-| newrelicoracledb.instance.name | The name of the Oracle instance that data is coming from. | Any Str | true |
-| server.address | Oracle server address (host:port) | Any Str | true |
+| host.address | The IP address or hostname of the Oracle Server | Any Str | true |
+| host.port | The port number of the Oracle Server | Any Int | true |
 | service.name | Oracle service name | Any Str | true |

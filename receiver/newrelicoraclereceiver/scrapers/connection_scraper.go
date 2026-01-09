@@ -22,7 +22,6 @@ type ConnectionScraper struct {
 	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
-	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 }
 
@@ -31,7 +30,6 @@ func NewConnectionScraper(
 	oracleClient client.OracleClient,
 	mb *metadata.MetricsBuilder,
 	logger *zap.Logger,
-	instanceName string,
 	metricsBuilderConfig metadata.MetricsBuilderConfig,
 ) (*ConnectionScraper, error) {
 	if oracleClient == nil {
@@ -43,15 +41,11 @@ func NewConnectionScraper(
 	if logger == nil {
 		return nil, fmt.Errorf("logger cannot be nil")
 	}
-	if instanceName == "" {
-		return nil, fmt.Errorf("instance name cannot be empty")
-	}
 
 	return &ConnectionScraper{
 		client:               oracleClient,
 		mb:                   mb,
 		logger:               logger,
-		instanceName:         instanceName,
 		metricsBuilderConfig: metricsBuilderConfig,
 	}, nil
 }

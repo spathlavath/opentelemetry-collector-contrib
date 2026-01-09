@@ -77,12 +77,11 @@ type newRelicOracleScraper struct {
 	logger               *zap.Logger
 
 	// Runtime configuration
-	instanceName  string
-	hostName      string
-	serverAddress string
-	serviceName   string
-	scrapeCfg     scraperhelper.ControllerConfig
-	startTime     pcommon.Timestamp
+	hostAddress string
+	hostPort    int64
+	serviceName string
+	scrapeCfg   scraperhelper.ControllerConfig
+	startTime   pcommon.Timestamp
 }
 
 // newScraper creates a new Oracle database metrics scraper
@@ -95,7 +94,9 @@ func newScraper(
 	config *Config,
 	logger *zap.Logger,
 	providerFunc dbProviderFunc,
-	instanceName, hostName, serverAddress, serviceName string,
+	hostAddress string,
+	hostPort int64,
+	serviceName string,
 ) (scraper.Metrics, error) {
 	s := &newRelicOracleScraper{
 		// Metrics and configuration
@@ -110,11 +111,10 @@ func newScraper(
 		dbProviderFunc: providerFunc,
 
 		// Runtime info
-		logger:        logger,
-		instanceName:  instanceName,
-		hostName:      hostName,
-		serverAddress: serverAddress,
-		serviceName:   serviceName,
+		logger:      logger,
+		hostAddress: hostAddress,
+		hostPort:    hostPort,
+		serviceName: serviceName,
 	}
 
 	return scraper.NewMetrics(
@@ -132,7 +132,9 @@ func newLogsScraper(
 	config *Config,
 	logger *zap.Logger,
 	providerFunc dbProviderFunc,
-	instanceName, hostName, serverAddress, serviceName string,
+	hostAddress string,
+	hostPort int64,
+	serviceName string,
 ) (scraper.Logs, error) {
 	s := &newRelicOracleScraper{
 		// Logs and configuration
@@ -145,11 +147,10 @@ func newLogsScraper(
 		dbProviderFunc: providerFunc,
 
 		// Runtime info
-		logger:        logger,
-		instanceName:  instanceName,
-		hostName:      hostName,
-		serverAddress: serverAddress,
-		serviceName:   serviceName,
+		logger:      logger,
+		hostAddress: hostAddress,
+		hostPort:    hostPort,
+		serviceName: serviceName,
 	}
 
 	return scraper.NewLogs(
@@ -200,30 +201,30 @@ func (s *newRelicOracleScraper) initializeScrapers() error {
 }
 
 func (s *newRelicOracleScraper) initializeCoreScrapers() error {
-	s.sessionScraper = scrapers.NewSessionScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
+	s.sessionScraper = scrapers.NewSessionScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
+	s.tablespaceScraper = scrapers.NewTablespaceScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
 
 	var err error
-	s.coreScraper, err = scrapers.NewCoreScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.coreScraper, err = scrapers.NewCoreScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 	if err != nil {
 		return fmt.Errorf("failed to create core scraper: %w", err)
 	}
 
-	s.pdbScraper = scrapers.NewPdbScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.systemScraper = scrapers.NewSystemScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.pdbScraper = scrapers.NewPdbScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
+	s.systemScraper = scrapers.NewSystemScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 
-	s.connectionScraper, err = scrapers.NewConnectionScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.connectionScraper, err = scrapers.NewConnectionScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 	if err != nil {
 		return fmt.Errorf("failed to create connection scraper: %w", err)
 	}
 
-	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
+	s.containerScraper, err = scrapers.NewContainerScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
 	if err != nil {
 		return fmt.Errorf("failed to create container scraper: %w", err)
 	}
 
-	s.racScraper = scrapers.NewRacScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
-	s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.client, s.mb, s.logger, s.instanceName, s.metricsBuilderConfig)
+	s.racScraper = scrapers.NewRacScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
+	s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 
 	return nil
 }
@@ -588,9 +589,8 @@ func (s *newRelicOracleScraper) collectScrapingErrors(ctx context.Context, errCh
 // buildMetrics constructs the final metrics output
 func (s *newRelicOracleScraper) buildMetrics() pmetric.Metrics {
 	rb := s.mb.NewResourceBuilder()
-	rb.SetNewrelicoracledbInstanceName(s.instanceName)
-	rb.SetHostName(s.hostName)
-	rb.SetServerAddress(s.serverAddress)
+	rb.SetHostAddress(s.hostAddress)
+	rb.SetHostPort(s.hostPort)
 	rb.SetServiceName(s.serviceName)
 	return s.mb.Emit(metadata.WithResource(rb.Emit()))
 }

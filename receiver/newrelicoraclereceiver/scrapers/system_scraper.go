@@ -18,17 +18,15 @@ type SystemScraper struct {
 	client               client.OracleClient
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
-	instanceName         string
 	metricsBuilderConfig metadata.MetricsBuilderConfig
 	metricRegistry       *SystemMetricRegistry
 }
 
-func NewSystemScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, metricsBuilderConfig metadata.MetricsBuilderConfig) *SystemScraper {
+func NewSystemScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *SystemScraper {
 	return &SystemScraper{
 		client:               c,
 		mb:                   mb,
 		logger:               logger,
-		instanceName:         instanceName,
 		metricsBuilderConfig: metricsBuilderConfig,
 		metricRegistry:       NewSystemMetricRegistry(),
 	}

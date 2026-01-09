@@ -20,11 +20,10 @@ import (
 
 // DatabaseInfoScraper collects Oracle database version and hosting environment info
 type DatabaseInfoScraper struct {
-	client       client.OracleClient
-	mb           *metadata.MetricsBuilder
-	logger       *zap.Logger
-	instanceName string
-	config       metadata.MetricsBuilderConfig
+	client client.OracleClient
+	mb     *metadata.MetricsBuilder
+	logger *zap.Logger
+	config metadata.MetricsBuilderConfig
 
 	// Cache static info to avoid repeated DB queries
 	cachedInfo      *DatabaseInfo
@@ -47,12 +46,11 @@ type DatabaseInfo struct {
 }
 
 // NewDatabaseInfoScraper creates a new database info scraper
-func NewDatabaseInfoScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *DatabaseInfoScraper {
+func NewDatabaseInfoScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, config metadata.MetricsBuilderConfig) *DatabaseInfoScraper {
 	return &DatabaseInfoScraper{
 		client:        c,
 		mb:            mb,
 		logger:        logger,
-		instanceName:  instanceName,
 		config:        config,
 		cacheDuration: 1 * time.Hour, // Version info rarely changes
 	}

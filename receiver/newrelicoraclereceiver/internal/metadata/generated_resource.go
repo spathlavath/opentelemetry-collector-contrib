@@ -21,24 +21,17 @@ func NewResourceBuilder(rac ResourceAttributesConfig) *ResourceBuilder {
 	}
 }
 
-// SetHostName sets provided value as "host.name" attribute.
-func (rb *ResourceBuilder) SetHostName(val string) {
-	if rb.config.HostName.Enabled {
-		rb.res.Attributes().PutStr("host.name", val)
+// SetHostAddress sets provided value as "host.address" attribute.
+func (rb *ResourceBuilder) SetHostAddress(val string) {
+	if rb.config.HostAddress.Enabled {
+		rb.res.Attributes().PutStr("host.address", val)
 	}
 }
 
-// SetNewrelicoracledbInstanceName sets provided value as "newrelicoracledb.instance.name" attribute.
-func (rb *ResourceBuilder) SetNewrelicoracledbInstanceName(val string) {
-	if rb.config.NewrelicoracledbInstanceName.Enabled {
-		rb.res.Attributes().PutStr("newrelicoracledb.instance.name", val)
-	}
-}
-
-// SetServerAddress sets provided value as "server.address" attribute.
-func (rb *ResourceBuilder) SetServerAddress(val string) {
-	if rb.config.ServerAddress.Enabled {
-		rb.res.Attributes().PutStr("server.address", val)
+// SetHostPort sets provided value as "host.port" attribute.
+func (rb *ResourceBuilder) SetHostPort(val int64) {
+	if rb.config.HostPort.Enabled {
+		rb.res.Attributes().PutInt("host.port", val)
 	}
 }
 

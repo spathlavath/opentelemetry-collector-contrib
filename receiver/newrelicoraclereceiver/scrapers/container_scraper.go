@@ -23,7 +23,6 @@ type ContainerScraper struct {
 	client             client.OracleClient
 	mb                 *metadata.MetricsBuilder
 	logger             *zap.Logger
-	instanceName       string
 	config             metadata.MetricsBuilderConfig
 	isCDBCapable       *bool    // Cache for CDB capability check
 	isPDBCapable       *bool    // Cache for PDB capability check
@@ -40,7 +39,6 @@ func NewContainerScraper(
 	oracleClient client.OracleClient,
 	mb *metadata.MetricsBuilder,
 	logger *zap.Logger,
-	instanceName string,
 	config metadata.MetricsBuilderConfig,
 	includeTablespaces, excludeTablespaces []string,
 ) (*ContainerScraper, error) {
@@ -53,15 +51,11 @@ func NewContainerScraper(
 	if logger == nil {
 		return nil, fmt.Errorf("logger cannot be nil")
 	}
-	if instanceName == "" {
-		return nil, fmt.Errorf("instance name cannot be empty")
-	}
 
 	return &ContainerScraper{
 		client:             oracleClient,
 		mb:                 mb,
 		logger:             logger,
-		instanceName:       instanceName,
 		config:             config,
 		includeTablespaces: includeTablespaces,
 		excludeTablespaces: excludeTablespaces,

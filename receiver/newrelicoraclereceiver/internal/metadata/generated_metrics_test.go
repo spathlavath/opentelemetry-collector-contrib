@@ -1369,9 +1369,8 @@ func TestMetricsBuilder(t *testing.T) {
 			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val")
 
 			rb := mb.NewResourceBuilder()
-			rb.SetHostName("host.name-val")
-			rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
-			rb.SetServerAddress("server.address-val")
+			rb.SetHostAddress("host.address-val")
+			rb.SetHostPort(9)
 			rb.SetServiceName("service.name-val")
 			res := rb.Emit()
 			metrics := mb.Emit(WithResource(res))
