@@ -152,6 +152,8 @@ processors:
 
 receivers:
   # YOUR CUSTOM RECEIVERS - Keep these active
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver v0.141.0
+    path: ./receiver/newrelicmysqlreceiver
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver v0.141.0
     path: ./receiver/newrelicoraclereceiver
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver v0.141.0

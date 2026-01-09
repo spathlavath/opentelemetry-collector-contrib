@@ -1,0 +1,33 @@
+type: newrelicmysql
+
+status:
+  class: receiver
+  stability:
+    development: [metrics]
+  distributions: [contrib]
+  codeowners:
+    active: []
+    
+
+resource_attributes:
+  mysql.instance.endpoint:
+    description: Endpoint of the MySQL instance.
+    enabled: true
+    type: string
+
+attributes:
+
+metrics:
+  # Placeholder metric - will be replaced with actual metrics later
+  newrelicmysql.placeholder:
+    enabled: true
+    description: Placeholder metric for receiver skeleton
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+tests:
+  config:
+  goleak:
