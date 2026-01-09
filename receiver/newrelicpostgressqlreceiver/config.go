@@ -31,7 +31,6 @@ type Config struct {
 	SSLCert     string `mapstructure:"ssl_cert"`      // Path to SSL certificate
 	SSLKey      string `mapstructure:"ssl_key"`       // Path to SSL key
 	SSLRootCert string `mapstructure:"ssl_root_cert"` // Path to SSL root certificate
-	SSLPassword string `mapstructure:"ssl_password"`  // SSL certificate password
 
 	// Timeout for database operations
 	Timeout time.Duration `mapstructure:"timeout"`
