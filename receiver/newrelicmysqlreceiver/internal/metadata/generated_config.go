@@ -28,12 +28,24 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicmysql metrics.
 type MetricsConfig struct {
-	NewrelicmysqlPlaceholder MetricConfig `mapstructure:"newrelicmysql.placeholder"`
+	NewrelicmysqlCommands        MetricConfig `mapstructure:"newrelicmysql.commands"`
+	NewrelicmysqlConnectionCount MetricConfig `mapstructure:"newrelicmysql.connection.count"`
+	NewrelicmysqlQueryCount      MetricConfig `mapstructure:"newrelicmysql.query.count"`
+	NewrelicmysqlUptime          MetricConfig `mapstructure:"newrelicmysql.uptime"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		NewrelicmysqlPlaceholder: MetricConfig{
+		NewrelicmysqlCommands: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlConnectionCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlQueryCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlUptime: MetricConfig{
 			Enabled: true,
 		},
 	}
