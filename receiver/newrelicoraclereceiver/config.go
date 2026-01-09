@@ -37,6 +37,17 @@ const (
 	// Note: QueryMonitoringIntervalSeconds default is set dynamically based on collection_interval
 	// in SetDefaults() to ensure it's always >= collection_interval
 
+	// Feature-level scraper defaults (all enabled by default)
+	defaultEnableSessionScraper      = true
+	defaultEnableTablespaceScraper   = true
+	defaultEnableCoreScraper         = true
+	defaultEnablePdbScraper          = true
+	defaultEnableSystemScraper       = true
+	defaultEnableConnectionScraper   = true
+	defaultEnableContainerScraper    = true
+	defaultEnableRacScraper          = true
+	defaultEnableDatabaseInfoScraper = true
+
 	// Validation ranges
 	minCollectionInterval                   = 10 * time.Second
 	maxCollectionInterval                   = 3600 * time.Second
@@ -99,6 +110,17 @@ type Config struct {
 	// Tablespace Filtering Configuration
 	TablespaceFilter TablespaceFilterConfig `mapstructure:"tablespace_filter"`
 
+	// Feature-level flags for enabling/disabling individual scrapers
+	EnableSessionScraper      bool `mapstructure:"enable_session_scraper"`
+	EnableTablespaceScraper   bool `mapstructure:"enable_tablespace_scraper"`
+	EnableCoreScraper         bool `mapstructure:"enable_core_scraper"`
+	EnablePdbScraper          bool `mapstructure:"enable_pdb_scraper"`
+	EnableSystemScraper       bool `mapstructure:"enable_system_scraper"`
+	EnableConnectionScraper   bool `mapstructure:"enable_connection_scraper"`
+	EnableContainerScraper    bool `mapstructure:"enable_container_scraper"`
+	EnableRacScraper          bool `mapstructure:"enable_rac_scraper"`
+	EnableDatabaseInfoScraper bool `mapstructure:"enable_database_info_scraper"`
+
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
 	metadata.MetricsBuilderConfig  `mapstructure:",squash"`
 	metadata.LogsBuilderConfig     `mapstructure:",squash"`
@@ -151,6 +173,19 @@ func (c *Config) SetDefaults() {
 	if c.IntervalCalculatorCacheTTLMinutes <= 0 {
 		c.IntervalCalculatorCacheTTLMinutes = defaultIntervalCalculatorCacheTTLMinutes
 	}
+
+	// Set feature-level scraper flags to defaults if not explicitly set
+	// Note: mapstructure will set bool fields to false if not present in config,
+	// so we use a pointer check pattern via the config itself being complete
+	c.EnableSessionScraper = defaultEnableSessionScraper
+	c.EnableTablespaceScraper = defaultEnableTablespaceScraper
+	c.EnableCoreScraper = defaultEnableCoreScraper
+	c.EnablePdbScraper = defaultEnablePdbScraper
+	c.EnableSystemScraper = defaultEnableSystemScraper
+	c.EnableConnectionScraper = defaultEnableConnectionScraper
+	c.EnableContainerScraper = defaultEnableContainerScraper
+	c.EnableRacScraper = defaultEnableRacScraper
+	c.EnableDatabaseInfoScraper = defaultEnableDatabaseInfoScraper
 }
 
 func (c Config) Validate() error {
