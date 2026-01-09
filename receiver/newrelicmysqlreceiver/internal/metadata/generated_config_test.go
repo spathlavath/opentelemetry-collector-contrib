@@ -27,20 +27,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
-					NewrelicmysqlBytesReceived:                MetricConfig{Enabled: true},
-					NewrelicmysqlBytesSent:                    MetricConfig{Enabled: true},
-					NewrelicmysqlCommands:                     MetricConfig{Enabled: true},
-					NewrelicmysqlConnections:                  MetricConfig{Enabled: true},
-					NewrelicmysqlConnectionsMax:               MetricConfig{Enabled: true},
-					NewrelicmysqlInnodbBufferPoolPagesData:    MetricConfig{Enabled: true},
-					NewrelicmysqlInnodbBufferPoolPagesFree:    MetricConfig{Enabled: true},
-					NewrelicmysqlInnodbBufferPoolReadRequests: MetricConfig{Enabled: true},
-					NewrelicmysqlInnodbBufferPoolReads:        MetricConfig{Enabled: true},
-					NewrelicmysqlInnodbRowLockTime:            MetricConfig{Enabled: true},
-					NewrelicmysqlInnodbRowLockWaits:           MetricConfig{Enabled: true},
-					NewrelicmysqlQueries:                      MetricConfig{Enabled: true},
-					NewrelicmysqlSlowQueries:                  MetricConfig{Enabled: true},
-					NewrelicmysqlThreadsRunning:               MetricConfig{Enabled: true},
+					NewrelicmysqlPlaceholder: MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					MysqlInstanceEndpoint: ResourceAttributeConfig{Enabled: true},
@@ -51,20 +38,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
-					NewrelicmysqlBytesReceived:                MetricConfig{Enabled: false},
-					NewrelicmysqlBytesSent:                    MetricConfig{Enabled: false},
-					NewrelicmysqlCommands:                     MetricConfig{Enabled: false},
-					NewrelicmysqlConnections:                  MetricConfig{Enabled: false},
-					NewrelicmysqlConnectionsMax:               MetricConfig{Enabled: false},
-					NewrelicmysqlInnodbBufferPoolPagesData:    MetricConfig{Enabled: false},
-					NewrelicmysqlInnodbBufferPoolPagesFree:    MetricConfig{Enabled: false},
-					NewrelicmysqlInnodbBufferPoolReadRequests: MetricConfig{Enabled: false},
-					NewrelicmysqlInnodbBufferPoolReads:        MetricConfig{Enabled: false},
-					NewrelicmysqlInnodbRowLockTime:            MetricConfig{Enabled: false},
-					NewrelicmysqlInnodbRowLockWaits:           MetricConfig{Enabled: false},
-					NewrelicmysqlQueries:                      MetricConfig{Enabled: false},
-					NewrelicmysqlSlowQueries:                  MetricConfig{Enabled: false},
-					NewrelicmysqlThreadsRunning:               MetricConfig{Enabled: false},
+					NewrelicmysqlPlaceholder: MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					MysqlInstanceEndpoint: ResourceAttributeConfig{Enabled: false},

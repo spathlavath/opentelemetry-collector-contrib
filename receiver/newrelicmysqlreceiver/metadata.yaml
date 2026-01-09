@@ -16,166 +16,17 @@ resource_attributes:
     type: string
 
 attributes:
-  command:
-    description: The type of MySQL command executed.
-    type: string
-    enum: [select, insert, update, delete, commit, rollback]
 
 metrics:
-  newrelicmysql.bytes.received:
+  # Placeholder metric - will be replaced with actual metrics later
+  newrelicmysql.placeholder:
     enabled: true
-    description: The number of bytes received from all clients (Bytes_received).
-    stability:
-      level: development
-    unit: By
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.bytes.sent:
-    enabled: true
-    description: The number of bytes sent to all clients (Bytes_sent).
-    stability:
-      level: development
-    unit: By
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.commands:
-    enabled: true
-    description: The number of times each SQL command has been executed.
+    description: Placeholder metric for receiver skeleton
     stability:
       level: development
     unit: "1"
-    sum:
+    gauge:
       value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-    attributes: [command]
-  
-  newrelicmysql.connections:
-    enabled: true
-    description: The number of active MySQL connections (Threads_connected).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: false
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.connections.max:
-    enabled: true
-    description: The maximum number of connections that have been in use simultaneously (Max_used_connections).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: false
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.innodb.buffer_pool.pages.data:
-    enabled: true
-    description: The number of pages in the InnoDB buffer pool containing data (Innodb_buffer_pool_pages_data).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: false
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.innodb.buffer_pool.pages.free:
-    enabled: true
-    description: The number of free pages in the InnoDB buffer pool (Innodb_buffer_pool_pages_free).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: false
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.innodb.buffer_pool.read_requests:
-    enabled: true
-    description: The number of logical read requests to the InnoDB buffer pool (Innodb_buffer_pool_read_requests).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.innodb.buffer_pool.reads:
-    enabled: true
-    description: The number of reads that InnoDB could not satisfy from the buffer pool (Innodb_buffer_pool_reads).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.innodb.row_lock.time:
-    enabled: true
-    description: The total time spent acquiring row locks for InnoDB tables in milliseconds (Innodb_row_lock_time).
-    stability:
-      level: development
-    unit: ms
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.innodb.row_lock.waits:
-    enabled: true
-    description: The number of times operations on InnoDB tables had to wait for a row lock (Innodb_row_lock_waits).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.queries:
-    enabled: true
-    description: The total number of queries executed (Questions).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.slow_queries:
-    enabled: true
-    description: The number of queries that have taken more than long_query_time seconds (Slow_queries).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
-  
-  newrelicmysql.threads.running:
-    enabled: true
-    description: The number of threads that are not sleeping (Threads_running).
-    stability:
-      level: development
-    unit: "1"
-    sum:
-      value_type: int
-      monotonic: false
-      aggregation_temporality: cumulative
 
 tests:
   config:

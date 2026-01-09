@@ -28,64 +28,12 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicmysql metrics.
 type MetricsConfig struct {
-	NewrelicmysqlBytesReceived                MetricConfig `mapstructure:"newrelicmysql.bytes.received"`
-	NewrelicmysqlBytesSent                    MetricConfig `mapstructure:"newrelicmysql.bytes.sent"`
-	NewrelicmysqlCommands                     MetricConfig `mapstructure:"newrelicmysql.commands"`
-	NewrelicmysqlConnections                  MetricConfig `mapstructure:"newrelicmysql.connections"`
-	NewrelicmysqlConnectionsMax               MetricConfig `mapstructure:"newrelicmysql.connections.max"`
-	NewrelicmysqlInnodbBufferPoolPagesData    MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool.pages.data"`
-	NewrelicmysqlInnodbBufferPoolPagesFree    MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool.pages.free"`
-	NewrelicmysqlInnodbBufferPoolReadRequests MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool.read_requests"`
-	NewrelicmysqlInnodbBufferPoolReads        MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool.reads"`
-	NewrelicmysqlInnodbRowLockTime            MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock.time"`
-	NewrelicmysqlInnodbRowLockWaits           MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock.waits"`
-	NewrelicmysqlQueries                      MetricConfig `mapstructure:"newrelicmysql.queries"`
-	NewrelicmysqlSlowQueries                  MetricConfig `mapstructure:"newrelicmysql.slow_queries"`
-	NewrelicmysqlThreadsRunning               MetricConfig `mapstructure:"newrelicmysql.threads.running"`
+	NewrelicmysqlPlaceholder MetricConfig `mapstructure:"newrelicmysql.placeholder"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		NewrelicmysqlBytesReceived: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlBytesSent: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlCommands: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlConnections: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlConnectionsMax: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlInnodbBufferPoolPagesData: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlInnodbBufferPoolPagesFree: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlInnodbBufferPoolReadRequests: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlInnodbBufferPoolReads: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlInnodbRowLockTime: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlInnodbRowLockWaits: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlQueries: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlSlowQueries: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicmysqlThreadsRunning: MetricConfig{
+		NewrelicmysqlPlaceholder: MetricConfig{
 			Enabled: true,
 		},
 	}
