@@ -1635,4 +1635,3 @@ func (c *SQLClient) QueryTablespacePDBNonWriteCurrentContainer(ctx context.Conte
 
 	return tablespaces, nil
 }
-

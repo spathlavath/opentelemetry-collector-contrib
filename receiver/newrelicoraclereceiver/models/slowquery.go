@@ -4,13 +4,13 @@ import "database/sql"
 
 // SlowQuery represents a slow query record from Oracle V$SQL view
 type SlowQuery struct {
-	CollectionTimestamp sql.NullString  // Timestamp when query was collected from Oracle
+	CollectionTimestamp sql.NullString // Timestamp when query was collected from Oracle
 	DatabaseName        sql.NullString
 	QueryID             sql.NullString
 	SchemaName          sql.NullString
 	UserName            sql.NullString // NEW: The user who parsed the statement
 	ExecutionCount      sql.NullInt64
-	QueryText           sql.NullString
+	QueryText           sql.NullString // Full query text from sql_fulltext (used for metadata extraction, normalization, and hash generation)
 	AvgCPUTimeMs        sql.NullFloat64
 	AvgDiskReads        sql.NullFloat64
 	AvgDiskWrites       sql.NullFloat64
