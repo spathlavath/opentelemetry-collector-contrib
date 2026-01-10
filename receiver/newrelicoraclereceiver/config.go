@@ -174,18 +174,6 @@ func (c *Config) SetDefaults() {
 		c.IntervalCalculatorCacheTTLMinutes = defaultIntervalCalculatorCacheTTLMinutes
 	}
 
-	// Set feature-level scraper flags to defaults if not explicitly set
-	// Note: mapstructure will set bool fields to false if not present in config,
-	// so we use a pointer check pattern via the config itself being complete
-	c.EnableSessionScraper = defaultEnableSessionScraper
-	c.EnableTablespaceScraper = defaultEnableTablespaceScraper
-	c.EnableCoreScraper = defaultEnableCoreScraper
-	c.EnablePdbScraper = defaultEnablePdbScraper
-	c.EnableSystemScraper = defaultEnableSystemScraper
-	c.EnableConnectionScraper = defaultEnableConnectionScraper
-	c.EnableContainerScraper = defaultEnableContainerScraper
-	c.EnableRacScraper = defaultEnableRacScraper
-	c.EnableDatabaseInfoScraper = defaultEnableDatabaseInfoScraper
 }
 
 func (c Config) Validate() error {
