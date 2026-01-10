@@ -46,6 +46,19 @@ func createDefaultConfig() component.Config {
 		MetricsBuilderConfig:  metadata.DefaultMetricsBuilderConfig(),
 		LogsBuilderConfig:     metadata.DefaultLogsBuilderConfig(),
 		DisableConnectionPool: false,
+		// Query Performance Monitoring defaults
+		EnableQueryMonitoring:        defaultEnableQueryMonitoring,
+		EnableIntervalBasedAveraging: defaultEnableIntervalBasedAveraging,
+		// Set feature-level scraper flags to enabled by default
+		EnableSessionScraper:      defaultEnableSessionScraper,
+		EnableTablespaceScraper:   defaultEnableTablespaceScraper,
+		EnableCoreScraper:         defaultEnableCoreScraper,
+		EnablePdbScraper:          defaultEnablePdbScraper,
+		EnableSystemScraper:       defaultEnableSystemScraper,
+		EnableConnectionScraper:   defaultEnableConnectionScraper,
+		EnableContainerScraper:    defaultEnableContainerScraper,
+		EnableRacScraper:          defaultEnableRacScraper,
+		EnableDatabaseInfoScraper: defaultEnableDatabaseInfoScraper,
 	}
 
 	// Apply defaults
