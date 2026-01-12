@@ -8,7 +8,7 @@ import (
 
 var (
 	Type      = component.MustNewType("newrelicpostgresql")
-	ScopeName = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgressqlreceiver"
+	ScopeName = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver"
 )
 
 const (
