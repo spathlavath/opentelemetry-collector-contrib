@@ -27,6 +27,7 @@ type SQLIdentifier struct {
 }
 
 // oracleConnector extracts SQL identifiers from Oracle metrics and forwards them as logs
+// It also triggers execution plan collection for the extracted SQL identifiers
 type oracleConnector struct {
 	logsConsumer consumer.Logs
 	config       *Config
@@ -37,6 +38,10 @@ type oracleConnector struct {
 	sqlIdentifiers map[string]SQLIdentifier
 	lastUpdated    time.Time
 	ttl            time.Duration
+
+	// Oracle client for execution plan queries (optional)
+	oracleClient         interface{} // Will be set if execution plan collection is enabled
+	executionPlanEnabled bool
 }
 
 const (
@@ -74,8 +79,17 @@ func (c *oracleConnector) ConsumeMetrics(ctx context.Context, md pmetric.Metrics
 		// Store identifiers
 		c.storeSQLIdentifiers(extractedIdentifiers)
 
-		// Forward as logs
-		return c.forwardSQLIdentifiersAsLogs(ctx, extractedIdentifiers)
+		// Forward SQL identifiers as logs
+		err := c.forwardSQLIdentifiersAsLogs(ctx, extractedIdentifiers)
+		if err != nil {
+			c.logger.Error("Failed to forward SQL identifiers as logs", zap.Error(err))
+			return err
+		}
+
+		// Additionally, forward execution plan requests if enabled
+		if c.config.EnableExecutionPlanRequests {
+			return c.forwardExecutionPlanRequests(ctx, extractedIdentifiers)
+		}
 	}
 
 	return nil
@@ -374,6 +388,68 @@ func (c *oracleConnector) forwardSQLIdentifiersAsLogs(ctx context.Context, ident
 			zap.String("sql_id", sqlId.SQLID),
 			zap.String("child_address", sqlId.ChildAddress))
 	}
+
+	return c.logsConsumer.ConsumeLogs(ctx, logs)
+}
+
+// forwardExecutionPlanRequests forwards SQL identifiers as execution plan request logs
+func (c *oracleConnector) forwardExecutionPlanRequests(ctx context.Context, identifiers []SQLIdentifier) error {
+	if len(identifiers) == 0 {
+		return nil
+	}
+
+	logs := plog.NewLogs()
+	resourceLogs := logs.ResourceLogs().AppendEmpty()
+	scopeLogs := resourceLogs.ScopeLogs().AppendEmpty()
+
+	// Set scope info
+	scope := scopeLogs.Scope()
+	scope.SetName("oracle-sql-identifier-connector")
+	scope.SetVersion("1.0.0")
+
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+
+	// Get event name from config or use default
+	eventName := c.config.ExecutionPlanRequestEventName
+	if eventName == "" {
+		eventName = "oracle.execution_plan_request"
+	}
+
+	for _, sqlId := range identifiers {
+		logRecord := scopeLogs.LogRecords().AppendEmpty()
+		logRecord.SetTimestamp(timestamp)
+		logRecord.SetEventName(eventName)
+		logRecord.SetSeverityText("INFO")
+
+		// Add SQL identifier information as attributes for execution plan collection
+		attrs := logRecord.Attributes()
+		attrs.PutStr("sql_id", sqlId.SQLID)
+		attrs.PutStr("child_number", sqlId.ChildNumber)
+		attrs.PutStr("request_type", "execution_plan")
+
+		// Add child_address if available
+		if sqlId.ChildAddress != "" {
+			attrs.PutStr("child_address", sqlId.ChildAddress)
+		}
+
+		// Add request details in body
+		requestData := map[string]interface{}{
+			"sql_id":        sqlId.SQLID,
+			"child_number":  sqlId.ChildNumber,
+			"child_address": sqlId.ChildAddress,
+			"request_type":  "execution_plan",
+			"timestamp":     time.Now().Unix(),
+		}
+		requestJSON, _ := json.Marshal(requestData)
+		logRecord.Body().SetStr(string(requestJSON))
+
+		c.logger.Debug("Created execution plan request log",
+			zap.String("sql_id", sqlId.SQLID),
+			zap.String("child_number", sqlId.ChildNumber))
+	}
+
+	c.logger.Info("Forwarding execution plan requests",
+		zap.Int("count", len(identifiers)))
 
 	return c.logsConsumer.ConsumeLogs(ctx, logs)
 }

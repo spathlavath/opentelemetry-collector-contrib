@@ -16,6 +16,12 @@ type Config struct {
 
 	// ChildNumberAttribute is the attribute name for child number (default: "sql_child_number")
 	ChildNumberAttribute string `mapstructure:"child_number_attribute"`
+
+	// EnableExecutionPlanRequests enables forwarding execution plan requests (default: true)
+	EnableExecutionPlanRequests bool `mapstructure:"enable_execution_plan_requests"`
+
+	// ExecutionPlanRequestEventName is the event name for execution plan requests (default: "oracle.execution_plan_request")
+	ExecutionPlanRequestEventName string `mapstructure:"execution_plan_request_event_name"`
 }
 
 // Validate checks the receiver configuration is valid

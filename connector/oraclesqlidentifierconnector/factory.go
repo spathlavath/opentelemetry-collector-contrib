@@ -27,7 +27,10 @@ func NewFactory() connector.Factory {
 
 // createDefaultConfig creates the default configuration.
 func createDefaultConfig() component.Config {
-	return &Config{}
+	return &Config{
+		EnableExecutionPlanRequests:   true,
+		ExecutionPlanRequestEventName: "oracle.execution_plan_request",
+	}
 }
 
 // createMetricsToLogs creates a metrics to logs connector based on provided config.
