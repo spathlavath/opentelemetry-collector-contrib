@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -43,9 +44,9 @@ const (
 
 	// Default attribute names for Oracle SQL identifiers
 	defaultSQLIdentifierAttr = "oracle.sql_identifier"
-	defaultSQLIDAttr         = "SQL_ID"
-	defaultChildAddressAttr  = "CHILD_ADDRESS"
-	defaultChildNumberAttr   = "SQL_CHILD_NUMBER"
+	defaultSQLIDAttr         = "query_id"         // New Relic Oracle receiver uses query_id
+	defaultChildAddressAttr  = "child_address"    // Not provided by New Relic receiver
+	defaultChildNumberAttr   = "sql_child_number" // New Relic Oracle receiver uses sql_child_number
 
 	// Log event names
 	sqlIdentifierEventName = "oracle.sql_identifier_extracted"
@@ -58,7 +59,13 @@ func (c *oracleConnector) Capabilities() consumer.Capabilities {
 
 // ConsumeMetrics processes metrics and extracts SQL identifiers
 func (c *oracleConnector) ConsumeMetrics(ctx context.Context, md pmetric.Metrics) error {
+	c.logger.Info("ConsumeMetrics called",
+		zap.Int("resourceMetrics", md.ResourceMetrics().Len()))
+
 	extractedIdentifiers := c.extractSQLIdentifiersFromMetrics(md)
+
+	c.logger.Info("SQL identifier extraction completed",
+		zap.Int("count", len(extractedIdentifiers)))
 
 	if len(extractedIdentifiers) > 0 {
 		c.logger.Info("Extracted SQL identifiers from Oracle metrics",
@@ -96,19 +103,28 @@ func (c *oracleConnector) extractSQLIdentifiersFromMetrics(md pmetric.Metrics) [
 	var identifiers []SQLIdentifier
 
 	resourceMetrics := md.ResourceMetrics()
+	c.logger.Info("Processing resource metrics", zap.Int("count", resourceMetrics.Len()))
+
 	for i := 0; i < resourceMetrics.Len(); i++ {
 		rm := resourceMetrics.At(i)
 		scopeMetrics := rm.ScopeMetrics()
+		c.logger.Info("Processing scope metrics", zap.Int("count", scopeMetrics.Len()))
 
 		for j := 0; j < scopeMetrics.Len(); j++ {
 			sm := scopeMetrics.At(j)
 			metrics := sm.Metrics()
+			c.logger.Info("Processing metrics", zap.Int("count", metrics.Len()))
 
 			for k := 0; k < metrics.Len(); k++ {
 				metric := metrics.At(k)
+				metricName := metric.Name()
+				c.logger.Debug("Processing metric",
+					zap.String("name", metricName),
+					zap.String("type", metric.Type().String()))
 
-				// Look for Oracle wait events or slow query metrics
+				// Look for Oracle wait events or any Oracle metrics that might contain SQL identifiers
 				if c.isOracleWaitEventMetric(metric) {
+					c.logger.Info("Found Oracle metric with potential SQL identifiers", zap.String("name", metricName))
 					extractedIds := c.extractFromWaitEventMetric(metric)
 					identifiers = append(identifiers, extractedIds...)
 				}
@@ -123,11 +139,28 @@ func (c *oracleConnector) extractSQLIdentifiersFromMetrics(md pmetric.Metrics) [
 func (c *oracleConnector) isOracleWaitEventMetric(metric pmetric.Metric) bool {
 	name := metric.Name()
 
-	// Look for Oracle-specific metric names that would contain SQL identifiers
-	return name == "newrelicoracledb.wait_events.current_wait_time_ms" ||
-		name == "newrelicoracledb.wait_events.blocking_count" ||
-		name == "newrelicoracledb.slow_query.count" ||
-		name == "newrelicoracledb.child_cursor.count"
+	c.logger.Debug("Checking metric for Oracle wait event patterns", zap.String("name", name))
+
+	// Look for New Relic Oracle receiver metric names that contain SQL identifiers
+	isOracleMetric := name == "newrelicoracledb.wait_events.current_wait_time_ms" ||
+		name == "newrelicoracledb.blocking_queries.wait_time_ms" ||
+		name == "newrelicoracledb.child_cursors.cpu_time" ||
+		name == "newrelicoracledb.child_cursors.elapsed_time" ||
+		name == "newrelicoracledb.child_cursors.executions" ||
+		name == "newrelicoracledb.child_cursors.buffer_gets" ||
+		name == "newrelicoracledb.child_cursors.disk_reads" ||
+		name == "newrelicoracledb.child_cursors.details" ||
+		// Pattern matching for any New Relic Oracle metric
+		strings.Contains(strings.ToLower(name), "newrelicoracledb") ||
+		strings.Contains(strings.ToLower(name), "oracle") ||
+		strings.Contains(strings.ToLower(name), "wait_event") ||
+		strings.Contains(strings.ToLower(name), "child_cursor")
+
+	if isOracleMetric {
+		c.logger.Info("Metric matches Oracle pattern", zap.String("name", name))
+	}
+
+	return isOracleMetric
 }
 
 // extractFromWaitEventMetric extracts SQL identifiers from wait event metrics
@@ -161,6 +194,15 @@ func (c *oracleConnector) extractSQLIdentifierFromDataPoint(attrs pcommon.Map) *
 	var sqlId SQLIdentifier
 	found := false
 
+	// Log all available attributes for debugging
+	attributesList := make([]string, 0, attrs.Len())
+	attrs.Range(func(k string, v pcommon.Value) bool {
+		attributesList = append(attributesList, fmt.Sprintf("%s=%s", k, v.AsString()))
+		return true
+	})
+	c.logger.Debug("Available attributes in data point",
+		zap.Strings("attributes", attributesList))
+
 	// Use configured attribute names or defaults
 	sqlIDAttr := c.config.SQLIDAttribute
 	if sqlIDAttr == "" {
@@ -177,28 +219,89 @@ func (c *oracleConnector) extractSQLIdentifierFromDataPoint(attrs pcommon.Map) *
 		childNumAttr = defaultChildNumberAttr
 	}
 
+	c.logger.Debug("Looking for SQL identifier attributes",
+		zap.String("sql_id_attr", sqlIDAttr),
+		zap.String("child_addr_attr", childAddrAttr),
+		zap.String("child_num_attr", childNumAttr))
+
 	// Extract SQL ID
 	if val, exists := attrs.Get(sqlIDAttr); exists {
 		sqlId.SQLID = val.Str()
 		found = true
+		c.logger.Debug("Found SQL ID", zap.String("value", sqlId.SQLID))
+	} else {
+		// Try alternative names for SQL ID
+		alternativeNames := []string{"SQL_ID", "sql_id", "sqlid", "SQLID", "query_id", "QUERY_ID"}
+		for _, altName := range alternativeNames {
+			if val, exists := attrs.Get(altName); exists {
+				sqlId.SQLID = val.Str()
+				found = true
+				c.logger.Debug("Found SQL ID with alternative name",
+					zap.String("attr_name", altName),
+					zap.String("value", sqlId.SQLID))
+				break
+			}
+		}
 	}
 
 	// Extract child address
 	if val, exists := attrs.Get(childAddrAttr); exists {
 		sqlId.ChildAddress = val.Str()
 		found = true
+		c.logger.Debug("Found child address", zap.String("value", sqlId.ChildAddress))
+	} else {
+		// Try alternative names for child address
+		alternativeNames := []string{"CHILD_ADDRESS", "child_address", "address", "ADDRESS", "CURSOR_ADDRESS", "cursor_address"}
+		for _, altName := range alternativeNames {
+			if val, exists := attrs.Get(altName); exists {
+				sqlId.ChildAddress = val.Str()
+				found = true
+				c.logger.Debug("Found child address with alternative name",
+					zap.String("attr_name", altName),
+					zap.String("value", sqlId.ChildAddress))
+				break
+			}
+		}
+		if sqlId.ChildAddress == "" {
+			c.logger.Debug("Child address not found, using empty string")
+			sqlId.ChildAddress = "" // Allow empty child address
+		}
 	}
 
 	// Extract child number
 	if val, exists := attrs.Get(childNumAttr); exists {
 		sqlId.ChildNumber = val.Str()
 		found = true
+		c.logger.Debug("Found child number", zap.String("value", sqlId.ChildNumber))
+	} else {
+		// Try alternative names for child number
+		alternativeNames := []string{"SQL_CHILD_NUMBER", "sql_child_number", "child_number", "CHILD_NUMBER", "CURSOR_CHILD_NUMBER", "cursor_child_number"}
+		for _, altName := range alternativeNames {
+			if val, exists := attrs.Get(altName); exists {
+				sqlId.ChildNumber = val.Str()
+				found = true
+				c.logger.Debug("Found child number with alternative name",
+					zap.String("attr_name", altName),
+					zap.String("value", sqlId.ChildNumber))
+				break
+			}
+		}
+		if sqlId.ChildNumber == "" {
+			c.logger.Debug("Child number not found, using empty string")
+			sqlId.ChildNumber = "" // Allow empty child number
+		}
 	}
 
+	// We only require SQL_ID to be present, child_address and child_number are optional
 	if found && sqlId.SQLID != "" {
+		c.logger.Info("Successfully extracted SQL identifier",
+			zap.String("sql_id", sqlId.SQLID),
+			zap.String("child_address", sqlId.ChildAddress),
+			zap.String("child_number", sqlId.ChildNumber))
 		return &sqlId
 	}
 
+	c.logger.Debug("No SQL identifier found in data point")
 	return nil
 }
 
