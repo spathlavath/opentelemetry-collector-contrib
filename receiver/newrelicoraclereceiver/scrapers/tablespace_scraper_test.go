@@ -95,7 +95,8 @@ func TestTablespaceScraper_MultipleInstances(t *testing.T) {
 	scraper1 := NewTablespaceScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig(), nil, nil)
 	scraper2 := NewTablespaceScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig(), nil, nil)
 
-	assert.NotEqual(t, scraper1, scraper2)
+	// Verify that two separate instances are created (different memory addresses)
+	assert.NotSame(t, scraper1, scraper2)
 }
 
 func TestTablespaceScraper_IsCDBSupported_NotChecked(t *testing.T) {

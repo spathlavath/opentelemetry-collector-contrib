@@ -107,7 +107,7 @@ func TestRacScraper_MetricConfiguration(t *testing.T) {
 	t.Run("custom_config", func(t *testing.T) {
 		customConfig := metadata.DefaultMetricsBuilderConfig()
 		customConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled = false
-		scraper := NewRacScraper(mockClient, mb, logger, "test-instance", customConfig)
+		scraper := NewRacScraper(mockClient, mb, logger, customConfig)
 		assert.False(t, scraper.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled)
 	})
 }

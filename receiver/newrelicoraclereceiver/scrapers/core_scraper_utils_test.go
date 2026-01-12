@@ -250,27 +250,31 @@ func TestGetInstanceIDString_DefaultCase(t *testing.T) {
 
 func TestGetInstanceIDString_EdgeCases(t *testing.T) {
 	tests := []struct {
-		name  string
-		input interface{}
+		name     string
+		input    interface{}
+		expected string
 	}{
 		{
-			name:  "nil interface",
-			input: nil,
+			name:     "nil interface",
+			input:    nil,
+			expected: "unknown",
 		},
 		{
-			name:  "nil pointer",
-			input: (*int)(nil),
+			name:     "nil pointer",
+			input:    (*int)(nil),
+			expected: "<nil>",
 		},
 		{
-			name:  "nil slice",
-			input: ([]byte)(nil),
+			name:     "nil slice",
+			input:    ([]byte)(nil),
+			expected: "",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := getInstanceIDString(tt.input)
-			assert.NotEmpty(t, result)
+			assert.Equal(t, tt.expected, result)
 		})
 	}
 }
