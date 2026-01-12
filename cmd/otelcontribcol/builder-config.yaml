@@ -274,7 +274,7 @@ receivers:
 connectors:
   # Oracle SQL identifier connector for extracting SQL identifiers from metrics
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/connector/oraclesqlidentifierconnector v0.141.0
-    path: ./connector/oraclesqlidentifierconnector 
+    path: ../../connector/oraclesqlidentifierconnector
   #  path: ./connector/oraclesqlidentifierconnector
   # Other connectors commented out
   # - gomod: go.opentelemetry.io/collector/connector/forwardconnector v0.141.0
@@ -307,3 +307,4 @@ providers:
 # file before passing it to OCB, to ensure that local versions are used for all
 # Contrib modules.
 replaces:
+  - github.com/open-telemetry/opentelemetry-collector-contrib/connector/oraclesqlidentifierconnector => ../../connector/oraclesqlidentifierconnector
