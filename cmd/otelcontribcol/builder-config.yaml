@@ -16,7 +16,7 @@ dist:
 extensions:
   # Only keep health_check extension used in config
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/healthcheckextension v0.141.0
-    path: ./connector/oraclesqlidentifierconnector  
+
   # All other extensions commented out
   # - gomod: go.opentelemetry.io/collector/extension/zpagesextension v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension v0.141.0
@@ -274,6 +274,7 @@ receivers:
 connectors:
   # Oracle SQL identifier connector for extracting SQL identifiers from metrics
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/connector/oraclesqlidentifierconnector v0.141.0
+    path: ./connector/oraclesqlidentifierconnector 
   #  path: ./connector/oraclesqlidentifierconnector
   # Other connectors commented out
   # - gomod: go.opentelemetry.io/collector/connector/forwardconnector v0.141.0
