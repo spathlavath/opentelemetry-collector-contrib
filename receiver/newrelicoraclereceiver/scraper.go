@@ -331,7 +331,8 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 
 	scrapeCtx := s.createScrapeContext(ctx)
 
-	s.logger.Debug("Fetching query IDs for execution plans (no metrics)")
+	// Get query IDs for execution plans
+	s.logger.Debug("Fetching query IDs for execution plans")
 	queryIDs, slowQueryErrs := s.slowQueriesScraper.GetSlowQueryIDs(scrapeCtx)
 
 	if len(slowQueryErrs) > 0 {
@@ -349,7 +350,7 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 		return logs, nil
 	}
 
-	s.logger.Debug("Getting SQL identifiers from wait events for execution plan logs (no metrics)",
+	s.logger.Debug("Getting SQL identifiers from wait events for execution plan logs",
 		zap.Strings("query_ids", queryIDs))
 
 	if s.waitEventBlockingScraper == nil {
@@ -358,11 +359,15 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 		return logs, err
 	}
 
-	sqlIdentifiers, waitEventErrs := s.waitEventBlockingScraper.GetSQLIdentifiers(scrapeCtx, queryIDs)
+	var sqlIdentifiers []models.SQLIdentifier
+	var waitEventErrs []error
+	sqlIdentifiers, waitEventErrs = s.waitEventBlockingScraper.GetSQLIdentifiers(scrapeCtx, queryIDs)
 	if len(waitEventErrs) > 0 {
 		s.logger.Warn("Errors occurred while getting SQL identifiers from wait events for execution plan logs",
 			zap.Int("error_count", len(waitEventErrs)))
 	}
+
+	totalErrors := len(slowQueryErrs) + len(waitEventErrs)
 
 	if len(sqlIdentifiers) == 0 {
 		s.logger.Info("No SQL identifiers found for execution plan logs")
@@ -382,7 +387,7 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 
 	endTime := time.Now()
 	duration := endTime.Sub(startTime)
-	totalErrors := len(slowQueryErrs) + len(waitEventErrs) + len(executionPlanErrs)
+	totalErrors += len(executionPlanErrs)
 	s.logger.Info("Completed New Relic Oracle logs scrape",
 		zap.Time("end_time", endTime),
 		zap.Duration("total_duration", duration),
@@ -488,6 +493,7 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 
 	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
+	// Execute child cursors if we have SQL identifiers
 	if len(waitEventSQLIdentifiers) > 0 {
 		s.executeChildCursors(ctx, errChan, waitEventSQLIdentifiers)
 	} else {

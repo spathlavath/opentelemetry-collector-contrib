@@ -1,0 +1,9 @@
+default:
+all_set:
+  events:
+    oracle.sql_identifier_extracted:
+      enabled: true
+none_set:
+  events:
+    oracle.sql_identifier_extracted:
+      enabled: false
