@@ -1,0 +1,28 @@
+type: oraclesqlidentifierconnector
+
+status:
+  class: connector
+  stability:
+    alpha: [metrics_to_logs]
+  distributions: []
+  codeowners:
+    active: [jsurampudi]
+
+resource_attributes:
+
+attributes:
+  sql_id:
+    description: Oracle SQL identifier
+    type: string
+  child_address:
+    description: Oracle child cursor address
+    type: string
+  child_number:
+    description: Oracle child cursor number
+    type: string
+
+events:
+  oracle.sql_identifier_extracted:
+    enabled: true
+    description: SQL identifier extracted from Oracle metrics
+    attributes: [sql_id, child_address, child_number]

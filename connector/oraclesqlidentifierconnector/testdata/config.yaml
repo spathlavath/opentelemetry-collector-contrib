@@ -1,0 +1,42 @@
+# Oracle SQL Identifier Connector Configuration Example
+
+receivers:
+  newrelicoraclereceiver:
+    endpoint: "oracle://user:password@localhost:1521/XE"
+    enable_query_monitoring: true
+    query_monitoring_response_time_threshold: 1000
+    query_monitoring_count_threshold: 10
+
+processors:
+  batch:
+
+connectors:
+  oraclesqlidentifierconnector:
+    sql_identifier_attribute: "oracle.sql_identifier"
+    sql_id_attribute: "query_id"
+    child_address_attribute: "child_address"
+    child_number_attribute: "sql_child_number"
+
+exporters:
+  debug:
+    verbosity: detailed
+  
+  file/metrics:
+    path: ./oracle_metrics.json
+    
+  file/logs:
+    path: ./oracle_logs.json
+
+service:
+  pipelines:
+    # Metrics pipeline - collects Oracle metrics including SQL identifiers
+    metrics:
+      receivers: [newrelicoraclereceiver]
+      processors: [batch]
+      exporters: [file/metrics, oraclesqlidentifierconnector]
+    
+    # Logs pipeline - receives SQL identifiers from connector 
+    logs:
+      receivers: [oraclesqlidentifierconnector]  
+      processors: [batch]
+      exporters: [file/logs, debug]
