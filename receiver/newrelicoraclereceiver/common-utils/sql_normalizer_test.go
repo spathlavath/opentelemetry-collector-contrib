@@ -171,6 +171,18 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 			expectedNrTxn:     "WebTransaction/Controller/api",
 		},
 		{
+			name:              "Real APM log example - employees GET",
+			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */ SELECT e.EMPLOYEE_ID, e.FIRST_NAME FROM EMPLOYEES e WHERE e.SALARY >= ? ORDER BY e.SALARY DESC",
+			expectedNrService: "Oracle-HR-Portal-Java",
+			expectedNrTxn:     "WebTransaction/SpringController/employees (GET)",
+		},
+		{
+			name:              "Real APM log example - employees history GET with path variable",
+			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees/{id}/history (GET) */ SELECT jh.* FROM JOB_HISTORY jh WHERE jh.EMPLOYEE_ID = ?",
+			expectedNrService: "Oracle-HR-Portal-Java",
+			expectedNrTxn:     "WebTransaction/SpringController/employees/{id}/history (GET)",
+		},
+		{
 			name:              "No New Relic metadata",
 			input:             "SELECT * FROM employees WHERE id = 1",
 			expectedNrService: "",

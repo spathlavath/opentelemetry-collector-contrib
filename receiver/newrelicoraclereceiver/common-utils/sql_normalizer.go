@@ -53,7 +53,8 @@ func GenerateMD5Hash(normalizedSQL string) string {
 func ExtractNewRelicMetadata(sql string) (nrService string, nrTxn string) {
 	// Pattern to match New Relic comment block with nr_service and nr_txn
 	// Example: /* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */
-	commentPattern := regexp.MustCompile(`/\*\s*nr_service=([^,]+),\s*nr_txn=([^*]+)\*/`)
+	// Use non-greedy match (.+?) to capture up to the closing */
+	commentPattern := regexp.MustCompile(`/\*\s*nr_service=([^,]+),\s*nr_txn=(.+?)\s*\*/`)
 
 	matches := commentPattern.FindStringSubmatch(sql)
 	if len(matches) >= 3 {
