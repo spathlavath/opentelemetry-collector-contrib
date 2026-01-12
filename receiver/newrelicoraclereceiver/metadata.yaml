@@ -171,6 +171,9 @@ attributes:
   session_serial:
     description: Oracle session serial number
     type: int
+  session_logon_time:
+    description: Timestamp when the session was created
+    type: string
   sql_child_number:
     description: SQL child cursor number
     type: int
@@ -387,6 +390,19 @@ metrics:
       value_type: int
     unit: "{sessions}"
     attributes:
+
+  newrelicoracledb.user_session.details:
+    description: Detailed information about Oracle user sessions including username, SID, serial number, logon time, and status
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{sessions}"
+    attributes:
+      - username
+      - session_id
+      - session_serial
+      - session_logon_time
+      - session_status
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace

@@ -114,6 +114,7 @@ type OracleClient interface {
 
 	// Session metrics
 	QuerySessionCount(ctx context.Context) (*models.SessionCount, error)
+	QueryUserSessionDetails(ctx context.Context) ([]models.UserSessionDetail, error)
 
 	// System metrics
 	QuerySystemMetrics(ctx context.Context) ([]models.SystemMetric, error)

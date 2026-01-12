@@ -985,6 +985,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbTablespaceUsedPercent: metricInfo{
 		Name: "newrelicoracledb.tablespace.used_percent",
 	},
+	NewrelicoracledbUserSessionDetails: metricInfo{
+		Name: "newrelicoracledb.user_session.details",
+	},
 	NewrelicoracledbWaitEventsCurrentWaitTimeMs: metricInfo{
 		Name: "newrelicoracledb.wait_events.current_wait_time_ms",
 	},
@@ -1315,6 +1318,7 @@ type metricsInfo struct {
 	NewrelicoracledbTablespaceTotalBytes                               metricInfo
 	NewrelicoracledbTablespaceUsedBytes                                metricInfo
 	NewrelicoracledbTablespaceUsedPercent                              metricInfo
+	NewrelicoracledbUserSessionDetails                                 metricInfo
 	NewrelicoracledbWaitEventsCurrentWaitTimeMs                        metricInfo
 }
 
@@ -18042,6 +18046,61 @@ func newMetricNewrelicoracledbTablespaceUsedPercent(cfg MetricConfig) metricNewr
 	return m
 }
 
+type metricNewrelicoracledbUserSessionDetails struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.user_session.details metric with initial data.
+func (m *metricNewrelicoracledbUserSessionDetails) init() {
+	m.data.SetName("newrelicoracledb.user_session.details")
+	m.data.SetDescription("Detailed information about Oracle user sessions including username, SID, serial number, logon time, and status")
+	m.data.SetUnit("{sessions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbUserSessionDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("username", usernameAttributeValue)
+	dp.Attributes().PutStr("session_id", sessionIDAttributeValue)
+	dp.Attributes().PutInt("session_serial", sessionSerialAttributeValue)
+	dp.Attributes().PutStr("session_logon_time", sessionLogonTimeAttributeValue)
+	dp.Attributes().PutStr("session_status", sessionStatusAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbUserSessionDetails) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbUserSessionDetails) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbUserSessionDetails(cfg MetricConfig) metricNewrelicoracledbUserSessionDetails {
+	m := metricNewrelicoracledbUserSessionDetails{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbWaitEventsCurrentWaitTimeMs struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -18447,6 +18506,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbTablespaceTotalBytes                               metricNewrelicoracledbTablespaceTotalBytes
 	metricNewrelicoracledbTablespaceUsedBytes                                metricNewrelicoracledbTablespaceUsedBytes
 	metricNewrelicoracledbTablespaceUsedPercent                              metricNewrelicoracledbTablespaceUsedPercent
+	metricNewrelicoracledbUserSessionDetails                                 metricNewrelicoracledbUserSessionDetails
 	metricNewrelicoracledbWaitEventsCurrentWaitTimeMs                        metricNewrelicoracledbWaitEventsCurrentWaitTimeMs
 }
 
@@ -18797,6 +18857,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbTablespaceTotalBytes:                               newMetricNewrelicoracledbTablespaceTotalBytes(mbc.Metrics.NewrelicoracledbTablespaceTotalBytes),
 		metricNewrelicoracledbTablespaceUsedBytes:                                newMetricNewrelicoracledbTablespaceUsedBytes(mbc.Metrics.NewrelicoracledbTablespaceUsedBytes),
 		metricNewrelicoracledbTablespaceUsedPercent:                              newMetricNewrelicoracledbTablespaceUsedPercent(mbc.Metrics.NewrelicoracledbTablespaceUsedPercent),
+		metricNewrelicoracledbUserSessionDetails:                                 newMetricNewrelicoracledbUserSessionDetails(mbc.Metrics.NewrelicoracledbUserSessionDetails),
 		metricNewrelicoracledbWaitEventsCurrentWaitTimeMs:                        newMetricNewrelicoracledbWaitEventsCurrentWaitTimeMs(mbc.Metrics.NewrelicoracledbWaitEventsCurrentWaitTimeMs),
 		resourceAttributeIncludeFilter:                                           make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:                                           make(map[string]filter.Filter),
@@ -19212,6 +19273,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbTablespaceTotalBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceUsedBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceUsedPercent.emit(ils.Metrics())
+	mb.metricNewrelicoracledbUserSessionDetails.emit(ils.Metrics())
 	mb.metricNewrelicoracledbWaitEventsCurrentWaitTimeMs.emit(ils.Metrics())
 
 	for _, op := range options {
@@ -20862,6 +20924,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceUsedBytesDataPoint(ts 
 // RecordNewrelicoracledbTablespaceUsedPercentDataPoint adds a data point to newrelicoracledb.tablespace.used_percent metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceUsedPercentDataPoint(ts pcommon.Timestamp, val float64, conIDAttributeValue string, tablespaceNameAttributeValue string) {
 	mb.metricNewrelicoracledbTablespaceUsedPercent.recordDataPoint(mb.startTime, ts, val, conIDAttributeValue, tablespaceNameAttributeValue)
+}
+
+// RecordNewrelicoracledbUserSessionDetailsDataPoint adds a data point to newrelicoracledb.user_session.details metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbUserSessionDetailsDataPoint(ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string) {
+	mb.metricNewrelicoracledbUserSessionDetails.recordDataPoint(mb.startTime, ts, val, usernameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionLogonTimeAttributeValue, sessionStatusAttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint adds a data point to newrelicoracledb.wait_events.current_wait_time_ms metric.

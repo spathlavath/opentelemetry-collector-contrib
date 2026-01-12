@@ -10,6 +10,18 @@ const (
 	// SessionCountSQL returns the count of user sessions
 	SessionCountSQL = "SELECT COUNT(*) AS SESSION_COUNT FROM v$session WHERE type = 'USER'"
 
+	// UserSessionDetailsSQL returns detailed information about user sessions
+	UserSessionDetailsSQL = `
+		SELECT
+			USERNAME,
+			SID,
+			SERIAL#,
+			LOGON_TIME,
+			STATUS
+		FROM V$SESSION
+		WHERE TYPE = 'USER'
+		ORDER BY LOGON_TIME DESC`
+
 	// TotalSessionsSQL returns the total number of sessions
 	TotalSessionsSQL = "SELECT COUNT(*) as TOTAL_SESSIONS FROM V$SESSION"
 

@@ -1366,6 +1366,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbUserSessionDetailsDataPoint(ts, 1, "username-val", "session_id-val", 14, "session_logon_time-val", "session_status-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val")
 
 			rb := mb.NewResourceBuilder()
@@ -6849,6 +6853,33 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("tablespace.name")
 					assert.True(t, ok)
 					assert.Equal(t, "tablespace.name-val", attrVal.Str())
+				case "newrelicoracledb.user_session.details":
+					assert.False(t, validatedMetrics["newrelicoracledb.user_session.details"], "Found a duplicate in the metrics slice: newrelicoracledb.user_session.details")
+					validatedMetrics["newrelicoracledb.user_session.details"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Detailed information about Oracle user sessions including username, SID, serial number, logon time, and status", ms.At(i).Description())
+					assert.Equal(t, "{sessions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("username")
+					assert.True(t, ok)
+					assert.Equal(t, "username-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("session_id")
+					assert.True(t, ok)
+					assert.Equal(t, "session_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("session_serial")
+					assert.True(t, ok)
+					assert.EqualValues(t, 14, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("session_logon_time")
+					assert.True(t, ok)
+					assert.Equal(t, "session_logon_time-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("session_status")
+					assert.True(t, ok)
+					assert.Equal(t, "session_status-val", attrVal.Str())
 				case "newrelicoracledb.wait_events.current_wait_time_ms":
 					assert.False(t, validatedMetrics["newrelicoracledb.wait_events.current_wait_time_ms"], "Found a duplicate in the metrics slice: newrelicoracledb.wait_events.current_wait_time_ms")
 					validatedMetrics["newrelicoracledb.wait_events.current_wait_time_ms"] = true
