@@ -45,6 +45,8 @@ type sqlServerScraper struct {
 	tempdbContentionScraper       *scrapers.TempDBContentionScraper // TempDB contention monitoring
 	metadataCache                 *helpers.MetadataCache            // Metadata cache for wait resource enrichment
 	engineEdition                 int                               // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
+	// Extension-based cache for metric/log pipeline coordination (OTel-native approach)
+	cacheExtension *QueryCacheExtension // OTel Extension for sharing query performance data between pipelines
 }
 
 // newSqlServerScraper creates a new SQL Server scraper with structured approach
@@ -57,8 +59,25 @@ func newSqlServerScraper(settings receiver.Settings, cfg *Config) *sqlServerScra
 }
 
 // Start initializes the scraper and establishes database connection
-func (s *sqlServerScraper) Start(ctx context.Context, _ component.Host) error {
+func (s *sqlServerScraper) Start(ctx context.Context, host component.Host) error {
 	s.logger.Info("Starting SQL Server receiver")
+
+	// Look up query cache extension (REQUIRED for logs pipeline)
+	if extensions := host.GetExtensions(); extensions != nil {
+		for _, ext := range extensions {
+			if cacheExt, ok := ext.(*QueryCacheExtension); ok {
+				s.cacheExtension = cacheExt
+				s.logger.Info("✅ Found query cache extension - metrics/logs pipeline coordination enabled")
+				break
+			}
+		}
+	}
+
+	if s.cacheExtension == nil {
+		if s.config.EnableQueryMonitoring || s.config.EnableActiveRunningQueries {
+			s.logger.Warn("⚠️  Query cache extension not found but query monitoring is enabled. Logs pipeline will be DISABLED. Add 'querycache' to service.extensions to enable logs.")
+		}
+	}
 
 	connection, err := NewSQLConnection(ctx, s.config, s.logger)
 	if err != nil {
@@ -204,64 +223,41 @@ func (s *sqlServerScraper) ScrapeLogs(ctx context.Context) (plog.Logs, error) {
 
 	s.logger.Info("Query monitoring is ENABLED, collecting execution plans for ACTIVE running queries")
 
-	// First, fetch slow query IDs for correlation with active queries
-	// This ensures we only fetch execution plans for slow queries selected by the user
-	intervalSeconds := s.config.QueryMonitoringFetchInterval
-	topN := s.config.QueryMonitoringCountThreshold
-	elapsedTimeThreshold := s.config.QueryMonitoringResponseTimeThreshold
-	textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit
-
-	s.logger.Info("Fetching slow queries for active query correlation",
-		zap.Int("interval_seconds", intervalSeconds),
-		zap.Int("top_n", topN),
-		zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
-
-	slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(ctx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit, false)
-	if err != nil {
-		s.logger.Warn("Failed to fetch slow queries for correlation, will skip execution plan collection",
-			zap.Error(err))
-		return logs, nil // Return empty logs, don't fail
-	}
-
-	// Extract query IDs and lightweight plan data (5 fields only) from slow queries in a single pass
+	// Try to get cached data from extension (eliminates duplicate DB queries)
 	var slowQueryIDs []string
 	var slowQueryPlanDataMap map[string]models.SlowQueryPlanData
-	if len(slowQueries) > 0 {
-		slowQueryIDs, slowQueryPlanDataMap = s.queryPerformanceScraper.ExtractQueryDataFromSlowQueries(slowQueries)
-		s.logger.Info("Extracted query IDs and lightweight plan data (5 fields: plan_handle, query_hash, creation_time, last_execution_time, total_elapsed_time)",
-			zap.Int("slow_query_count", len(slowQueries)),
-			zap.Int("unique_query_id_count", len(slowQueryIDs)),
-			zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
-	} else {
-		s.logger.Info("No slow queries found, skipping execution plan collection")
-		return logs, nil // No slow queries, nothing to collect
-	}
+	var activeQueries []models.ActiveRunningQuery
 
-	// Scrape active running queries with execution plans
-	// This will fetch, parse, and emit execution plan operators as OTLP logs
-	limit := s.config.QueryMonitoringCountThreshold
-	activeElapsedTimeThreshold := s.config.ActiveRunningQueriesElapsedTimeThreshold // Minimum elapsed time in ms
-
-	s.logger.Info("Collecting active running query execution plans",
-		zap.Int("limit", limit),
-		zap.Int("text_truncate_limit", textTruncateLimit),
-		zap.Int("elapsed_time_threshold_ms", activeElapsedTimeThreshold),
-		zap.Int("slow_query_id_filter_count", len(slowQueryIDs)))
-
-	// Step 1: Fetch active queries from database
-	activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(ctx, limit, textTruncateLimit, activeElapsedTimeThreshold, slowQueryIDs)
-	if err != nil {
-		s.logger.Error("Failed to fetch active running queries", zap.Error(err))
-		return logs, err
-	}
-
-	if len(activeQueries) == 0 {
-		s.logger.Info("No active queries found matching slow query IDs")
+	// Extension is REQUIRED for logs pipeline - no fallback to database queries
+	if s.cacheExtension == nil {
+		s.logger.Error("❌ Query cache extension is REQUIRED for logs pipeline. Please add 'querycache' to service.extensions in your config.")
 		return logs, nil
 	}
 
-	s.logger.Info("Active queries fetched, emitting metrics",
-		zap.Int("active_query_count", len(activeQueries)))
+	// Get cached data from extension (populated by metrics pipeline)
+	cache := s.cacheExtension.GetCache(s.settings.ID)
+	if cache == nil {
+		// Cache not available yet - metrics pipeline hasn't run
+		s.logger.Info("⚠️  Cache not available - metrics pipeline may not have run yet. Skipping log collection.")
+		return logs, nil
+	}
+
+	slowQueryIDs, slowQueryPlanDataMap, activeQueries = cache.GetAll()
+	s.logger.Info("✅ Retrieved cached query performance data from extension (NO database queries!)",
+		zap.Int("slow_query_ids", len(slowQueryIDs)),
+		zap.Int("plan_data_entries", len(slowQueryPlanDataMap)),
+		zap.Int("active_queries", len(activeQueries)),
+		zap.Time("cache_updated", cache.GetLastUpdateTime()))
+
+	if len(slowQueryIDs) == 0 {
+		s.logger.Info("No cached slow queries found, skipping execution plan collection")
+		return logs, nil
+	}
+
+	if len(activeQueries) == 0 {
+		s.logger.Info("No cached active queries found, skipping execution plan collection")
+		return logs, nil
+	}
 
 	// Step 2: Emit execution plan statistics using lightweight plan data from memory (5 fields only, NO database query)
 	if err := s.queryPerformanceScraper.ScrapeActiveQueryPlanStatistics(ctx, activeQueries, slowQueryPlanDataMap); err != nil {
@@ -641,6 +637,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	// Store query IDs and lightweight plan data (5 fields only) for correlation with active queries
 	var slowQueryIDs []string
 	var slowQueryPlanDataMap map[string]models.SlowQueryPlanData
+	var activeQueriesForCache []models.ActiveRunningQuery // Store for caching to logs pipeline
 	if s.config.EnableQueryMonitoring {
 		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 		defer cancel()
@@ -713,6 +710,9 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			s.logger.Info("Active queries fetched, emitting metrics",
 				zap.Int("active_query_count", len(activeQueries)))
 
+			// Store active queries for caching to logs pipeline
+			activeQueriesForCache = activeQueries
+
 			// Step 2: Emit metrics for active queries (using lightweight plan data from memory)
 			if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries, slowQueryPlanDataMap); err != nil {
 				s.logger.Warn("Failed to emit active running queries metrics",
@@ -735,6 +735,17 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	} else {
 		s.logger.Info("Active running queries scraping SKIPPED - EnableActiveRunningQueries is false")
 	}
+
+	// Cache query performance data for logs pipeline (Extension pattern - eliminates duplicate DB queries)
+	if s.cacheExtension != nil && (s.config.EnableQueryMonitoring || s.config.EnableActiveRunningQueries) {
+		cache := s.cacheExtension.GetOrCreateCache(s.settings.ID)
+		cache.Update(slowQueryIDs, slowQueryPlanDataMap, activeQueriesForCache)
+		s.logger.Info("✅ Cached query performance data in extension for logs pipeline",
+			zap.Int("slow_query_ids", len(slowQueryIDs)),
+			zap.Int("plan_data_entries", len(slowQueryPlanDataMap)),
+			zap.Int("active_queries", len(activeQueriesForCache)))
+	}
+
 	s.logger.Debug("Starting instance buffer pool hit percent metrics scraping")
 	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
 	defer cancel()

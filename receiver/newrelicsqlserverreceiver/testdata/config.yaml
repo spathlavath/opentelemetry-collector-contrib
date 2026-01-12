@@ -7,11 +7,22 @@ extensions:
   health_check:
     endpoint: localhost:13134
 
+  # Query Cache Extension (RECOMMENDED for performance optimization)
+  # Shares query performance data between metrics and logs pipelines
+  # Eliminates duplicate database queries (50% reduction)
+  # Benefits:
+  #   - Metrics pipeline queries DB and caches data
+  #   - Logs pipeline reads from cache (NO duplicate DB queries!)
+  #   - Perfect data correlation between metrics and logs
+  #   - Reduces CPU, memory, and I/O load on SQL Server
+  querycache:
+
 # Service configuration
 service:
-  # Enable extensions
-  extensions: [health_check]
-  
+  # Enable extensions (querycache is HIGHLY RECOMMENDED for optimal performance)
+  extensions: [health_check, querycache]
+
+
   # Define the data pipeline
   pipelines:
     # Metrics pipeline: receiver -> processor -> exporter
@@ -59,7 +70,7 @@ processors:
         value: "1.0.0"
         action: upsert
       - key: server.address
-        value: "sqlserver-av"
+        value: "74.225.3.34-1433"
         action: upsert
       - key: server.port
         value: "1433"
@@ -68,14 +79,25 @@ processors:
 # Receivers collect telemetry data
 receivers:
   # Your New Relic SQL Server Receiver
+  #
+  # 🚀 PERFORMANCE OPTIMIZATION: This receiver works with the querycache extension
+  #    to eliminate duplicate database queries between metrics and logs pipelines.
+  #
+  #    How it works:
+  #    1. Metrics pipeline queries DB once and caches data in extension
+  #    2. Logs pipeline reads from cache (NO duplicate DB queries!)
+  #    3. Result: 50% reduction in database load (4 queries → 2 queries per cycle)
+  #
+  #    To enable: Ensure 'querycache' is in service.extensions (see above)
+  #
   newrelicsqlserver:
     # SQL Server connection configuration
     # ⚠️  REPLACE THESE WITH YOUR ACTUAL VALUES ⚠️
     hostname: ""                    # e.g., "your-sql-server.com" or "192.168.1.100"
-    port: ""                # Default SQL Server port
+    port: "1433"                # Default SQL Server port
     username: ""              # e.g., "monitoring_user"
     password: ""              # Your SQL Server password
-    monitored_databases: []
+    monitored_databases: []  # List of databases to monitor
 
 
     # Optional: Named instance (if using SQL Server named instances)
@@ -204,3 +226,28 @@ exporters:
 #
 # Then run:
 # ./bin/otelcol-newrelic --config=config.yaml
+#
+# Verifying Query Cache Extension is Working:
+#
+# When the collector starts, you should see these log messages:
+#
+# 1. Extension loaded:
+#    "Query cache extension started"
+#
+# 2. Receiver found extension:
+#    "✅ Found query cache extension - will use for metric/log pipeline coordination"
+#
+# 3. Metrics pipeline caching data:
+#    "✅ Cached query performance data in extension for logs pipeline"
+#    slow_query_ids: X, plan_data_entries: Y, active_queries: Z
+#
+# 4. Logs pipeline using cache:
+#    "✅ Retrieved cached query performance data from extension (NO database queries!)"
+#    slow_query_ids: X, plan_data_entries: Y, active_queries: Z
+#
+# If you see these messages, the extension is working correctly and you're getting
+# 50% reduction in database queries!
+#
+# Troubleshooting:
+# - If you see "Query cache extension not found", verify querycache is in service.extensions
+# - If you see "Cache not available", wait one collection interval for metrics to run first

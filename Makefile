@@ -434,6 +434,7 @@ chlog-update: $(CHLOGGEN)
 genotelcontribcol: $(BUILDER)
 	./internal/buildscripts/ocb-add-replaces.sh otelcontribcol
 	$(BUILDER) --skip-compilation --config cmd/otelcontribcol/builder-config-replaced.yaml
+	./internal/buildscripts/add-query-cache-extension.sh
 
 # Build the Collector executable.
 # Note: CGO_ENABLED=1 is required for Oracle receiver (godror driver)
