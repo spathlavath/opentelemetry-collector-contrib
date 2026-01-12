@@ -1,0 +1,11 @@
+type: querycache
+
+status:
+  class: extension
+  stability:
+    development: [extension]
+  distributions: []
+  codeowners:
+    active: []
+
+resource_attributes:

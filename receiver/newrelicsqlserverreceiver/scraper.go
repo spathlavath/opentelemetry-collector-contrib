@@ -15,6 +15,7 @@ import (
 	"go.opentelemetry.io/collector/receiver"
 	"go.uber.org/zap"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/extension/querycache"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/models"
@@ -46,7 +47,7 @@ type sqlServerScraper struct {
 	metadataCache                 *helpers.MetadataCache            // Metadata cache for wait resource enrichment
 	engineEdition                 int                               // SQL Server engine edition (0=Unknown, 5=Azure DB, 8=Azure MI)
 	// Extension-based cache for metric/log pipeline coordination (OTel-native approach)
-	cacheExtension *QueryCacheExtension // OTel Extension for sharing query performance data between pipelines
+	cacheExtension *querycache.Extension // OTel Extension for sharing query performance data between pipelines
 }
 
 // newSqlServerScraper creates a new SQL Server scraper with structured approach
@@ -65,7 +66,7 @@ func (s *sqlServerScraper) Start(ctx context.Context, host component.Host) error
 	// Look up query cache extension (REQUIRED for logs pipeline)
 	if extensions := host.GetExtensions(); extensions != nil {
 		for _, ext := range extensions {
-			if cacheExt, ok := ext.(*QueryCacheExtension); ok {
+			if cacheExt, ok := ext.(*querycache.Extension); ok {
 				s.cacheExtension = cacheExt
 				s.logger.Info("✅ Found query cache extension - metrics/logs pipeline coordination enabled")
 				break

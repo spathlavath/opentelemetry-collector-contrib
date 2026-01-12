@@ -16,6 +16,9 @@ dist:
 extensions:
   # Only keep health_check extension used in config
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/healthcheckextension v0.141.0
+  # Query cache extension for metrics/logs pipeline coordination
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/querycache v0.141.0
+    path: ./extension/querycache
   # All other extensions commented out
   # - gomod: go.opentelemetry.io/collector/extension/zpagesextension v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension v0.141.0
