@@ -43,9 +43,9 @@ const (
 
 	// Default attribute names for Oracle SQL identifiers
 	defaultSQLIdentifierAttr = "oracle.sql_identifier"
-	defaultSQLIDAttr         = "query_id"
-	defaultChildAddressAttr  = "child_address"
-	defaultChildNumberAttr   = "sql_child_number"
+	defaultSQLIDAttr         = "SQL_ID"
+	defaultChildAddressAttr  = "CHILD_ADDRESS"
+	defaultChildNumberAttr   = "SQL_CHILD_NUMBER"
 
 	// Log event names
 	sqlIdentifierEventName = "oracle.sql_identifier_extracted"
