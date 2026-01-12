@@ -15,6 +15,8 @@ type UserSessionDetail struct {
 	Username  sql.NullString
 	SID       sql.NullInt64
 	Serial    sql.NullInt64
+	Machine   sql.NullString
+	Program   sql.NullString
 	LogonTime sql.NullTime
 	Status    sql.NullString
 }

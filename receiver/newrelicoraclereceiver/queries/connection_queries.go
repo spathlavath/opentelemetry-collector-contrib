@@ -16,10 +16,13 @@ const (
 			USERNAME,
 			SID,
 			SERIAL#,
+			MACHINE,
+			PROGRAM,
 			LOGON_TIME,
 			STATUS
 		FROM V$SESSION
 		WHERE TYPE = 'USER'
+		  AND USERNAME IS NOT NULL
 		ORDER BY LOGON_TIME DESC`
 
 	// TotalSessionsSQL returns the total number of sessions

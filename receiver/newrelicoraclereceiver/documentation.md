@@ -4670,7 +4670,7 @@ Used percentage of tablespace
 
 ### newrelicoracledb.user_session.details
 
-Detailed information about Oracle user sessions including username, SID, serial number, logon time, and status
+Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, and status
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4683,6 +4683,8 @@ Detailed information about Oracle user sessions including username, SID, serial 
 | username | Oracle username who parsed the SQL | Any Str | false |
 | session_id | Oracle session ID (SID) | Any Str | false |
 | session_serial | Oracle session serial number | Any Int | false |
+| session_machine | Machine name where the session is running | Any Str | false |
+| session_program | Program name of the session | Any Str | false |
 | session_logon_time | Timestamp when the session was created | Any Str | false |
 | session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 

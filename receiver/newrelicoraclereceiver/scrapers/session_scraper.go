@@ -105,20 +105,30 @@ func (s *SessionScraper) ScrapeUserSessionDetails(ctx context.Context) []error {
 			username := detail.Username.String
 			sessionID := fmt.Sprintf("%d", detail.SID.Int64)
 			serialNum := detail.Serial.Int64
-			status := detail.Status.String
+			machine := ""
+			if detail.Machine.Valid {
+				machine = detail.Machine.String
+			}
+			program := ""
+			if detail.Program.Valid {
+				program = detail.Program.String
+			}
 			logonTime := ""
 			if detail.LogonTime.Valid {
 				logonTime = detail.LogonTime.Time.Format(time.RFC3339)
 			}
+			status := detail.Status.String
 
 			s.mb.RecordNewrelicoracledbUserSessionDetailsDataPoint(
 				now,
-				1, // Value of 1 to indicate session exists
-				username,
-				sessionID,
-				serialNum,
-				logonTime,
-				status,
+				1,         // Value of 1 to indicate session exists
+				username,  // username
+				sessionID, // session_id
+				serialNum, // session_serial
+				machine,   // session_machine
+				program,   // session_program
+				logonTime, // session_logon_time
+				status,    // session_status
 			)
 		}
 	}
