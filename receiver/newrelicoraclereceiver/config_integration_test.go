@@ -59,9 +59,9 @@ func TestConfigOracleCompatibility(t *testing.T) {
 				Username:           "user",
 				Password:           "password",
 				Service:            "XE",
-				MaxOpenConnections: 0, // Invalid
+				MaxOpenConnections: 0, // Will be auto-corrected by SetDefaults() to 5
 			},
-			valid: false,
+			valid: true, // SetDefaults() fixes this
 		},
 		{
 			name: "invalid - negative connections",
@@ -78,6 +78,7 @@ func TestConfigOracleCompatibility(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			tt.config.SetDefaults()
 			err := tt.config.Validate()
 			if tt.valid {
 				assert.NoError(t, err, "Expected configuration to be valid")
@@ -99,6 +100,7 @@ func TestConfigDataSourcePriority(t *testing.T) {
 		Service:  "ignored",
 	}
 
+	config.SetDefaults()
 	err := config.Validate()
 	assert.NoError(t, err, "DataSource configuration should be valid")
 }
@@ -161,6 +163,7 @@ func TestConfigEndpointValidation(t *testing.T) {
 				MaxOpenConnections: 5,
 			}
 
+			config.SetDefaults()
 			err := config.Validate()
 			if tt.valid {
 				assert.NoError(t, err, "Expected endpoint to be valid")
@@ -225,6 +228,7 @@ func TestConfigRequiredFields(t *testing.T) {
 			config := baseConfig // Copy
 			tt.modifier(&config)
 
+			config.SetDefaults()
 			err := config.Validate()
 			if tt.valid {
 				assert.NoError(t, err, "Expected configuration to be valid")
@@ -257,6 +261,7 @@ func TestConfigValidationErrors(t *testing.T) {
 		MaxOpenConnections: 0,
 	}
 
+	config.SetDefaults()
 	err := config.Validate()
 	require.Error(t, err, "Expected validation to fail")
 
@@ -265,7 +270,7 @@ func TestConfigValidationErrors(t *testing.T) {
 	assert.Contains(t, errorStr, "username must be set")
 	assert.Contains(t, errorStr, "password must be set")
 	assert.Contains(t, errorStr, "service must be specified")
-	assert.Contains(t, errorStr, "max_open_connections must be at least 1")
+	// Note: max_open_connections is set to default value by SetDefaults(), so it won't be in the error
 }
 
 func TestDataSourceValidation(t *testing.T) {
@@ -303,6 +308,7 @@ func TestDataSourceValidation(t *testing.T) {
 				MaxOpenConnections: 5,
 			}
 
+			config.SetDefaults()
 			err := config.Validate()
 			if tt.valid {
 				assert.NoError(t, err, "Expected data source to be valid")

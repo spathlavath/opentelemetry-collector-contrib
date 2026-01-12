@@ -23,7 +23,6 @@ type ContainerScraper struct {
 	client             client.OracleClient
 	mb                 *metadata.MetricsBuilder
 	logger             *zap.Logger
-	instanceName       string
 	config             metadata.MetricsBuilderConfig
 	isCDBCapable       *bool    // Cache for CDB capability check
 	isPDBCapable       *bool    // Cache for PDB capability check
@@ -40,7 +39,6 @@ func NewContainerScraper(
 	oracleClient client.OracleClient,
 	mb *metadata.MetricsBuilder,
 	logger *zap.Logger,
-	instanceName string,
 	config metadata.MetricsBuilderConfig,
 	includeTablespaces, excludeTablespaces []string,
 ) (*ContainerScraper, error) {
@@ -53,15 +51,11 @@ func NewContainerScraper(
 	if logger == nil {
 		return nil, fmt.Errorf("logger cannot be nil")
 	}
-	if instanceName == "" {
-		return nil, fmt.Errorf("instance name cannot be empty")
-	}
 
 	return &ContainerScraper{
 		client:             oracleClient,
 		mb:                 mb,
 		logger:             logger,
-		instanceName:       instanceName,
 		config:             config,
 		includeTablespaces: includeTablespaces,
 		excludeTablespaces: excludeTablespaces,
@@ -132,14 +126,35 @@ func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 }
 
 // scrapeContainerStatus scrapes container status from GV$CONTAINERS
-func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommon.Timestamp) []error {
-	var errs []error
+// hasAnyContainerStatusMetricEnabled checks if any container status metric is enabled
+func (s *ContainerScraper) hasAnyContainerStatusMetricEnabled() bool {
+	return s.config.Metrics.NewrelicoracledbContainerStatus.Enabled ||
+		s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled
+}
 
-	// Check if this metric is enabled in config
-	if !s.config.Metrics.NewrelicoracledbContainerStatus.Enabled &&
-		!s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled {
+// recordContainerStatusMetrics records container status and restricted metrics
+func (s *ContainerScraper) recordContainerStatusMetrics(now pcommon.Timestamp, conIDStr, containerNameStr, openModeStr, restrictedStr string) {
+	if s.config.Metrics.NewrelicoracledbContainerStatus.Enabled {
+		statusValue := int64(0)
+		if strings.ToUpper(openModeStr) == "READ WRITE" {
+			statusValue = 1
+		}
+		s.mb.RecordNewrelicoracledbContainerStatusDataPoint(now, statusValue, conIDStr, containerNameStr, openModeStr)
+	}
+
+	if s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled {
+		restrictedValue := int64(0)
+		if strings.ToUpper(restrictedStr) == "YES" {
+			restrictedValue = 1
+		}
+		s.mb.RecordNewrelicoracledbContainerRestrictedDataPoint(now, restrictedValue, conIDStr, containerNameStr, restrictedStr)
+	}
+}
+
+func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommon.Timestamp) []error {
+	if !s.hasAnyContainerStatusMetricEnabled() {
 		s.logger.Debug("Container status metrics disabled, skipping")
-		return errs
+		return nil
 	}
 
 	containers, err := s.client.QueryContainerStatus(ctx)
@@ -149,45 +164,27 @@ func (s *ContainerScraper) scrapeContainerStatus(ctx context.Context, now pcommo
 	}
 
 	for _, container := range containers {
-		// Validate required fields
 		if !container.ConID.Valid || !container.ContainerName.Valid {
 			continue
 		}
 
 		conIDStr := strconv.FormatInt(container.ConID.Int64, 10)
 		containerNameStr := container.ContainerName.String
-		openModeStr := ""
-		restrictedStr := ""
 
+		openModeStr := ""
 		if container.OpenMode.Valid {
 			openModeStr = container.OpenMode.String
 		}
+
+		restrictedStr := ""
 		if container.Restricted.Valid {
 			restrictedStr = container.Restricted.String
 		}
 
-		// Record metrics only if enabled
-		if s.config.Metrics.NewrelicoracledbContainerStatus.Enabled {
-			// Container status metric (1=READ WRITE, 0=other)
-			var statusValue int64 = 0
-			if strings.ToUpper(openModeStr) == "READ WRITE" {
-				statusValue = 1
-			}
-			s.mb.RecordNewrelicoracledbContainerStatusDataPoint(now, statusValue, s.instanceName, conIDStr, containerNameStr, openModeStr)
-		}
-
-		if s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled {
-			// Container restricted metric (1=YES, 0=NO)
-			var restrictedValue int64 = 0
-			if strings.ToUpper(restrictedStr) == "YES" {
-				restrictedValue = 1
-			}
-			s.mb.RecordNewrelicoracledbContainerRestrictedDataPoint(now, restrictedValue, s.instanceName, conIDStr, containerNameStr, restrictedStr)
-		}
-
+		s.recordContainerStatusMetrics(now, conIDStr, containerNameStr, openModeStr, restrictedStr)
 	}
 
-	return errs
+	return nil
 }
 
 // scrapePDBStatus scrapes PDB status from GV$PDBS
@@ -218,11 +215,11 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 		if strings.ToUpper(openModeStr) == "READ WRITE" {
 			openModeValue = 1
 		}
-		s.mb.RecordNewrelicoracledbPdbOpenModeDataPoint(now, openModeValue, s.instanceName, conIDStr, pdbNameStr, openModeStr)
+		s.mb.RecordNewrelicoracledbPdbOpenModeDataPoint(now, openModeValue, conIDStr, pdbNameStr, openModeStr)
 
 		// PDB total size metric
 		if pdb.TotalSize.Valid {
-			s.mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(now, pdb.TotalSize.Int64, s.instanceName, conIDStr, pdbNameStr)
+			s.mb.RecordNewrelicoracledbPdbTotalSizeBytesDataPoint(now, pdb.TotalSize.Int64, conIDStr, pdbNameStr)
 		} else {
 			s.logger.Warn("PDB total size is NULL, skipping metric")
 		}
@@ -249,15 +246,15 @@ func (s *ContainerScraper) scrapeCDBTablespaceUsage(ctx context.Context, now pco
 
 		// Record tablespace usage metrics with container tagging
 		if ts.UsedBytes.Valid {
-			s.mb.RecordNewrelicoracledbTablespaceUsedBytesDataPoint(now, ts.UsedBytes.Int64, s.instanceName, conIDStr, tablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceUsedBytesDataPoint(now, ts.UsedBytes.Int64, conIDStr, tablespaceName)
 		}
 
 		if ts.TotalBytes.Valid {
-			s.mb.RecordNewrelicoracledbTablespaceTotalBytesDataPoint(now, ts.TotalBytes.Int64, s.instanceName, conIDStr, tablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceTotalBytesDataPoint(now, ts.TotalBytes.Int64, conIDStr, tablespaceName)
 		}
 
 		if ts.UsedPercent.Valid {
-			s.mb.RecordNewrelicoracledbTablespaceUsedPercentDataPoint(now, ts.UsedPercent.Float64, s.instanceName, conIDStr, tablespaceName)
+			s.mb.RecordNewrelicoracledbTablespaceUsedPercentDataPoint(now, ts.UsedPercent.Float64, conIDStr, tablespaceName)
 		}
 
 		s.logger.Debug("Processed CDB tablespace usage",
@@ -294,12 +291,12 @@ func (s *ContainerScraper) scrapeCDBDataFiles(ctx context.Context, now pcommon.T
 
 		// Record data file size
 		if df.Bytes.Valid {
-			s.mb.RecordNewrelicoracledbDatafileSizeBytesDataPoint(now, df.Bytes.Int64, s.instanceName, conIDStr, tablespaceName, fileName)
+			s.mb.RecordNewrelicoracledbDatafileSizeBytesDataPoint(now, df.Bytes.Int64, conIDStr, tablespaceName, fileName)
 		}
 
 		// Record user bytes
 		if df.UserBytes.Valid {
-			s.mb.RecordNewrelicoracledbDatafileUsedBytesDataPoint(now, df.UserBytes.Int64, s.instanceName, conIDStr, tablespaceName, fileName)
+			s.mb.RecordNewrelicoracledbDatafileUsedBytesDataPoint(now, df.UserBytes.Int64, conIDStr, tablespaceName, fileName)
 		}
 
 		// Record autoextensible status (1=YES, 0=NO)
@@ -307,7 +304,7 @@ func (s *ContainerScraper) scrapeCDBDataFiles(ctx context.Context, now pcommon.T
 		if strings.ToUpper(autoextensibleStr) == "YES" {
 			autoextensibleValue = 1
 		}
-		s.mb.RecordNewrelicoracledbDatafileAutoextensibleDataPoint(now, autoextensibleValue, s.instanceName, conIDStr, tablespaceName, fileName, autoextensibleStr)
+		s.mb.RecordNewrelicoracledbDatafileAutoextensibleDataPoint(now, autoextensibleValue, conIDStr, tablespaceName, fileName, autoextensibleStr)
 
 		s.logger.Debug("Processed CDB data file",
 			zap.String("con_id", conIDStr),
@@ -335,7 +332,6 @@ func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Ti
 		}
 
 		conIDStr := strconv.FormatInt(svc.ConID.Int64, 10)
-		serviceName := svc.ServiceName.String
 
 		// Count services per container
 		serviceCount[conIDStr]++
@@ -345,14 +341,14 @@ func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Ti
 		if svc.Enabled.Valid && strings.ToUpper(svc.Enabled.String) == "YES" {
 			serviceStatus = 1
 		}
-		s.mb.RecordNewrelicoracledbServiceStatusDataPoint(now, serviceStatus, s.instanceName, conIDStr, serviceName)
+		s.mb.RecordNewrelicoracledbServiceStatusDataPoint(now, serviceStatus, conIDStr)
 
 		s.logger.Debug("Processed CDB service")
 	}
 
 	// Record service count per container
 	for conIDStr, count := range serviceCount {
-		s.mb.RecordNewrelicoracledbServiceCountDataPoint(now, count, s.instanceName, conIDStr)
+		s.mb.RecordNewrelicoracledbServiceCountDataPoint(now, count, conIDStr)
 	}
 
 	return nil

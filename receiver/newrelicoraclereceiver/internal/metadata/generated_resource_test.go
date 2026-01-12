@@ -13,17 +13,18 @@ func TestResourceBuilder(t *testing.T) {
 		t.Run(tt, func(t *testing.T) {
 			cfg := loadResourceAttributesConfig(t, tt)
 			rb := NewResourceBuilder(cfg)
-			rb.SetHostName("host.name-val")
-			rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
+			rb.SetHostAddress("host.address-val")
+			rb.SetHostPort(9)
+			rb.SetServiceName("service.name-val")
 
 			res := rb.Emit()
 			assert.Equal(t, 0, rb.Emit().Attributes().Len()) // Second call should return empty Resource
 
 			switch tt {
 			case "default":
-				assert.Equal(t, 2, res.Attributes().Len())
+				assert.Equal(t, 3, res.Attributes().Len())
 			case "all_set":
-				assert.Equal(t, 2, res.Attributes().Len())
+				assert.Equal(t, 3, res.Attributes().Len())
 			case "none_set":
 				assert.Equal(t, 0, res.Attributes().Len())
 				return
@@ -31,15 +32,20 @@ func TestResourceBuilder(t *testing.T) {
 				assert.Failf(t, "unexpected test case: %s", tt)
 			}
 
-			val, ok := res.Attributes().Get("host.name")
+			val, ok := res.Attributes().Get("host.address")
 			assert.True(t, ok)
 			if ok {
-				assert.Equal(t, "host.name-val", val.Str())
+				assert.Equal(t, "host.address-val", val.Str())
 			}
-			val, ok = res.Attributes().Get("newrelicoracledb.instance.name")
+			val, ok = res.Attributes().Get("host.port")
 			assert.True(t, ok)
 			if ok {
-				assert.Equal(t, "newrelicoracledb.instance.name-val", val.Str())
+				assert.EqualValues(t, 9, val.Int())
+			}
+			val, ok = res.Attributes().Get("service.name")
+			assert.True(t, ok)
+			if ok {
+				assert.Equal(t, "service.name-val", val.Str())
 			}
 		})
 	}

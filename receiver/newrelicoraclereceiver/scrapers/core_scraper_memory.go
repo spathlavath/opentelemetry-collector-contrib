@@ -31,16 +31,16 @@ func (s *CoreScraper) scrapePGAMetrics(ctx context.Context, now pcommon.Timestam
 	metricCount := 0
 	for instanceID, metricVals := range instanceMetrics {
 		if val, exists := metricVals["total PGA inuse"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(now, val, instanceID)
 		}
 		if val, exists := metricVals["total PGA allocated"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(now, val, instanceID)
 		}
 		if val, exists := metricVals["total freeable PGA memory"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(now, val, instanceID)
 		}
 		if val, exists := metricVals["global memory bound"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(now, val, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(now, val, instanceID)
 		}
 
 		metricCount++
@@ -61,7 +61,7 @@ func (s *CoreScraper) scrapeSGAUGATotalMemoryMetrics(ctx context.Context, now pc
 	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(now, metric.Sum, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbMemorySgaUgaTotalBytesDataPoint(now, metric.Sum, instanceID)
 		metricCount++
 	}
 
@@ -80,7 +80,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheMetrics(ctx context.Context
 	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(now, metric.Sum, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheSharableBytesDataPoint(now, metric.Sum, instanceID)
 		metricCount++
 	}
 
@@ -99,7 +99,7 @@ func (s *CoreScraper) scrapeSGASharedPoolLibraryCacheUserMetrics(ctx context.Con
 	metricCount := 0
 	for _, metric := range metrics {
 		instanceID := getInstanceIDString(metric.InstID)
-		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(now, metric.Sum, s.instanceName, instanceID)
+		s.mb.RecordNewrelicoracledbMemorySgaSharedPoolLibraryCacheUserBytesDataPoint(now, metric.Sum, instanceID)
 		metricCount++
 	}
 
@@ -126,9 +126,9 @@ func (s *CoreScraper) scrapeSGAMetrics(ctx context.Context, now pcommon.Timestam
 
 		switch metric.Name {
 		case "Fixed Size":
-			s.mb.RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaFixedSizeBytesDataPoint(now, valueInt, instanceID)
 		case "Redo Buffers":
-			s.mb.RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(now, valueInt, s.instanceName, instanceID)
+			s.mb.RecordNewrelicoracledbSgaRedoBuffersBytesDataPoint(now, valueInt, instanceID)
 		default:
 			s.logger.Debug("Unknown SGA metric", zap.String("name", metric.Name))
 		}

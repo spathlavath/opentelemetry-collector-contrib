@@ -41,6 +41,19 @@ func createDefaultConfig() component.Config {
 		ControllerConfig:      cfg,
 		MetricsBuilderConfig:  metadata.DefaultMetricsBuilderConfig(),
 		DisableConnectionPool: false,
+		// Query Performance Monitoring defaults
+		EnableQueryMonitoring:        defaultEnableQueryMonitoring,
+		EnableIntervalBasedAveraging: defaultEnableIntervalBasedAveraging,
+		// Set feature-level scraper flags to enabled by default
+		EnableSessionScraper:      defaultEnableSessionScraper,
+		EnableTablespaceScraper:   defaultEnableTablespaceScraper,
+		EnableCoreScraper:         defaultEnableCoreScraper,
+		EnablePdbScraper:          defaultEnablePdbScraper,
+		EnableSystemScraper:       defaultEnableSystemScraper,
+		EnableConnectionScraper:   defaultEnableConnectionScraper,
+		EnableContainerScraper:    defaultEnableContainerScraper,
+		EnableRacScraper:          defaultEnableRacScraper,
+		EnableDatabaseInfoScraper: defaultEnableDatabaseInfoScraper,
 	}
 
 	// Apply defaults
@@ -68,13 +81,13 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 
 		metricsBuilder := metadata.NewMetricsBuilder(sqlCfg.MetricsBuilderConfig, settings)
 
-		instanceName, err := getInstanceName(getDataSource(*sqlCfg))
+		hostAddress, hostPort, err := getHostAndPort(getDataSource(*sqlCfg))
 		if err != nil {
 			return nil, err
 		}
-		hostName, hostNameErr := getHostName(getDataSource(*sqlCfg))
-		if hostNameErr != nil {
-			return nil, hostNameErr
+		serviceName, serviceNameErr := getServiceName(getDataSource(*sqlCfg))
+		if serviceNameErr != nil {
+			return nil, serviceNameErr
 		}
 
 		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
@@ -100,7 +113,7 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			db.SetConnMaxIdleTime(30 * time.Second)
 
 			return db, nil
-		}, instanceName, hostName)
+		}, hostAddress, hostPort, serviceName)
 		if err != nil {
 			return nil, err
 		}
@@ -128,32 +141,51 @@ func getDataSource(cfg Config) string {
 	return fmt.Sprintf("%s/%s@%s:%d/%s", cfg.Username, cfg.Password, host, port, cfg.Service)
 }
 
-func getInstanceName(datasource string) (string, error) {
-	// For godror format: user/password@host:port/service_name
-	// Extract the part after @
-	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
-		return datasource[atIndex+1:], nil
-	}
-
-	// Fallback to URL parsing for oracle:// format
-	datasourceURL, err := url.Parse(datasource)
-	if err != nil {
-		return "", err
-	}
-
-	instanceName := datasourceURL.Host + datasourceURL.Path
-	return instanceName, nil
-}
-
-func getHostName(datasource string) (string, error) {
+func getHostAndPort(datasource string) (string, int64, error) {
 	// For godror format: user/password@host:port/service_name
 	// Extract the host:port part
 	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
 		hostPart := datasource[atIndex+1:]
 		if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
-			return hostPart[:slashIndex], nil
+			hostPart = hostPart[:slashIndex]
 		}
-		return hostPart, nil
+		// Split host:port
+		host, portStr, err := net.SplitHostPort(hostPart)
+		if err != nil {
+			return "", 0, fmt.Errorf("failed to parse host:port from datasource: %w", err)
+		}
+		port, err := strconv.ParseInt(portStr, 10, 64)
+		if err != nil {
+			return "", 0, fmt.Errorf("failed to parse port: %w", err)
+		}
+		return host, port, nil
+	}
+
+	// Fallback to URL parsing for oracle:// format
+	datasourceURL, err := url.Parse(datasource)
+	if err != nil {
+		return "", 0, err
+	}
+	host, portStr, err := net.SplitHostPort(datasourceURL.Host)
+	if err != nil {
+		return "", 0, fmt.Errorf("failed to parse host:port from URL: %w", err)
+	}
+	port, err := strconv.ParseInt(portStr, 10, 64)
+	if err != nil {
+		return "", 0, fmt.Errorf("failed to parse port from URL: %w", err)
+	}
+	return host, port, nil
+}
+
+func getServiceName(datasource string) (string, error) {
+	// For godror format: user/password@host:port/service_name
+	// Extract the service name part after /
+	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
+		hostPart := datasource[atIndex+1:]
+		if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
+			return hostPart[slashIndex+1:], nil
+		}
+		return "", nil
 	}
 
 	// Fallback to URL parsing for oracle:// format
@@ -161,5 +193,7 @@ func getHostName(datasource string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return datasourceURL.Host, nil
+	// Remove leading / from path
+	serviceName := strings.TrimPrefix(datasourceURL.Path, "/")
+	return serviceName, nil
 }

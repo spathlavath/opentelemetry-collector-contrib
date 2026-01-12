@@ -17,20 +17,18 @@ import (
 )
 
 type SessionScraper struct {
-	client       client.OracleClient
-	mb           *metadata.MetricsBuilder
-	logger       *zap.Logger
-	instanceName string
-	config       metadata.MetricsBuilderConfig
+	client client.OracleClient
+	mb     *metadata.MetricsBuilder
+	logger *zap.Logger
+	config metadata.MetricsBuilderConfig
 }
 
-func NewSessionScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, instanceName string, config metadata.MetricsBuilderConfig) *SessionScraper {
+func NewSessionScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, config metadata.MetricsBuilderConfig) *SessionScraper {
 	return &SessionScraper{
-		client:       c,
-		mb:           mb,
-		logger:       logger,
-		instanceName: instanceName,
-		config:       config,
+		client: c,
+		mb:     mb,
+		logger: logger,
+		config: config,
 	}
 }
 
@@ -54,7 +52,6 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 			"SessionCountSQL",
 			err,
 			map[string]interface{}{
-				"instance":  s.instanceName,
 				"retryable": errors.IsRetryableError(err),
 				"permanent": errors.IsPermanentError(err),
 			},
@@ -65,7 +62,7 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 	}
 
 	if count != nil {
-		s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, count.Count, s.instanceName)
+		s.mb.RecordNewrelicoracledbSessionsCountDataPoint(now, count.Count)
 
 		s.logger.Debug("Session count scrape completed")
 	}

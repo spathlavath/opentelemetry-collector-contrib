@@ -106,9 +106,9 @@ func TestConfig_Validate(t *testing.T) {
 				Username:           "user",
 				Password:           "password",
 				Service:            "XE",
-				MaxOpenConnections: 0,
+				MaxOpenConnections: 0, // Will be auto-corrected by SetDefaults() to 5
 			},
-			expectErr: true,
+			expectErr: false, // SetDefaults() fixes this
 		},
 		{
 			name: "invalid config - negative max_open_connections",
@@ -125,6 +125,7 @@ func TestConfig_Validate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			tt.config.SetDefaults()
 			err := tt.config.Validate()
 			if tt.expectErr {
 				require.Error(t, err)

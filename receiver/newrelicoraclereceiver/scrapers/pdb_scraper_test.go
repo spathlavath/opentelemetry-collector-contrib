@@ -20,16 +20,14 @@ func TestNewPdbScraper(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	instanceName := "test-instance"
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper := NewPdbScraper(mockClient, mb, logger, instanceName, config)
+	scraper := NewPdbScraper(mockClient, mb, logger, config)
 
 	assert.NotNil(t, scraper)
 	assert.Equal(t, mockClient, scraper.client)
 	assert.Equal(t, mb, scraper.mb)
 	assert.Equal(t, logger, scraper.logger)
-	assert.Equal(t, instanceName, scraper.instanceName)
 	assert.Equal(t, config, scraper.config)
 	assert.Nil(t, scraper.isCDBCapable)
 	assert.False(t, scraper.environmentChecked)
@@ -40,7 +38,7 @@ func TestIsCDBSupported_True(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	cdbCapable := true
 	scraper.isCDBCapable = &cdbCapable
@@ -53,7 +51,7 @@ func TestIsCDBSupported_False(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	cdbCapable := false
 	scraper.isCDBCapable = &cdbCapable
@@ -66,7 +64,7 @@ func TestIsCDBSupported_Nil(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	assert.False(t, scraper.isCDBSupported())
 }
@@ -100,7 +98,7 @@ func TestRecordMetric_SessionMetrics(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	testCases := []string{
 		"Active Parallel Sessions",
@@ -119,7 +117,7 @@ func TestRecordMetric_CPUMetrics(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	testCases := []string{
 		"Background CPU Usage Per Sec",
@@ -138,7 +136,7 @@ func TestRecordMetric_IOMetrics(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	testCases := []string{
 		"Physical Read Total Bytes Per Sec",
@@ -157,7 +155,7 @@ func TestRecordMetric_ParseMetrics(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	testCases := []string{
 		"Hard Parse Count Per Sec",
@@ -175,7 +173,7 @@ func TestRecordMetric_TransactionMetrics(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	testCases := []string{
 		"User Transaction Per Sec",
@@ -193,7 +191,7 @@ func TestRecordMetric_UnknownMetric(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	logger := zap.NewNop()
-	scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	scraper.recordMetric(0, "Unknown Metric Name", 100.0, "1", "TEST_PDB")
 }
@@ -205,20 +203,20 @@ func TestPdbScraper_CDBCapableStates(t *testing.T) {
 	logger := zap.NewNop()
 
 	t.Run("uninitialized", func(t *testing.T) {
-		scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+		scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 		assert.False(t, scraper.isCDBSupported())
 		assert.Nil(t, scraper.isCDBCapable)
 	})
 
 	t.Run("capable_true", func(t *testing.T) {
-		scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+		scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 		capable := true
 		scraper.isCDBCapable = &capable
 		assert.True(t, scraper.isCDBSupported())
 	})
 
 	t.Run("capable_false", func(t *testing.T) {
-		scraper := NewPdbScraper(mockClient, mb, logger, "test-instance", metadata.DefaultMetricsBuilderConfig())
+		scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 		capable := false
 		scraper.isCDBCapable = &capable
 		assert.False(t, scraper.isCDBSupported())

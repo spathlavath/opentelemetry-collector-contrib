@@ -20,8 +20,9 @@ func TestLogsBuilderAppendLogRecord(t *testing.T) {
 	lb := NewLogsBuilder(settings)
 
 	rb := lb.NewResourceBuilder()
-	rb.SetHostName("host.name-val")
-	rb.SetNewrelicoracledbInstanceName("newrelicoracledb.instance.name-val")
+	rb.SetHostAddress("host.address-val")
+	rb.SetHostPort(9)
+	rb.SetServiceName("service.name-val")
 	res := rb.Emit()
 
 	// append the first log record
