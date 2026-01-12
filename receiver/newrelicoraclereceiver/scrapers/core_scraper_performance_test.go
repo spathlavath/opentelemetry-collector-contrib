@@ -37,10 +37,10 @@ func TestScrapeSysstatMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	ctx := context.Background()
@@ -53,10 +53,10 @@ func TestScrapeSysstatMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	ctx := context.Background()
@@ -72,10 +72,10 @@ func TestScrapeSysstatMetrics_NullValues(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	ctx := context.Background()
@@ -98,10 +98,10 @@ func TestScrapeRollbackSegmentsMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	ctx := context.Background()
@@ -114,10 +114,10 @@ func TestScrapeRollbackSegmentsMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	ctx := context.Background()
@@ -136,10 +136,10 @@ func TestScrapeRedoLogWaitsMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	ctx := context.Background()
@@ -152,10 +152,10 @@ func TestScrapeRedoLogWaitsMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	ctx := context.Background()

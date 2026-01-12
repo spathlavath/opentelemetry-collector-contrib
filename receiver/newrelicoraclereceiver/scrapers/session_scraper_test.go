@@ -95,7 +95,8 @@ func TestSessionScraper_MultipleInstances(t *testing.T) {
 	scraper1 := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 	scraper2 := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	assert.NotEqual(t, scraper1, scraper2)
+	// Verify that two separate instances are created (different memory addresses)
+	assert.NotSame(t, scraper1, scraper2)
 }
 
 func TestSessionScraper_MetricEnabled(t *testing.T) {

@@ -35,10 +35,10 @@ func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_Success(t *testing.T)
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(context.Background(), testSGATimestamp())
@@ -50,10 +50,10 @@ func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_QueryError(t *testing
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(context.Background(), testSGATimestamp())
@@ -71,10 +71,10 @@ func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(context.Background(), testSGATimestamp())
@@ -86,10 +86,10 @@ func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_QueryError(t *testing.T)
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(context.Background(), testSGATimestamp())
@@ -107,10 +107,10 @@ func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(context.Background(), testSGATimestamp())
@@ -122,10 +122,10 @@ func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(context.Background(), testSGATimestamp())
@@ -143,10 +143,10 @@ func TestScrapeSGALogBufferSpaceWaitsMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(context.Background(), testSGATimestamp())
@@ -158,10 +158,10 @@ func TestScrapeSGALogBufferSpaceWaitsMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(context.Background(), testSGATimestamp())
@@ -179,10 +179,10 @@ func TestScrapeSGALogAllocRetriesMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
@@ -197,10 +197,10 @@ func TestScrapeSGALogAllocRetriesMetrics_NullRatio(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
@@ -212,10 +212,10 @@ func TestScrapeSGALogAllocRetriesMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
@@ -233,10 +233,10 @@ func TestScrapeSGAHitRatioMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
@@ -251,10 +251,10 @@ func TestScrapeSGAHitRatioMetrics_NullRatio(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
@@ -266,10 +266,10 @@ func TestScrapeSGAHitRatioMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		instanceName: "test-db",
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
 	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
