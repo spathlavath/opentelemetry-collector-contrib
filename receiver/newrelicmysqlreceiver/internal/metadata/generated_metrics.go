@@ -3,6 +3,8 @@
 package metadata
 
 import (
+	"fmt"
+	"strconv"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -12,62 +14,273 @@ import (
 	"go.opentelemetry.io/collector/receiver"
 )
 
+// AttributeCommand specifies the value command attribute.
+type AttributeCommand int
+
+const (
+	_ AttributeCommand = iota
+	AttributeCommandDelete
+	AttributeCommandDeleteMulti
+	AttributeCommandInsert
+	AttributeCommandSelect
+	AttributeCommandUpdate
+	AttributeCommandUpdateMulti
+)
+
+// String returns the string representation of the AttributeCommand.
+func (av AttributeCommand) String() string {
+	switch av {
+	case AttributeCommandDelete:
+		return "delete"
+	case AttributeCommandDeleteMulti:
+		return "delete_multi"
+	case AttributeCommandInsert:
+		return "insert"
+	case AttributeCommandSelect:
+		return "select"
+	case AttributeCommandUpdate:
+		return "update"
+	case AttributeCommandUpdateMulti:
+		return "update_multi"
+	}
+	return ""
+}
+
+// MapAttributeCommand is a helper map of string to AttributeCommand attribute value.
+var MapAttributeCommand = map[string]AttributeCommand{
+	"delete":       AttributeCommandDelete,
+	"delete_multi": AttributeCommandDeleteMulti,
+	"insert":       AttributeCommandInsert,
+	"select":       AttributeCommandSelect,
+	"update":       AttributeCommandUpdate,
+	"update_multi": AttributeCommandUpdateMulti,
+}
+
 var MetricsInfo = metricsInfo{
-	NewrelicmysqlPlaceholder: metricInfo{
-		Name: "newrelicmysql.placeholder",
+	NewrelicmysqlCommands: metricInfo{
+		Name: "newrelicmysql.commands",
+	},
+	NewrelicmysqlConnectionCount: metricInfo{
+		Name: "newrelicmysql.connection.count",
+	},
+	NewrelicmysqlQueryCount: metricInfo{
+		Name: "newrelicmysql.query.count",
+	},
+	NewrelicmysqlUptime: metricInfo{
+		Name: "newrelicmysql.uptime",
 	},
 }
 
 type metricsInfo struct {
-	NewrelicmysqlPlaceholder metricInfo
+	NewrelicmysqlCommands        metricInfo
+	NewrelicmysqlConnectionCount metricInfo
+	NewrelicmysqlQueryCount      metricInfo
+	NewrelicmysqlUptime          metricInfo
 }
 
 type metricInfo struct {
 	Name string
 }
 
-type metricNewrelicmysqlPlaceholder struct {
+type metricNewrelicmysqlCommands struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
 	capacity int            // max observed number of data points added to the metric.
 }
 
-// init fills newrelicmysql.placeholder metric with initial data.
-func (m *metricNewrelicmysqlPlaceholder) init() {
-	m.data.SetName("newrelicmysql.placeholder")
-	m.data.SetDescription("Placeholder metric for receiver skeleton")
+// init fills newrelicmysql.commands metric with initial data.
+func (m *metricNewrelicmysqlCommands) init() {
+	m.data.SetName("newrelicmysql.commands")
+	m.data.SetDescription("The number of times each type of command has been executed.")
 	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicmysqlPlaceholder) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+func (m *metricNewrelicmysqlCommands) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, commandAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp := m.data.Sum().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
+	dp.Attributes().PutStr("command", commandAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicmysqlPlaceholder) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
+func (m *metricNewrelicmysqlCommands) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicmysqlPlaceholder) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+func (m *metricNewrelicmysqlCommands) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
 		m.init()
 	}
 }
 
-func newMetricNewrelicmysqlPlaceholder(cfg MetricConfig) metricNewrelicmysqlPlaceholder {
-	m := metricNewrelicmysqlPlaceholder{config: cfg}
+func newMetricNewrelicmysqlCommands(cfg MetricConfig) metricNewrelicmysqlCommands {
+	m := metricNewrelicmysqlCommands{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlConnectionCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.connection.count metric with initial data.
+func (m *metricNewrelicmysqlConnectionCount) init() {
+	m.data.SetName("newrelicmysql.connection.count")
+	m.data.SetDescription("The number of connection attempts (successful or not) to the MySQL server.")
+	m.data.SetUnit("1")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlConnectionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlConnectionCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlConnectionCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlConnectionCount(cfg MetricConfig) metricNewrelicmysqlConnectionCount {
+	m := metricNewrelicmysqlConnectionCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlQueryCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.query.count metric with initial data.
+func (m *metricNewrelicmysqlQueryCount) init() {
+	m.data.SetName("newrelicmysql.query.count")
+	m.data.SetDescription("The number of statements executed by the server.")
+	m.data.SetUnit("1")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlQueryCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlQueryCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlQueryCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlQueryCount(cfg MetricConfig) metricNewrelicmysqlQueryCount {
+	m := metricNewrelicmysqlQueryCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlUptime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.uptime metric with initial data.
+func (m *metricNewrelicmysqlUptime) init() {
+	m.data.SetName("newrelicmysql.uptime")
+	m.data.SetDescription("The number of seconds that the server has been up.")
+	m.data.SetUnit("s")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlUptime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlUptime) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlUptime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlUptime(cfg MetricConfig) metricNewrelicmysqlUptime {
+	m := metricNewrelicmysqlUptime{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -78,14 +291,17 @@ func newMetricNewrelicmysqlPlaceholder(cfg MetricConfig) metricNewrelicmysqlPlac
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                         MetricsBuilderConfig // config of the metrics builder.
-	startTime                      pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                int                  // maximum observed number of metrics per resource.
-	metricsBuffer                  pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                      component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter map[string]filter.Filter
-	resourceAttributeExcludeFilter map[string]filter.Filter
-	metricNewrelicmysqlPlaceholder metricNewrelicmysqlPlaceholder
+	config                             MetricsBuilderConfig // config of the metrics builder.
+	startTime                          pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                    int                  // maximum observed number of metrics per resource.
+	metricsBuffer                      pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                          component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter     map[string]filter.Filter
+	resourceAttributeExcludeFilter     map[string]filter.Filter
+	metricNewrelicmysqlCommands        metricNewrelicmysqlCommands
+	metricNewrelicmysqlConnectionCount metricNewrelicmysqlConnectionCount
+	metricNewrelicmysqlQueryCount      metricNewrelicmysqlQueryCount
+	metricNewrelicmysqlUptime          metricNewrelicmysqlUptime
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -107,13 +323,16 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                         mbc,
-		startTime:                      pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                  pmetric.NewMetrics(),
-		buildInfo:                      settings.BuildInfo,
-		metricNewrelicmysqlPlaceholder: newMetricNewrelicmysqlPlaceholder(mbc.Metrics.NewrelicmysqlPlaceholder),
-		resourceAttributeIncludeFilter: make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter: make(map[string]filter.Filter),
+		config:                             mbc,
+		startTime:                          pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                      pmetric.NewMetrics(),
+		buildInfo:                          settings.BuildInfo,
+		metricNewrelicmysqlCommands:        newMetricNewrelicmysqlCommands(mbc.Metrics.NewrelicmysqlCommands),
+		metricNewrelicmysqlConnectionCount: newMetricNewrelicmysqlConnectionCount(mbc.Metrics.NewrelicmysqlConnectionCount),
+		metricNewrelicmysqlQueryCount:      newMetricNewrelicmysqlQueryCount(mbc.Metrics.NewrelicmysqlQueryCount),
+		metricNewrelicmysqlUptime:          newMetricNewrelicmysqlUptime(mbc.Metrics.NewrelicmysqlUptime),
+		resourceAttributeIncludeFilter:     make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:     make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.MysqlInstanceEndpoint.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["mysql.instance.endpoint"] = filter.CreateFilter(mbc.ResourceAttributes.MysqlInstanceEndpoint.MetricsInclude)
@@ -190,7 +409,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
-	mb.metricNewrelicmysqlPlaceholder.emit(ils.Metrics())
+	mb.metricNewrelicmysqlCommands.emit(ils.Metrics())
+	mb.metricNewrelicmysqlConnectionCount.emit(ils.Metrics())
+	mb.metricNewrelicmysqlQueryCount.emit(ils.Metrics())
+	mb.metricNewrelicmysqlUptime.emit(ils.Metrics())
 
 	for _, op := range options {
 		op.apply(rm)
@@ -222,9 +444,44 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	return metrics
 }
 
-// RecordNewrelicmysqlPlaceholderDataPoint adds a data point to newrelicmysql.placeholder metric.
-func (mb *MetricsBuilder) RecordNewrelicmysqlPlaceholderDataPoint(ts pcommon.Timestamp, val int64) {
-	mb.metricNewrelicmysqlPlaceholder.recordDataPoint(mb.startTime, ts, val)
+// RecordNewrelicmysqlCommandsDataPoint adds a data point to newrelicmysql.commands metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlCommandsDataPoint(ts pcommon.Timestamp, inputVal string, commandAttributeValue AttributeCommand) error {
+	val, err := strconv.ParseInt(inputVal, 10, 64)
+	if err != nil {
+		return fmt.Errorf("failed to parse int64 for NewrelicmysqlCommands, value was %s: %w", inputVal, err)
+	}
+	mb.metricNewrelicmysqlCommands.recordDataPoint(mb.startTime, ts, val, commandAttributeValue.String())
+	return nil
+}
+
+// RecordNewrelicmysqlConnectionCountDataPoint adds a data point to newrelicmysql.connection.count metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlConnectionCountDataPoint(ts pcommon.Timestamp, inputVal string) error {
+	val, err := strconv.ParseInt(inputVal, 10, 64)
+	if err != nil {
+		return fmt.Errorf("failed to parse int64 for NewrelicmysqlConnectionCount, value was %s: %w", inputVal, err)
+	}
+	mb.metricNewrelicmysqlConnectionCount.recordDataPoint(mb.startTime, ts, val)
+	return nil
+}
+
+// RecordNewrelicmysqlQueryCountDataPoint adds a data point to newrelicmysql.query.count metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlQueryCountDataPoint(ts pcommon.Timestamp, inputVal string) error {
+	val, err := strconv.ParseInt(inputVal, 10, 64)
+	if err != nil {
+		return fmt.Errorf("failed to parse int64 for NewrelicmysqlQueryCount, value was %s: %w", inputVal, err)
+	}
+	mb.metricNewrelicmysqlQueryCount.recordDataPoint(mb.startTime, ts, val)
+	return nil
+}
+
+// RecordNewrelicmysqlUptimeDataPoint adds a data point to newrelicmysql.uptime metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlUptimeDataPoint(ts pcommon.Timestamp, inputVal string) error {
+	val, err := strconv.ParseInt(inputVal, 10, 64)
+	if err != nil {
+		return fmt.Errorf("failed to parse int64 for NewrelicmysqlUptime, value was %s: %w", inputVal, err)
+	}
+	mb.metricNewrelicmysqlUptime.recordDataPoint(mb.startTime, ts, val)
+	return nil
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,
