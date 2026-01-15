@@ -12,11 +12,12 @@ type SessionCount struct {
 
 // UserSessionDetail represents detailed information about user sessions
 type UserSessionDetail struct {
-	Username  sql.NullString
-	SID       sql.NullInt64
-	Serial    sql.NullInt64
-	Machine   sql.NullString
-	Program   sql.NullString
-	LogonTime sql.NullTime
-	Status    sql.NullString
+	Username        sql.NullString
+	SID             sql.NullInt64
+	Serial          sql.NullInt64
+	Machine         sql.NullString
+	Program         sql.NullString
+	LogonTime       sql.NullTime
+	Status          sql.NullString
+	TotalExecutions sql.NullInt64
 }

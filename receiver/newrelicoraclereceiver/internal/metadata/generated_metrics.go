@@ -18055,13 +18055,13 @@ type metricNewrelicoracledbUserSessionDetails struct {
 // init fills newrelicoracledb.user_session.details metric with initial data.
 func (m *metricNewrelicoracledbUserSessionDetails) init() {
 	m.data.SetName("newrelicoracledb.user_session.details")
-	m.data.SetDescription("Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, and status")
+	m.data.SetDescription("Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, and total executions")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbUserSessionDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string) {
+func (m *metricNewrelicoracledbUserSessionDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string, sessionTotalExecutionsAttributeValue int64) {
 	if !m.config.Enabled {
 		return
 	}
@@ -18076,6 +18076,7 @@ func (m *metricNewrelicoracledbUserSessionDetails) recordDataPoint(start pcommon
 	dp.Attributes().PutStr("session_program", sessionProgramAttributeValue)
 	dp.Attributes().PutStr("session_logon_time", sessionLogonTimeAttributeValue)
 	dp.Attributes().PutStr("session_status", sessionStatusAttributeValue)
+	dp.Attributes().PutInt("session_total_executions", sessionTotalExecutionsAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -20929,8 +20930,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceUsedPercentDataPoint(t
 }
 
 // RecordNewrelicoracledbUserSessionDetailsDataPoint adds a data point to newrelicoracledb.user_session.details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbUserSessionDetailsDataPoint(ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string) {
-	mb.metricNewrelicoracledbUserSessionDetails.recordDataPoint(mb.startTime, ts, val, usernameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionMachineAttributeValue, sessionProgramAttributeValue, sessionLogonTimeAttributeValue, sessionStatusAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbUserSessionDetailsDataPoint(ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string, sessionTotalExecutionsAttributeValue int64) {
+	mb.metricNewrelicoracledbUserSessionDetails.recordDataPoint(mb.startTime, ts, val, usernameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionMachineAttributeValue, sessionProgramAttributeValue, sessionLogonTimeAttributeValue, sessionStatusAttributeValue, sessionTotalExecutionsAttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint adds a data point to newrelicoracledb.wait_events.current_wait_time_ms metric.

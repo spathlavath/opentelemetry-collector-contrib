@@ -174,6 +174,9 @@ attributes:
   session_logon_time:
     description: Timestamp when the session was created
     type: string
+  session_total_executions:
+    description: Total number of SQL executions for the session (execute count)
+    type: int
   sql_child_number:
     description: SQL child cursor number
     type: int
@@ -392,7 +395,7 @@ metrics:
     attributes:
 
   newrelicoracledb.user_session.details:
-    description: Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, and status
+    description: Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, and total executions
     enabled: true
     gauge:
       value_type: int
@@ -405,6 +408,7 @@ metrics:
       - session_program
       - session_logon_time
       - session_status
+      - session_total_executions
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace

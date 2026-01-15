@@ -13,17 +13,23 @@ const (
 	// UserSessionDetailsSQL returns detailed information about user sessions
 	UserSessionDetailsSQL = `
 		SELECT
-			USERNAME,
-			SID,
-			SERIAL#,
-			MACHINE,
-			PROGRAM,
-			LOGON_TIME,
-			STATUS
-		FROM V$SESSION
-		WHERE TYPE = 'USER'
-		  AND USERNAME IS NOT NULL
-		ORDER BY LOGON_TIME DESC`
+			s.USERNAME,
+			s.SID,
+			s.SERIAL#,
+			s.MACHINE,
+			s.PROGRAM,
+			s.LOGON_TIME,
+			s.STATUS,
+			NVL(st.VALUE, 0) AS TOTAL_EXECUTIONS
+		FROM V$SESSION s
+		LEFT JOIN V$SESSTAT st
+			ON s.SID = st.SID
+		LEFT JOIN V$STATNAME sn
+			ON st.STATISTIC# = sn.STATISTIC#
+			AND sn.NAME = 'execute count'
+		WHERE s.TYPE = 'USER'
+		  AND s.USERNAME IS NOT NULL
+		ORDER BY s.LOGON_TIME DESC`
 
 	// TotalSessionsSQL returns the total number of sessions
 	TotalSessionsSQL = "SELECT COUNT(*) as TOTAL_SESSIONS FROM V$SESSION"
