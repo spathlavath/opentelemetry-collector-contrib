@@ -466,22 +466,26 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	}
 
 	// Scrape database-level buffer pool metrics (bufferpool.sizePerDatabaseInBytes)
-	scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
+	if s.config.EnableDatabaseBufferMetrics {
+		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
+		defer cancel()
 
-	if err := s.databaseScraper.ScrapeDatabaseBufferMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape database buffer metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
+		if err := s.databaseScraper.ScrapeDatabaseBufferMetrics(scrapeCtx); err != nil {
+			s.logger.Error("Failed to scrape database buffer metrics",
+				zap.Error(err),
+				zap.Duration("timeout", s.config.Timeout))
+			scrapeErrors = append(scrapeErrors, err)
+			// Don't return here - continue with other metrics
+		} else {
+			s.logger.Debug("Successfully scraped database buffer metrics")
+		}
 	} else {
-		s.logger.Debug("Successfully scraped database buffer metrics")
+		s.logger.Debug("Database buffer metrics scraping SKIPPED - EnableDatabaseBufferMetrics is false")
 	}
 
 	// Scrape database-level IO metrics (io.stallInMilliseconds)
 	s.logger.Debug("Starting database IO metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
+	scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 	defer cancel()
 
 	if err := s.databaseScraper.ScrapeDatabaseIOMetrics(scrapeCtx); err != nil {

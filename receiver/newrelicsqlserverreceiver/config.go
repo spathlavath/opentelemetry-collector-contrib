@@ -77,6 +77,9 @@ type Config struct {
 	// KEY lock cross-database resolution configuration
 	// Specify which databases to resolve KEY lock index names from
 	MonitoredDatabases []string `mapstructure:"monitored_databases"` // List of database names for KEY lock resolution (empty = all databases)
+
+	// Database buffer metrics configuration
+	EnableDatabaseBufferMetrics bool `mapstructure:"enable_database_buffer_metrics"` // Enable/disable database buffer pool metrics collection
 }
 
 // DefaultConfig returns a Config struct with default values
@@ -120,6 +123,9 @@ func DefaultConfig() component.Config {
 		// Default wait resource enrichment settings
 		EnableWaitResourceEnrichment:       true, // Enabled by default for human-readable wait_resource
 		WaitResourceMetadataRefreshMinutes: 5,    // Refresh metadata cache every 5 minutes
+
+		// Default database buffer metrics settings
+		EnableDatabaseBufferMetrics: true, // Enabled by default
 	}
 
 	// Set default collection interval to 15 seconds
