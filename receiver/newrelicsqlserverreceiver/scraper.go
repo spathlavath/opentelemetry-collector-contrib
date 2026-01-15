@@ -1294,11 +1294,11 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	return metrics, nil
 }
 
-// buildMetrics constructs the final metrics output with resource attributes (Oracle pattern)
+// buildMetrics constructs the final metrics output with resource attributes
 func (s *sqlServerScraper) buildMetrics(ctx context.Context) pmetric.Metrics {
-	// Emit metrics with default resource
-	// Resource attributes will be added by the collector pipeline
-	return s.mb.Emit()
+	rb := s.mb.NewResourceBuilder()
+	rb.SetServerAddress(fmt.Sprintf("%s:%s", s.config.Hostname, s.config.Port))
+	return s.mb.Emit(metadata.WithResource(rb.Emit()))
 }
 
 // addSystemInformationAsResourceAttributes collects system/host information and adds it as resource attributes
