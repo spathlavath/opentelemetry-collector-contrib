@@ -18055,13 +18055,13 @@ type metricNewrelicoracledbUserSessionDetails struct {
 // init fills newrelicoracledb.user_session.details metric with initial data.
 func (m *metricNewrelicoracledbUserSessionDetails) init() {
 	m.data.SetName("newrelicoracledb.user_session.details")
-	m.data.SetDescription("Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, and total executions")
+	m.data.SetDescription("Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, total executions, and active lock count")
 	m.data.SetUnit("{sessions}")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbUserSessionDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string, sessionTotalExecutionsAttributeValue int64) {
+func (m *metricNewrelicoracledbUserSessionDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string, sessionTotalExecutionsAttributeValue int64, sessionActiveLockCountAttributeValue int64) {
 	if !m.config.Enabled {
 		return
 	}
@@ -18077,6 +18077,7 @@ func (m *metricNewrelicoracledbUserSessionDetails) recordDataPoint(start pcommon
 	dp.Attributes().PutStr("session_logon_time", sessionLogonTimeAttributeValue)
 	dp.Attributes().PutStr("session_status", sessionStatusAttributeValue)
 	dp.Attributes().PutInt("session_total_executions", sessionTotalExecutionsAttributeValue)
+	dp.Attributes().PutInt("session_active_lock_count", sessionActiveLockCountAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -20930,8 +20931,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceUsedPercentDataPoint(t
 }
 
 // RecordNewrelicoracledbUserSessionDetailsDataPoint adds a data point to newrelicoracledb.user_session.details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbUserSessionDetailsDataPoint(ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string, sessionTotalExecutionsAttributeValue int64) {
-	mb.metricNewrelicoracledbUserSessionDetails.recordDataPoint(mb.startTime, ts, val, usernameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionMachineAttributeValue, sessionProgramAttributeValue, sessionLogonTimeAttributeValue, sessionStatusAttributeValue, sessionTotalExecutionsAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbUserSessionDetailsDataPoint(ts pcommon.Timestamp, val int64, usernameAttributeValue string, sessionIDAttributeValue string, sessionSerialAttributeValue int64, sessionMachineAttributeValue string, sessionProgramAttributeValue string, sessionLogonTimeAttributeValue string, sessionStatusAttributeValue string, sessionTotalExecutionsAttributeValue int64, sessionActiveLockCountAttributeValue int64) {
+	mb.metricNewrelicoracledbUserSessionDetails.recordDataPoint(mb.startTime, ts, val, usernameAttributeValue, sessionIDAttributeValue, sessionSerialAttributeValue, sessionMachineAttributeValue, sessionProgramAttributeValue, sessionLogonTimeAttributeValue, sessionStatusAttributeValue, sessionTotalExecutionsAttributeValue, sessionActiveLockCountAttributeValue)
 }
 
 // RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint adds a data point to newrelicoracledb.wait_events.current_wait_time_ms metric.

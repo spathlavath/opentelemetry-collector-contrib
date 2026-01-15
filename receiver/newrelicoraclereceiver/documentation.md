@@ -4670,7 +4670,7 @@ Used percentage of tablespace
 
 ### newrelicoracledb.user_session.details
 
-Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, and total executions
+Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, total executions, and active lock count
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4688,6 +4688,7 @@ Detailed information about Oracle user sessions including username, SID, serial 
 | session_logon_time | Timestamp when the session was created | Any Str | false |
 | session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
 | session_total_executions | Total number of SQL executions for the session (execute count) | Any Int | false |
+| session_active_lock_count | Number of active TX/TM locks held by the session | Any Int | false |
 
 ### newrelicoracledb.wait_events.current_wait_time_ms
 

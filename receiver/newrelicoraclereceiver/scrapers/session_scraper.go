@@ -101,7 +101,7 @@ func (s *SessionScraper) ScrapeUserSessionDetails(ctx context.Context) []error {
 	}
 
 	for _, detail := range details {
-		if detail.Username.Valid && detail.SID.Valid && detail.Serial.Valid && detail.Status.Valid && detail.TotalExecutions.Valid {
+		if detail.Username.Valid && detail.SID.Valid && detail.Serial.Valid && detail.Status.Valid && detail.TotalExecutions.Valid && detail.ActiveLockCount.Valid {
 			username := detail.Username.String
 			sessionID := fmt.Sprintf("%d", detail.SID.Int64)
 			serialNum := detail.Serial.Int64
@@ -119,6 +119,7 @@ func (s *SessionScraper) ScrapeUserSessionDetails(ctx context.Context) []error {
 			}
 			status := detail.Status.String
 			totalExecutions := detail.TotalExecutions.Int64
+			activeLockCount := detail.ActiveLockCount.Int64
 
 			s.mb.RecordNewrelicoracledbUserSessionDetailsDataPoint(
 				now,
@@ -131,6 +132,7 @@ func (s *SessionScraper) ScrapeUserSessionDetails(ctx context.Context) []error {
 				logonTime,        // session_logon_time
 				status,           // session_status
 				totalExecutions,  // session_total_executions
+				activeLockCount,  // session_active_lock_count
 			)
 		}
 	}

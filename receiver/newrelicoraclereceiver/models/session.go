@@ -20,4 +20,5 @@ type UserSessionDetail struct {
 	LogonTime       sql.NullTime
 	Status          sql.NullString
 	TotalExecutions sql.NullInt64
+	ActiveLockCount sql.NullInt64
 }

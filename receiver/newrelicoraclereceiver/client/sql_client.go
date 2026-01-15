@@ -1414,7 +1414,7 @@ func (c *SQLClient) QueryUserSessionDetails(ctx context.Context) ([]models.UserS
 	var results []models.UserSessionDetail
 	for rows.Next() {
 		var detail models.UserSessionDetail
-		err := rows.Scan(&detail.Username, &detail.SID, &detail.Serial, &detail.Machine, &detail.Program, &detail.LogonTime, &detail.Status, &detail.TotalExecutions)
+		err := rows.Scan(&detail.Username, &detail.SID, &detail.Serial, &detail.Machine, &detail.Program, &detail.LogonTime, &detail.Status, &detail.TotalExecutions, &detail.ActiveLockCount)
 		if err != nil {
 			return nil, err
 		}

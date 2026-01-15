@@ -23,7 +23,12 @@ const (
 			NVL((SELECT st.VALUE
 				FROM V$SESSTAT st
 				JOIN V$STATNAME sn ON st.STATISTIC# = sn.STATISTIC#
-				WHERE st.SID = s.SID AND sn.NAME = 'execute count'), 0) AS TOTAL_EXECUTIONS
+				WHERE st.SID = s.SID AND sn.NAME = 'execute count'), 0) AS TOTAL_EXECUTIONS,
+			NVL((SELECT COUNT(*)
+				FROM V$LOCK l
+				WHERE l.SID = s.SID
+				  AND l.TYPE IN ('TX', 'TM')
+				  AND l.LMODE > 0), 0) AS ACTIVE_LOCK_COUNT
 		FROM V$SESSION s
 		WHERE s.TYPE = 'USER'
 		  AND s.USERNAME IS NOT NULL
