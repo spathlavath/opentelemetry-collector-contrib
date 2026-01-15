@@ -52,9 +52,9 @@ receivers:
   newrelicsqlserver:
     # SQL Server connection configuration
     # ⚠️  REPLACE THESE WITH YOUR ACTUAL VALUES ⚠️
-    hostname: "74.225.3.34"                    # e.g., "your-sql-server.com" or "192.168.1.100"
-    port: "1433"                # Default SQL Server port
-    username: "sa"              # e.g., "monitoring_user"
+    hostname: ""                    # e.g., "your-sql-server.com" or "192.168.1.100"
+    port: ""                # Default SQL Server port
+    username: ""              # e.g., "monitoring_user"
     password: ""              # Your SQL Server password
     monitored_databases: []
 
