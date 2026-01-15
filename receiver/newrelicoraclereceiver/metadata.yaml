@@ -171,6 +171,15 @@ attributes:
   session_serial:
     description: Oracle session serial number
     type: int
+  session_logon_time:
+    description: Timestamp when the session was created
+    type: string
+  session_total_executions:
+    description: Total number of SQL executions for the session (execute count)
+    type: int
+  session_active_lock_count:
+    description: Number of active TX/TM locks held by the session
+    type: int
   sql_child_number:
     description: SQL child cursor number
     type: int
@@ -387,6 +396,23 @@ metrics:
       value_type: int
     unit: "{sessions}"
     attributes:
+
+  newrelicoracledb.user_session.details:
+    description: Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, total executions, and active lock count
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{sessions}"
+    attributes:
+      - username
+      - session_id
+      - session_serial
+      - session_machine
+      - session_program
+      - session_logon_time
+      - session_status
+      - session_total_executions
+      - session_active_lock_count
 
   newrelicoracledb.tablespace.space_consumed_bytes:
     description: Total bytes consumed by the tablespace

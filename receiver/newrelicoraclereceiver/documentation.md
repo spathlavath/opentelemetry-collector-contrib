@@ -4668,6 +4668,28 @@ Used percentage of tablespace
 | con.id | Oracle container ID (CDB/PDB) | Any Str | false |
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 
+### newrelicoracledb.user_session.details
+
+Detailed information about Oracle user sessions including username, SID, serial number, machine, program, logon time, status, total executions, and active lock count
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {sessions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| username | Oracle username who parsed the SQL | Any Str | false |
+| session_id | Oracle session ID (SID) | Any Str | false |
+| session_serial | Oracle session serial number | Any Int | false |
+| session_machine | Machine name where the session is running | Any Str | false |
+| session_program | Program name of the session | Any Str | false |
+| session_logon_time | Timestamp when the session was created | Any Str | false |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| session_total_executions | Total number of SQL executions for the session (execute count) | Any Int | false |
+| session_active_lock_count | Number of active TX/TM locks held by the session | Any Int | false |
+
 ### newrelicoracledb.wait_events.current_wait_time_ms
 
 Current wait time in milliseconds for active wait events

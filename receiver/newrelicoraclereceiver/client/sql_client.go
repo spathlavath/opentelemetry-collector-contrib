@@ -1404,6 +1404,29 @@ func (c *SQLClient) QuerySessionCount(ctx context.Context) (*models.SessionCount
 	return &count, nil
 }
 
+func (c *SQLClient) QueryUserSessionDetails(ctx context.Context) ([]models.UserSessionDetail, error) {
+	rows, err := c.db.QueryContext(ctx, queries.UserSessionDetailsSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.UserSessionDetail
+	for rows.Next() {
+		var detail models.UserSessionDetail
+		err := rows.Scan(&detail.Username, &detail.SID, &detail.Serial, &detail.Machine, &detail.Program, &detail.LogonTime, &detail.Status, &detail.TotalExecutions, &detail.ActiveLockCount)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, detail)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
 func (c *SQLClient) QuerySystemMetrics(ctx context.Context) ([]models.SystemMetric, error) {
 	rows, err := c.db.QueryContext(ctx, queries.SystemSysMetricsSQL)
 	if err != nil {
@@ -1635,4 +1658,3 @@ func (c *SQLClient) QueryTablespacePDBNonWriteCurrentContainer(ctx context.Conte
 
 	return tablespaces, nil
 }
-

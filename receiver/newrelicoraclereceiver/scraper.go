@@ -533,6 +533,7 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 
 	if s.config.EnableSessionScraper && s.sessionScraper != nil {
 		scraperFuncs = append(scraperFuncs, s.sessionScraper.ScrapeSessionCount)
+		scraperFuncs = append(scraperFuncs, s.sessionScraper.ScrapeUserSessionDetails)
 	}
 
 	if s.config.EnableTablespaceScraper && s.tablespaceScraper != nil {

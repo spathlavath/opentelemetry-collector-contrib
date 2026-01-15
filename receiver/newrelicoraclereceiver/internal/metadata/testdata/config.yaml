@@ -649,6 +649,8 @@ all_set:
       enabled: true
     newrelicoracledb.tablespace.used_percent:
       enabled: true
+    newrelicoracledb.user_session.details:
+      enabled: true
     newrelicoracledb.wait_events.current_wait_time_ms:
       enabled: true
   events:
@@ -1310,6 +1312,8 @@ none_set:
     newrelicoracledb.tablespace.used_bytes:
       enabled: false
     newrelicoracledb.tablespace.used_percent:
+      enabled: false
+    newrelicoracledb.user_session.details:
       enabled: false
     newrelicoracledb.wait_events.current_wait_time_ms:
       enabled: false

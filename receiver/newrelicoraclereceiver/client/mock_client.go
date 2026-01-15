@@ -87,7 +87,8 @@ type MockClient struct {
 	RACActiveServicesList []models.RACActiveService
 
 	// Session metrics
-	SessionCount *models.SessionCount
+	SessionCount       *models.SessionCount
+	UserSessionDetails []models.UserSessionDetail
 
 	// System metrics
 	SystemMetricsList []models.SystemMetric
@@ -533,6 +534,13 @@ func (m *MockClient) QuerySessionCount(_ context.Context) (*models.SessionCount,
 		return nil, m.QueryErr
 	}
 	return m.SessionCount, nil
+}
+
+func (m *MockClient) QueryUserSessionDetails(_ context.Context) ([]models.UserSessionDetail, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	return m.UserSessionDetails, nil
 }
 
 func (m *MockClient) QuerySystemMetrics(_ context.Context) ([]models.SystemMetric, error) {
