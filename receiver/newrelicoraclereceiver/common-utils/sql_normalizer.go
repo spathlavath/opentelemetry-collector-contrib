@@ -31,13 +31,9 @@ func NormalizeSql(sql string) string {
 	if sql == "" {
 		return ""
 	}
-
+	// Java Agent forces uppercase BEFORE normalization starts
 	sql = strings.ToUpper(sql)
-
-	// Handle SQL params and literals
 	sql = normalizeParametersAndLiterals(sql)
-
-	// Remove comments/whitespace
 	return removeCommentsAndNormalizeWhitespace(sql)
 }
 
@@ -51,15 +47,17 @@ func GenerateMD5Hash(normalizedSQL string) string {
 // Example: /* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */
 // Returns: (nr_service, nr_txn)
 func ExtractNewRelicMetadata(sql string) (nrService string, nrTxn string) {
-	// Pattern to match New Relic comment block with nr_service and nr_txn
-	// Example: /* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */
-	// Use non-greedy match (.+?) to capture up to the closing */
-	commentPattern := regexp.MustCompile(`/\*\s*nr_service=([^,]+),\s*nr_txn=(.+?)\s*\*/`)
+	serviceRegex := regexp.MustCompile(`nr_service=([^,\s\*]+)`)
+	txnRegex := regexp.MustCompile(`nr_txn=([^,\s\*]+)`)
 
-	matches := commentPattern.FindStringSubmatch(sql)
-	if len(matches) >= 3 {
-		nrService = strings.TrimSpace(matches[1])
-		nrTxn = strings.TrimSpace(matches[2])
+	serviceMatch := serviceRegex.FindStringSubmatch(sql)
+	if len(serviceMatch) > 1 {
+		nrService = serviceMatch[1]
+	}
+
+	txnMatch := txnRegex.FindStringSubmatch(sql)
+	if len(txnMatch) > 1 {
+		nrTxn = txnMatch[1]
 	}
 
 	return nrService, nrTxn
@@ -179,7 +177,8 @@ func isPrecededByIn(result *strings.Builder) bool {
 
 // isIdentifierChar checks if a character is valid in an identifier
 func isIdentifierChar(c rune) bool {
-	return unicode.IsLetter(c) || unicode.IsDigit(c) || c == '_'
+    // Added backtick (`) to match isNumericLiteral logic
+	return unicode.IsLetter(c) || unicode.IsDigit(c) || c == '_' || c == '`'
 }
 
 // isPlaceholder checks if current position is a parameter placeholder
@@ -477,6 +476,7 @@ func skipToEndOfLine(state *sqlNormalizerState) {
 	}
 }
 
+// IMPORTANT: Ensure your processWhitespace matches the Java trim logic
 func processWhitespace(result *strings.Builder, state *sqlNormalizerState) {
 	if !state.lastWasWhitespace && result.Len() > 0 {
 		result.WriteByte(' ')
