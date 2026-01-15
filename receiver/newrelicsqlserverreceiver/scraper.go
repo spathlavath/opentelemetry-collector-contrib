@@ -466,22 +466,26 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	}
 
 	// Scrape database-level buffer pool metrics (bufferpool.sizePerDatabaseInBytes)
-	scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
-	defer cancel()
+	if s.config.EnableDatabaseBufferMetrics {
+		scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
+		defer cancel()
 
-	if err := s.databaseScraper.ScrapeDatabaseBufferMetrics(scrapeCtx); err != nil {
-		s.logger.Error("Failed to scrape database buffer metrics",
-			zap.Error(err),
-			zap.Duration("timeout", s.config.Timeout))
-		scrapeErrors = append(scrapeErrors, err)
-		// Don't return here - continue with other metrics
+		if err := s.databaseScraper.ScrapeDatabaseBufferMetrics(scrapeCtx); err != nil {
+			s.logger.Error("Failed to scrape database buffer metrics",
+				zap.Error(err),
+				zap.Duration("timeout", s.config.Timeout))
+			scrapeErrors = append(scrapeErrors, err)
+			// Don't return here - continue with other metrics
+		} else {
+			s.logger.Debug("Successfully scraped database buffer metrics")
+		}
 	} else {
-		s.logger.Debug("Successfully scraped database buffer metrics")
+		s.logger.Debug("Database buffer metrics scraping SKIPPED - EnableDatabaseBufferMetrics is false")
 	}
 
 	// Scrape database-level IO metrics (io.stallInMilliseconds)
 	s.logger.Debug("Starting database IO metrics scraping")
-	scrapeCtx, cancel = context.WithTimeout(ctx, s.config.Timeout)
+	scrapeCtx, cancel := context.WithTimeout(ctx, s.config.Timeout)
 	defer cancel()
 
 	if err := s.databaseScraper.ScrapeDatabaseIOMetrics(scrapeCtx); err != nil {
@@ -1294,91 +1298,11 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	return metrics, nil
 }
 
-// buildMetrics constructs the final metrics output with resource attributes (Oracle pattern)
+// buildMetrics constructs the final metrics output with resource attributes
 func (s *sqlServerScraper) buildMetrics(ctx context.Context) pmetric.Metrics {
-	// Emit metrics with default resource
-	// Resource attributes will be added by the collector pipeline
-	return s.mb.Emit()
-}
-
-// addSystemInformationAsResourceAttributes collects system/host information and adds it as resource attributes
-// This ensures that all metrics sent by the scraper include comprehensive host context
-func (s *sqlServerScraper) addSystemInformationAsResourceAttributes(ctx context.Context, attrs pcommon.Map) error {
-	// Collect system information using the main scraper
-	systemInfo, err := s.CollectSystemInformation(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to collect system information: %w", err)
-	}
-
-	// Add SQL Server instance information
-	if systemInfo.ServerName != nil && *systemInfo.ServerName != "" {
-		attrs.PutStr("sql.instance_name", *systemInfo.ServerName)
-	}
-	if systemInfo.ComputerName != nil && *systemInfo.ComputerName != "" {
-		attrs.PutStr("host.name", *systemInfo.ComputerName)
-	}
-	if systemInfo.ServiceName != nil && *systemInfo.ServiceName != "" {
-		attrs.PutStr("sql.service_name", *systemInfo.ServiceName)
-	}
-
-	// Add SQL Server edition and version information
-	if systemInfo.Edition != nil && *systemInfo.Edition != "" {
-		attrs.PutStr("sql.edition", *systemInfo.Edition)
-	}
-	if systemInfo.EngineEdition != nil {
-		attrs.PutInt("sql.engine_edition", int64(*systemInfo.EngineEdition))
-	}
-	if systemInfo.ProductVersion != nil && *systemInfo.ProductVersion != "" {
-		attrs.PutStr("sql.version", *systemInfo.ProductVersion)
-	}
-	if systemInfo.VersionDesc != nil && *systemInfo.VersionDesc != "" {
-		attrs.PutStr("sql.version_description", *systemInfo.VersionDesc)
-	}
-
-	// Add hardware information
-	// if systemInfo.CPUCount != nil {
-	// 	attrs.PutInt("host.cpu.count", int64(*systemInfo.CPUCount))
-	// }
-	// if systemInfo.ServerMemoryKB != nil {
-	// 	attrs.PutInt("host.memory.total_kb", *systemInfo.ServerMemoryKB)
-	// }
-	// if systemInfo.AvailableMemoryKB != nil {
-	// 	attrs.PutInt("host.memory.available_kb", *systemInfo.AvailableMemoryKB)
-	// }
-
-	// // Add instance configuration
-	// if systemInfo.IsClustered != nil {
-	// 	attrs.PutBool("sql.is_clustered", *systemInfo.IsClustered)
-	// }
-	// if systemInfo.IsHadrEnabled != nil {
-	// 	attrs.PutBool("sql.is_hadr_enabled", *systemInfo.IsHadrEnabled)
-	// }
-	// if systemInfo.Uptime != nil {
-	// 	attrs.PutInt("sql.uptime_minutes", int64(*systemInfo.Uptime))
-	// }
-	// if systemInfo.ComputerUptime != nil {
-	// 	attrs.PutInt("host.uptime_seconds", int64(*systemInfo.ComputerUptime))
-	// }
-
-	// Add network configuration
-	if systemInfo.Port != nil && *systemInfo.Port != "" {
-		attrs.PutStr("sql.port", *systemInfo.Port)
-	}
-	if systemInfo.PortType != nil && *systemInfo.PortType != "" {
-		attrs.PutStr("sql.port_type", *systemInfo.PortType)
-	}
-	if systemInfo.ForceEncryption != nil {
-		attrs.PutBool("sql.force_encryption", *systemInfo.ForceEncryption != 0)
-	}
-
-	s.logger.Debug("Successfully added system information as resource attributes",
-		zap.String("host_name", getStringValueFromMap(systemInfo.ComputerName)),
-		zap.String("sql_instance", getStringValueFromMap(systemInfo.ServerName)),
-		zap.String("sql_edition", getStringValueFromMap(systemInfo.Edition)),
-		zap.Int("cpu_count", getIntValueFromMap(systemInfo.CPUCount)),
-		zap.Bool("is_clustered", getBoolValueFromMap(systemInfo.IsClustered)))
-
-	return nil
+	rb := s.mb.NewResourceBuilder()
+	rb.SetServerAddress(fmt.Sprintf("%s:%s", s.config.Hostname, s.config.Port))
+	return s.mb.Emit(metadata.WithResource(rb.Emit()))
 }
 
 // Helper functions to safely extract values from pointers for logging

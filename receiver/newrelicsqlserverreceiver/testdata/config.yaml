@@ -2,28 +2,23 @@
 # Custom collector with New Relic SQL Server Receiver
 
 # Extensions provide additional functionality
-extensions:
-  # Health check endpoint
-  health_check:
-    endpoint: localhost:13134
 
 # Service configuration
 service:
   # Enable extensions
-  extensions: [health_check]
   
   # Define the data pipeline
   pipelines:
     # Metrics pipeline: receiver -> processor -> exporter
     metrics:
       receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch, resource]
+      processors: [memory_limiter, batch]
       exporters: [otlphttp, debug]
     
     # Logs pipeline: receiver -> processor -> exporter (for execution plans)
     logs:
       receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch, resource]
+      processors: [memory_limiter, batch]
       exporters: [otlphttp/logs, debug]
   
   # Telemetry configuration for the collector itself
@@ -47,23 +42,9 @@ processors:
     send_batch_size: 1024
   
   # Resource processor adds metadata to all telemetry
-  resource:
-    attributes:
-      - key: deployment.environment
-        value: "production"
-        action: upsert
-      - key: service.name
-        value: "sql-server-monitoring"
-        action: upsert
-      - key: service.version
-        value: "1.0.0"
-        action: upsert
-      - key: server.address
-        value: "sqlserver-av"
-        action: upsert
-      - key: server.port
-        value: "1433"
-        action: upsert
+  # NOTE: server.address and server.port are automatically set by the receiver
+  # based on the hostname and port configuration. No need to add them here.
+
 
 # Receivers collect telemetry data
 receivers:
