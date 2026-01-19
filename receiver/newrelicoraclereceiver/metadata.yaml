@@ -3,7 +3,7 @@ type: newrelicoracledb
 status:
   class: receiver
   stability:
-    alpha: [metrics, logs]
+    alpha: [metrics]
   distributions: [contrib]
   codeowners:
     active: [tharun0064,spathlavath,sjyothi54,RamanaReddy8801]
@@ -23,6 +23,9 @@ resource_attributes:
     type: string
 
 attributes:
+  newrelic.event.type:
+    description: " "
+    type: string
   collection_timestamp:
     description: Timestamp when the query metrics were collected from Oracle
     type: string
@@ -120,9 +123,6 @@ attributes:
     type: int
   filter_predicates:
     description: Filter predicates applied after accessing rows
-    type: string
-  newrelic.event.type:
-    description: New Relic event type for log categorization
     type: string
   
   wait_event_name:
@@ -348,15 +348,17 @@ attributes:
     description: Oracle Data Guard protection level
     type: string
 
-events:
+metrics:
   newrelicoracledb.execution_plan:
+    description: " "
     enabled: true
-    description: Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
+    gauge:
+      value_type: int
+    unit: "1"
     attributes:
       - newrelic.event.type
       - query_id
       - plan_hash_value
-      - query_text
       - child_number
       - plan_id
       - parent_id
@@ -379,7 +381,6 @@ events:
       - time
       - filter_predicates
 
-metrics:
   newrelicoracledb.sessions.count:
     description: Total number of active Oracle database sessions
     enabled: true
