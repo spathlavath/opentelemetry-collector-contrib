@@ -935,6 +935,43 @@ Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL
 | db.instance.name |   | Any Str | false |
 | instance.id |   | Any Str | false |
 
+### newrelicoracledb.execution_plan
+
+ 
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.event.type |   | Any Str | false |
+| query_id |   | Any Str | false |
+| plan_hash_value |   | Any Str | false |
+| child_number |   | Any Int | false |
+| plan_id |   | Any Int | false |
+| parent_id |   | Any Int | false |
+| depth |   | Any Int | false |
+| operation |   | Any Str | false |
+| options |   | Any Str | false |
+| object_owner |   | Any Str | false |
+| object_name |   | Any Str | false |
+| position |   | Any Int | false |
+| cost |   | Any Int | false |
+| cardinality |   | Any Int | false |
+| bytes |   | Any Int | false |
+| cpu_cost |   | Any Int | false |
+| io_cost |   | Any Int | false |
+| timestamp |   | Any Str | false |
+| plan_generated_timestamp |   | Any Str | false |
+| temp_space |   | Any Int | false |
+| access_predicates |   | Any Str | false |
+| projection |   | Any Str | false |
+| time |   | Any Int | false |
+| filter_predicates |   | Any Str | false |
+
 ### newrelicoracledb.global_name
 
  
@@ -5108,50 +5145,6 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_obj_id |   | Any Str | false |
 | row_wait_file_id |   | Any Str | false |
 | row_wait_block_id |   | Any Str | false |
-
-## Default Events
-
-The following events are emitted by default. Each of them can be disabled by applying the following configuration:
-
-```yaml
-events:
-  <event_name>:
-    enabled: false
-```
-
-### newrelicoracledb.execution_plan
-
- 
-
-#### Attributes
-
-| Name | Description | Values |
-| ---- | ----------- | ------ |
-| newrelic.event.type |   | Any Str |
-| query_id |   | Any Str |
-| plan_hash_value |   | Any Str |
-| query_text |   | Any Str |
-| child_number |   | Any Int |
-| plan_id |   | Any Int |
-| parent_id |   | Any Int |
-| depth |   | Any Int |
-| operation |   | Any Str |
-| options |   | Any Str |
-| object_owner |   | Any Str |
-| object_name |   | Any Str |
-| position |   | Any Int |
-| cost |   | Any Int |
-| cardinality |   | Any Int |
-| bytes |   | Any Int |
-| cpu_cost |   | Any Int |
-| io_cost |   | Any Int |
-| timestamp |   | Any Str |
-| plan_generated_timestamp |   | Any Str |
-| temp_space |   | Any Int |
-| access_predicates |   | Any Str |
-| projection |   | Any Str |
-| time |   | Any Int |
-| filter_predicates |   | Any Str |
 
 ## Resource Attributes
 

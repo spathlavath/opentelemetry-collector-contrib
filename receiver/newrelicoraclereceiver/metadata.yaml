@@ -19,6 +19,9 @@ resource_attributes:
     type: string
 
 attributes:
+  newrelic.event.type:
+    description: " "
+    type: string
   collection_timestamp:
     description: " "
     type: string
@@ -115,9 +118,6 @@ attributes:
     description: " "
     type: int
   filter_predicates:
-    description: " "
-    type: string
-  newrelic.event.type:
     description: " "
     type: string
   
@@ -350,15 +350,17 @@ attributes:
     description: " "
     type: string
 
-events:
+metrics:
   newrelicoracledb.execution_plan:
-    enabled: true
     description: " "
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "1"
     attributes:
       - newrelic.event.type
       - query_id
       - plan_hash_value
-      - query_text
       - child_number
       - plan_id
       - parent_id
@@ -381,7 +383,6 @@ events:
       - time
       - filter_predicates
 
-metrics:
   newrelicoracledb.sessions.count:
     description: " "
     enabled: true
