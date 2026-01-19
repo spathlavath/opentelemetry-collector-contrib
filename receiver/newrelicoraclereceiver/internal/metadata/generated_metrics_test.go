@@ -746,7 +746,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.event.type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4576,7 +4576,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					attrVal, ok := dp.Attributes().Get("newrelic.event.type")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.event.type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")

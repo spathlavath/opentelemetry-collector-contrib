@@ -3335,6 +3335,7 @@ metrics:
       value_type: int
     unit: "{count}"
     attributes:
+      - newrelic.event.type
       - collection_timestamp
       - database_name
       - query_id

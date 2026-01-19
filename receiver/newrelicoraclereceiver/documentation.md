@@ -2522,6 +2522,7 @@ Slow Query Details
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| newrelic.event.type |   | Any Str | false |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
