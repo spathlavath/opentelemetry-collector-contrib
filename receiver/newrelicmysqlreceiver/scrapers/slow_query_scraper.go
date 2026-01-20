@@ -205,17 +205,13 @@ func (s *SlowQueryScraper) Scrape(ctx context.Context, now pcommon.Timestamp) er
 }
 
 // recordSlowQueryMetrics emits all slow query metrics for a single query
-// This will be fully implemented once metadata.yaml is updated with metric definitions
 //
-// Metrics to be emitted:
+// Metrics emitted:
 // - Historical metrics: avg_elapsed_time, avg_cpu_time, avg_lock_time, execution_count
 // - Interval (delta) metrics: interval_avg_elapsed_time, interval_execution_count
 // - I/O metrics: avg_rows_examined, total_select_scan, total_tmp_disk_tables
 // - Performance variance: min_elapsed_time, max_elapsed_time
 func (s *SlowQueryScraper) recordSlowQueryMetrics(now pcommon.Timestamp, query *models.SlowQuery) error {
-	// TODO: Implement metric recording once metadata.yaml is updated
-	// This is a placeholder that logs the query for now
-
 	queryID := query.GetQueryID()
 	queryText := query.GetQueryText()
 	dbName := query.GetDatabaseName()
@@ -230,17 +226,234 @@ func (s *SlowQueryScraper) recordSlowQueryMetrics(now pcommon.Timestamp, query *
 		zap.Float64("historical_avg_elapsed_ms", getFloat64OrZero(query.AvgElapsedTimeMs)),
 		zap.Int64("total_execution_count", getInt64OrZero(query.ExecutionCount)))
 
-	// Metrics will be recorded here after metadata.yaml update
-	// Example (to be uncommented after metadata.yaml is ready):
-	// if query.IntervalAvgElapsedTimeMS != nil {
-	//     s.mb.RecordNewrelicmysqlSlowqueryIntervalAvgElapsedTimeDataPoint(
-	//         now,
-	//         *query.IntervalAvgElapsedTimeMS,
-	//         queryID,
-	//         dbName,
-	//         queryText,
-	//     )
-	// }
+	// ===========================================
+	// INTERVAL (DELTA) METRICS - MOST IMPORTANT!
+	// ===========================================
+	// These show current performance since last scrape
+
+	if query.IntervalAvgElapsedTimeMS != nil {
+		s.mb.RecordNewrelicmysqlSlowqueryIntervalAvgElapsedTimeDataPoint(
+			now,
+			*query.IntervalAvgElapsedTimeMS,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.IntervalExecutionCount != nil {
+		s.mb.RecordNewrelicmysqlSlowqueryIntervalExecutionCountDataPoint(
+			now,
+			*query.IntervalExecutionCount,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	// ===========================================
+	// HISTORICAL AVERAGE METRICS
+	// ===========================================
+
+	if query.AvgElapsedTimeMs.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryAvgElapsedTimeDataPoint(
+			now,
+			query.AvgElapsedTimeMs.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.AvgLockTimeMs.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryAvgLockTimeDataPoint(
+			now,
+			query.AvgLockTimeMs.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.AvgCPUTimeMs.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryAvgCPUTimeDataPoint(
+			now,
+			query.AvgCPUTimeMs.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.ExecutionCount.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryExecutionCountDataPoint(
+			now,
+			query.ExecutionCount.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	// ===========================================
+	// ROW METRICS
+	// ===========================================
+
+	if query.AvgRowsExamined.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryAvgRowsExaminedDataPoint(
+			now,
+			query.AvgRowsExamined.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.AvgRowsSent.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryAvgRowsSentDataPoint(
+			now,
+			query.AvgRowsSent.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.AvgRowsAffected.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryAvgRowsAffectedDataPoint(
+			now,
+			query.AvgRowsAffected.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	// ===========================================
+	// PERFORMANCE VARIANCE METRICS
+	// ===========================================
+
+	if query.MinElapsedTimeMs.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryMinElapsedTimeDataPoint(
+			now,
+			query.MinElapsedTimeMs.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.MaxElapsedTimeMs.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryMaxElapsedTimeDataPoint(
+			now,
+			query.MaxElapsedTimeMs.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	// ===========================================
+	// DISK I/O METRICS (PERFORMANCE INDICATORS)
+	// ===========================================
+
+	if query.TotalSelectScan.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalSelectScanDataPoint(
+			now,
+			query.TotalSelectScan.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.TotalSelectFullJoin.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalSelectFullJoinDataPoint(
+			now,
+			query.TotalSelectFullJoin.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.TotalNoIndexUsed.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalNoIndexUsedDataPoint(
+			now,
+			query.TotalNoIndexUsed.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.TotalNoGoodIndexUsed.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalNoGoodIndexUsedDataPoint(
+			now,
+			query.TotalNoGoodIndexUsed.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	// ===========================================
+	// TEMPORARY TABLE METRICS (MEMORY PRESSURE)
+	// ===========================================
+
+	if query.TotalTmpTables.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalTmpTablesDataPoint(
+			now,
+			query.TotalTmpTables.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.TotalTmpDiskTables.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalTmpDiskTablesDataPoint(
+			now,
+			query.TotalTmpDiskTables.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	// ===========================================
+	// ERROR AND WARNING METRICS
+	// ===========================================
+
+	if query.TotalLockTimeMS.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalLockTimeDataPoint(
+			now,
+			query.TotalLockTimeMS.Float64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.TotalErrors.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalErrorsDataPoint(
+			now,
+			query.TotalErrors.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
+
+	if query.TotalWarnings.Valid {
+		s.mb.RecordNewrelicmysqlSlowqueryTotalWarningsDataPoint(
+			now,
+			query.TotalWarnings.Int64,
+			dbName,
+			queryID,
+			queryText,
+		)
+	}
 
 	return nil
 }
