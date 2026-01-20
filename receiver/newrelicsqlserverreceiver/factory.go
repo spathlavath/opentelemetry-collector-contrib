@@ -17,12 +17,33 @@ import (
 )
 
 // NewFactory creates a factory for SQL Server receiver.
+//
+// This receiver collects all metrics in a single pipeline including:
+// - Database and instance metrics
+// - Slow query metrics
+// - Active query metrics
+// - Query plan statistics as metrics
+// - All other performance metrics
+//
+// Example configuration:
+//
+//	receivers:
+//	  newrelicsqlserver:
+//	    hostname: localhost
+//	    port: "1433"
+//	    enable_query_monitoring: true
+//	    enable_active_running_queries: true
+//
+//	service:
+//	  pipelines:
+//	    metrics:
+//	      receivers: [newrelicsqlserver]
+//	      exporters: [...]
 func NewFactory() receiver.Factory {
 	return receiver.NewFactory(
 		metadata.Type,
 		createDefaultConfig,
-		receiver.WithMetrics(createMetricsReceiver, metadata.MetricsStability),
-		receiver.WithLogs(createLogsReceiver, component.StabilityLevelDevelopment))
+		receiver.WithMetrics(createMetricsReceiver, metadata.MetricsStability))
 }
 
 func createDefaultConfig() component.Config {
@@ -60,30 +81,5 @@ func createMetricsReceiver(
 	return scraperhelper.NewMetricsController(
 		&cfg.ControllerConfig, params, consumer,
 		scraperhelper.AddScraper(metadata.Type, s),
-	)
-}
-
-func createLogsReceiver(
-	_ context.Context,
-	params receiver.Settings,
-	rConf component.Config,
-	consumer consumer.Logs,
-) (receiver.Logs, error) {
-	cfg := rConf.(*Config)
-
-	ns := newSqlServerScraper(params, cfg)
-
-	f := scraper.NewFactory(metadata.Type, nil,
-		scraper.WithLogs(func(context.Context, scraper.Settings, component.Config) (scraper.Logs, error) {
-			return ns, nil
-		}, component.StabilityLevelDevelopment))
-
-	opt := scraperhelper.AddFactoryWithConfig(f, nil)
-
-	return scraperhelper.NewLogsController(
-		&cfg.ControllerConfig,
-		params,
-		consumer,
-		opt,
 	)
 }

@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/plog"
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
@@ -27,7 +26,6 @@ type QueryPerformanceScraper struct {
 	startTime           pcommon.Timestamp // Used by slow query metrics (not yet migrated)
 	engineEdition       int
 	executionPlanLogger *models.ExecutionPlanLogger
-	logConsumer         plog.Logs                     // For emitting execution plan logs
 	slowQuerySmoother   *SlowQuerySmoother            // EWMA-based smoothing algorithm for slow queries
 	intervalCalculator  *SimplifiedIntervalCalculator // Simplified delta-based interval calculator
 	metadataCache       *helpers.MetadataCache        // Metadata cache for wait resource enrichment
