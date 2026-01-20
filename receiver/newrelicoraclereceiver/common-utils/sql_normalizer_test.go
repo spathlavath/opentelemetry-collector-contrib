@@ -207,6 +207,24 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 			expectedNrTxn:     "WebTransaction/Servlet/OrderController/processOrder (POST)",
 		},
 		{
+			name:              "Transaction with PUT method",
+			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees/{id} (PUT) */ UPDATE employees SET salary = ? WHERE id = ?",
+			expectedNrService: "Oracle-HR-Portal-Java",
+			expectedNrTxn:     "WebTransaction/SpringController/employees/{id} (PUT)",
+		},
+		{
+			name:              "Transaction with DELETE method",
+			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees/{id} (DELETE) */ DELETE FROM employees WHERE id = ?",
+			expectedNrService: "Oracle-HR-Portal-Java",
+			expectedNrTxn:     "WebTransaction/SpringController/employees/{id} (DELETE)",
+		},
+		{
+			name:              "Transaction with PATCH method",
+			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/departments/{id}/status (PATCH) */ UPDATE departments SET active = ?",
+			expectedNrService: "Oracle-HR-Portal-Java",
+			expectedNrTxn:     "WebTransaction/SpringController/departments/{id}/status (PATCH)",
+		},
+		{
 			name:              "Empty query",
 			input:             "",
 			expectedNrService: "",
