@@ -42,6 +42,326 @@ The number of statements executed by the server.
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | Development |
 
+### newrelicmysql.slowquery.avg_cpu_time
+
+Historical average CPU time per query execution.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_elapsed_time
+
+Historical average query elapsed time (all-time average since server start).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_lock_time
+
+Historical average lock wait time per query execution.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_rows_affected
+
+Average number of rows modified per query execution (INSERT/UPDATE/DELETE).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_rows_examined
+
+Average number of rows examined per query execution.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_rows_sent
+
+Average number of rows returned per query execution.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.execution_count
+
+Total number of times this query pattern has been executed (cumulative).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.interval_avg_elapsed_time
+
+Average query elapsed time in the current interval (delta between scrapes). This is the primary metric for Top N selection.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.interval_execution_count
+
+Number of query executions in the current interval (delta between scrapes).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.max_elapsed_time
+
+Maximum (slowest) query execution time observed.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.min_elapsed_time
+
+Minimum (fastest) query execution time observed.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_errors
+
+Total number of errors encountered during query execution. Common causes include syntax errors, constraint violations, and permission issues.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_lock_time
+
+Total cumulative time spent waiting for locks. High value indicates lock contention issues.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_no_good_index_used
+
+Total number of times MySQL couldn't find a good index to use. Non-zero = YELLOW FLAG.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_no_index_used
+
+Total number of queries that performed table scans without using an index. Non-zero = RED FLAG.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_select_full_join
+
+Total number of joins without indexes. High value indicates missing join indexes.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_select_scan
+
+Total number of full table scans performed. High value indicates missing indexes.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_tmp_disk_tables
+
+Total number of temporary tables created on disk (RED FLAG - indicates memory pressure).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_tmp_tables
+
+Total number of temporary tables created.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
+### newrelicmysql.slowquery.total_warnings
+
+Total number of warnings generated during query execution. Common causes include type mismatches, truncated data, and deprecated syntax.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | The database/schema name where the query was executed. | Any Str | Recommended |
+| query_id | The unique identifier (DIGEST hash) for the normalized query pattern. | Any Str | Recommended |
+| query_text | The normalized query text with literals replaced by placeholders. | Any Str | Recommended |
+
 ### newrelicmysql.uptime
 
 The number of seconds that the server has been up.

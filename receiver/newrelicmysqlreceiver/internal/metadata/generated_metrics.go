@@ -66,16 +66,96 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlQueryCount: metricInfo{
 		Name: "newrelicmysql.query.count",
 	},
+	NewrelicmysqlSlowqueryAvgCPUTime: metricInfo{
+		Name: "newrelicmysql.slowquery.avg_cpu_time",
+	},
+	NewrelicmysqlSlowqueryAvgElapsedTime: metricInfo{
+		Name: "newrelicmysql.slowquery.avg_elapsed_time",
+	},
+	NewrelicmysqlSlowqueryAvgLockTime: metricInfo{
+		Name: "newrelicmysql.slowquery.avg_lock_time",
+	},
+	NewrelicmysqlSlowqueryAvgRowsAffected: metricInfo{
+		Name: "newrelicmysql.slowquery.avg_rows_affected",
+	},
+	NewrelicmysqlSlowqueryAvgRowsExamined: metricInfo{
+		Name: "newrelicmysql.slowquery.avg_rows_examined",
+	},
+	NewrelicmysqlSlowqueryAvgRowsSent: metricInfo{
+		Name: "newrelicmysql.slowquery.avg_rows_sent",
+	},
+	NewrelicmysqlSlowqueryExecutionCount: metricInfo{
+		Name: "newrelicmysql.slowquery.execution_count",
+	},
+	NewrelicmysqlSlowqueryIntervalAvgElapsedTime: metricInfo{
+		Name: "newrelicmysql.slowquery.interval_avg_elapsed_time",
+	},
+	NewrelicmysqlSlowqueryIntervalExecutionCount: metricInfo{
+		Name: "newrelicmysql.slowquery.interval_execution_count",
+	},
+	NewrelicmysqlSlowqueryMaxElapsedTime: metricInfo{
+		Name: "newrelicmysql.slowquery.max_elapsed_time",
+	},
+	NewrelicmysqlSlowqueryMinElapsedTime: metricInfo{
+		Name: "newrelicmysql.slowquery.min_elapsed_time",
+	},
+	NewrelicmysqlSlowqueryTotalErrors: metricInfo{
+		Name: "newrelicmysql.slowquery.total_errors",
+	},
+	NewrelicmysqlSlowqueryTotalLockTime: metricInfo{
+		Name: "newrelicmysql.slowquery.total_lock_time",
+	},
+	NewrelicmysqlSlowqueryTotalNoGoodIndexUsed: metricInfo{
+		Name: "newrelicmysql.slowquery.total_no_good_index_used",
+	},
+	NewrelicmysqlSlowqueryTotalNoIndexUsed: metricInfo{
+		Name: "newrelicmysql.slowquery.total_no_index_used",
+	},
+	NewrelicmysqlSlowqueryTotalSelectFullJoin: metricInfo{
+		Name: "newrelicmysql.slowquery.total_select_full_join",
+	},
+	NewrelicmysqlSlowqueryTotalSelectScan: metricInfo{
+		Name: "newrelicmysql.slowquery.total_select_scan",
+	},
+	NewrelicmysqlSlowqueryTotalTmpDiskTables: metricInfo{
+		Name: "newrelicmysql.slowquery.total_tmp_disk_tables",
+	},
+	NewrelicmysqlSlowqueryTotalTmpTables: metricInfo{
+		Name: "newrelicmysql.slowquery.total_tmp_tables",
+	},
+	NewrelicmysqlSlowqueryTotalWarnings: metricInfo{
+		Name: "newrelicmysql.slowquery.total_warnings",
+	},
 	NewrelicmysqlUptime: metricInfo{
 		Name: "newrelicmysql.uptime",
 	},
 }
 
 type metricsInfo struct {
-	NewrelicmysqlCommands        metricInfo
-	NewrelicmysqlConnectionCount metricInfo
-	NewrelicmysqlQueryCount      metricInfo
-	NewrelicmysqlUptime          metricInfo
+	NewrelicmysqlCommands                        metricInfo
+	NewrelicmysqlConnectionCount                 metricInfo
+	NewrelicmysqlQueryCount                      metricInfo
+	NewrelicmysqlSlowqueryAvgCPUTime             metricInfo
+	NewrelicmysqlSlowqueryAvgElapsedTime         metricInfo
+	NewrelicmysqlSlowqueryAvgLockTime            metricInfo
+	NewrelicmysqlSlowqueryAvgRowsAffected        metricInfo
+	NewrelicmysqlSlowqueryAvgRowsExamined        metricInfo
+	NewrelicmysqlSlowqueryAvgRowsSent            metricInfo
+	NewrelicmysqlSlowqueryExecutionCount         metricInfo
+	NewrelicmysqlSlowqueryIntervalAvgElapsedTime metricInfo
+	NewrelicmysqlSlowqueryIntervalExecutionCount metricInfo
+	NewrelicmysqlSlowqueryMaxElapsedTime         metricInfo
+	NewrelicmysqlSlowqueryMinElapsedTime         metricInfo
+	NewrelicmysqlSlowqueryTotalErrors            metricInfo
+	NewrelicmysqlSlowqueryTotalLockTime          metricInfo
+	NewrelicmysqlSlowqueryTotalNoGoodIndexUsed   metricInfo
+	NewrelicmysqlSlowqueryTotalNoIndexUsed       metricInfo
+	NewrelicmysqlSlowqueryTotalSelectFullJoin    metricInfo
+	NewrelicmysqlSlowqueryTotalSelectScan        metricInfo
+	NewrelicmysqlSlowqueryTotalTmpDiskTables     metricInfo
+	NewrelicmysqlSlowqueryTotalTmpTables         metricInfo
+	NewrelicmysqlSlowqueryTotalWarnings          metricInfo
+	NewrelicmysqlUptime                          metricInfo
 }
 
 type metricInfo struct {
@@ -237,6 +317,1066 @@ func newMetricNewrelicmysqlQueryCount(cfg MetricConfig) metricNewrelicmysqlQuery
 	return m
 }
 
+type metricNewrelicmysqlSlowqueryAvgCPUTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.avg_cpu_time metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryAvgCPUTime) init() {
+	m.data.SetName("newrelicmysql.slowquery.avg_cpu_time")
+	m.data.SetDescription("Historical average CPU time per query execution.")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryAvgCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryAvgCPUTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryAvgCPUTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryAvgCPUTime(cfg MetricConfig) metricNewrelicmysqlSlowqueryAvgCPUTime {
+	m := metricNewrelicmysqlSlowqueryAvgCPUTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryAvgElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.avg_elapsed_time metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryAvgElapsedTime) init() {
+	m.data.SetName("newrelicmysql.slowquery.avg_elapsed_time")
+	m.data.SetDescription("Historical average query elapsed time (all-time average since server start).")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryAvgElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryAvgElapsedTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryAvgElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryAvgElapsedTime(cfg MetricConfig) metricNewrelicmysqlSlowqueryAvgElapsedTime {
+	m := metricNewrelicmysqlSlowqueryAvgElapsedTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryAvgLockTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.avg_lock_time metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryAvgLockTime) init() {
+	m.data.SetName("newrelicmysql.slowquery.avg_lock_time")
+	m.data.SetDescription("Historical average lock wait time per query execution.")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryAvgLockTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryAvgLockTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryAvgLockTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryAvgLockTime(cfg MetricConfig) metricNewrelicmysqlSlowqueryAvgLockTime {
+	m := metricNewrelicmysqlSlowqueryAvgLockTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryAvgRowsAffected struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.avg_rows_affected metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsAffected) init() {
+	m.data.SetName("newrelicmysql.slowquery.avg_rows_affected")
+	m.data.SetDescription("Average number of rows modified per query execution (INSERT/UPDATE/DELETE).")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryAvgRowsAffected) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsAffected) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsAffected) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryAvgRowsAffected(cfg MetricConfig) metricNewrelicmysqlSlowqueryAvgRowsAffected {
+	m := metricNewrelicmysqlSlowqueryAvgRowsAffected{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryAvgRowsExamined struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.avg_rows_examined metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsExamined) init() {
+	m.data.SetName("newrelicmysql.slowquery.avg_rows_examined")
+	m.data.SetDescription("Average number of rows examined per query execution.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryAvgRowsExamined) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsExamined) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsExamined) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryAvgRowsExamined(cfg MetricConfig) metricNewrelicmysqlSlowqueryAvgRowsExamined {
+	m := metricNewrelicmysqlSlowqueryAvgRowsExamined{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryAvgRowsSent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.avg_rows_sent metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsSent) init() {
+	m.data.SetName("newrelicmysql.slowquery.avg_rows_sent")
+	m.data.SetDescription("Average number of rows returned per query execution.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryAvgRowsSent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsSent) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryAvgRowsSent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryAvgRowsSent(cfg MetricConfig) metricNewrelicmysqlSlowqueryAvgRowsSent {
+	m := metricNewrelicmysqlSlowqueryAvgRowsSent{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryExecutionCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.execution_count metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryExecutionCount) init() {
+	m.data.SetName("newrelicmysql.slowquery.execution_count")
+	m.data.SetDescription("Total number of times this query pattern has been executed (cumulative).")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryExecutionCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryExecutionCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryExecutionCount(cfg MetricConfig) metricNewrelicmysqlSlowqueryExecutionCount {
+	m := metricNewrelicmysqlSlowqueryExecutionCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.interval_avg_elapsed_time metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime) init() {
+	m.data.SetName("newrelicmysql.slowquery.interval_avg_elapsed_time")
+	m.data.SetDescription("Average query elapsed time in the current interval (delta between scrapes). This is the primary metric for Top N selection.")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryIntervalAvgElapsedTime(cfg MetricConfig) metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime {
+	m := metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryIntervalExecutionCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.interval_execution_count metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryIntervalExecutionCount) init() {
+	m.data.SetName("newrelicmysql.slowquery.interval_execution_count")
+	m.data.SetDescription("Number of query executions in the current interval (delta between scrapes).")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryIntervalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryIntervalExecutionCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryIntervalExecutionCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryIntervalExecutionCount(cfg MetricConfig) metricNewrelicmysqlSlowqueryIntervalExecutionCount {
+	m := metricNewrelicmysqlSlowqueryIntervalExecutionCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryMaxElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.max_elapsed_time metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryMaxElapsedTime) init() {
+	m.data.SetName("newrelicmysql.slowquery.max_elapsed_time")
+	m.data.SetDescription("Maximum (slowest) query execution time observed.")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryMaxElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryMaxElapsedTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryMaxElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryMaxElapsedTime(cfg MetricConfig) metricNewrelicmysqlSlowqueryMaxElapsedTime {
+	m := metricNewrelicmysqlSlowqueryMaxElapsedTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryMinElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.min_elapsed_time metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryMinElapsedTime) init() {
+	m.data.SetName("newrelicmysql.slowquery.min_elapsed_time")
+	m.data.SetDescription("Minimum (fastest) query execution time observed.")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryMinElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryMinElapsedTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryMinElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryMinElapsedTime(cfg MetricConfig) metricNewrelicmysqlSlowqueryMinElapsedTime {
+	m := metricNewrelicmysqlSlowqueryMinElapsedTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalErrors struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_errors metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalErrors) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_errors")
+	m.data.SetDescription("Total number of errors encountered during query execution. Common causes include syntax errors, constraint violations, and permission issues.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalErrors) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalErrors) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalErrors) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalErrors(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalErrors {
+	m := metricNewrelicmysqlSlowqueryTotalErrors{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalLockTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_lock_time metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalLockTime) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_lock_time")
+	m.data.SetDescription("Total cumulative time spent waiting for locks. High value indicates lock contention issues.")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalLockTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalLockTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalLockTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalLockTime(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalLockTime {
+	m := metricNewrelicmysqlSlowqueryTotalLockTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_no_good_index_used metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_no_good_index_used")
+	m.data.SetDescription("Total number of times MySQL couldn't find a good index to use. Non-zero = YELLOW FLAG.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed {
+	m := metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalNoIndexUsed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_no_index_used metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalNoIndexUsed) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_no_index_used")
+	m.data.SetDescription("Total number of queries that performed table scans without using an index. Non-zero = RED FLAG.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalNoIndexUsed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalNoIndexUsed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalNoIndexUsed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalNoIndexUsed(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalNoIndexUsed {
+	m := metricNewrelicmysqlSlowqueryTotalNoIndexUsed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalSelectFullJoin struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_select_full_join metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalSelectFullJoin) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_select_full_join")
+	m.data.SetDescription("Total number of joins without indexes. High value indicates missing join indexes.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalSelectFullJoin) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalSelectFullJoin) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalSelectFullJoin) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalSelectFullJoin(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalSelectFullJoin {
+	m := metricNewrelicmysqlSlowqueryTotalSelectFullJoin{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalSelectScan struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_select_scan metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalSelectScan) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_select_scan")
+	m.data.SetDescription("Total number of full table scans performed. High value indicates missing indexes.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalSelectScan) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalSelectScan) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalSelectScan) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalSelectScan(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalSelectScan {
+	m := metricNewrelicmysqlSlowqueryTotalSelectScan{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalTmpDiskTables struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_tmp_disk_tables metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalTmpDiskTables) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_tmp_disk_tables")
+	m.data.SetDescription("Total number of temporary tables created on disk (RED FLAG - indicates memory pressure).")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalTmpDiskTables) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalTmpDiskTables) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalTmpDiskTables) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalTmpDiskTables(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalTmpDiskTables {
+	m := metricNewrelicmysqlSlowqueryTotalTmpDiskTables{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalTmpTables struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_tmp_tables metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalTmpTables) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_tmp_tables")
+	m.data.SetDescription("Total number of temporary tables created.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalTmpTables) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalTmpTables) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalTmpTables) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalTmpTables(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalTmpTables {
+	m := metricNewrelicmysqlSlowqueryTotalTmpTables{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlSlowqueryTotalWarnings struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.slowquery.total_warnings metric with initial data.
+func (m *metricNewrelicmysqlSlowqueryTotalWarnings) init() {
+	m.data.SetName("newrelicmysql.slowquery.total_warnings")
+	m.data.SetDescription("Total number of warnings generated during query execution. Common causes include type mismatches, truncated data, and deprecated syntax.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicmysqlSlowqueryTotalWarnings) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlSlowqueryTotalWarnings) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlSlowqueryTotalWarnings) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlSlowqueryTotalWarnings(cfg MetricConfig) metricNewrelicmysqlSlowqueryTotalWarnings {
+	m := metricNewrelicmysqlSlowqueryTotalWarnings{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlUptime struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -291,17 +1431,37 @@ func newMetricNewrelicmysqlUptime(cfg MetricConfig) metricNewrelicmysqlUptime {
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                             MetricsBuilderConfig // config of the metrics builder.
-	startTime                          pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                    int                  // maximum observed number of metrics per resource.
-	metricsBuffer                      pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                          component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter     map[string]filter.Filter
-	resourceAttributeExcludeFilter     map[string]filter.Filter
-	metricNewrelicmysqlCommands        metricNewrelicmysqlCommands
-	metricNewrelicmysqlConnectionCount metricNewrelicmysqlConnectionCount
-	metricNewrelicmysqlQueryCount      metricNewrelicmysqlQueryCount
-	metricNewrelicmysqlUptime          metricNewrelicmysqlUptime
+	config                                             MetricsBuilderConfig // config of the metrics builder.
+	startTime                                          pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                                    int                  // maximum observed number of metrics per resource.
+	metricsBuffer                                      pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                                          component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter                     map[string]filter.Filter
+	resourceAttributeExcludeFilter                     map[string]filter.Filter
+	metricNewrelicmysqlCommands                        metricNewrelicmysqlCommands
+	metricNewrelicmysqlConnectionCount                 metricNewrelicmysqlConnectionCount
+	metricNewrelicmysqlQueryCount                      metricNewrelicmysqlQueryCount
+	metricNewrelicmysqlSlowqueryAvgCPUTime             metricNewrelicmysqlSlowqueryAvgCPUTime
+	metricNewrelicmysqlSlowqueryAvgElapsedTime         metricNewrelicmysqlSlowqueryAvgElapsedTime
+	metricNewrelicmysqlSlowqueryAvgLockTime            metricNewrelicmysqlSlowqueryAvgLockTime
+	metricNewrelicmysqlSlowqueryAvgRowsAffected        metricNewrelicmysqlSlowqueryAvgRowsAffected
+	metricNewrelicmysqlSlowqueryAvgRowsExamined        metricNewrelicmysqlSlowqueryAvgRowsExamined
+	metricNewrelicmysqlSlowqueryAvgRowsSent            metricNewrelicmysqlSlowqueryAvgRowsSent
+	metricNewrelicmysqlSlowqueryExecutionCount         metricNewrelicmysqlSlowqueryExecutionCount
+	metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime
+	metricNewrelicmysqlSlowqueryIntervalExecutionCount metricNewrelicmysqlSlowqueryIntervalExecutionCount
+	metricNewrelicmysqlSlowqueryMaxElapsedTime         metricNewrelicmysqlSlowqueryMaxElapsedTime
+	metricNewrelicmysqlSlowqueryMinElapsedTime         metricNewrelicmysqlSlowqueryMinElapsedTime
+	metricNewrelicmysqlSlowqueryTotalErrors            metricNewrelicmysqlSlowqueryTotalErrors
+	metricNewrelicmysqlSlowqueryTotalLockTime          metricNewrelicmysqlSlowqueryTotalLockTime
+	metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed   metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed
+	metricNewrelicmysqlSlowqueryTotalNoIndexUsed       metricNewrelicmysqlSlowqueryTotalNoIndexUsed
+	metricNewrelicmysqlSlowqueryTotalSelectFullJoin    metricNewrelicmysqlSlowqueryTotalSelectFullJoin
+	metricNewrelicmysqlSlowqueryTotalSelectScan        metricNewrelicmysqlSlowqueryTotalSelectScan
+	metricNewrelicmysqlSlowqueryTotalTmpDiskTables     metricNewrelicmysqlSlowqueryTotalTmpDiskTables
+	metricNewrelicmysqlSlowqueryTotalTmpTables         metricNewrelicmysqlSlowqueryTotalTmpTables
+	metricNewrelicmysqlSlowqueryTotalWarnings          metricNewrelicmysqlSlowqueryTotalWarnings
+	metricNewrelicmysqlUptime                          metricNewrelicmysqlUptime
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -323,16 +1483,36 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                             mbc,
-		startTime:                          pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                      pmetric.NewMetrics(),
-		buildInfo:                          settings.BuildInfo,
-		metricNewrelicmysqlCommands:        newMetricNewrelicmysqlCommands(mbc.Metrics.NewrelicmysqlCommands),
-		metricNewrelicmysqlConnectionCount: newMetricNewrelicmysqlConnectionCount(mbc.Metrics.NewrelicmysqlConnectionCount),
-		metricNewrelicmysqlQueryCount:      newMetricNewrelicmysqlQueryCount(mbc.Metrics.NewrelicmysqlQueryCount),
-		metricNewrelicmysqlUptime:          newMetricNewrelicmysqlUptime(mbc.Metrics.NewrelicmysqlUptime),
-		resourceAttributeIncludeFilter:     make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:     make(map[string]filter.Filter),
+		config:                                             mbc,
+		startTime:                                          pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                                      pmetric.NewMetrics(),
+		buildInfo:                                          settings.BuildInfo,
+		metricNewrelicmysqlCommands:                        newMetricNewrelicmysqlCommands(mbc.Metrics.NewrelicmysqlCommands),
+		metricNewrelicmysqlConnectionCount:                 newMetricNewrelicmysqlConnectionCount(mbc.Metrics.NewrelicmysqlConnectionCount),
+		metricNewrelicmysqlQueryCount:                      newMetricNewrelicmysqlQueryCount(mbc.Metrics.NewrelicmysqlQueryCount),
+		metricNewrelicmysqlSlowqueryAvgCPUTime:             newMetricNewrelicmysqlSlowqueryAvgCPUTime(mbc.Metrics.NewrelicmysqlSlowqueryAvgCPUTime),
+		metricNewrelicmysqlSlowqueryAvgElapsedTime:         newMetricNewrelicmysqlSlowqueryAvgElapsedTime(mbc.Metrics.NewrelicmysqlSlowqueryAvgElapsedTime),
+		metricNewrelicmysqlSlowqueryAvgLockTime:            newMetricNewrelicmysqlSlowqueryAvgLockTime(mbc.Metrics.NewrelicmysqlSlowqueryAvgLockTime),
+		metricNewrelicmysqlSlowqueryAvgRowsAffected:        newMetricNewrelicmysqlSlowqueryAvgRowsAffected(mbc.Metrics.NewrelicmysqlSlowqueryAvgRowsAffected),
+		metricNewrelicmysqlSlowqueryAvgRowsExamined:        newMetricNewrelicmysqlSlowqueryAvgRowsExamined(mbc.Metrics.NewrelicmysqlSlowqueryAvgRowsExamined),
+		metricNewrelicmysqlSlowqueryAvgRowsSent:            newMetricNewrelicmysqlSlowqueryAvgRowsSent(mbc.Metrics.NewrelicmysqlSlowqueryAvgRowsSent),
+		metricNewrelicmysqlSlowqueryExecutionCount:         newMetricNewrelicmysqlSlowqueryExecutionCount(mbc.Metrics.NewrelicmysqlSlowqueryExecutionCount),
+		metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime: newMetricNewrelicmysqlSlowqueryIntervalAvgElapsedTime(mbc.Metrics.NewrelicmysqlSlowqueryIntervalAvgElapsedTime),
+		metricNewrelicmysqlSlowqueryIntervalExecutionCount: newMetricNewrelicmysqlSlowqueryIntervalExecutionCount(mbc.Metrics.NewrelicmysqlSlowqueryIntervalExecutionCount),
+		metricNewrelicmysqlSlowqueryMaxElapsedTime:         newMetricNewrelicmysqlSlowqueryMaxElapsedTime(mbc.Metrics.NewrelicmysqlSlowqueryMaxElapsedTime),
+		metricNewrelicmysqlSlowqueryMinElapsedTime:         newMetricNewrelicmysqlSlowqueryMinElapsedTime(mbc.Metrics.NewrelicmysqlSlowqueryMinElapsedTime),
+		metricNewrelicmysqlSlowqueryTotalErrors:            newMetricNewrelicmysqlSlowqueryTotalErrors(mbc.Metrics.NewrelicmysqlSlowqueryTotalErrors),
+		metricNewrelicmysqlSlowqueryTotalLockTime:          newMetricNewrelicmysqlSlowqueryTotalLockTime(mbc.Metrics.NewrelicmysqlSlowqueryTotalLockTime),
+		metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed:   newMetricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed(mbc.Metrics.NewrelicmysqlSlowqueryTotalNoGoodIndexUsed),
+		metricNewrelicmysqlSlowqueryTotalNoIndexUsed:       newMetricNewrelicmysqlSlowqueryTotalNoIndexUsed(mbc.Metrics.NewrelicmysqlSlowqueryTotalNoIndexUsed),
+		metricNewrelicmysqlSlowqueryTotalSelectFullJoin:    newMetricNewrelicmysqlSlowqueryTotalSelectFullJoin(mbc.Metrics.NewrelicmysqlSlowqueryTotalSelectFullJoin),
+		metricNewrelicmysqlSlowqueryTotalSelectScan:        newMetricNewrelicmysqlSlowqueryTotalSelectScan(mbc.Metrics.NewrelicmysqlSlowqueryTotalSelectScan),
+		metricNewrelicmysqlSlowqueryTotalTmpDiskTables:     newMetricNewrelicmysqlSlowqueryTotalTmpDiskTables(mbc.Metrics.NewrelicmysqlSlowqueryTotalTmpDiskTables),
+		metricNewrelicmysqlSlowqueryTotalTmpTables:         newMetricNewrelicmysqlSlowqueryTotalTmpTables(mbc.Metrics.NewrelicmysqlSlowqueryTotalTmpTables),
+		metricNewrelicmysqlSlowqueryTotalWarnings:          newMetricNewrelicmysqlSlowqueryTotalWarnings(mbc.Metrics.NewrelicmysqlSlowqueryTotalWarnings),
+		metricNewrelicmysqlUptime:                          newMetricNewrelicmysqlUptime(mbc.Metrics.NewrelicmysqlUptime),
+		resourceAttributeIncludeFilter:                     make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:                     make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.MysqlInstanceEndpoint.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["mysql.instance.endpoint"] = filter.CreateFilter(mbc.ResourceAttributes.MysqlInstanceEndpoint.MetricsInclude)
@@ -412,6 +1592,26 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicmysqlCommands.emit(ils.Metrics())
 	mb.metricNewrelicmysqlConnectionCount.emit(ils.Metrics())
 	mb.metricNewrelicmysqlQueryCount.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryAvgCPUTime.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryAvgElapsedTime.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryAvgLockTime.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryAvgRowsAffected.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryAvgRowsExamined.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryAvgRowsSent.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryExecutionCount.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryIntervalExecutionCount.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryMaxElapsedTime.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryMinElapsedTime.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalErrors.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalLockTime.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalNoIndexUsed.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalSelectFullJoin.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalSelectScan.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalTmpDiskTables.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalTmpTables.emit(ils.Metrics())
+	mb.metricNewrelicmysqlSlowqueryTotalWarnings.emit(ils.Metrics())
 	mb.metricNewrelicmysqlUptime.emit(ils.Metrics())
 
 	for _, op := range options {
@@ -472,6 +1672,106 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlQueryCountDataPoint(ts pcommon.Time
 	}
 	mb.metricNewrelicmysqlQueryCount.recordDataPoint(mb.startTime, ts, val)
 	return nil
+}
+
+// RecordNewrelicmysqlSlowqueryAvgCPUTimeDataPoint adds a data point to newrelicmysql.slowquery.avg_cpu_time metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryAvgCPUTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryAvgCPUTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryAvgElapsedTimeDataPoint adds a data point to newrelicmysql.slowquery.avg_elapsed_time metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryAvgElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryAvgElapsedTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryAvgLockTimeDataPoint adds a data point to newrelicmysql.slowquery.avg_lock_time metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryAvgLockTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryAvgLockTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryAvgRowsAffectedDataPoint adds a data point to newrelicmysql.slowquery.avg_rows_affected metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryAvgRowsAffectedDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryAvgRowsAffected.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryAvgRowsExaminedDataPoint adds a data point to newrelicmysql.slowquery.avg_rows_examined metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryAvgRowsExaminedDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryAvgRowsExamined.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryAvgRowsSentDataPoint adds a data point to newrelicmysql.slowquery.avg_rows_sent metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryAvgRowsSentDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryAvgRowsSent.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryExecutionCountDataPoint adds a data point to newrelicmysql.slowquery.execution_count metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryExecutionCountDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryExecutionCount.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryIntervalAvgElapsedTimeDataPoint adds a data point to newrelicmysql.slowquery.interval_avg_elapsed_time metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryIntervalAvgElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryIntervalAvgElapsedTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryIntervalExecutionCountDataPoint adds a data point to newrelicmysql.slowquery.interval_execution_count metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryIntervalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryIntervalExecutionCount.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryMaxElapsedTimeDataPoint adds a data point to newrelicmysql.slowquery.max_elapsed_time metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryMaxElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryMaxElapsedTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryMinElapsedTimeDataPoint adds a data point to newrelicmysql.slowquery.min_elapsed_time metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryMinElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryMinElapsedTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalErrorsDataPoint adds a data point to newrelicmysql.slowquery.total_errors metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalErrorsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalErrors.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalLockTimeDataPoint adds a data point to newrelicmysql.slowquery.total_lock_time metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalLockTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalLockTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalNoGoodIndexUsedDataPoint adds a data point to newrelicmysql.slowquery.total_no_good_index_used metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalNoGoodIndexUsedDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalNoGoodIndexUsed.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalNoIndexUsedDataPoint adds a data point to newrelicmysql.slowquery.total_no_index_used metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalNoIndexUsedDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalNoIndexUsed.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalSelectFullJoinDataPoint adds a data point to newrelicmysql.slowquery.total_select_full_join metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalSelectFullJoinDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalSelectFullJoin.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalSelectScanDataPoint adds a data point to newrelicmysql.slowquery.total_select_scan metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalSelectScanDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalSelectScan.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalTmpDiskTablesDataPoint adds a data point to newrelicmysql.slowquery.total_tmp_disk_tables metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalTmpDiskTablesDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalTmpDiskTables.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalTmpTablesDataPoint adds a data point to newrelicmysql.slowquery.total_tmp_tables metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalTmpTablesDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalTmpTables.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+}
+
+// RecordNewrelicmysqlSlowqueryTotalWarningsDataPoint adds a data point to newrelicmysql.slowquery.total_warnings metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlSlowqueryTotalWarningsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+	mb.metricNewrelicmysqlSlowqueryTotalWarnings.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
 }
 
 // RecordNewrelicmysqlUptimeDataPoint adds a data point to newrelicmysql.uptime metric.

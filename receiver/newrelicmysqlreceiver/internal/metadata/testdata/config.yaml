@@ -7,6 +7,46 @@ all_set:
       enabled: true
     newrelicmysql.query.count:
       enabled: true
+    newrelicmysql.slowquery.avg_cpu_time:
+      enabled: true
+    newrelicmysql.slowquery.avg_elapsed_time:
+      enabled: true
+    newrelicmysql.slowquery.avg_lock_time:
+      enabled: true
+    newrelicmysql.slowquery.avg_rows_affected:
+      enabled: true
+    newrelicmysql.slowquery.avg_rows_examined:
+      enabled: true
+    newrelicmysql.slowquery.avg_rows_sent:
+      enabled: true
+    newrelicmysql.slowquery.execution_count:
+      enabled: true
+    newrelicmysql.slowquery.interval_avg_elapsed_time:
+      enabled: true
+    newrelicmysql.slowquery.interval_execution_count:
+      enabled: true
+    newrelicmysql.slowquery.max_elapsed_time:
+      enabled: true
+    newrelicmysql.slowquery.min_elapsed_time:
+      enabled: true
+    newrelicmysql.slowquery.total_errors:
+      enabled: true
+    newrelicmysql.slowquery.total_lock_time:
+      enabled: true
+    newrelicmysql.slowquery.total_no_good_index_used:
+      enabled: true
+    newrelicmysql.slowquery.total_no_index_used:
+      enabled: true
+    newrelicmysql.slowquery.total_select_full_join:
+      enabled: true
+    newrelicmysql.slowquery.total_select_scan:
+      enabled: true
+    newrelicmysql.slowquery.total_tmp_disk_tables:
+      enabled: true
+    newrelicmysql.slowquery.total_tmp_tables:
+      enabled: true
+    newrelicmysql.slowquery.total_warnings:
+      enabled: true
     newrelicmysql.uptime:
       enabled: true
   resource_attributes:
@@ -19,6 +59,46 @@ none_set:
     newrelicmysql.connection.count:
       enabled: false
     newrelicmysql.query.count:
+      enabled: false
+    newrelicmysql.slowquery.avg_cpu_time:
+      enabled: false
+    newrelicmysql.slowquery.avg_elapsed_time:
+      enabled: false
+    newrelicmysql.slowquery.avg_lock_time:
+      enabled: false
+    newrelicmysql.slowquery.avg_rows_affected:
+      enabled: false
+    newrelicmysql.slowquery.avg_rows_examined:
+      enabled: false
+    newrelicmysql.slowquery.avg_rows_sent:
+      enabled: false
+    newrelicmysql.slowquery.execution_count:
+      enabled: false
+    newrelicmysql.slowquery.interval_avg_elapsed_time:
+      enabled: false
+    newrelicmysql.slowquery.interval_execution_count:
+      enabled: false
+    newrelicmysql.slowquery.max_elapsed_time:
+      enabled: false
+    newrelicmysql.slowquery.min_elapsed_time:
+      enabled: false
+    newrelicmysql.slowquery.total_errors:
+      enabled: false
+    newrelicmysql.slowquery.total_lock_time:
+      enabled: false
+    newrelicmysql.slowquery.total_no_good_index_used:
+      enabled: false
+    newrelicmysql.slowquery.total_no_index_used:
+      enabled: false
+    newrelicmysql.slowquery.total_select_full_join:
+      enabled: false
+    newrelicmysql.slowquery.total_select_scan:
+      enabled: false
+    newrelicmysql.slowquery.total_tmp_disk_tables:
+      enabled: false
+    newrelicmysql.slowquery.total_tmp_tables:
+      enabled: false
+    newrelicmysql.slowquery.total_warnings:
       enabled: false
     newrelicmysql.uptime:
       enabled: false

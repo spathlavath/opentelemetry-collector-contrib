@@ -28,10 +28,30 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicmysql metrics.
 type MetricsConfig struct {
-	NewrelicmysqlCommands        MetricConfig `mapstructure:"newrelicmysql.commands"`
-	NewrelicmysqlConnectionCount MetricConfig `mapstructure:"newrelicmysql.connection.count"`
-	NewrelicmysqlQueryCount      MetricConfig `mapstructure:"newrelicmysql.query.count"`
-	NewrelicmysqlUptime          MetricConfig `mapstructure:"newrelicmysql.uptime"`
+	NewrelicmysqlCommands                        MetricConfig `mapstructure:"newrelicmysql.commands"`
+	NewrelicmysqlConnectionCount                 MetricConfig `mapstructure:"newrelicmysql.connection.count"`
+	NewrelicmysqlQueryCount                      MetricConfig `mapstructure:"newrelicmysql.query.count"`
+	NewrelicmysqlSlowqueryAvgCPUTime             MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_cpu_time"`
+	NewrelicmysqlSlowqueryAvgElapsedTime         MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_elapsed_time"`
+	NewrelicmysqlSlowqueryAvgLockTime            MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_lock_time"`
+	NewrelicmysqlSlowqueryAvgRowsAffected        MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_rows_affected"`
+	NewrelicmysqlSlowqueryAvgRowsExamined        MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_rows_examined"`
+	NewrelicmysqlSlowqueryAvgRowsSent            MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_rows_sent"`
+	NewrelicmysqlSlowqueryExecutionCount         MetricConfig `mapstructure:"newrelicmysql.slowquery.execution_count"`
+	NewrelicmysqlSlowqueryIntervalAvgElapsedTime MetricConfig `mapstructure:"newrelicmysql.slowquery.interval_avg_elapsed_time"`
+	NewrelicmysqlSlowqueryIntervalExecutionCount MetricConfig `mapstructure:"newrelicmysql.slowquery.interval_execution_count"`
+	NewrelicmysqlSlowqueryMaxElapsedTime         MetricConfig `mapstructure:"newrelicmysql.slowquery.max_elapsed_time"`
+	NewrelicmysqlSlowqueryMinElapsedTime         MetricConfig `mapstructure:"newrelicmysql.slowquery.min_elapsed_time"`
+	NewrelicmysqlSlowqueryTotalErrors            MetricConfig `mapstructure:"newrelicmysql.slowquery.total_errors"`
+	NewrelicmysqlSlowqueryTotalLockTime          MetricConfig `mapstructure:"newrelicmysql.slowquery.total_lock_time"`
+	NewrelicmysqlSlowqueryTotalNoGoodIndexUsed   MetricConfig `mapstructure:"newrelicmysql.slowquery.total_no_good_index_used"`
+	NewrelicmysqlSlowqueryTotalNoIndexUsed       MetricConfig `mapstructure:"newrelicmysql.slowquery.total_no_index_used"`
+	NewrelicmysqlSlowqueryTotalSelectFullJoin    MetricConfig `mapstructure:"newrelicmysql.slowquery.total_select_full_join"`
+	NewrelicmysqlSlowqueryTotalSelectScan        MetricConfig `mapstructure:"newrelicmysql.slowquery.total_select_scan"`
+	NewrelicmysqlSlowqueryTotalTmpDiskTables     MetricConfig `mapstructure:"newrelicmysql.slowquery.total_tmp_disk_tables"`
+	NewrelicmysqlSlowqueryTotalTmpTables         MetricConfig `mapstructure:"newrelicmysql.slowquery.total_tmp_tables"`
+	NewrelicmysqlSlowqueryTotalWarnings          MetricConfig `mapstructure:"newrelicmysql.slowquery.total_warnings"`
+	NewrelicmysqlUptime                          MetricConfig `mapstructure:"newrelicmysql.uptime"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -43,6 +63,66 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicmysqlQueryCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgLockTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgRowsAffected: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgRowsExamined: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgRowsSent: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryIntervalAvgElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryIntervalExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryMaxElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryMinElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalErrors: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalLockTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalNoGoodIndexUsed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalNoIndexUsed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalSelectFullJoin: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalSelectScan: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalTmpDiskTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalTmpTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryTotalWarnings: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlUptime: MetricConfig{

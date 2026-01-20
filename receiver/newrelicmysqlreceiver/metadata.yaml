@@ -21,8 +21,22 @@ attributes:
     type: string
     enum: [delete, delete_multi, insert, select, update, update_multi]
 
+  # Slow Query Monitoring Attributes
+  database_name:
+    description: The database/schema name where the query was executed.
+    type: string
+  query_id:
+    description: The unique identifier (DIGEST hash) for the normalized query pattern.
+    type: string
+  query_text:
+    description: The normalized query text with literals replaced by placeholders.
+    type: string
+
 
 metrics:
+  # ============================================
+  # EXISTING METRICS (unchanged)
+  # ============================================
   newrelicmysql.commands:
     enabled: true
     description: The number of times each type of command has been executed.
@@ -57,6 +71,220 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
+
+  # ============================================
+  # SLOW QUERY MONITORING METRICS
+  # ============================================
+  # These metrics track Top N slow queries using MySQL performance_schema
+  # Data source: performance_schema.events_statements_summary_by_digest
+
+  # Historical (Cumulative) Metrics
+  newrelicmysql.slowquery.avg_cpu_time:
+    enabled: true
+    description: Historical average CPU time per query execution.
+    stability:
+      level: development
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.avg_elapsed_time:
+    enabled: true
+    stability:
+      level: development
+    description: Historical average query elapsed time (all-time average since server start).
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.avg_lock_time:
+    enabled: true
+    stability:
+      level: development
+    description: Historical average lock wait time per query execution.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  # Row Metrics
+  newrelicmysql.slowquery.avg_rows_affected:
+    enabled: true
+    stability:
+      level: development
+    description: Average number of rows modified per query execution (INSERT/UPDATE/DELETE).
+    unit: "1"
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.avg_rows_examined:
+    enabled: true
+    stability:
+      level: development
+    description: Average number of rows examined per query execution.
+    unit: "1"
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.avg_rows_sent:
+    enabled: true
+    stability:
+      level: development
+    description: Average number of rows returned per query execution.
+    unit: "1"
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.execution_count:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of times this query pattern has been executed (cumulative).
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  # Interval (Delta) Metrics - Most Important!
+  newrelicmysql.slowquery.interval_avg_elapsed_time:
+    enabled: true
+    stability:
+      level: development
+    description: Average query elapsed time in the current interval (delta between scrapes). This is the primary metric for Top N selection.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.interval_execution_count:
+    enabled: true
+    stability:
+      level: development
+    description: Number of query executions in the current interval (delta between scrapes).
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  # Performance Variance Metrics (Root Cause Analysis)
+  newrelicmysql.slowquery.max_elapsed_time:
+    enabled: true
+    stability:
+      level: development
+    description: Maximum (slowest) query execution time observed.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.min_elapsed_time:
+    enabled: true
+    stability:
+      level: development
+    description: Minimum (fastest) query execution time observed.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  # Error and Warning Metrics (Reliability Indicators)
+  newrelicmysql.slowquery.total_errors:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of errors encountered during query execution. Common causes include syntax errors, constraint violations, and permission issues.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.total_lock_time:
+    enabled: true
+    stability:
+      level: development
+    description: Total cumulative time spent waiting for locks. High value indicates lock contention issues.
+    unit: ms
+    gauge:
+      value_type: double
+    attributes: [database_name, query_id, query_text]
+
+  # Disk I/O Metrics (Performance Indicators)
+  newrelicmysql.slowquery.total_no_good_index_used:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of times MySQL couldn't find a good index to use. Non-zero = YELLOW FLAG.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.total_no_index_used:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of queries that performed table scans without using an index. Non-zero = RED FLAG.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.total_select_full_join:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of joins without indexes. High value indicates missing join indexes.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.total_select_scan:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of full table scans performed. High value indicates missing indexes.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  # Temporary Table Metrics (Memory Pressure Indicators)
+  newrelicmysql.slowquery.total_tmp_disk_tables:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of temporary tables created on disk (RED FLAG - indicates memory pressure).
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.total_tmp_tables:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of temporary tables created.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
+  newrelicmysql.slowquery.total_warnings:
+    enabled: true
+    stability:
+      level: development
+    description: Total number of warnings generated during query execution. Common causes include type mismatches, truncated data, and deprecated syntax.
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes: [database_name, query_id, query_text]
+
   newrelicmysql.uptime:
     enabled: true
     description: The number of seconds that the server has been up.
