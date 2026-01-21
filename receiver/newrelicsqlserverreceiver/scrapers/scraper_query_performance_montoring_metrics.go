@@ -385,6 +385,7 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 			requestStartTime,
 			node.CollectionTimestamp,
 			node.LastExecutionTime,
+			"SqlExecutionPlan",
 		)
 	}
 }
@@ -451,6 +452,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		querySignature,
 		collectionTimestamp,
 		lastExecutionTimestamp,
+		"SqlQueryDetails",
 	)
 
 	if result.AvgCPUTimeMS != nil {
@@ -632,8 +634,6 @@ func (s *QueryPerformanceScraper) ExtractQueryIDsFromSlowQueries(slowQueries []m
 
 	return queryIDs
 }
-
-
 
 func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []models.SlowQuery) ([]string, map[string]models.SlowQueryPlanData) {
 	queryIDMap := make(map[string]bool)

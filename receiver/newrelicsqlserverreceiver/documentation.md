@@ -1097,6 +1097,7 @@ SQL Server execution plan operator with detailed cost estimates, performance met
 | request_start_time | Timestamp when the request started | Any Str | false |
 | collection_timestamp | Timestamp when the metric was collected | Any Str | false |
 | last_execution_time | Timestamp of last execution | Any Str | false |
+| newrelic.event.type | Event type for New Relic integration | Any Str | false |
 
 ### sqlserver.failover_cluster.ag_cluster_type
 
@@ -2154,6 +2155,7 @@ Query details including text, signature, and timestamps for slow queries
 | query_signature | SHA256 hash of normalized query for cross-instance correlation | Any Str | false |
 | collection_timestamp | Timestamp when the metric was collected | Any Str | false |
 | last_execution_timestamp | Timestamp of the last execution of this query | Any Str | false |
+| newrelic.event.type | Event type for New Relic integration | Any Str | false |
 
 ### sqlserver.stats.connections
 

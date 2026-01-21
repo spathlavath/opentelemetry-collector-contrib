@@ -1612,6 +1612,7 @@ metrics:
         request_start_time,
         collection_timestamp,
         last_execution_time,
+        newrelic.event.type,
       ]
 
   # Individual Query Analysis Metrics
@@ -1655,6 +1656,7 @@ metrics:
         query_signature,
         collection_timestamp,
         last_execution_timestamp,
+        newrelic.event.type,
       ]
 
   sqlserver.slowquery.avg_disk_reads:
@@ -2319,6 +2321,9 @@ attributes:
     type: string
   metric_source:
     description: Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX)
+    type: string
+  newrelic.event.type:
+    description: Event type for New Relic integration
     type: string
   no_join_predicate:
     description: Whether join lacks a predicate (potential Cartesian product)
