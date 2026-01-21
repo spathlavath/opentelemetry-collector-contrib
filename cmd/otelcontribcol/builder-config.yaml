@@ -124,6 +124,7 @@ processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/cumulativetodeltaprocessor v0.141.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatorateprocessor v0.141.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.141.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.141.0
   # All other processors commented out
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/coralogixprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatocumulativeprocessor v0.141.0
@@ -272,6 +273,8 @@ receivers:
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zookeeperreceiver v0.141.0
 
 connectors:
+  # Add metricsaslogs connector for metrics-to-logs conversion
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/connector/metricsaslogsconnector v0.141.0
   # No connectors used in config files - comment out all
   # - gomod: go.opentelemetry.io/collector/connector/forwardconnector v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/connector/countconnector v0.141.0
