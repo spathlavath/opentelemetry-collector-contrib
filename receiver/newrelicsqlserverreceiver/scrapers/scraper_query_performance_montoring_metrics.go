@@ -155,10 +155,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 	skippedNoSlowQueryMatch := 0
 	skippedPlanFetch := 0
 
-	// Use lightweight plan data already in memory (NO database query needed)
-	// Only uses the 5 fields needed for sqlserver.plan.* metrics
 	for _, activeQuery := range activeQueries {
-		// Get lightweight plan data using query_hash
 		var planData models.SlowQueryPlanData
 		var found bool
 		if activeQuery.QueryID != nil && !activeQuery.QueryID.IsEmpty() {

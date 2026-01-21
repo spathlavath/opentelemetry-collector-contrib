@@ -184,7 +184,6 @@ DEALLOCATE db_cursor;
 -- MAIN QUERY: Active running queries with cross-database KEY lock resolution
 -- ============================================================================
 DECLARE @Limit INT = %d; -- Set the maximum number of rows to return
-DECLARE @TextTruncateLimit INT = %d; -- Set the maximum length for query text
 DECLARE @ElapsedTimeThresholdMs INT = %d; -- Minimum elapsed time threshold in milliseconds
 
 SELECT TOP (@Limit)
@@ -205,8 +204,8 @@ SELECT TOP (@Limit)
     r_wait.query_hash AS query_id,
 
     -- B2. QUERY TEXT (moved up before wait decoding to avoid SUBSTRING errors in later sections)
-    -- Using full text to avoid SUBSTRING calculation errors when offsets are invalid
-    LEFT(st_wait.text, @TextTruncateLimit) AS query_statement_text,
+    -- Using full text without truncation
+    st_wait.text AS query_statement_text,
 
     -- B3. QUERY CONTEXT - Schema and Object Name (for stored procedures)
     -- Use query plan's objectid (qp_wait.objectid) not SQL text's objectid (st_wait.objectid)
@@ -322,11 +321,11 @@ SELECT TOP (@Limit)
     s_blocker.open_transaction_count AS blocker_open_transaction_count,
 
     -- J. QUERY TEXT - Blocking Session
-    -- Simplified to avoid SUBSTRING errors
+    -- Full text without truncation
     CASE
         WHEN r_wait.blocking_session_id = 0 THEN 'N/A'
-        WHEN r_blocker.command IS NULL AND ib_blocker.event_info IS NOT NULL THEN LEFT(ib_blocker.event_info, @TextTruncateLimit)
-        WHEN st_blocker.text IS NOT NULL THEN LEFT(st_blocker.text, @TextTruncateLimit)
+        WHEN r_blocker.command IS NULL AND ib_blocker.event_info IS NOT NULL THEN ib_blocker.event_info
+        WHEN st_blocker.text IS NOT NULL THEN st_blocker.text
         ELSE 'N/A'
     END AS blocking_query_statement_text,
 
