@@ -163,6 +163,9 @@ var MetricsInfo = metricsInfo{
 	SqlserverDatabaseTransactionsActive: metricInfo{
 		Name: "sqlserver.database.transactions.active",
 	},
+	SqlserverExecutionPlan: metricInfo{
+		Name: "sqlserver.execution.plan",
+	},
 	SqlserverFailoverClusterAgClusterType: metricInfo{
 		Name: "sqlserver.failover_cluster.ag_cluster_type",
 	},
@@ -576,6 +579,7 @@ type metricsInfo struct {
 	SqlserverDatabaseSizeDataMb                               metricInfo
 	SqlserverDatabaseSizeTotalMb                              metricInfo
 	SqlserverDatabaseTransactionsActive                       metricInfo
+	SqlserverExecutionPlan                                    metricInfo
 	SqlserverFailoverClusterAgClusterType                     metricInfo
 	SqlserverFailoverClusterAgFailureConditionLevel           metricInfo
 	SqlserverFailoverClusterAgHealthCheckTimeout              metricInfo
@@ -3614,6 +3618,88 @@ func (m *metricSqlserverDatabaseTransactionsActive) emit(metrics pmetric.MetricS
 
 func newMetricSqlserverDatabaseTransactionsActive(cfg MetricConfig) metricSqlserverDatabaseTransactionsActive {
 	m := metricSqlserverDatabaseTransactionsActive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricSqlserverExecutionPlan struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills sqlserver.execution.plan metric with initial data.
+func (m *metricSqlserverExecutionPlan) init() {
+	m.data.SetName("sqlserver.execution.plan")
+	m.data.SetDescription("SQL Server execution plan operator with detailed cost estimates, performance metrics, and resource usage")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricSqlserverExecutionPlan) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, nodeIDAttributeValue int64, parentNodeIDAttributeValue int64, physicalOpAttributeValue string, logicalOpAttributeValue string, inputTypeAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string, referencedColumnsAttributeValue string, estimateRowsAttributeValue float64, estimateIoAttributeValue float64, estimateCPUAttributeValue float64, avgRowSizeAttributeValue float64, totalSubtreeCostAttributeValue float64, estimatedOperatorCostAttributeValue float64, estimatedExecutionModeAttributeValue string, grantedMemoryKbAttributeValue int64, spillOccurredAttributeValue bool, noJoinPredicateAttributeValue bool, totalWorkerTimeAttributeValue float64, totalElapsedTimeAttributeValue float64, totalLogicalReadsAttributeValue int64, totalLogicalWritesAttributeValue int64, executionCountAttributeValue int64, avgElapsedTimeMsAttributeValue float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
+	dp.Attributes().PutInt("node_id", nodeIDAttributeValue)
+	dp.Attributes().PutInt("parent_node_id", parentNodeIDAttributeValue)
+	dp.Attributes().PutStr("physical_op", physicalOpAttributeValue)
+	dp.Attributes().PutStr("logical_op", logicalOpAttributeValue)
+	dp.Attributes().PutStr("input_type", inputTypeAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("referenced_columns", referencedColumnsAttributeValue)
+	dp.Attributes().PutDouble("estimate_rows", estimateRowsAttributeValue)
+	dp.Attributes().PutDouble("estimate_io", estimateIoAttributeValue)
+	dp.Attributes().PutDouble("estimate_cpu", estimateCPUAttributeValue)
+	dp.Attributes().PutDouble("avg_row_size", avgRowSizeAttributeValue)
+	dp.Attributes().PutDouble("total_subtree_cost", totalSubtreeCostAttributeValue)
+	dp.Attributes().PutDouble("estimated_operator_cost", estimatedOperatorCostAttributeValue)
+	dp.Attributes().PutStr("estimated_execution_mode", estimatedExecutionModeAttributeValue)
+	dp.Attributes().PutInt("granted_memory_kb", grantedMemoryKbAttributeValue)
+	dp.Attributes().PutBool("spill_occurred", spillOccurredAttributeValue)
+	dp.Attributes().PutBool("no_join_predicate", noJoinPredicateAttributeValue)
+	dp.Attributes().PutDouble("total_worker_time", totalWorkerTimeAttributeValue)
+	dp.Attributes().PutDouble("total_elapsed_time", totalElapsedTimeAttributeValue)
+	dp.Attributes().PutInt("total_logical_reads", totalLogicalReadsAttributeValue)
+	dp.Attributes().PutInt("total_logical_writes", totalLogicalWritesAttributeValue)
+	dp.Attributes().PutInt("execution_count", executionCountAttributeValue)
+	dp.Attributes().PutDouble("avg_elapsed_time_ms", avgElapsedTimeMsAttributeValue)
+	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
+	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
+	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricSqlserverExecutionPlan) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricSqlserverExecutionPlan) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricSqlserverExecutionPlan(cfg MetricConfig) metricSqlserverExecutionPlan {
+	m := metricSqlserverExecutionPlan{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9865,6 +9951,7 @@ type MetricsBuilder struct {
 	metricSqlserverDatabaseSizeDataMb                               metricSqlserverDatabaseSizeDataMb
 	metricSqlserverDatabaseSizeTotalMb                              metricSqlserverDatabaseSizeTotalMb
 	metricSqlserverDatabaseTransactionsActive                       metricSqlserverDatabaseTransactionsActive
+	metricSqlserverExecutionPlan                                    metricSqlserverExecutionPlan
 	metricSqlserverFailoverClusterAgClusterType                     metricSqlserverFailoverClusterAgClusterType
 	metricSqlserverFailoverClusterAgFailureConditionLevel           metricSqlserverFailoverClusterAgFailureConditionLevel
 	metricSqlserverFailoverClusterAgHealthCheckTimeout              metricSqlserverFailoverClusterAgHealthCheckTimeout
@@ -10060,6 +10147,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverDatabaseSizeDataMb:                               newMetricSqlserverDatabaseSizeDataMb(mbc.Metrics.SqlserverDatabaseSizeDataMb),
 		metricSqlserverDatabaseSizeTotalMb:                              newMetricSqlserverDatabaseSizeTotalMb(mbc.Metrics.SqlserverDatabaseSizeTotalMb),
 		metricSqlserverDatabaseTransactionsActive:                       newMetricSqlserverDatabaseTransactionsActive(mbc.Metrics.SqlserverDatabaseTransactionsActive),
+		metricSqlserverExecutionPlan:                                    newMetricSqlserverExecutionPlan(mbc.Metrics.SqlserverExecutionPlan),
 		metricSqlserverFailoverClusterAgClusterType:                     newMetricSqlserverFailoverClusterAgClusterType(mbc.Metrics.SqlserverFailoverClusterAgClusterType),
 		metricSqlserverFailoverClusterAgFailureConditionLevel:           newMetricSqlserverFailoverClusterAgFailureConditionLevel(mbc.Metrics.SqlserverFailoverClusterAgFailureConditionLevel),
 		metricSqlserverFailoverClusterAgHealthCheckTimeout:              newMetricSqlserverFailoverClusterAgHealthCheckTimeout(mbc.Metrics.SqlserverFailoverClusterAgHealthCheckTimeout),
@@ -10332,6 +10420,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverDatabaseSizeDataMb.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseSizeTotalMb.emit(ils.Metrics())
 	mb.metricSqlserverDatabaseTransactionsActive.emit(ils.Metrics())
+	mb.metricSqlserverExecutionPlan.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterAgClusterType.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterAgFailureConditionLevel.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterAgHealthCheckTimeout.emit(ils.Metrics())
@@ -10731,6 +10820,11 @@ func (mb *MetricsBuilder) RecordSqlserverDatabaseSizeTotalMbDataPoint(ts pcommon
 // RecordSqlserverDatabaseTransactionsActiveDataPoint adds a data point to sqlserver.database.transactions.active metric.
 func (mb *MetricsBuilder) RecordSqlserverDatabaseTransactionsActiveDataPoint(ts pcommon.Timestamp, val int64, metricSourceAttributeValue string, engineEditionAttributeValue string, engineEditionIDAttributeValue int64) {
 	mb.metricSqlserverDatabaseTransactionsActive.recordDataPoint(mb.startTime, ts, val, metricSourceAttributeValue, engineEditionAttributeValue, engineEditionIDAttributeValue)
+}
+
+// RecordSqlserverExecutionPlanDataPoint adds a data point to sqlserver.execution.plan metric.
+func (mb *MetricsBuilder) RecordSqlserverExecutionPlanDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, nodeIDAttributeValue int64, parentNodeIDAttributeValue int64, physicalOpAttributeValue string, logicalOpAttributeValue string, inputTypeAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string, referencedColumnsAttributeValue string, estimateRowsAttributeValue float64, estimateIoAttributeValue float64, estimateCPUAttributeValue float64, avgRowSizeAttributeValue float64, totalSubtreeCostAttributeValue float64, estimatedOperatorCostAttributeValue float64, estimatedExecutionModeAttributeValue string, grantedMemoryKbAttributeValue int64, spillOccurredAttributeValue bool, noJoinPredicateAttributeValue bool, totalWorkerTimeAttributeValue float64, totalElapsedTimeAttributeValue float64, totalLogicalReadsAttributeValue int64, totalLogicalWritesAttributeValue int64, executionCountAttributeValue int64, avgElapsedTimeMsAttributeValue float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimeAttributeValue string) {
+	mb.metricSqlserverExecutionPlan.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, nodeIDAttributeValue, parentNodeIDAttributeValue, physicalOpAttributeValue, logicalOpAttributeValue, inputTypeAttributeValue, schemaNameAttributeValue, tableNameAttributeValue, indexNameAttributeValue, referencedColumnsAttributeValue, estimateRowsAttributeValue, estimateIoAttributeValue, estimateCPUAttributeValue, avgRowSizeAttributeValue, totalSubtreeCostAttributeValue, estimatedOperatorCostAttributeValue, estimatedExecutionModeAttributeValue, grantedMemoryKbAttributeValue, spillOccurredAttributeValue, noJoinPredicateAttributeValue, totalWorkerTimeAttributeValue, totalElapsedTimeAttributeValue, totalLogicalReadsAttributeValue, totalLogicalWritesAttributeValue, executionCountAttributeValue, avgElapsedTimeMsAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, lastExecutionTimeAttributeValue)
 }
 
 // RecordSqlserverFailoverClusterAgClusterTypeDataPoint adds a data point to sqlserver.failover_cluster.ag_cluster_type metric.

@@ -64,13 +64,15 @@ CPU time for currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -119,13 +121,15 @@ Total elapsed time for currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -174,13 +178,15 @@ Number of memory pages granted to currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -229,13 +235,15 @@ Number of logical reads from buffer cache for currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -284,13 +292,15 @@ Number of physical reads from disk for currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -339,13 +349,15 @@ Number of rows returned by currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -394,13 +406,15 @@ Wait time for currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -449,13 +463,15 @@ Number of writes for currently executing query
 | transaction_isolation_level | Transaction isolation level | Any Int | false |
 | degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
 | parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_status | Status of the blocking session | Any Str | false |
 | blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
+| blocking_login_name | Login name of the blocking session | Any Str | false |
 | blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
+| blocking_program_name | Program name of the blocking session | Any Str | false |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
+| blocking_query_text | SQL query text of the blocking session | Any Str | false |
+| blocking_session_id | Session ID that is blocking this request | Any Int | false |
+| blocking_status | Status of the blocking session | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_id | Unique identifier for the SQL query | Any Str | false |
 | plan_handle | Handle to the cached execution plan | Any Str | false |
@@ -675,22 +691,6 @@ Total page file space (total reserved space) for the SQL Server database
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
 
-### sqlserver.database.principal.createDate
-
-Database principal creation date as Unix timestamp
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| principal_name | Database principal name | Any Str | false |
-| principal_type | Principal type description | Any Str | false |
-
 ### sqlserver.database.principals.applicationRoles
 
 Number of application roles
@@ -873,24 +873,6 @@ Number of unique members in roles
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the database | Any Str | false |
 
-### sqlserver.database.role.membership.active
-
-Database role membership active status
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {status} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| role_name | Database role name | Any Str | false |
-| member_name | Role member name | Any Str | false |
-| role_type | Role type | Any Str | false |
-| member_type | Member type | Any Str | false |
-
 ### sqlserver.database.role.memberships.active
 
 Number of active role memberships
@@ -961,22 +943,6 @@ Number of user role memberships
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the database | Any Str | false |
 
-### sqlserver.database.role.nesting.level
-
-Role nesting level
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {level} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| parent_role_name | Parent role name in hierarchy | Any Str | false |
-| child_role_name | Child role name in hierarchy | Any Str | false |
-
 ### sqlserver.database.role.permission.memberCount
 
 Number of members in role
@@ -1008,22 +974,6 @@ Role risk level
 | database_name | Name of the database | Any Str | false |
 | role_name | Database role name | Any Str | false |
 | permission_scope | Permission scope | Any Str | false |
-
-### sqlserver.database.role.permissions.inherited
-
-Role permission inheritance status
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {status} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| parent_role_name | Parent role name in hierarchy | Any Str | false |
-| child_role_name | Child role name in hierarchy | Any Str | false |
 
 ### sqlserver.database.role.roles.empty
 
@@ -1102,6 +1052,51 @@ Number of active transactions
 | metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
 | engine_edition_id | SQL Server engine edition ID | Any Int | false |
+
+### sqlserver.execution.plan
+
+SQL Server execution plan operator with detailed cost estimates, performance metrics, and resource usage
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | false |
+| plan_handle | Handle to the cached execution plan | Any Str | false |
+| node_id | Execution plan node identifier | Any Int | false |
+| parent_node_id | Parent node identifier in execution plan tree | Any Int | false |
+| physical_op | Physical operator name (e.g., Index Seek, Table Scan) | Any Str | false |
+| logical_op | Logical operator name | Any Str | false |
+| input_type | Type of input to the operator | Any Str | false |
+| schema_name | Schema name of the database object | Any Str | false |
+| table_name | Table name referenced in the operator | Any Str | false |
+| index_name | Index name used by the operator | Any Str | false |
+| referenced_columns | Comma-separated list of columns referenced | Any Str | false |
+| estimate_rows | Estimated number of rows | Any Double | false |
+| estimate_io | Estimated I/O cost | Any Double | false |
+| estimate_cpu | Estimated CPU cost | Any Double | false |
+| avg_row_size | Average row size in bytes | Any Double | false |
+| total_subtree_cost | Cumulative cost of this operator and its children | Any Double | false |
+| estimated_operator_cost | Estimated cost of this operator alone | Any Double | false |
+| estimated_execution_mode | Execution mode (Row, Batch) | Any Str | false |
+| granted_memory_kb | Memory granted in KB | Any Int | false |
+| spill_occurred | Whether memory spill occurred | Any Bool | false |
+| no_join_predicate | Whether join lacks a predicate (potential Cartesian product) | Any Bool | false |
+| total_worker_time | Total CPU time for this operator | Any Double | false |
+| total_elapsed_time | Total elapsed time for this operator | Any Double | false |
+| total_logical_reads | Total logical reads for this operator | Any Int | false |
+| total_logical_writes | Total logical writes for this operator | Any Int | false |
+| execution_count | Number of times this operator executed | Any Int | false |
+| avg_elapsed_time_ms | Average elapsed time in milliseconds | Any Double | false |
+| session_id | SQL Server session identifier | Any Int | false |
+| request_id | SQL Server request identifier | Any Int | false |
+| request_start_time | Timestamp when the request started | Any Str | false |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| last_execution_time | Timestamp of last execution | Any Str | false |
 
 ### sqlserver.failover_cluster.ag_cluster_type
 
@@ -1810,214 +1805,7 @@ Total server memory in KB
 
 ### sqlserver.plan.avg_elapsed_time_ms
 
-Average elapsed time per execution of this plan (historical)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.avg_logical_reads
-
-Average logical reads per execution of this plan (historical)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.avg_logical_writes
-
-Average logical writes per execution of this plan (historical)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.avg_worker_time_ms
-
-Average CPU time per execution of this plan (historical)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.execution_count
-
-Total number of executions for this execution plan (historical)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.last_dop
-
-Degree of parallelism for last execution of this plan
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {threads} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.last_grant_kb
-
-Memory grant for last execution of this plan
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| KB | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.last_spills
-
-TempDB spills for last execution of this plan
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {pages} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.max_elapsed_time_ms
-
-Maximum elapsed time for this plan (historical)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.plan.min_elapsed_time_ms
-
-Minimum elapsed time for this plan (historical)
+Average elapsed time per execution of this plan (historical) - Used in NRQL queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2671,26 +2459,6 @@ Connection churn rate (logout/login ratio as percentage)
 | ---- | ----------- | ---------- |
 | % | Gauge | Double |
 
-### sqlserver.user_connections.authentication.failed_login_events
-
-Count of failed login events processed
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {events} | Sum | Int | Cumulative | true |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| event_type | Event type | Any Str | false |
-| description | Event description | Any Str | false |
-| start_time | Event start time | Any Str | false |
-| client_ip | Client IP address | Any Str | false |
-| log_date | Log date timestamp | Any Str | false |
-| process_info | Process information | Any Str | false |
-| error_text | Error message text | Any Str | false |
-
 ### sqlserver.user_connections.authentication.logins_per_sec
 
 Current login rate per second
@@ -2699,28 +2467,6 @@ Current login rate per second
 | ---- | ----------- | ---------- |
 | {logins}/s | Gauge | Int |
 
-### sqlserver.user_connections.authentication.logouts_per_sec
-
-Current logout rate per second
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {logouts}/s | Gauge | Int |
-
-### sqlserver.user_connections.authentication.rate
-
-Login or logout rate per second from performance counters
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {events}/s | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| counter_name | Performance counter name | Any Str | false |
-
 ### sqlserver.user_connections.authentication.recent_failed_logins
 
 Count of failed logins in the last hour
@@ -2728,14 +2474,6 @@ Count of failed logins in the last hour
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {attempts} | Gauge | Int |
-
-### sqlserver.user_connections.authentication.total_activity
-
-Sum of logins and logouts per second
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {events}/s | Gauge | Int |
 
 ### sqlserver.user_connections.authentication.total_failed_logins
 
@@ -2776,38 +2514,6 @@ Number of connections grouped by client host and program
 | host_name | Client host name | Any Str | false |
 | program_name | Client program name | Any Str | false |
 
-### sqlserver.user_connections.client.hosts_multi_program
-
-Count of hosts running multiple different programs
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {hosts} | Gauge | Int |
-
-### sqlserver.user_connections.client.programs_multi_host
-
-Count of programs connecting from multiple hosts
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {programs} | Gauge | Int |
-
-### sqlserver.user_connections.client.top_host_connections
-
-Highest number of connections from a single host
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
-
-### sqlserver.user_connections.client.top_program_connections
-
-Highest number of connections from a single program
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
-
 ### sqlserver.user_connections.client.unique_hosts
 
 Count of unique client hosts with active connections
@@ -2823,14 +2529,6 @@ Count of unique programs with active connections
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {programs} | Gauge | Int |
-
-### sqlserver.user_connections.dormant
-
-Number of dormant user connections
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
 
 ### sqlserver.user_connections.runnable
 
@@ -2856,20 +2554,6 @@ Number of sleeping user connections
 | ---- | ----------- | ---------- |
 | {connections} | Gauge | Int |
 
-### sqlserver.user_connections.status.count
-
-Number of user sessions by connection status
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| status | Connection or session status | Any Str | false |
-
 ### sqlserver.user_connections.suspended
 
 Number of suspended user connections
@@ -2894,25 +2578,9 @@ Ratio of active connections to total connections
 | ---- | ----------- | ---------- |
 | 1 | Gauge | Double |
 
-### sqlserver.user_connections.utilization.efficiency
-
-Connection efficiency metric (active/total ratio adjusted for waiting)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
 ### sqlserver.user_connections.utilization.idle_ratio
 
 Ratio of idle connections to total connections
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
-
-### sqlserver.user_connections.utilization.waiting_ratio
-
-Ratio of waiting connections to total connections
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |

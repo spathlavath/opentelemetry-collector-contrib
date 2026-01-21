@@ -78,6 +78,7 @@ type MetricsConfig struct {
 	SqlserverDatabaseSizeDataMb                               MetricConfig `mapstructure:"sqlserver.database.size.data_mb"`
 	SqlserverDatabaseSizeTotalMb                              MetricConfig `mapstructure:"sqlserver.database.size.total_mb"`
 	SqlserverDatabaseTransactionsActive                       MetricConfig `mapstructure:"sqlserver.database.transactions.active"`
+	SqlserverExecutionPlan                                    MetricConfig `mapstructure:"sqlserver.execution.plan"`
 	SqlserverFailoverClusterAgClusterType                     MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_cluster_type"`
 	SqlserverFailoverClusterAgFailureConditionLevel           MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_failure_condition_level"`
 	SqlserverFailoverClusterAgHealthCheckTimeout              MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_health_check_timeout"`
@@ -350,6 +351,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverDatabaseTransactionsActive: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverExecutionPlan: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverFailoverClusterAgClusterType: MetricConfig{

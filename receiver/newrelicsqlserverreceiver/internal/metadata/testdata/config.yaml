@@ -101,6 +101,8 @@ all_set:
       enabled: true
     sqlserver.database.transactions.active:
       enabled: true
+    sqlserver.execution.plan:
+      enabled: true
     sqlserver.failover_cluster.ag_cluster_type:
       enabled: true
     sqlserver.failover_cluster.ag_failure_condition_level:
@@ -456,6 +458,8 @@ none_set:
     sqlserver.database.size.total_mb:
       enabled: false
     sqlserver.database.transactions.active:
+      enabled: false
+    sqlserver.execution.plan:
       enabled: false
     sqlserver.failover_cluster.ag_cluster_type:
       enabled: false

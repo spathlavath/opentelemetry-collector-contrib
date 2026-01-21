@@ -4,7 +4,6 @@ status:
   class: receiver
   stability:
     alpha: [metrics]
-    development: [logs]
   distributions: [contrib]
   codeowners:
     active: [pkulkarni, avadla, pkudikyala]
@@ -1570,6 +1569,51 @@ metrics:
         schema_name,
       ]
 
+  # Execution Plan Operator Metric (single metric with all operator details as attributes)
+  sqlserver.execution.plan:
+    enabled: true
+    stability:
+      level: alpha
+    description: SQL Server execution plan operator with detailed cost estimates, performance metrics, and resource usage
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes:
+      [
+        query_id,
+        plan_handle,
+        node_id,
+        parent_node_id,
+        physical_op,
+        logical_op,
+        input_type,
+        schema_name,
+        table_name,
+        index_name,
+        referenced_columns,
+        estimate_rows,
+        estimate_io,
+        estimate_cpu,
+        avg_row_size,
+        total_subtree_cost,
+        estimated_operator_cost,
+        estimated_execution_mode,
+        granted_memory_kb,
+        spill_occurred,
+        no_join_predicate,
+        total_worker_time,
+        total_elapsed_time,
+        total_logical_reads,
+        total_logical_writes,
+        execution_count,
+        avg_elapsed_time_ms,
+        session_id,
+        request_id,
+        request_start_time,
+        collection_timestamp,
+        last_execution_time,
+      ]
+
   # Individual Query Analysis Metrics
   sqlserver.security.server_principals_count:
     enabled: true
@@ -2431,15 +2475,6 @@ attributes:
     type: string
   plan_handle:
     description: Handle to the cached execution plan
-    type: string
-  principal_name:
-    description: Database principal name
-    type: string
-  principal_type:
-    description: Principal type description
-    type: string
-  process_info:
-    description: Process information
     type: string
   program_name:
     description: Client program name

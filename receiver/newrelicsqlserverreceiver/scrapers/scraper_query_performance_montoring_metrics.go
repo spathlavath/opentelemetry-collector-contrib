@@ -248,7 +248,9 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 	totalStatsEmitted := 0
+	totalExecutionPlansEmitted := 0
 	skippedNoSlowQueryMatch := 0
+	skippedPlanFetch := 0
 
 	// Use lightweight plan data already in memory (NO database query needed)
 	// Only uses the 5 fields needed for sqlserver.plan.* metrics
@@ -280,12 +282,52 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 		s.emitActiveQueryPlanMetrics(planResult, activeQuery, timestamp)
 
 		totalStatsEmitted++
+
+		// Fetch and emit execution plan operator details
+		// Fetch execution plan XML from SQL Server
+		executionPlanXML, err := s.fetchExecutionPlanXML(ctx, planData.PlanHandle)
+		if err != nil {
+			s.logger.Warn("Failed to fetch execution plan XML",
+				zap.Error(err),
+				zap.String("plan_handle", planData.PlanHandle.String()))
+			skippedPlanFetch++
+			continue
+		}
+
+		if executionPlanXML == "" {
+			s.logger.Debug("Execution plan XML not available (plan evicted from cache)",
+				zap.String("plan_handle", planData.PlanHandle.String()))
+			skippedPlanFetch++
+			continue
+		}
+
+		// Parse execution plan XML
+		queryID := ""
+		if activeQuery.QueryID != nil {
+			queryID = activeQuery.QueryID.String()
+		}
+		planHandle := planData.PlanHandle.String()
+
+		executionPlan, err := models.ParseExecutionPlanXML(executionPlanXML, queryID, planHandle)
+		if err != nil {
+			s.logger.Warn("Failed to parse execution plan XML",
+				zap.Error(err),
+				zap.String("plan_handle", planHandle))
+			skippedPlanFetch++
+			continue
+		}
+
+		// Emit execution plan node metrics
+		s.emitExecutionPlanNodeMetrics(*executionPlan, activeQuery, timestamp)
+		totalExecutionPlansEmitted++
 	}
 
-	s.logger.Info("Emitted execution plan statistics from slow query data (NO database query)",
+	s.logger.Info("Emitted execution plan statistics and detailed operator metrics",
 		zap.Int("active_query_count", len(activeQueries)),
-		zap.Int("stats_emitted", totalStatsEmitted),
-		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch))
+		zap.Int("plan_stats_emitted", totalStatsEmitted),
+		zap.Int("execution_plans_emitted", totalExecutionPlansEmitted),
+		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch),
+		zap.Int("skipped_plan_fetch", skippedPlanFetch))
 
 	return nil
 }
@@ -433,6 +475,78 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		)
 	}
 }
+
+// emitExecutionPlanNodeMetrics emits execution plan node metrics for detailed operator analysis
+// Emits sqlserver.execution.plan metric with all operator details as attributes
+func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan models.ExecutionPlanAnalysis, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
+	// Helper to safely get session correlation attributes
+	getSessionID := func() int64 {
+		if activeQuery.CurrentSessionID != nil {
+			return *activeQuery.CurrentSessionID
+		}
+		return 0
+	}
+
+	getRequestID := func() int64 {
+		if activeQuery.RequestID != nil {
+			return *activeQuery.RequestID
+		}
+		return 0
+	}
+
+	getRequestStartTime := func() string {
+		if activeQuery.RequestStartTime != nil {
+			return *activeQuery.RequestStartTime
+		}
+		return ""
+	}
+
+	// Emit metric for each operator node in the execution plan
+	for _, node := range executionPlan.Nodes {
+		s.mb.RecordSqlserverExecutionPlanDataPoint(
+			timestamp,
+			1, // Value is always 1 for dimensional metrics
+			node.QueryID,
+			node.PlanHandle,
+			int64(node.NodeID),
+			int64(node.ParentNodeID),
+			node.PhysicalOp,
+			node.LogicalOp,
+			node.InputType,
+			node.SchemaName,
+			node.TableName,
+			node.IndexName,
+			node.ReferencedColumns,
+			node.EstimateRows,
+			node.EstimateIO,
+			node.EstimateCPU,
+			node.AvgRowSize,
+			node.TotalSubtreeCost,
+			node.EstimatedOperatorCost,
+			node.EstimatedExecutionMode,
+			node.GrantedMemoryKb,
+			node.SpillOccurred,
+			node.NoJoinPredicate,
+			node.TotalWorkerTime,
+			node.TotalElapsedTime,
+			node.TotalLogicalReads,
+			node.TotalLogicalWrites,
+			node.ExecutionCount,
+			node.AvgElapsedTimeMs,
+			getSessionID(),
+			getRequestID(),
+			getRequestStartTime(),
+			node.CollectionTimestamp,
+			node.LastExecutionTime,
+		)
+	}
+
+	s.logger.Debug("Emitted execution plan node metrics",
+		zap.String("query_id", executionPlan.QueryID),
+		zap.String("plan_handle", executionPlan.PlanHandle),
+		zap.Int("node_count", len(executionPlan.Nodes)))
+}
+
 func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, index int) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
