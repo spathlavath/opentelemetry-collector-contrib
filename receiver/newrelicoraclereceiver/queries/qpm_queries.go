@@ -24,7 +24,7 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			COALESCE(p.name, d.name) AS database_name,
+			SYS_CONTEXT('USERENV', 'CON_NAME') AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,
@@ -88,7 +88,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			COALESCE(p.name, d.name) AS database_name,
+			SYS_CONTEXT('USERENV', 'CON_NAME') AS database_name,
 			s.username,
 			s.sid,
 			s.serial#,
@@ -161,7 +161,7 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
 			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			COALESCE(p.name, d.name) AS database_name,
+			SYS_CONTEXT('USERENV', 'CON_NAME') AS database_name,
 			s.sql_id,
 			s.child_number,
 			s.plan_hash_value,
