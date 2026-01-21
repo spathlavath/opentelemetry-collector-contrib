@@ -28,31 +28,10 @@ func (rb *ResourceBuilder) SetDatabaseName(val string) {
 	}
 }
 
-// SetDbSystem sets provided value as "db.system" attribute.
-func (rb *ResourceBuilder) SetDbSystem(val string) {
-	if rb.config.DbSystem.Enabled {
-		rb.res.Attributes().PutStr("db.system", val)
-	}
-}
-
-// SetPostgresqlVersion sets provided value as "postgresql.version" attribute.
-func (rb *ResourceBuilder) SetPostgresqlVersion(val string) {
-	if rb.config.PostgresqlVersion.Enabled {
-		rb.res.Attributes().PutStr("postgresql.version", val)
-	}
-}
-
-// SetServerAddress sets provided value as "server.address" attribute.
-func (rb *ResourceBuilder) SetServerAddress(val string) {
-	if rb.config.ServerAddress.Enabled {
-		rb.res.Attributes().PutStr("server.address", val)
-	}
-}
-
-// SetServerPort sets provided value as "server.port" attribute.
-func (rb *ResourceBuilder) SetServerPort(val string) {
-	if rb.config.ServerPort.Enabled {
-		rb.res.Attributes().PutStr("server.port", val)
+// SetNewrelicpostgresqlInstanceName sets provided value as "newrelicpostgresql.instance_name" attribute.
+func (rb *ResourceBuilder) SetNewrelicpostgresqlInstanceName(val string) {
+	if rb.config.NewrelicpostgresqlInstanceName.Enabled {
+		rb.res.Attributes().PutStr("newrelicpostgresql.instance_name", val)
 	}
 }
 

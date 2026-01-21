@@ -12,20 +12,264 @@ metrics:
     enabled: false
 ```
 
-### postgresql.connection.count
+### postgresql.before_xid_wraparound
 
-Number of active connections to the PostgreSQL database
+Number of transactions before XID wraparound occurs
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.blk_read_time
+
+Time spent reading data file blocks (milliseconds)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.blk_write_time
+
+Time spent writing data file blocks (milliseconds)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.buffer_hit
+
+Number of times disk blocks were found in the buffer cache
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.commits
+
+Number of transactions that have been committed
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.connections
+
+Number of active connections (backends) to the database
 
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | {connections} | Sum | Int | Cumulative | false | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.database_size
+
+Size of the database in bytes
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.deadlocks
+
+Number of deadlocks detected
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {deadlocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.disk_read
+
+Number of disk blocks read
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.rollbacks
+
+Number of transactions that have been rolled back
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.rows_deleted
+
+Number of rows deleted
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.rows_fetched
+
+Number of rows fetched by queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.rows_inserted
+
+Number of rows inserted
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.rows_returned
+
+Number of rows returned by queries
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.rows_updated
+
+Number of rows updated
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.temp_bytes
+
+Total amount of data written to temporary files
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.temp_files
+
+Number of temporary files created
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {files} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
 ## Resource Attributes
 
 | Name | Description | Values | Enabled |
 | ---- | ----------- | ------ | ------- |
 | database_name | Name of the PostgreSQL database | Any Str | true |
-| db.system | Database system identifier | Any Str | true |
-| postgresql.version | PostgreSQL version | Any Str | true |
-| server.address | PostgreSQL hostname or IP address | Any Str | true |
-| server.port | PostgreSQL port number | Any Str | true |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | true |
