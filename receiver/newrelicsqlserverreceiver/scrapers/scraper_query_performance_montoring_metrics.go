@@ -616,69 +616,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	return nil
 }
 
-func (s *QueryPerformanceScraper) processQueryExecutionPlanMetrics(result models.QueryExecutionPlan, index int) error {
-	timestamp := pcommon.NewTimestampFromTime(time.Now())
-
-	// Compute all attribute values once
-	queryID := ""
-	if result.QueryID != nil {
-		queryID = result.QueryID.String()
-	}
-
-	planHandle := ""
-	if result.PlanHandle != nil {
-		planHandle = result.PlanHandle.String()
-	}
-
-	queryPlanID := ""
-	if result.QueryPlanID != nil {
-		queryPlanID = result.QueryPlanID.String()
-	}
-
-	queryText := ""
-	if result.SQLText != nil {
-		queryText = helpers.AnonymizeQueryText(*result.SQLText)
-	}
-
-	creationTime := ""
-	if result.CreationTime != nil {
-		creationTime = *result.CreationTime
-	}
-
-	lastExecutionTime := ""
-	if result.LastExecutionTime != nil {
-		lastExecutionTime = *result.LastExecutionTime
-	}
-
-	if result.TotalCPUMs != nil {
-		s.mb.RecordSqlserverIndividualQueryTotalCPUMsDataPoint(
-			timestamp,
-			*result.TotalCPUMs,
-			queryID,
-			planHandle,
-			queryPlanID,
-			queryText,
-			creationTime,
-			lastExecutionTime,
-		)
-	}
-
-	if result.TotalElapsedMs != nil {
-		s.mb.RecordSqlserverIndividualQueryTotalElapsedMsDataPoint(
-			timestamp,
-			*result.TotalElapsedMs,
-			queryID,
-			planHandle,
-			queryPlanID,
-			queryText,
-			creationTime,
-			lastExecutionTime,
-		)
-	}
-
-	return nil
-}
-
 func (s *QueryPerformanceScraper) ExtractQueryIDsFromSlowQueries(slowQueries []models.SlowQuery) []string {
 	queryIDMap := make(map[string]bool)
 	var queryIDs []string
@@ -696,54 +633,7 @@ func (s *QueryPerformanceScraper) ExtractQueryIDsFromSlowQueries(slowQueries []m
 	return queryIDs
 }
 
-func (s *QueryPerformanceScraper) formatQueryIDsForSQL(queryIDs []string) string {
-	if len(queryIDs) == 0 {
-		return "0x0"
-	}
 
-	queryIDsString := ""
-	for i, queryID := range queryIDs {
-		if i > 0 {
-			queryIDsString += ","
-		}
-		queryIDsString += queryID
-	}
-
-	return queryIDsString
-}
-
-func (s *QueryPerformanceScraper) extractPlanHandlesFromSlowQueries(slowQueries []models.SlowQuery) []string {
-	planHandleMap := make(map[string]bool)
-	var planHandles []string
-
-	for _, slowQuery := range slowQueries {
-		if slowQuery.PlanHandle != nil && !slowQuery.PlanHandle.IsEmpty() {
-			planHandleStr := slowQuery.PlanHandle.String()
-			if !planHandleMap[planHandleStr] {
-				planHandleMap[planHandleStr] = true
-				planHandles = append(planHandles, planHandleStr)
-			}
-		}
-	}
-
-	return planHandles
-}
-
-func (s *QueryPerformanceScraper) formatPlanHandlesForSQL(planHandles []string) string {
-	if len(planHandles) == 0 {
-		return "0x0"
-	}
-
-	planHandlesString := ""
-	for i, planHandle := range planHandles {
-		if i > 0 {
-			planHandlesString += ","
-		}
-		planHandlesString += planHandle
-	}
-
-	return planHandlesString
-}
 
 func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []models.SlowQuery) ([]string, map[string]models.SlowQueryPlanData) {
 	queryIDMap := make(map[string]bool)
