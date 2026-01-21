@@ -1,4 +1,4 @@
-module github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgressqlreceiver
+module github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver
 
 go 1.24.0
 

@@ -154,8 +154,8 @@ receivers:
   # YOUR CUSTOM RECEIVERS - Keep these active
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver v0.141.0
     path: ./receiver/newrelicoraclereceiver
-  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgressqlreceiver v0.141.0
-    path: ./receiver/newrelicpostgressqlreceiver
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver v0.141.0
+    path: ./receiver/newrelicpostgresqlreceiver
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver v0.141.0
     path: ./receiver/newrelicsqlserverreceiver
   # All other receivers commented out - not needed for New Relic custom receivers

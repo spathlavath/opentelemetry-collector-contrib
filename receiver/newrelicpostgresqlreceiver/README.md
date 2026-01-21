@@ -24,7 +24,7 @@ The New Relic PostgreSQL Receiver is an OpenTelemetry receiver that collects met
 
 ```yaml
 receivers:
-  newrelicpostgressqlreceiver:
+  newrelicpostgresqlreceiver:
     hostname: "localhost"
     port: "5432"
     username: "monitoring_user"
@@ -37,7 +37,7 @@ receivers:
 
 ```yaml
 receivers:
-  newrelicpostgressqlreceiver:
+  newrelicpostgresqlreceiver:
     # Connection settings
     hostname: "postgres-server.example.com"  # Required: PostgreSQL hostname
     port: "5432"                             # Port number (default: 5432)
@@ -80,7 +80,7 @@ GRANT USAGE ON SCHEMA public TO monitoring_user;
 
 ```yaml
 receivers:
-  newrelicpostgressqlreceiver:
+  newrelicpostgresqlreceiver:
     hostname: "postgres.example.com"
     port: "5432"
     username: "monitor_user"
@@ -96,7 +96,7 @@ receivers:
 To generate internal metadata code:
 
 ```bash
-cd receiver/newrelicpostgressqlreceiver
+cd receiver/newrelicpostgresqlreceiver
 make generate
 ```
 
