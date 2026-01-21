@@ -425,6 +425,12 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	startTime := time.Now()
 	s.logger.Info("Begin New Relic Oracle scrape", zap.Time("start_time", startTime))
 
+	// If we have multiple connections (PDBs), scrape each one separately
+	if len(s.dbs) > 1 {
+		return s.scrapeMultipleDatabases(ctx)
+	}
+
+	// Single database scrape (original behavior)
 	scrapeCtx := s.createScrapeContext(ctx)
 
 	errChan := make(chan error, maxErrors)
@@ -453,6 +459,75 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	return metrics, nil
 }
 
+// scrapeMultipleDatabases scrapes metrics from multiple PDB connections
+func (s *newRelicOracleScraper) scrapeMultipleDatabases(ctx context.Context) (pmetric.Metrics, error) {
+	s.logger.Info("Scraping multiple databases", zap.Int("database_count", len(s.dbs)))
+
+	allMetrics := pmetric.NewMetrics()
+	var allErrors []error
+
+	// Iterate through all database connections
+	for serviceName, dbConn := range s.dbs {
+		s.logger.Info("Scraping database", zap.String("service", serviceName))
+
+		// Temporarily set this connection as the active one
+		previousClient := s.client
+		previousDB := s.db
+		previousServiceName := s.serviceName
+
+		s.client = s.clients[serviceName]
+		s.db = dbConn
+		s.serviceName = serviceName
+
+		// Reinitialize scrapers with the new client
+		if err := s.initializeScrapers(); err != nil {
+			s.logger.Error("Failed to initialize scrapers for service",
+				zap.String("service", serviceName),
+				zap.Error(err))
+			allErrors = append(allErrors, fmt.Errorf("service %s: %w", serviceName, err))
+			continue
+		}
+
+		// Scrape this database
+		scrapeCtx := s.createScrapeContext(ctx)
+		errChan := make(chan error, maxErrors)
+		var wg sync.WaitGroup
+
+		s.executeQPMScrapers(scrapeCtx, errChan)
+		s.executeIndependentScrapers(scrapeCtx, errChan, &wg)
+		scrapeErrors := s.collectScrapingErrors(scrapeCtx, errChan, &wg)
+
+		if len(scrapeErrors) > 0 {
+			s.logger.Warn("Errors occurred while scraping service",
+				zap.String("service", serviceName),
+				zap.Int("error_count", len(scrapeErrors)))
+			allErrors = append(allErrors, scrapeErrors...)
+		}
+
+		// Build and merge metrics for this database
+		dbMetrics := s.buildMetrics()
+		dbMetrics.ResourceMetrics().MoveAndAppendTo(allMetrics.ResourceMetrics())
+
+		s.logger.Info("Completed scraping database",
+			zap.String("service", serviceName),
+			zap.Int("errors", len(scrapeErrors)))
+
+		// Restore previous connection (not strictly necessary as we're iterating, but good practice)
+		s.client = previousClient
+		s.db = previousDB
+		s.serviceName = previousServiceName
+	}
+
+	s.logger.Info("Completed scraping all databases",
+		zap.Int("total_databases", len(s.dbs)),
+		zap.Int("total_errors", len(allErrors)))
+
+	if len(allErrors) > 0 {
+		return allMetrics, scrapererror.NewPartialScrapeError(multierr.Combine(allErrors...), len(allErrors))
+	}
+	return allMetrics, nil
+}
+
 // scrapeLogs orchestrates the collection of Oracle execution plans as logs
 func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, error) {
 	startTime := time.Now()
@@ -470,6 +545,11 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 	if !s.config.EnableQueryMonitoring {
 		s.logger.Debug("Query Performance Monitoring disabled, skipping execution plan scrape")
 		return logs, nil
+	}
+
+	// If we have multiple connections (PDBs), scrape logs from each one separately
+	if len(s.dbs) > 1 {
+		return s.scrapeLogsMultipleDatabases(ctx)
 	}
 
 	scrapeCtx := s.createScrapeContext(ctx)
@@ -537,6 +617,128 @@ func (s *newRelicOracleScraper) scrapeLogs(ctx context.Context) (plog.Logs, erro
 	}
 
 	return logs, nil
+}
+
+// scrapeLogsMultipleDatabases scrapes execution plan logs from multiple PDB connections
+func (s *newRelicOracleScraper) scrapeLogsMultipleDatabases(ctx context.Context) (plog.Logs, error) {
+	s.logger.Info("Scraping execution plans from multiple databases", zap.Int("database_count", len(s.dbs)))
+
+	allLogs := plog.NewLogs()
+	var allErrors []error
+
+	// Iterate through all database connections
+	for serviceName, dbConn := range s.dbs {
+		s.logger.Info("Scraping execution plans from database", zap.String("service", serviceName))
+
+		// Temporarily set this connection as the active one
+		previousClient := s.client
+		previousDB := s.db
+		previousServiceName := s.serviceName
+
+		s.client = s.clients[serviceName]
+		s.db = dbConn
+		s.serviceName = serviceName
+
+		// Reinitialize QPM scrapers with the new client
+		if err := s.initializeQPMScrapers(); err != nil {
+			s.logger.Error("Failed to initialize QPM scrapers for service",
+				zap.String("service", serviceName),
+				zap.Error(err))
+			allErrors = append(allErrors, fmt.Errorf("service %s: %w", serviceName, err))
+			continue
+		}
+
+		scrapeCtx := s.createScrapeContext(ctx)
+
+		s.logger.Debug("Fetching query IDs for execution plans", zap.String("service", serviceName))
+		queryIDs, slowQueryErrs := s.slowQueriesScraper.GetSlowQueryIDs(scrapeCtx)
+
+		if len(slowQueryErrs) > 0 {
+			s.logger.Warn("Errors occurred while getting query IDs for execution plans",
+				zap.String("service", serviceName),
+				zap.Int("error_count", len(slowQueryErrs)))
+			allErrors = append(allErrors, slowQueryErrs...)
+		}
+
+		s.logger.Info("Query IDs fetched for execution plans",
+			zap.String("service", serviceName),
+			zap.Int("query_ids_found", len(queryIDs)))
+
+		if len(queryIDs) == 0 {
+			s.logger.Debug("No query IDs found for this database", zap.String("service", serviceName))
+			// Restore previous connection
+			s.client = previousClient
+			s.db = previousDB
+			s.serviceName = previousServiceName
+			continue
+		}
+
+		if s.waitEventBlockingScraper == nil {
+			err := fmt.Errorf("waitEventBlockingScraper is not initialized for service %s", serviceName)
+			s.logger.Error("Cannot get SQL identifiers for execution plans", zap.Error(err))
+			allErrors = append(allErrors, err)
+			// Restore previous connection
+			s.client = previousClient
+			s.db = previousDB
+			s.serviceName = previousServiceName
+			continue
+		}
+
+		sqlIdentifiers, waitEventErrs := s.waitEventBlockingScraper.GetSQLIdentifiers(scrapeCtx, queryIDs)
+		if len(waitEventErrs) > 0 {
+			s.logger.Warn("Errors occurred while getting SQL identifiers from wait events",
+				zap.String("service", serviceName),
+				zap.Int("error_count", len(waitEventErrs)))
+			allErrors = append(allErrors, waitEventErrs...)
+		}
+
+		if len(sqlIdentifiers) == 0 {
+			s.logger.Info("No SQL identifiers found for execution plan logs",
+				zap.String("service", serviceName))
+			// Restore previous connection
+			s.client = previousClient
+			s.db = previousDB
+			s.serviceName = previousServiceName
+			continue
+		}
+
+		s.logger.Debug("Scraping execution plans for logs",
+			zap.String("service", serviceName),
+			zap.Int("sql_identifiers", len(sqlIdentifiers)))
+
+		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(scrapeCtx, sqlIdentifiers)
+
+		if len(executionPlanErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping execution plans",
+				zap.String("service", serviceName),
+				zap.Int("error_count", len(executionPlanErrs)))
+			allErrors = append(allErrors, executionPlanErrs...)
+		}
+
+		s.logger.Info("Execution plan scraper completed for database",
+			zap.String("service", serviceName),
+			zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+			zap.Int("errors", len(executionPlanErrs)))
+
+		// Build and merge logs for this database
+		dbLogs := s.lb.Emit()
+		dbLogs.ResourceLogs().MoveAndAppendTo(allLogs.ResourceLogs())
+
+		// Restore previous connection
+		s.client = previousClient
+		s.db = previousDB
+		s.serviceName = previousServiceName
+	}
+
+	s.logger.Info("Completed scraping execution plans from all databases",
+		zap.Int("total_databases", len(s.dbs)),
+		zap.Int("total_errors", len(allErrors)))
+
+	if len(allErrors) > 0 {
+		return allLogs, scrapererror.NewPartialScrapeError(multierr.Combine(allErrors...), len(allErrors))
+	}
+
+	return allLogs, nil
 }
 
 // startLogs initializes the logs scraper (execution plans only)
