@@ -1890,11 +1890,8 @@ Average disk reads for slow query
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.avg_disk_writes
 
@@ -1909,11 +1906,8 @@ Average disk writes for slow query
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.avg_rows_processed
 
@@ -1928,11 +1922,8 @@ Average rows processed (returned) per execution for slow query
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.historical_avg_cpu_time_ms
 
@@ -1947,11 +1938,8 @@ Historical average CPU time in milliseconds (cumulative since plan cached)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.historical_avg_elapsed_time_ms
 
@@ -1966,13 +1954,8 @@ Historical average elapsed time in milliseconds (cumulative since plan cached)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| last_execution_timestamp | Timestamp of the last execution of this query | Any Str | false |
 
 ### sqlserver.slowquery.historical_execution_count
 
@@ -1987,11 +1970,8 @@ Historical execution count (cumulative since plan cached)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.interval_avg_elapsed_time_ms
 
@@ -2006,11 +1986,8 @@ Interval average elapsed time in milliseconds (delta for this collection interva
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.interval_execution_count
 
@@ -2025,11 +2002,8 @@ Interval execution count (delta for this collection interval)
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.last_dop
 
@@ -2044,11 +2018,8 @@ Last degree of parallelism
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.last_elapsed_time_ms
 
@@ -2063,11 +2034,8 @@ Last elapsed time in milliseconds
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.last_grant_kb
 
@@ -2082,11 +2050,8 @@ Last memory grant in KB
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.last_spills
 
@@ -2101,11 +2066,8 @@ Last TempDB spills count
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.last_used_grant_kb
 
@@ -2120,11 +2082,8 @@ Last used memory grant in KB
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.max_elapsed_time_ms
 
@@ -2139,11 +2098,8 @@ Maximum elapsed time in milliseconds
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.max_spills
 
@@ -2158,11 +2114,8 @@ Maximum TempDB spills count
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
 ### sqlserver.slowquery.min_elapsed_time_ms
 
@@ -2177,15 +2130,12 @@ Minimum elapsed time in milliseconds
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
 
-### sqlserver.slowquery.query_text
+### sqlserver.slowquery.query_details
 
-Query text for slow query
+Query details including text, signature, and timestamps for slow queries
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2196,12 +2146,14 @@ Query text for slow query
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
 | database_name | Name of the database | Any Str | false |
 | schema_name | Schema name of the database object | Any Str | false |
+| plan_handle | Handle to the cached execution plan | Any Str | false |
 | statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
 | query_text | SQL query text (truncated and anonymized) | Any Str | false |
 | query_signature | SHA256 hash of normalized query for cross-instance correlation | Any Str | false |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| last_execution_timestamp | Timestamp of the last execution of this query | Any Str | false |
 
 ### sqlserver.stats.connections
 
@@ -2641,59 +2593,6 @@ Number of tasks currently waiting
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
 | wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-
-## Default Events
-
-The following events are emitted by default. Each of them can be disabled by applying the following configuration:
-
-```yaml
-events:
-  <event_name>:
-    enabled: false
-```
-
-### sqlserver.active_query_execution_plan
-
-Execution plan details for active SQL Server queries
-
-#### Attributes
-
-| Name | Description | Values |
-| ---- | ----------- | ------ |
-| newrelic_event_type | New Relic custom event type identifier | Any Str |
-| query_id | Unique identifier for the SQL query | Any Str |
-| plan_handle | Handle to the cached execution plan | Any Str |
-| session_id | SQL Server session identifier | Any Int |
-| request_id | SQL Server request identifier | Any Int |
-| database_name | Name of the database | Any Str |
-| start_time | Event start time | Any Str |
-| node_id | Execution plan node identifier | Any Int |
-| parent_node_id | Parent node identifier in execution plan tree | Any Int |
-| input_type | Type of input to the operator | Any Str |
-| physical_op | Physical operator name (e.g., Index Seek, Table Scan) | Any Str |
-| logical_op | Logical operator name | Any Str |
-| query_text | SQL query text (truncated and anonymized) | Any Str |
-| schema_name | Schema name of the database object | Any Str |
-| table_name | Table name referenced in the operator | Any Str |
-| index_name | Index name used by the operator | Any Str |
-| referenced_columns | Comma-separated list of columns referenced | Any Str |
-| estimate_rows | Estimated number of rows | Any Double |
-| estimate_io | Estimated I/O cost | Any Double |
-| estimate_cpu | Estimated CPU cost | Any Double |
-| avg_row_size | Average row size in bytes | Any Double |
-| total_subtree_cost | Cumulative cost of this operator and its children | Any Double |
-| estimated_operator_cost | Estimated cost of this operator alone | Any Double |
-| estimated_execution_mode | Execution mode (Row, Batch) | Any Str |
-| granted_memory_kb | Memory granted in KB | Any Int |
-| spill_occurred | Whether memory spill occurred | Any Bool |
-| no_join_predicate | Whether join lacks a predicate (potential Cartesian product) | Any Bool |
-| total_worker_time | Total CPU time for this operator | Any Double |
-| total_elapsed_time | Total elapsed time for this operator | Any Double |
-| total_logical_reads | Total logical reads for this operator | Any Int |
-| total_logical_writes | Total logical writes for this operator | Any Int |
-| execution_count | Number of times this operator executed | Any Int |
-| avg_elapsed_time_ms | Average elapsed time in milliseconds | Any Double |
-| last_execution_time | Timestamp of last execution | Any Str |
 
 ## Resource Attributes
 

@@ -530,71 +530,71 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryAvgDiskReadsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryAvgDiskReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryAvgDiskWritesDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryAvgDiskWritesDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val", "collection_timestamp-val", "last_execution_timestamp-val")
+			mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryLastDopDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryLastDopDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryLastGrantKbDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryLastGrantKbDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryLastSpillsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryLastSpillsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryMaxSpillsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryMaxSpillsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val")
+			mb.RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryQueryTextDataPoint(ts, 1, "query_id-val", "plan_handle-val", "database_name-val", "schema_name-val", "statement_type-val", "query_text-val", "query_signature-val")
+			mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(ts, 1, "query_id-val", "database_name-val", "schema_name-val", "plan_handle-val", "statement_type-val", "query_text-val", "query_signature-val", "collection_timestamp-val", "last_execution_timestamp-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -3780,21 +3780,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.avg_disk_writes":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.avg_disk_writes"], "Found a duplicate in the metrics slice: sqlserver.slowquery.avg_disk_writes")
 					validatedMetrics["sqlserver.slowquery.avg_disk_writes"] = true
@@ -3810,21 +3801,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.avg_rows_processed":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.avg_rows_processed"], "Found a duplicate in the metrics slice: sqlserver.slowquery.avg_rows_processed")
 					validatedMetrics["sqlserver.slowquery.avg_rows_processed"] = true
@@ -3840,21 +3822,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.historical_avg_cpu_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_avg_cpu_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_avg_cpu_time_ms")
 					validatedMetrics["sqlserver.slowquery.historical_avg_cpu_time_ms"] = true
@@ -3870,21 +3843,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.historical_avg_elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_avg_elapsed_time_ms")
 					validatedMetrics["sqlserver.slowquery.historical_avg_elapsed_time_ms"] = true
@@ -3900,27 +3864,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("collection_timestamp")
-					assert.True(t, ok)
-					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("last_execution_timestamp")
-					assert.True(t, ok)
-					assert.Equal(t, "last_execution_timestamp-val", attrVal.Str())
 				case "sqlserver.slowquery.historical_execution_count":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_execution_count"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_execution_count")
 					validatedMetrics["sqlserver.slowquery.historical_execution_count"] = true
@@ -3936,21 +3885,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.interval_avg_elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_avg_elapsed_time_ms")
 					validatedMetrics["sqlserver.slowquery.interval_avg_elapsed_time_ms"] = true
@@ -3966,21 +3906,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.interval_execution_count":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_execution_count"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_execution_count")
 					validatedMetrics["sqlserver.slowquery.interval_execution_count"] = true
@@ -3996,21 +3927,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.last_dop":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.last_dop"], "Found a duplicate in the metrics slice: sqlserver.slowquery.last_dop")
 					validatedMetrics["sqlserver.slowquery.last_dop"] = true
@@ -4026,21 +3948,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.last_elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.last_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.last_elapsed_time_ms")
 					validatedMetrics["sqlserver.slowquery.last_elapsed_time_ms"] = true
@@ -4056,21 +3969,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.last_grant_kb":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.last_grant_kb"], "Found a duplicate in the metrics slice: sqlserver.slowquery.last_grant_kb")
 					validatedMetrics["sqlserver.slowquery.last_grant_kb"] = true
@@ -4086,21 +3990,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.last_spills":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.last_spills"], "Found a duplicate in the metrics slice: sqlserver.slowquery.last_spills")
 					validatedMetrics["sqlserver.slowquery.last_spills"] = true
@@ -4116,21 +4011,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.last_used_grant_kb":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.last_used_grant_kb"], "Found a duplicate in the metrics slice: sqlserver.slowquery.last_used_grant_kb")
 					validatedMetrics["sqlserver.slowquery.last_used_grant_kb"] = true
@@ -4146,21 +4032,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.max_elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.max_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.max_elapsed_time_ms")
 					validatedMetrics["sqlserver.slowquery.max_elapsed_time_ms"] = true
@@ -4176,21 +4053,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.max_spills":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.max_spills"], "Found a duplicate in the metrics slice: sqlserver.slowquery.max_spills")
 					validatedMetrics["sqlserver.slowquery.max_spills"] = true
@@ -4206,21 +4074,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "sqlserver.slowquery.min_elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.min_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.min_elapsed_time_ms")
 					validatedMetrics["sqlserver.slowquery.min_elapsed_time_ms"] = true
@@ -4236,27 +4095,18 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("statement_type")
-					assert.True(t, ok)
-					assert.Equal(t, "statement_type-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
-				case "sqlserver.slowquery.query_text":
-					assert.False(t, validatedMetrics["sqlserver.slowquery.query_text"], "Found a duplicate in the metrics slice: sqlserver.slowquery.query_text")
-					validatedMetrics["sqlserver.slowquery.query_text"] = true
+				case "sqlserver.slowquery.query_details":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.query_details"], "Found a duplicate in the metrics slice: sqlserver.slowquery.query_details")
+					validatedMetrics["sqlserver.slowquery.query_details"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Query text for slow query", ms.At(i).Description())
+					assert.Equal(t, "Query details including text, signature, and timestamps for slow queries", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -4266,15 +4116,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("schema_name")
 					assert.True(t, ok)
 					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_handle")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_handle-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("statement_type")
 					assert.True(t, ok)
 					assert.Equal(t, "statement_type-val", attrVal.Str())
@@ -4284,6 +4134,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_signature")
 					assert.True(t, ok)
 					assert.Equal(t, "query_signature-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("last_execution_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "last_execution_timestamp-val", attrVal.Str())
 				case "sqlserver.stats.connections":
 					assert.False(t, validatedMetrics["sqlserver.stats.connections"], "Found a duplicate in the metrics slice: sqlserver.stats.connections")
 					validatedMetrics["sqlserver.stats.connections"] = true

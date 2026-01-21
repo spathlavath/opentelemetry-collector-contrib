@@ -158,7 +158,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					SqlserverSlowqueryMaxElapsedTimeMs:                        MetricConfig{Enabled: true},
 					SqlserverSlowqueryMaxSpills:                               MetricConfig{Enabled: true},
 					SqlserverSlowqueryMinElapsedTimeMs:                        MetricConfig{Enabled: true},
-					SqlserverSlowqueryQueryText:                               MetricConfig{Enabled: true},
+					SqlserverSlowqueryQueryDetails:                            MetricConfig{Enabled: true},
 					SqlserverStatsConnections:                                 MetricConfig{Enabled: true},
 					SqlserverStatsDeadlocksPerSec:                             MetricConfig{Enabled: true},
 					SqlserverStatsKillConnectionErrorsPerSec:                  MetricConfig{Enabled: true},
@@ -343,7 +343,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					SqlserverSlowqueryMaxElapsedTimeMs:                        MetricConfig{Enabled: false},
 					SqlserverSlowqueryMaxSpills:                               MetricConfig{Enabled: false},
 					SqlserverSlowqueryMinElapsedTimeMs:                        MetricConfig{Enabled: false},
-					SqlserverSlowqueryQueryText:                               MetricConfig{Enabled: false},
+					SqlserverSlowqueryQueryDetails:                            MetricConfig{Enabled: false},
 					SqlserverStatsConnections:                                 MetricConfig{Enabled: false},
 					SqlserverStatsDeadlocksPerSec:                             MetricConfig{Enabled: false},
 					SqlserverStatsKillConnectionErrorsPerSec:                  MetricConfig{Enabled: false},
@@ -409,16 +409,6 @@ func loadMetricsBuilderConfig(t *testing.T, name string) MetricsBuilderConfig {
 	sub, err := cm.Sub(name)
 	require.NoError(t, err)
 	cfg := DefaultMetricsBuilderConfig()
-	require.NoError(t, sub.Unmarshal(&cfg, confmap.WithIgnoreUnused()))
-	return cfg
-}
-
-func loadLogsBuilderConfig(t *testing.T, name string) LogsBuilderConfig {
-	cm, err := confmaptest.LoadConf(filepath.Join("testdata", "config.yaml"))
-	require.NoError(t, err)
-	sub, err := cm.Sub(name)
-	require.NoError(t, err)
-	cfg := DefaultLogsBuilderConfig()
 	require.NoError(t, sub.Unmarshal(&cfg, confmap.WithIgnoreUnused()))
 	return cfg
 }

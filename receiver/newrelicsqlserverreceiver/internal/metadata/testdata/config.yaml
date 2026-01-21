@@ -263,7 +263,7 @@ all_set:
       enabled: true
     sqlserver.slowquery.min_elapsed_time_ms:
       enabled: true
-    sqlserver.slowquery.query_text:
+    sqlserver.slowquery.query_details:
       enabled: true
     sqlserver.stats.connections:
       enabled: true
@@ -342,9 +342,6 @@ all_set:
     sqlserver.wait_stats.wait_time_ms:
       enabled: true
     sqlserver.wait_stats.waiting_tasks_count:
-      enabled: true
-  events:
-    sqlserver.active_query_execution_plan:
       enabled: true
   resource_attributes:
     database_name:
@@ -621,7 +618,7 @@ none_set:
       enabled: false
     sqlserver.slowquery.min_elapsed_time_ms:
       enabled: false
-    sqlserver.slowquery.query_text:
+    sqlserver.slowquery.query_details:
       enabled: false
     sqlserver.stats.connections:
       enabled: false
@@ -701,9 +698,6 @@ none_set:
       enabled: false
     sqlserver.wait_stats.waiting_tasks_count:
       enabled: false
-  events:
-    sqlserver.active_query_execution_plan:
-      enabled: false
   resource_attributes:
     database_name:
       enabled: false
@@ -721,31 +715,21 @@ filter_set_include:
       enabled: true
       metrics_include:
         - regexp: ".*"
-      events_include:
-        - regexp: ".*"
     db.system:
       enabled: true
       metrics_include:
-        - regexp: ".*"
-      events_include:
         - regexp: ".*"
     engine_edition:
       enabled: true
       metrics_include:
         - regexp: ".*"
-      events_include:
-        - regexp: ".*"
     server.address:
       enabled: true
       metrics_include:
         - regexp: ".*"
-      events_include:
-        - regexp: ".*"
     server.port:
       enabled: true
       metrics_include:
-        - regexp: ".*"
-      events_include:
         - regexp: ".*"
 filter_set_exclude:
   resource_attributes:
@@ -753,29 +737,19 @@ filter_set_exclude:
       enabled: true
       metrics_exclude:
         - strict: "database_name-val"
-      events_exclude:
-        - strict: "database_name-val"
     db.system:
       enabled: true
       metrics_exclude:
-        - strict: "db.system-val"
-      events_exclude:
         - strict: "db.system-val"
     engine_edition:
       enabled: true
       metrics_exclude:
         - strict: "engine_edition-val"
-      events_exclude:
-        - strict: "engine_edition-val"
     server.address:
       enabled: true
       metrics_exclude:
         - strict: "server.address-val"
-      events_exclude:
-        - strict: "server.address-val"
     server.port:
       enabled: true
       metrics_exclude:
-        - strict: "server.port-val"
-      events_exclude:
         - strict: "server.port-val"

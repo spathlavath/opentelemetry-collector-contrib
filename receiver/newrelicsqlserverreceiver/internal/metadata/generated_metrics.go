@@ -406,8 +406,8 @@ var MetricsInfo = metricsInfo{
 	SqlserverSlowqueryMinElapsedTimeMs: metricInfo{
 		Name: "sqlserver.slowquery.min_elapsed_time_ms",
 	},
-	SqlserverSlowqueryQueryText: metricInfo{
-		Name: "sqlserver.slowquery.query_text",
+	SqlserverSlowqueryQueryDetails: metricInfo{
+		Name: "sqlserver.slowquery.query_details",
 	},
 	SqlserverStatsConnections: metricInfo{
 		Name: "sqlserver.stats.connections",
@@ -660,7 +660,7 @@ type metricsInfo struct {
 	SqlserverSlowqueryMaxElapsedTimeMs                        metricInfo
 	SqlserverSlowqueryMaxSpills                               metricInfo
 	SqlserverSlowqueryMinElapsedTimeMs                        metricInfo
-	SqlserverSlowqueryQueryText                               metricInfo
+	SqlserverSlowqueryQueryDetails                            metricInfo
 	SqlserverStatsConnections                                 metricInfo
 	SqlserverStatsDeadlocksPerSec                             metricInfo
 	SqlserverStatsKillConnectionErrorsPerSec                  metricInfo
@@ -6973,7 +6973,7 @@ func (m *metricSqlserverSlowqueryAvgDiskReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6982,11 +6982,8 @@ func (m *metricSqlserverSlowqueryAvgDiskReads) recordDataPoint(start pcommon.Tim
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7029,7 +7026,7 @@ func (m *metricSqlserverSlowqueryAvgDiskWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7038,11 +7035,8 @@ func (m *metricSqlserverSlowqueryAvgDiskWrites) recordDataPoint(start pcommon.Ti
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7085,7 +7079,7 @@ func (m *metricSqlserverSlowqueryAvgRowsProcessed) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryAvgRowsProcessed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryAvgRowsProcessed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7094,11 +7088,8 @@ func (m *metricSqlserverSlowqueryAvgRowsProcessed) recordDataPoint(start pcommon
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7141,7 +7132,7 @@ func (m *metricSqlserverSlowqueryHistoricalAvgCPUTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalAvgCPUTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalAvgCPUTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7150,11 +7141,8 @@ func (m *metricSqlserverSlowqueryHistoricalAvgCPUTimeMs) recordDataPoint(start p
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7197,7 +7185,7 @@ func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7206,13 +7194,8 @@ func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) recordDataPoint(sta
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("last_execution_timestamp", lastExecutionTimestampAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7255,7 +7238,7 @@ func (m *metricSqlserverSlowqueryHistoricalExecutionCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7264,11 +7247,8 @@ func (m *metricSqlserverSlowqueryHistoricalExecutionCount) recordDataPoint(start
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7311,7 +7291,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7320,11 +7300,8 @@ func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) recordDataPoint(start
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7367,7 +7344,7 @@ func (m *metricSqlserverSlowqueryIntervalExecutionCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7376,11 +7353,8 @@ func (m *metricSqlserverSlowqueryIntervalExecutionCount) recordDataPoint(start p
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7423,7 +7397,7 @@ func (m *metricSqlserverSlowqueryLastDop) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryLastDop) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryLastDop) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7432,11 +7406,8 @@ func (m *metricSqlserverSlowqueryLastDop) recordDataPoint(start pcommon.Timestam
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7479,7 +7450,7 @@ func (m *metricSqlserverSlowqueryLastElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryLastElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryLastElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7488,11 +7459,8 @@ func (m *metricSqlserverSlowqueryLastElapsedTimeMs) recordDataPoint(start pcommo
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7535,7 +7503,7 @@ func (m *metricSqlserverSlowqueryLastGrantKb) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryLastGrantKb) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryLastGrantKb) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7544,11 +7512,8 @@ func (m *metricSqlserverSlowqueryLastGrantKb) recordDataPoint(start pcommon.Time
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7591,7 +7556,7 @@ func (m *metricSqlserverSlowqueryLastSpills) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryLastSpills) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryLastSpills) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7600,11 +7565,8 @@ func (m *metricSqlserverSlowqueryLastSpills) recordDataPoint(start pcommon.Times
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7647,7 +7609,7 @@ func (m *metricSqlserverSlowqueryLastUsedGrantKb) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryLastUsedGrantKb) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryLastUsedGrantKb) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7656,11 +7618,8 @@ func (m *metricSqlserverSlowqueryLastUsedGrantKb) recordDataPoint(start pcommon.
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7703,7 +7662,7 @@ func (m *metricSqlserverSlowqueryMaxElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryMaxElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryMaxElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7712,11 +7671,8 @@ func (m *metricSqlserverSlowqueryMaxElapsedTimeMs) recordDataPoint(start pcommon
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7759,7 +7715,7 @@ func (m *metricSqlserverSlowqueryMaxSpills) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryMaxSpills) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryMaxSpills) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7768,11 +7724,8 @@ func (m *metricSqlserverSlowqueryMaxSpills) recordDataPoint(start pcommon.Timest
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7815,7 +7768,7 @@ func (m *metricSqlserverSlowqueryMinElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryMinElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
+func (m *metricSqlserverSlowqueryMinElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7824,11 +7777,8 @@ func (m *metricSqlserverSlowqueryMinElapsedTimeMs) recordDataPoint(start pcommon
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7856,22 +7806,22 @@ func newMetricSqlserverSlowqueryMinElapsedTimeMs(cfg MetricConfig) metricSqlserv
 	return m
 }
 
-type metricSqlserverSlowqueryQueryText struct {
+type metricSqlserverSlowqueryQueryDetails struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
 	capacity int            // max observed number of data points added to the metric.
 }
 
-// init fills sqlserver.slowquery.query_text metric with initial data.
-func (m *metricSqlserverSlowqueryQueryText) init() {
-	m.data.SetName("sqlserver.slowquery.query_text")
-	m.data.SetDescription("Query text for slow query")
+// init fills sqlserver.slowquery.query_details metric with initial data.
+func (m *metricSqlserverSlowqueryQueryDetails) init() {
+	m.data.SetName("sqlserver.slowquery.query_details")
+	m.data.SetDescription("Query details including text, signature, and timestamps for slow queries")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryQueryText) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string, querySignatureAttributeValue string) {
+func (m *metricSqlserverSlowqueryQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, planHandleAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string, querySignatureAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7880,23 +7830,25 @@ func (m *metricSqlserverSlowqueryQueryText) recordDataPoint(start pcommon.Timest
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutStr("statement_type", statementTypeAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 	dp.Attributes().PutStr("query_signature", querySignatureAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("last_execution_timestamp", lastExecutionTimestampAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverSlowqueryQueryText) updateCapacity() {
+func (m *metricSqlserverSlowqueryQueryDetails) updateCapacity() {
 	if m.data.Gauge().DataPoints().Len() > m.capacity {
 		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverSlowqueryQueryText) emit(metrics pmetric.MetricSlice) {
+func (m *metricSqlserverSlowqueryQueryDetails) emit(metrics pmetric.MetricSlice) {
 	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
@@ -7904,8 +7856,8 @@ func (m *metricSqlserverSlowqueryQueryText) emit(metrics pmetric.MetricSlice) {
 	}
 }
 
-func newMetricSqlserverSlowqueryQueryText(cfg MetricConfig) metricSqlserverSlowqueryQueryText {
-	m := metricSqlserverSlowqueryQueryText{config: cfg}
+func newMetricSqlserverSlowqueryQueryDetails(cfg MetricConfig) metricSqlserverSlowqueryQueryDetails {
+	m := metricSqlserverSlowqueryQueryDetails{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10032,7 +9984,7 @@ type MetricsBuilder struct {
 	metricSqlserverSlowqueryMaxElapsedTimeMs                        metricSqlserverSlowqueryMaxElapsedTimeMs
 	metricSqlserverSlowqueryMaxSpills                               metricSqlserverSlowqueryMaxSpills
 	metricSqlserverSlowqueryMinElapsedTimeMs                        metricSqlserverSlowqueryMinElapsedTimeMs
-	metricSqlserverSlowqueryQueryText                               metricSqlserverSlowqueryQueryText
+	metricSqlserverSlowqueryQueryDetails                            metricSqlserverSlowqueryQueryDetails
 	metricSqlserverStatsConnections                                 metricSqlserverStatsConnections
 	metricSqlserverStatsDeadlocksPerSec                             metricSqlserverStatsDeadlocksPerSec
 	metricSqlserverStatsKillConnectionErrorsPerSec                  metricSqlserverStatsKillConnectionErrorsPerSec
@@ -10228,7 +10180,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverSlowqueryMaxElapsedTimeMs:                        newMetricSqlserverSlowqueryMaxElapsedTimeMs(mbc.Metrics.SqlserverSlowqueryMaxElapsedTimeMs),
 		metricSqlserverSlowqueryMaxSpills:                               newMetricSqlserverSlowqueryMaxSpills(mbc.Metrics.SqlserverSlowqueryMaxSpills),
 		metricSqlserverSlowqueryMinElapsedTimeMs:                        newMetricSqlserverSlowqueryMinElapsedTimeMs(mbc.Metrics.SqlserverSlowqueryMinElapsedTimeMs),
-		metricSqlserverSlowqueryQueryText:                               newMetricSqlserverSlowqueryQueryText(mbc.Metrics.SqlserverSlowqueryQueryText),
+		metricSqlserverSlowqueryQueryDetails:                            newMetricSqlserverSlowqueryQueryDetails(mbc.Metrics.SqlserverSlowqueryQueryDetails),
 		metricSqlserverStatsConnections:                                 newMetricSqlserverStatsConnections(mbc.Metrics.SqlserverStatsConnections),
 		metricSqlserverStatsDeadlocksPerSec:                             newMetricSqlserverStatsDeadlocksPerSec(mbc.Metrics.SqlserverStatsDeadlocksPerSec),
 		metricSqlserverStatsKillConnectionErrorsPerSec:                  newMetricSqlserverStatsKillConnectionErrorsPerSec(mbc.Metrics.SqlserverStatsKillConnectionErrorsPerSec),
@@ -10501,7 +10453,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverSlowqueryMaxElapsedTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverSlowqueryMaxSpills.emit(ils.Metrics())
 	mb.metricSqlserverSlowqueryMinElapsedTimeMs.emit(ils.Metrics())
-	mb.metricSqlserverSlowqueryQueryText.emit(ils.Metrics())
+	mb.metricSqlserverSlowqueryQueryDetails.emit(ils.Metrics())
 	mb.metricSqlserverStatsConnections.emit(ils.Metrics())
 	mb.metricSqlserverStatsDeadlocksPerSec.emit(ils.Metrics())
 	mb.metricSqlserverStatsKillConnectionErrorsPerSec.emit(ils.Metrics())
@@ -11148,88 +11100,88 @@ func (mb *MetricsBuilder) RecordSqlserverSecurityServerRoleMembersCountDataPoint
 }
 
 // RecordSqlserverSlowqueryAvgDiskReadsDataPoint adds a data point to sqlserver.slowquery.avg_disk_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryAvgDiskReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryAvgDiskReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryAvgDiskWritesDataPoint adds a data point to sqlserver.slowquery.avg_disk_writes metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryAvgRowsProcessedDataPoint adds a data point to sqlserver.slowquery.avg_rows_processed metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryAvgRowsProcessed.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryAvgRowsProcessed.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint adds a data point to sqlserver.slowquery.historical_avg_cpu_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalAvgCPUTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalAvgCPUTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.historical_avg_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue, collectionTimestampAttributeValue, lastExecutionTimestampAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint adds a data point to sqlserver.slowquery.historical_execution_count metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.interval_avg_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalExecutionCountDataPoint adds a data point to sqlserver.slowquery.interval_execution_count metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryLastDopDataPoint adds a data point to sqlserver.slowquery.last_dop metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastDopDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryLastDop.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastDopDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryLastDop.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.last_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryLastElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryLastElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryLastGrantKbDataPoint adds a data point to sqlserver.slowquery.last_grant_kb metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastGrantKbDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryLastGrantKb.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastGrantKbDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryLastGrantKb.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryLastSpillsDataPoint adds a data point to sqlserver.slowquery.last_spills metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastSpillsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryLastSpills.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastSpillsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryLastSpills.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryLastUsedGrantKbDataPoint adds a data point to sqlserver.slowquery.last_used_grant_kb metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryLastUsedGrantKb.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryLastUsedGrantKb.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.max_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryMaxElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryMaxElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryMaxSpillsDataPoint adds a data point to sqlserver.slowquery.max_spills metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryMaxSpillsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryMaxSpills.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryMaxSpillsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryMaxSpills.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
 // RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.min_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string) {
-	mb.metricSqlserverSlowqueryMinElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+	mb.metricSqlserverSlowqueryMinElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
 }
 
-// RecordSqlserverSlowqueryQueryTextDataPoint adds a data point to sqlserver.slowquery.query_text metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryQueryTextDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, planHandleAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string, querySignatureAttributeValue string) {
-	mb.metricSqlserverSlowqueryQueryText.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, statementTypeAttributeValue, queryTextAttributeValue, querySignatureAttributeValue)
+// RecordSqlserverSlowqueryQueryDetailsDataPoint adds a data point to sqlserver.slowquery.query_details metric.
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string, planHandleAttributeValue string, statementTypeAttributeValue string, queryTextAttributeValue string, querySignatureAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string) {
+	mb.metricSqlserverSlowqueryQueryDetails.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue, planHandleAttributeValue, statementTypeAttributeValue, queryTextAttributeValue, querySignatureAttributeValue, collectionTimestampAttributeValue, lastExecutionTimestampAttributeValue)
 }
 
 // RecordSqlserverStatsConnectionsDataPoint adds a data point to sqlserver.stats.connections metric.

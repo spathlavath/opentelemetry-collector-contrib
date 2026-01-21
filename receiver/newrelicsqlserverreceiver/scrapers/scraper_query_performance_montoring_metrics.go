@@ -249,90 +249,71 @@ func (s *QueryPerformanceScraper) convertPlanDataToPlanHandleResult(planData mod
 }
 
 func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
-	getQueryID := func() string {
-		if planResult.QueryID != nil {
-			return planResult.QueryID.String()
-		}
-		return ""
+	// Compute all attribute values once
+	queryID := ""
+	if planResult.QueryID != nil {
+		queryID = planResult.QueryID.String()
 	}
 
-	getPlanHandle := func() string {
-		if planResult.PlanHandle != nil {
-			return planResult.PlanHandle.String()
-		}
-		return ""
+	planHandle := ""
+	if planResult.PlanHandle != nil {
+		planHandle = planResult.PlanHandle.String()
 	}
 
-	getQueryPlanHash := func() string {
-		if planResult.QueryPlanHash != nil {
-			return planResult.QueryPlanHash.String()
-		}
-		return ""
+	queryPlanHash := ""
+	if planResult.QueryPlanHash != nil {
+		queryPlanHash = planResult.QueryPlanHash.String()
 	}
 
-	getSessionID := func() int64 {
-		if activeQuery.CurrentSessionID != nil {
-			return *activeQuery.CurrentSessionID
-		}
-		return 0
+	sessionID := int64(0)
+	if activeQuery.CurrentSessionID != nil {
+		sessionID = *activeQuery.CurrentSessionID
 	}
 
-	getRequestID := func() int64 {
-		if activeQuery.RequestID != nil {
-			return *activeQuery.RequestID
-		}
-		return 0
+	requestID := int64(0)
+	if activeQuery.RequestID != nil {
+		requestID = *activeQuery.RequestID
 	}
 
-	getRequestStartTime := func() string {
-		if activeQuery.RequestStartTime != nil {
-			return *activeQuery.RequestStartTime
-		}
-		return ""
+	requestStartTime := ""
+	if activeQuery.RequestStartTime != nil {
+		requestStartTime = *activeQuery.RequestStartTime
 	}
 
-	getLastExecutionTime := func() string {
-		if planResult.LastExecutionTime != nil {
-			return *planResult.LastExecutionTime
-		}
-		return ""
+	lastExecutionTime := ""
+	if planResult.LastExecutionTime != nil {
+		lastExecutionTime = *planResult.LastExecutionTime
 	}
 
-	getCreationTime := func() string {
-		if planResult.CreationTime != nil {
-			return *planResult.CreationTime
-		}
-		return ""
+	creationTime := ""
+	if planResult.CreationTime != nil {
+		creationTime = *planResult.CreationTime
 	}
 
-	getDatabaseName := func() string {
-		if activeQuery.DatabaseName != nil {
-			return *activeQuery.DatabaseName
-		}
-		return ""
+	databaseName := ""
+	if activeQuery.DatabaseName != nil {
+		databaseName = *activeQuery.DatabaseName
 	}
 
-	getSchemaName := func() string {
-		if activeQuery.SchemaName != nil {
-			return *activeQuery.SchemaName
-		}
-		return ""
+	schemaName := ""
+	if activeQuery.SchemaName != nil {
+		schemaName = *activeQuery.SchemaName
 	}
 
 	if planResult.AvgElapsedTimeMs != nil {
 		s.mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(
 			timestamp,
 			*planResult.AvgElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
+			queryID,
+			planHandle,
+			queryPlanHash,
+			sessionID,
+			requestID,
+			requestStartTime,
+			lastExecutionTime,
+			creationTime,
+			databaseName,
+			schemaName,
 		)
 	}
 
@@ -340,40 +321,35 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		s.mb.RecordSqlserverPlanTotalElapsedTimeMsDataPoint(
 			timestamp,
 			*planResult.TotalElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanHash(),
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
-			getLastExecutionTime(),
-			getCreationTime(),
-			getDatabaseName(),
-			getSchemaName(),
+			queryID,
+			planHandle,
+			queryPlanHash,
+			sessionID,
+			requestID,
+			requestStartTime,
+			lastExecutionTime,
+			creationTime,
+			databaseName,
+			schemaName,
 		)
 	}
 }
 
 func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan models.ExecutionPlanAnalysis, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
-	getSessionID := func() int64 {
-		if activeQuery.CurrentSessionID != nil {
-			return *activeQuery.CurrentSessionID
-		}
-		return 0
+	// Compute all attribute values once
+	sessionID := int64(0)
+	if activeQuery.CurrentSessionID != nil {
+		sessionID = *activeQuery.CurrentSessionID
 	}
 
-	getRequestID := func() int64 {
-		if activeQuery.RequestID != nil {
-			return *activeQuery.RequestID
-		}
-		return 0
+	requestID := int64(0)
+	if activeQuery.RequestID != nil {
+		requestID = *activeQuery.RequestID
 	}
 
-	getRequestStartTime := func() string {
-		if activeQuery.RequestStartTime != nil {
-			return *activeQuery.RequestStartTime
-		}
-		return ""
+	requestStartTime := ""
+	if activeQuery.RequestStartTime != nil {
+		requestStartTime = *activeQuery.RequestStartTime
 	}
 
 	for _, node := range executionPlan.Nodes {
@@ -407,9 +383,9 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 			node.TotalLogicalWrites,
 			node.ExecutionCount,
 			node.AvgElapsedTimeMs,
-			getSessionID(),
-			getRequestID(),
-			getRequestStartTime(),
+			sessionID,
+			requestID,
+			requestStartTime,
 			node.CollectionTimestamp,
 			node.LastExecutionTime,
 		)
@@ -419,249 +395,154 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, index int) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Helper functions to safely get attribute values
-	getQueryID := func() string {
-		if result.QueryID != nil {
-			return result.QueryID.String()
-		}
-		return ""
+	// Compute all attribute values once
+	queryID := ""
+	if result.QueryID != nil {
+		queryID = result.QueryID.String()
 	}
 
-	getPlanHandle := func() string {
-		if result.PlanHandle != nil {
-			return result.PlanHandle.String()
-		}
-		return ""
+	planHandle := ""
+	if result.PlanHandle != nil {
+		planHandle = result.PlanHandle.String()
 	}
 
-	getDatabaseName := func() string {
-		if result.DatabaseName != nil {
-			return *result.DatabaseName
-		}
-		return ""
+	databaseName := ""
+	if result.DatabaseName != nil {
+		databaseName = *result.DatabaseName
 	}
 
-	getSchemaName := func() string {
-		if result.SchemaName != nil {
-			return *result.SchemaName
-		}
-		return ""
+	schemaName := ""
+	if result.SchemaName != nil {
+		schemaName = *result.SchemaName
 	}
 
-	getStatementType := func() string {
-		if result.StatementType != nil {
-			return *result.StatementType
-		}
-		return ""
+	statementType := ""
+	if result.StatementType != nil {
+		statementType = *result.StatementType
 	}
 
-	getQueryText := func() string {
-		if result.QueryText != nil {
-			return *result.QueryText
-		}
-		return ""
+	queryText := ""
+	if result.QueryText != nil {
+		queryText = *result.QueryText
 	}
 
-	getCollectionTimestamp := func() string {
-		if result.CollectionTimestamp != nil {
-			return *result.CollectionTimestamp
-		}
-		return ""
+	collectionTimestamp := ""
+	if result.CollectionTimestamp != nil {
+		collectionTimestamp = *result.CollectionTimestamp
 	}
 
-	getLastExecutionTimestamp := func() string {
-		if result.LastExecutionTimestamp != nil {
-			return *result.LastExecutionTimestamp
-		}
-		return ""
+	lastExecutionTimestamp := ""
+	if result.LastExecutionTimestamp != nil {
+		lastExecutionTimestamp = *result.LastExecutionTimestamp
 	}
 
-	getQuerySignature := func() string {
-		if result.QueryText != nil {
-			return helpers.ComputeQueryHash(*result.QueryText)
-		}
-		return ""
+	querySignature := ""
+	if result.QueryText != nil {
+		querySignature = helpers.ComputeQueryHash(*result.QueryText)
 	}
 
-	// Create detailed attributes for logging/debugging (not used in metrics)
-	logAttributes := func() []zap.Field {
-		var fields []zap.Field
-		if result.QueryID != nil {
-			fields = append(fields, zap.String("query_id", result.QueryID.String()))
-		}
-		if result.PlanHandle != nil {
-			fields = append(fields, zap.String("plan_handle", result.PlanHandle.String()))
-		}
-		if result.DatabaseName != nil {
-			fields = append(fields, zap.String("database_name", *result.DatabaseName))
-		}
-		if result.QueryText != nil {
-			// Anonymize and truncate query text for logging
-			anonymizedSQL := helpers.SafeAnonymizeQueryText(result.QueryText)
-			if len(anonymizedSQL) > 100 {
-				anonymizedSQL = anonymizedSQL[:100] + "..."
-			}
-			fields = append(fields, zap.String("query_text_preview", anonymizedSQL))
-		}
-		if result.CollectionTimestamp != nil {
-			fields = append(fields, zap.String("collection_timestamp", *result.CollectionTimestamp))
-		}
-		if result.LastExecutionTimestamp != nil {
-			fields = append(fields, zap.String("last_execution_timestamp", *result.LastExecutionTimestamp))
-		}
-		return fields
-	}
+	// Emit a single metric with all query details (non-numeric attributes)
+	s.mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(
+		timestamp,
+		1,
+		queryID,
+		databaseName,
+		schemaName,
+		planHandle,
+		statementType,
+		queryText,
+		querySignature,
+		collectionTimestamp,
+		lastExecutionTimestamp,
+	)
 
-	// Create avg_cpu_time_ms metric (historical/cumulative only, no delta) - CARDINALITY SAFE
 	if result.AvgCPUTimeMS != nil {
 		s.mb.RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint(
 			timestamp,
 			*result.AvgCPUTimeMS,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Create avg_disk_reads metric - CARDINALITY SAFE
 	if result.AvgDiskReads != nil {
 		s.mb.RecordSqlserverSlowqueryAvgDiskReadsDataPoint(
 			timestamp,
 			*result.AvgDiskReads,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Create avg_disk_writes metric - CARDINALITY SAFE
 	if result.AvgDiskWrites != nil {
 		s.mb.RecordSqlserverSlowqueryAvgDiskWritesDataPoint(
 			timestamp,
 			*result.AvgDiskWrites,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Create avg_rows_processed metric - CARDINALITY SAFE
 	if result.AvgRowsProcessed != nil {
 		s.mb.RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(
 			timestamp,
 			*result.AvgRowsProcessed,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
-	} else {
-		s.logger.Debug("AvgRowsProcessed is nil for slow query", zap.Int("index", index))
 	}
 
-	// Create avg_elapsed_time_ms metric (historical/cumulative) - CARDINALITY SAFE
 	if result.AvgElapsedTimeMS != nil {
 		s.mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(
 			timestamp,
 			*result.AvgElapsedTimeMS,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-			getCollectionTimestamp(),
-			getLastExecutionTimestamp(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Create interval_avg_elapsed_time_ms metric (delta) - CARDINALITY SAFE
 	if result.IntervalAvgElapsedTimeMS != nil {
 		s.mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(
 			timestamp,
 			*result.IntervalAvgElapsedTimeMS,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Create execution_count metric (historical/cumulative) - CARDINALITY SAFE
 	if result.ExecutionCount != nil {
 		s.mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(
 			timestamp,
 			*result.ExecutionCount,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Create interval_execution_count metric (delta) - CARDINALITY SAFE
 	if result.IntervalExecutionCount != nil {
 		s.mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(
 			timestamp,
 			*result.IntervalExecutionCount,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// NOTE: Removed separate query_id and plan_handle metrics as these attributes
-	// are now included in ALL slow query metrics via createSafeAttributes()
-	// This eliminates redundant metric emission
-
-	// Create query_text metric with cardinality control
-	if result.QueryText != nil {
-		s.mb.RecordSqlserverSlowqueryQueryTextDataPoint(
-			timestamp,
-			1,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-			getQuerySignature(),
-		)
-	}
-
-	// ========================================
-	// RCA ENHANCEMENT METRICS
-	// ========================================
-
-	// Min/Max/Last Elapsed Time Metrics
 	if result.MinElapsedTimeMs != nil {
 		s.mb.RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(
 			timestamp,
 			*result.MinElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
@@ -669,12 +550,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		s.mb.RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(
 			timestamp,
 			*result.MaxElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
@@ -682,26 +560,19 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		s.mb.RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(
 			timestamp,
 			*result.LastElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Memory Grant Metrics
 	if result.LastGrantKB != nil {
 		s.mb.RecordSqlserverSlowqueryLastGrantKbDataPoint(
 			timestamp,
 			*result.LastGrantKB,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
@@ -709,26 +580,19 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		s.mb.RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(
 			timestamp,
 			*result.LastUsedGrantKB,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// TempDB Spill Metrics
 	if result.LastSpills != nil {
 		s.mb.RecordSqlserverSlowqueryLastSpillsDataPoint(
 			timestamp,
 			*result.LastSpills,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
@@ -736,165 +600,88 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		s.mb.RecordSqlserverSlowqueryMaxSpillsDataPoint(
 			timestamp,
 			*result.MaxSpills,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
 
-	// Parallelism Metrics
 	if result.LastDOP != nil {
 		s.mb.RecordSqlserverSlowqueryLastDopDataPoint(
 			timestamp,
 			*result.LastDOP,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
+			queryID,
+			databaseName,
+			schemaName,
 		)
 	}
-
-	// Use dedicated logging function with cardinality-safe approach
-	s.logger.Debug("Processed slow query metrics with cardinality safety", logAttributes()...)
 
 	return nil
 }
 
-// processQueryExecutionPlanMetrics processes query execution plan metrics with cardinality safety
 func (s *QueryPerformanceScraper) processQueryExecutionPlanMetrics(result models.QueryExecutionPlan, index int) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Helper functions to safely get attribute values
-	getQueryID := func() string {
-		if result.QueryID != nil {
-			return result.QueryID.String()
-		}
-		return ""
+	// Compute all attribute values once
+	queryID := ""
+	if result.QueryID != nil {
+		queryID = result.QueryID.String()
 	}
 
-	getPlanHandle := func() string {
-		if result.PlanHandle != nil {
-			return result.PlanHandle.String()
-		}
-		return ""
+	planHandle := ""
+	if result.PlanHandle != nil {
+		planHandle = result.PlanHandle.String()
 	}
 
-	getQueryPlanID := func() string {
-		if result.QueryPlanID != nil {
-			return result.QueryPlanID.String()
-		}
-		return ""
+	queryPlanID := ""
+	if result.QueryPlanID != nil {
+		queryPlanID = result.QueryPlanID.String()
 	}
 
-	getQueryText := func() string {
-		if result.SQLText != nil {
-			return helpers.AnonymizeQueryText(*result.SQLText)
-		}
-		return ""
+	queryText := ""
+	if result.SQLText != nil {
+		queryText = helpers.AnonymizeQueryText(*result.SQLText)
 	}
 
-	getCreationTime := func() string {
-		if result.CreationTime != nil {
-			return *result.CreationTime
-		}
-		return ""
+	creationTime := ""
+	if result.CreationTime != nil {
+		creationTime = *result.CreationTime
 	}
 
-	getLastExecutionTime := func() string {
-		if result.LastExecutionTime != nil {
-			return *result.LastExecutionTime
-		}
-		return ""
+	lastExecutionTime := ""
+	if result.LastExecutionTime != nil {
+		lastExecutionTime = *result.LastExecutionTime
 	}
 
-	// Create detailed attributes for logging/debugging (not used in metrics)
-	logAttributes := func() []zap.Field {
-		var fields []zap.Field
-		if result.QueryID != nil {
-			fields = append(fields, zap.String("query_id", result.QueryID.String()))
-		}
-		if result.PlanHandle != nil {
-			fields = append(fields, zap.String("plan_handle", result.PlanHandle.String()))
-		}
-		if result.QueryPlanID != nil {
-			fields = append(fields, zap.String("query_plan_id", result.QueryPlanID.String()))
-		}
-		if result.SQLText != nil {
-			// Anonymize and truncate SQL text for logging
-			anonymizedSQL := helpers.AnonymizeQueryText(*result.SQLText)
-			if len(anonymizedSQL) > 100 {
-				anonymizedSQL = anonymizedSQL[:100] + "..."
-			}
-			fields = append(fields, zap.String("sql_text_preview", anonymizedSQL))
-		}
-		return fields
-	}
-
-	// Create TotalCPUMs metric - CARDINALITY SAFE
 	if result.TotalCPUMs != nil {
 		s.mb.RecordSqlserverIndividualQueryTotalCPUMsDataPoint(
 			timestamp,
 			*result.TotalCPUMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanID(),
-			getQueryText(),
-			getCreationTime(),
-			getLastExecutionTime(),
+			queryID,
+			planHandle,
+			queryPlanID,
+			queryText,
+			creationTime,
+			lastExecutionTime,
 		)
 	}
 
-	// Create TotalElapsedMs metric - CARDINALITY SAFE
-	// This metric includes all attributes: execution plan XML, timestamps, query details
 	if result.TotalElapsedMs != nil {
 		s.mb.RecordSqlserverIndividualQueryTotalElapsedMsDataPoint(
 			timestamp,
 			*result.TotalElapsedMs,
-			getQueryID(),
-			getPlanHandle(),
-			getQueryPlanID(),
-			getQueryText(),
-			getCreationTime(),
-			getLastExecutionTime(),
+			queryID,
+			planHandle,
+			queryPlanID,
+			queryText,
+			creationTime,
+			lastExecutionTime,
 		)
 	}
-
-	// Log detailed information for debugging/analysis
-	s.logger.Debug("Processed query execution plan metrics with execution plan XML and timestamps included",
-		logAttributes()...)
 
 	return nil
 }
 
-// getSlowQueryResults fetches slow query results to extract QueryIDs for execution plan analysis
-func (s *QueryPerformanceScraper) getSlowQueryResults(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int) ([]models.SlowQuery, error) {
-	formattedQuery := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold)
-
-	var results []models.SlowQuery
-	if err := s.connection.Query(ctx, &results, formattedQuery); err != nil {
-		return nil, fmt.Errorf("failed to execute slow query for QueryID extraction: %w", err)
-	}
-
-	s.logger.Debug("Successfully fetched slow queries for QueryID extraction",
-		zap.Int("result_count", len(results)))
-
-	return results, nil
-}
-
-// REMOVED: emitExecutionPlanLogs, categorizeOperator, and assessPerformanceImpact functions
-// These functions created SqlServerExecutionPlan and SqlServerExecutionPlanNode custom events
-// which have been removed in favor of SqlServerActiveQueryExecutionPlan with aggregated stats
-
-// REMOVED (2025-11-28): logExecutionPlanToNewRelic function
-// This function created structured logs for execution plan data
-// which has been removed in favor of SqlServerActiveQueryExecutionPlan custom events with aggregated stats
-
-// ExtractQueryIDsFromSlowQueries extracts unique QueryIDs from slow query results
 func (s *QueryPerformanceScraper) ExtractQueryIDsFromSlowQueries(slowQueries []models.SlowQuery) []string {
 	queryIDMap := make(map[string]bool)
 	var queryIDs []string
@@ -909,22 +696,14 @@ func (s *QueryPerformanceScraper) ExtractQueryIDsFromSlowQueries(slowQueries []m
 		}
 	}
 
-	s.logger.Debug("Extracted unique QueryIDs from slow queries",
-		zap.Int("total_slow_queries", len(slowQueries)),
-		zap.Int("unique_query_ids", len(queryIDs)))
-
 	return queryIDs
 }
 
-// formatQueryIDsForSQL converts QueryID slice to comma-separated string for SQL IN clause
-// Follows nri-mssql pattern for QueryID formatting
 func (s *QueryPerformanceScraper) formatQueryIDsForSQL(queryIDs []string) string {
 	if len(queryIDs) == 0 {
-		return "0x0" // Return placeholder if no QueryIDs
+		return "0x0"
 	}
 
-	// Join QueryIDs with commas for SQL STRING_SPLIT
-	// QueryIDs are already in hex format (0x...), so we can use them directly
 	queryIDsString := ""
 	for i, queryID := range queryIDs {
 		if i > 0 {
@@ -933,14 +712,9 @@ func (s *QueryPerformanceScraper) formatQueryIDsForSQL(queryIDs []string) string
 		queryIDsString += queryID
 	}
 
-	s.logger.Debug("Formatted QueryIDs for SQL query",
-		zap.Int("query_id_count", len(queryIDs)),
-		zap.String("formatted_query_ids", queries.TruncateQuery(queryIDsString, 100)))
-
 	return queryIDsString
 }
 
-// extractPlanHandlesFromSlowQueries extracts unique PlanHandles from slow query results
 func (s *QueryPerformanceScraper) extractPlanHandlesFromSlowQueries(slowQueries []models.SlowQuery) []string {
 	planHandleMap := make(map[string]bool)
 	var planHandles []string
@@ -955,21 +729,14 @@ func (s *QueryPerformanceScraper) extractPlanHandlesFromSlowQueries(slowQueries 
 		}
 	}
 
-	s.logger.Debug("Extracted unique PlanHandles from slow queries",
-		zap.Int("total_slow_queries", len(slowQueries)),
-		zap.Int("unique_plan_handles", len(planHandles)))
-
 	return planHandles
 }
 
-// formatPlanHandlesForSQL converts PlanHandle slice to comma-separated string for SQL IN clause
 func (s *QueryPerformanceScraper) formatPlanHandlesForSQL(planHandles []string) string {
 	if len(planHandles) == 0 {
-		return "0x0" // Return placeholder if no PlanHandles
+		return "0x0"
 	}
 
-	// Join PlanHandles with commas for SQL STRING_SPLIT
-	// PlanHandles are already in hex format (0x...), so we can use them directly
 	planHandlesString := ""
 	for i, planHandle := range planHandles {
 		if i > 0 {
@@ -978,32 +745,21 @@ func (s *QueryPerformanceScraper) formatPlanHandlesForSQL(planHandles []string) 
 		planHandlesString += planHandle
 	}
 
-	s.logger.Debug("Formatted PlanHandles for SQL query",
-		zap.Int("plan_handle_count", len(planHandles)),
-		zap.String("formatted_plan_handles", queries.TruncateQuery(planHandlesString, 100)))
-
 	return planHandlesString
 }
 
-// Returns: (queryIDs []string, slowQueryPlanDataMap map[string]models.SlowQueryPlanData)
-// Only extracts the 5 fields needed for sqlserver.plan.* metrics
-// When multiple plan_handles exist for the same query_hash, uses the MOST RECENT one (latest last_execution_time)
 func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []models.SlowQuery) ([]string, map[string]models.SlowQueryPlanData) {
-	queryIDMap := make(map[string]bool)                               // For deduplication
-	slowQueryPlanDataMap := make(map[string]models.SlowQueryPlanData) // Lightweight plan data (ONLY 5 fields)
-	duplicatePlanHandles := 0                                         // Track how many duplicate query_hashes with different plan_handles we find
+	queryIDMap := make(map[string]bool)
+	slowQueryPlanDataMap := make(map[string]models.SlowQueryPlanData)
+	duplicatePlanHandles := 0
 
 	for _, slowQuery := range slowQueries {
 		if slowQuery.QueryID != nil && !slowQuery.QueryID.IsEmpty() {
 			queryIDStr := slowQuery.QueryID.String()
 			queryIDMap[queryIDStr] = true
 
-			// Store ONLY the 5 fields needed for plan metrics (not the entire SlowQuery struct)
 			if slowQuery.PlanHandle != nil && !slowQuery.PlanHandle.IsEmpty() {
-				// Check if this query_hash already exists in the map
 				if existingPlanData, exists := slowQueryPlanDataMap[queryIDStr]; exists {
-					// Same query_hash with different plan_handle - keep the most recent one
-					// Compare last_execution_time timestamps (RFC3339 format: "2025-12-16T15:20:55Z")
 					existingTime := ""
 					newTime := ""
 					if existingPlanData.LastExecutionTime != nil {
@@ -1013,17 +769,8 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 						newTime = *slowQuery.LastExecutionTimestamp
 					}
 
-					// String comparison works for RFC3339 timestamps (lexicographically sorted)
-					// Only replace if new timestamp is more recent
 					if newTime > existingTime {
 						duplicatePlanHandles++
-						s.logger.Debug("Found multiple plan_handles for same query_hash - using most recent",
-							zap.String("query_hash", queryIDStr),
-							zap.String("existing_plan_handle", existingPlanData.PlanHandle.String()),
-							zap.String("existing_last_execution", existingTime),
-							zap.String("new_plan_handle", slowQuery.PlanHandle.String()),
-							zap.String("new_last_execution", newTime))
-
 						slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
 							QueryID:            slowQuery.QueryID,
 							PlanHandle:         slowQuery.PlanHandle,
@@ -1031,16 +778,8 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 							LastExecutionTime:  slowQuery.LastExecutionTimestamp,
 							TotalElapsedTimeMs: slowQuery.TotalElapsedTimeMS,
 						}
-					} else {
-						s.logger.Debug("Skipping older plan_handle for same query_hash",
-							zap.String("query_hash", queryIDStr),
-							zap.String("existing_plan_handle", existingPlanData.PlanHandle.String()),
-							zap.String("existing_last_execution", existingTime),
-							zap.String("skipped_plan_handle", slowQuery.PlanHandle.String()),
-							zap.String("skipped_last_execution", newTime))
 					}
 				} else {
-					// First time seeing this query_hash - store it
 					slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
 						QueryID:            slowQuery.QueryID,
 						PlanHandle:         slowQuery.PlanHandle,
@@ -1058,12 +797,6 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 	for queryID := range queryIDMap {
 		queryIDs = append(queryIDs, queryID)
 	}
-
-	s.logger.Info("Extracted query IDs and lightweight plan data (5 fields only)",
-		zap.Int("total_slow_queries", len(slowQueries)),
-		zap.Int("unique_query_ids", len(queryIDs)),
-		zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)),
-		zap.Int("duplicate_plan_handles_resolved", duplicatePlanHandles))
 
 	return queryIDs, slowQueryPlanDataMap
 }
