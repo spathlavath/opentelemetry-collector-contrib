@@ -77,9 +77,6 @@ receivers:
     # Enable query performance monitoring (blocking sessions, slow queries, etc.)
     enable_query_monitoring: true
 
-    # Enable active running queries monitoring (captures currently executing queries with waits)
-    enable_active_running_queries: true
-
     # Query monitoring thresholds (required when enable_query_monitoring is true)
     query_monitoring_response_time_threshold: 0  # milliseconds - 0 = capture all queries (no threshold) for debugging
     query_monitoring_count_threshold: 100         # TopN: emit top 100 slowest queries per collection cycle
