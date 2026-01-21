@@ -16,23 +16,46 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/scrapers"
 )
 
 type newRelicMySQLScraper struct {
-	sqlclient client
-	logger    *zap.Logger
-	config    *Config
-	mb        *metadata.MetricsBuilder
+	sqlclient         client
+	logger            *zap.Logger
+	config            *Config
+	mb                *metadata.MetricsBuilder
+	globalStatsScraper *scrapers.GlobalStatsScraper // Scraper for global MySQL stats
+	slowQueryScraper   *scrapers.SlowQueryScraper   // Scraper for slow query monitoring
 }
 
 func newNewRelicMySQLScraper(
 	settings receiver.Settings,
 	config *Config,
 ) *newRelicMySQLScraper {
+	mb := metadata.NewMetricsBuilder(config.MetricsBuilderConfig, settings)
+
+	// Initialize global stats scraper
+	globalStatsScraper := scrapers.NewGlobalStatsScraper(settings.Logger, mb)
+
+	// Initialize slow query scraper if enabled
+	var slowQueryScraper *scrapers.SlowQueryScraper
+	if config.QueryMonitoringEnabled {
+		slowQueryConfig := &scrapers.SlowQueryScraperConfig{
+			IntervalSeconds:      config.QueryMonitoringIntervalSeconds,
+			TopN:                 config.QueryMonitoringTopN,
+			ElapsedTimeThreshold: config.QueryMonitoringElapsedTimeThreshold,
+			EnableIntervalCalc:   config.QueryMonitoringEnableIntervalCalc,
+		}
+		// Note: client will be set later in start() method
+		slowQueryScraper = scrapers.NewSlowQueryScraper(settings.Logger, mb, slowQueryConfig, nil)
+	}
+
 	return &newRelicMySQLScraper{
-		logger: settings.Logger,
-		config: config,
-		mb:     metadata.NewMetricsBuilder(config.MetricsBuilderConfig, settings),
+		logger:             settings.Logger,
+		config:             config,
+		mb:                 mb,
+		globalStatsScraper: globalStatsScraper,
+		slowQueryScraper:   slowQueryScraper,
 	}
 }
 
@@ -48,6 +71,21 @@ func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error 
 		return err
 	}
 	n.sqlclient = sqlclient
+
+	// Set the client for slow query scraper if enabled
+	if n.slowQueryScraper != nil {
+		n.slowQueryScraper = scrapers.NewSlowQueryScraper(
+			n.logger,
+			n.mb,
+			&scrapers.SlowQueryScraperConfig{
+				IntervalSeconds:      n.config.QueryMonitoringIntervalSeconds,
+				TopN:                 n.config.QueryMonitoringTopN,
+				ElapsedTimeThreshold: n.config.QueryMonitoringElapsedTimeThreshold,
+				EnableIntervalCalc:   n.config.QueryMonitoringEnableIntervalCalc,
+			},
+			sqlclient,
+		)
+	}
 
 	return nil
 }
@@ -69,56 +107,27 @@ func (n *newRelicMySQLScraper) scrape(ctx context.Context) (pmetric.Metrics, err
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := &scrapererror.ScrapeErrors{}
 
-	// collect global status metrics.
 	n.logger.Info("Scraping MySQL metrics using newrelicmysql receiver started")
-	n.scrapeGlobalStats(now, errs)
+
+	// Collect global status metrics using dedicated scraper
+	globalStats, err := n.sqlclient.GetGlobalStats()
+	if err != nil {
+		n.logger.Error("Failed to fetch global stats", zap.Error(err))
+		errs.AddPartial(66, err)
+	} else {
+		n.globalStatsScraper.Scrape(now, globalStats, errs)
+	}
+
+	// Collect slow query metrics if enabled using dedicated scraper
+	if n.config.QueryMonitoringEnabled && n.slowQueryScraper != nil {
+		if err := n.slowQueryScraper.Scrape(ctx, now); err != nil {
+			n.logger.Error("Failed to scrape slow queries", zap.Error(err))
+			errs.AddPartial(1, err)
+		}
+	}
+
 	n.logger.Info("Scraping MySQL metrics using newrelicmysql receiver completed")
 
 	return n.mb.Emit(), nil
 }
 
-func (m *newRelicMySQLScraper) scrapeGlobalStats(now pcommon.Timestamp, errs *scrapererror.ScrapeErrors) {
-	globalStats, err := m.sqlclient.getGlobalStats()
-	if err != nil {
-		m.logger.Error("Failed to fetch global stats", zap.Error(err))
-		errs.AddPartial(66, err)
-		return
-	}
-
-	for k, v := range globalStats {
-		switch k {
-
-		// connection
-		case "Connections":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlConnectionCountDataPoint(now, v))
-
-		// commands
-		case "Com_delete":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlCommandsDataPoint(now, v, metadata.AttributeCommandDelete))
-		case "Com_delete_multi":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlCommandsDataPoint(now, v, metadata.AttributeCommandDeleteMulti))
-		case "Com_insert":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlCommandsDataPoint(now, v, metadata.AttributeCommandInsert))
-		case "Com_select":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlCommandsDataPoint(now, v, metadata.AttributeCommandSelect))
-		case "Com_update":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlCommandsDataPoint(now, v, metadata.AttributeCommandUpdate))
-		case "Com_update_multi":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlCommandsDataPoint(now, v, metadata.AttributeCommandUpdateMulti))
-
-		// queries
-		case "Queries":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlQueryCountDataPoint(now, v))
-
-		// uptime
-		case "Uptime":
-			addPartialIfError(errs, m.mb.RecordNewrelicmysqlUptimeDataPoint(now, v))
-		}
-	}
-}
-
-func addPartialIfError(errors *scrapererror.ScrapeErrors, err error) {
-	if err != nil {
-		errors.AddPartial(1, err)
-	}
-}

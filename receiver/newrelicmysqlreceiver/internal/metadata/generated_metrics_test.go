@@ -82,6 +82,86 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryAvgCPUTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryAvgElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryAvgLockTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryAvgRowsAffectedDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryAvgRowsExaminedDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryAvgRowsSentDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryExecutionCountDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryIntervalAvgElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryIntervalExecutionCountDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryMaxElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryMinElapsedTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalErrorsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalLockTimeDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalNoGoodIndexUsedDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalNoIndexUsedDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalSelectFullJoinDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalSelectScanDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalTmpDiskTablesDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalTmpTablesDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlSlowqueryTotalWarningsDataPoint(ts, 1, "database_name-val", "query_id-val", "query_text-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlUptimeDataPoint(ts, "1")
 
 			rb := mb.NewResourceBuilder()
@@ -153,6 +233,426 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.slowquery.avg_cpu_time":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.avg_cpu_time"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.avg_cpu_time")
+					validatedMetrics["newrelicmysql.slowquery.avg_cpu_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical average CPU time per query execution.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.avg_elapsed_time":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.avg_elapsed_time")
+					validatedMetrics["newrelicmysql.slowquery.avg_elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical average query elapsed time (all-time average since server start).", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.avg_lock_time":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.avg_lock_time"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.avg_lock_time")
+					validatedMetrics["newrelicmysql.slowquery.avg_lock_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical average lock wait time per query execution.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.avg_rows_affected":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.avg_rows_affected"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.avg_rows_affected")
+					validatedMetrics["newrelicmysql.slowquery.avg_rows_affected"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average number of rows modified per query execution (INSERT/UPDATE/DELETE).", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.avg_rows_examined":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.avg_rows_examined"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.avg_rows_examined")
+					validatedMetrics["newrelicmysql.slowquery.avg_rows_examined"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average number of rows examined per query execution.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.avg_rows_sent":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.avg_rows_sent"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.avg_rows_sent")
+					validatedMetrics["newrelicmysql.slowquery.avg_rows_sent"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average number of rows returned per query execution.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.execution_count":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.execution_count"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.execution_count")
+					validatedMetrics["newrelicmysql.slowquery.execution_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of times this query pattern has been executed (cumulative).", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.interval_avg_elapsed_time":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.interval_avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.interval_avg_elapsed_time")
+					validatedMetrics["newrelicmysql.slowquery.interval_avg_elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average query elapsed time in the current interval (delta between scrapes). This is the primary metric for Top N selection.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.interval_execution_count":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.interval_execution_count"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.interval_execution_count")
+					validatedMetrics["newrelicmysql.slowquery.interval_execution_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of query executions in the current interval (delta between scrapes).", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.max_elapsed_time":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.max_elapsed_time"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.max_elapsed_time")
+					validatedMetrics["newrelicmysql.slowquery.max_elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Maximum (slowest) query execution time observed.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.min_elapsed_time":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.min_elapsed_time"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.min_elapsed_time")
+					validatedMetrics["newrelicmysql.slowquery.min_elapsed_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Minimum (fastest) query execution time observed.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_errors":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_errors"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_errors")
+					validatedMetrics["newrelicmysql.slowquery.total_errors"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of errors encountered during query execution. Common causes include syntax errors, constraint violations, and permission issues.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_lock_time":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_lock_time"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_lock_time")
+					validatedMetrics["newrelicmysql.slowquery.total_lock_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total cumulative time spent waiting for locks. High value indicates lock contention issues.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_no_good_index_used":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_no_good_index_used"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_no_good_index_used")
+					validatedMetrics["newrelicmysql.slowquery.total_no_good_index_used"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of times MySQL couldn't find a good index to use. Non-zero = YELLOW FLAG.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_no_index_used":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_no_index_used"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_no_index_used")
+					validatedMetrics["newrelicmysql.slowquery.total_no_index_used"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of queries that performed table scans without using an index. Non-zero = RED FLAG.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_select_full_join":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_select_full_join"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_select_full_join")
+					validatedMetrics["newrelicmysql.slowquery.total_select_full_join"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of joins without indexes. High value indicates missing join indexes.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_select_scan":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_select_scan"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_select_scan")
+					validatedMetrics["newrelicmysql.slowquery.total_select_scan"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of full table scans performed. High value indicates missing indexes.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_tmp_disk_tables":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_tmp_disk_tables"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_tmp_disk_tables")
+					validatedMetrics["newrelicmysql.slowquery.total_tmp_disk_tables"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of temporary tables created on disk (RED FLAG - indicates memory pressure).", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_tmp_tables":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_tmp_tables"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_tmp_tables")
+					validatedMetrics["newrelicmysql.slowquery.total_tmp_tables"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of temporary tables created.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
+				case "newrelicmysql.slowquery.total_warnings":
+					assert.False(t, validatedMetrics["newrelicmysql.slowquery.total_warnings"], "Found a duplicate in the metrics slice: newrelicmysql.slowquery.total_warnings")
+					validatedMetrics["newrelicmysql.slowquery.total_warnings"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of warnings generated during query execution. Common causes include type mismatches, truncated data, and deprecated syntax.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "newrelicmysql.uptime":
 					assert.False(t, validatedMetrics["newrelicmysql.uptime"], "Found a duplicate in the metrics slice: newrelicmysql.uptime")
 					validatedMetrics["newrelicmysql.uptime"] = true
