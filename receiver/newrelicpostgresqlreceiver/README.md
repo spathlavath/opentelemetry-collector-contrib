@@ -11,12 +11,20 @@ The New Relic PostgreSQL Receiver is an OpenTelemetry receiver that collects met
 - Connection pooling configuration
 
 ### Environment Compatibility
-- PostgreSQL 10 and later versions
-- Amazon RDS for PostgreSQL
-- Amazon Aurora PostgreSQL
-- Azure Database for PostgreSQL
-- Google Cloud SQL for PostgreSQL
-- Self-hosted PostgreSQL instances
+
+**Supported PostgreSQL Versions:**
+- PostgreSQL 9.2 and later versions
+- All columns are supported in PostgreSQL 9.2+
+- Note: `blk_read_time` and `blk_write_time` metrics require `track_io_timing = on` (available since PostgreSQL 9.2)
+
+**Supported Environments:**
+- ✅ Amazon RDS for PostgreSQL
+- ✅ Amazon Aurora PostgreSQL
+- ✅ Azure Database for PostgreSQL
+- ✅ Google Cloud SQL for PostgreSQL
+- ✅ Self-hosted PostgreSQL instances
+
+All cloud providers fully support the `pg_stat_database` view and related functions used by this receiver.
 
 ## Configuration
 
