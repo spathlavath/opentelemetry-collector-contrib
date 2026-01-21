@@ -20,3 +20,9 @@ type CDBCapability struct {
 type PDBCapability struct {
 	PDBCount int64
 }
+
+// PDBServiceInfo represents a PDB service name for connection
+type PDBServiceInfo struct {
+	PDBName     string
+	ServiceName string
+}

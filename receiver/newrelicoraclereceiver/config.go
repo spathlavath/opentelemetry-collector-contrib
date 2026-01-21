@@ -89,8 +89,12 @@ type Config struct {
 	DataSource string `mapstructure:"datasource"`
 	Endpoint   string `mapstructure:"endpoint"`
 	Password   string `mapstructure:"password"`
-	Service    string `mapstructure:"service"`
+	Service    string `mapstructure:"service"` // Deprecated: Use Services instead
 	Username   string `mapstructure:"username"`
+
+	// PDB Discovery and Multi-Service Configuration
+	Services        []string `mapstructure:"services"`          // List of services/PDBs to connect to, or ["ALL"] for discovery
+	PDBDomainSuffix string   `mapstructure:"pdb_domain_suffix"` // Optional: Override db_domain from database
 
 	// Connection Pool Configuration
 	MaxOpenConnections    int  `mapstructure:"max_open_connections"`
@@ -130,6 +134,16 @@ type Config struct {
 func (c *Config) SetDefaults() {
 	if c.MaxOpenConnections == 0 {
 		c.MaxOpenConnections = defaultMaxOpenConnections
+	}
+
+	// Handle Services field - default to "ALL" if both Service and Services are empty
+	if c.Service == "" && len(c.Services) == 0 {
+		c.Services = []string{"ALL"}
+	}
+
+	// If legacy Service field is set but Services is empty, populate Services from Service
+	if c.Service != "" && len(c.Services) == 0 {
+		c.Services = []string{c.Service}
 	}
 
 	// Set scraper controller defaults if not set
@@ -204,12 +218,21 @@ func (c Config) Validate() error {
 			allErrs = multierr.Append(allErrs, errEmptyPassword)
 		}
 
-		// Validate service
-		if c.Service == "" {
+		// Validate service/services - at least one must be specified
+		if c.Service == "" && len(c.Services) == 0 {
 			allErrs = multierr.Append(allErrs, errEmptyService)
 		} else {
-			if err := c.validateService(); err != nil {
-				allErrs = multierr.Append(allErrs, err)
+			// Validate legacy Service field if provided
+			if c.Service != "" {
+				if err := c.validateService(); err != nil {
+					allErrs = multierr.Append(allErrs, err)
+				}
+			}
+			// Validate Services array if provided
+			if len(c.Services) > 0 {
+				if err := c.validateServices(); err != nil {
+					allErrs = multierr.Append(allErrs, err)
+				}
 			}
 		}
 	} else {
@@ -287,6 +310,31 @@ func (c Config) validateService() error {
 	}
 
 	return nil
+}
+
+// validateServices validates the Services array
+func (c Config) validateServices() error {
+	var allErrs error
+
+	for _, service := range c.Services {
+		// "ALL" is a special keyword for PDB discovery
+		if service == "ALL" {
+			continue
+		}
+
+		// Validate each service name
+		if len(service) > maxServiceLength {
+			allErrs = multierr.Append(allErrs, fmt.Errorf("%w: service '%s' length %d exceeds maximum %d", errInvalidService, service, len(service), maxServiceLength))
+			continue
+		}
+
+		// Oracle service names should not contain certain special characters
+		if strings.ContainsAny(service, " \t\n\r;\"'\\") {
+			allErrs = multierr.Append(allErrs, fmt.Errorf("%w: service '%s' contains invalid characters", errInvalidService, service))
+		}
+	}
+
+	return allErrs
 }
 
 // validateDataSource validates the complete data source URL

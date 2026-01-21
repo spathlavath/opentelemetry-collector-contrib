@@ -1253,6 +1253,37 @@ func (c *SQLClient) QueryCDBCapability(ctx context.Context) (*models.CDBCapabili
 	return &capability, nil
 }
 
+// QueryPDBServices discovers all PDB service names from the CDB
+func (c *SQLClient) QueryPDBServices(ctx context.Context, domainSuffix string) ([]models.PDBServiceInfo, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PDBServicesSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query PDB services: %w", err)
+	}
+	defer rows.Close()
+
+	var results []models.PDBServiceInfo
+	for rows.Next() {
+		var info models.PDBServiceInfo
+		if err := rows.Scan(&info.PDBName, &info.ServiceName); err != nil {
+			continue
+		}
+
+		// Override domain suffix if provided
+		if domainSuffix != "" {
+			pdbNameLower := strings.ToLower(info.PDBName)
+			info.ServiceName = pdbNameLower + "." + domainSuffix
+		}
+
+		results = append(results, info)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating PDB services: %w", err)
+	}
+
+	return results, nil
+}
+
 // QueryRACDetection checks if Oracle is running in RAC mode
 func (c *SQLClient) QueryRACDetection(ctx context.Context) (*models.RACDetection, error) {
 	var detection models.RACDetection

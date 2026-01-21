@@ -33,7 +33,7 @@ const (
 
 	// CDBServicesSQL returns services across all containers
 	CDBServicesSQL = `
-		SELECT 
+		SELECT
 			con_id,
 			name AS service_name,
 			network_name,
@@ -42,6 +42,15 @@ const (
 			enabled
 		FROM CDB_SERVICES
 		WHERE ROWNUM <= 1000`
+
+	// PDBServicesSQL returns PDB service names for discovery
+	PDBServicesSQL = `
+		SELECT
+			p.NAME AS pdb_name,
+			LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain') AS service_name
+		FROM V$PDBS p
+		WHERE p.NAME != 'PDB$SEED'
+		ORDER BY p.CON_ID`
 )
 
 // Container Metrics Queries

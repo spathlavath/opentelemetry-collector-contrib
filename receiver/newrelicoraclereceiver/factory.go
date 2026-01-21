@@ -71,7 +71,7 @@ type sqlOpenerFunc func(dataSourceName string) (*sql.DB, error)
 
 func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetricsFunc {
 	return func(
-		_ context.Context,
+		ctx context.Context,
 		settings receiver.Settings,
 		cfg component.Config,
 		consumer consumer.Metrics,
@@ -96,7 +96,8 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			return nil, serviceNameErr
 		}
 
-		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, logsBuilder, sqlCfg.LogsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
+		// Create database provider function for the scraper
+		dbProviderFunc := func() (*sql.DB, error) {
 			db, err := sqlOpenerFunc(getDataSource(*sqlCfg))
 			if err != nil {
 				return nil, err
@@ -119,7 +120,9 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			db.SetConnMaxIdleTime(30 * time.Second)
 
 			return db, nil
-		}, hostAddress, hostPort, serviceName)
+		}
+
+		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, logsBuilder, sqlCfg.LogsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, dbProviderFunc, hostAddress, hostPort, serviceName)
 		if err != nil {
 			return nil, err
 		}

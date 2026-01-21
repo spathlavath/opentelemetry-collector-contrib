@@ -104,6 +104,9 @@ type OracleClient interface {
 	QueryPDBSysMetrics(ctx context.Context) ([]models.PDBSysMetric, error)
 	QueryCDBCapability(ctx context.Context) (*models.CDBCapability, error)
 
+	// PDB Discovery
+	QueryPDBServices(ctx context.Context, domainSuffix string) ([]models.PDBServiceInfo, error)
+
 	// RAC metrics
 	QueryRACDetection(ctx context.Context) (*models.RACDetection, error)
 	QueryASMDetection(ctx context.Context) (*models.ASMDetection, error)

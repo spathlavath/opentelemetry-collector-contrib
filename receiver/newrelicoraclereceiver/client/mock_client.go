@@ -486,6 +486,17 @@ func (m *MockClient) QueryCDBCapability(_ context.Context) (*models.CDBCapabilit
 	return m.CDBCapability, nil
 }
 
+func (m *MockClient) QueryPDBServices(_ context.Context, _ string) ([]models.PDBServiceInfo, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	// Return mock PDB services for testing
+	return []models.PDBServiceInfo{
+		{PDBName: "PDB1", ServiceName: "pdb1.example.com"},
+		{PDBName: "PDB2", ServiceName: "pdb2.example.com"},
+	}, nil
+}
+
 func (m *MockClient) QueryRACDetection(_ context.Context) (*models.RACDetection, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr

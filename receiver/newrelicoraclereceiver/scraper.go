@@ -63,9 +63,11 @@ type newRelicOracleScraper struct {
 	waitEventBlockingScraper *scrapers.WaitEventBlockingScraper
 	childCursorsScraper      *scrapers.ChildCursorsScraper
 
-	// Database and configuration
-	db             *sql.DB
-	client         client.OracleClient
+	// Database and configuration - Support for multiple services/PDBs
+	db             *sql.DB             // Primary database connection (CDB or single service)
+	client         client.OracleClient // Primary client
+	dbs            map[string]*sql.DB  // Map of service name to database connections
+	clients        map[string]client.OracleClient // Map of service name to clients
 	dbProviderFunc dbProviderFunc
 	config         *Config
 
@@ -176,15 +178,156 @@ func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
 	return nil
 }
 
-// initializeDatabase establishes the database connection
+// initializeDatabase establishes the database connection(s)
+// This function handles:
+// 1. Single service connection (legacy behavior)
+// 2. Multiple specific PDB connections from Services list
+// 3. PDB discovery when Services contains "ALL"
 func (s *newRelicOracleScraper) initializeDatabase() error {
-	db, err := s.dbProviderFunc()
-	if err != nil {
-		return fmt.Errorf("failed to open db connection: %w", err)
+	// Initialize maps for multiple connections
+	s.dbs = make(map[string]*sql.DB)
+	s.clients = make(map[string]client.OracleClient)
+
+	// Get the list of services to connect to
+	services := s.config.Services
+	if len(services) == 0 {
+		// Fallback to single service if Services is empty
+		services = []string{s.serviceName}
 	}
-	s.db = db
-	s.client = client.NewSQLClient(db)
+
+	// Check if we need to discover PDBs
+	if len(services) == 1 && services[0] == "ALL" {
+		s.logger.Info("PDB discovery mode enabled, discovering all PDBs from CDB")
+
+		// First, connect to the CDB to discover PDBs
+		db, err := s.dbProviderFunc()
+		if err != nil {
+			return fmt.Errorf("failed to open CDB connection for discovery: %w", err)
+		}
+		cdbClient := client.NewSQLClient(db)
+
+		// Query for PDB services
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
+		pdbServices, err := cdbClient.QueryPDBServices(ctx, s.config.PDBDomainSuffix)
+		if err != nil {
+			db.Close()
+			return fmt.Errorf("failed to discover PDBs: %w", err)
+		}
+
+		// Close CDB connection after discovery
+		db.Close()
+
+		if len(pdbServices) == 0 {
+			s.logger.Warn("No PDBs discovered, falling back to CDB connection")
+			services = []string{s.serviceName}
+		} else {
+			// Build list of discovered PDB service names
+			services = make([]string, 0, len(pdbServices))
+			for _, pdb := range pdbServices {
+				services = append(services, pdb.ServiceName)
+			}
+			s.logger.Info("Discovered PDBs",
+				zap.Int("pdb_count", len(services)),
+				zap.Strings("pdb_services", services))
+		}
+	}
+
+	// Connect to all services
+	s.logger.Info("Establishing database connections",
+		zap.Int("service_count", len(services)),
+		zap.Strings("services", services))
+
+	for _, service := range services {
+		// Create a new config with the specific service
+		serviceConfig := *s.config
+		if s.config.DataSource == "" {
+			// Update the service in endpoint-based config
+			serviceConfig.Service = service
+		} else {
+			// For datasource-based config, we need to update the datasource URL
+			// This is more complex - for now, log a warning
+			s.logger.Warn("DataSource-based config with multiple services may not work correctly",
+				zap.String("service", service))
+		}
+
+		// Create connection
+		db, err := s.createServiceConnection(&serviceConfig, service)
+		if err != nil {
+			s.logger.Error("Failed to connect to service, skipping",
+				zap.String("service", service),
+				zap.Error(err))
+			continue
+		}
+
+		// Store connection and client
+		s.dbs[service] = db
+		s.clients[service] = client.NewSQLClient(db)
+
+		s.logger.Info("Successfully connected to service", zap.String("service", service))
+	}
+
+	if len(s.dbs) == 0 {
+		return fmt.Errorf("failed to establish any database connections")
+	}
+
+	// Set primary connection to the first service
+	for serviceName, db := range s.dbs {
+		s.db = db
+		s.client = s.clients[serviceName]
+		s.serviceName = serviceName
+		break
+	}
+
+	s.logger.Info("Database initialization complete",
+		zap.Int("total_connections", len(s.dbs)))
+
 	return nil
+}
+
+// createServiceConnection creates a database connection for a specific service
+func (s *newRelicOracleScraper) createServiceConnection(cfg *Config, service string) (*sql.DB, error) {
+	// Build connection string for this service
+	var dataSource string
+	if cfg.DataSource == "" {
+		// Use endpoint-based configuration
+		dataSource = fmt.Sprintf("%s/%s@%s/%s",
+			cfg.Username,
+			cfg.Password,
+			cfg.Endpoint,
+			service)
+	} else {
+		// Use existing datasource (may need modification for service)
+		dataSource = cfg.DataSource
+	}
+
+	db, err := sql.Open("godror", dataSource)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open connection to service %s: %w", service, err)
+	}
+
+	// Configure connection pool settings
+	if !cfg.DisableConnectionPool {
+		db.SetMaxOpenConns(cfg.MaxOpenConnections)
+	} else {
+		db.SetMaxOpenConns(1)
+	}
+
+	db.SetMaxIdleConns(2)
+	db.SetConnMaxLifetime(10 * time.Minute)
+	db.SetConnMaxIdleTime(30 * time.Second)
+
+	// Test the connection
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := db.PingContext(ctx); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to ping service %s: %w", service, err)
+	}
+
+	return db, nil
 }
 
 // initializeScrapers initializes all metric scrapers
@@ -683,10 +826,32 @@ func (s *newRelicOracleScraper) sendErrorsToChannelWithCancellation(ctx context.
 	}
 }
 
-// shutdown closes the database connection
+// shutdown closes all database connections
 func (s *newRelicOracleScraper) shutdown(_ context.Context) error {
-	if s.db == nil {
-		return nil
+	var errs []error
+
+	// Close all connections in the map
+	for serviceName, db := range s.dbs {
+		if db != nil {
+			if err := db.Close(); err != nil {
+				s.logger.Error("Failed to close database connection",
+					zap.String("service", serviceName),
+					zap.Error(err))
+				errs = append(errs, err)
+			}
+		}
 	}
-	return s.db.Close()
+
+	// Also close primary connection if it exists and wasn't in the map
+	if s.db != nil {
+		if err := s.db.Close(); err != nil {
+			errs = append(errs, err)
+		}
+	}
+
+	if len(errs) > 0 {
+		return fmt.Errorf("failed to close %d database connections", len(errs))
+	}
+
+	return nil
 }
