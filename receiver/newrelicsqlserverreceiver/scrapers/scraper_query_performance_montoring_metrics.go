@@ -50,27 +50,14 @@ func NewQueryPerformanceScraper(
 	var smoother *SlowQuerySmoother
 	var intervalCalc *SimplifiedIntervalCalculator
 
-	// Initialize EWMA-based smoother if enabled
 	if smoothingEnabled {
-		// Initialize smoother with configured parameters
 		maxAge := time.Duration(maxAgeMinutes) * time.Minute
 		smoother = NewSlowQuerySmoother(logger, smoothingFactor, decayThreshold, maxAge)
-		logger.Info("Slow query EWMA smoothing enabled",
-			zap.Float64("smoothing_factor", smoothingFactor),
-			zap.Int("decay_threshold", decayThreshold),
-			zap.Int("max_age_minutes", maxAgeMinutes))
-	} else {
-		logger.Info("Slow query EWMA smoothing disabled")
 	}
 
-	// Initialize simplified interval-based calculator if enabled
 	if intervalCalcEnabled {
 		cacheTTL := time.Duration(intervalCalcCacheTTLMinutes) * time.Minute
 		intervalCalc = NewSimplifiedIntervalCalculator(logger, cacheTTL)
-		logger.Info("Simplified interval-based delta calculator enabled",
-			zap.Int("cache_ttl_minutes", intervalCalcCacheTTLMinutes))
-	} else {
-		logger.Info("Simplified interval-based delta calculator disabled")
 	}
 
 	return &QueryPerformanceScraper{
@@ -92,157 +79,73 @@ func (s *QueryPerformanceScraper) SetMetricsBuilder(mb *metadata.MetricsBuilder)
 	s.mb = mb
 }
 
-// ScrapeSlowQueryMetrics collects slow query performance monitoring metrics with interval-based averaging and/or EWMA smoothing
-// Returns the processed slow queries for downstream correlation (e.g., filtering active queries by slow query IDs)
-// emitMetrics: if true, emit metrics to MetricsBuilder; if false, only fetch and process data without metric emission
-func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit int, emitMetrics bool) ([]models.SlowQuery, error) {
-
-	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
-
-	s.logger.Debug("Executing slow query metrics collection",
-		zap.String("query", queries.TruncateQuery(query, 100)),
-		zap.Int("interval_seconds", intervalSeconds),
-		zap.Int("top_n", topN),
-		zap.Int("elapsed_time_threshold", elapsedTimeThreshold),
-		zap.Bool("interval_calc_enabled", s.intervalCalculator != nil),
-		zap.Bool("ewma_smoothing_enabled", s.slowQuerySmoother != nil))
+func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int, emitMetrics bool) ([]models.SlowQuery, error) {
+	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold)
 
 	var rawResults []models.SlowQuery
 	if err := s.connection.Query(ctx, &rawResults, query); err != nil {
 		return nil, fmt.Errorf("failed to execute slow query metrics query: %w", err)
 	}
-
-	s.logger.Debug("Raw slow query metrics fetched", zap.Int("raw_result_count", len(rawResults)))
-
-	// Apply simplified interval-based delta calculation if enabled
 	var resultsWithIntervalMetrics []models.SlowQuery
 	if s.intervalCalculator != nil {
 		now := time.Now()
-
-		// Pre-allocate slice capacity to avoid reallocations (performance optimization)
-		// Note: Length is still 0, capacity reserves space for worst case (all queries pass filters)
 		resultsWithIntervalMetrics = make([]models.SlowQuery, 0, len(rawResults))
-
-		// Calculate interval metrics for each query
 		for _, rawQuery := range rawResults {
 			metrics := s.intervalCalculator.CalculateMetrics(&rawQuery, now)
 
-			if metrics == nil {
-				s.logger.Debug("Skipping query with nil metrics")
+			if metrics == nil || !metrics.HasNewExecutions {
 				continue
 			}
 
-			// Skip queries with no new executions
-			if !metrics.HasNewExecutions {
-				s.logger.Debug("Skipping query with no new executions",
-					zap.String("query_id", rawQuery.QueryID.String()),
-					zap.Float64("time_since_last_exec_sec", metrics.TimeSinceLastExecSec))
-				continue
-			}
-
-			// Apply interval-based threshold filtering
-			// First scrape: interval = historical (no baseline), filter still applies
-			// Subsequent scrapes: interval = delta, filter on delta performance
 			if metrics.IntervalAvgElapsedTimeMs < float64(elapsedTimeThreshold) {
-				s.logger.Debug("Skipping query below interval threshold",
-					zap.String("query_id", rawQuery.QueryID.String()),
-					zap.Float64("interval_avg_ms", metrics.IntervalAvgElapsedTimeMs),
-					zap.Float64("historical_avg_ms", metrics.HistoricalAvgElapsedTimeMs),
-					zap.Int("threshold_ms", elapsedTimeThreshold),
-					zap.Bool("is_first_scrape", metrics.IsFirstScrape))
 				continue
 			}
 
-			// Store interval metrics in new fields (preserve historical values)
-			// Historical values (AvgElapsedTimeMS, AvgCPUTimeMS, ExecutionCount) remain unchanged from DB
-			// NOTE: Only elapsed time has delta calculation, CPU uses historical average
 			rawQuery.IntervalAvgElapsedTimeMS = &metrics.IntervalAvgElapsedTimeMs
 			rawQuery.IntervalExecutionCount = &metrics.IntervalExecutionCount
 
 			resultsWithIntervalMetrics = append(resultsWithIntervalMetrics, rawQuery)
 		}
 
-		// Cleanup stale entries periodically (TTL-based only)
 		s.intervalCalculator.CleanupStaleEntries(now)
-
-		s.logger.Debug("Simplified interval-based delta calculation applied",
-			zap.Int("raw_count", len(rawResults)),
-			zap.Int("processed_count", len(resultsWithIntervalMetrics)))
-
-		// Log calculator statistics
-		stats := s.intervalCalculator.GetCacheStats()
-		s.logger.Debug("Interval calculator statistics", zap.Any("stats", stats))
-
-		// Use interval-calculated results as input for next step
 		rawResults = resultsWithIntervalMetrics
 	}
 
-	// Apply Go-level sorting and top-N selection AFTER delta calculation and filtering
-	// This ensures we get the slowest queries based on interval (delta) averages, not historical
 	if s.intervalCalculator != nil && len(rawResults) > 0 {
-		// Sort by interval average elapsed time (delta) - slowest first
 		sort.Slice(rawResults, func(i, j int) bool {
-			// Handle nil cases - queries without interval metrics go to the end
 			if rawResults[i].IntervalAvgElapsedTimeMS == nil {
 				return false
 			}
 			if rawResults[j].IntervalAvgElapsedTimeMS == nil {
 				return true
 			}
-			// Sort descending (highest delta average first)
 			return *rawResults[i].IntervalAvgElapsedTimeMS > *rawResults[j].IntervalAvgElapsedTimeMS
 		})
 
-		s.logger.Debug("Sorted queries by interval average elapsed time (delta)",
-			zap.Int("total_count", len(rawResults)))
-
-		// Take top N queries after sorting
 		if len(rawResults) > topN {
-			s.logger.Debug("Applying top N selection",
-				zap.Int("before_count", len(rawResults)),
-				zap.Int("top_n", topN))
 			rawResults = rawResults[:topN]
 		}
 	}
 
-	// Apply EWMA smoothing algorithm if enabled (can work on top of interval metrics or raw)
 	var resultsToProcess []models.SlowQuery
 	if s.slowQuerySmoother != nil {
-		// Smoothing is enabled - apply the algorithm
 		resultsToProcess = s.slowQuerySmoother.Smooth(rawResults)
-
-		s.logger.Debug("EWMA smoothing applied",
-			zap.Int("input_count", len(rawResults)),
-			zap.Int("smoothed_count", len(resultsToProcess)))
-
-		// Log smoother statistics
-		stats := s.slowQuerySmoother.GetHistoryStats()
-		s.logger.Debug("EWMA smoother statistics", zap.Any("stats", stats))
 	} else {
-		// Smoothing is disabled - use results from interval calculator or raw
 		resultsToProcess = rawResults
-		s.logger.Debug("EWMA smoothing disabled, using interval-calculated or raw results")
 	}
 
-	// Process results and emit metrics if requested
 	if emitMetrics {
 		for i, result := range resultsToProcess {
 			if err := s.processSlowQueryMetrics(result, i); err != nil {
 				s.logger.Error("Failed to process slow query metric", zap.Error(err), zap.Int("index", i))
 			}
 		}
-		s.logger.Debug("Slow query metrics emitted", zap.Int("count", len(resultsToProcess)))
-	} else {
-		s.logger.Debug("Skipping metric emission (emitMetrics=false)", zap.Int("count", len(resultsToProcess)))
 	}
-
-	// Return processed results for downstream correlation (e.g., filtering active queries)
 	return resultsToProcess, nil
 }
 
 func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
 	if len(activeQueries) == 0 {
-		s.logger.Debug("No active queries to emit execution statistics for")
 		return nil
 	}
 
@@ -263,28 +166,21 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 			planData, found = slowQueryPlanDataMap[queryIDStr]
 		}
 
-		// Skip if no matching plan data found
 		if !found {
 			skippedNoSlowQueryMatch++
 			continue
 		}
 
-		// Skip if plan data has no plan_handle
 		if planData.PlanHandle == nil || planData.PlanHandle.IsEmpty() {
 			skippedNoSlowQueryMatch++
 			continue
 		}
 
-		// Convert lightweight plan data to PlanHandleResult format for metrics emission
 		planResult := s.convertPlanDataToPlanHandleResult(planData)
-
-		// Emit metrics with active query correlation (session_id, request_id, start_time)
 		s.emitActiveQueryPlanMetrics(planResult, activeQuery, timestamp)
 
 		totalStatsEmitted++
 
-		// Fetch and emit execution plan operator details
-		// Fetch execution plan XML from SQL Server
 		executionPlanXML, err := s.fetchExecutionPlanXML(ctx, planData.PlanHandle)
 		if err != nil {
 			s.logger.Warn("Failed to fetch execution plan XML",
@@ -295,13 +191,9 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 		}
 
 		if executionPlanXML == "" {
-			s.logger.Debug("Execution plan XML not available (plan evicted from cache)",
-				zap.String("plan_handle", planData.PlanHandle.String()))
 			skippedPlanFetch++
 			continue
 		}
-
-		// Parse execution plan XML
 		queryID := ""
 		if activeQuery.QueryID != nil {
 			queryID = activeQuery.QueryID.String()
@@ -317,7 +209,6 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 			continue
 		}
 
-		// Emit execution plan node metrics
 		s.emitExecutionPlanNodeMetrics(*executionPlan, activeQuery, timestamp)
 		totalExecutionPlansEmitted++
 	}
@@ -332,43 +223,32 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 	return nil
 }
 
-// convertPlanDataToPlanHandleResult converts SlowQueryPlanData (5 fields) to PlanHandleResult format
-// This allows us to reuse existing metrics emission code without database query
-// Only the 5 essential fields are populated, rest are nil
 func (s *QueryPerformanceScraper) convertPlanDataToPlanHandleResult(planData models.SlowQueryPlanData) models.PlanHandleResult {
 	return models.PlanHandleResult{
-		// The 5 fields we actually have from lightweight plan data
 		PlanHandle:         planData.PlanHandle,
 		QueryID:            planData.QueryID,
 		CreationTime:       planData.CreationTime,
 		LastExecutionTime:  planData.LastExecutionTime,
 		TotalElapsedTimeMs: planData.TotalElapsedTimeMs,
-		// All other fields are nil (not needed for plan metrics)
-		ExecutionCount:    nil,
-		AvgElapsedTimeMs:  nil,
-		MinElapsedTimeMs:  nil,
-		MaxElapsedTimeMs:  nil,
-		LastElapsedTimeMs: nil,
-		AvgWorkerTimeMs:   nil,
-		TotalWorkerTimeMs: nil,
-		AvgLogicalReads:   nil,
-		AvgLogicalWrites:  nil,
-		AvgRows:           nil,
-		LastGrantKB:       nil,
-		LastUsedGrantKB:   nil,
-		LastSpills:        nil,
-		MaxSpills:         nil,
-		LastDOP:           nil,
+		ExecutionCount:     nil,
+		AvgElapsedTimeMs:   nil,
+		MinElapsedTimeMs:   nil,
+		MaxElapsedTimeMs:   nil,
+		LastElapsedTimeMs:  nil,
+		AvgWorkerTimeMs:    nil,
+		TotalWorkerTimeMs:  nil,
+		AvgLogicalReads:    nil,
+		AvgLogicalWrites:   nil,
+		AvgRows:            nil,
+		LastGrantKB:        nil,
+		LastUsedGrantKB:    nil,
+		LastSpills:         nil,
+		MaxSpills:          nil,
+		LastDOP:            nil,
 	}
 }
 
-// emitActiveQueryPlanMetrics emits execution plan metrics for an active running query
-// ONLY emits 2 metrics: avg_elapsed_time_ms and total_elapsed_time_ms
-// These metrics have attributes: query_id, plan_handle, creation_time, last_execution_time (for NRQL queries)
-// Uses namespace: sqlserver.plan.* (SAME as slow query plans)
-// Context: Active query drill-down (WITH session_id/request_id/request_start_time for correlation)
 func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
-	// Helper functions to safely get attribute values
 	getQueryID := func() string {
 		if planResult.QueryID != nil {
 			return planResult.QueryID.String()
@@ -439,7 +319,6 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		return ""
 	}
 
-	// Metric 1: Average elapsed time (for NRQL: latest(sqlserver.plan.avg_elapsed_time_ms))
 	if planResult.AvgElapsedTimeMs != nil {
 		s.mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(
 			timestamp,
@@ -457,7 +336,6 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		)
 	}
 
-	// Metric 2: Total elapsed time
 	if planResult.TotalElapsedTimeMs != nil {
 		s.mb.RecordSqlserverPlanTotalElapsedTimeMsDataPoint(
 			timestamp,
@@ -476,10 +354,7 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 	}
 }
 
-// emitExecutionPlanNodeMetrics emits execution plan node metrics for detailed operator analysis
-// Emits sqlserver.execution.plan metric with all operator details as attributes
 func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan models.ExecutionPlanAnalysis, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
-	// Helper to safely get session correlation attributes
 	getSessionID := func() int64 {
 		if activeQuery.CurrentSessionID != nil {
 			return *activeQuery.CurrentSessionID
@@ -501,7 +376,6 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 		return ""
 	}
 
-	// Emit metric for each operator node in the execution plan
 	for _, node := range executionPlan.Nodes {
 		s.mb.RecordSqlserverExecutionPlanDataPoint(
 			timestamp,
@@ -540,11 +414,6 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 			node.LastExecutionTime,
 		)
 	}
-
-	s.logger.Debug("Emitted execution plan node metrics",
-		zap.String("query_id", executionPlan.QueryID),
-		zap.String("plan_handle", executionPlan.PlanHandle),
-		zap.Int("node_count", len(executionPlan.Nodes)))
 }
 
 func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, index int) error {
@@ -1003,17 +872,8 @@ func (s *QueryPerformanceScraper) processQueryExecutionPlanMetrics(result models
 }
 
 // getSlowQueryResults fetches slow query results to extract QueryIDs for execution plan analysis
-func (s *QueryPerformanceScraper) getSlowQueryResults(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold,
-	textTruncateLimit int,
-) ([]models.SlowQuery, error) {
-	// Format the slow query with parameters
-	formattedQuery := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit)
-
-	s.logger.Debug("Executing slow query to extract QueryIDs for execution plan analysis",
-		zap.String("query", queries.TruncateQuery(formattedQuery, 100)),
-		zap.Int("interval_seconds", intervalSeconds),
-		zap.Int("top_n", topN),
-		zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
+func (s *QueryPerformanceScraper) getSlowQueryResults(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int) ([]models.SlowQuery, error) {
+	formattedQuery := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold)
 
 	var results []models.SlowQuery
 	if err := s.connection.Query(ctx, &results, formattedQuery); err != nil {

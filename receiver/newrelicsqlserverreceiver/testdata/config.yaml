@@ -83,7 +83,6 @@ receivers:
     # Query monitoring thresholds (required when enable_query_monitoring is true)
     query_monitoring_response_time_threshold: 0  # milliseconds - 0 = capture all queries (no threshold) for debugging
     query_monitoring_count_threshold: 100         # TopN: emit top 100 slowest queries per collection cycle
-    query_monitoring_text_truncate_limit: 4094    # characters - maximum length of SQL text in query monitoring results (4KB - 2 bytes)
 
     # Interval-based averaging (delta calculation) - EXPLICITLY ENABLED
     enable_interval_based_averaging: true          # Enable delta-based interval calculations

@@ -6,7 +6,6 @@ package queries
 const SlowQuery = `DECLARE @IntervalSeconds INT = %d; 		-- Define the interval in seconds
 DECLARE @TopN INT = %d; 				-- Number of top queries to retrieve
 DECLARE @ElapsedTimeThreshold INT = %d;  -- Elapsed time threshold in milliseconds
-DECLARE @TextTruncateLimit INT = %d; 	-- Truncate limit for query_text
 				
 WITH StatementDetails AS (
 	SELECT
@@ -14,7 +13,7 @@ WITH StatementDetails AS (
 		qs.sql_handle,
 		-- Extract query text using Microsoft's official offset logic (no +1 on length)
 		-- Reference: https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-query-stats-transact-sql
-		LEFT(SUBSTRING(
+		SUBSTRING(
 			qt.text,
 			(qs.statement_start_offset / 2) + 1,
 			(
@@ -24,7 +23,7 @@ WITH StatementDetails AS (
 					ELSE qs.statement_end_offset
 				END - qs.statement_start_offset
 			) / 2
-		), @TextTruncateLimit) AS query_text,
+		) AS query_text,
 		-- query_id: SQL Server's query_hash - used for correlating with active query metrics
 		qs.query_hash AS query_id,
 		qs.creation_time,

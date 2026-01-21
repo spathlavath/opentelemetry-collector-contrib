@@ -425,29 +425,26 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		intervalSeconds := s.config.QueryMonitoringFetchInterval
 		topN := s.config.QueryMonitoringCountThreshold
 		elapsedTimeThreshold := s.config.QueryMonitoringResponseTimeThreshold
-		textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit
 
 		s.logger.Info("Attempting to scrape slow query metrics",
 			zap.Int("interval_seconds", intervalSeconds),
 			zap.Int("top_n", topN),
 			zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
 
-		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, intervalSeconds, topN, elapsedTimeThreshold, textTruncateLimit, true)
+		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, intervalSeconds, topN, elapsedTimeThreshold, true)
 		if err != nil {
 			s.logger.Warn("Failed to scrape slow query metrics - continuing with other metrics",
 				zap.Error(err),
 				zap.Duration("timeout", s.config.Timeout),
 				zap.Int("interval_seconds", intervalSeconds),
 				zap.Int("top_n", topN),
-				zap.Int("elapsed_time_threshold", elapsedTimeThreshold),
-				zap.Int("text_truncate_limit", textTruncateLimit))
+				zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
 			// Don't add to scrapeErrors - just warn and continue
 		} else {
 			s.logger.Info("Successfully scraped slow query metrics",
 				zap.Int("interval_seconds", intervalSeconds),
 				zap.Int("top_n", topN),
 				zap.Int("elapsed_time_threshold", elapsedTimeThreshold),
-				zap.Int("text_truncate_limit", textTruncateLimit),
 				zap.Int("slow_query_count", len(slowQueries)))
 
 			// Extract query IDs and lightweight plan data (5 fields only) for active query correlation
@@ -468,16 +465,14 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 		// Use config values for active running queries parameters
 		limit := s.config.QueryMonitoringCountThreshold // Reuse count threshold for active queries limit
-		textTruncateLimit := s.config.QueryMonitoringTextTruncateLimit
 		elapsedTimeThreshold := s.config.ActiveRunningQueriesElapsedTimeThreshold // Minimum elapsed time in ms
 
 		s.logger.Info("Attempting to scrape active running queries metrics",
 			zap.Int("limit", limit),
-			zap.Int("text_truncate_limit", textTruncateLimit),
 			zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold))
 
 		// Step 1: Fetch active queries from database
-		activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(scrapeCtx, limit, textTruncateLimit, elapsedTimeThreshold, slowQueryIDs)
+		activeQueries, err := s.queryPerformanceScraper.ScrapeActiveRunningQueriesMetrics(scrapeCtx, limit, elapsedTimeThreshold, slowQueryIDs)
 		if err != nil {
 			s.logger.Warn("Failed to fetch active running queries - continuing with other metrics",
 				zap.Error(err),

@@ -20,7 +20,7 @@ import (
 
 // ScrapeActiveRunningQueriesMetrics fetches active running queries from SQL Server
 // Returns the list of active queries for further processing (metrics emission and execution plan fetching)
-func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
+func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, limit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
 	// Skip active query scraping if no slow queries found (nothing to correlate)
 	if len(slowQueryIDs) == 0 {
 		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
@@ -45,12 +45,11 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 	// Build query with slow query correlation filter
 	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
-	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, dbFilter, limit, textTruncateLimit, elapsedTimeThreshold, queryIDFilter)
+	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, dbFilter, limit, elapsedTimeThreshold, queryIDFilter)
 
 	s.logger.Debug("Executing active running queries fetch",
 		zap.String("query", queries.TruncateQuery(query, 100)),
 		zap.Int("limit", limit),
-		zap.Int("text_truncate_limit", textTruncateLimit),
 		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold),
 		zap.Int("slow_query_id_count", len(slowQueryIDs)))
 
