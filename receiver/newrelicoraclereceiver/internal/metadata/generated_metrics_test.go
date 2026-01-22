@@ -710,39 +710,39 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4372,6 +4372,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_disk_reads":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_disk_reads")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"] = true
@@ -4396,6 +4402,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_disk_writes":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_disk_writes"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_disk_writes")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_disk_writes"] = true
@@ -4420,6 +4432,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_elapsed_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_elapsed_time")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"] = true
@@ -4444,6 +4462,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_lock_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_lock_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_lock_time")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_lock_time"] = true
@@ -4468,6 +4492,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_rows_examined":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_rows_examined"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_rows_examined")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_rows_examined"] = true
@@ -4492,6 +4522,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.execution_count":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.execution_count")
 					validatedMetrics["newrelicoracledb.slow_queries.execution_count"] = true
@@ -4516,6 +4552,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.interval_avg_elapsed_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.interval_avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.interval_avg_elapsed_time")
 					validatedMetrics["newrelicoracledb.slow_queries.interval_avg_elapsed_time"] = true
@@ -4540,6 +4582,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.interval_execution_count":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.interval_execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.interval_execution_count")
 					validatedMetrics["newrelicoracledb.slow_queries.interval_execution_count"] = true
@@ -4564,6 +4612,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_txn")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_txn-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.query_details":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.query_details"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.query_details")
 					validatedMetrics["newrelicoracledb.slow_queries.query_details"] = true

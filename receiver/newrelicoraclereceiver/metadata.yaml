@@ -3264,6 +3264,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.avg_cpu_time:
     description: Average CPU time per execution for slow queries
@@ -3276,6 +3278,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.avg_disk_reads:
     description: Average disk reads per execution for slow queries
@@ -3288,6 +3292,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.avg_disk_writes:
     description: Average disk writes per execution for slow queries
@@ -3300,6 +3306,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
@@ -3312,6 +3320,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.avg_rows_examined:
     description: Average rows examined per execution for slow queries
@@ -3324,6 +3334,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.avg_lock_time:
     description: Average lock/concurrency wait time per execution for slow queries
@@ -3336,6 +3348,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
@@ -3369,6 +3383,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   newrelicoracledb.slow_queries.interval_execution_count:
     description: Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
@@ -3381,6 +3397,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - nr_service
+      - nr_txn
 
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:

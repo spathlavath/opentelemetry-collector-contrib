@@ -2373,6 +2373,8 @@ Average CPU time per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_reads
 
@@ -2390,6 +2392,8 @@ Average disk reads per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_disk_writes
 
@@ -2407,6 +2411,8 @@ Average disk writes per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_elapsed_time
 
@@ -2424,6 +2430,8 @@ Average elapsed time per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_lock_time
 
@@ -2441,6 +2449,8 @@ Average lock/concurrency wait time per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.avg_rows_examined
 
@@ -2458,6 +2468,8 @@ Average rows examined per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.execution_count
 
@@ -2475,6 +2487,8 @@ Number of executions for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_elapsed_time
 
@@ -2492,6 +2506,8 @@ Average elapsed time per execution in the last polling interval (delta metric)
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_execution_count
 
@@ -2509,6 +2525,8 @@ Number of new executions since last scrape (delta metric). On first scrape or af
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
+| nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
 ### newrelicoracledb.slow_queries.query_details
 
