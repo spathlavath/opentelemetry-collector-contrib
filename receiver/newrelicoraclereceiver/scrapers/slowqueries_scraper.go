@@ -196,6 +196,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)
@@ -209,6 +210,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)
@@ -222,6 +224,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)
@@ -235,6 +238,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)
@@ -248,6 +252,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		dbName,
 		qID,
 		userName,
+		queryHash,
 		nrService,
 		nrTxn,
 	)
@@ -261,6 +266,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)
@@ -275,6 +281,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)
@@ -288,6 +295,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)
@@ -301,6 +309,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			queryHash,
 			nrService,
 			nrTxn,
 		)

@@ -710,39 +710,39 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "nr_service-val", "nr_txn-val")
+			mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "obfuscated_query_hash-val", "nr_service-val", "nr_txn-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4372,6 +4372,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4402,6 +4405,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4432,6 +4438,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4462,6 +4471,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4492,6 +4504,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4522,6 +4537,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4552,6 +4570,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4582,6 +4603,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())
@@ -4612,6 +4636,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("user_name")
 					assert.True(t, ok)
 					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("obfuscated_query_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "obfuscated_query_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service-val", attrVal.Str())

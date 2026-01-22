@@ -2373,6 +2373,7 @@ Average CPU time per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2392,6 +2393,7 @@ Average disk reads per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2411,6 +2413,7 @@ Average disk writes per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2430,6 +2433,7 @@ Average elapsed time per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2449,6 +2453,7 @@ Average lock/concurrency wait time per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2468,6 +2473,7 @@ Average rows examined per execution for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2487,6 +2493,7 @@ Number of executions for slow queries
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2506,6 +2513,7 @@ Average elapsed time per execution in the last polling interval (delta metric)
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
@@ -2525,6 +2533,7 @@ Number of new executions since last scrape (delta metric). On first scrape or af
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
+| obfuscated_query_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service | New Relic service name extracted from query comment (nr_service) | Any Str | false |
 | nr_txn | New Relic transaction name extracted from query comment (nr_txn) | Any Str | false |
 
