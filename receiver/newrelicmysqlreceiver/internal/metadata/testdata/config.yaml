@@ -5,12 +5,114 @@ all_set:
       enabled: true
     newrelicmysql.connection.count:
       enabled: true
+    newrelicmysql.innodb.buffer_pool_dirty:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool_free:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool_read_requests:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool_reads:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool_total:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool_used:
+      enabled: true
+    newrelicmysql.innodb.buffer_pool_utilization:
+      enabled: true
+    newrelicmysql.innodb.current_row_locks:
+      enabled: true
+    newrelicmysql.innodb.data_reads:
+      enabled: true
+    newrelicmysql.innodb.data_writes:
+      enabled: true
+    newrelicmysql.innodb.mutex_os_waits:
+      enabled: true
+    newrelicmysql.innodb.mutex_spin_rounds:
+      enabled: true
+    newrelicmysql.innodb.mutex_spin_waits:
+      enabled: true
+    newrelicmysql.innodb.os_log_fsyncs:
+      enabled: true
+    newrelicmysql.innodb.row_lock_current_waits:
+      enabled: true
+    newrelicmysql.innodb.row_lock_time:
+      enabled: true
+    newrelicmysql.innodb.row_lock_waits:
+      enabled: true
+    newrelicmysql.myisam.key_buffer_bytes_unflushed:
+      enabled: true
+    newrelicmysql.myisam.key_buffer_bytes_used:
+      enabled: true
+    newrelicmysql.myisam.key_buffer_size:
+      enabled: true
+    newrelicmysql.myisam.key_read_requests:
+      enabled: true
+    newrelicmysql.myisam.key_reads:
+      enabled: true
+    newrelicmysql.myisam.key_write_requests:
+      enabled: true
+    newrelicmysql.myisam.key_writes:
+      enabled: true
+    newrelicmysql.net.aborted_clients:
+      enabled: true
+    newrelicmysql.net.aborted_connects:
+      enabled: true
+    newrelicmysql.net.connections:
+      enabled: true
+    newrelicmysql.net.max_connections:
+      enabled: true
+    newrelicmysql.net.max_connections_available:
+      enabled: true
+    newrelicmysql.performance.bytes_received:
+      enabled: true
+    newrelicmysql.performance.bytes_sent:
+      enabled: true
+    newrelicmysql.performance.created_tmp_disk_tables:
+      enabled: true
+    newrelicmysql.performance.created_tmp_files:
+      enabled: true
+    newrelicmysql.performance.created_tmp_tables:
+      enabled: true
+    newrelicmysql.performance.key_cache_utilization:
+      enabled: true
+    newrelicmysql.performance.max_prepared_stmt_count:
+      enabled: true
+    newrelicmysql.performance.open_files:
+      enabled: true
+    newrelicmysql.performance.open_tables:
+      enabled: true
+    newrelicmysql.performance.performance_schema_digest_lost:
+      enabled: true
+    newrelicmysql.performance.prepared_stmt_count:
+      enabled: true
+    newrelicmysql.performance.qcache_hits:
+      enabled: true
+    newrelicmysql.performance.qcache_inserts:
+      enabled: true
+    newrelicmysql.performance.qcache_lowmem_prunes:
+      enabled: true
+    newrelicmysql.performance.qcache_size:
+      enabled: true
+    newrelicmysql.performance.questions:
+      enabled: true
+    newrelicmysql.performance.slow_queries:
+      enabled: true
+    newrelicmysql.performance.table_locks_waited:
+      enabled: true
+    newrelicmysql.performance.table_open_cache:
+      enabled: true
+    newrelicmysql.performance.thread_cache_size:
+      enabled: true
+    newrelicmysql.performance.threads_connected:
+      enabled: true
+    newrelicmysql.performance.threads_running:
+      enabled: true
     newrelicmysql.query.count:
       enabled: true
     newrelicmysql.uptime:
       enabled: true
   resource_attributes:
-    mysql.instance.endpoint:
+    newrelicmysql.instance.endpoint:
       enabled: true
 none_set:
   metrics:
@@ -18,22 +120,124 @@ none_set:
       enabled: false
     newrelicmysql.connection.count:
       enabled: false
+    newrelicmysql.innodb.buffer_pool_dirty:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool_free:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool_read_requests:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool_reads:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool_total:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool_used:
+      enabled: false
+    newrelicmysql.innodb.buffer_pool_utilization:
+      enabled: false
+    newrelicmysql.innodb.current_row_locks:
+      enabled: false
+    newrelicmysql.innodb.data_reads:
+      enabled: false
+    newrelicmysql.innodb.data_writes:
+      enabled: false
+    newrelicmysql.innodb.mutex_os_waits:
+      enabled: false
+    newrelicmysql.innodb.mutex_spin_rounds:
+      enabled: false
+    newrelicmysql.innodb.mutex_spin_waits:
+      enabled: false
+    newrelicmysql.innodb.os_log_fsyncs:
+      enabled: false
+    newrelicmysql.innodb.row_lock_current_waits:
+      enabled: false
+    newrelicmysql.innodb.row_lock_time:
+      enabled: false
+    newrelicmysql.innodb.row_lock_waits:
+      enabled: false
+    newrelicmysql.myisam.key_buffer_bytes_unflushed:
+      enabled: false
+    newrelicmysql.myisam.key_buffer_bytes_used:
+      enabled: false
+    newrelicmysql.myisam.key_buffer_size:
+      enabled: false
+    newrelicmysql.myisam.key_read_requests:
+      enabled: false
+    newrelicmysql.myisam.key_reads:
+      enabled: false
+    newrelicmysql.myisam.key_write_requests:
+      enabled: false
+    newrelicmysql.myisam.key_writes:
+      enabled: false
+    newrelicmysql.net.aborted_clients:
+      enabled: false
+    newrelicmysql.net.aborted_connects:
+      enabled: false
+    newrelicmysql.net.connections:
+      enabled: false
+    newrelicmysql.net.max_connections:
+      enabled: false
+    newrelicmysql.net.max_connections_available:
+      enabled: false
+    newrelicmysql.performance.bytes_received:
+      enabled: false
+    newrelicmysql.performance.bytes_sent:
+      enabled: false
+    newrelicmysql.performance.created_tmp_disk_tables:
+      enabled: false
+    newrelicmysql.performance.created_tmp_files:
+      enabled: false
+    newrelicmysql.performance.created_tmp_tables:
+      enabled: false
+    newrelicmysql.performance.key_cache_utilization:
+      enabled: false
+    newrelicmysql.performance.max_prepared_stmt_count:
+      enabled: false
+    newrelicmysql.performance.open_files:
+      enabled: false
+    newrelicmysql.performance.open_tables:
+      enabled: false
+    newrelicmysql.performance.performance_schema_digest_lost:
+      enabled: false
+    newrelicmysql.performance.prepared_stmt_count:
+      enabled: false
+    newrelicmysql.performance.qcache_hits:
+      enabled: false
+    newrelicmysql.performance.qcache_inserts:
+      enabled: false
+    newrelicmysql.performance.qcache_lowmem_prunes:
+      enabled: false
+    newrelicmysql.performance.qcache_size:
+      enabled: false
+    newrelicmysql.performance.questions:
+      enabled: false
+    newrelicmysql.performance.slow_queries:
+      enabled: false
+    newrelicmysql.performance.table_locks_waited:
+      enabled: false
+    newrelicmysql.performance.table_open_cache:
+      enabled: false
+    newrelicmysql.performance.thread_cache_size:
+      enabled: false
+    newrelicmysql.performance.threads_connected:
+      enabled: false
+    newrelicmysql.performance.threads_running:
+      enabled: false
     newrelicmysql.query.count:
       enabled: false
     newrelicmysql.uptime:
       enabled: false
   resource_attributes:
-    mysql.instance.endpoint:
+    newrelicmysql.instance.endpoint:
       enabled: false
 filter_set_include:
   resource_attributes:
-    mysql.instance.endpoint:
+    newrelicmysql.instance.endpoint:
       enabled: true
       metrics_include:
         - regexp: ".*"
 filter_set_exclude:
   resource_attributes:
-    mysql.instance.endpoint:
+    newrelicmysql.instance.endpoint:
       enabled: true
       metrics_exclude:
-        - strict: "mysql.instance.endpoint-val"
+        - strict: "newrelicmysql.instance.endpoint-val"
