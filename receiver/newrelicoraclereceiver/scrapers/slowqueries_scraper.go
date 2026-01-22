@@ -196,6 +196,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
@@ -207,6 +209,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
@@ -218,6 +222,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
@@ -229,6 +235,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
@@ -240,6 +248,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		dbName,
 		qID,
 		userName,
+		nrService,
+		nrTxn,
 	)
 
 	// Record interval-based average elapsed time if available (delta metric)
@@ -251,6 +261,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
@@ -263,6 +275,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
@@ -274,6 +288,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
@@ -285,6 +301,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			dbName,
 			qID,
 			userName,
+			nrService,
+			nrTxn,
 		)
 	}
 
