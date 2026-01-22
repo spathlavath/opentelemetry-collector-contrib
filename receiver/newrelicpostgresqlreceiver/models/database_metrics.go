@@ -32,7 +32,8 @@ type PgStatDatabaseMetric struct {
 	TupUpdated  sql.NullInt64 // Number of rows updated
 	TupDeleted  sql.NullInt64 // Number of rows deleted
 
-	// Lock and consistency metrics
+	// Replication and consistency metrics
+	Conflicts sql.NullInt64 // Number of queries canceled due to conflicts with recovery
 	Deadlocks sql.NullInt64 // Number of deadlocks detected
 
 	// Temporary file metrics

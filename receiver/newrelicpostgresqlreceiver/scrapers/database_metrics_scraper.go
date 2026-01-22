@@ -92,6 +92,7 @@ func (s *DatabaseMetricsScraper) recordMetricsForDatabase(now pcommon.Timestamp,
 	s.mb.RecordPostgresqlRowsInsertedDataPoint(now, getInt64(metric.TupInserted), s.instanceName, databaseName)
 	s.mb.RecordPostgresqlRowsUpdatedDataPoint(now, getInt64(metric.TupUpdated), s.instanceName, databaseName)
 	s.mb.RecordPostgresqlRowsDeletedDataPoint(now, getInt64(metric.TupDeleted), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlConflictsDataPoint(now, getInt64(metric.Conflicts), s.instanceName, databaseName)
 	s.mb.RecordPostgresqlDeadlocksDataPoint(now, getInt64(metric.Deadlocks), s.instanceName, databaseName)
 	s.mb.RecordPostgresqlTempFilesDataPoint(now, getInt64(metric.TempFiles), s.instanceName, databaseName)
 	s.mb.RecordPostgresqlTempBytesDataPoint(now, getInt64(metric.TempBytes), s.instanceName, databaseName)

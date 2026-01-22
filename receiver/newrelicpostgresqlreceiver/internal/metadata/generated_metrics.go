@@ -28,6 +28,9 @@ var MetricsInfo = metricsInfo{
 	PostgresqlCommits: metricInfo{
 		Name: "postgresql.commits",
 	},
+	PostgresqlConflicts: metricInfo{
+		Name: "postgresql.conflicts",
+	},
 	PostgresqlConnections: metricInfo{
 		Name: "postgresql.connections",
 	},
@@ -72,6 +75,7 @@ type metricsInfo struct {
 	PostgresqlBlkWriteTime        metricInfo
 	PostgresqlBufferHit           metricInfo
 	PostgresqlCommits             metricInfo
+	PostgresqlConflicts           metricInfo
 	PostgresqlConnections         metricInfo
 	PostgresqlDatabaseSize        metricInfo
 	PostgresqlDeadlocks           metricInfo
@@ -347,6 +351,60 @@ func (m *metricPostgresqlCommits) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlCommits(cfg MetricConfig) metricPostgresqlCommits {
 	m := metricPostgresqlCommits{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlConflicts struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.conflicts metric with initial data.
+func (m *metricPostgresqlConflicts) init() {
+	m.data.SetName("postgresql.conflicts")
+	m.data.SetDescription("Number of queries canceled due to conflicts with recovery")
+	m.data.SetUnit("{queries}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlConflicts) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlConflicts) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlConflicts) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlConflicts(cfg MetricConfig) metricPostgresqlConflicts {
+	m := metricPostgresqlConflicts{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -1015,6 +1073,7 @@ type MetricsBuilder struct {
 	metricPostgresqlBlkWriteTime        metricPostgresqlBlkWriteTime
 	metricPostgresqlBufferHit           metricPostgresqlBufferHit
 	metricPostgresqlCommits             metricPostgresqlCommits
+	metricPostgresqlConflicts           metricPostgresqlConflicts
 	metricPostgresqlConnections         metricPostgresqlConnections
 	metricPostgresqlDatabaseSize        metricPostgresqlDatabaseSize
 	metricPostgresqlDeadlocks           metricPostgresqlDeadlocks
@@ -1057,6 +1116,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlBlkWriteTime:        newMetricPostgresqlBlkWriteTime(mbc.Metrics.PostgresqlBlkWriteTime),
 		metricPostgresqlBufferHit:           newMetricPostgresqlBufferHit(mbc.Metrics.PostgresqlBufferHit),
 		metricPostgresqlCommits:             newMetricPostgresqlCommits(mbc.Metrics.PostgresqlCommits),
+		metricPostgresqlConflicts:           newMetricPostgresqlConflicts(mbc.Metrics.PostgresqlConflicts),
 		metricPostgresqlConnections:         newMetricPostgresqlConnections(mbc.Metrics.PostgresqlConnections),
 		metricPostgresqlDatabaseSize:        newMetricPostgresqlDatabaseSize(mbc.Metrics.PostgresqlDatabaseSize),
 		metricPostgresqlDeadlocks:           newMetricPostgresqlDeadlocks(mbc.Metrics.PostgresqlDeadlocks),
@@ -1182,6 +1242,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlBlkWriteTime.emit(ils.Metrics())
 	mb.metricPostgresqlBufferHit.emit(ils.Metrics())
 	mb.metricPostgresqlCommits.emit(ils.Metrics())
+	mb.metricPostgresqlConflicts.emit(ils.Metrics())
 	mb.metricPostgresqlConnections.emit(ils.Metrics())
 	mb.metricPostgresqlDatabaseSize.emit(ils.Metrics())
 	mb.metricPostgresqlDeadlocks.emit(ils.Metrics())
@@ -1248,6 +1309,11 @@ func (mb *MetricsBuilder) RecordPostgresqlBufferHitDataPoint(ts pcommon.Timestam
 // RecordPostgresqlCommitsDataPoint adds a data point to postgresql.commits metric.
 func (mb *MetricsBuilder) RecordPostgresqlCommitsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlCommits.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlConflictsDataPoint adds a data point to postgresql.conflicts metric.
+func (mb *MetricsBuilder) RecordPostgresqlConflictsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlConflicts.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlConnectionsDataPoint adds a data point to postgresql.connections metric.

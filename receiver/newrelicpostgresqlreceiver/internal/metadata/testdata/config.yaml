@@ -11,6 +11,8 @@ all_set:
       enabled: true
     postgresql.commits:
       enabled: true
+    postgresql.conflicts:
+      enabled: true
     postgresql.connections:
       enabled: true
     postgresql.database_size:
@@ -59,6 +61,8 @@ none_set:
     postgresql.buffer_hit:
       enabled: false
     postgresql.commits:
+      enabled: false
+    postgresql.conflicts:
       enabled: false
     postgresql.connections:
       enabled: false

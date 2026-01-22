@@ -97,6 +97,18 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.conflicts:
+    description: Number of queries canceled due to conflicts with recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
   postgresql.connections:
     description: Number of active connections (backends) to the database
     enabled: true
