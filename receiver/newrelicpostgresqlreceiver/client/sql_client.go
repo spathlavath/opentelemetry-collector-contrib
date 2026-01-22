@@ -36,8 +36,15 @@ func (c *SQLClient) Ping(ctx context.Context) error {
 }
 
 // QueryDatabaseMetrics retrieves database statistics from pg_stat_database
-func (c *SQLClient) QueryDatabaseMetrics(ctx context.Context) ([]models.PgStatDatabaseMetric, error) {
-	rows, err := c.db.QueryContext(ctx, queries.PgStatDatabaseMetricsSQL)
+// For PostgreSQL 12+, includes checksum metrics when supportsPG12 is true
+func (c *SQLClient) QueryDatabaseMetrics(ctx context.Context, supportsPG12 bool) ([]models.PgStatDatabaseMetric, error) {
+	// Select query based on PostgreSQL version
+	query := queries.PgStatDatabaseMetricsSQL
+	if supportsPG12 {
+		query = queries.PgStatDatabaseMetricsWithChecksumsSQL
+	}
+
+	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query pg_stat_database: %w", err)
 	}
@@ -47,27 +54,58 @@ func (c *SQLClient) QueryDatabaseMetrics(ctx context.Context) ([]models.PgStatDa
 
 	for rows.Next() {
 		var metric models.PgStatDatabaseMetric
-		err := rows.Scan(
-			&metric.DatName,
-			&metric.NumBackends,
-			&metric.XactCommit,
-			&metric.XactRollback,
-			&metric.BlksRead,
-			&metric.BlksHit,
-			&metric.TupReturned,
-			&metric.TupFetched,
-			&metric.TupInserted,
-			&metric.TupUpdated,
-			&metric.TupDeleted,
-			&metric.Conflicts,
-			&metric.TempFiles,
-			&metric.TempBytes,
-			&metric.Deadlocks,
-			&metric.BlkReadTime,
-			&metric.BlkWriteTime,
-			&metric.BeforeXIDWraparound,
-			&metric.DatabaseSize,
-		)
+
+		if supportsPG12 {
+			// Scan with checksum fields (PostgreSQL 12+)
+			err = rows.Scan(
+				&metric.DatName,
+				&metric.NumBackends,
+				&metric.XactCommit,
+				&metric.XactRollback,
+				&metric.BlksRead,
+				&metric.BlksHit,
+				&metric.TupReturned,
+				&metric.TupFetched,
+				&metric.TupInserted,
+				&metric.TupUpdated,
+				&metric.TupDeleted,
+				&metric.Conflicts,
+				&metric.TempFiles,
+				&metric.TempBytes,
+				&metric.Deadlocks,
+				&metric.BlkReadTime,
+				&metric.BlkWriteTime,
+				&metric.BeforeXIDWraparound,
+				&metric.DatabaseSize,
+				&metric.ChecksumFailures,
+				&metric.ChecksumLastFailure,
+				&metric.ChecksumsEnabled,
+			)
+		} else {
+			// Scan without checksum fields (PostgreSQL < 12)
+			err = rows.Scan(
+				&metric.DatName,
+				&metric.NumBackends,
+				&metric.XactCommit,
+				&metric.XactRollback,
+				&metric.BlksRead,
+				&metric.BlksHit,
+				&metric.TupReturned,
+				&metric.TupFetched,
+				&metric.TupInserted,
+				&metric.TupUpdated,
+				&metric.TupDeleted,
+				&metric.Conflicts,
+				&metric.TempFiles,
+				&metric.TempBytes,
+				&metric.Deadlocks,
+				&metric.BlkReadTime,
+				&metric.BlkWriteTime,
+				&metric.BeforeXIDWraparound,
+				&metric.DatabaseSize,
+			)
+		}
+
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan pg_stat_database row: %w", err)
 		}

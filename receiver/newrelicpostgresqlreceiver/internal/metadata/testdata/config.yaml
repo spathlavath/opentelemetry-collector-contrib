@@ -9,6 +9,10 @@ all_set:
       enabled: true
     postgresql.buffer_hit:
       enabled: true
+    postgresql.checksums.enabled:
+      enabled: true
+    postgresql.checksums.failures:
+      enabled: true
     postgresql.commits:
       enabled: true
     postgresql.conflicts:
@@ -83,6 +87,10 @@ none_set:
     postgresql.blk_write_time:
       enabled: false
     postgresql.buffer_hit:
+      enabled: false
+    postgresql.checksums.enabled:
+      enabled: false
+    postgresql.checksums.failures:
       enabled: false
     postgresql.commits:
       enabled: false

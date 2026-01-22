@@ -45,6 +45,11 @@ type PgStatDatabaseMetric struct {
 
 	// Database size
 	DatabaseSize sql.NullInt64 // Total database size in bytes
+
+	// Checksum metrics (PostgreSQL 12+)
+	ChecksumFailures    sql.NullInt64 // Number of data page checksum failures detected
+	ChecksumLastFailure sql.NullTime  // Time of last checksum failure (can be NULL)
+	ChecksumsEnabled    sql.NullBool  // Whether data checksums are enabled
 }
 
 // PgStatDatabaseSessionMetric represents session statistics from pg_stat_database (PostgreSQL 14+)

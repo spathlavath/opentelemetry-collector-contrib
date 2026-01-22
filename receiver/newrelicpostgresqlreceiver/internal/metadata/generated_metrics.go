@@ -25,6 +25,12 @@ var MetricsInfo = metricsInfo{
 	PostgresqlBufferHit: metricInfo{
 		Name: "postgresql.buffer_hit",
 	},
+	PostgresqlChecksumsEnabled: metricInfo{
+		Name: "postgresql.checksums.enabled",
+	},
+	PostgresqlChecksumsFailures: metricInfo{
+		Name: "postgresql.checksums.failures",
+	},
 	PostgresqlCommits: metricInfo{
 		Name: "postgresql.commits",
 	},
@@ -110,6 +116,8 @@ type metricsInfo struct {
 	PostgresqlBlkReadTime                   metricInfo
 	PostgresqlBlkWriteTime                  metricInfo
 	PostgresqlBufferHit                     metricInfo
+	PostgresqlChecksumsEnabled              metricInfo
+	PostgresqlChecksumsFailures             metricInfo
 	PostgresqlCommits                       metricInfo
 	PostgresqlConflicts                     metricInfo
 	PostgresqlConflictsBufferpin            metricInfo
@@ -345,6 +353,112 @@ func (m *metricPostgresqlBufferHit) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlBufferHit(cfg MetricConfig) metricPostgresqlBufferHit {
 	m := metricPostgresqlBufferHit{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlChecksumsEnabled struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.checksums.enabled metric with initial data.
+func (m *metricPostgresqlChecksumsEnabled) init() {
+	m.data.SetName("postgresql.checksums.enabled")
+	m.data.SetDescription("Whether data checksums are enabled for this PostgreSQL cluster (PostgreSQL 12+)")
+	m.data.SetUnit("{status}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlChecksumsEnabled) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlChecksumsEnabled) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlChecksumsEnabled) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlChecksumsEnabled(cfg MetricConfig) metricPostgresqlChecksumsEnabled {
+	m := metricPostgresqlChecksumsEnabled{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlChecksumsFailures struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.checksums.failures metric with initial data.
+func (m *metricPostgresqlChecksumsFailures) init() {
+	m.data.SetName("postgresql.checksums.failures")
+	m.data.SetDescription("Number of data page checksum failures detected (PostgreSQL 12+)")
+	m.data.SetUnit("{failures}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlChecksumsFailures) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlChecksumsFailures) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlChecksumsFailures) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlChecksumsFailures(cfg MetricConfig) metricPostgresqlChecksumsFailures {
+	m := metricPostgresqlChecksumsFailures{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -1762,6 +1876,8 @@ type MetricsBuilder struct {
 	metricPostgresqlBlkReadTime                   metricPostgresqlBlkReadTime
 	metricPostgresqlBlkWriteTime                  metricPostgresqlBlkWriteTime
 	metricPostgresqlBufferHit                     metricPostgresqlBufferHit
+	metricPostgresqlChecksumsEnabled              metricPostgresqlChecksumsEnabled
+	metricPostgresqlChecksumsFailures             metricPostgresqlChecksumsFailures
 	metricPostgresqlCommits                       metricPostgresqlCommits
 	metricPostgresqlConflicts                     metricPostgresqlConflicts
 	metricPostgresqlConflictsBufferpin            metricPostgresqlConflictsBufferpin
@@ -1817,6 +1933,8 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlBlkReadTime:                   newMetricPostgresqlBlkReadTime(mbc.Metrics.PostgresqlBlkReadTime),
 		metricPostgresqlBlkWriteTime:                  newMetricPostgresqlBlkWriteTime(mbc.Metrics.PostgresqlBlkWriteTime),
 		metricPostgresqlBufferHit:                     newMetricPostgresqlBufferHit(mbc.Metrics.PostgresqlBufferHit),
+		metricPostgresqlChecksumsEnabled:              newMetricPostgresqlChecksumsEnabled(mbc.Metrics.PostgresqlChecksumsEnabled),
+		metricPostgresqlChecksumsFailures:             newMetricPostgresqlChecksumsFailures(mbc.Metrics.PostgresqlChecksumsFailures),
 		metricPostgresqlCommits:                       newMetricPostgresqlCommits(mbc.Metrics.PostgresqlCommits),
 		metricPostgresqlConflicts:                     newMetricPostgresqlConflicts(mbc.Metrics.PostgresqlConflicts),
 		metricPostgresqlConflictsBufferpin:            newMetricPostgresqlConflictsBufferpin(mbc.Metrics.PostgresqlConflictsBufferpin),
@@ -1955,6 +2073,8 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlBlkReadTime.emit(ils.Metrics())
 	mb.metricPostgresqlBlkWriteTime.emit(ils.Metrics())
 	mb.metricPostgresqlBufferHit.emit(ils.Metrics())
+	mb.metricPostgresqlChecksumsEnabled.emit(ils.Metrics())
+	mb.metricPostgresqlChecksumsFailures.emit(ils.Metrics())
 	mb.metricPostgresqlCommits.emit(ils.Metrics())
 	mb.metricPostgresqlConflicts.emit(ils.Metrics())
 	mb.metricPostgresqlConflictsBufferpin.emit(ils.Metrics())
@@ -2030,6 +2150,16 @@ func (mb *MetricsBuilder) RecordPostgresqlBlkWriteTimeDataPoint(ts pcommon.Times
 // RecordPostgresqlBufferHitDataPoint adds a data point to postgresql.buffer_hit metric.
 func (mb *MetricsBuilder) RecordPostgresqlBufferHitDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlBufferHit.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlChecksumsEnabledDataPoint adds a data point to postgresql.checksums.enabled metric.
+func (mb *MetricsBuilder) RecordPostgresqlChecksumsEnabledDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlChecksumsEnabled.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlChecksumsFailuresDataPoint adds a data point to postgresql.checksums.failures metric.
+func (mb *MetricsBuilder) RecordPostgresqlChecksumsFailuresDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlChecksumsFailures.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlCommitsDataPoint adds a data point to postgresql.commits metric.

@@ -54,6 +54,7 @@ type newRelicPostgreSQLScraper struct {
 	scrapeCfg    scraperhelper.ControllerConfig
 	startTime    pcommon.Timestamp
 	pgVersion    int  // PostgreSQL version number
+	supportsPG12 bool // Whether PostgreSQL version is 12 or higher
 	supportsPG14 bool // Whether PostgreSQL version is 14 or higher
 }
 
@@ -122,16 +123,19 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 	// Detect PostgreSQL version
 	version, err := s.client.GetVersion(context.Background())
 	if err != nil {
-		s.logger.Warn("Failed to detect PostgreSQL version, session metrics will be disabled", zap.Error(err))
+		s.logger.Warn("Failed to detect PostgreSQL version, version-specific features will be disabled", zap.Error(err))
 		s.pgVersion = 0
+		s.supportsPG12 = false
 		s.supportsPG14 = false
 	} else {
 		s.pgVersion = version
 		// Version format: Major * 10000 + Minor * 100 + Patch
-		// PostgreSQL 14.0 = 140000
+		// PostgreSQL 12.0 = 120000, PostgreSQL 14.0 = 140000
+		s.supportsPG12 = version >= 120000
 		s.supportsPG14 = version >= 140000
 		s.logger.Info("PostgreSQL version detected",
 			zap.Int("version", version),
+			zap.Bool("supports_pg12_features", s.supportsPG12),
 			zap.Bool("supports_pg14_features", s.supportsPG14))
 	}
 
@@ -142,6 +146,7 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.logger,
 		s.instanceName,
 		s.metricsBuilderConfig,
+		s.supportsPG12,
 	)
 
 	// Initialize conflict metrics scraper (available for all supported versions)

@@ -85,6 +85,28 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.checksums.enabled:
+    description: Whether data checksums are enabled for this PostgreSQL cluster (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{status}"
+    stability:
+      level: alpha
+
+  postgresql.checksums.failures:
+    description: Number of data page checksum failures detected (PostgreSQL 12+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{failures}"
+    stability:
+      level: alpha
+
   postgresql.commits:
     description: Number of transactions that have been committed
     enabled: true

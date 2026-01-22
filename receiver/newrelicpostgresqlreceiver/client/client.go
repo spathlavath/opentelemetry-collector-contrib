@@ -20,7 +20,8 @@ type PostgreSQLClient interface {
 	GetVersion(ctx context.Context) (int, error)
 
 	// Database metrics from pg_stat_database
-	QueryDatabaseMetrics(ctx context.Context) ([]models.PgStatDatabaseMetric, error)
+	// The supportsPG12 parameter enables checksum metrics for PostgreSQL 12+
+	QueryDatabaseMetrics(ctx context.Context, supportsPG12 bool) ([]models.PgStatDatabaseMetric, error)
 
 	// Session metrics from pg_stat_database (PG14+)
 	QuerySessionMetrics(ctx context.Context) ([]models.PgStatDatabaseSessionMetric, error)

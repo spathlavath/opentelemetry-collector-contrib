@@ -32,6 +32,8 @@ type MetricsConfig struct {
 	PostgresqlBlkReadTime                   MetricConfig `mapstructure:"postgresql.blk_read_time"`
 	PostgresqlBlkWriteTime                  MetricConfig `mapstructure:"postgresql.blk_write_time"`
 	PostgresqlBufferHit                     MetricConfig `mapstructure:"postgresql.buffer_hit"`
+	PostgresqlChecksumsEnabled              MetricConfig `mapstructure:"postgresql.checksums.enabled"`
+	PostgresqlChecksumsFailures             MetricConfig `mapstructure:"postgresql.checksums.failures"`
 	PostgresqlCommits                       MetricConfig `mapstructure:"postgresql.commits"`
 	PostgresqlConflicts                     MetricConfig `mapstructure:"postgresql.conflicts"`
 	PostgresqlConflictsBufferpin            MetricConfig `mapstructure:"postgresql.conflicts.bufferpin"`
@@ -72,6 +74,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlBufferHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlChecksumsEnabled: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlChecksumsFailures: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlCommits: MetricConfig{

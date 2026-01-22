@@ -66,6 +66,36 @@ const (
 		FROM pg_stat_database_conflicts
 		WHERE datname NOT IN ('template0', 'template1')`
 
+	// PgStatDatabaseMetricsWithChecksumsSQL returns database statistics including checksum data (PostgreSQL 12+)
+	// This query extends the base metrics with checksum failure tracking
+	PgStatDatabaseMetricsWithChecksumsSQL = `
+		SELECT
+			sd.datname,
+			sd.numbackends,
+			sd.xact_commit,
+			sd.xact_rollback,
+			sd.blks_read,
+			sd.blks_hit,
+			sd.tup_returned,
+			sd.tup_fetched,
+			sd.tup_inserted,
+			sd.tup_updated,
+			sd.tup_deleted,
+			sd.conflicts,
+			sd.temp_files,
+			sd.temp_bytes,
+			sd.deadlocks,
+			sd.blk_read_time,
+			sd.blk_write_time,
+			(2^31 - age(d.datfrozenxid))::bigint AS before_xid_wraparound,
+			pg_database_size(sd.datname) AS database_size,
+			sd.checksum_failures,
+			sd.checksum_last_failure,
+			(SELECT current_setting('data_checksums')::bool) as checksums_enabled
+		FROM pg_stat_database sd
+		JOIN pg_database d ON sd.datname = d.datname
+		WHERE sd.datname NOT IN ('template0', 'template1')`
+
 	// VersionQuery returns the PostgreSQL server version as an integer
 	// Format: Major version * 10000 + Minor version * 100 + Patch version
 	// Example: PostgreSQL 14.5 returns 140005

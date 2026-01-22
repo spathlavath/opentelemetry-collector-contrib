@@ -31,6 +31,13 @@ func getFloat64(val sql.NullFloat64) float64 {
 	return 0.0
 }
 
+func getBool(val sql.NullBool) int64 {
+	if val.Valid && val.Bool {
+		return 1
+	}
+	return 0
+}
+
 // DatabaseMetricsScraper scrapes database-level metrics from pg_stat_database
 type DatabaseMetricsScraper struct {
 	client       client.PostgreSQLClient
@@ -38,6 +45,7 @@ type DatabaseMetricsScraper struct {
 	logger       *zap.Logger
 	instanceName string
 	mbConfig     metadata.MetricsBuilderConfig
+	supportsPG12 bool // Whether PostgreSQL version is 12 or higher
 }
 
 // NewDatabaseMetricsScraper creates a new DatabaseMetricsScraper
@@ -47,6 +55,7 @@ func NewDatabaseMetricsScraper(
 	logger *zap.Logger,
 	instanceName string,
 	mbConfig metadata.MetricsBuilderConfig,
+	supportsPG12 bool,
 ) *DatabaseMetricsScraper {
 	return &DatabaseMetricsScraper{
 		client:       client,
@@ -54,6 +63,7 @@ func NewDatabaseMetricsScraper(
 		logger:       logger,
 		instanceName: instanceName,
 		mbConfig:     mbConfig,
+		supportsPG12: supportsPG12,
 	}
 }
 
@@ -61,7 +71,7 @@ func NewDatabaseMetricsScraper(
 func (s *DatabaseMetricsScraper) ScrapeDatabaseMetrics(ctx context.Context) []error {
 	now := pcommon.NewTimestampFromTime(time.Now())
 
-	metrics, err := s.client.QueryDatabaseMetrics(ctx)
+	metrics, err := s.client.QueryDatabaseMetrics(ctx, s.supportsPG12)
 	if err != nil {
 		s.logger.Error("Failed to query database metrics", zap.Error(err))
 		return []error{err}
@@ -100,4 +110,10 @@ func (s *DatabaseMetricsScraper) recordMetricsForDatabase(now pcommon.Timestamp,
 	s.mb.RecordPostgresqlBlkWriteTimeDataPoint(now, getFloat64(metric.BlkWriteTime), s.instanceName, databaseName)
 	s.mb.RecordPostgresqlBeforeXidWraparoundDataPoint(now, getInt64(metric.BeforeXIDWraparound), s.instanceName, databaseName)
 	s.mb.RecordPostgresqlDatabaseSizeDataPoint(now, getInt64(metric.DatabaseSize), s.instanceName, databaseName)
+
+	// Record checksum metrics if PostgreSQL 12+
+	if s.supportsPG12 {
+		s.mb.RecordPostgresqlChecksumsFailuresDataPoint(now, getInt64(metric.ChecksumFailures), s.instanceName, databaseName)
+		s.mb.RecordPostgresqlChecksumsEnabledDataPoint(now, getBool(metric.ChecksumsEnabled), s.instanceName, databaseName)
+	}
 }
