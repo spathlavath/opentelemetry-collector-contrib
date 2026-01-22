@@ -227,6 +227,84 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.sessions.abandoned:
+    description: Number of sessions abandoned due to client disconnection (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.active_time:
+    description: Time spent executing queries in this database (PostgreSQL 14+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.sessions.count:
+    description: Number of sessions established to this database (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.fatal:
+    description: Number of sessions terminated by fatal errors (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.idle_in_transaction_time:
+    description: Time spent idle in transactions in this database (PostgreSQL 14+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.sessions.killed:
+    description: Number of sessions terminated by operator intervention (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.session_time:
+    description: Time spent in sessions for this database (PostgreSQL 14+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
   postgresql.temp_bytes:
     description: Total amount of data written to temporary files
     enabled: true

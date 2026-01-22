@@ -28,24 +28,31 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
-	PostgresqlBeforeXidWraparound MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
-	PostgresqlBlkReadTime         MetricConfig `mapstructure:"postgresql.blk_read_time"`
-	PostgresqlBlkWriteTime        MetricConfig `mapstructure:"postgresql.blk_write_time"`
-	PostgresqlBufferHit           MetricConfig `mapstructure:"postgresql.buffer_hit"`
-	PostgresqlCommits             MetricConfig `mapstructure:"postgresql.commits"`
-	PostgresqlConflicts           MetricConfig `mapstructure:"postgresql.conflicts"`
-	PostgresqlConnections         MetricConfig `mapstructure:"postgresql.connections"`
-	PostgresqlDatabaseSize        MetricConfig `mapstructure:"postgresql.database_size"`
-	PostgresqlDeadlocks           MetricConfig `mapstructure:"postgresql.deadlocks"`
-	PostgresqlDiskRead            MetricConfig `mapstructure:"postgresql.disk_read"`
-	PostgresqlRollbacks           MetricConfig `mapstructure:"postgresql.rollbacks"`
-	PostgresqlRowsDeleted         MetricConfig `mapstructure:"postgresql.rows_deleted"`
-	PostgresqlRowsFetched         MetricConfig `mapstructure:"postgresql.rows_fetched"`
-	PostgresqlRowsInserted        MetricConfig `mapstructure:"postgresql.rows_inserted"`
-	PostgresqlRowsReturned        MetricConfig `mapstructure:"postgresql.rows_returned"`
-	PostgresqlRowsUpdated         MetricConfig `mapstructure:"postgresql.rows_updated"`
-	PostgresqlTempBytes           MetricConfig `mapstructure:"postgresql.temp_bytes"`
-	PostgresqlTempFiles           MetricConfig `mapstructure:"postgresql.temp_files"`
+	PostgresqlBeforeXidWraparound           MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
+	PostgresqlBlkReadTime                   MetricConfig `mapstructure:"postgresql.blk_read_time"`
+	PostgresqlBlkWriteTime                  MetricConfig `mapstructure:"postgresql.blk_write_time"`
+	PostgresqlBufferHit                     MetricConfig `mapstructure:"postgresql.buffer_hit"`
+	PostgresqlCommits                       MetricConfig `mapstructure:"postgresql.commits"`
+	PostgresqlConflicts                     MetricConfig `mapstructure:"postgresql.conflicts"`
+	PostgresqlConnections                   MetricConfig `mapstructure:"postgresql.connections"`
+	PostgresqlDatabaseSize                  MetricConfig `mapstructure:"postgresql.database_size"`
+	PostgresqlDeadlocks                     MetricConfig `mapstructure:"postgresql.deadlocks"`
+	PostgresqlDiskRead                      MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlRollbacks                     MetricConfig `mapstructure:"postgresql.rollbacks"`
+	PostgresqlRowsDeleted                   MetricConfig `mapstructure:"postgresql.rows_deleted"`
+	PostgresqlRowsFetched                   MetricConfig `mapstructure:"postgresql.rows_fetched"`
+	PostgresqlRowsInserted                  MetricConfig `mapstructure:"postgresql.rows_inserted"`
+	PostgresqlRowsReturned                  MetricConfig `mapstructure:"postgresql.rows_returned"`
+	PostgresqlRowsUpdated                   MetricConfig `mapstructure:"postgresql.rows_updated"`
+	PostgresqlSessionsAbandoned             MetricConfig `mapstructure:"postgresql.sessions.abandoned"`
+	PostgresqlSessionsActiveTime            MetricConfig `mapstructure:"postgresql.sessions.active_time"`
+	PostgresqlSessionsCount                 MetricConfig `mapstructure:"postgresql.sessions.count"`
+	PostgresqlSessionsFatal                 MetricConfig `mapstructure:"postgresql.sessions.fatal"`
+	PostgresqlSessionsIdleInTransactionTime MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
+	PostgresqlSessionsKilled                MetricConfig `mapstructure:"postgresql.sessions.killed"`
+	PostgresqlSessionsSessionTime           MetricConfig `mapstructure:"postgresql.sessions.session_time"`
+	PostgresqlTempBytes                     MetricConfig `mapstructure:"postgresql.temp_bytes"`
+	PostgresqlTempFiles                     MetricConfig `mapstructure:"postgresql.temp_files"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -96,6 +103,27 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlRowsUpdated: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsAbandoned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsActiveTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsFatal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsIdleInTransactionTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsKilled: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsSessionTime: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlTempBytes: MetricConfig{

@@ -16,6 +16,12 @@ type PostgreSQLClient interface {
 	Close() error
 	Ping(ctx context.Context) error
 
+	// Version detection
+	GetVersion(ctx context.Context) (int, error)
+
 	// Database metrics from pg_stat_database
 	QueryDatabaseMetrics(ctx context.Context) ([]models.PgStatDatabaseMetric, error)
+
+	// Session metrics from pg_stat_database (PG14+)
+	QuerySessionMetrics(ctx context.Context) ([]models.PgStatDatabaseSessionMetric, error)
 }

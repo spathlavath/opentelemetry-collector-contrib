@@ -33,6 +33,20 @@ all_set:
       enabled: true
     postgresql.rows_updated:
       enabled: true
+    postgresql.sessions.abandoned:
+      enabled: true
+    postgresql.sessions.active_time:
+      enabled: true
+    postgresql.sessions.count:
+      enabled: true
+    postgresql.sessions.fatal:
+      enabled: true
+    postgresql.sessions.idle_in_transaction_time:
+      enabled: true
+    postgresql.sessions.killed:
+      enabled: true
+    postgresql.sessions.session_time:
+      enabled: true
     postgresql.temp_bytes:
       enabled: true
     postgresql.temp_files:
@@ -83,6 +97,20 @@ none_set:
     postgresql.rows_returned:
       enabled: false
     postgresql.rows_updated:
+      enabled: false
+    postgresql.sessions.abandoned:
+      enabled: false
+    postgresql.sessions.active_time:
+      enabled: false
+    postgresql.sessions.count:
+      enabled: false
+    postgresql.sessions.fatal:
+      enabled: false
+    postgresql.sessions.idle_in_transaction_time:
+      enabled: false
+    postgresql.sessions.killed:
+      enabled: false
+    postgresql.sessions.session_time:
       enabled: false
     postgresql.temp_bytes:
       enabled: false

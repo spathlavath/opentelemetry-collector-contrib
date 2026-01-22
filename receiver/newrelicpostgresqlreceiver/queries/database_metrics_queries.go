@@ -35,4 +35,25 @@ const (
 		FROM pg_stat_database sd
 		JOIN pg_database d ON sd.datname = d.datname
 		WHERE sd.datname NOT IN ('template0', 'template1')`
+
+	// PgStatDatabaseSessionMetricsSQL returns session statistics from pg_stat_database (PostgreSQL 14+)
+	// This query retrieves session-level metrics including session time, active time,
+	// idle in transaction time, and session lifecycle events
+	PgStatDatabaseSessionMetricsSQL = `
+		SELECT
+			datname,
+			session_time,
+			active_time,
+			idle_in_transaction_time,
+			sessions AS session_count,
+			sessions_abandoned,
+			sessions_fatal,
+			sessions_killed
+		FROM pg_stat_database
+		WHERE datname NOT IN ('template0', 'template1')`
+
+	// VersionQuery returns the PostgreSQL server version as an integer
+	// Format: Major version * 10000 + Minor version * 100 + Patch version
+	// Example: PostgreSQL 14.5 returns 140005
+	VersionQuery = `SELECT current_setting('server_version_num')::int`
 )

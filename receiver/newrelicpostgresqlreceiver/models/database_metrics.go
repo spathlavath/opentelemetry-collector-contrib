@@ -46,3 +46,21 @@ type PgStatDatabaseMetric struct {
 	// Database size
 	DatabaseSize sql.NullInt64 // Total database size in bytes
 }
+
+// PgStatDatabaseSessionMetric represents session statistics from pg_stat_database (PostgreSQL 14+)
+// This struct captures session-level metrics including session time, active time, and session lifecycle events
+type PgStatDatabaseSessionMetric struct {
+	// Database information
+	DatName string // Database name
+
+	// Session timing metrics (milliseconds)
+	SessionTime           sql.NullFloat64 // Time spent in sessions for this database
+	ActiveTime            sql.NullFloat64 // Time spent executing queries
+	IdleInTransactionTime sql.NullFloat64 // Time spent idle in transactions
+
+	// Session count and lifecycle metrics
+	SessionCount      sql.NullInt64 // Number of sessions established to this database
+	SessionsAbandoned sql.NullInt64 // Number of sessions abandoned (client disconnected)
+	SessionsFatal     sql.NullInt64 // Number of sessions terminated by fatal errors
+	SessionsKilled    sql.NullInt64 // Number of sessions terminated by operator intervention
+}

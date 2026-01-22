@@ -34,6 +34,7 @@ type (
 type newRelicPostgreSQLScraper struct {
 	// Scrapers
 	databaseMetricsScraper *scrapers.DatabaseMetricsScraper
+	sessionMetricsScraper  *scrapers.SessionMetricsScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -51,6 +52,8 @@ type newRelicPostgreSQLScraper struct {
 	hostName     string
 	scrapeCfg    scraperhelper.ControllerConfig
 	startTime    pcommon.Timestamp
+	pgVersion    int  // PostgreSQL version number
+	supportsPG14 bool // Whether PostgreSQL version is 14 or higher
 }
 
 // newScraper creates a new PostgreSQL database metrics scraper
@@ -115,6 +118,23 @@ func (s *newRelicPostgreSQLScraper) initializeDatabase() error {
 
 // initializeScrapers initializes all metric scrapers
 func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
+	// Detect PostgreSQL version
+	version, err := s.client.GetVersion(context.Background())
+	if err != nil {
+		s.logger.Warn("Failed to detect PostgreSQL version, session metrics will be disabled", zap.Error(err))
+		s.pgVersion = 0
+		s.supportsPG14 = false
+	} else {
+		s.pgVersion = version
+		// Version format: Major * 10000 + Minor * 100 + Patch
+		// PostgreSQL 14.0 = 140000
+		s.supportsPG14 = version >= 140000
+		s.logger.Info("PostgreSQL version detected",
+			zap.Int("version", version),
+			zap.Bool("supports_pg14_features", s.supportsPG14))
+	}
+
+	// Initialize database metrics scraper (always available)
 	s.databaseMetricsScraper = scrapers.NewDatabaseMetricsScraper(
 		s.client,
 		s.mb,
@@ -122,6 +142,20 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.instanceName,
 		s.metricsBuilderConfig,
 	)
+
+	// Initialize session metrics scraper only if PostgreSQL 14+
+	if s.supportsPG14 {
+		s.sessionMetricsScraper = scrapers.NewSessionMetricsScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+			s.metricsBuilderConfig,
+		)
+		s.logger.Info("Session metrics scraper enabled (PostgreSQL 14+)")
+	} else {
+		s.logger.Info("Session metrics scraper disabled (requires PostgreSQL 14+)")
+	}
 
 	return nil
 }
@@ -142,6 +176,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		s.logger.Warn("Errors occurred while scraping database metrics",
 			zap.Int("error_count", len(dbErrs)))
 		scrapeErrors = append(scrapeErrors, dbErrs...)
+	}
+
+	// Scrape session metrics (PostgreSQL 14+ only)
+	if s.supportsPG14 && s.sessionMetricsScraper != nil {
+		sessionErrs := s.sessionMetricsScraper.ScrapeSessionMetrics(scrapeCtx)
+		if len(sessionErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping session metrics",
+				zap.Int("error_count", len(sessionErrs)))
+			scrapeErrors = append(scrapeErrors, sessionErrs...)
+		}
 	}
 
 	metrics := s.buildMetrics()
