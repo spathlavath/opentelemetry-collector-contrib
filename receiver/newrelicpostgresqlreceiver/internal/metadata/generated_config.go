@@ -34,6 +34,11 @@ type MetricsConfig struct {
 	PostgresqlBufferHit                     MetricConfig `mapstructure:"postgresql.buffer_hit"`
 	PostgresqlCommits                       MetricConfig `mapstructure:"postgresql.commits"`
 	PostgresqlConflicts                     MetricConfig `mapstructure:"postgresql.conflicts"`
+	PostgresqlConflictsBufferpin            MetricConfig `mapstructure:"postgresql.conflicts.bufferpin"`
+	PostgresqlConflictsDeadlock             MetricConfig `mapstructure:"postgresql.conflicts.deadlock"`
+	PostgresqlConflictsLock                 MetricConfig `mapstructure:"postgresql.conflicts.lock"`
+	PostgresqlConflictsSnapshot             MetricConfig `mapstructure:"postgresql.conflicts.snapshot"`
+	PostgresqlConflictsTablespace           MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
 	PostgresqlConnections                   MetricConfig `mapstructure:"postgresql.connections"`
 	PostgresqlDatabaseSize                  MetricConfig `mapstructure:"postgresql.database_size"`
 	PostgresqlDeadlocks                     MetricConfig `mapstructure:"postgresql.deadlocks"`
@@ -73,6 +78,21 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlConflicts: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsBufferpin: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsDeadlock: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsLock: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsSnapshot: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsTablespace: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlConnections: MetricConfig{

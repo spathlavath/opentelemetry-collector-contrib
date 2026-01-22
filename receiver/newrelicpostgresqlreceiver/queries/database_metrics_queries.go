@@ -52,6 +52,20 @@ const (
 		FROM pg_stat_database
 		WHERE datname NOT IN ('template0', 'template1')`
 
+	// PgStatDatabaseConflictsSQL returns conflict statistics from pg_stat_database_conflicts
+	// This query retrieves replication conflict events on standby servers
+	// Available in PostgreSQL 9.6+
+	PgStatDatabaseConflictsSQL = `
+		SELECT
+			datname,
+			confl_tablespace,
+			confl_lock,
+			confl_snapshot,
+			confl_bufferpin,
+			confl_deadlock
+		FROM pg_stat_database_conflicts
+		WHERE datname NOT IN ('template0', 'template1')`
+
 	// VersionQuery returns the PostgreSQL server version as an integer
 	// Format: Major version * 10000 + Minor version * 100 + Patch version
 	// Example: PostgreSQL 14.5 returns 140005

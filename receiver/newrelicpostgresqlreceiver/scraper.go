@@ -35,6 +35,7 @@ type newRelicPostgreSQLScraper struct {
 	// Scrapers
 	databaseMetricsScraper *scrapers.DatabaseMetricsScraper
 	sessionMetricsScraper  *scrapers.SessionMetricsScraper
+	conflictMetricsScraper *scrapers.ConflictMetricsScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -143,6 +144,16 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.metricsBuilderConfig,
 	)
 
+	// Initialize conflict metrics scraper (available for all supported versions)
+	s.conflictMetricsScraper = scrapers.NewConflictMetricsScraper(
+		s.client,
+		s.mb,
+		s.logger,
+		s.instanceName,
+		s.metricsBuilderConfig,
+	)
+	s.logger.Info("Conflict metrics scraper enabled")
+
 	// Initialize session metrics scraper only if PostgreSQL 14+
 	if s.supportsPG14 {
 		s.sessionMetricsScraper = scrapers.NewSessionMetricsScraper(
@@ -176,6 +187,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		s.logger.Warn("Errors occurred while scraping database metrics",
 			zap.Int("error_count", len(dbErrs)))
 		scrapeErrors = append(scrapeErrors, dbErrs...)
+	}
+
+	// Scrape conflict metrics (all supported versions)
+	if s.conflictMetricsScraper != nil {
+		conflictErrs := s.conflictMetricsScraper.ScrapeConflictMetrics(scrapeCtx)
+		if len(conflictErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping conflict metrics",
+				zap.Int("error_count", len(conflictErrs)))
+			scrapeErrors = append(scrapeErrors, conflictErrs...)
+		}
 	}
 
 	// Scrape session metrics (PostgreSQL 14+ only)

@@ -109,6 +109,66 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.conflicts.bufferpin:
+    description: Queries canceled due to pinned buffers during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.deadlock:
+    description: Queries canceled due to deadlocks during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.lock:
+    description: Queries canceled due to lock timeouts during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.snapshot:
+    description: Queries canceled due to old snapshots during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.tablespace:
+    description: Queries canceled due to dropped tablespaces during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
   postgresql.connections:
     description: Number of active connections (backends) to the database
     enabled: true

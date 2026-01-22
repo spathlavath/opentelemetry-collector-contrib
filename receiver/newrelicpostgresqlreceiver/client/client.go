@@ -24,4 +24,7 @@ type PostgreSQLClient interface {
 
 	// Session metrics from pg_stat_database (PG14+)
 	QuerySessionMetrics(ctx context.Context) ([]models.PgStatDatabaseSessionMetric, error)
+
+	// Conflict metrics from pg_stat_database_conflicts (PG9.6+)
+	QueryConflictMetrics(ctx context.Context) ([]models.PgStatDatabaseConflictsMetric, error)
 }

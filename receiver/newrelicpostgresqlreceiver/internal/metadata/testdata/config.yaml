@@ -13,6 +13,16 @@ all_set:
       enabled: true
     postgresql.conflicts:
       enabled: true
+    postgresql.conflicts.bufferpin:
+      enabled: true
+    postgresql.conflicts.deadlock:
+      enabled: true
+    postgresql.conflicts.lock:
+      enabled: true
+    postgresql.conflicts.snapshot:
+      enabled: true
+    postgresql.conflicts.tablespace:
+      enabled: true
     postgresql.connections:
       enabled: true
     postgresql.database_size:
@@ -77,6 +87,16 @@ none_set:
     postgresql.commits:
       enabled: false
     postgresql.conflicts:
+      enabled: false
+    postgresql.conflicts.bufferpin:
+      enabled: false
+    postgresql.conflicts.deadlock:
+      enabled: false
+    postgresql.conflicts.lock:
+      enabled: false
+    postgresql.conflicts.snapshot:
+      enabled: false
+    postgresql.conflicts.tablespace:
       enabled: false
     postgresql.connections:
       enabled: false

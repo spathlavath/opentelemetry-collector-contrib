@@ -64,3 +64,17 @@ type PgStatDatabaseSessionMetric struct {
 	SessionsFatal     sql.NullInt64 // Number of sessions terminated by fatal errors
 	SessionsKilled    sql.NullInt64 // Number of sessions terminated by operator intervention
 }
+
+// PgStatDatabaseConflictsMetric represents conflict statistics from pg_stat_database_conflicts
+// This struct captures replication conflict events on standby servers
+type PgStatDatabaseConflictsMetric struct {
+	// Database information
+	DatName string // Database name
+
+	// Replication conflict types
+	ConflTablespace sql.NullInt64 // Queries canceled due to dropped tablespaces
+	ConflLock       sql.NullInt64 // Queries canceled due to lock timeouts
+	ConflSnapshot   sql.NullInt64 // Queries canceled due to old snapshots
+	ConflBufferpin  sql.NullInt64 // Queries canceled due to pinned buffers
+	ConflDeadlock   sql.NullInt64 // Queries canceled due to deadlocks
+}
