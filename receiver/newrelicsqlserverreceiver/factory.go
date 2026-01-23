@@ -21,8 +21,7 @@ func NewFactory() receiver.Factory {
 	return receiver.NewFactory(
 		metadata.Type,
 		createDefaultConfig,
-		receiver.WithMetrics(createMetricsReceiver, metadata.MetricsStability),
-		receiver.WithLogs(createLogsReceiver, component.StabilityLevelDevelopment))
+		receiver.WithMetrics(createMetricsReceiver, metadata.MetricsStability))
 }
 
 func createDefaultConfig() component.Config {
@@ -60,30 +59,5 @@ func createMetricsReceiver(
 	return scraperhelper.NewMetricsController(
 		&cfg.ControllerConfig, params, consumer,
 		scraperhelper.AddScraper(metadata.Type, s),
-	)
-}
-
-func createLogsReceiver(
-	_ context.Context,
-	params receiver.Settings,
-	rConf component.Config,
-	consumer consumer.Logs,
-) (receiver.Logs, error) {
-	cfg := rConf.(*Config)
-
-	ns := newSqlServerScraper(params, cfg)
-
-	f := scraper.NewFactory(metadata.Type, nil,
-		scraper.WithLogs(func(context.Context, scraper.Settings, component.Config) (scraper.Logs, error) {
-			return ns, nil
-		}, component.StabilityLevelDevelopment))
-
-	opt := scraperhelper.AddFactoryWithConfig(f, nil)
-
-	return scraperhelper.NewLogsController(
-		&cfg.ControllerConfig,
-		params,
-		consumer,
-		opt,
 	)
 }

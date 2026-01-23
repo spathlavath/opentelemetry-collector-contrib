@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.opentelemetry.io/collector/pdata/plog"
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
@@ -20,7 +19,7 @@ import (
 
 // ScrapeActiveRunningQueriesMetrics fetches active running queries from SQL Server
 // Returns the list of active queries for further processing (metrics emission and execution plan fetching)
-func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, limit, textTruncateLimit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
+func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, limit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
 	// Skip active query scraping if no slow queries found (nothing to correlate)
 	if len(slowQueryIDs) == 0 {
 		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
@@ -45,12 +44,11 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 	// Build query with slow query correlation filter
 	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
-	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, dbFilter, limit, textTruncateLimit, elapsedTimeThreshold, queryIDFilter)
+	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, dbFilter, limit, elapsedTimeThreshold, queryIDFilter)
 
 	s.logger.Debug("Executing active running queries fetch",
 		zap.String("query", queries.TruncateQuery(query, 100)),
 		zap.Int("limit", limit),
-		zap.Int("text_truncate_limit", textTruncateLimit),
 		zap.Int("elapsed_time_threshold_ms", elapsedTimeThreshold),
 		zap.Int("slow_query_id_count", len(slowQueryIDs)))
 
@@ -128,114 +126,8 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 	return nil
 }
 
-// EmitActiveRunningExecutionPlansAsLogs fetches execution plans for active queries and emits as OTLP logs
-// This is called from ScrapeLogs to emit execution plans with slow query correlation
-// Uses plan_handle from slow queries instead of active query plan_handle
-func (s *QueryPerformanceScraper) EmitActiveRunningExecutionPlansAsLogs(ctx context.Context, logs plog.Logs, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
-	if len(activeQueries) == 0 {
-		s.logger.Info("No active queries to fetch execution plans for")
-		return nil
-	}
-
-	fetchedCount := 0
-	errorCount := 0
-	skippedNoSlowQueryMatch := 0
-
-	for i, result := range activeQueries {
-		// Get plan_handle from lightweight plan data using query_id
-		// This ensures we only show plans for queries that exist in dm_exec_query_stats
-		var planHandle *models.QueryID
-		var queryIDStr string
-		if result.QueryID != nil && !result.QueryID.IsEmpty() {
-			queryIDStr = result.QueryID.String()
-			if planData, found := slowQueryPlanDataMap[queryIDStr]; found {
-				planHandle = planData.PlanHandle
-			}
-			s.logger.Info(fmt.Sprintf("[%d/%d] Processing active query for execution plan", i+1, len(activeQueries)),
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.String("query_hash", queryIDStr),
-				zap.Bool("found_in_slow_query_map", planHandle != nil),
-				zap.String("plan_handle", func() string {
-					if planHandle != nil {
-						return planHandle.String()
-					}
-					return "NULL"
-				}()))
-		} else {
-			s.logger.Warn("Active query has NULL/empty query_hash - cannot correlate with slow query",
-				zap.Any("session_id", result.CurrentSessionID))
-		}
-
-		// Skip if no matching slow query plan_handle found
-		// The warmup phase ensures all operations are cached in dm_exec_query_stats first
-		if planHandle == nil || planHandle.IsEmpty() {
-			skippedNoSlowQueryMatch++
-			s.logger.Warn("No matching slow query plan_handle found for active query, skipping execution plan fetch",
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.Any("query_id", result.QueryID),
-				zap.String("query_hash", queryIDStr),
-				zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
-			continue
-		}
-
-		s.logger.Debug("Fetching execution plan XML for active query",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.String("plan_handle", planHandle.String()))
-
-		// Fetch execution plan XML using plan_handle from slow query
-		executionPlanXML, err := s.fetchExecutionPlanXML(ctx, planHandle)
-		if err != nil {
-			errorCount++
-			s.logger.Error("Failed to fetch execution plan XML for active query",
-				zap.Error(err),
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.String("plan_handle", planHandle.String()))
-			continue
-		}
-
-		if executionPlanXML == "" {
-			s.logger.Warn("Empty execution plan XML returned for active query (plan evicted or not available)",
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.String("plan_handle", planHandle.String()),
-				zap.String("query_hash", queryIDStr))
-			continue
-		}
-
-		s.logger.Debug("Successfully fetched execution plan XML",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int("xml_length", len(executionPlanXML)))
-
-		// Parse and emit execution plan as logs (pass the slow query plan_handle we used to fetch XML)
-		if err := s.parseAndEmitExecutionPlanAsLogs(ctx, result, executionPlanXML, planHandle, logs); err != nil {
-			errorCount++
-			s.logger.Error("Failed to parse and emit execution plan as logs",
-				zap.Error(err),
-				zap.Any("session_id", result.CurrentSessionID),
-				zap.Int("index", i))
-			continue
-		}
-
-		fetchedCount++
-	}
-
-	s.logger.Info("Execution plans emission complete",
-		zap.Int("total_active_queries", len(activeQueries)),
-		zap.Int("plans_successfully_fetched_and_emitted", fetchedCount),
-		zap.Int("errors_during_fetch_or_parse", errorCount),
-		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch),
-		zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
-
-	// Warning if no execution plans were emitted
-	if fetchedCount == 0 && len(activeQueries) > 0 {
-		s.logger.Warn("⚠️  NO EXECUTION PLANS EMITTED - Check logs above for reasons:",
-			zap.Int("active_queries_found", len(activeQueries)),
-			zap.Int("skipped_no_plan_handle_match", skippedNoSlowQueryMatch),
-			zap.Int("errors", errorCount))
-	}
-
-	return nil
-}
-
+// processActiveRunningQueryMetricsWithPlan emits metrics for a single active running query
+// Uses slow query plan_handle for consistency across all metrics and logs
 func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, index int, executionPlanXML string, slowQueryPlanHandle *models.QueryID) error {
 	if result.CurrentSessionID == nil {
 		s.logger.Debug("Skipping active running query with nil session ID", zap.Int("index", index))
@@ -244,294 +136,229 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Helper functions for attribute extraction
-	getSessionID := func() int64 {
-		if result.CurrentSessionID != nil {
-			return *result.CurrentSessionID
-		}
-		return 0
+	// Extract attribute values
+	var sessionID int64
+	if result.CurrentSessionID != nil {
+		sessionID = *result.CurrentSessionID
 	}
-	getRequestID := func() int64 {
-		if result.RequestID != nil {
-			return *result.RequestID
-		}
-		return 0
+
+	var requestID int64
+	if result.RequestID != nil {
+		requestID = *result.RequestID
 	}
-	getDatabaseName := func() string {
-		if result.DatabaseName != nil {
-			return *result.DatabaseName
-		}
-		return ""
+
+	var databaseName string
+	if result.DatabaseName != nil {
+		databaseName = *result.DatabaseName
 	}
-	getLoginName := func() string {
-		if result.LoginName != nil {
-			return *result.LoginName
-		}
-		return ""
+
+	var loginName string
+	if result.LoginName != nil {
+		loginName = *result.LoginName
 	}
-	getHostName := func() string {
-		if result.HostName != nil {
-			return *result.HostName
-		}
-		return ""
+
+	var hostName string
+	if result.HostName != nil {
+		hostName = *result.HostName
 	}
-	getProgramName := func() string {
-		if result.ProgramName != nil {
-			return *result.ProgramName
-		}
-		return ""
+
+	var programName string
+	if result.ProgramName != nil {
+		programName = *result.ProgramName
 	}
-	getRequestCommand := func() string {
-		if result.RequestCommand != nil {
-			return *result.RequestCommand
-		}
-		return ""
+
+	var requestCommand string
+	if result.RequestCommand != nil {
+		requestCommand = *result.RequestCommand
 	}
-	getRequestStatus := func() string {
-		if result.RequestStatus != nil {
-			return *result.RequestStatus
-		}
-		return ""
+
+	var requestStatus string
+	if result.RequestStatus != nil {
+		requestStatus = *result.RequestStatus
 	}
-	getSessionStatus := func() string {
-		if result.SessionStatus != nil {
-			return *result.SessionStatus
-		}
-		return ""
+
+	var sessionStatus string
+	if result.SessionStatus != nil {
+		sessionStatus = *result.SessionStatus
 	}
-	getClientInterfaceName := func() string {
-		if result.ClientInterfaceName != nil {
-			return *result.ClientInterfaceName
-		}
-		return ""
+
+	var clientInterfaceName string
+	if result.ClientInterfaceName != nil {
+		clientInterfaceName = *result.ClientInterfaceName
 	}
-	getWaitType := func() string {
-		if result.WaitType != nil {
-			return *result.WaitType
-		}
-		return ""
+
+	var waitType string
+	if result.WaitType != nil {
+		waitType = *result.WaitType
 	}
-	getWaitResource := func() string {
-		if result.WaitResource != nil {
-			return *result.WaitResource
-		}
-		return ""
+
+	var waitResource string
+	if result.WaitResource != nil {
+		waitResource = *result.WaitResource
 	}
-	getWaitResourceObjectName := func() string {
-		if result.WaitResourceObjectName != nil {
-			return *result.WaitResourceObjectName
-		}
-		return ""
+
+	var waitResourceObjectName string
+	if result.WaitResourceObjectName != nil {
+		waitResourceObjectName = *result.WaitResourceObjectName
 	}
-	getWaitResourceDatabaseName := func() string {
-		if result.WaitResourceDatabaseName != nil {
-			return *result.WaitResourceDatabaseName
-		}
-		return ""
+
+	var waitResourceDatabaseName string
+	if result.WaitResourceDatabaseName != nil {
+		waitResourceDatabaseName = *result.WaitResourceDatabaseName
 	}
-	getLastWaitType := func() string {
-		if result.LastWaitType != nil {
-			return *result.LastWaitType
-		}
-		return ""
+
+	var lastWaitType string
+	if result.LastWaitType != nil {
+		lastWaitType = *result.LastWaitType
 	}
-	getRequestStartTime := func() string {
-		if result.RequestStartTime != nil {
-			return *result.RequestStartTime
-		}
-		return ""
+
+	var requestStartTime string
+	if result.RequestStartTime != nil {
+		requestStartTime = *result.RequestStartTime
 	}
-	getCollectionTimestamp := func() string {
-		if result.CollectionTimestamp != nil {
-			return *result.CollectionTimestamp
-		}
-		return ""
+
+	var collectionTimestamp string
+	if result.CollectionTimestamp != nil {
+		collectionTimestamp = *result.CollectionTimestamp
 	}
-	getTransactionID := func() int64 {
-		if result.TransactionID != nil {
-			return *result.TransactionID
-		}
-		return 0
+
+	var transactionID int64
+	if result.TransactionID != nil {
+		transactionID = *result.TransactionID
 	}
-	getOpenTransactionCount := func() int64 {
-		if result.OpenTransactionCount != nil {
-			return *result.OpenTransactionCount
-		}
-		return 0
+
+	var openTransactionCount int64
+	if result.OpenTransactionCount != nil {
+		openTransactionCount = *result.OpenTransactionCount
 	}
-	getTransactionIsolationLevel := func() int64 {
-		if result.TransactionIsolationLevel != nil {
-			return *result.TransactionIsolationLevel
-		}
-		return 0
+
+	var transactionIsolationLevel int64
+	if result.TransactionIsolationLevel != nil {
+		transactionIsolationLevel = *result.TransactionIsolationLevel
 	}
-	getDegreeOfParallelism := func() int64 {
-		if result.DegreeOfParallelism != nil {
-			return *result.DegreeOfParallelism
-		}
-		return 0
+
+	var degreeOfParallelism int64
+	if result.DegreeOfParallelism != nil {
+		degreeOfParallelism = *result.DegreeOfParallelism
 	}
-	getParallelWorkerCount := func() int64 {
-		if result.ParallelWorkerCount != nil {
-			return *result.ParallelWorkerCount
-		}
-		return 0
+
+	var parallelWorkerCount int64
+	if result.ParallelWorkerCount != nil {
+		parallelWorkerCount = *result.ParallelWorkerCount
 	}
-	getBlockingSessionID := func() int64 {
-		if result.BlockingSessionID != nil {
-			return *result.BlockingSessionID
-		}
-		return 0
+
+	var blockingSessionID int64
+	if result.BlockingSessionID != nil {
+		blockingSessionID = *result.BlockingSessionID
 	}
-	getBlockingLoginName := func() string {
-		if result.BlockerLoginName != nil {
-			return *result.BlockerLoginName
-		}
-		return ""
+
+	var blockingLoginName string
+	if result.BlockerLoginName != nil {
+		blockingLoginName = *result.BlockerLoginName
 	}
-	getBlockingHostName := func() string {
-		if result.BlockerHostName != nil {
-			return *result.BlockerHostName
-		}
-		return ""
+
+	var blockingHostName string
+	if result.BlockerHostName != nil {
+		blockingHostName = *result.BlockerHostName
 	}
-	getBlockingProgramName := func() string {
-		if result.BlockerProgramName != nil {
-			return *result.BlockerProgramName
-		}
-		return ""
+
+	var blockingProgramName string
+	if result.BlockerProgramName != nil {
+		blockingProgramName = *result.BlockerProgramName
 	}
-	getBlockingStatus := func() string {
-		if result.BlockerStatus != nil {
-			return *result.BlockerStatus
-		}
-		return ""
+
+	var blockingStatus string
+	if result.BlockerStatus != nil {
+		blockingStatus = *result.BlockerStatus
 	}
-	getBlockingIsolationLevel := func() int64 {
-		if result.BlockerIsolationLevel != nil {
-			return *result.BlockerIsolationLevel
-		}
-		return 0
+
+	var blockingIsolationLevel int64
+	if result.BlockerIsolationLevel != nil {
+		blockingIsolationLevel = *result.BlockerIsolationLevel
 	}
-	getBlockingOpenTransactionCount := func() int64 {
-		if result.BlockerOpenTransactionCount != nil {
-			return *result.BlockerOpenTransactionCount
-		}
-		return 0
+
+	var blockingOpenTransactionCount int64
+	if result.BlockerOpenTransactionCount != nil {
+		blockingOpenTransactionCount = *result.BlockerOpenTransactionCount
 	}
-	getBlockingQueryHash := func() string {
-		if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
-			return result.BlockingQueryHash.String()
-		}
-		return ""
+
+	var blockingQueryHash string
+	if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
+		blockingQueryHash = result.BlockingQueryHash.String()
 	}
-	getBlockingQueryText := func() string {
-		if result.BlockingQueryStatementText != nil {
-			return *result.BlockingQueryStatementText
-		}
-		return ""
+
+	var blockingQueryText string
+	if result.BlockingQueryStatementText != nil {
+		blockingQueryText = *result.BlockingQueryStatementText
 	}
-	getQueryText := func() string {
-		if result.QueryStatementText != nil {
-			return *result.QueryStatementText
-		}
-		return ""
+
+	var queryText string
+	if result.QueryStatementText != nil {
+		queryText = *result.QueryStatementText
 	}
-	getQueryID := func() string {
-		if result.QueryID != nil && !result.QueryID.IsEmpty() {
-			return result.QueryID.String()
-		}
-		return ""
+
+	var queryID string
+	if result.QueryID != nil && !result.QueryID.IsEmpty() {
+		queryID = result.QueryID.String()
 	}
-	getPlanHandle := func() string {
-		// Use slow query plan_handle for consistency across all metrics and logs
-		if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
-			return slowQueryPlanHandle.String()
-		}
-		return ""
+
+	var planHandle string
+	if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
+		planHandle = slowQueryPlanHandle.String()
 	}
-	// getWaitTypeDescription returns human-readable wait event name (never blank)
-	// Falls back to raw wait_type if description is unavailable
-	getWaitTypeDescription := func() string {
-		waitType := getWaitType()
-		if waitType == "" {
-			waitType = "N/A"
-		}
-		description := helpers.DecodeWaitType(waitType)
-		// DecodeWaitType already handles empty/N/A and returns "Not Waiting"
-		// It also returns the original waitType for unknown types
-		// So this should never be blank, but we double-check
-		if description == "" {
-			return waitType
-		}
-		return description
+
+	// Computed wait type attributes
+	waitTypeForDescription := waitType
+	if waitTypeForDescription == "" {
+		waitTypeForDescription = "N/A"
 	}
-	// getWaitTypeCategory returns wait category (never blank)
-	// Falls back to "Other" if category cannot be determined
-	getWaitTypeCategory := func() string {
-		waitType := getWaitType()
-		if waitType == "" {
-			waitType = "N/A"
-		}
-		category := helpers.GetWaitTypeCategory(waitType)
-		// GetWaitTypeCategory returns "None" for empty/N/A and "Other" for unknown
-		// So this should never be blank, but we double-check
-		if category == "" {
-			return "Other"
-		}
-		return category
+	waitTypeDescription := helpers.DecodeWaitType(waitTypeForDescription)
+	if waitTypeDescription == "" {
+		waitTypeDescription = waitTypeForDescription
 	}
-	getWaitResourceType := func() string {
-		// This would be computed from wait_resource parsing
-		if result.WaitResource != nil {
-			resourceType, _ := helpers.DecodeWaitResource(*result.WaitResource)
-			return resourceType
-		}
-		return ""
+
+	waitTypeForCategory := waitType
+	if waitTypeForCategory == "" {
+		waitTypeForCategory = "N/A"
 	}
-	getWaitResourceDescription := func() string {
-		// This would be computed with enhanced logic from addActiveQueryAttributes
-		if result.WaitResource != nil {
-			_, resourceDesc := helpers.DecodeWaitResource(*result.WaitResource)
-			return resourceDesc
-		}
-		return ""
+	waitTypeCategory := helpers.GetWaitTypeCategory(waitTypeForCategory)
+	if waitTypeCategory == "" {
+		waitTypeCategory = "Other"
 	}
-	getWaitResourceSchemaName := func() string {
-		if result.WaitResourceSchemaNameObject != nil {
-			return *result.WaitResourceSchemaNameObject
-		}
-		return ""
+
+	var waitResourceType, waitResourceDescription string
+	if result.WaitResource != nil {
+		waitResourceType, waitResourceDescription = helpers.DecodeWaitResource(*result.WaitResource)
 	}
-	getWaitResourceTableName := func() string {
-		if result.WaitResourceObjectName != nil {
-			return *result.WaitResourceObjectName
-		}
-		return ""
+
+	var waitResourceSchemaName string
+	if result.WaitResourceSchemaNameObject != nil {
+		waitResourceSchemaName = *result.WaitResourceSchemaNameObject
 	}
-	getWaitResourceObjectType := func() string {
-		if result.WaitResourceObjectType != nil {
-			return *result.WaitResourceObjectType
-		}
-		return ""
+
+	var waitResourceTableName string
+	if result.WaitResourceObjectName != nil {
+		waitResourceTableName = *result.WaitResourceObjectName
 	}
-	getWaitResourceIndexName := func() string {
-		if result.WaitResourceIndexName != nil {
-			return *result.WaitResourceIndexName
-		}
-		return ""
+
+	var waitResourceObjectType string
+	if result.WaitResourceObjectType != nil {
+		waitResourceObjectType = *result.WaitResourceObjectType
 	}
-	getWaitResourceIndexType := func() string {
-		if result.WaitResourceIndexType != nil {
-			return *result.WaitResourceIndexType
-		}
-		return ""
+
+	var waitResourceIndexName string
+	if result.WaitResourceIndexName != nil {
+		waitResourceIndexName = *result.WaitResourceIndexName
 	}
-	getLastWaitTypeDescription := func() string {
-		if result.LastWaitType != nil {
-			return helpers.DecodeWaitType(*result.LastWaitType)
-		}
-		return ""
+
+	var waitResourceIndexType string
+	if result.WaitResourceIndexType != nil {
+		waitResourceIndexType = *result.WaitResourceIndexType
+	}
+
+	var lastWaitTypeDescription string
+	if result.LastWaitType != nil {
+		lastWaitTypeDescription = helpers.DecodeWaitType(*result.LastWaitType)
 	}
 
 	// Active query wait time
@@ -545,50 +372,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(
 			timestamp,
 			*result.WaitTimeS,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Warn("❌ SKIPPED wait_time metric (wait_time_s <= 0 or nil)",
@@ -606,50 +433,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryCPUTimeMsDataPoint(
 			timestamp,
 			*result.CPUTimeMs,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Debug("SKIPPED cpu_time metric (nil)",
@@ -665,50 +492,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryElapsedTimeMsDataPoint(
 			timestamp,
 			*result.TotalElapsedTimeMs,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Debug("SKIPPED elapsed_time metric (nil)",
@@ -724,50 +551,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryReadsDataPoint(
 			timestamp,
 			*result.Reads,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Debug("SKIPPED reads metric (nil)",
@@ -783,50 +610,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryWritesDataPoint(
 			timestamp,
 			*result.Writes,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Debug("SKIPPED writes metric (nil)",
@@ -842,50 +669,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryLogicalReadsDataPoint(
 			timestamp,
 			*result.LogicalReads,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Debug("SKIPPED logical_reads metric (nil)",
@@ -901,50 +728,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryRowCountDataPoint(
 			timestamp,
 			*result.RowCount,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Debug("SKIPPED row_count metric (nil)",
@@ -959,50 +786,50 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(
 			timestamp,
 			*result.GrantedQueryMemoryPages,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getProgramName(),
-			getRequestCommand(),
-			getRequestStatus(),
-			getSessionStatus(),
-			getClientInterfaceName(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceObjectName(),
-			getWaitResourceDatabaseName(),
-			getWaitResourceType(),
-			getWaitResourceDescription(),
-			getWaitResourceSchemaName(),
-			getWaitResourceTableName(),
-			getWaitResourceObjectType(),
-			getWaitResourceIndexName(),
-			getWaitResourceIndexType(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getTransactionIsolationLevel(),
-			getDegreeOfParallelism(),
-			getParallelWorkerCount(),
-			getBlockingHostName(),
-			getBlockingIsolationLevel(),
-			getBlockingLoginName(),
-			getBlockingOpenTransactionCount(),
-			getBlockingProgramName(),
-			getBlockingQueryHash(),
-			getBlockingQueryText(),
-			getBlockingSessionID(),
-			getBlockingStatus(),
-			getQueryText(),
-			getQueryID(),
-			getPlanHandle(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			programName,
+			requestCommand,
+			requestStatus,
+			sessionStatus,
+			clientInterfaceName,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceObjectName,
+			waitResourceDatabaseName,
+			waitResourceType,
+			waitResourceDescription,
+			waitResourceSchemaName,
+			waitResourceTableName,
+			waitResourceObjectType,
+			waitResourceIndexName,
+			waitResourceIndexType,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			transactionIsolationLevel,
+			degreeOfParallelism,
+			parallelWorkerCount,
+			blockingHostName,
+			blockingIsolationLevel,
+			blockingLoginName,
+			blockingOpenTransactionCount,
+			blockingProgramName,
+			blockingQueryHash,
+			blockingQueryText,
+			blockingSessionID,
+			blockingStatus,
+			queryText,
+			queryID,
+			planHandle,
 		)
 	} else {
 		s.logger.Debug("SKIPPED granted_query_memory_pages metric (nil)",
@@ -1063,151 +890,8 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, pla
 	return *results[0].ExecutionPlanXML, nil
 }
 
-// parseAndEmitExecutionPlanAsLogs parses execution plan XML and emits as OTLP logs
-// Converts XML execution plan to custom events using attributes (not JSON body)
-func (s *QueryPerformanceScraper) parseAndEmitExecutionPlanAsLogs(
-	ctx context.Context,
-	activeQuery models.ActiveRunningQuery,
-	executionPlanXML string,
-	slowQueryPlanHandle *models.QueryID,
-	logs plog.Logs,
-) error {
-	// Build execution plan analysis with metadata
-	var queryID string
-	if activeQuery.QueryID != nil {
-		queryID = activeQuery.QueryID.String()
-	}
+// REMOVED: Old logs-based execution plan functions (EmitActiveRunningExecutionPlansAsLogs, parseAndEmitExecutionPlanAsLogs)
+// Execution plans now emitted as sqlserver.execution.plan metrics, converted to logs via metricsaslogs connector.
 
-	// Use the slow query plan_handle (this is what we used to fetch the XML)
-	// NOT the active query's plan_handle
-	var planHandle string
-	if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
-		planHandle = slowQueryPlanHandle.String()
-	}
-
-	// Parse the XML execution plan
-	analysis, err := models.ParseExecutionPlanXML(executionPlanXML, queryID, planHandle)
-	if err != nil {
-		return fmt.Errorf("failed to parse execution plan XML: %w", err)
-	}
-
-	// Emit as OTLP logs
-	resourceLogs := logs.ResourceLogs().AppendEmpty()
-	scopeLogs := resourceLogs.ScopeLogs().AppendEmpty()
-
-	timestamp := pcommon.NewTimestampFromTime(time.Now())
-
-	// Emit one log record per operator node using ATTRIBUTES (not JSON body)
-	for i := range analysis.Nodes {
-		node := &analysis.Nodes[i]
-		logRecord := scopeLogs.LogRecords().AppendEmpty()
-		logRecord.SetTimestamp(timestamp)
-		logRecord.SetObservedTimestamp(timestamp)
-		logRecord.SetSeverityNumber(plog.SeverityNumberInfo)
-		logRecord.SetSeverityText("INFO")
-
-		// Set body as simple string (not JSON)
-		logRecord.Body().SetStr(fmt.Sprintf("Execution Plan Node: %s (NodeID=%d, Parent=%d)",
-			node.PhysicalOp, node.NodeID, node.ParentNodeID))
-
-		// Set ALL fields as ATTRIBUTES (this is what makes it a proper custom event)
-		attrs := logRecord.Attributes()
-
-		// IMPORTANT: Signal New Relic to ingest this as a Custom Event
-		attrs.PutStr("newrelic.event.type", "SqlServerActiveQueryExecutionPlan")
-
-		// Correlation keys
-		attrs.PutStr("query_id", node.QueryID)
-		attrs.PutStr("plan_handle", node.PlanHandle)
-		if activeQuery.CurrentSessionID != nil {
-			attrs.PutInt("session_id", *activeQuery.CurrentSessionID)
-		}
-		if activeQuery.RequestID != nil {
-			attrs.PutInt("request_id", *activeQuery.RequestID)
-		}
-		if activeQuery.DatabaseName != nil {
-			attrs.PutStr("database_name", *activeQuery.DatabaseName)
-		}
-		if activeQuery.RequestStartTime != nil {
-			attrs.PutStr("start_time", *activeQuery.RequestStartTime)
-		}
-
-		// Node structure
-		attrs.PutInt("node_id", int64(node.NodeID))
-		attrs.PutInt("parent_node_id", int64(node.ParentNodeID))
-		attrs.PutStr("input_type", node.InputType)
-
-		// Operator information
-		attrs.PutStr("physical_op", node.PhysicalOp)
-		attrs.PutStr("logical_op", node.LogicalOp)
-		attrs.PutStr("sql_text", node.SQLText)
-
-		// Object information (for Index Scan/Seek operators)
-		if node.SchemaName != "" {
-			attrs.PutStr("schema_name", node.SchemaName)
-		}
-		if node.TableName != "" {
-			attrs.PutStr("table_name", node.TableName)
-		}
-		if node.IndexName != "" {
-			attrs.PutStr("index_name", node.IndexName)
-		}
-		if node.ReferencedColumns != "" {
-			attrs.PutStr("referenced_columns", node.ReferencedColumns)
-		}
-
-		// Cost estimates
-		attrs.PutDouble("estimate_rows", node.EstimateRows)
-		attrs.PutDouble("estimate_io", node.EstimateIO)
-		attrs.PutDouble("estimate_cpu", node.EstimateCPU)
-		attrs.PutDouble("avg_row_size", node.AvgRowSize)
-		attrs.PutDouble("total_subtree_cost", node.TotalSubtreeCost)
-		attrs.PutDouble("estimated_operator_cost", node.EstimatedOperatorCost)
-
-		// Execution details
-		attrs.PutStr("estimated_execution_mode", node.EstimatedExecutionMode)
-		attrs.PutInt("granted_memory_kb", node.GrantedMemoryKb)
-		attrs.PutBool("spill_occurred", node.SpillOccurred)
-		attrs.PutBool("no_join_predicate", node.NoJoinPredicate)
-
-		// Performance metrics
-		attrs.PutDouble("total_worker_time", node.TotalWorkerTime)
-		attrs.PutDouble("total_elapsed_time", node.TotalElapsedTime)
-		attrs.PutInt("total_logical_reads", node.TotalLogicalReads)
-		attrs.PutInt("total_logical_writes", node.TotalLogicalWrites)
-		attrs.PutInt("execution_count", node.ExecutionCount)
-		attrs.PutDouble("avg_elapsed_time_ms", node.AvgElapsedTimeMs)
-
-		// Timestamps
-		if node.LastExecutionTime != "" {
-			attrs.PutStr("last_execution_time", node.LastExecutionTime)
-		}
-	}
-
-	s.logger.Info("Emitted execution plan as OTLP logs with attributes",
-		zap.String("query_id", queryID),
-		zap.String("plan_handle", planHandle),
-		zap.Int("operator_count", len(analysis.Nodes)))
-
-	return nil
-}
-
-// REMOVED (2025-11-28): Old execution plan functions that created node-level custom events
-// - emitActiveQueryExecutionPlanLogs() - created one SqlServerActiveQueryExecutionPlan event per operator node
-// - createActiveQueryExecutionPlanNodeLog() - helper function for node-level events
-// - emitActiveQueryExecutionPlanMetrics() - created summary metrics from parsed XML
-// These have been replaced with aggregated stats approach using dm_exec_query_stats
-
-// REMOVED: Old execution plan fetching functions for active queries
-// - fetchTop5PlanHandlesForActiveQuery
-// - emitAggregatedExecutionPlanAsMetrics
-// - createAggregatedExecutionPlanMetrics
-//
-// These functions have been replaced by the new approach in scraper_query_performance_montoring_metrics.go:
-// - ScrapeSlowQueryExecutionPlans: Fetches plans for ALL slow queries (not just active ones)
-// - emitActiveQueryPlanMetrics: Emits metrics with active query correlation (session_id, request_id, request_start_time)
-//
-// Benefits of the new approach:
-// 1. Plans available even when query is NOT currently running
-// 2. No duplicate fetches per active execution (fetched once per unique query_id)
-// 3. Clean historical context without misleading active session attributes
+// REMOVED: Legacy execution plan functions (fetchTop5PlanHandlesForActiveQuery, emitAggregatedExecutionPlanAsMetrics)
+// Replaced by ScrapeSlowQueryExecutionPlans in scraper_query_performance_montoring_metrics.go

@@ -52,11 +52,9 @@ type Config struct {
 	QueryMonitoringResponseTimeThreshold int  `mapstructure:"query_monitoring_response_time_threshold"`
 	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
 	QueryMonitoringFetchInterval         int  `mapstructure:"query_monitoring_fetch_interval"`
-	QueryMonitoringTextTruncateLimit     int  `mapstructure:"query_monitoring_text_truncate_limit"`
 
 	// Active running queries configuration
-	EnableActiveRunningQueries               bool `mapstructure:"enable_active_running_queries"`
-	ActiveRunningQueriesElapsedTimeThreshold int  `mapstructure:"active_running_queries_elapsed_time_threshold"` // Minimum elapsed time in milliseconds (default: 0 = capture all)
+	ActiveRunningQueriesElapsedTimeThreshold int `mapstructure:"active_running_queries_elapsed_time_threshold"` // Minimum elapsed time in milliseconds (default: 0 = capture all)
 
 	// Slow query smoothing configuration (EWMA-based smoothing)
 	EnableSlowQuerySmoothing         bool    `mapstructure:"enable_slow_query_smoothing"`          // Enable/disable EWMA smoothing algorithm
@@ -104,11 +102,9 @@ func DefaultConfig() component.Config {
 		QueryMonitoringResponseTimeThreshold: 0, // 0 = capture all queries (no threshold)
 		QueryMonitoringCountThreshold:        20,
 		QueryMonitoringFetchInterval:         15,
-		QueryMonitoringTextTruncateLimit:     4094, // Default text truncate limit (4KB - 2 bytes for null terminator)
 
 		// Default active running queries settings
-		EnableActiveRunningQueries:               true, // Enable by default for comprehensive query monitoring
-		ActiveRunningQueriesElapsedTimeThreshold: 0,    // Default: 0ms (capture all active queries, including very short ones)
+		ActiveRunningQueriesElapsedTimeThreshold: 0, // Default: 0ms (capture all active queries, including very short ones)
 
 		// Default slow query smoothing settings (EWMA-based)
 		EnableSlowQuerySmoothing:         false, // Disabled - using delta calculation only
@@ -161,9 +157,6 @@ func (cfg *Config) Validate() error {
 		}
 		if cfg.QueryMonitoringCountThreshold <= 0 {
 			return errors.New("query_monitoring_count_threshold must be positive when query monitoring is enabled")
-		}
-		if cfg.QueryMonitoringTextTruncateLimit <= 0 {
-			return errors.New("query_monitoring_text_truncate_limit must be positive when query monitoring is enabled")
 		}
 	}
 
