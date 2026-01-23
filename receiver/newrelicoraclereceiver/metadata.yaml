@@ -350,7 +350,7 @@ attributes:
 
 metrics:
   newrelicoracledb.execution_plan:
-    description: " "
+    description: Oracle SQL execution plan details including operation costs, cardinality, and resource estimates
     enabled: true
     gauge:
       value_type: int
