@@ -170,6 +170,14 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlReplicationDelayDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationDelayBytesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlReplicationSlotCatalogXminAgeDataPoint(ts, 1, "slot_name-val", "slot_type-val", "plugin-val")
 
 			defaultMetricsCount++
@@ -827,6 +835,36 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sync_state")
 					assert.True(t, ok)
 					assert.Equal(t, "sync_state-val", attrVal.Str())
+				case "postgresql.replication_delay":
+					assert.False(t, validatedMetrics["postgresql.replication_delay"], "Found a duplicate in the metrics slice: postgresql.replication_delay")
+					validatedMetrics["postgresql.replication_delay"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Time lag between primary and standby (standby-side metric, PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.replication_delay_bytes":
+					assert.False(t, validatedMetrics["postgresql.replication_delay_bytes"], "Found a duplicate in the metrics slice: postgresql.replication_delay_bytes")
+					validatedMetrics["postgresql.replication_delay_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Byte lag between WAL received and replayed on standby (standby-side metric, PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				case "postgresql.replication_slot.catalog_xmin_age":
 					assert.False(t, validatedMetrics["postgresql.replication_slot.catalog_xmin_age"], "Found a duplicate in the metrics slice: postgresql.replication_slot.catalog_xmin_age")
 					validatedMetrics["postgresql.replication_slot.catalog_xmin_age"] = true

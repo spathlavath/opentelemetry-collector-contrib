@@ -333,3 +333,27 @@ func (c *SQLClient) QueryReplicationSlotStats(ctx context.Context) ([]models.PgS
 
 	return metrics, nil
 }
+
+// QueryReplicationDelay retrieves replication lag metrics on standby servers
+// Uses version-specific queries based on PostgreSQL version
+// Returns single metric with replication_delay (seconds) and replication_delay_bytes
+func (c *SQLClient) QueryReplicationDelay(ctx context.Context, version int) (*models.PgReplicationDelayMetric, error) {
+	// Select appropriate query based on PostgreSQL version
+	var query string
+	if version >= 100000 { // PostgreSQL 10.0+
+		query = queries.PgReplicationDelayPG10SQL
+	} else { // PostgreSQL 9.6
+		query = queries.PgReplicationDelayPG96SQL
+	}
+
+	var metric models.PgReplicationDelayMetric
+	err := c.db.QueryRowContext(ctx, query).Scan(
+		&metric.ReplicationDelay,
+		&metric.ReplicationDelayBytes,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query replication delay: %w", err)
+	}
+
+	return &metric, nil
+}

@@ -53,6 +53,8 @@ type MetricsConfig struct {
 	PostgresqlReplicationWalReplayLag                 MetricConfig `mapstructure:"postgresql.replication.wal_replay_lag"`
 	PostgresqlReplicationWalWriteLag                  MetricConfig `mapstructure:"postgresql.replication.wal_write_lag"`
 	PostgresqlReplicationWriteLsnDelay                MetricConfig `mapstructure:"postgresql.replication.write_lsn_delay"`
+	PostgresqlReplicationDelay                        MetricConfig `mapstructure:"postgresql.replication_delay"`
+	PostgresqlReplicationDelayBytes                   MetricConfig `mapstructure:"postgresql.replication_delay_bytes"`
 	PostgresqlReplicationSlotCatalogXminAge           MetricConfig `mapstructure:"postgresql.replication_slot.catalog_xmin_age"`
 	PostgresqlReplicationSlotConfirmedFlushDelayBytes MetricConfig `mapstructure:"postgresql.replication_slot.confirmed_flush_delay_bytes"`
 	PostgresqlReplicationSlotRestartDelayBytes        MetricConfig `mapstructure:"postgresql.replication_slot.restart_delay_bytes"`
@@ -157,6 +159,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlReplicationWriteLsnDelay: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationDelay: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationDelayBytes: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlReplicationSlotCatalogXminAge: MetricConfig{

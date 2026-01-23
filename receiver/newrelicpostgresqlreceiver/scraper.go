@@ -256,6 +256,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 				zap.Int("error_count", len(slotErrs)))
 			scrapeErrors = append(scrapeErrors, slotErrs...)
 		}
+
+		// Scrape replication delay metrics (PostgreSQL 9.6+ only, standby-side)
+		delayErrs := s.replicationMetricsScraper.ScrapeReplicationDelay(scrapeCtx)
+		if len(delayErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping replication delay metrics",
+				zap.Int("error_count", len(delayErrs)))
+			scrapeErrors = append(scrapeErrors, delayErrs...)
+		}
 	}
 
 	// Scrape replication slot stats (PostgreSQL 14+ only)

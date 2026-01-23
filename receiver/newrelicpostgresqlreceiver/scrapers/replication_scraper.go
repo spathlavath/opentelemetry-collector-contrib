@@ -206,3 +206,41 @@ func (s *ReplicationScraper) recordMetricsForSlotStats(now pcommon.Timestamp, me
 	s.mb.RecordPostgresqlReplicationSlotTotalTxnsDataPoint(now, getInt64(metric.TotalTxns), slotName, slotType, state)
 	s.mb.RecordPostgresqlReplicationSlotTotalBytesDataPoint(now, getInt64(metric.TotalBytes), slotName, slotType, state)
 }
+
+// ScrapeReplicationDelay scrapes replication lag metrics from standby servers
+func (s *ReplicationScraper) ScrapeReplicationDelay(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// Replication delay metrics available in PostgreSQL 9.6+
+	const PG96Version = 90600 // PostgreSQL 9.6.0
+
+	if s.version < PG96Version {
+		s.logger.Debug("Skipping replication delay metrics (PostgreSQL 9.6+ required)",
+			zap.Int("version", s.version))
+		return nil
+	}
+
+	metric, err := s.client.QueryReplicationDelay(ctx, s.version)
+	if err != nil {
+		s.logger.Error("Failed to query replication delay", zap.Error(err))
+		return []error{err}
+	}
+
+	// Record replication delay metrics
+	// These return 0 on primary servers (not in recovery)
+	// On standby servers, they show the lag from the primary
+	s.recordReplicationDelayMetrics(now, metric)
+
+	s.logger.Debug("Replication delay metrics scrape completed")
+
+	return nil
+}
+
+// recordReplicationDelayMetrics records replication delay metrics for the standby server
+func (s *ReplicationScraper) recordReplicationDelayMetrics(now pcommon.Timestamp, metric *models.PgReplicationDelayMetric) {
+	// Record replication delay (time lag in seconds)
+	s.mb.RecordPostgresqlReplicationDelayDataPoint(now, getFloat64(metric.ReplicationDelay), s.instanceName)
+
+	// Record replication delay bytes (byte lag between receive and replay)
+	s.mb.RecordPostgresqlReplicationDelayBytesDataPoint(now, getInt64(metric.ReplicationDelayBytes), s.instanceName)
+}

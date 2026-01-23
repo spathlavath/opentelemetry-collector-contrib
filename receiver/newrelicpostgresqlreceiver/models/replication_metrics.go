@@ -175,3 +175,24 @@ type PgStatReplicationSlotMetric struct {
 	// In bytes
 	TotalBytes sql.NullInt64
 }
+
+// PgReplicationDelayMetric represents replication lag metrics on a standby server
+// These metrics measure how far behind the standby is from the primary
+// Only available on standby servers (pg_is_in_recovery() returns true)
+//
+// Available in PostgreSQL 9.6+
+type PgReplicationDelayMetric struct {
+	// ReplicationDelay is the time lag between primary and standby
+	// Calculated as: now() - pg_last_xact_replay_timestamp()
+	// Measures how old the last replayed transaction is
+	// In seconds
+	// Returns 0 on primary servers
+	ReplicationDelay sql.NullFloat64
+
+	// ReplicationDelayBytes is the byte lag between WAL received and replayed
+	// Calculated as: pg_wal_lsn_diff(pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn())
+	// Measures how much WAL data is waiting to be replayed
+	// In bytes
+	// Returns 0 on primary servers
+	ReplicationDelayBytes sql.NullInt64
+}

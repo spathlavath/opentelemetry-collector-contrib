@@ -341,6 +341,26 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.replication_delay:
+    description: Time lag between primary and standby (standby-side metric, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication_delay_bytes:
+    description: Byte lag between WAL received and replayed on standby (standby-side metric, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
   postgresql.replication_slot.catalog_xmin_age:
     description: Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)
     enabled: true

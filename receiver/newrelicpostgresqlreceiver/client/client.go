@@ -50,4 +50,13 @@ type PostgreSQLClient interface {
 	// Returns empty slice if no logical replication slots are configured
 	// Available in PostgreSQL 14+
 	QueryReplicationSlotStats(ctx context.Context) ([]models.PgStatReplicationSlotMetric, error)
+
+	// QueryReplicationDelay retrieves replication lag metrics on standby servers
+	// Uses version-specific queries:
+	// - PostgreSQL 9.6: Uses pg_xlog_location_diff and pg_last_xlog_receive/replay_location
+	// - PostgreSQL 10+: Uses pg_wal_lsn_diff and pg_last_wal_receive/replay_lsn
+	// Returns 0 values on primary servers (not in recovery)
+	// Returns single row with replication_delay (seconds) and replication_delay_bytes
+	// Available in PostgreSQL 9.6+
+	QueryReplicationDelay(ctx context.Context, version int) (*models.PgReplicationDelayMetric, error)
 }

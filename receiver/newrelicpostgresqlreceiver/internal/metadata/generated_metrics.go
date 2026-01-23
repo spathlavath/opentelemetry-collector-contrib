@@ -88,6 +88,12 @@ var MetricsInfo = metricsInfo{
 	PostgresqlReplicationWriteLsnDelay: metricInfo{
 		Name: "postgresql.replication.write_lsn_delay",
 	},
+	PostgresqlReplicationDelay: metricInfo{
+		Name: "postgresql.replication_delay",
+	},
+	PostgresqlReplicationDelayBytes: metricInfo{
+		Name: "postgresql.replication_delay_bytes",
+	},
 	PostgresqlReplicationSlotCatalogXminAge: metricInfo{
 		Name: "postgresql.replication_slot.catalog_xmin_age",
 	},
@@ -197,6 +203,8 @@ type metricsInfo struct {
 	PostgresqlReplicationWalReplayLag                 metricInfo
 	PostgresqlReplicationWalWriteLag                  metricInfo
 	PostgresqlReplicationWriteLsnDelay                metricInfo
+	PostgresqlReplicationDelay                        metricInfo
+	PostgresqlReplicationDelayBytes                   metricInfo
 	PostgresqlReplicationSlotCatalogXminAge           metricInfo
 	PostgresqlReplicationSlotConfirmedFlushDelayBytes metricInfo
 	PostgresqlReplicationSlotRestartDelayBytes        metricInfo
@@ -1563,6 +1571,108 @@ func (m *metricPostgresqlReplicationWriteLsnDelay) emit(metrics pmetric.MetricSl
 
 func newMetricPostgresqlReplicationWriteLsnDelay(cfg MetricConfig) metricPostgresqlReplicationWriteLsnDelay {
 	m := metricPostgresqlReplicationWriteLsnDelay{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationDelay struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_delay metric with initial data.
+func (m *metricPostgresqlReplicationDelay) init() {
+	m.data.SetName("postgresql.replication_delay")
+	m.data.SetDescription("Time lag between primary and standby (standby-side metric, PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationDelay) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationDelay) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationDelay) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationDelay(cfg MetricConfig) metricPostgresqlReplicationDelay {
+	m := metricPostgresqlReplicationDelay{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationDelayBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_delay_bytes metric with initial data.
+func (m *metricPostgresqlReplicationDelayBytes) init() {
+	m.data.SetName("postgresql.replication_delay_bytes")
+	m.data.SetDescription("Byte lag between WAL received and replayed on standby (standby-side metric, PostgreSQL 9.6+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationDelayBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationDelayBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationDelayBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationDelayBytes(cfg MetricConfig) metricPostgresqlReplicationDelayBytes {
+	m := metricPostgresqlReplicationDelayBytes{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -3061,6 +3171,8 @@ type MetricsBuilder struct {
 	metricPostgresqlReplicationWalReplayLag                 metricPostgresqlReplicationWalReplayLag
 	metricPostgresqlReplicationWalWriteLag                  metricPostgresqlReplicationWalWriteLag
 	metricPostgresqlReplicationWriteLsnDelay                metricPostgresqlReplicationWriteLsnDelay
+	metricPostgresqlReplicationDelay                        metricPostgresqlReplicationDelay
+	metricPostgresqlReplicationDelayBytes                   metricPostgresqlReplicationDelayBytes
 	metricPostgresqlReplicationSlotCatalogXminAge           metricPostgresqlReplicationSlotCatalogXminAge
 	metricPostgresqlReplicationSlotConfirmedFlushDelayBytes metricPostgresqlReplicationSlotConfirmedFlushDelayBytes
 	metricPostgresqlReplicationSlotRestartDelayBytes        metricPostgresqlReplicationSlotRestartDelayBytes
@@ -3138,6 +3250,8 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlReplicationWalReplayLag:                 newMetricPostgresqlReplicationWalReplayLag(mbc.Metrics.PostgresqlReplicationWalReplayLag),
 		metricPostgresqlReplicationWalWriteLag:                  newMetricPostgresqlReplicationWalWriteLag(mbc.Metrics.PostgresqlReplicationWalWriteLag),
 		metricPostgresqlReplicationWriteLsnDelay:                newMetricPostgresqlReplicationWriteLsnDelay(mbc.Metrics.PostgresqlReplicationWriteLsnDelay),
+		metricPostgresqlReplicationDelay:                        newMetricPostgresqlReplicationDelay(mbc.Metrics.PostgresqlReplicationDelay),
+		metricPostgresqlReplicationDelayBytes:                   newMetricPostgresqlReplicationDelayBytes(mbc.Metrics.PostgresqlReplicationDelayBytes),
 		metricPostgresqlReplicationSlotCatalogXminAge:           newMetricPostgresqlReplicationSlotCatalogXminAge(mbc.Metrics.PostgresqlReplicationSlotCatalogXminAge),
 		metricPostgresqlReplicationSlotConfirmedFlushDelayBytes: newMetricPostgresqlReplicationSlotConfirmedFlushDelayBytes(mbc.Metrics.PostgresqlReplicationSlotConfirmedFlushDelayBytes),
 		metricPostgresqlReplicationSlotRestartDelayBytes:        newMetricPostgresqlReplicationSlotRestartDelayBytes(mbc.Metrics.PostgresqlReplicationSlotRestartDelayBytes),
@@ -3298,6 +3412,8 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlReplicationWalReplayLag.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationWalWriteLag.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationWriteLsnDelay.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationDelay.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationDelayBytes.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationSlotCatalogXminAge.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationSlotConfirmedFlushDelayBytes.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationSlotRestartDelayBytes.emit(ils.Metrics())
@@ -3479,6 +3595,16 @@ func (mb *MetricsBuilder) RecordPostgresqlReplicationWalWriteLagDataPoint(ts pco
 // RecordPostgresqlReplicationWriteLsnDelayDataPoint adds a data point to postgresql.replication.write_lsn_delay metric.
 func (mb *MetricsBuilder) RecordPostgresqlReplicationWriteLsnDelayDataPoint(ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
 	mb.metricPostgresqlReplicationWriteLsnDelay.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationDelayDataPoint adds a data point to postgresql.replication_delay metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationDelayDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlReplicationDelay.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlReplicationDelayBytesDataPoint adds a data point to postgresql.replication_delay_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationDelayBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlReplicationDelayBytes.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlReplicationSlotCatalogXminAgeDataPoint adds a data point to postgresql.replication_slot.catalog_xmin_age metric.

@@ -403,6 +403,34 @@ Number of bytes of WAL written but not yet flushed on standby
 | replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
 | sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
 
+### postgresql.replication_delay
+
+Time lag between primary and standby (standby-side metric, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.replication_delay_bytes
+
+Byte lag between WAL received and replayed on standby (standby-side metric, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.replication_slot.catalog_xmin_age
 
 Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)

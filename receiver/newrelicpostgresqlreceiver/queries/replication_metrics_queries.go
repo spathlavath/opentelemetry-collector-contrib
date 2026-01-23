@@ -166,4 +166,57 @@ const (
 			COALESCE(stat.total_bytes, 0) as total_bytes
 		FROM pg_stat_replication_slots stat
 		JOIN pg_replication_slots slot ON slot.slot_name = stat.slot_name`
+
+	// Replication Delay Queries (Standby-side metrics)
+	// PgReplicationDelayPG96SQL returns replication lag metrics for standby servers (PostgreSQL 9.6)
+	// Uses pg_xlog_* functions (renamed to pg_wal_* in PostgreSQL 10)
+	// Only returns data on standby servers (pg_is_in_recovery() = true)
+	// Available in PostgreSQL 9.6
+	//
+	// Metrics collected:
+	// - replication_delay: Time lag in seconds (how old is the last replayed transaction)
+	// - replication_delay_bytes: Byte lag between received and replayed WAL
+	//
+	// Notes:
+	// - Returns 0 for both metrics on primary servers
+	// - pg_last_xact_replay_timestamp() returns the timestamp of the last transaction replayed
+	// - pg_last_xlog_receive_location() is the last WAL location received from primary
+	// - pg_last_xlog_replay_location() is the last WAL location replayed on standby
+	// - COALESCE ensures NULL values are converted to 0
+	PgReplicationDelayPG96SQL = `
+		SELECT
+			CASE WHEN pg_is_in_recovery()
+				THEN COALESCE(EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp())), 0)
+				ELSE 0
+			END as replication_delay,
+			CASE WHEN pg_is_in_recovery()
+				THEN COALESCE(pg_xlog_location_diff(pg_last_xlog_receive_location(), pg_last_xlog_replay_location()), 0)
+				ELSE 0
+			END as replication_delay_bytes`
+
+	// PgReplicationDelayPG10SQL returns replication lag metrics for standby servers (PostgreSQL 10+)
+	// Uses pg_wal_* functions (renamed from pg_xlog_* in PostgreSQL 10)
+	// Only returns data on standby servers (pg_is_in_recovery() = true)
+	// Available in PostgreSQL 10+
+	//
+	// Metrics collected:
+	// - replication_delay: Time lag in seconds (how old is the last replayed transaction)
+	// - replication_delay_bytes: Byte lag between received and replayed WAL
+	//
+	// Notes:
+	// - Returns 0 for both metrics on primary servers
+	// - pg_last_xact_replay_timestamp() returns the timestamp of the last transaction replayed
+	// - pg_last_wal_receive_lsn() is the last WAL location received from primary
+	// - pg_last_wal_replay_lsn() is the last WAL location replayed on standby
+	// - COALESCE ensures NULL values are converted to 0
+	PgReplicationDelayPG10SQL = `
+		SELECT
+			CASE WHEN pg_is_in_recovery()
+				THEN COALESCE(EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp())), 0)
+				ELSE 0
+			END as replication_delay,
+			CASE WHEN pg_is_in_recovery()
+				THEN COALESCE(pg_wal_lsn_diff(pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn()), 0)
+				ELSE 0
+			END as replication_delay_bytes`
 )
