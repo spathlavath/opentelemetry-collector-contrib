@@ -12,7 +12,7 @@ service:
     # Metrics pipeline: receiver -> processor -> exporter
     metrics:
       receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, transform/host, batch]
       exporters: [otlphttp, debug]
     
     # Logs pipeline: receiver -> processor -> exporter (for execution plans)
@@ -35,7 +35,13 @@ processors:
     check_interval: 1s
     limit_mib: 256
     spike_limit_mib: 64
-  
+
+  transform/host:
+    metric_statements:
+      - context: metric
+        statements:
+          - set(metric.description, "")
+          - set(metric.unit, "")
   # Batch processor groups data for efficient transmission
   batch:
     timeout: 10s
@@ -53,7 +59,7 @@ receivers:
     # SQL Server connection configuration
     # ⚠️  REPLACE THESE WITH YOUR ACTUAL VALUES ⚠️
     hostname: ""                    # e.g., "your-sql-server.com" or "192.168.1.100"
-    port: ""                # Default SQL Server port
+    port: "1433"                # Default SQL Server port
     username: ""              # e.g., "monitoring_user"
     password: ""              # Your SQL Server password
     monitored_databases: []
@@ -164,24 +170,3 @@ exporters:
     sampling_initial: 10000  # Increased to capture more initial data
     sampling_thereafter: 10000  # Increased to see all metrics continuously
 
-# Environment Variables to Set:
-# 
-# Required:
-# export SQLSERVER_HOST="your-sql-server-hostname-or-ip"
-# export SQLSERVER_USERNAME="your-sql-username"
-# export SQLSERVER_PASSWORD="your-sql-password"
-# export NEW_RELIC_LICENSE_KEY="your-newrelic-license-key"
-#
-# Optional:
-# export SQLSERVER_PORT="1433"
-# export SQLSERVER_DATABASE="master"  
-# export SQLSERVER_INSTANCE="SQLEXPRESS"
-#
-# Example:
-# export SQLSERVER_HOST="192.168.1.100"
-# export SQLSERVER_USERNAME="monitoring_user"
-# export SQLSERVER_PASSWORD="SecurePassword123!"
-# export NEW_RELIC_LICENSE_KEY="eu01xxNRAL-your-actual-key-here"
-#
-# Then run:
-# ./bin/otelcol-newrelic --config=config.yaml
