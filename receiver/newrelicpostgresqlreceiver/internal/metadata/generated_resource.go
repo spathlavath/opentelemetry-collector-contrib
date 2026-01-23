@@ -35,6 +35,13 @@ func (rb *ResourceBuilder) SetDbSystem(val string) {
 	}
 }
 
+// SetNewrelicpostgresqlInstanceName sets provided value as "newrelicpostgresql.instance_name" attribute.
+func (rb *ResourceBuilder) SetNewrelicpostgresqlInstanceName(val string) {
+	if rb.config.NewrelicpostgresqlInstanceName.Enabled {
+		rb.res.Attributes().PutStr("newrelicpostgresql.instance_name", val)
+	}
+}
+
 // SetPostgresqlVersion sets provided value as "postgresql.version" attribute.
 func (rb *ResourceBuilder) SetPostgresqlVersion(val string) {
 	if rb.config.PostgresqlVersion.Enabled {

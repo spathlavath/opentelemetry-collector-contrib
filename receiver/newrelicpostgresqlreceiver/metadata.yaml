@@ -4,10 +4,9 @@ status:
   class: receiver
   stability:
     alpha: [metrics]
-    development: [logs]
   distributions: [contrib]
   codeowners:
-    active: [pkudikyala]
+    active: [pkudikyala, rmalhan]
 
 resource_attributes:
   database_name:
@@ -15,33 +14,402 @@ resource_attributes:
     type: string
     enabled: true
   db.system:
-    description: Database system identifier
+    description: Database system identifier (postgresql)
+    type: string
+    enabled: true
+  newrelicpostgresql.instance_name:
+    description: Name of the PostgreSQL instance
     type: string
     enabled: true
   postgresql.version:
-    description: PostgreSQL version
+    description: PostgreSQL server version
     type: string
     enabled: true
   server.address:
-    description: PostgreSQL hostname or IP address
+    description: PostgreSQL server hostname or IP address
     type: string
     enabled: true
   server.port:
-    description: PostgreSQL port number
+    description: PostgreSQL server port number
     type: string
     enabled: true
 
+attributes:
+  database_name:
+    description: Name of the PostgreSQL database
+    type: string
+  newrelicpostgresql.instance_name:
+    description: Name of the PostgreSQL instance
+    type: string
+
 metrics:
-  postgresql.connection.count:
-    description: Number of active connections to the PostgreSQL database
+  postgresql.before_xid_wraparound:
+    description: Number of transactions before XID wraparound occurs
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.blk_read_time:
+    description: Time spent reading data file blocks (milliseconds)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.blk_write_time:
+    description: Time spent writing data file blocks (milliseconds)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.buffer_hit:
+    description: Number of times disk blocks were found in the buffer cache
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.checksums.enabled:
+    description: Whether data checksums are enabled for this PostgreSQL cluster (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{status}"
+    stability:
+      level: alpha
+
+  postgresql.checksums.failures:
+    description: Number of data page checksum failures detected (PostgreSQL 12+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{failures}"
+    stability:
+      level: alpha
+
+  postgresql.commits:
+    description: Number of transactions that have been committed
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts:
+    description: Number of queries canceled due to conflicts with recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.bufferpin:
+    description: Queries canceled due to pinned buffers during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.deadlock:
+    description: Queries canceled due to deadlocks during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.lock:
+    description: Queries canceled due to lock timeouts during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.snapshot:
+    description: Queries canceled due to old snapshots during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.conflicts.tablespace:
+    description: Queries canceled due to dropped tablespaces during recovery
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.connections:
+    description: Number of active connections (backends) to the database
     enabled: true
     sum:
       aggregation_temporality: cumulative
       monotonic: false
       value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{connections}"
     stability:
       level: alpha
-    unit: "{connections}"
+
+  postgresql.database_size:
+    description: Size of the database in bytes
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.deadlocks:
+    description: Number of deadlocks detected
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{deadlocks}"
+    stability:
+      level: alpha
+
+  postgresql.disk_read:
+    description: Number of disk blocks read
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.rollbacks:
+    description: Number of transactions that have been rolled back
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.rows_deleted:
+    description: Number of rows deleted
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.rows_fetched:
+    description: Number of rows fetched by queries
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.rows_inserted:
+    description: Number of rows inserted
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.rows_returned:
+    description: Number of rows returned by queries
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.rows_updated:
+    description: Number of rows updated
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.abandoned:
+    description: Number of sessions abandoned due to client disconnection (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.active_time:
+    description: Time spent executing queries in this database (PostgreSQL 14+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.sessions.count:
+    description: Number of sessions established to this database (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.fatal:
+    description: Number of sessions terminated by fatal errors (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.idle_in_transaction_time:
+    description: Time spent idle in transactions in this database (PostgreSQL 14+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.sessions.killed:
+    description: Number of sessions terminated by operator intervention (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{sessions}"
+    stability:
+      level: alpha
+
+  postgresql.sessions.session_time:
+    description: Time spent in sessions for this database (PostgreSQL 14+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.temp_bytes:
+    description: Total amount of data written to temporary files
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.temp_files:
+    description: Number of temporary files created
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name]
+    unit: "{files}"
+    stability:
+      level: alpha
 
 tests:
   config:

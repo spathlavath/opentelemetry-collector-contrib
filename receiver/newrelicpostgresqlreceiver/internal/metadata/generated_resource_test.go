@@ -15,6 +15,7 @@ func TestResourceBuilder(t *testing.T) {
 			rb := NewResourceBuilder(cfg)
 			rb.SetDatabaseName("database_name-val")
 			rb.SetDbSystem("db.system-val")
+			rb.SetNewrelicpostgresqlInstanceName("newrelicpostgresql.instance_name-val")
 			rb.SetPostgresqlVersion("postgresql.version-val")
 			rb.SetServerAddress("server.address-val")
 			rb.SetServerPort("server.port-val")
@@ -24,9 +25,9 @@ func TestResourceBuilder(t *testing.T) {
 
 			switch tt {
 			case "default":
-				assert.Equal(t, 5, res.Attributes().Len())
+				assert.Equal(t, 6, res.Attributes().Len())
 			case "all_set":
-				assert.Equal(t, 5, res.Attributes().Len())
+				assert.Equal(t, 6, res.Attributes().Len())
 			case "none_set":
 				assert.Equal(t, 0, res.Attributes().Len())
 				return
@@ -43,6 +44,11 @@ func TestResourceBuilder(t *testing.T) {
 			assert.True(t, ok)
 			if ok {
 				assert.Equal(t, "db.system-val", val.Str())
+			}
+			val, ok = res.Attributes().Get("newrelicpostgresql.instance_name")
+			assert.True(t, ok)
+			if ok {
+				assert.Equal(t, "newrelicpostgresql.instance_name-val", val.Str())
 			}
 			val, ok = res.Attributes().Get("postgresql.version")
 			assert.True(t, ok)

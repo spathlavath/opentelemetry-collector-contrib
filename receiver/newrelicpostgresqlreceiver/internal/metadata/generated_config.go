@@ -28,12 +28,136 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
-	PostgresqlConnectionCount MetricConfig `mapstructure:"postgresql.connection.count"`
+	PostgresqlBeforeXidWraparound           MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
+	PostgresqlBlkReadTime                   MetricConfig `mapstructure:"postgresql.blk_read_time"`
+	PostgresqlBlkWriteTime                  MetricConfig `mapstructure:"postgresql.blk_write_time"`
+	PostgresqlBufferHit                     MetricConfig `mapstructure:"postgresql.buffer_hit"`
+	PostgresqlChecksumsEnabled              MetricConfig `mapstructure:"postgresql.checksums.enabled"`
+	PostgresqlChecksumsFailures             MetricConfig `mapstructure:"postgresql.checksums.failures"`
+	PostgresqlCommits                       MetricConfig `mapstructure:"postgresql.commits"`
+	PostgresqlConflicts                     MetricConfig `mapstructure:"postgresql.conflicts"`
+	PostgresqlConflictsBufferpin            MetricConfig `mapstructure:"postgresql.conflicts.bufferpin"`
+	PostgresqlConflictsDeadlock             MetricConfig `mapstructure:"postgresql.conflicts.deadlock"`
+	PostgresqlConflictsLock                 MetricConfig `mapstructure:"postgresql.conflicts.lock"`
+	PostgresqlConflictsSnapshot             MetricConfig `mapstructure:"postgresql.conflicts.snapshot"`
+	PostgresqlConflictsTablespace           MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
+	PostgresqlConnections                   MetricConfig `mapstructure:"postgresql.connections"`
+	PostgresqlDatabaseSize                  MetricConfig `mapstructure:"postgresql.database_size"`
+	PostgresqlDeadlocks                     MetricConfig `mapstructure:"postgresql.deadlocks"`
+	PostgresqlDiskRead                      MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlRollbacks                     MetricConfig `mapstructure:"postgresql.rollbacks"`
+	PostgresqlRowsDeleted                   MetricConfig `mapstructure:"postgresql.rows_deleted"`
+	PostgresqlRowsFetched                   MetricConfig `mapstructure:"postgresql.rows_fetched"`
+	PostgresqlRowsInserted                  MetricConfig `mapstructure:"postgresql.rows_inserted"`
+	PostgresqlRowsReturned                  MetricConfig `mapstructure:"postgresql.rows_returned"`
+	PostgresqlRowsUpdated                   MetricConfig `mapstructure:"postgresql.rows_updated"`
+	PostgresqlSessionsAbandoned             MetricConfig `mapstructure:"postgresql.sessions.abandoned"`
+	PostgresqlSessionsActiveTime            MetricConfig `mapstructure:"postgresql.sessions.active_time"`
+	PostgresqlSessionsCount                 MetricConfig `mapstructure:"postgresql.sessions.count"`
+	PostgresqlSessionsFatal                 MetricConfig `mapstructure:"postgresql.sessions.fatal"`
+	PostgresqlSessionsIdleInTransactionTime MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
+	PostgresqlSessionsKilled                MetricConfig `mapstructure:"postgresql.sessions.killed"`
+	PostgresqlSessionsSessionTime           MetricConfig `mapstructure:"postgresql.sessions.session_time"`
+	PostgresqlTempBytes                     MetricConfig `mapstructure:"postgresql.temp_bytes"`
+	PostgresqlTempFiles                     MetricConfig `mapstructure:"postgresql.temp_files"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
-		PostgresqlConnectionCount: MetricConfig{
+		PostgresqlBeforeXidWraparound: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBlkReadTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBlkWriteTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBufferHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlChecksumsEnabled: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlChecksumsFailures: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCommits: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflicts: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsBufferpin: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsDeadlock: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsLock: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsSnapshot: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConflictsTablespace: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConnections: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlDatabaseSize: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlDeadlocks: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlDiskRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRollbacks: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRowsDeleted: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRowsFetched: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRowsInserted: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRowsReturned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRowsUpdated: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsAbandoned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsActiveTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsFatal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsIdleInTransactionTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsKilled: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSessionsSessionTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTempBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTempFiles: MetricConfig{
 			Enabled: true,
 		},
 	}
@@ -67,11 +191,12 @@ func (rac *ResourceAttributeConfig) Unmarshal(parser *confmap.Conf) error {
 
 // ResourceAttributesConfig provides config for newrelicpostgresql resource attributes.
 type ResourceAttributesConfig struct {
-	DatabaseName      ResourceAttributeConfig `mapstructure:"database_name"`
-	DbSystem          ResourceAttributeConfig `mapstructure:"db.system"`
-	PostgresqlVersion ResourceAttributeConfig `mapstructure:"postgresql.version"`
-	ServerAddress     ResourceAttributeConfig `mapstructure:"server.address"`
-	ServerPort        ResourceAttributeConfig `mapstructure:"server.port"`
+	DatabaseName                   ResourceAttributeConfig `mapstructure:"database_name"`
+	DbSystem                       ResourceAttributeConfig `mapstructure:"db.system"`
+	NewrelicpostgresqlInstanceName ResourceAttributeConfig `mapstructure:"newrelicpostgresql.instance_name"`
+	PostgresqlVersion              ResourceAttributeConfig `mapstructure:"postgresql.version"`
+	ServerAddress                  ResourceAttributeConfig `mapstructure:"server.address"`
+	ServerPort                     ResourceAttributeConfig `mapstructure:"server.port"`
 }
 
 func DefaultResourceAttributesConfig() ResourceAttributesConfig {
@@ -80,6 +205,9 @@ func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 			Enabled: true,
 		},
 		DbSystem: ResourceAttributeConfig{
+			Enabled: true,
+		},
+		NewrelicpostgresqlInstanceName: ResourceAttributeConfig{
 			Enabled: true,
 		},
 		PostgresqlVersion: ResourceAttributeConfig{
