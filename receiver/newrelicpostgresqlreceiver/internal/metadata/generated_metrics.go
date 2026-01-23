@@ -16,10 +16,42 @@ var MetricsInfo = metricsInfo{
 	PostgresqlConnectionCount: metricInfo{
 		Name: "postgresql.connection.count",
 	},
+	PostgresqlReplicationBackendXminAge: metricInfo{
+		Name: "postgresql.replication.backend_xmin_age",
+	},
+	PostgresqlReplicationFlushLsnDelay: metricInfo{
+		Name: "postgresql.replication.flush_lsn_delay",
+	},
+	PostgresqlReplicationReplayLsnDelay: metricInfo{
+		Name: "postgresql.replication.replay_lsn_delay",
+	},
+	PostgresqlReplicationSentLsnDelay: metricInfo{
+		Name: "postgresql.replication.sent_lsn_delay",
+	},
+	PostgresqlReplicationWalFlushLag: metricInfo{
+		Name: "postgresql.replication.wal_flush_lag",
+	},
+	PostgresqlReplicationWalReplayLag: metricInfo{
+		Name: "postgresql.replication.wal_replay_lag",
+	},
+	PostgresqlReplicationWalWriteLag: metricInfo{
+		Name: "postgresql.replication.wal_write_lag",
+	},
+	PostgresqlReplicationWriteLsnDelay: metricInfo{
+		Name: "postgresql.replication.write_lsn_delay",
+	},
 }
 
 type metricsInfo struct {
-	PostgresqlConnectionCount metricInfo
+	PostgresqlConnectionCount           metricInfo
+	PostgresqlReplicationBackendXminAge metricInfo
+	PostgresqlReplicationFlushLsnDelay  metricInfo
+	PostgresqlReplicationReplayLsnDelay metricInfo
+	PostgresqlReplicationSentLsnDelay   metricInfo
+	PostgresqlReplicationWalFlushLag    metricInfo
+	PostgresqlReplicationWalReplayLag   metricInfo
+	PostgresqlReplicationWalWriteLag    metricInfo
+	PostgresqlReplicationWriteLsnDelay  metricInfo
 }
 
 type metricInfo struct {
@@ -77,17 +109,457 @@ func newMetricPostgresqlConnectionCount(cfg MetricConfig) metricPostgresqlConnec
 	return m
 }
 
+type metricPostgresqlReplicationBackendXminAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.backend_xmin_age metric with initial data.
+func (m *metricPostgresqlReplicationBackendXminAge) init() {
+	m.data.SetName("postgresql.replication.backend_xmin_age")
+	m.data.SetDescription("Age of the oldest transaction on the standby server that is holding back vacuum")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationBackendXminAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationBackendXminAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationBackendXminAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationBackendXminAge(cfg MetricConfig) metricPostgresqlReplicationBackendXminAge {
+	m := metricPostgresqlReplicationBackendXminAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationFlushLsnDelay struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.flush_lsn_delay metric with initial data.
+func (m *metricPostgresqlReplicationFlushLsnDelay) init() {
+	m.data.SetName("postgresql.replication.flush_lsn_delay")
+	m.data.SetDescription("Number of bytes of WAL flushed but not yet applied on standby")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationFlushLsnDelay) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationFlushLsnDelay) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationFlushLsnDelay) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationFlushLsnDelay(cfg MetricConfig) metricPostgresqlReplicationFlushLsnDelay {
+	m := metricPostgresqlReplicationFlushLsnDelay{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationReplayLsnDelay struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.replay_lsn_delay metric with initial data.
+func (m *metricPostgresqlReplicationReplayLsnDelay) init() {
+	m.data.SetName("postgresql.replication.replay_lsn_delay")
+	m.data.SetDescription("Number of bytes of WAL not yet replayed on standby (total replication lag in bytes)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationReplayLsnDelay) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationReplayLsnDelay) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationReplayLsnDelay) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationReplayLsnDelay(cfg MetricConfig) metricPostgresqlReplicationReplayLsnDelay {
+	m := metricPostgresqlReplicationReplayLsnDelay{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSentLsnDelay struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.sent_lsn_delay metric with initial data.
+func (m *metricPostgresqlReplicationSentLsnDelay) init() {
+	m.data.SetName("postgresql.replication.sent_lsn_delay")
+	m.data.SetDescription("Number of bytes of WAL sent but not yet written to disk on standby")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSentLsnDelay) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSentLsnDelay) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSentLsnDelay) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSentLsnDelay(cfg MetricConfig) metricPostgresqlReplicationSentLsnDelay {
+	m := metricPostgresqlReplicationSentLsnDelay{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationWalFlushLag struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.wal_flush_lag metric with initial data.
+func (m *metricPostgresqlReplicationWalFlushLag) init() {
+	m.data.SetName("postgresql.replication.wal_flush_lag")
+	m.data.SetDescription("Time elapsed between WAL flush on primary and confirmation from standby (PostgreSQL 10+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationWalFlushLag) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationWalFlushLag) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationWalFlushLag) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationWalFlushLag(cfg MetricConfig) metricPostgresqlReplicationWalFlushLag {
+	m := metricPostgresqlReplicationWalFlushLag{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationWalReplayLag struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.wal_replay_lag metric with initial data.
+func (m *metricPostgresqlReplicationWalReplayLag) init() {
+	m.data.SetName("postgresql.replication.wal_replay_lag")
+	m.data.SetDescription("Time elapsed between WAL replay on primary and confirmation from standby (PostgreSQL 10+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationWalReplayLag) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationWalReplayLag) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationWalReplayLag) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationWalReplayLag(cfg MetricConfig) metricPostgresqlReplicationWalReplayLag {
+	m := metricPostgresqlReplicationWalReplayLag{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationWalWriteLag struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.wal_write_lag metric with initial data.
+func (m *metricPostgresqlReplicationWalWriteLag) init() {
+	m.data.SetName("postgresql.replication.wal_write_lag")
+	m.data.SetDescription("Time elapsed between WAL write on primary and confirmation from standby (PostgreSQL 10+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationWalWriteLag) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationWalWriteLag) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationWalWriteLag) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationWalWriteLag(cfg MetricConfig) metricPostgresqlReplicationWalWriteLag {
+	m := metricPostgresqlReplicationWalWriteLag{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationWriteLsnDelay struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication.write_lsn_delay metric with initial data.
+func (m *metricPostgresqlReplicationWriteLsnDelay) init() {
+	m.data.SetName("postgresql.replication.write_lsn_delay")
+	m.data.SetDescription("Number of bytes of WAL written but not yet flushed on standby")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationWriteLsnDelay) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("client_address", clientAddressAttributeValue)
+	dp.Attributes().PutStr("replication_state", replicationStateAttributeValue)
+	dp.Attributes().PutStr("sync_state", syncStateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationWriteLsnDelay) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationWriteLsnDelay) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationWriteLsnDelay(cfg MetricConfig) metricPostgresqlReplicationWriteLsnDelay {
+	m := metricPostgresqlReplicationWriteLsnDelay{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                          MetricsBuilderConfig // config of the metrics builder.
-	startTime                       pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                 int                  // maximum observed number of metrics per resource.
-	metricsBuffer                   pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                       component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter  map[string]filter.Filter
-	resourceAttributeExcludeFilter  map[string]filter.Filter
-	metricPostgresqlConnectionCount metricPostgresqlConnectionCount
+	config                                    MetricsBuilderConfig // config of the metrics builder.
+	startTime                                 pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                           int                  // maximum observed number of metrics per resource.
+	metricsBuffer                             pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                                 component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter            map[string]filter.Filter
+	resourceAttributeExcludeFilter            map[string]filter.Filter
+	metricPostgresqlConnectionCount           metricPostgresqlConnectionCount
+	metricPostgresqlReplicationBackendXminAge metricPostgresqlReplicationBackendXminAge
+	metricPostgresqlReplicationFlushLsnDelay  metricPostgresqlReplicationFlushLsnDelay
+	metricPostgresqlReplicationReplayLsnDelay metricPostgresqlReplicationReplayLsnDelay
+	metricPostgresqlReplicationSentLsnDelay   metricPostgresqlReplicationSentLsnDelay
+	metricPostgresqlReplicationWalFlushLag    metricPostgresqlReplicationWalFlushLag
+	metricPostgresqlReplicationWalReplayLag   metricPostgresqlReplicationWalReplayLag
+	metricPostgresqlReplicationWalWriteLag    metricPostgresqlReplicationWalWriteLag
+	metricPostgresqlReplicationWriteLsnDelay  metricPostgresqlReplicationWriteLsnDelay
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -114,8 +586,16 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricsBuffer:                   pmetric.NewMetrics(),
 		buildInfo:                       settings.BuildInfo,
 		metricPostgresqlConnectionCount: newMetricPostgresqlConnectionCount(mbc.Metrics.PostgresqlConnectionCount),
-		resourceAttributeIncludeFilter:  make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:  make(map[string]filter.Filter),
+		metricPostgresqlReplicationBackendXminAge: newMetricPostgresqlReplicationBackendXminAge(mbc.Metrics.PostgresqlReplicationBackendXminAge),
+		metricPostgresqlReplicationFlushLsnDelay:  newMetricPostgresqlReplicationFlushLsnDelay(mbc.Metrics.PostgresqlReplicationFlushLsnDelay),
+		metricPostgresqlReplicationReplayLsnDelay: newMetricPostgresqlReplicationReplayLsnDelay(mbc.Metrics.PostgresqlReplicationReplayLsnDelay),
+		metricPostgresqlReplicationSentLsnDelay:   newMetricPostgresqlReplicationSentLsnDelay(mbc.Metrics.PostgresqlReplicationSentLsnDelay),
+		metricPostgresqlReplicationWalFlushLag:    newMetricPostgresqlReplicationWalFlushLag(mbc.Metrics.PostgresqlReplicationWalFlushLag),
+		metricPostgresqlReplicationWalReplayLag:   newMetricPostgresqlReplicationWalReplayLag(mbc.Metrics.PostgresqlReplicationWalReplayLag),
+		metricPostgresqlReplicationWalWriteLag:    newMetricPostgresqlReplicationWalWriteLag(mbc.Metrics.PostgresqlReplicationWalWriteLag),
+		metricPostgresqlReplicationWriteLsnDelay:  newMetricPostgresqlReplicationWriteLsnDelay(mbc.Metrics.PostgresqlReplicationWriteLsnDelay),
+		resourceAttributeIncludeFilter:            make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:            make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.DatabaseName.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["database_name"] = filter.CreateFilter(mbc.ResourceAttributes.DatabaseName.MetricsInclude)
@@ -217,6 +697,14 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
 	mb.metricPostgresqlConnectionCount.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationBackendXminAge.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationFlushLsnDelay.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationReplayLsnDelay.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSentLsnDelay.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationWalFlushLag.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationWalReplayLag.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationWalWriteLag.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationWriteLsnDelay.emit(ils.Metrics())
 
 	for _, op := range options {
 		op.apply(rm)
@@ -251,6 +739,46 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 // RecordPostgresqlConnectionCountDataPoint adds a data point to postgresql.connection.count metric.
 func (mb *MetricsBuilder) RecordPostgresqlConnectionCountDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricPostgresqlConnectionCount.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordPostgresqlReplicationBackendXminAgeDataPoint adds a data point to postgresql.replication.backend_xmin_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationBackendXminAgeDataPoint(ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationBackendXminAge.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationFlushLsnDelayDataPoint adds a data point to postgresql.replication.flush_lsn_delay metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationFlushLsnDelayDataPoint(ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationFlushLsnDelay.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationReplayLsnDelayDataPoint adds a data point to postgresql.replication.replay_lsn_delay metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationReplayLsnDelayDataPoint(ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationReplayLsnDelay.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSentLsnDelayDataPoint adds a data point to postgresql.replication.sent_lsn_delay metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSentLsnDelayDataPoint(ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationSentLsnDelay.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationWalFlushLagDataPoint adds a data point to postgresql.replication.wal_flush_lag metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationWalFlushLagDataPoint(ts pcommon.Timestamp, val float64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationWalFlushLag.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationWalReplayLagDataPoint adds a data point to postgresql.replication.wal_replay_lag metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationWalReplayLagDataPoint(ts pcommon.Timestamp, val float64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationWalReplayLag.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationWalWriteLagDataPoint adds a data point to postgresql.replication.wal_write_lag metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationWalWriteLagDataPoint(ts pcommon.Timestamp, val float64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationWalWriteLag.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationWriteLsnDelayDataPoint adds a data point to postgresql.replication.write_lsn_delay metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationWriteLsnDelayDataPoint(ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
+	mb.metricPostgresqlReplicationWriteLsnDelay.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,

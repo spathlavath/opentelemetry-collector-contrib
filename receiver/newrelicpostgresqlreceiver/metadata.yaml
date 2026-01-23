@@ -31,6 +31,20 @@ resource_attributes:
     type: string
     enabled: true
 
+attributes:
+  application_name:
+    description: Name of the replication application
+    type: string
+  client_address:
+    description: IP address of the standby server
+    type: string
+  replication_state:
+    description: State of the replication connection (streaming, catchup, etc.)
+    type: string
+  sync_state:
+    description: Synchronous state of the standby (async, sync, quorum, potential)
+    type: string
+
 metrics:
   postgresql.connection.count:
     description: Number of active connections to the PostgreSQL database
@@ -42,6 +56,86 @@ metrics:
     stability:
       level: alpha
     unit: "{connections}"
+
+  postgresql.replication.backend_xmin_age:
+    description: Age of the oldest transaction on the standby server that is holding back vacuum
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication.flush_lsn_delay:
+    description: Number of bytes of WAL flushed but not yet applied on standby
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication.replay_lsn_delay:
+    description: Number of bytes of WAL not yet replayed on standby (total replication lag in bytes)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication.sent_lsn_delay:
+    description: Number of bytes of WAL sent but not yet written to disk on standby
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication.wal_flush_lag:
+    description: Time elapsed between WAL flush on primary and confirmation from standby (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication.wal_replay_lag:
+    description: Time elapsed between WAL replay on primary and confirmation from standby (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication.wal_write_lag:
+    description: Time elapsed between WAL write on primary and confirmation from standby (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication.write_lsn_delay:
+    description: Number of bytes of WAL written but not yet flushed on standby
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
 
 tests:
   config:

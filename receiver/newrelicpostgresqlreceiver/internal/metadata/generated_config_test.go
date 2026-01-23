@@ -27,7 +27,15 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
-					PostgresqlConnectionCount: MetricConfig{Enabled: true},
+					PostgresqlConnectionCount:           MetricConfig{Enabled: true},
+					PostgresqlReplicationBackendXminAge: MetricConfig{Enabled: true},
+					PostgresqlReplicationFlushLsnDelay:  MetricConfig{Enabled: true},
+					PostgresqlReplicationReplayLsnDelay: MetricConfig{Enabled: true},
+					PostgresqlReplicationSentLsnDelay:   MetricConfig{Enabled: true},
+					PostgresqlReplicationWalFlushLag:    MetricConfig{Enabled: true},
+					PostgresqlReplicationWalReplayLag:   MetricConfig{Enabled: true},
+					PostgresqlReplicationWalWriteLag:    MetricConfig{Enabled: true},
+					PostgresqlReplicationWriteLsnDelay:  MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					DatabaseName:      ResourceAttributeConfig{Enabled: true},
@@ -42,7 +50,15 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
-					PostgresqlConnectionCount: MetricConfig{Enabled: false},
+					PostgresqlConnectionCount:           MetricConfig{Enabled: false},
+					PostgresqlReplicationBackendXminAge: MetricConfig{Enabled: false},
+					PostgresqlReplicationFlushLsnDelay:  MetricConfig{Enabled: false},
+					PostgresqlReplicationReplayLsnDelay: MetricConfig{Enabled: false},
+					PostgresqlReplicationSentLsnDelay:   MetricConfig{Enabled: false},
+					PostgresqlReplicationWalFlushLag:    MetricConfig{Enabled: false},
+					PostgresqlReplicationWalReplayLag:   MetricConfig{Enabled: false},
+					PostgresqlReplicationWalWriteLag:    MetricConfig{Enabled: false},
+					PostgresqlReplicationWriteLsnDelay:  MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					DatabaseName:      ResourceAttributeConfig{Enabled: false},

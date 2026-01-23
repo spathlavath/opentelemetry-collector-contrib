@@ -20,6 +20,142 @@ Number of active connections to the PostgreSQL database
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | {connections} | Sum | Int | Cumulative | false | Alpha |
 
+### postgresql.replication.backend_xmin_age
+
+Age of the oldest transaction on the standby server that is holding back vacuum
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.flush_lsn_delay
+
+Number of bytes of WAL flushed but not yet applied on standby
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.replay_lsn_delay
+
+Number of bytes of WAL not yet replayed on standby (total replication lag in bytes)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.sent_lsn_delay
+
+Number of bytes of WAL sent but not yet written to disk on standby
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.wal_flush_lag
+
+Time elapsed between WAL flush on primary and confirmation from standby (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.wal_replay_lag
+
+Time elapsed between WAL replay on primary and confirmation from standby (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.wal_write_lag
+
+Time elapsed between WAL write on primary and confirmation from standby (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.write_lsn_delay
+
+Number of bytes of WAL written but not yet flushed on standby
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
 ## Resource Attributes
 
 | Name | Description | Values | Enabled |

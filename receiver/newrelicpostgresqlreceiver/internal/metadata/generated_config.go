@@ -28,12 +28,44 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
-	PostgresqlConnectionCount MetricConfig `mapstructure:"postgresql.connection.count"`
+	PostgresqlConnectionCount           MetricConfig `mapstructure:"postgresql.connection.count"`
+	PostgresqlReplicationBackendXminAge MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
+	PostgresqlReplicationFlushLsnDelay  MetricConfig `mapstructure:"postgresql.replication.flush_lsn_delay"`
+	PostgresqlReplicationReplayLsnDelay MetricConfig `mapstructure:"postgresql.replication.replay_lsn_delay"`
+	PostgresqlReplicationSentLsnDelay   MetricConfig `mapstructure:"postgresql.replication.sent_lsn_delay"`
+	PostgresqlReplicationWalFlushLag    MetricConfig `mapstructure:"postgresql.replication.wal_flush_lag"`
+	PostgresqlReplicationWalReplayLag   MetricConfig `mapstructure:"postgresql.replication.wal_replay_lag"`
+	PostgresqlReplicationWalWriteLag    MetricConfig `mapstructure:"postgresql.replication.wal_write_lag"`
+	PostgresqlReplicationWriteLsnDelay  MetricConfig `mapstructure:"postgresql.replication.write_lsn_delay"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
 		PostgresqlConnectionCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationBackendXminAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationFlushLsnDelay: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationReplayLsnDelay: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSentLsnDelay: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationWalFlushLag: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationWalReplayLag: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationWalWriteLag: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationWriteLsnDelay: MetricConfig{
 			Enabled: true,
 		},
 	}

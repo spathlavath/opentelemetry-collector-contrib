@@ -3,6 +3,22 @@ all_set:
   metrics:
     postgresql.connection.count:
       enabled: true
+    postgresql.replication.backend_xmin_age:
+      enabled: true
+    postgresql.replication.flush_lsn_delay:
+      enabled: true
+    postgresql.replication.replay_lsn_delay:
+      enabled: true
+    postgresql.replication.sent_lsn_delay:
+      enabled: true
+    postgresql.replication.wal_flush_lag:
+      enabled: true
+    postgresql.replication.wal_replay_lag:
+      enabled: true
+    postgresql.replication.wal_write_lag:
+      enabled: true
+    postgresql.replication.write_lsn_delay:
+      enabled: true
   resource_attributes:
     database_name:
       enabled: true
@@ -17,6 +33,22 @@ all_set:
 none_set:
   metrics:
     postgresql.connection.count:
+      enabled: false
+    postgresql.replication.backend_xmin_age:
+      enabled: false
+    postgresql.replication.flush_lsn_delay:
+      enabled: false
+    postgresql.replication.replay_lsn_delay:
+      enabled: false
+    postgresql.replication.sent_lsn_delay:
+      enabled: false
+    postgresql.replication.wal_flush_lag:
+      enabled: false
+    postgresql.replication.wal_replay_lag:
+      enabled: false
+    postgresql.replication.wal_write_lag:
+      enabled: false
+    postgresql.replication.write_lsn_delay:
       enabled: false
   resource_attributes:
     database_name:
