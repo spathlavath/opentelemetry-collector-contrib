@@ -5,7 +5,7 @@ package scrapers
 
 import (
 	"context"
-	"database/sql"
+	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
@@ -17,10 +17,12 @@ import (
 
 // ReplicationScraper scrapes replication metrics from pg_stat_replication
 type ReplicationScraper struct {
-	client  client.PostgreSQLClient
-	mb      *metadata.MetricsBuilder
-	logger  *zap.Logger
-	version int // PostgreSQL version number
+	client       client.PostgreSQLClient
+	mb           *metadata.MetricsBuilder
+	logger       *zap.Logger
+	instanceName string
+	mbConfig     metadata.MetricsBuilderConfig
+	version      int // PostgreSQL version number
 }
 
 // NewReplicationScraper creates a new ReplicationScraper
@@ -28,18 +30,24 @@ func NewReplicationScraper(
 	client client.PostgreSQLClient,
 	mb *metadata.MetricsBuilder,
 	logger *zap.Logger,
+	instanceName string,
+	mbConfig metadata.MetricsBuilderConfig,
 	version int,
 ) *ReplicationScraper {
 	return &ReplicationScraper{
-		client:  client,
-		mb:      mb,
-		logger:  logger,
-		version: version,
+		client:       client,
+		mb:           mb,
+		logger:       logger,
+		instanceName: instanceName,
+		mbConfig:     mbConfig,
+		version:      version,
 	}
 }
 
 // ScrapeReplicationMetrics scrapes all replication metrics from pg_stat_replication
-func (s *ReplicationScraper) ScrapeReplicationMetrics(ctx context.Context, now pcommon.Timestamp) []error {
+func (s *ReplicationScraper) ScrapeReplicationMetrics(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
 	// Replication metrics available in PostgreSQL 9.6+
 	// Version-specific features:
 	// - PostgreSQL 9.6: LSN delays only (no lag times)
@@ -54,7 +62,7 @@ func (s *ReplicationScraper) ScrapeReplicationMetrics(ctx context.Context, now p
 
 	metrics, err := s.client.QueryReplicationMetrics(ctx, s.version)
 	if err != nil {
-		s.logger.Warn("Failed to query replication metrics", zap.Error(err))
+		s.logger.Error("Failed to query replication metrics", zap.Error(err))
 		return []error{err}
 	}
 
@@ -68,112 +76,31 @@ func (s *ReplicationScraper) ScrapeReplicationMetrics(ctx context.Context, now p
 		s.recordMetricsForReplica(now, metric)
 	}
 
+	s.logger.Debug("Replication metrics scrape completed",
+		zap.Int("replicas", len(metrics)))
+
 	return nil
 }
 
 // recordMetricsForReplica records replication metrics for a single standby server
 func (s *ReplicationScraper) recordMetricsForReplica(now pcommon.Timestamp, metric models.PgStatReplicationMetric) {
 	// Get string values for attributes
-	applicationName := getStringValue(metric.ApplicationName)
-	state := getStringValue(metric.State)
-	syncState := getStringValue(metric.SyncState)
-	clientAddr := getStringValue(metric.ClientAddr)
+	applicationName := getString(metric.ApplicationName)
+	state := getString(metric.State)
+	syncState := getString(metric.SyncState)
+	clientAddr := getString(metric.ClientAddr)
 
-	// Record LSN delay metrics (bytes)
-	if metric.BackendXminAge.Valid {
-		s.mb.RecordPostgresqlReplicationBackendXminAgeDataPoint(
-			now,
-			metric.BackendXminAge.Int64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
+	// Record LSN delay metrics (bytes) - available in PostgreSQL 9.6+
+	// Using helper functions to extract values (consistent with other scrapers)
+	s.mb.RecordPostgresqlReplicationBackendXminAgeDataPoint(now, getInt64(metric.BackendXminAge), applicationName, clientAddr, state, syncState)
+	s.mb.RecordPostgresqlReplicationSentLsnDelayDataPoint(now, getInt64(metric.SentLsnDelay), applicationName, clientAddr, state, syncState)
+	s.mb.RecordPostgresqlReplicationWriteLsnDelayDataPoint(now, getInt64(metric.WriteLsnDelay), applicationName, clientAddr, state, syncState)
+	s.mb.RecordPostgresqlReplicationFlushLsnDelayDataPoint(now, getInt64(metric.FlushLsnDelay), applicationName, clientAddr, state, syncState)
+	s.mb.RecordPostgresqlReplicationReplayLsnDelayDataPoint(now, getInt64(metric.ReplayLsnDelay), applicationName, clientAddr, state, syncState)
 
-	if metric.SentLsnDelay.Valid {
-		s.mb.RecordPostgresqlReplicationSentLsnDelayDataPoint(
-			now,
-			metric.SentLsnDelay.Int64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
-
-	if metric.WriteLsnDelay.Valid {
-		s.mb.RecordPostgresqlReplicationWriteLsnDelayDataPoint(
-			now,
-			metric.WriteLsnDelay.Int64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
-
-	if metric.FlushLsnDelay.Valid {
-		s.mb.RecordPostgresqlReplicationFlushLsnDelayDataPoint(
-			now,
-			metric.FlushLsnDelay.Int64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
-
-	if metric.ReplayLsnDelay.Valid {
-		s.mb.RecordPostgresqlReplicationReplayLsnDelayDataPoint(
-			now,
-			metric.ReplayLsnDelay.Int64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
-
-	// Record WAL lag time metrics (seconds) - PostgreSQL 10+
-	if metric.WriteLag.Valid {
-		s.mb.RecordPostgresqlReplicationWalWriteLagDataPoint(
-			now,
-			metric.WriteLag.Float64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
-
-	if metric.FlushLag.Valid {
-		s.mb.RecordPostgresqlReplicationWalFlushLagDataPoint(
-			now,
-			metric.FlushLag.Float64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
-
-	if metric.ReplayLag.Valid {
-		s.mb.RecordPostgresqlReplicationWalReplayLagDataPoint(
-			now,
-			metric.ReplayLag.Float64,
-			applicationName,
-			clientAddr,
-			state,
-			syncState,
-		)
-	}
-}
-
-// getStringValue safely extracts string from sql.NullString
-func getStringValue(ns sql.NullString) string {
-	if ns.Valid {
-		return ns.String
-	}
-	return ""
+	// Record WAL lag time metrics (seconds) - available in PostgreSQL 10+ only
+	// For PostgreSQL 9.6, these will be NULL and getFloat64 will return 0.0
+	s.mb.RecordPostgresqlReplicationWalWriteLagDataPoint(now, getFloat64(metric.WriteLag), applicationName, clientAddr, state, syncState)
+	s.mb.RecordPostgresqlReplicationWalFlushLagDataPoint(now, getFloat64(metric.FlushLag), applicationName, clientAddr, state, syncState)
+	s.mb.RecordPostgresqlReplicationWalReplayLagDataPoint(now, getFloat64(metric.ReplayLag), applicationName, clientAddr, state, syncState)
 }

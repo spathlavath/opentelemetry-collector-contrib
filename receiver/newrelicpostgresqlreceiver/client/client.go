@@ -9,18 +9,25 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/models"
 )
 
-// PostgreSQLClient defines the interface for interacting with PostgreSQL
+// PostgreSQLClient defines the interface for PostgreSQL database operations.
+// This abstraction allows for easy testing by injecting mock implementations.
 type PostgreSQLClient interface {
-	// Ping verifies the database connection is alive
+	// Connection management
+	Close() error
 	Ping(ctx context.Context) error
 
-	// GetVersion returns the PostgreSQL server version as an integer
-	// Format: Major * 10000 + Minor * 100 + Patch
-	// Example: PostgreSQL 15.2 returns 150002
+	// Version detection
 	GetVersion(ctx context.Context) (int, error)
 
-	// Close closes the database connection
-	Close() error
+	// Database metrics from pg_stat_database
+	// The supportsPG12 parameter enables checksum metrics for PostgreSQL 12+
+	QueryDatabaseMetrics(ctx context.Context, supportsPG12 bool) ([]models.PgStatDatabaseMetric, error)
+
+	// Session metrics from pg_stat_database (PG14+)
+	QuerySessionMetrics(ctx context.Context) ([]models.PgStatDatabaseSessionMetric, error)
+
+	// Conflict metrics from pg_stat_database_conflicts (PG9.6+)
+	QueryConflictMetrics(ctx context.Context) ([]models.PgStatDatabaseConflictsMetric, error)
 
 	// QueryReplicationMetrics retrieves replication statistics from pg_stat_replication
 	// Uses version-specific queries:

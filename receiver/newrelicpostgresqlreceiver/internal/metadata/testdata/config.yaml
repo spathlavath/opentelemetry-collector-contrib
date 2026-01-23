@@ -1,7 +1,39 @@
 default:
 all_set:
   metrics:
-    postgresql.connection.count:
+    postgresql.before_xid_wraparound:
+      enabled: true
+    postgresql.blk_read_time:
+      enabled: true
+    postgresql.blk_write_time:
+      enabled: true
+    postgresql.buffer_hit:
+      enabled: true
+    postgresql.checksums.enabled:
+      enabled: true
+    postgresql.checksums.failures:
+      enabled: true
+    postgresql.commits:
+      enabled: true
+    postgresql.conflicts:
+      enabled: true
+    postgresql.conflicts.bufferpin:
+      enabled: true
+    postgresql.conflicts.deadlock:
+      enabled: true
+    postgresql.conflicts.lock:
+      enabled: true
+    postgresql.conflicts.snapshot:
+      enabled: true
+    postgresql.conflicts.tablespace:
+      enabled: true
+    postgresql.connections:
+      enabled: true
+    postgresql.database_size:
+      enabled: true
+    postgresql.deadlocks:
+      enabled: true
+    postgresql.disk_read:
       enabled: true
     postgresql.replication.backend_xmin_age:
       enabled: true
@@ -19,10 +51,42 @@ all_set:
       enabled: true
     postgresql.replication.write_lsn_delay:
       enabled: true
+    postgresql.rollbacks:
+      enabled: true
+    postgresql.rows_deleted:
+      enabled: true
+    postgresql.rows_fetched:
+      enabled: true
+    postgresql.rows_inserted:
+      enabled: true
+    postgresql.rows_returned:
+      enabled: true
+    postgresql.rows_updated:
+      enabled: true
+    postgresql.sessions.abandoned:
+      enabled: true
+    postgresql.sessions.active_time:
+      enabled: true
+    postgresql.sessions.count:
+      enabled: true
+    postgresql.sessions.fatal:
+      enabled: true
+    postgresql.sessions.idle_in_transaction_time:
+      enabled: true
+    postgresql.sessions.killed:
+      enabled: true
+    postgresql.sessions.session_time:
+      enabled: true
+    postgresql.temp_bytes:
+      enabled: true
+    postgresql.temp_files:
+      enabled: true
   resource_attributes:
     database_name:
       enabled: true
     db.system:
+      enabled: true
+    newrelicpostgresql.instance_name:
       enabled: true
     postgresql.version:
       enabled: true
@@ -32,7 +96,39 @@ all_set:
       enabled: true
 none_set:
   metrics:
-    postgresql.connection.count:
+    postgresql.before_xid_wraparound:
+      enabled: false
+    postgresql.blk_read_time:
+      enabled: false
+    postgresql.blk_write_time:
+      enabled: false
+    postgresql.buffer_hit:
+      enabled: false
+    postgresql.checksums.enabled:
+      enabled: false
+    postgresql.checksums.failures:
+      enabled: false
+    postgresql.commits:
+      enabled: false
+    postgresql.conflicts:
+      enabled: false
+    postgresql.conflicts.bufferpin:
+      enabled: false
+    postgresql.conflicts.deadlock:
+      enabled: false
+    postgresql.conflicts.lock:
+      enabled: false
+    postgresql.conflicts.snapshot:
+      enabled: false
+    postgresql.conflicts.tablespace:
+      enabled: false
+    postgresql.connections:
+      enabled: false
+    postgresql.database_size:
+      enabled: false
+    postgresql.deadlocks:
+      enabled: false
+    postgresql.disk_read:
       enabled: false
     postgresql.replication.backend_xmin_age:
       enabled: false
@@ -50,10 +146,42 @@ none_set:
       enabled: false
     postgresql.replication.write_lsn_delay:
       enabled: false
+    postgresql.rollbacks:
+      enabled: false
+    postgresql.rows_deleted:
+      enabled: false
+    postgresql.rows_fetched:
+      enabled: false
+    postgresql.rows_inserted:
+      enabled: false
+    postgresql.rows_returned:
+      enabled: false
+    postgresql.rows_updated:
+      enabled: false
+    postgresql.sessions.abandoned:
+      enabled: false
+    postgresql.sessions.active_time:
+      enabled: false
+    postgresql.sessions.count:
+      enabled: false
+    postgresql.sessions.fatal:
+      enabled: false
+    postgresql.sessions.idle_in_transaction_time:
+      enabled: false
+    postgresql.sessions.killed:
+      enabled: false
+    postgresql.sessions.session_time:
+      enabled: false
+    postgresql.temp_bytes:
+      enabled: false
+    postgresql.temp_files:
+      enabled: false
   resource_attributes:
     database_name:
       enabled: false
     db.system:
+      enabled: false
+    newrelicpostgresql.instance_name:
       enabled: false
     postgresql.version:
       enabled: false
@@ -68,6 +196,10 @@ filter_set_include:
       metrics_include:
         - regexp: ".*"
     db.system:
+      enabled: true
+      metrics_include:
+        - regexp: ".*"
+    newrelicpostgresql.instance_name:
       enabled: true
       metrics_include:
         - regexp: ".*"
@@ -93,6 +225,10 @@ filter_set_exclude:
       enabled: true
       metrics_exclude:
         - strict: "db.system-val"
+    newrelicpostgresql.instance_name:
+      enabled: true
+      metrics_exclude:
+        - strict: "newrelicpostgresql.instance_name-val"
     postgresql.version:
       enabled: true
       metrics_exclude:

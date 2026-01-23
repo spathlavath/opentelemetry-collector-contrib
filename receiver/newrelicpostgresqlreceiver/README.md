@@ -5,18 +5,29 @@ The New Relic PostgreSQL Receiver is an OpenTelemetry receiver that collects met
 ## Features
 
 ### Basic Capabilities
+
 - PostgreSQL database connection support
 - SSL/TLS connection encryption
 - Certificate-based authentication
 - Connection pooling configuration
 
 ### Environment Compatibility
-- PostgreSQL 10 and later versions
-- Amazon RDS for PostgreSQL
-- Amazon Aurora PostgreSQL
-- Azure Database for PostgreSQL
-- Google Cloud SQL for PostgreSQL
-- Self-hosted PostgreSQL instances
+
+**Supported PostgreSQL Versions:**
+
+- PostgreSQL 9.2 and later versions
+- All columns are supported in PostgreSQL 9.2+
+- Note: `blk_read_time` and `blk_write_time` metrics require `track_io_timing = on` (available since PostgreSQL 9.2)
+
+**Supported Environments:**
+
+- ✅ Amazon RDS for PostgreSQL
+- ✅ Amazon Aurora PostgreSQL
+- ✅ Azure Database for PostgreSQL
+- ✅ Google Cloud SQL for PostgreSQL
+- ✅ Self-hosted PostgreSQL instances
+
+All cloud providers fully support the `pg_stat_database` view and related functions used by this receiver.
 
 ## Configuration
 
@@ -39,22 +50,22 @@ receivers:
 receivers:
   newrelicpostgresqlreceiver:
     # Connection settings
-    hostname: "postgres-server.example.com"  # Required: PostgreSQL hostname
-    port: "5432"                             # Port number (default: 5432)
-    username: "monitor_user"                 # Required: PostgreSQL username
-    password: "secure_password"              # PostgreSQL password
-    database: "postgres"                     # Required: Database name to connect to
-    
+    hostname: "postgres-server.example.com" # Required: PostgreSQL hostname
+    port: "5432" # Port number (default: 5432)
+    username: "monitor_user" # Required: PostgreSQL username
+    password: "secure_password" # PostgreSQL password
+    database: "postgres" # Required: Database name to connect to
+
     # SSL Configuration
-    ssl_mode: "disable"                      # SSL mode: disable, require, verify-ca, verify-full
-    ssl_cert: "/path/to/client-cert.pem"    # Path to SSL client certificate
-    ssl_key: "/path/to/client-key.pem"      # Path to SSL client key
-    ssl_root_cert: "/path/to/ca-cert.pem"   # Path to SSL root certificate
-    ssl_password: ""                         # SSL certificate password (if encrypted)
-    
+    ssl_mode: "disable" # SSL mode: disable, require, verify-ca, verify-full
+    ssl_cert: "/path/to/client-cert.pem" # Path to SSL client certificate
+    ssl_key: "/path/to/client-key.pem" # Path to SSL client key
+    ssl_root_cert: "/path/to/ca-cert.pem" # Path to SSL root certificate
+    ssl_password: "" # SSL certificate password (if encrypted)
+
     # Collection settings
-    collection_interval: 15s                 # How often to collect metrics
-    timeout: 30s                            # Query timeout duration
+    collection_interval: 15s # How often to collect metrics
+    timeout: 30s # Query timeout duration
 ```
 
 ## Prerequisites

@@ -5,14 +5,6 @@ package queries
 
 // PostgreSQL replication metrics queries
 
-// Version Query
-const (
-	// VersionQuery returns the PostgreSQL server version as an integer
-	// Format: Major version * 10000 + Minor version * 100 + Patch version
-	// Example: PostgreSQL 14.5 returns 140005, PostgreSQL 15.2 returns 150002
-	VersionQuery = `SELECT current_setting('server_version_num')::int`
-)
-
 // Replication Statistics Queries
 const (
 	// PgStatReplicationMetricsPG96SQL returns replication statistics for PostgreSQL 9.6
