@@ -104,3 +104,52 @@ func (s *ReplicationScraper) recordMetricsForReplica(now pcommon.Timestamp, metr
 	s.mb.RecordPostgresqlReplicationWalFlushLagDataPoint(now, getFloat64(metric.FlushLag), applicationName, clientAddr, state, syncState)
 	s.mb.RecordPostgresqlReplicationWalReplayLagDataPoint(now, getFloat64(metric.ReplayLag), applicationName, clientAddr, state, syncState)
 }
+
+// ScrapeReplicationSlots scrapes all replication slot metrics from pg_replication_slots
+func (s *ReplicationScraper) ScrapeReplicationSlots(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// Replication slot metrics available in PostgreSQL 9.4+
+	const PG94Version = 90400 // PostgreSQL 9.4.0
+
+	if s.version < PG94Version {
+		s.logger.Debug("Skipping replication slot metrics (PostgreSQL 9.4+ required)",
+			zap.Int("version", s.version))
+		return nil
+	}
+
+	metrics, err := s.client.QueryReplicationSlots(ctx, s.version)
+	if err != nil {
+		s.logger.Error("Failed to query replication slot metrics", zap.Error(err))
+		return []error{err}
+	}
+
+	// No error if no replication slots (empty result set)
+	if len(metrics) == 0 {
+		s.logger.Debug("No replication slots found (server may not have slots configured)")
+		return nil
+	}
+
+	for _, metric := range metrics {
+		s.recordMetricsForSlot(now, metric)
+	}
+
+	s.logger.Debug("Replication slot metrics scrape completed",
+		zap.Int("slots", len(metrics)))
+
+	return nil
+}
+
+// recordMetricsForSlot records replication slot metrics for a single slot
+func (s *ReplicationScraper) recordMetricsForSlot(now pcommon.Timestamp, metric models.PgReplicationSlotMetric) {
+	// Get string values for attributes
+	slotName := getString(metric.SlotName)
+	slotType := getString(metric.SlotType)
+	plugin := getString(metric.Plugin)
+
+	// Record slot metrics using helper functions
+	s.mb.RecordPostgresqlReplicationSlotXminAgeDataPoint(now, getInt64(metric.XminAge), slotName, slotType, plugin)
+	s.mb.RecordPostgresqlReplicationSlotCatalogXminAgeDataPoint(now, getInt64(metric.CatalogXminAge), slotName, slotType, plugin)
+	s.mb.RecordPostgresqlReplicationSlotRestartDelayBytesDataPoint(now, getInt64(metric.RestartDelayBytes), slotName, slotType, plugin)
+	s.mb.RecordPostgresqlReplicationSlotConfirmedFlushDelayBytesDataPoint(now, getInt64(metric.ConfirmedFlushDelayBytes), slotName, slotType, plugin)
+}

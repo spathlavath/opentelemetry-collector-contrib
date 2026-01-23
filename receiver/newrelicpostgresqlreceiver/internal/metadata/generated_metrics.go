@@ -88,6 +88,18 @@ var MetricsInfo = metricsInfo{
 	PostgresqlReplicationWriteLsnDelay: metricInfo{
 		Name: "postgresql.replication.write_lsn_delay",
 	},
+	PostgresqlReplicationSlotCatalogXminAge: metricInfo{
+		Name: "postgresql.replication_slot.catalog_xmin_age",
+	},
+	PostgresqlReplicationSlotConfirmedFlushDelayBytes: metricInfo{
+		Name: "postgresql.replication_slot.confirmed_flush_delay_bytes",
+	},
+	PostgresqlReplicationSlotRestartDelayBytes: metricInfo{
+		Name: "postgresql.replication_slot.restart_delay_bytes",
+	},
+	PostgresqlReplicationSlotXminAge: metricInfo{
+		Name: "postgresql.replication_slot.xmin_age",
+	},
 	PostgresqlRollbacks: metricInfo{
 		Name: "postgresql.rollbacks",
 	},
@@ -136,46 +148,50 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
-	PostgresqlBeforeXidWraparound           metricInfo
-	PostgresqlBlkReadTime                   metricInfo
-	PostgresqlBlkWriteTime                  metricInfo
-	PostgresqlBufferHit                     metricInfo
-	PostgresqlChecksumsEnabled              metricInfo
-	PostgresqlChecksumsFailures             metricInfo
-	PostgresqlCommits                       metricInfo
-	PostgresqlConflicts                     metricInfo
-	PostgresqlConflictsBufferpin            metricInfo
-	PostgresqlConflictsDeadlock             metricInfo
-	PostgresqlConflictsLock                 metricInfo
-	PostgresqlConflictsSnapshot             metricInfo
-	PostgresqlConflictsTablespace           metricInfo
-	PostgresqlConnections                   metricInfo
-	PostgresqlDatabaseSize                  metricInfo
-	PostgresqlDeadlocks                     metricInfo
-	PostgresqlDiskRead                      metricInfo
-	PostgresqlReplicationBackendXminAge     metricInfo
-	PostgresqlReplicationFlushLsnDelay      metricInfo
-	PostgresqlReplicationReplayLsnDelay     metricInfo
-	PostgresqlReplicationSentLsnDelay       metricInfo
-	PostgresqlReplicationWalFlushLag        metricInfo
-	PostgresqlReplicationWalReplayLag       metricInfo
-	PostgresqlReplicationWalWriteLag        metricInfo
-	PostgresqlReplicationWriteLsnDelay      metricInfo
-	PostgresqlRollbacks                     metricInfo
-	PostgresqlRowsDeleted                   metricInfo
-	PostgresqlRowsFetched                   metricInfo
-	PostgresqlRowsInserted                  metricInfo
-	PostgresqlRowsReturned                  metricInfo
-	PostgresqlRowsUpdated                   metricInfo
-	PostgresqlSessionsAbandoned             metricInfo
-	PostgresqlSessionsActiveTime            metricInfo
-	PostgresqlSessionsCount                 metricInfo
-	PostgresqlSessionsFatal                 metricInfo
-	PostgresqlSessionsIdleInTransactionTime metricInfo
-	PostgresqlSessionsKilled                metricInfo
-	PostgresqlSessionsSessionTime           metricInfo
-	PostgresqlTempBytes                     metricInfo
-	PostgresqlTempFiles                     metricInfo
+	PostgresqlBeforeXidWraparound                     metricInfo
+	PostgresqlBlkReadTime                             metricInfo
+	PostgresqlBlkWriteTime                            metricInfo
+	PostgresqlBufferHit                               metricInfo
+	PostgresqlChecksumsEnabled                        metricInfo
+	PostgresqlChecksumsFailures                       metricInfo
+	PostgresqlCommits                                 metricInfo
+	PostgresqlConflicts                               metricInfo
+	PostgresqlConflictsBufferpin                      metricInfo
+	PostgresqlConflictsDeadlock                       metricInfo
+	PostgresqlConflictsLock                           metricInfo
+	PostgresqlConflictsSnapshot                       metricInfo
+	PostgresqlConflictsTablespace                     metricInfo
+	PostgresqlConnections                             metricInfo
+	PostgresqlDatabaseSize                            metricInfo
+	PostgresqlDeadlocks                               metricInfo
+	PostgresqlDiskRead                                metricInfo
+	PostgresqlReplicationBackendXminAge               metricInfo
+	PostgresqlReplicationFlushLsnDelay                metricInfo
+	PostgresqlReplicationReplayLsnDelay               metricInfo
+	PostgresqlReplicationSentLsnDelay                 metricInfo
+	PostgresqlReplicationWalFlushLag                  metricInfo
+	PostgresqlReplicationWalReplayLag                 metricInfo
+	PostgresqlReplicationWalWriteLag                  metricInfo
+	PostgresqlReplicationWriteLsnDelay                metricInfo
+	PostgresqlReplicationSlotCatalogXminAge           metricInfo
+	PostgresqlReplicationSlotConfirmedFlushDelayBytes metricInfo
+	PostgresqlReplicationSlotRestartDelayBytes        metricInfo
+	PostgresqlReplicationSlotXminAge                  metricInfo
+	PostgresqlRollbacks                               metricInfo
+	PostgresqlRowsDeleted                             metricInfo
+	PostgresqlRowsFetched                             metricInfo
+	PostgresqlRowsInserted                            metricInfo
+	PostgresqlRowsReturned                            metricInfo
+	PostgresqlRowsUpdated                             metricInfo
+	PostgresqlSessionsAbandoned                       metricInfo
+	PostgresqlSessionsActiveTime                      metricInfo
+	PostgresqlSessionsCount                           metricInfo
+	PostgresqlSessionsFatal                           metricInfo
+	PostgresqlSessionsIdleInTransactionTime           metricInfo
+	PostgresqlSessionsKilled                          metricInfo
+	PostgresqlSessionsSessionTime                     metricInfo
+	PostgresqlTempBytes                               metricInfo
+	PostgresqlTempFiles                               metricInfo
 }
 
 type metricInfo struct {
@@ -1522,6 +1538,218 @@ func newMetricPostgresqlReplicationWriteLsnDelay(cfg MetricConfig) metricPostgre
 	return m
 }
 
+type metricPostgresqlReplicationSlotCatalogXminAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.catalog_xmin_age metric with initial data.
+func (m *metricPostgresqlReplicationSlotCatalogXminAge) init() {
+	m.data.SetName("postgresql.replication_slot.catalog_xmin_age")
+	m.data.SetDescription("Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotCatalogXminAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("plugin", pluginAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotCatalogXminAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotCatalogXminAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotCatalogXminAge(cfg MetricConfig) metricPostgresqlReplicationSlotCatalogXminAge {
+	m := metricPostgresqlReplicationSlotCatalogXminAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotConfirmedFlushDelayBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.confirmed_flush_delay_bytes metric with initial data.
+func (m *metricPostgresqlReplicationSlotConfirmedFlushDelayBytes) init() {
+	m.data.SetName("postgresql.replication_slot.confirmed_flush_delay_bytes")
+	m.data.SetDescription("Number of bytes between current WAL position and confirmed_flush_lsn (logical slots only, PostgreSQL 9.4+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotConfirmedFlushDelayBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("plugin", pluginAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotConfirmedFlushDelayBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotConfirmedFlushDelayBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotConfirmedFlushDelayBytes(cfg MetricConfig) metricPostgresqlReplicationSlotConfirmedFlushDelayBytes {
+	m := metricPostgresqlReplicationSlotConfirmedFlushDelayBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotRestartDelayBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.restart_delay_bytes metric with initial data.
+func (m *metricPostgresqlReplicationSlotRestartDelayBytes) init() {
+	m.data.SetName("postgresql.replication_slot.restart_delay_bytes")
+	m.data.SetDescription("Number of bytes of WAL between current position and slot's restart_lsn (PostgreSQL 9.4+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotRestartDelayBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("plugin", pluginAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotRestartDelayBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotRestartDelayBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotRestartDelayBytes(cfg MetricConfig) metricPostgresqlReplicationSlotRestartDelayBytes {
+	m := metricPostgresqlReplicationSlotRestartDelayBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotXminAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.xmin_age metric with initial data.
+func (m *metricPostgresqlReplicationSlotXminAge) init() {
+	m.data.SetName("postgresql.replication_slot.xmin_age")
+	m.data.SetDescription("Age of oldest transaction that this replication slot needs to keep (PostgreSQL 9.4+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotXminAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("plugin", pluginAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotXminAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotXminAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotXminAge(cfg MetricConfig) metricPostgresqlReplicationSlotXminAge {
+	m := metricPostgresqlReplicationSlotXminAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlRollbacks struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2329,53 +2557,57 @@ func newMetricPostgresqlTempFiles(cfg MetricConfig) metricPostgresqlTempFiles {
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                                        MetricsBuilderConfig // config of the metrics builder.
-	startTime                                     pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                               int                  // maximum observed number of metrics per resource.
-	metricsBuffer                                 pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                                     component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter                map[string]filter.Filter
-	resourceAttributeExcludeFilter                map[string]filter.Filter
-	metricPostgresqlBeforeXidWraparound           metricPostgresqlBeforeXidWraparound
-	metricPostgresqlBlkReadTime                   metricPostgresqlBlkReadTime
-	metricPostgresqlBlkWriteTime                  metricPostgresqlBlkWriteTime
-	metricPostgresqlBufferHit                     metricPostgresqlBufferHit
-	metricPostgresqlChecksumsEnabled              metricPostgresqlChecksumsEnabled
-	metricPostgresqlChecksumsFailures             metricPostgresqlChecksumsFailures
-	metricPostgresqlCommits                       metricPostgresqlCommits
-	metricPostgresqlConflicts                     metricPostgresqlConflicts
-	metricPostgresqlConflictsBufferpin            metricPostgresqlConflictsBufferpin
-	metricPostgresqlConflictsDeadlock             metricPostgresqlConflictsDeadlock
-	metricPostgresqlConflictsLock                 metricPostgresqlConflictsLock
-	metricPostgresqlConflictsSnapshot             metricPostgresqlConflictsSnapshot
-	metricPostgresqlConflictsTablespace           metricPostgresqlConflictsTablespace
-	metricPostgresqlConnections                   metricPostgresqlConnections
-	metricPostgresqlDatabaseSize                  metricPostgresqlDatabaseSize
-	metricPostgresqlDeadlocks                     metricPostgresqlDeadlocks
-	metricPostgresqlDiskRead                      metricPostgresqlDiskRead
-	metricPostgresqlReplicationBackendXminAge     metricPostgresqlReplicationBackendXminAge
-	metricPostgresqlReplicationFlushLsnDelay      metricPostgresqlReplicationFlushLsnDelay
-	metricPostgresqlReplicationReplayLsnDelay     metricPostgresqlReplicationReplayLsnDelay
-	metricPostgresqlReplicationSentLsnDelay       metricPostgresqlReplicationSentLsnDelay
-	metricPostgresqlReplicationWalFlushLag        metricPostgresqlReplicationWalFlushLag
-	metricPostgresqlReplicationWalReplayLag       metricPostgresqlReplicationWalReplayLag
-	metricPostgresqlReplicationWalWriteLag        metricPostgresqlReplicationWalWriteLag
-	metricPostgresqlReplicationWriteLsnDelay      metricPostgresqlReplicationWriteLsnDelay
-	metricPostgresqlRollbacks                     metricPostgresqlRollbacks
-	metricPostgresqlRowsDeleted                   metricPostgresqlRowsDeleted
-	metricPostgresqlRowsFetched                   metricPostgresqlRowsFetched
-	metricPostgresqlRowsInserted                  metricPostgresqlRowsInserted
-	metricPostgresqlRowsReturned                  metricPostgresqlRowsReturned
-	metricPostgresqlRowsUpdated                   metricPostgresqlRowsUpdated
-	metricPostgresqlSessionsAbandoned             metricPostgresqlSessionsAbandoned
-	metricPostgresqlSessionsActiveTime            metricPostgresqlSessionsActiveTime
-	metricPostgresqlSessionsCount                 metricPostgresqlSessionsCount
-	metricPostgresqlSessionsFatal                 metricPostgresqlSessionsFatal
-	metricPostgresqlSessionsIdleInTransactionTime metricPostgresqlSessionsIdleInTransactionTime
-	metricPostgresqlSessionsKilled                metricPostgresqlSessionsKilled
-	metricPostgresqlSessionsSessionTime           metricPostgresqlSessionsSessionTime
-	metricPostgresqlTempBytes                     metricPostgresqlTempBytes
-	metricPostgresqlTempFiles                     metricPostgresqlTempFiles
+	config                                                  MetricsBuilderConfig // config of the metrics builder.
+	startTime                                               pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                                         int                  // maximum observed number of metrics per resource.
+	metricsBuffer                                           pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                                               component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter                          map[string]filter.Filter
+	resourceAttributeExcludeFilter                          map[string]filter.Filter
+	metricPostgresqlBeforeXidWraparound                     metricPostgresqlBeforeXidWraparound
+	metricPostgresqlBlkReadTime                             metricPostgresqlBlkReadTime
+	metricPostgresqlBlkWriteTime                            metricPostgresqlBlkWriteTime
+	metricPostgresqlBufferHit                               metricPostgresqlBufferHit
+	metricPostgresqlChecksumsEnabled                        metricPostgresqlChecksumsEnabled
+	metricPostgresqlChecksumsFailures                       metricPostgresqlChecksumsFailures
+	metricPostgresqlCommits                                 metricPostgresqlCommits
+	metricPostgresqlConflicts                               metricPostgresqlConflicts
+	metricPostgresqlConflictsBufferpin                      metricPostgresqlConflictsBufferpin
+	metricPostgresqlConflictsDeadlock                       metricPostgresqlConflictsDeadlock
+	metricPostgresqlConflictsLock                           metricPostgresqlConflictsLock
+	metricPostgresqlConflictsSnapshot                       metricPostgresqlConflictsSnapshot
+	metricPostgresqlConflictsTablespace                     metricPostgresqlConflictsTablespace
+	metricPostgresqlConnections                             metricPostgresqlConnections
+	metricPostgresqlDatabaseSize                            metricPostgresqlDatabaseSize
+	metricPostgresqlDeadlocks                               metricPostgresqlDeadlocks
+	metricPostgresqlDiskRead                                metricPostgresqlDiskRead
+	metricPostgresqlReplicationBackendXminAge               metricPostgresqlReplicationBackendXminAge
+	metricPostgresqlReplicationFlushLsnDelay                metricPostgresqlReplicationFlushLsnDelay
+	metricPostgresqlReplicationReplayLsnDelay               metricPostgresqlReplicationReplayLsnDelay
+	metricPostgresqlReplicationSentLsnDelay                 metricPostgresqlReplicationSentLsnDelay
+	metricPostgresqlReplicationWalFlushLag                  metricPostgresqlReplicationWalFlushLag
+	metricPostgresqlReplicationWalReplayLag                 metricPostgresqlReplicationWalReplayLag
+	metricPostgresqlReplicationWalWriteLag                  metricPostgresqlReplicationWalWriteLag
+	metricPostgresqlReplicationWriteLsnDelay                metricPostgresqlReplicationWriteLsnDelay
+	metricPostgresqlReplicationSlotCatalogXminAge           metricPostgresqlReplicationSlotCatalogXminAge
+	metricPostgresqlReplicationSlotConfirmedFlushDelayBytes metricPostgresqlReplicationSlotConfirmedFlushDelayBytes
+	metricPostgresqlReplicationSlotRestartDelayBytes        metricPostgresqlReplicationSlotRestartDelayBytes
+	metricPostgresqlReplicationSlotXminAge                  metricPostgresqlReplicationSlotXminAge
+	metricPostgresqlRollbacks                               metricPostgresqlRollbacks
+	metricPostgresqlRowsDeleted                             metricPostgresqlRowsDeleted
+	metricPostgresqlRowsFetched                             metricPostgresqlRowsFetched
+	metricPostgresqlRowsInserted                            metricPostgresqlRowsInserted
+	metricPostgresqlRowsReturned                            metricPostgresqlRowsReturned
+	metricPostgresqlRowsUpdated                             metricPostgresqlRowsUpdated
+	metricPostgresqlSessionsAbandoned                       metricPostgresqlSessionsAbandoned
+	metricPostgresqlSessionsActiveTime                      metricPostgresqlSessionsActiveTime
+	metricPostgresqlSessionsCount                           metricPostgresqlSessionsCount
+	metricPostgresqlSessionsFatal                           metricPostgresqlSessionsFatal
+	metricPostgresqlSessionsIdleInTransactionTime           metricPostgresqlSessionsIdleInTransactionTime
+	metricPostgresqlSessionsKilled                          metricPostgresqlSessionsKilled
+	metricPostgresqlSessionsSessionTime                     metricPostgresqlSessionsSessionTime
+	metricPostgresqlTempBytes                               metricPostgresqlTempBytes
+	metricPostgresqlTempFiles                               metricPostgresqlTempFiles
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -2397,52 +2629,56 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                        mbc,
-		startTime:                                     pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                                 pmetric.NewMetrics(),
-		buildInfo:                                     settings.BuildInfo,
-		metricPostgresqlBeforeXidWraparound:           newMetricPostgresqlBeforeXidWraparound(mbc.Metrics.PostgresqlBeforeXidWraparound),
-		metricPostgresqlBlkReadTime:                   newMetricPostgresqlBlkReadTime(mbc.Metrics.PostgresqlBlkReadTime),
-		metricPostgresqlBlkWriteTime:                  newMetricPostgresqlBlkWriteTime(mbc.Metrics.PostgresqlBlkWriteTime),
-		metricPostgresqlBufferHit:                     newMetricPostgresqlBufferHit(mbc.Metrics.PostgresqlBufferHit),
-		metricPostgresqlChecksumsEnabled:              newMetricPostgresqlChecksumsEnabled(mbc.Metrics.PostgresqlChecksumsEnabled),
-		metricPostgresqlChecksumsFailures:             newMetricPostgresqlChecksumsFailures(mbc.Metrics.PostgresqlChecksumsFailures),
-		metricPostgresqlCommits:                       newMetricPostgresqlCommits(mbc.Metrics.PostgresqlCommits),
-		metricPostgresqlConflicts:                     newMetricPostgresqlConflicts(mbc.Metrics.PostgresqlConflicts),
-		metricPostgresqlConflictsBufferpin:            newMetricPostgresqlConflictsBufferpin(mbc.Metrics.PostgresqlConflictsBufferpin),
-		metricPostgresqlConflictsDeadlock:             newMetricPostgresqlConflictsDeadlock(mbc.Metrics.PostgresqlConflictsDeadlock),
-		metricPostgresqlConflictsLock:                 newMetricPostgresqlConflictsLock(mbc.Metrics.PostgresqlConflictsLock),
-		metricPostgresqlConflictsSnapshot:             newMetricPostgresqlConflictsSnapshot(mbc.Metrics.PostgresqlConflictsSnapshot),
-		metricPostgresqlConflictsTablespace:           newMetricPostgresqlConflictsTablespace(mbc.Metrics.PostgresqlConflictsTablespace),
-		metricPostgresqlConnections:                   newMetricPostgresqlConnections(mbc.Metrics.PostgresqlConnections),
-		metricPostgresqlDatabaseSize:                  newMetricPostgresqlDatabaseSize(mbc.Metrics.PostgresqlDatabaseSize),
-		metricPostgresqlDeadlocks:                     newMetricPostgresqlDeadlocks(mbc.Metrics.PostgresqlDeadlocks),
-		metricPostgresqlDiskRead:                      newMetricPostgresqlDiskRead(mbc.Metrics.PostgresqlDiskRead),
-		metricPostgresqlReplicationBackendXminAge:     newMetricPostgresqlReplicationBackendXminAge(mbc.Metrics.PostgresqlReplicationBackendXminAge),
-		metricPostgresqlReplicationFlushLsnDelay:      newMetricPostgresqlReplicationFlushLsnDelay(mbc.Metrics.PostgresqlReplicationFlushLsnDelay),
-		metricPostgresqlReplicationReplayLsnDelay:     newMetricPostgresqlReplicationReplayLsnDelay(mbc.Metrics.PostgresqlReplicationReplayLsnDelay),
-		metricPostgresqlReplicationSentLsnDelay:       newMetricPostgresqlReplicationSentLsnDelay(mbc.Metrics.PostgresqlReplicationSentLsnDelay),
-		metricPostgresqlReplicationWalFlushLag:        newMetricPostgresqlReplicationWalFlushLag(mbc.Metrics.PostgresqlReplicationWalFlushLag),
-		metricPostgresqlReplicationWalReplayLag:       newMetricPostgresqlReplicationWalReplayLag(mbc.Metrics.PostgresqlReplicationWalReplayLag),
-		metricPostgresqlReplicationWalWriteLag:        newMetricPostgresqlReplicationWalWriteLag(mbc.Metrics.PostgresqlReplicationWalWriteLag),
-		metricPostgresqlReplicationWriteLsnDelay:      newMetricPostgresqlReplicationWriteLsnDelay(mbc.Metrics.PostgresqlReplicationWriteLsnDelay),
-		metricPostgresqlRollbacks:                     newMetricPostgresqlRollbacks(mbc.Metrics.PostgresqlRollbacks),
-		metricPostgresqlRowsDeleted:                   newMetricPostgresqlRowsDeleted(mbc.Metrics.PostgresqlRowsDeleted),
-		metricPostgresqlRowsFetched:                   newMetricPostgresqlRowsFetched(mbc.Metrics.PostgresqlRowsFetched),
-		metricPostgresqlRowsInserted:                  newMetricPostgresqlRowsInserted(mbc.Metrics.PostgresqlRowsInserted),
-		metricPostgresqlRowsReturned:                  newMetricPostgresqlRowsReturned(mbc.Metrics.PostgresqlRowsReturned),
-		metricPostgresqlRowsUpdated:                   newMetricPostgresqlRowsUpdated(mbc.Metrics.PostgresqlRowsUpdated),
-		metricPostgresqlSessionsAbandoned:             newMetricPostgresqlSessionsAbandoned(mbc.Metrics.PostgresqlSessionsAbandoned),
-		metricPostgresqlSessionsActiveTime:            newMetricPostgresqlSessionsActiveTime(mbc.Metrics.PostgresqlSessionsActiveTime),
-		metricPostgresqlSessionsCount:                 newMetricPostgresqlSessionsCount(mbc.Metrics.PostgresqlSessionsCount),
-		metricPostgresqlSessionsFatal:                 newMetricPostgresqlSessionsFatal(mbc.Metrics.PostgresqlSessionsFatal),
-		metricPostgresqlSessionsIdleInTransactionTime: newMetricPostgresqlSessionsIdleInTransactionTime(mbc.Metrics.PostgresqlSessionsIdleInTransactionTime),
-		metricPostgresqlSessionsKilled:                newMetricPostgresqlSessionsKilled(mbc.Metrics.PostgresqlSessionsKilled),
-		metricPostgresqlSessionsSessionTime:           newMetricPostgresqlSessionsSessionTime(mbc.Metrics.PostgresqlSessionsSessionTime),
-		metricPostgresqlTempBytes:                     newMetricPostgresqlTempBytes(mbc.Metrics.PostgresqlTempBytes),
-		metricPostgresqlTempFiles:                     newMetricPostgresqlTempFiles(mbc.Metrics.PostgresqlTempFiles),
-		resourceAttributeIncludeFilter:                make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:                make(map[string]filter.Filter),
+		config:                                                  mbc,
+		startTime:                                               pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                                           pmetric.NewMetrics(),
+		buildInfo:                                               settings.BuildInfo,
+		metricPostgresqlBeforeXidWraparound:                     newMetricPostgresqlBeforeXidWraparound(mbc.Metrics.PostgresqlBeforeXidWraparound),
+		metricPostgresqlBlkReadTime:                             newMetricPostgresqlBlkReadTime(mbc.Metrics.PostgresqlBlkReadTime),
+		metricPostgresqlBlkWriteTime:                            newMetricPostgresqlBlkWriteTime(mbc.Metrics.PostgresqlBlkWriteTime),
+		metricPostgresqlBufferHit:                               newMetricPostgresqlBufferHit(mbc.Metrics.PostgresqlBufferHit),
+		metricPostgresqlChecksumsEnabled:                        newMetricPostgresqlChecksumsEnabled(mbc.Metrics.PostgresqlChecksumsEnabled),
+		metricPostgresqlChecksumsFailures:                       newMetricPostgresqlChecksumsFailures(mbc.Metrics.PostgresqlChecksumsFailures),
+		metricPostgresqlCommits:                                 newMetricPostgresqlCommits(mbc.Metrics.PostgresqlCommits),
+		metricPostgresqlConflicts:                               newMetricPostgresqlConflicts(mbc.Metrics.PostgresqlConflicts),
+		metricPostgresqlConflictsBufferpin:                      newMetricPostgresqlConflictsBufferpin(mbc.Metrics.PostgresqlConflictsBufferpin),
+		metricPostgresqlConflictsDeadlock:                       newMetricPostgresqlConflictsDeadlock(mbc.Metrics.PostgresqlConflictsDeadlock),
+		metricPostgresqlConflictsLock:                           newMetricPostgresqlConflictsLock(mbc.Metrics.PostgresqlConflictsLock),
+		metricPostgresqlConflictsSnapshot:                       newMetricPostgresqlConflictsSnapshot(mbc.Metrics.PostgresqlConflictsSnapshot),
+		metricPostgresqlConflictsTablespace:                     newMetricPostgresqlConflictsTablespace(mbc.Metrics.PostgresqlConflictsTablespace),
+		metricPostgresqlConnections:                             newMetricPostgresqlConnections(mbc.Metrics.PostgresqlConnections),
+		metricPostgresqlDatabaseSize:                            newMetricPostgresqlDatabaseSize(mbc.Metrics.PostgresqlDatabaseSize),
+		metricPostgresqlDeadlocks:                               newMetricPostgresqlDeadlocks(mbc.Metrics.PostgresqlDeadlocks),
+		metricPostgresqlDiskRead:                                newMetricPostgresqlDiskRead(mbc.Metrics.PostgresqlDiskRead),
+		metricPostgresqlReplicationBackendXminAge:               newMetricPostgresqlReplicationBackendXminAge(mbc.Metrics.PostgresqlReplicationBackendXminAge),
+		metricPostgresqlReplicationFlushLsnDelay:                newMetricPostgresqlReplicationFlushLsnDelay(mbc.Metrics.PostgresqlReplicationFlushLsnDelay),
+		metricPostgresqlReplicationReplayLsnDelay:               newMetricPostgresqlReplicationReplayLsnDelay(mbc.Metrics.PostgresqlReplicationReplayLsnDelay),
+		metricPostgresqlReplicationSentLsnDelay:                 newMetricPostgresqlReplicationSentLsnDelay(mbc.Metrics.PostgresqlReplicationSentLsnDelay),
+		metricPostgresqlReplicationWalFlushLag:                  newMetricPostgresqlReplicationWalFlushLag(mbc.Metrics.PostgresqlReplicationWalFlushLag),
+		metricPostgresqlReplicationWalReplayLag:                 newMetricPostgresqlReplicationWalReplayLag(mbc.Metrics.PostgresqlReplicationWalReplayLag),
+		metricPostgresqlReplicationWalWriteLag:                  newMetricPostgresqlReplicationWalWriteLag(mbc.Metrics.PostgresqlReplicationWalWriteLag),
+		metricPostgresqlReplicationWriteLsnDelay:                newMetricPostgresqlReplicationWriteLsnDelay(mbc.Metrics.PostgresqlReplicationWriteLsnDelay),
+		metricPostgresqlReplicationSlotCatalogXminAge:           newMetricPostgresqlReplicationSlotCatalogXminAge(mbc.Metrics.PostgresqlReplicationSlotCatalogXminAge),
+		metricPostgresqlReplicationSlotConfirmedFlushDelayBytes: newMetricPostgresqlReplicationSlotConfirmedFlushDelayBytes(mbc.Metrics.PostgresqlReplicationSlotConfirmedFlushDelayBytes),
+		metricPostgresqlReplicationSlotRestartDelayBytes:        newMetricPostgresqlReplicationSlotRestartDelayBytes(mbc.Metrics.PostgresqlReplicationSlotRestartDelayBytes),
+		metricPostgresqlReplicationSlotXminAge:                  newMetricPostgresqlReplicationSlotXminAge(mbc.Metrics.PostgresqlReplicationSlotXminAge),
+		metricPostgresqlRollbacks:                               newMetricPostgresqlRollbacks(mbc.Metrics.PostgresqlRollbacks),
+		metricPostgresqlRowsDeleted:                             newMetricPostgresqlRowsDeleted(mbc.Metrics.PostgresqlRowsDeleted),
+		metricPostgresqlRowsFetched:                             newMetricPostgresqlRowsFetched(mbc.Metrics.PostgresqlRowsFetched),
+		metricPostgresqlRowsInserted:                            newMetricPostgresqlRowsInserted(mbc.Metrics.PostgresqlRowsInserted),
+		metricPostgresqlRowsReturned:                            newMetricPostgresqlRowsReturned(mbc.Metrics.PostgresqlRowsReturned),
+		metricPostgresqlRowsUpdated:                             newMetricPostgresqlRowsUpdated(mbc.Metrics.PostgresqlRowsUpdated),
+		metricPostgresqlSessionsAbandoned:                       newMetricPostgresqlSessionsAbandoned(mbc.Metrics.PostgresqlSessionsAbandoned),
+		metricPostgresqlSessionsActiveTime:                      newMetricPostgresqlSessionsActiveTime(mbc.Metrics.PostgresqlSessionsActiveTime),
+		metricPostgresqlSessionsCount:                           newMetricPostgresqlSessionsCount(mbc.Metrics.PostgresqlSessionsCount),
+		metricPostgresqlSessionsFatal:                           newMetricPostgresqlSessionsFatal(mbc.Metrics.PostgresqlSessionsFatal),
+		metricPostgresqlSessionsIdleInTransactionTime:           newMetricPostgresqlSessionsIdleInTransactionTime(mbc.Metrics.PostgresqlSessionsIdleInTransactionTime),
+		metricPostgresqlSessionsKilled:                          newMetricPostgresqlSessionsKilled(mbc.Metrics.PostgresqlSessionsKilled),
+		metricPostgresqlSessionsSessionTime:                     newMetricPostgresqlSessionsSessionTime(mbc.Metrics.PostgresqlSessionsSessionTime),
+		metricPostgresqlTempBytes:                               newMetricPostgresqlTempBytes(mbc.Metrics.PostgresqlTempBytes),
+		metricPostgresqlTempFiles:                               newMetricPostgresqlTempFiles(mbc.Metrics.PostgresqlTempFiles),
+		resourceAttributeIncludeFilter:                          make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:                          make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.DatabaseName.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["database_name"] = filter.CreateFilter(mbc.ResourceAttributes.DatabaseName.MetricsInclude)
@@ -2574,6 +2810,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlReplicationWalReplayLag.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationWalWriteLag.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationWriteLsnDelay.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotCatalogXminAge.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotConfirmedFlushDelayBytes.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotRestartDelayBytes.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotXminAge.emit(ils.Metrics())
 	mb.metricPostgresqlRollbacks.emit(ils.Metrics())
 	mb.metricPostgresqlRowsDeleted.emit(ils.Metrics())
 	mb.metricPostgresqlRowsFetched.emit(ils.Metrics())
@@ -2743,6 +2983,26 @@ func (mb *MetricsBuilder) RecordPostgresqlReplicationWalWriteLagDataPoint(ts pco
 // RecordPostgresqlReplicationWriteLsnDelayDataPoint adds a data point to postgresql.replication.write_lsn_delay metric.
 func (mb *MetricsBuilder) RecordPostgresqlReplicationWriteLsnDelayDataPoint(ts pcommon.Timestamp, val int64, applicationNameAttributeValue string, clientAddressAttributeValue string, replicationStateAttributeValue string, syncStateAttributeValue string) {
 	mb.metricPostgresqlReplicationWriteLsnDelay.recordDataPoint(mb.startTime, ts, val, applicationNameAttributeValue, clientAddressAttributeValue, replicationStateAttributeValue, syncStateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotCatalogXminAgeDataPoint adds a data point to postgresql.replication_slot.catalog_xmin_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotCatalogXminAgeDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotCatalogXminAge.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, pluginAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotConfirmedFlushDelayBytesDataPoint adds a data point to postgresql.replication_slot.confirmed_flush_delay_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotConfirmedFlushDelayBytesDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotConfirmedFlushDelayBytes.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, pluginAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotRestartDelayBytesDataPoint adds a data point to postgresql.replication_slot.restart_delay_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotRestartDelayBytesDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotRestartDelayBytes.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, pluginAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotXminAgeDataPoint adds a data point to postgresql.replication_slot.xmin_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotXminAgeDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotXminAge.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, pluginAttributeValue)
 }
 
 // RecordPostgresqlRollbacksDataPoint adds a data point to postgresql.rollbacks metric.

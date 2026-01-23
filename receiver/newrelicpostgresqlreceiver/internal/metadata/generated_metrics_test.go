@@ -170,6 +170,22 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotCatalogXminAgeDataPoint(ts, 1, "slot_name-val", "slot_type-val", "plugin-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotConfirmedFlushDelayBytesDataPoint(ts, 1, "slot_name-val", "slot_type-val", "plugin-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotRestartDelayBytesDataPoint(ts, 1, "slot_name-val", "slot_type-val", "plugin-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotXminAgeDataPoint(ts, 1, "slot_name-val", "slot_type-val", "plugin-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlRollbacksDataPoint(ts, 1, "database_name-val", "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -779,6 +795,90 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("sync_state")
 					assert.True(t, ok)
 					assert.Equal(t, "sync_state-val", attrVal.Str())
+				case "postgresql.replication_slot.catalog_xmin_age":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.catalog_xmin_age"], "Found a duplicate in the metrics slice: postgresql.replication_slot.catalog_xmin_age")
+					validatedMetrics["postgresql.replication_slot.catalog_xmin_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plugin")
+					assert.True(t, ok)
+					assert.Equal(t, "plugin-val", attrVal.Str())
+				case "postgresql.replication_slot.confirmed_flush_delay_bytes":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.confirmed_flush_delay_bytes"], "Found a duplicate in the metrics slice: postgresql.replication_slot.confirmed_flush_delay_bytes")
+					validatedMetrics["postgresql.replication_slot.confirmed_flush_delay_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of bytes between current WAL position and confirmed_flush_lsn (logical slots only, PostgreSQL 9.4+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plugin")
+					assert.True(t, ok)
+					assert.Equal(t, "plugin-val", attrVal.Str())
+				case "postgresql.replication_slot.restart_delay_bytes":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.restart_delay_bytes"], "Found a duplicate in the metrics slice: postgresql.replication_slot.restart_delay_bytes")
+					validatedMetrics["postgresql.replication_slot.restart_delay_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of bytes of WAL between current position and slot's restart_lsn (PostgreSQL 9.4+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plugin")
+					assert.True(t, ok)
+					assert.Equal(t, "plugin-val", attrVal.Str())
+				case "postgresql.replication_slot.xmin_age":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.xmin_age"], "Found a duplicate in the metrics slice: postgresql.replication_slot.xmin_age")
+					validatedMetrics["postgresql.replication_slot.xmin_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Age of oldest transaction that this replication slot needs to keep (PostgreSQL 9.4+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plugin")
+					assert.True(t, ok)
+					assert.Equal(t, "plugin-val", attrVal.Str())
 				case "postgresql.rollbacks":
 					assert.False(t, validatedMetrics["postgresql.rollbacks"], "Found a duplicate in the metrics slice: postgresql.rollbacks")
 					validatedMetrics["postgresql.rollbacks"] = true

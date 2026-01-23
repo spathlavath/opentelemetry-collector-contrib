@@ -36,4 +36,12 @@ type PostgreSQLClient interface {
 	// Returns empty slice if no replication is configured or if server is a standby
 	// Available in PostgreSQL 9.6+
 	QueryReplicationMetrics(ctx context.Context, version int) ([]models.PgStatReplicationMetric, error)
+
+	// QueryReplicationSlots retrieves replication slot statistics from pg_replication_slots
+	// Uses version-specific queries:
+	// - PostgreSQL 9.4-9.6: Uses pg_xlog_location_diff and pg_current_xlog_location
+	// - PostgreSQL 10+: Uses pg_wal_lsn_diff and pg_current_wal_lsn
+	// Returns empty slice if no replication slots are configured
+	// Available in PostgreSQL 9.4+
+	QueryReplicationSlots(ctx context.Context, version int) ([]models.PgReplicationSlotMetric, error)
 }

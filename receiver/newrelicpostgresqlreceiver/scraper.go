@@ -9,8 +9,6 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/lib/pq" // PostgreSQL driver
-
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
@@ -249,6 +247,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping replication metrics",
 				zap.Int("error_count", len(replicationErrs)))
 			scrapeErrors = append(scrapeErrors, replicationErrs...)
+		}
+
+		// Scrape replication slot metrics (PostgreSQL 9.4+ only)
+		slotErrs := s.replicationMetricsScraper.ScrapeReplicationSlots(scrapeCtx)
+		if len(slotErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping replication slot metrics",
+				zap.Int("error_count", len(slotErrs)))
+			scrapeErrors = append(scrapeErrors, slotErrs...)
 		}
 	}
 

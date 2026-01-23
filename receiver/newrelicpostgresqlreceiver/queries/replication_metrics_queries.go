@@ -75,4 +75,60 @@ const (
 
 	// PgStatReplicationMetricsSQL is an alias for PG10+ query (backward compatibility)
 	PgStatReplicationMetricsSQL = PgStatReplicationMetricsPG10SQL
+
+	// Replication Slots Queries
+	// PgReplicationSlotsPG96SQL returns replication slot statistics for PostgreSQL 9.4-9.6
+	// Uses pg_xlog_* functions (renamed to pg_wal_* in PostgreSQL 10)
+	// Available in PostgreSQL 9.4+
+	//
+	// Metrics collected:
+	// - xmin_age: Age of oldest transaction kept by this slot
+	// - catalog_xmin_age: Age of oldest transaction affecting system catalogs
+	// - restart_delay_bytes: Bytes of WAL between current location and slot's restart_lsn
+	// - confirmed_flush_delay_bytes: Bytes between current location and confirmed_flush_lsn (logical slots only)
+	//
+	// Note: Uses pg_xlog_location_diff instead of pg_wal_lsn_diff (renamed in PG10)
+	PgReplicationSlotsPG96SQL = `
+		SELECT
+			slot_name,
+			COALESCE(slot_type, '') as slot_type,
+			COALESCE(plugin, '') as plugin,
+			COALESCE(active, false) as active,
+			GREATEST(0, age(xmin)) as xmin_age,
+			GREATEST(0, age(catalog_xmin)) as catalog_xmin_age,
+			COALESCE(pg_xlog_location_diff(pg_current_xlog_location(), restart_lsn), 0) as restart_delay_bytes,
+			CASE
+				WHEN slot_type = 'logical' THEN COALESCE(pg_xlog_location_diff(pg_current_xlog_location(), confirmed_flush_lsn), 0)
+				ELSE 0
+			END as confirmed_flush_delay_bytes
+		FROM pg_replication_slots`
+
+	// PgReplicationSlotsPG10SQL returns replication slot statistics for PostgreSQL 10+
+	// Uses pg_wal_* functions (renamed from pg_xlog_* in PostgreSQL 10)
+	// Available in PostgreSQL 10+
+	//
+	// Metrics collected:
+	// - xmin_age: Age of oldest transaction kept by this slot
+	// - catalog_xmin_age: Age of oldest transaction affecting system catalogs
+	// - restart_delay_bytes: Bytes of WAL between current location and slot's restart_lsn
+	// - confirmed_flush_delay_bytes: Bytes between current location and confirmed_flush_lsn (logical slots only)
+	//
+	// Notes:
+	// - Physical slots (used for streaming replication) have NULL confirmed_flush_lsn
+	// - Logical slots (used for logical replication) have both restart_lsn and confirmed_flush_lsn
+	// - GREATEST(0, ...) ensures negative values are converted to 0
+	PgReplicationSlotsPG10SQL = `
+		SELECT
+			slot_name,
+			COALESCE(slot_type, '') as slot_type,
+			COALESCE(plugin, '') as plugin,
+			COALESCE(active, false) as active,
+			GREATEST(0, age(xmin)) as xmin_age,
+			GREATEST(0, age(catalog_xmin)) as catalog_xmin_age,
+			COALESCE(pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn), 0) as restart_delay_bytes,
+			CASE
+				WHEN slot_type = 'logical' THEN COALESCE(pg_wal_lsn_diff(pg_current_wal_lsn(), confirmed_flush_lsn), 0)
+				ELSE 0
+			END as confirmed_flush_delay_bytes
+		FROM pg_replication_slots`
 )

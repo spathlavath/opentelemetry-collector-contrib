@@ -403,6 +403,70 @@ Number of bytes of WAL written but not yet flushed on standby
 | replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
 | sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
 
+### postgresql.replication_slot.catalog_xmin_age
+
+Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
+### postgresql.replication_slot.confirmed_flush_delay_bytes
+
+Number of bytes between current WAL position and confirmed_flush_lsn (logical slots only, PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
+### postgresql.replication_slot.restart_delay_bytes
+
+Number of bytes of WAL between current position and slot's restart_lsn (PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
+### postgresql.replication_slot.xmin_age
+
+Age of oldest transaction that this replication slot needs to keep (PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
 ### postgresql.rollbacks
 
 Number of transactions that have been rolled back

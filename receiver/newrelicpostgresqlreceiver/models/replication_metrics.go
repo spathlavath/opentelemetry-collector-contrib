@@ -74,3 +74,54 @@ type PgStatReplicationMetric struct {
 	// PostgreSQL 10+
 	ReplayLag sql.NullFloat64
 }
+
+// PgReplicationSlotMetric represents a row from pg_replication_slots
+// This view contains information about replication slots on the database server
+// Replication slots provide an automated way to ensure that the primary does not
+// delete WAL segments until they have been received by all standbys
+//
+// Available in PostgreSQL 9.4+
+type PgReplicationSlotMetric struct {
+	// SlotName is the unique identifier of the replication slot
+	// Set when creating the slot
+	SlotName sql.NullString
+
+	// SlotType is the type of the replication slot
+	// Possible values: physical, logical
+	// Physical slots are used for streaming replication
+	// Logical slots are used for logical replication/decoding
+	SlotType sql.NullString
+
+	// Plugin is the name of the output plugin used by logical replication slot
+	// NULL for physical slots
+	// Examples: pgoutput, test_decoding, wal2json
+	Plugin sql.NullString
+
+	// Active indicates whether this slot is currently being used
+	// true if a receiver process is connected and streaming
+	Active sql.NullBool
+
+	// XminAge is the age of the oldest transaction that this slot needs to keep
+	// Measured in number of transactions
+	// Affects VACUUM behavior - transactions older than this cannot be removed
+	XminAge sql.NullInt64
+
+	// CatalogXminAge is the age of the oldest transaction affecting system catalogs
+	// that this slot needs to keep
+	// Measured in number of transactions
+	// Used by logical replication to preserve catalog changes
+	CatalogXminAge sql.NullInt64
+
+	// RestartDelayBytes is the number of bytes of WAL between current position
+	// and the slot's restart_lsn
+	// Indicates how far behind the slot is
+	// In bytes
+	RestartDelayBytes sql.NullInt64
+
+	// ConfirmedFlushDelayBytes is the number of bytes of WAL between current position
+	// and the slot's confirmed_flush_lsn
+	// Only applicable for logical replication slots
+	// NULL or 0 for physical slots
+	// In bytes
+	ConfirmedFlushDelayBytes sql.NullInt64
+}

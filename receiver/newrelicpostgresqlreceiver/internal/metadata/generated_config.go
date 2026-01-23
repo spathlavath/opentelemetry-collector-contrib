@@ -28,46 +28,50 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
-	PostgresqlBeforeXidWraparound           MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
-	PostgresqlBlkReadTime                   MetricConfig `mapstructure:"postgresql.blk_read_time"`
-	PostgresqlBlkWriteTime                  MetricConfig `mapstructure:"postgresql.blk_write_time"`
-	PostgresqlBufferHit                     MetricConfig `mapstructure:"postgresql.buffer_hit"`
-	PostgresqlChecksumsEnabled              MetricConfig `mapstructure:"postgresql.checksums.enabled"`
-	PostgresqlChecksumsFailures             MetricConfig `mapstructure:"postgresql.checksums.failures"`
-	PostgresqlCommits                       MetricConfig `mapstructure:"postgresql.commits"`
-	PostgresqlConflicts                     MetricConfig `mapstructure:"postgresql.conflicts"`
-	PostgresqlConflictsBufferpin            MetricConfig `mapstructure:"postgresql.conflicts.bufferpin"`
-	PostgresqlConflictsDeadlock             MetricConfig `mapstructure:"postgresql.conflicts.deadlock"`
-	PostgresqlConflictsLock                 MetricConfig `mapstructure:"postgresql.conflicts.lock"`
-	PostgresqlConflictsSnapshot             MetricConfig `mapstructure:"postgresql.conflicts.snapshot"`
-	PostgresqlConflictsTablespace           MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
-	PostgresqlConnections                   MetricConfig `mapstructure:"postgresql.connections"`
-	PostgresqlDatabaseSize                  MetricConfig `mapstructure:"postgresql.database_size"`
-	PostgresqlDeadlocks                     MetricConfig `mapstructure:"postgresql.deadlocks"`
-	PostgresqlDiskRead                      MetricConfig `mapstructure:"postgresql.disk_read"`
-	PostgresqlReplicationBackendXminAge     MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
-	PostgresqlReplicationFlushLsnDelay      MetricConfig `mapstructure:"postgresql.replication.flush_lsn_delay"`
-	PostgresqlReplicationReplayLsnDelay     MetricConfig `mapstructure:"postgresql.replication.replay_lsn_delay"`
-	PostgresqlReplicationSentLsnDelay       MetricConfig `mapstructure:"postgresql.replication.sent_lsn_delay"`
-	PostgresqlReplicationWalFlushLag        MetricConfig `mapstructure:"postgresql.replication.wal_flush_lag"`
-	PostgresqlReplicationWalReplayLag       MetricConfig `mapstructure:"postgresql.replication.wal_replay_lag"`
-	PostgresqlReplicationWalWriteLag        MetricConfig `mapstructure:"postgresql.replication.wal_write_lag"`
-	PostgresqlReplicationWriteLsnDelay      MetricConfig `mapstructure:"postgresql.replication.write_lsn_delay"`
-	PostgresqlRollbacks                     MetricConfig `mapstructure:"postgresql.rollbacks"`
-	PostgresqlRowsDeleted                   MetricConfig `mapstructure:"postgresql.rows_deleted"`
-	PostgresqlRowsFetched                   MetricConfig `mapstructure:"postgresql.rows_fetched"`
-	PostgresqlRowsInserted                  MetricConfig `mapstructure:"postgresql.rows_inserted"`
-	PostgresqlRowsReturned                  MetricConfig `mapstructure:"postgresql.rows_returned"`
-	PostgresqlRowsUpdated                   MetricConfig `mapstructure:"postgresql.rows_updated"`
-	PostgresqlSessionsAbandoned             MetricConfig `mapstructure:"postgresql.sessions.abandoned"`
-	PostgresqlSessionsActiveTime            MetricConfig `mapstructure:"postgresql.sessions.active_time"`
-	PostgresqlSessionsCount                 MetricConfig `mapstructure:"postgresql.sessions.count"`
-	PostgresqlSessionsFatal                 MetricConfig `mapstructure:"postgresql.sessions.fatal"`
-	PostgresqlSessionsIdleInTransactionTime MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
-	PostgresqlSessionsKilled                MetricConfig `mapstructure:"postgresql.sessions.killed"`
-	PostgresqlSessionsSessionTime           MetricConfig `mapstructure:"postgresql.sessions.session_time"`
-	PostgresqlTempBytes                     MetricConfig `mapstructure:"postgresql.temp_bytes"`
-	PostgresqlTempFiles                     MetricConfig `mapstructure:"postgresql.temp_files"`
+	PostgresqlBeforeXidWraparound                     MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
+	PostgresqlBlkReadTime                             MetricConfig `mapstructure:"postgresql.blk_read_time"`
+	PostgresqlBlkWriteTime                            MetricConfig `mapstructure:"postgresql.blk_write_time"`
+	PostgresqlBufferHit                               MetricConfig `mapstructure:"postgresql.buffer_hit"`
+	PostgresqlChecksumsEnabled                        MetricConfig `mapstructure:"postgresql.checksums.enabled"`
+	PostgresqlChecksumsFailures                       MetricConfig `mapstructure:"postgresql.checksums.failures"`
+	PostgresqlCommits                                 MetricConfig `mapstructure:"postgresql.commits"`
+	PostgresqlConflicts                               MetricConfig `mapstructure:"postgresql.conflicts"`
+	PostgresqlConflictsBufferpin                      MetricConfig `mapstructure:"postgresql.conflicts.bufferpin"`
+	PostgresqlConflictsDeadlock                       MetricConfig `mapstructure:"postgresql.conflicts.deadlock"`
+	PostgresqlConflictsLock                           MetricConfig `mapstructure:"postgresql.conflicts.lock"`
+	PostgresqlConflictsSnapshot                       MetricConfig `mapstructure:"postgresql.conflicts.snapshot"`
+	PostgresqlConflictsTablespace                     MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
+	PostgresqlConnections                             MetricConfig `mapstructure:"postgresql.connections"`
+	PostgresqlDatabaseSize                            MetricConfig `mapstructure:"postgresql.database_size"`
+	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
+	PostgresqlDiskRead                                MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlReplicationBackendXminAge               MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
+	PostgresqlReplicationFlushLsnDelay                MetricConfig `mapstructure:"postgresql.replication.flush_lsn_delay"`
+	PostgresqlReplicationReplayLsnDelay               MetricConfig `mapstructure:"postgresql.replication.replay_lsn_delay"`
+	PostgresqlReplicationSentLsnDelay                 MetricConfig `mapstructure:"postgresql.replication.sent_lsn_delay"`
+	PostgresqlReplicationWalFlushLag                  MetricConfig `mapstructure:"postgresql.replication.wal_flush_lag"`
+	PostgresqlReplicationWalReplayLag                 MetricConfig `mapstructure:"postgresql.replication.wal_replay_lag"`
+	PostgresqlReplicationWalWriteLag                  MetricConfig `mapstructure:"postgresql.replication.wal_write_lag"`
+	PostgresqlReplicationWriteLsnDelay                MetricConfig `mapstructure:"postgresql.replication.write_lsn_delay"`
+	PostgresqlReplicationSlotCatalogXminAge           MetricConfig `mapstructure:"postgresql.replication_slot.catalog_xmin_age"`
+	PostgresqlReplicationSlotConfirmedFlushDelayBytes MetricConfig `mapstructure:"postgresql.replication_slot.confirmed_flush_delay_bytes"`
+	PostgresqlReplicationSlotRestartDelayBytes        MetricConfig `mapstructure:"postgresql.replication_slot.restart_delay_bytes"`
+	PostgresqlReplicationSlotXminAge                  MetricConfig `mapstructure:"postgresql.replication_slot.xmin_age"`
+	PostgresqlRollbacks                               MetricConfig `mapstructure:"postgresql.rollbacks"`
+	PostgresqlRowsDeleted                             MetricConfig `mapstructure:"postgresql.rows_deleted"`
+	PostgresqlRowsFetched                             MetricConfig `mapstructure:"postgresql.rows_fetched"`
+	PostgresqlRowsInserted                            MetricConfig `mapstructure:"postgresql.rows_inserted"`
+	PostgresqlRowsReturned                            MetricConfig `mapstructure:"postgresql.rows_returned"`
+	PostgresqlRowsUpdated                             MetricConfig `mapstructure:"postgresql.rows_updated"`
+	PostgresqlSessionsAbandoned                       MetricConfig `mapstructure:"postgresql.sessions.abandoned"`
+	PostgresqlSessionsActiveTime                      MetricConfig `mapstructure:"postgresql.sessions.active_time"`
+	PostgresqlSessionsCount                           MetricConfig `mapstructure:"postgresql.sessions.count"`
+	PostgresqlSessionsFatal                           MetricConfig `mapstructure:"postgresql.sessions.fatal"`
+	PostgresqlSessionsIdleInTransactionTime           MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
+	PostgresqlSessionsKilled                          MetricConfig `mapstructure:"postgresql.sessions.killed"`
+	PostgresqlSessionsSessionTime                     MetricConfig `mapstructure:"postgresql.sessions.session_time"`
+	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
+	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -145,6 +149,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlReplicationWriteLsnDelay: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotCatalogXminAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotConfirmedFlushDelayBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotRestartDelayBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotXminAge: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlRollbacks: MetricConfig{

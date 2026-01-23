@@ -246,3 +246,49 @@ func (c *SQLClient) QueryReplicationMetrics(ctx context.Context, version int) ([
 
 	return metrics, nil
 }
+
+// QueryReplicationSlots retrieves replication slot statistics from pg_replication_slots
+// Uses version-specific queries based on PostgreSQL version
+func (c *SQLClient) QueryReplicationSlots(ctx context.Context, version int) ([]models.PgReplicationSlotMetric, error) {
+	// Select appropriate query based on PostgreSQL version
+	var query string
+	if version >= 100000 { // PostgreSQL 10.0+
+		query = queries.PgReplicationSlotsPG10SQL
+	} else { // PostgreSQL 9.4-9.6
+		query = queries.PgReplicationSlotsPG96SQL
+	}
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_replication_slots: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgReplicationSlotMetric
+
+	for rows.Next() {
+		var metric models.PgReplicationSlotMetric
+
+		err = rows.Scan(
+			&metric.SlotName,
+			&metric.SlotType,
+			&metric.Plugin,
+			&metric.Active,
+			&metric.XminAge,
+			&metric.CatalogXminAge,
+			&metric.RestartDelayBytes,
+			&metric.ConfirmedFlushDelayBytes,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_replication_slots row: %w", err)
+		}
+
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_replication_slots rows: %w", err)
+	}
+
+	return metrics, nil
+}
