@@ -59,6 +59,9 @@ attributes:
   slot_type:
     description: Type of replication slot (physical or logical)
     type: string
+  state:
+    description: State of the replication slot (active or inactive)
+    type: string
   sync_state:
     description: Synchronous state of the standby (async, sync, quorum, potential)
     type: string
@@ -365,6 +368,102 @@ metrics:
       value_type: int
     attributes: [slot_name, slot_type, plugin]
     unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.spill_bytes:
+    description: Total amount of data spilled to disk for logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.spill_count:
+    description: Number of times transactions were spilled to disk during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{spills}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.spill_txns:
+    description: Number of transactions spilled to disk during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.stream_bytes:
+    description: Total amount of data streamed for in-progress transactions during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.stream_count:
+    description: Number of times in-progress transactions were streamed during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{streams}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.stream_txns:
+    description: Number of in-progress transactions streamed during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.total_bytes:
+    description: Total amount of data decoded for transactions during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.total_txns:
+    description: Total number of decoded transactions during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{transactions}"
     stability:
       level: alpha
 

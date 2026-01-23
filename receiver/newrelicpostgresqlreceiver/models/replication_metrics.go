@@ -125,3 +125,53 @@ type PgReplicationSlotMetric struct {
 	// In bytes
 	ConfirmedFlushDelayBytes sql.NullInt64
 }
+
+// PgStatReplicationSlotMetric represents a row from pg_stat_replication_slots
+// This view provides statistics about logical decoding on replication slots
+// Only contains data for logical replication slots (physical slots don't appear here)
+//
+// Available in PostgreSQL 14+
+type PgStatReplicationSlotMetric struct {
+	// SlotName is the unique identifier of the replication slot
+	SlotName sql.NullString
+
+	// SlotType is the type of the replication slot (physical or logical)
+	// From pg_replication_slots via JOIN
+	SlotType sql.NullString
+
+	// State indicates whether the slot is currently active or inactive
+	// 'active' if a receiver process is connected, 'inactive' otherwise
+	State sql.NullString
+
+	// SpillTxns is the number of transactions spilled to disk
+	// Transactions are spilled when they exceed logical_decoding_work_mem
+	SpillTxns sql.NullInt64
+
+	// SpillCount is the number of times transactions were spilled to disk
+	// A single transaction can be spilled multiple times
+	SpillCount sql.NullInt64
+
+	// SpillBytes is the total amount of data spilled to disk
+	// In bytes
+	SpillBytes sql.NullInt64
+
+	// StreamTxns is the number of in-progress transactions streamed to the decoding output plugin
+	// Streaming allows large transactions to be decoded incrementally
+	StreamTxns sql.NullInt64
+
+	// StreamCount is the number of times in-progress transactions were streamed
+	// A single transaction can be streamed multiple times as it progresses
+	StreamCount sql.NullInt64
+
+	// StreamBytes is the total amount of data streamed for in-progress transactions
+	// In bytes
+	StreamBytes sql.NullInt64
+
+	// TotalTxns is the total number of decoded transactions sent to the decoding output plugin
+	// Includes both committed and aborted transactions
+	TotalTxns sql.NullInt64
+
+	// TotalBytes is the total amount of data decoded for transactions sent to the plugin
+	// In bytes
+	TotalBytes sql.NullInt64
+}

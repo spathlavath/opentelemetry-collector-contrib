@@ -182,6 +182,38 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotSpillBytesDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotSpillCountDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotSpillTxnsDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotStreamBytesDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotStreamCountDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotStreamTxnsDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotTotalBytesDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlReplicationSlotTotalTxnsDataPoint(ts, 1, "slot_name-val", "slot_type-val", "state-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlReplicationSlotXminAgeDataPoint(ts, 1, "slot_name-val", "slot_type-val", "plugin-val")
 
 			defaultMetricsCount++
@@ -858,6 +890,190 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("plugin")
 					assert.True(t, ok)
 					assert.Equal(t, "plugin-val", attrVal.Str())
+				case "postgresql.replication_slot.spill_bytes":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.spill_bytes"], "Found a duplicate in the metrics slice: postgresql.replication_slot.spill_bytes")
+					validatedMetrics["postgresql.replication_slot.spill_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total amount of data spilled to disk for logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
+				case "postgresql.replication_slot.spill_count":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.spill_count"], "Found a duplicate in the metrics slice: postgresql.replication_slot.spill_count")
+					validatedMetrics["postgresql.replication_slot.spill_count"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of times transactions were spilled to disk during logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{spills}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
+				case "postgresql.replication_slot.spill_txns":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.spill_txns"], "Found a duplicate in the metrics slice: postgresql.replication_slot.spill_txns")
+					validatedMetrics["postgresql.replication_slot.spill_txns"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of transactions spilled to disk during logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
+				case "postgresql.replication_slot.stream_bytes":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.stream_bytes"], "Found a duplicate in the metrics slice: postgresql.replication_slot.stream_bytes")
+					validatedMetrics["postgresql.replication_slot.stream_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total amount of data streamed for in-progress transactions during logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
+				case "postgresql.replication_slot.stream_count":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.stream_count"], "Found a duplicate in the metrics slice: postgresql.replication_slot.stream_count")
+					validatedMetrics["postgresql.replication_slot.stream_count"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of times in-progress transactions were streamed during logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{streams}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
+				case "postgresql.replication_slot.stream_txns":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.stream_txns"], "Found a duplicate in the metrics slice: postgresql.replication_slot.stream_txns")
+					validatedMetrics["postgresql.replication_slot.stream_txns"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of in-progress transactions streamed during logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
+				case "postgresql.replication_slot.total_bytes":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.total_bytes"], "Found a duplicate in the metrics slice: postgresql.replication_slot.total_bytes")
+					validatedMetrics["postgresql.replication_slot.total_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total amount of data decoded for transactions during logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
+				case "postgresql.replication_slot.total_txns":
+					assert.False(t, validatedMetrics["postgresql.replication_slot.total_txns"], "Found a duplicate in the metrics slice: postgresql.replication_slot.total_txns")
+					validatedMetrics["postgresql.replication_slot.total_txns"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total number of decoded transactions during logical decoding (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("slot_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slot_type")
+					assert.True(t, ok)
+					assert.Equal(t, "slot_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("state")
+					assert.True(t, ok)
+					assert.Equal(t, "state-val", attrVal.Str())
 				case "postgresql.replication_slot.xmin_age":
 					assert.False(t, validatedMetrics["postgresql.replication_slot.xmin_age"], "Found a duplicate in the metrics slice: postgresql.replication_slot.xmin_age")
 					validatedMetrics["postgresql.replication_slot.xmin_age"] = true

@@ -451,6 +451,134 @@ Number of bytes of WAL between current position and slot's restart_lsn (PostgreS
 | slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
 | plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
 
+### postgresql.replication_slot.spill_bytes
+
+Total amount of data spilled to disk for logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.spill_count
+
+Number of times transactions were spilled to disk during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {spills} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.spill_txns
+
+Number of transactions spilled to disk during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.stream_bytes
+
+Total amount of data streamed for in-progress transactions during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.stream_count
+
+Number of times in-progress transactions were streamed during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {streams} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.stream_txns
+
+Number of in-progress transactions streamed during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.total_bytes
+
+Total amount of data decoded for transactions during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.total_txns
+
+Total number of decoded transactions during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
 ### postgresql.replication_slot.xmin_age
 
 Age of oldest transaction that this replication slot needs to keep (PostgreSQL 9.4+)

@@ -56,6 +56,14 @@ type MetricsConfig struct {
 	PostgresqlReplicationSlotCatalogXminAge           MetricConfig `mapstructure:"postgresql.replication_slot.catalog_xmin_age"`
 	PostgresqlReplicationSlotConfirmedFlushDelayBytes MetricConfig `mapstructure:"postgresql.replication_slot.confirmed_flush_delay_bytes"`
 	PostgresqlReplicationSlotRestartDelayBytes        MetricConfig `mapstructure:"postgresql.replication_slot.restart_delay_bytes"`
+	PostgresqlReplicationSlotSpillBytes               MetricConfig `mapstructure:"postgresql.replication_slot.spill_bytes"`
+	PostgresqlReplicationSlotSpillCount               MetricConfig `mapstructure:"postgresql.replication_slot.spill_count"`
+	PostgresqlReplicationSlotSpillTxns                MetricConfig `mapstructure:"postgresql.replication_slot.spill_txns"`
+	PostgresqlReplicationSlotStreamBytes              MetricConfig `mapstructure:"postgresql.replication_slot.stream_bytes"`
+	PostgresqlReplicationSlotStreamCount              MetricConfig `mapstructure:"postgresql.replication_slot.stream_count"`
+	PostgresqlReplicationSlotStreamTxns               MetricConfig `mapstructure:"postgresql.replication_slot.stream_txns"`
+	PostgresqlReplicationSlotTotalBytes               MetricConfig `mapstructure:"postgresql.replication_slot.total_bytes"`
+	PostgresqlReplicationSlotTotalTxns                MetricConfig `mapstructure:"postgresql.replication_slot.total_txns"`
 	PostgresqlReplicationSlotXminAge                  MetricConfig `mapstructure:"postgresql.replication_slot.xmin_age"`
 	PostgresqlRollbacks                               MetricConfig `mapstructure:"postgresql.rollbacks"`
 	PostgresqlRowsDeleted                             MetricConfig `mapstructure:"postgresql.rows_deleted"`
@@ -158,6 +166,30 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlReplicationSlotRestartDelayBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotSpillBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotSpillCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotSpillTxns: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotStreamBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotStreamCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotStreamTxns: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotTotalBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlReplicationSlotTotalTxns: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlReplicationSlotXminAge: MetricConfig{

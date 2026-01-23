@@ -97,6 +97,30 @@ var MetricsInfo = metricsInfo{
 	PostgresqlReplicationSlotRestartDelayBytes: metricInfo{
 		Name: "postgresql.replication_slot.restart_delay_bytes",
 	},
+	PostgresqlReplicationSlotSpillBytes: metricInfo{
+		Name: "postgresql.replication_slot.spill_bytes",
+	},
+	PostgresqlReplicationSlotSpillCount: metricInfo{
+		Name: "postgresql.replication_slot.spill_count",
+	},
+	PostgresqlReplicationSlotSpillTxns: metricInfo{
+		Name: "postgresql.replication_slot.spill_txns",
+	},
+	PostgresqlReplicationSlotStreamBytes: metricInfo{
+		Name: "postgresql.replication_slot.stream_bytes",
+	},
+	PostgresqlReplicationSlotStreamCount: metricInfo{
+		Name: "postgresql.replication_slot.stream_count",
+	},
+	PostgresqlReplicationSlotStreamTxns: metricInfo{
+		Name: "postgresql.replication_slot.stream_txns",
+	},
+	PostgresqlReplicationSlotTotalBytes: metricInfo{
+		Name: "postgresql.replication_slot.total_bytes",
+	},
+	PostgresqlReplicationSlotTotalTxns: metricInfo{
+		Name: "postgresql.replication_slot.total_txns",
+	},
 	PostgresqlReplicationSlotXminAge: metricInfo{
 		Name: "postgresql.replication_slot.xmin_age",
 	},
@@ -176,6 +200,14 @@ type metricsInfo struct {
 	PostgresqlReplicationSlotCatalogXminAge           metricInfo
 	PostgresqlReplicationSlotConfirmedFlushDelayBytes metricInfo
 	PostgresqlReplicationSlotRestartDelayBytes        metricInfo
+	PostgresqlReplicationSlotSpillBytes               metricInfo
+	PostgresqlReplicationSlotSpillCount               metricInfo
+	PostgresqlReplicationSlotSpillTxns                metricInfo
+	PostgresqlReplicationSlotStreamBytes              metricInfo
+	PostgresqlReplicationSlotStreamCount              metricInfo
+	PostgresqlReplicationSlotStreamTxns               metricInfo
+	PostgresqlReplicationSlotTotalBytes               metricInfo
+	PostgresqlReplicationSlotTotalTxns                metricInfo
 	PostgresqlReplicationSlotXminAge                  metricInfo
 	PostgresqlRollbacks                               metricInfo
 	PostgresqlRowsDeleted                             metricInfo
@@ -1697,6 +1729,446 @@ func newMetricPostgresqlReplicationSlotRestartDelayBytes(cfg MetricConfig) metri
 	return m
 }
 
+type metricPostgresqlReplicationSlotSpillBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.spill_bytes metric with initial data.
+func (m *metricPostgresqlReplicationSlotSpillBytes) init() {
+	m.data.SetName("postgresql.replication_slot.spill_bytes")
+	m.data.SetDescription("Total amount of data spilled to disk for logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotSpillBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotSpillBytes) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotSpillBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotSpillBytes(cfg MetricConfig) metricPostgresqlReplicationSlotSpillBytes {
+	m := metricPostgresqlReplicationSlotSpillBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotSpillCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.spill_count metric with initial data.
+func (m *metricPostgresqlReplicationSlotSpillCount) init() {
+	m.data.SetName("postgresql.replication_slot.spill_count")
+	m.data.SetDescription("Number of times transactions were spilled to disk during logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("{spills}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotSpillCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotSpillCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotSpillCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotSpillCount(cfg MetricConfig) metricPostgresqlReplicationSlotSpillCount {
+	m := metricPostgresqlReplicationSlotSpillCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotSpillTxns struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.spill_txns metric with initial data.
+func (m *metricPostgresqlReplicationSlotSpillTxns) init() {
+	m.data.SetName("postgresql.replication_slot.spill_txns")
+	m.data.SetDescription("Number of transactions spilled to disk during logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotSpillTxns) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotSpillTxns) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotSpillTxns) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotSpillTxns(cfg MetricConfig) metricPostgresqlReplicationSlotSpillTxns {
+	m := metricPostgresqlReplicationSlotSpillTxns{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotStreamBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.stream_bytes metric with initial data.
+func (m *metricPostgresqlReplicationSlotStreamBytes) init() {
+	m.data.SetName("postgresql.replication_slot.stream_bytes")
+	m.data.SetDescription("Total amount of data streamed for in-progress transactions during logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotStreamBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotStreamBytes) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotStreamBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotStreamBytes(cfg MetricConfig) metricPostgresqlReplicationSlotStreamBytes {
+	m := metricPostgresqlReplicationSlotStreamBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotStreamCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.stream_count metric with initial data.
+func (m *metricPostgresqlReplicationSlotStreamCount) init() {
+	m.data.SetName("postgresql.replication_slot.stream_count")
+	m.data.SetDescription("Number of times in-progress transactions were streamed during logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("{streams}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotStreamCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotStreamCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotStreamCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotStreamCount(cfg MetricConfig) metricPostgresqlReplicationSlotStreamCount {
+	m := metricPostgresqlReplicationSlotStreamCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotStreamTxns struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.stream_txns metric with initial data.
+func (m *metricPostgresqlReplicationSlotStreamTxns) init() {
+	m.data.SetName("postgresql.replication_slot.stream_txns")
+	m.data.SetDescription("Number of in-progress transactions streamed during logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotStreamTxns) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotStreamTxns) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotStreamTxns) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotStreamTxns(cfg MetricConfig) metricPostgresqlReplicationSlotStreamTxns {
+	m := metricPostgresqlReplicationSlotStreamTxns{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotTotalBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.total_bytes metric with initial data.
+func (m *metricPostgresqlReplicationSlotTotalBytes) init() {
+	m.data.SetName("postgresql.replication_slot.total_bytes")
+	m.data.SetDescription("Total amount of data decoded for transactions during logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotTotalBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotTotalBytes) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotTotalBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotTotalBytes(cfg MetricConfig) metricPostgresqlReplicationSlotTotalBytes {
+	m := metricPostgresqlReplicationSlotTotalBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlReplicationSlotTotalTxns struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.replication_slot.total_txns metric with initial data.
+func (m *metricPostgresqlReplicationSlotTotalTxns) init() {
+	m.data.SetName("postgresql.replication_slot.total_txns")
+	m.data.SetDescription("Total number of decoded transactions during logical decoding (PostgreSQL 14+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlReplicationSlotTotalTxns) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("slot_name", slotNameAttributeValue)
+	dp.Attributes().PutStr("slot_type", slotTypeAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlReplicationSlotTotalTxns) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlReplicationSlotTotalTxns) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlReplicationSlotTotalTxns(cfg MetricConfig) metricPostgresqlReplicationSlotTotalTxns {
+	m := metricPostgresqlReplicationSlotTotalTxns{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlReplicationSlotXminAge struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2592,6 +3064,14 @@ type MetricsBuilder struct {
 	metricPostgresqlReplicationSlotCatalogXminAge           metricPostgresqlReplicationSlotCatalogXminAge
 	metricPostgresqlReplicationSlotConfirmedFlushDelayBytes metricPostgresqlReplicationSlotConfirmedFlushDelayBytes
 	metricPostgresqlReplicationSlotRestartDelayBytes        metricPostgresqlReplicationSlotRestartDelayBytes
+	metricPostgresqlReplicationSlotSpillBytes               metricPostgresqlReplicationSlotSpillBytes
+	metricPostgresqlReplicationSlotSpillCount               metricPostgresqlReplicationSlotSpillCount
+	metricPostgresqlReplicationSlotSpillTxns                metricPostgresqlReplicationSlotSpillTxns
+	metricPostgresqlReplicationSlotStreamBytes              metricPostgresqlReplicationSlotStreamBytes
+	metricPostgresqlReplicationSlotStreamCount              metricPostgresqlReplicationSlotStreamCount
+	metricPostgresqlReplicationSlotStreamTxns               metricPostgresqlReplicationSlotStreamTxns
+	metricPostgresqlReplicationSlotTotalBytes               metricPostgresqlReplicationSlotTotalBytes
+	metricPostgresqlReplicationSlotTotalTxns                metricPostgresqlReplicationSlotTotalTxns
 	metricPostgresqlReplicationSlotXminAge                  metricPostgresqlReplicationSlotXminAge
 	metricPostgresqlRollbacks                               metricPostgresqlRollbacks
 	metricPostgresqlRowsDeleted                             metricPostgresqlRowsDeleted
@@ -2661,6 +3141,14 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlReplicationSlotCatalogXminAge:           newMetricPostgresqlReplicationSlotCatalogXminAge(mbc.Metrics.PostgresqlReplicationSlotCatalogXminAge),
 		metricPostgresqlReplicationSlotConfirmedFlushDelayBytes: newMetricPostgresqlReplicationSlotConfirmedFlushDelayBytes(mbc.Metrics.PostgresqlReplicationSlotConfirmedFlushDelayBytes),
 		metricPostgresqlReplicationSlotRestartDelayBytes:        newMetricPostgresqlReplicationSlotRestartDelayBytes(mbc.Metrics.PostgresqlReplicationSlotRestartDelayBytes),
+		metricPostgresqlReplicationSlotSpillBytes:               newMetricPostgresqlReplicationSlotSpillBytes(mbc.Metrics.PostgresqlReplicationSlotSpillBytes),
+		metricPostgresqlReplicationSlotSpillCount:               newMetricPostgresqlReplicationSlotSpillCount(mbc.Metrics.PostgresqlReplicationSlotSpillCount),
+		metricPostgresqlReplicationSlotSpillTxns:                newMetricPostgresqlReplicationSlotSpillTxns(mbc.Metrics.PostgresqlReplicationSlotSpillTxns),
+		metricPostgresqlReplicationSlotStreamBytes:              newMetricPostgresqlReplicationSlotStreamBytes(mbc.Metrics.PostgresqlReplicationSlotStreamBytes),
+		metricPostgresqlReplicationSlotStreamCount:              newMetricPostgresqlReplicationSlotStreamCount(mbc.Metrics.PostgresqlReplicationSlotStreamCount),
+		metricPostgresqlReplicationSlotStreamTxns:               newMetricPostgresqlReplicationSlotStreamTxns(mbc.Metrics.PostgresqlReplicationSlotStreamTxns),
+		metricPostgresqlReplicationSlotTotalBytes:               newMetricPostgresqlReplicationSlotTotalBytes(mbc.Metrics.PostgresqlReplicationSlotTotalBytes),
+		metricPostgresqlReplicationSlotTotalTxns:                newMetricPostgresqlReplicationSlotTotalTxns(mbc.Metrics.PostgresqlReplicationSlotTotalTxns),
 		metricPostgresqlReplicationSlotXminAge:                  newMetricPostgresqlReplicationSlotXminAge(mbc.Metrics.PostgresqlReplicationSlotXminAge),
 		metricPostgresqlRollbacks:                               newMetricPostgresqlRollbacks(mbc.Metrics.PostgresqlRollbacks),
 		metricPostgresqlRowsDeleted:                             newMetricPostgresqlRowsDeleted(mbc.Metrics.PostgresqlRowsDeleted),
@@ -2813,6 +3301,14 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlReplicationSlotCatalogXminAge.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationSlotConfirmedFlushDelayBytes.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationSlotRestartDelayBytes.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotSpillBytes.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotSpillCount.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotSpillTxns.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotStreamBytes.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotStreamCount.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotStreamTxns.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotTotalBytes.emit(ils.Metrics())
+	mb.metricPostgresqlReplicationSlotTotalTxns.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationSlotXminAge.emit(ils.Metrics())
 	mb.metricPostgresqlRollbacks.emit(ils.Metrics())
 	mb.metricPostgresqlRowsDeleted.emit(ils.Metrics())
@@ -2998,6 +3494,46 @@ func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotConfirmedFlushDelayByte
 // RecordPostgresqlReplicationSlotRestartDelayBytesDataPoint adds a data point to postgresql.replication_slot.restart_delay_bytes metric.
 func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotRestartDelayBytesDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, pluginAttributeValue string) {
 	mb.metricPostgresqlReplicationSlotRestartDelayBytes.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, pluginAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotSpillBytesDataPoint adds a data point to postgresql.replication_slot.spill_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotSpillBytesDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotSpillBytes.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotSpillCountDataPoint adds a data point to postgresql.replication_slot.spill_count metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotSpillCountDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotSpillCount.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotSpillTxnsDataPoint adds a data point to postgresql.replication_slot.spill_txns metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotSpillTxnsDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotSpillTxns.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotStreamBytesDataPoint adds a data point to postgresql.replication_slot.stream_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotStreamBytesDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotStreamBytes.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotStreamCountDataPoint adds a data point to postgresql.replication_slot.stream_count metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotStreamCountDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotStreamCount.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotStreamTxnsDataPoint adds a data point to postgresql.replication_slot.stream_txns metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotStreamTxnsDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotStreamTxns.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotTotalBytesDataPoint adds a data point to postgresql.replication_slot.total_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotTotalBytesDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotTotalBytes.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
+}
+
+// RecordPostgresqlReplicationSlotTotalTxnsDataPoint adds a data point to postgresql.replication_slot.total_txns metric.
+func (mb *MetricsBuilder) RecordPostgresqlReplicationSlotTotalTxnsDataPoint(ts pcommon.Timestamp, val int64, slotNameAttributeValue string, slotTypeAttributeValue string, stateAttributeValue string) {
+	mb.metricPostgresqlReplicationSlotTotalTxns.recordDataPoint(mb.startTime, ts, val, slotNameAttributeValue, slotTypeAttributeValue, stateAttributeValue)
 }
 
 // RecordPostgresqlReplicationSlotXminAgeDataPoint adds a data point to postgresql.replication_slot.xmin_age metric.

@@ -131,4 +131,39 @@ const (
 				ELSE 0
 			END as confirmed_flush_delay_bytes
 		FROM pg_replication_slots`
+
+	// Replication Slot Stats Queries
+	// PgStatReplicationSlotsSQL returns replication slot statistics from pg_stat_replication_slots
+	// This view provides statistics about logical decoding on replication slots
+	// Available in PostgreSQL 14+
+	//
+	// Metrics collected:
+	// - spill_txns: Number of transactions spilled to disk
+	// - spill_count: Number of times transactions were spilled to disk
+	// - spill_bytes: Total bytes spilled to disk
+	// - stream_txns: Number of in-progress transactions streamed
+	// - stream_count: Number of times in-progress transactions were streamed
+	// - stream_bytes: Total bytes streamed for in-progress transactions
+	// - total_txns: Total number of decoded transactions
+	// - total_bytes: Total bytes processed
+	//
+	// Notes:
+	// - This view only contains data for logical replication slots
+	// - Physical replication slots will not appear in pg_stat_replication_slots
+	// - Joins with pg_replication_slots to get slot metadata (type, state)
+	PgStatReplicationSlotsSQL = `
+		SELECT
+			slot.slot_name,
+			slot.slot_type,
+			CASE WHEN slot.active THEN 'active' ELSE 'inactive' END as state,
+			COALESCE(stat.spill_txns, 0) as spill_txns,
+			COALESCE(stat.spill_count, 0) as spill_count,
+			COALESCE(stat.spill_bytes, 0) as spill_bytes,
+			COALESCE(stat.stream_txns, 0) as stream_txns,
+			COALESCE(stat.stream_count, 0) as stream_count,
+			COALESCE(stat.stream_bytes, 0) as stream_bytes,
+			COALESCE(stat.total_txns, 0) as total_txns,
+			COALESCE(stat.total_bytes, 0) as total_bytes
+		FROM pg_stat_replication_slots stat
+		JOIN pg_replication_slots slot ON slot.slot_name = stat.slot_name`
 )

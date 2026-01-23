@@ -153,3 +153,56 @@ func (s *ReplicationScraper) recordMetricsForSlot(now pcommon.Timestamp, metric 
 	s.mb.RecordPostgresqlReplicationSlotRestartDelayBytesDataPoint(now, getInt64(metric.RestartDelayBytes), slotName, slotType, plugin)
 	s.mb.RecordPostgresqlReplicationSlotConfirmedFlushDelayBytesDataPoint(now, getInt64(metric.ConfirmedFlushDelayBytes), slotName, slotType, plugin)
 }
+
+// ScrapeReplicationSlotStats scrapes replication slot statistics from pg_stat_replication_slots
+func (s *ReplicationScraper) ScrapeReplicationSlotStats(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// Replication slot stats available in PostgreSQL 14+
+	const PG14Version = 140000 // PostgreSQL 14.0
+
+	if s.version < PG14Version {
+		s.logger.Debug("Skipping replication slot stats (PostgreSQL 14+ required)",
+			zap.Int("version", s.version))
+		return nil
+	}
+
+	metrics, err := s.client.QueryReplicationSlotStats(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query replication slot stats", zap.Error(err))
+		return []error{err}
+	}
+
+	// No error if no replication slot stats (empty result set)
+	if len(metrics) == 0 {
+		s.logger.Debug("No replication slot stats found (server may not have logical slots configured)")
+		return nil
+	}
+
+	for _, metric := range metrics {
+		s.recordMetricsForSlotStats(now, metric)
+	}
+
+	s.logger.Debug("Replication slot stats scrape completed",
+		zap.Int("slots", len(metrics)))
+
+	return nil
+}
+
+// recordMetricsForSlotStats records replication slot statistics for a single slot
+func (s *ReplicationScraper) recordMetricsForSlotStats(now pcommon.Timestamp, metric models.PgStatReplicationSlotMetric) {
+	// Get string values for attributes
+	slotName := getString(metric.SlotName)
+	slotType := getString(metric.SlotType)
+	state := getString(metric.State)
+
+	// Record slot stats metrics using helper functions
+	s.mb.RecordPostgresqlReplicationSlotSpillTxnsDataPoint(now, getInt64(metric.SpillTxns), slotName, slotType, state)
+	s.mb.RecordPostgresqlReplicationSlotSpillCountDataPoint(now, getInt64(metric.SpillCount), slotName, slotType, state)
+	s.mb.RecordPostgresqlReplicationSlotSpillBytesDataPoint(now, getInt64(metric.SpillBytes), slotName, slotType, state)
+	s.mb.RecordPostgresqlReplicationSlotStreamTxnsDataPoint(now, getInt64(metric.StreamTxns), slotName, slotType, state)
+	s.mb.RecordPostgresqlReplicationSlotStreamCountDataPoint(now, getInt64(metric.StreamCount), slotName, slotType, state)
+	s.mb.RecordPostgresqlReplicationSlotStreamBytesDataPoint(now, getInt64(metric.StreamBytes), slotName, slotType, state)
+	s.mb.RecordPostgresqlReplicationSlotTotalTxnsDataPoint(now, getInt64(metric.TotalTxns), slotName, slotType, state)
+	s.mb.RecordPostgresqlReplicationSlotTotalBytesDataPoint(now, getInt64(metric.TotalBytes), slotName, slotType, state)
+}

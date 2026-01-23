@@ -44,4 +44,10 @@ type PostgreSQLClient interface {
 	// Returns empty slice if no replication slots are configured
 	// Available in PostgreSQL 9.4+
 	QueryReplicationSlots(ctx context.Context, version int) ([]models.PgReplicationSlotMetric, error)
+
+	// QueryReplicationSlotStats retrieves replication slot statistics from pg_stat_replication_slots
+	// This view provides statistics about logical decoding on replication slots
+	// Returns empty slice if no logical replication slots are configured
+	// Available in PostgreSQL 14+
+	QueryReplicationSlotStats(ctx context.Context) ([]models.PgStatReplicationSlotMetric, error)
 }

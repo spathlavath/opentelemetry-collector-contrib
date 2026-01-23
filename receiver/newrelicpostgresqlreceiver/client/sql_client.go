@@ -292,3 +292,44 @@ func (c *SQLClient) QueryReplicationSlots(ctx context.Context, version int) ([]m
 
 	return metrics, nil
 }
+
+// QueryReplicationSlotStats retrieves replication slot statistics from pg_stat_replication_slots
+// This view is only available in PostgreSQL 14+
+func (c *SQLClient) QueryReplicationSlotStats(ctx context.Context) ([]models.PgStatReplicationSlotMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatReplicationSlotsSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_replication_slots: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatReplicationSlotMetric
+
+	for rows.Next() {
+		var metric models.PgStatReplicationSlotMetric
+
+		err = rows.Scan(
+			&metric.SlotName,
+			&metric.SlotType,
+			&metric.State,
+			&metric.SpillTxns,
+			&metric.SpillCount,
+			&metric.SpillBytes,
+			&metric.StreamTxns,
+			&metric.StreamCount,
+			&metric.StreamBytes,
+			&metric.TotalTxns,
+			&metric.TotalBytes,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_replication_slots row: %w", err)
+		}
+
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_replication_slots rows: %w", err)
+	}
+
+	return metrics, nil
+}

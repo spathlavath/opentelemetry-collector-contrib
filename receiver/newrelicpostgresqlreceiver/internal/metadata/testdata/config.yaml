@@ -57,6 +57,22 @@ all_set:
       enabled: true
     postgresql.replication_slot.restart_delay_bytes:
       enabled: true
+    postgresql.replication_slot.spill_bytes:
+      enabled: true
+    postgresql.replication_slot.spill_count:
+      enabled: true
+    postgresql.replication_slot.spill_txns:
+      enabled: true
+    postgresql.replication_slot.stream_bytes:
+      enabled: true
+    postgresql.replication_slot.stream_count:
+      enabled: true
+    postgresql.replication_slot.stream_txns:
+      enabled: true
+    postgresql.replication_slot.total_bytes:
+      enabled: true
+    postgresql.replication_slot.total_txns:
+      enabled: true
     postgresql.replication_slot.xmin_age:
       enabled: true
     postgresql.rollbacks:
@@ -159,6 +175,22 @@ none_set:
     postgresql.replication_slot.confirmed_flush_delay_bytes:
       enabled: false
     postgresql.replication_slot.restart_delay_bytes:
+      enabled: false
+    postgresql.replication_slot.spill_bytes:
+      enabled: false
+    postgresql.replication_slot.spill_count:
+      enabled: false
+    postgresql.replication_slot.spill_txns:
+      enabled: false
+    postgresql.replication_slot.stream_bytes:
+      enabled: false
+    postgresql.replication_slot.stream_count:
+      enabled: false
+    postgresql.replication_slot.stream_txns:
+      enabled: false
+    postgresql.replication_slot.total_bytes:
+      enabled: false
+    postgresql.replication_slot.total_txns:
       enabled: false
     postgresql.replication_slot.xmin_age:
       enabled: false
