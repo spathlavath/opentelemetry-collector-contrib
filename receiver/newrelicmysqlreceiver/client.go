@@ -16,6 +16,8 @@ type client interface {
 	Connect() error
 	getGlobalStats() (map[string]int64, error)
 	getGlobalVariables() (map[string]int64, error)
+	getReplicationStatus() (map[string]string, error)
+	getVersion() (string, error)
 	Close() error
 }
 
@@ -113,6 +115,71 @@ func (c *mySQLClient) getGlobalVariables() (map[string]int64, error) {
 	}
 
 	return vars, rows.Err()
+}
+
+func (c *mySQLClient) getReplicationStatus() (map[string]string, error) {
+	// Try MySQL 8.0+ command first (SHOW REPLICA STATUS)
+	query := "SHOW REPLICA STATUS"
+	rows, err := c.db.Query(query)
+	if err != nil {
+		// Fall back to MySQL 5.7 command (SHOW SLAVE STATUS)
+		query = "SHOW SLAVE STATUS"
+		rows, err = c.db.Query(query)
+		if err != nil {
+			return nil, err
+		}
+	}
+	defer rows.Close()
+
+	// Get column names
+	columns, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if there are any rows (only applies to replicas)
+	if !rows.Next() {
+		// Not a replica, return empty map
+		return make(map[string]string), nil
+	}
+
+	// Create a slice of any to hold the values
+	values := make([]any, len(columns))
+	valuePtrs := make([]any, len(columns))
+	for i := range values {
+		valuePtrs[i] = &values[i]
+	}
+
+	// Scan the row
+	if err := rows.Scan(valuePtrs...); err != nil {
+		return nil, err
+	}
+
+	// Convert to map
+	result := make(map[string]string)
+	for i, col := range columns {
+		var v string
+		val := values[i]
+		if val != nil {
+			switch t := val.(type) {
+			case []byte:
+				v = string(t)
+			case string:
+				v = t
+			default:
+				v = fmt.Sprintf("%v", val)
+			}
+		}
+		result[col] = v
+	}
+
+	return result, rows.Err()
+}
+
+func (c *mySQLClient) getVersion() (string, error) {
+	var version string
+	err := c.db.QueryRow("SELECT VERSION()").Scan(&version)
+	return version, err
 }
 
 func (c *mySQLClient) Close() error {

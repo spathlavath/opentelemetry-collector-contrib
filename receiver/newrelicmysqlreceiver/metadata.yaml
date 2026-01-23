@@ -19,10 +19,9 @@ attributes:
   command:
     description: The command types.
     type: string
-    enum: [delete, delete_multi, insert, insert_select, load, replace, replace_select, select, update, update_multi]
+    enum: [commit, delete, delete_multi, insert, insert_select, load, replace, replace_select, rollback, select, update, update_multi]
 
 metrics:
-  # InnoDB Metrics
   newrelicmysql.commands:
     enabled: true
     description: The number of times each type of command has been executed.
@@ -46,6 +45,29 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
+  newrelicmysql.db.handler_rollback:
+    enabled: true
+    description: The number of internal ROLLBACK statements.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.db.opened_tables:
+    enabled: true
+    description: The number of tables that have been opened.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  # InnoDB Additional Metrics
   newrelicmysql.innodb.buffer_pool_dirty:
     enabled: true
     description: The number of dirty pages in the InnoDB buffer pool.
@@ -144,6 +166,29 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.innodb.data_written:
+    enabled: true
+    description: The amount of data written to InnoDB tables in bytes.
+    stability:
+      level: development
+    unit: By
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.log_waits:
+    enabled: true
+    description: The number of times the log buffer was too small and a wait was required for it to be flushed.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  # Performance Metrics
   newrelicmysql.innodb.mutex_os_waits:
     enabled: true
     description: The number of mutex OS waits.
@@ -343,7 +388,16 @@ metrics:
     gauge:
       value_type: int
 
-  # Performance Metrics
+  newrelicmysql.net.max_used_connections:
+    enabled: true
+    description: The maximum number of connections that have been in use simultaneously since the server started.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  # DB Metrics
   newrelicmysql.performance.bytes_received:
     enabled: true
     description: The number of bytes received from all clients.
@@ -488,6 +542,17 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.performance.qcache_not_cached:
+    enabled: true
+    description: The number of queries that were not cached in the query cache.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
   newrelicmysql.performance.qcache_size:
     enabled: true
     description: The amount of memory allocated for the query cache.
@@ -577,6 +642,96 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
+  newrelicmysql.replication.exec_master_log_pos:
+    enabled: true
+    description: The position in the current master binary log file to which the replication SQL thread has read and executed.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.last_io_errno:
+    enabled: true
+    description: The error number of the most recent error that caused the replication I/O thread to stop.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+
+  newrelicmysql.replication.last_sql_errno:
+    enabled: true
+    description: The error number of the most recent error that caused the replication SQL thread to stop.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+
+
+
+
+  newrelicmysql.replication.read_master_log_pos:
+    enabled: true
+    description: The position in the current master binary log file up to which the replication I/O thread has read.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.relay_log_space:
+    enabled: true
+    description: The total combined size of all existing relay log files.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+
+  newrelicmysql.replication.seconds_behind_master:
+    enabled: true
+    description: The number of seconds that the replica SQL thread is behind processing the master binary log.
+    stability:
+      level: development
+    unit: s
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.slave_io_running:
+    enabled: true
+    description: Status of the replication I/O thread. 0=No/Stopped, 1=Yes/Running, 2=Connecting.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.slave_running:
+    enabled: true
+    description: Whether the replica is currently running (both I/O and SQL threads are running). 1=Both running, 0=One or both stopped.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.slave_sql_running:
+    enabled: true
+    description: Status of the replication SQL thread. 0=No/Stopped, 1=Yes/Running.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+
+
+
   newrelicmysql.uptime:
     enabled: true
     description: The number of seconds that the server has been up.
@@ -588,6 +743,7 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
+
 
 
 tests:

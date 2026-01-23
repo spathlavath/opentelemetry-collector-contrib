@@ -5,6 +5,10 @@ all_set:
       enabled: true
     newrelicmysql.connection.count:
       enabled: true
+    newrelicmysql.db.handler_rollback:
+      enabled: true
+    newrelicmysql.db.opened_tables:
+      enabled: true
     newrelicmysql.innodb.buffer_pool_dirty:
       enabled: true
     newrelicmysql.innodb.buffer_pool_free:
@@ -24,6 +28,10 @@ all_set:
     newrelicmysql.innodb.data_reads:
       enabled: true
     newrelicmysql.innodb.data_writes:
+      enabled: true
+    newrelicmysql.innodb.data_written:
+      enabled: true
+    newrelicmysql.innodb.log_waits:
       enabled: true
     newrelicmysql.innodb.mutex_os_waits:
       enabled: true
@@ -63,6 +71,8 @@ all_set:
       enabled: true
     newrelicmysql.net.max_connections_available:
       enabled: true
+    newrelicmysql.net.max_used_connections:
+      enabled: true
     newrelicmysql.performance.bytes_received:
       enabled: true
     newrelicmysql.performance.bytes_sent:
@@ -91,6 +101,8 @@ all_set:
       enabled: true
     newrelicmysql.performance.qcache_lowmem_prunes:
       enabled: true
+    newrelicmysql.performance.qcache_not_cached:
+      enabled: true
     newrelicmysql.performance.qcache_size:
       enabled: true
     newrelicmysql.performance.questions:
@@ -108,6 +120,24 @@ all_set:
     newrelicmysql.performance.threads_running:
       enabled: true
     newrelicmysql.query.count:
+      enabled: true
+    newrelicmysql.replication.exec_master_log_pos:
+      enabled: true
+    newrelicmysql.replication.last_io_errno:
+      enabled: true
+    newrelicmysql.replication.last_sql_errno:
+      enabled: true
+    newrelicmysql.replication.read_master_log_pos:
+      enabled: true
+    newrelicmysql.replication.relay_log_space:
+      enabled: true
+    newrelicmysql.replication.seconds_behind_master:
+      enabled: true
+    newrelicmysql.replication.slave_io_running:
+      enabled: true
+    newrelicmysql.replication.slave_running:
+      enabled: true
+    newrelicmysql.replication.slave_sql_running:
       enabled: true
     newrelicmysql.uptime:
       enabled: true
@@ -120,6 +150,10 @@ none_set:
       enabled: false
     newrelicmysql.connection.count:
       enabled: false
+    newrelicmysql.db.handler_rollback:
+      enabled: false
+    newrelicmysql.db.opened_tables:
+      enabled: false
     newrelicmysql.innodb.buffer_pool_dirty:
       enabled: false
     newrelicmysql.innodb.buffer_pool_free:
@@ -139,6 +173,10 @@ none_set:
     newrelicmysql.innodb.data_reads:
       enabled: false
     newrelicmysql.innodb.data_writes:
+      enabled: false
+    newrelicmysql.innodb.data_written:
+      enabled: false
+    newrelicmysql.innodb.log_waits:
       enabled: false
     newrelicmysql.innodb.mutex_os_waits:
       enabled: false
@@ -178,6 +216,8 @@ none_set:
       enabled: false
     newrelicmysql.net.max_connections_available:
       enabled: false
+    newrelicmysql.net.max_used_connections:
+      enabled: false
     newrelicmysql.performance.bytes_received:
       enabled: false
     newrelicmysql.performance.bytes_sent:
@@ -206,6 +246,8 @@ none_set:
       enabled: false
     newrelicmysql.performance.qcache_lowmem_prunes:
       enabled: false
+    newrelicmysql.performance.qcache_not_cached:
+      enabled: false
     newrelicmysql.performance.qcache_size:
       enabled: false
     newrelicmysql.performance.questions:
@@ -223,6 +265,24 @@ none_set:
     newrelicmysql.performance.threads_running:
       enabled: false
     newrelicmysql.query.count:
+      enabled: false
+    newrelicmysql.replication.exec_master_log_pos:
+      enabled: false
+    newrelicmysql.replication.last_io_errno:
+      enabled: false
+    newrelicmysql.replication.last_sql_errno:
+      enabled: false
+    newrelicmysql.replication.read_master_log_pos:
+      enabled: false
+    newrelicmysql.replication.relay_log_space:
+      enabled: false
+    newrelicmysql.replication.seconds_behind_master:
+      enabled: false
+    newrelicmysql.replication.slave_io_running:
+      enabled: false
+    newrelicmysql.replication.slave_running:
+      enabled: false
+    newrelicmysql.replication.slave_sql_running:
       enabled: false
     newrelicmysql.uptime:
       enabled: false
