@@ -1,56 +1,4 @@
 
-# Extensions provide additional functionality
-
-# Service configuration
-service:
-  # Enable extensions
-  
-  # Define the data pipeline
-  pipelines:
-    # Metrics pipeline: receiver -> processor -> exporter
-    metrics:
-      receivers: [newrelicsqlserver]
-      processors: [memory_limiter, transform/host, batch]
-      exporters: [otlphttp, debug]
-    
-    # Logs pipeline: receiver -> processor -> exporter (for execution plans)
-    logs:
-      receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch]
-      exporters: [otlphttp/logs, debug]
-  
-  # Telemetry configuration for the collector itself
-  telemetry:
-    logs:
-      level: debug  # Changed from info to debug for verbose logging
-    metrics:
-      level: none
-
-# Processors transform and enrich the data
-processors:
-  # Memory limiter prevents out-of-memory issues
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 256
-    spike_limit_mib: 64
-
-  transform/host:
-    metric_statements:
-      - context: metric
-        statements:
-          - set(metric.description, "")
-          - set(metric.unit, "")
-  # Batch processor groups data for efficient transmission
-  batch:
-    timeout: 10s
-    send_batch_size: 1024
-  
-  # Resource processor adds metadata to all telemetry
-  # NOTE: server.address and server.port are automatically set by the receiver
-  # based on the hostname and port configuration. No need to add them here.
-
-
-# Receivers collect telemetry data
 receivers:
   newrelicsqlserver:
     hostname: ""                    # e.g., "your-sql-server.com" or "192.168.1.100"
@@ -75,6 +23,12 @@ processors:
   batch:
     timeout: 10s
     send_batch_size: 1024
+  transform/host:
+    metric_statements:
+      - context: metric
+        statements:
+          - set(metric.description, "")
+          - set(metric.unit, "")
   
   
   
@@ -95,7 +49,6 @@ processors:
         metric_names:
           - sqlserver.slowquery.query_details
           - sqlserver.execution.plan
-
 
 connectors:
   # Convert metrics to logs
@@ -118,13 +71,13 @@ service:
     # Main metrics pipeline - send all metrics EXCEPT execution plan
     metrics:
       receivers: [newrelicsqlserver]
-      processors: [memory_limiter, batch, filter/exec_plan_exclude]
+      processors: [memory_limiter, batch, transform/host, filter/exec_plan_exclude]
       exporters: [otlp, debug]
     
     # Metrics to logs pipeline - convert execution plan metrics to logs
     metrics/exec_plan_to_logs:
       receivers: [newrelicsqlserver]
-      processors: [filter/exec_plan_include]
+      processors: [transform/host, filter/exec_plan_include]
       exporters: [metricsaslogs]
     
     # Logs pipeline - receive converted metrics from connector
@@ -138,4 +91,3 @@ service:
       level: info  # Changed from info to debug for verbose logging
     metrics:
       level: none
-    
