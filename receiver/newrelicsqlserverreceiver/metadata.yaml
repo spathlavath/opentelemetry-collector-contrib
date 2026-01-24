@@ -4,7 +4,6 @@ status:
   class: receiver
   stability:
     alpha: [metrics]
-    development: [logs]
   distributions: [contrib]
   codeowners:
     active: [pkulkarni, avadla, pkudikyala]
@@ -1570,6 +1569,52 @@ metrics:
         schema_name,
       ]
 
+  # Execution Plan Operator Metric (single metric with all operator details as attributes)
+  sqlserver.execution.plan:
+    enabled: true
+    stability:
+      level: alpha
+    description: SQL Server execution plan operator with detailed cost estimates, performance metrics, and resource usage
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes:
+      [
+        query_id,
+        plan_handle,
+        node_id,
+        parent_node_id,
+        physical_op,
+        logical_op,
+        input_type,
+        schema_name,
+        table_name,
+        index_name,
+        referenced_columns,
+        estimate_rows,
+        estimate_io,
+        estimate_cpu,
+        avg_row_size,
+        total_subtree_cost,
+        estimated_operator_cost,
+        estimated_execution_mode,
+        granted_memory_kb,
+        spill_occurred,
+        no_join_predicate,
+        total_worker_time,
+        total_elapsed_time,
+        total_logical_reads,
+        total_logical_writes,
+        execution_count,
+        avg_elapsed_time_ms,
+        session_id,
+        request_id,
+        request_start_time,
+        collection_timestamp,
+        last_execution_time,
+        newrelic.event.type,
+      ]
+
   # Individual Query Analysis Metrics
   sqlserver.security.server_principals_count:
     enabled: true
@@ -1592,6 +1637,28 @@ metrics:
     attributes: [metric.type]
 
   # TempDB Contention Metrics
+  sqlserver.slowquery.query_details:
+    enabled: true
+    stability:
+      level: alpha
+    description: Query details including text, signature, and timestamps for slow queries
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes:
+      [
+        query_id,
+        database_name,
+        schema_name,
+        plan_handle,
+        statement_type,
+        query_text,
+        query_signature,
+        collection_timestamp,
+        last_execution_timestamp,
+        newrelic.event.type,
+      ]
+
   sqlserver.slowquery.avg_disk_reads:
     enabled: true
     stability:
@@ -1600,15 +1667,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.avg_disk_writes:
     enabled: true
@@ -1618,15 +1677,7 @@ metrics:
     unit: "{writes}"
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.avg_rows_processed:
     enabled: true
@@ -1636,15 +1687,7 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.historical_avg_cpu_time_ms:
     enabled: true
@@ -1654,15 +1697,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.historical_avg_elapsed_time_ms:
     enabled: true
@@ -1672,17 +1707,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-        collection_timestamp,
-        last_execution_timestamp,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.historical_execution_count:
     enabled: true
@@ -1692,15 +1717,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.interval_avg_elapsed_time_ms:
     enabled: true
@@ -1710,15 +1727,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.interval_execution_count:
     enabled: true
@@ -1728,15 +1737,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.last_dop:
     enabled: true
@@ -1746,15 +1747,7 @@ metrics:
     unit: "{threads}"
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   # Execution Plan Metrics (ONLY 2 metrics needed for NRQL queries)
   sqlserver.slowquery.last_elapsed_time_ms:
@@ -1765,15 +1758,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.last_grant_kb:
     enabled: true
@@ -1783,15 +1768,7 @@ metrics:
     unit: KB
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.last_spills:
     enabled: true
@@ -1801,15 +1778,7 @@ metrics:
     unit: "{pages}"
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.last_used_grant_kb:
     enabled: true
@@ -1819,15 +1788,7 @@ metrics:
     unit: KB
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.max_elapsed_time_ms:
     enabled: true
@@ -1837,15 +1798,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.max_spills:
     enabled: true
@@ -1855,15 +1808,7 @@ metrics:
     unit: "{pages}"
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.slowquery.min_elapsed_time_ms:
     enabled: true
@@ -1873,34 +1818,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-      ]
-
-  sqlserver.slowquery.query_text:
-    enabled: true
-    stability:
-      level: alpha
-    description: Query text for slow query
-    unit: "1"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        database_name,
-        schema_name,
-        statement_type,
-        query_text,
-        query_signature,
-      ]
+    attributes: [query_id, database_name, schema_name]
 
   sqlserver.stats.connections:
     enabled: true
@@ -2404,8 +2322,8 @@ attributes:
   metric_source:
     description: Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX)
     type: string
-  newrelic_event_type:
-    description: New Relic custom event type identifier
+  newrelic.event.type:
+    description: Event type for New Relic integration
     type: string
   no_join_predicate:
     description: Whether join lacks a predicate (potential Cartesian product)
@@ -2431,15 +2349,6 @@ attributes:
     type: string
   plan_handle:
     description: Handle to the cached execution plan
-    type: string
-  principal_name:
-    description: Database principal name
-    type: string
-  principal_type:
-    description: Principal type description
-    type: string
-  process_info:
-    description: Process information
     type: string
   program_name:
     description: Client program name
@@ -2498,9 +2407,6 @@ attributes:
     type: bool
   sql_hostname:
     description: SQL Server hostname
-    type: string
-  start_time:
-    description: Event start time
     type: string
   statement_type:
     description: Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.)
@@ -2574,45 +2480,6 @@ attributes:
   wait_type_description:
     description: Human-readable description of the wait type
     type: string
-events:
-  sqlserver.active_query_execution_plan:
-    enabled: true
-    description: Execution plan details for active SQL Server queries
-    attributes:
-      - newrelic_event_type
-      - query_id
-      - plan_handle
-      - session_id
-      - request_id
-      - database_name
-      - start_time
-      - node_id
-      - parent_node_id
-      - input_type
-      - physical_op
-      - logical_op
-      - query_text
-      - schema_name
-      - table_name
-      - index_name
-      - referenced_columns
-      - estimate_rows
-      - estimate_io
-      - estimate_cpu
-      - avg_row_size
-      - total_subtree_cost
-      - estimated_operator_cost
-      - estimated_execution_mode
-      - granted_memory_kb
-      - spill_occurred
-      - no_join_predicate
-      - total_worker_time
-      - total_elapsed_time
-      - total_logical_reads
-      - total_logical_writes
-      - execution_count
-      - avg_elapsed_time_ms
-      - last_execution_time
 
 tests:
   config:
