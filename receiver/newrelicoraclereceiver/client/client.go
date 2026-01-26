@@ -17,6 +17,11 @@ type OracleClient interface {
 	Close() error
 	Ping(ctx context.Context) error
 
+	// PDB Discovery
+	// DiscoverPDBs discovers available PDBs from the CDB
+	// If pdbNames is empty, discovers all PDBs; otherwise, discovers only the specified PDBs
+	DiscoverPDBs(ctx context.Context, pdbNames []string) ([]models.DiscoveredPDB, error)
+
 	// Execution plan queries
 	QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error)
 

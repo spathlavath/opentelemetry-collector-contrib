@@ -38,6 +38,38 @@ func (c *SQLClient) Ping(ctx context.Context) error {
 	return c.db.PingContext(ctx)
 }
 
+// DiscoverPDBs discovers available PDBs from the CDB
+// If pdbNames is empty, discovers all PDBs; otherwise, discovers only the specified PDBs
+func (c *SQLClient) DiscoverPDBs(ctx context.Context, pdbNames []string) ([]models.DiscoveredPDB, error) {
+	var query string
+	if len(pdbNames) == 0 {
+		query = queries.DiscoverPDBServicesSQL
+	} else {
+		query = queries.BuildDiscoverSpecificPDBsQuery(pdbNames)
+	}
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to discover PDBs: %w", err)
+	}
+	defer rows.Close()
+
+	var results []models.DiscoveredPDB
+	for rows.Next() {
+		var pdb models.DiscoveredPDB
+		if err := rows.Scan(&pdb.ConID, &pdb.PDBName, &pdb.PDBServiceFQDN, &pdb.OpenMode); err != nil {
+			return nil, fmt.Errorf("failed to scan PDB row: %w", err)
+		}
+		results = append(results, pdb)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating PDB rows: %w", err)
+	}
+
+	return results, nil
+}
+
 // QueryExecutionPlanForChild executes the execution plan query for a specific SQL_ID and CHILD_NUMBER.
 func (c *SQLClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error) {
 	query := queries.GetExecutionPlanForChildQuery(sqlID, childNumber)

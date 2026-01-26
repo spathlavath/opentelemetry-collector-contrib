@@ -119,7 +119,7 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			db.SetConnMaxIdleTime(30 * time.Second)
 
 			return db, nil
-		}, hostAddress, hostPort, serviceName)
+		}, sqlOpenerFunc, hostAddress, hostPort, serviceName)
 		if err != nil {
 			return nil, err
 		}

@@ -92,6 +92,10 @@ type Config struct {
 	Service    string `mapstructure:"service"`
 	Username   string `mapstructure:"username"`
 
+	// PDB Discovery Configuration
+	// Values: "ALL" (discover all PDBs), "pdb1,pdb2" (specific PDBs), or "" (disabled)
+	PDBList string `mapstructure:"pdb_list"`
+
 	// Connection Pool Configuration
 	MaxOpenConnections    int  `mapstructure:"max_open_connections"`
 	DisableConnectionPool bool `mapstructure:"disable_connection_pool"`
@@ -127,6 +131,32 @@ type Config struct {
 }
 
 // SetDefaults sets default values for configuration fields that are not explicitly set
+// IsPDBDiscoveryEnabled returns true if PDB discovery is enabled
+func (c *Config) IsPDBDiscoveryEnabled() bool {
+	return c.PDBList != ""
+}
+
+// IsDiscoverAllPDBs returns true if all PDBs should be discovered
+func (c *Config) IsDiscoverAllPDBs() bool {
+	return strings.ToUpper(c.PDBList) == "ALL"
+}
+
+// GetExplicitPDBs returns a list of explicitly configured PDB names (when not "ALL")
+func (c *Config) GetExplicitPDBs() []string {
+	if c.PDBList == "" || c.IsDiscoverAllPDBs() {
+		return nil
+	}
+	pdbs := strings.Split(c.PDBList, ",")
+	result := make([]string, 0, len(pdbs))
+	for _, pdb := range pdbs {
+		trimmed := strings.TrimSpace(pdb)
+		if trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+	return result
+}
+
 func (c *Config) SetDefaults() {
 	if c.MaxOpenConnections == 0 {
 		c.MaxOpenConnections = defaultMaxOpenConnections

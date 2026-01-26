@@ -63,6 +63,11 @@ type newRelicOracleScraper struct {
 	waitEventBlockingScraper *scrapers.WaitEventBlockingScraper
 	childCursorsScraper      *scrapers.ChildCursorsScraper
 
+	// PDB Discovery Manager
+	pdbManager      *PDBManager
+	usePDBDiscovery bool
+	dbOpener        func(string) (*sql.DB, error)
+
 	// Database and configuration
 	db             *sql.DB
 	client         client.OracleClient
@@ -94,6 +99,7 @@ func newScraper(
 	config *Config,
 	logger *zap.Logger,
 	providerFunc dbProviderFunc,
+	sqlOpener sqlOpenerFunc,
 	hostAddress string,
 	hostPort int64,
 	serviceName string,
@@ -109,6 +115,7 @@ func newScraper(
 
 		// Database connection
 		dbProviderFunc: providerFunc,
+		dbOpener:       sqlOpener,
 
 		// Runtime info
 		logger:      logger,
@@ -161,12 +168,37 @@ func newLogsScraper(
 }
 
 // start initializes the scraper and establishes database connections
-func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
+func (s *newRelicOracleScraper) start(ctx context.Context, _ component.Host) error {
 	s.startTime = pcommon.NewTimestampFromTime(time.Now())
 
-	// Establish database connection
-	if err := s.initializeDatabase(); err != nil {
-		return err
+	// Check if PDB discovery is enabled
+	s.usePDBDiscovery = s.config.IsPDBDiscoveryEnabled()
+
+	if s.usePDBDiscovery {
+		s.logger.Info("PDB Discovery is enabled, initializing PDB Manager",
+			zap.String("pdb_list", s.config.PDBList))
+
+		// Initialize PDB Manager
+		s.pdbManager = NewPDBManager(
+			s.config,
+			s.logger,
+			s.dbOpener,
+			s.hostAddress,
+			s.hostPort,
+		)
+
+		if err := s.pdbManager.Initialize(ctx); err != nil {
+			return fmt.Errorf("failed to initialize PDB Manager: %w", err)
+		}
+
+		// Use CDB connection for main scraping
+		s.db = s.pdbManager.GetCDBDB()
+		s.client = s.pdbManager.GetCDBClient()
+	} else {
+		// Standard database connection (backward compatible)
+		if err := s.initializeDatabase(); err != nil {
+			return err
+		}
 	}
 
 	if err := s.initializeScrapers(); err != nil {
@@ -287,9 +319,21 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	errChan := make(chan error, maxErrors)
 	var wg sync.WaitGroup
 
+	// Refresh PDB connections if discovery is enabled
+	if s.usePDBDiscovery && s.pdbManager != nil {
+		if err := s.pdbManager.RefreshPDBConnections(scrapeCtx); err != nil {
+			s.logger.Warn("Failed to refresh PDB connections", zap.Error(err))
+		}
+	}
+
 	s.executeQPMScrapers(scrapeCtx, errChan)
 
 	s.executeIndependentScrapers(scrapeCtx, errChan, &wg)
+
+	// Execute PDB-specific scrapers if discovery is enabled
+	if s.usePDBDiscovery && s.pdbManager != nil {
+		s.executePDBScrapers(scrapeCtx, errChan, &wg)
+	}
 
 	scrapeErrors := s.collectScrapingErrors(scrapeCtx, errChan, &wg)
 
@@ -517,6 +561,104 @@ func (s *newRelicOracleScraper) executeChildCursors(ctx context.Context, errChan
 		zap.Int("errors", len(childCursorErrs)))
 }
 
+// executePDBScrapers executes scrapers for each discovered PDB in parallel
+func (s *newRelicOracleScraper) executePDBScrapers(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup) {
+	if s.pdbManager == nil {
+		return
+	}
+
+	pdbConnections := s.pdbManager.GetPDBConnections()
+	if len(pdbConnections) == 0 {
+		s.logger.Debug("No PDB connections available for scraping")
+		return
+	}
+
+	s.logger.Info("Starting PDB-specific metric collection",
+		zap.Int("pdb_count", len(pdbConnections)))
+
+	for pdbName, pdbConn := range pdbConnections {
+		if pdbConn.Client == nil {
+			s.logger.Warn("Skipping PDB with no client", zap.String("pdb_name", pdbName))
+			continue
+		}
+
+		wg.Add(1)
+		go func(name string, conn *PDBConnectionState) {
+			defer wg.Done()
+
+			s.logger.Debug("Scraping metrics for PDB",
+				zap.String("pdb_name", name),
+				zap.Int64("con_id", conn.ConID))
+
+			// Create PDB-specific scrapers
+			pdbErrors := s.scrapePDBMetrics(ctx, name, conn)
+
+			for _, err := range pdbErrors {
+				select {
+				case errChan <- err:
+				case <-ctx.Done():
+					return
+				default:
+					s.logger.Warn("Error channel full, dropping PDB scrape error",
+						zap.String("pdb_name", name),
+						zap.Error(err))
+				}
+			}
+
+			s.logger.Debug("Completed PDB metric collection",
+				zap.String("pdb_name", name),
+				zap.Int("errors", len(pdbErrors)))
+		}(pdbName, pdbConn)
+	}
+}
+
+// scrapePDBMetrics collects metrics specific to a PDB
+func (s *newRelicOracleScraper) scrapePDBMetrics(ctx context.Context, pdbName string, conn *PDBConnectionState) []error {
+	var errors []error
+
+	// Create PDB-specific scrapers using the PDB client
+	// These scrapers will collect metrics that are specific to the PDB context
+
+	// Session scraper for PDB
+	if s.config.EnableSessionScraper {
+		pdbSessionScraper := scrapers.NewSessionScraper(conn.Client, s.mb, s.logger, s.metricsBuilderConfig)
+		errs := pdbSessionScraper.ScrapeSessionCount(ctx)
+		if len(errs) > 0 {
+			for _, err := range errs {
+				errors = append(errors, fmt.Errorf("PDB %s session scraper: %w", pdbName, err))
+			}
+		}
+	}
+
+	// System scraper for PDB
+	if s.config.EnableSystemScraper {
+		pdbSystemScraper := scrapers.NewSystemScraper(conn.Client, s.mb, s.logger, s.metricsBuilderConfig)
+		errs := pdbSystemScraper.ScrapeSystemMetrics(ctx)
+		if len(errs) > 0 {
+			for _, err := range errs {
+				errors = append(errors, fmt.Errorf("PDB %s system scraper: %w", pdbName, err))
+			}
+		}
+	}
+
+	// Tablespace scraper for PDB
+	if s.config.EnableTablespaceScraper {
+		pdbTablespaceScraper := scrapers.NewTablespaceScraper(
+			conn.Client, s.mb, s.logger, s.metricsBuilderConfig,
+			s.config.TablespaceFilter.IncludeTablespaces,
+			s.config.TablespaceFilter.ExcludeTablespaces,
+		)
+		errs := pdbTablespaceScraper.ScrapeTablespaceMetrics(ctx)
+		if len(errs) > 0 {
+			for _, err := range errs {
+				errors = append(errors, fmt.Errorf("PDB %s tablespace scraper: %w", pdbName, err))
+			}
+		}
+	}
+
+	return errors
+}
+
 // executeIndependentScrapers launches concurrent scrapers for independent metrics
 func (s *newRelicOracleScraper) executeIndependentScrapers(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup) {
 	scraperFuncs := s.getIndependentScraperFunctions()
@@ -685,6 +827,12 @@ func (s *newRelicOracleScraper) sendErrorsToChannelWithCancellation(ctx context.
 
 // shutdown closes the database connection
 func (s *newRelicOracleScraper) shutdown(_ context.Context) error {
+	// If using PDB discovery, shutdown the manager
+	if s.usePDBDiscovery && s.pdbManager != nil {
+		return s.pdbManager.Shutdown()
+	}
+
+	// Standard shutdown
 	if s.db == nil {
 		return nil
 	}

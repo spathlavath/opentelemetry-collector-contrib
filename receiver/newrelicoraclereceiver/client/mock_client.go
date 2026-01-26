@@ -15,6 +15,9 @@ type MockClient struct {
 	ChildCursors           []models.ChildCursor
 	WaitEventsWithBlocking []models.WaitEventWithBlocking
 
+	// PDB Discovery
+	DiscoveredPDBs []models.DiscoveredPDB
+
 	// Connection metrics
 	TotalSessions      int64
 	ActiveSessionCount int64
@@ -126,6 +129,27 @@ func (m *MockClient) Close() error {
 
 func (m *MockClient) Ping(ctx context.Context) error {
 	return m.PingErr
+}
+
+func (m *MockClient) DiscoverPDBs(ctx context.Context, pdbNames []string) ([]models.DiscoveredPDB, error) {
+	if m.QueryErr != nil {
+		return nil, m.QueryErr
+	}
+	// If specific PDB names are requested, filter the results
+	if len(pdbNames) > 0 && len(m.DiscoveredPDBs) > 0 {
+		pdbNameSet := make(map[string]bool)
+		for _, name := range pdbNames {
+			pdbNameSet[name] = true
+		}
+		var filtered []models.DiscoveredPDB
+		for _, pdb := range m.DiscoveredPDBs {
+			if pdbNameSet[pdb.GetPDBName()] {
+				filtered = append(filtered, pdb)
+			}
+		}
+		return filtered, nil
+	}
+	return m.DiscoveredPDBs, nil
 }
 
 func (m *MockClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error) {
