@@ -512,6 +512,12 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 		return
 	}
 
+	// Skip CDB QPM when PDB discovery is enabled - QPM will run per PDB in executePDBScrapers
+	if s.usePDBDiscovery {
+		s.logger.Debug("PDB Discovery enabled, QPM will run per PDB instead of CDB")
+		return
+	}
+
 	s.logger.Debug("Starting slow queries scraper")
 	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
 
@@ -652,6 +658,83 @@ func (s *newRelicOracleScraper) scrapePDBMetrics(ctx context.Context, pdbName st
 		if len(errs) > 0 {
 			for _, err := range errs {
 				errors = append(errors, fmt.Errorf("PDB %s tablespace scraper: %w", pdbName, err))
+			}
+		}
+	}
+
+	// QPM scrapers for PDB - runs slow queries, wait events, and child cursors per PDB
+	if s.config.EnableQueryMonitoring {
+		s.logger.Debug("Starting QPM scrapers for PDB", zap.String("pdb_name", pdbName))
+
+		// Slow queries scraper for PDB
+		pdbSlowQueriesScraper := scrapers.NewSlowQueriesScraper(
+			conn.Client,
+			s.mb,
+			s.logger,
+			s.metricsBuilderConfig,
+			s.config.QueryMonitoringResponseTimeThreshold,
+			s.config.QueryMonitoringCountThreshold,
+			s.config.QueryMonitoringIntervalSeconds,
+			s.config.EnableIntervalBasedAveraging,
+			s.config.IntervalCalculatorCacheTTLMinutes,
+		)
+
+		queryIDs, slowQueryErrs := pdbSlowQueriesScraper.ScrapeSlowQueries(ctx)
+		if len(slowQueryErrs) > 0 {
+			for _, err := range slowQueryErrs {
+				errors = append(errors, fmt.Errorf("PDB %s slow queries: %w", pdbName, err))
+			}
+		}
+
+		s.logger.Debug("PDB slow queries scraper completed",
+			zap.String("pdb_name", pdbName),
+			zap.Int("query_ids_found", len(queryIDs)),
+			zap.Int("errors", len(slowQueryErrs)))
+
+		// Wait events & blocking scraper for PDB
+		if len(queryIDs) > 0 {
+			pdbWaitEventScraper, err := scrapers.NewWaitEventBlockingScraper(
+				conn.Client,
+				s.mb,
+				s.logger,
+				s.metricsBuilderConfig,
+				s.config.QueryMonitoringCountThreshold,
+			)
+			if err != nil {
+				errors = append(errors, fmt.Errorf("PDB %s failed to create wait event scraper: %w", pdbName, err))
+			} else {
+				sqlIdentifiers, waitErrs := pdbWaitEventScraper.ScrapeWaitEventsAndBlocking(ctx, queryIDs)
+				if len(waitErrs) > 0 {
+					for _, err := range waitErrs {
+						errors = append(errors, fmt.Errorf("PDB %s wait events: %w", pdbName, err))
+					}
+				}
+
+				s.logger.Debug("PDB wait events scraper completed",
+					zap.String("pdb_name", pdbName),
+					zap.Int("sql_identifiers", len(sqlIdentifiers)),
+					zap.Int("errors", len(waitErrs)))
+
+				// Child cursors scraper for PDB
+				if len(sqlIdentifiers) > 0 {
+					pdbChildCursorsScraper := scrapers.NewChildCursorsScraper(
+						conn.Client,
+						s.mb,
+						s.logger,
+						s.metricsBuilderConfig,
+					)
+					childCursorErrs := pdbChildCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, sqlIdentifiers, s.config.ChildCursorsPerSQLID)
+					if len(childCursorErrs) > 0 {
+						for _, err := range childCursorErrs {
+							errors = append(errors, fmt.Errorf("PDB %s child cursors: %w", pdbName, err))
+						}
+					}
+
+					s.logger.Debug("PDB child cursors scraper completed",
+						zap.String("pdb_name", pdbName),
+						zap.Int("sql_identifiers_processed", len(sqlIdentifiers)),
+						zap.Int("errors", len(childCursorErrs)))
+				}
 			}
 		}
 	}
