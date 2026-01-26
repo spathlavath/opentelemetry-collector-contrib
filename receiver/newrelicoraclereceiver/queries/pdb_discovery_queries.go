@@ -8,21 +8,20 @@ package queries
 const (
 	// DiscoverPDBServicesSQL discovers all available PDBs and their service names
 	// This query is run against the CDB to find all PDBs that can be connected to
+	// It joins with V$SERVICES to get the actual TNS-registered service name
 	// It excludes PDB$SEED (the seed template) and only returns PDBs in READ WRITE mode
 	DiscoverPDBServicesSQL = `
 		SELECT
 			p.CON_ID,
 			p.NAME AS PDB_NAME,
-			CASE
-				WHEN (SELECT value FROM v$parameter WHERE name = 'db_domain') IS NOT NULL
-					AND (SELECT value FROM v$parameter WHERE name = 'db_domain') != ''
-				THEN LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain')
-				ELSE LOWER(p.NAME)
-			END AS PDB_SERVICE_FQDN,
+			s.NAME AS PDB_SERVICE_FQDN,
 			p.OPEN_MODE
 		FROM V$PDBS p
+		JOIN V$SERVICES s ON p.CON_ID = s.CON_ID
 		WHERE p.NAME != 'PDB$SEED'
 			AND p.OPEN_MODE = 'READ WRITE'
+			AND s.NAME NOT LIKE '%XDB%'
+			AND UPPER(s.NAME) != UPPER(p.NAME)
 		ORDER BY p.CON_ID`
 
 	// DiscoverSpecificPDBsSQL is a template for discovering specific PDBs by name
@@ -32,16 +31,14 @@ const (
 		SELECT
 			p.CON_ID,
 			p.NAME AS PDB_NAME,
-			CASE
-				WHEN (SELECT value FROM v$parameter WHERE name = 'db_domain') IS NOT NULL
-					AND (SELECT value FROM v$parameter WHERE name = 'db_domain') != ''
-				THEN LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain')
-				ELSE LOWER(p.NAME)
-			END AS PDB_SERVICE_FQDN,
+			s.NAME AS PDB_SERVICE_FQDN,
 			p.OPEN_MODE
 		FROM V$PDBS p
+		JOIN V$SERVICES s ON p.CON_ID = s.CON_ID
 		WHERE p.NAME != 'PDB$SEED'
 			AND UPPER(p.NAME) IN (%s)
+			AND s.NAME NOT LIKE '%%XDB%%'
+			AND UPPER(s.NAME) != UPPER(p.NAME)
 		ORDER BY p.CON_ID`
 )
 
@@ -61,13 +58,10 @@ func BuildDiscoverSpecificPDBsQuery(pdbNames []string) string {
 		inClause += "'" + escapeSQL(name) + "'"
 	}
 
-	return "SELECT p.CON_ID, p.NAME AS PDB_NAME, " +
-		"CASE WHEN (SELECT value FROM v$parameter WHERE name = 'db_domain') IS NOT NULL " +
-		"AND (SELECT value FROM v$parameter WHERE name = 'db_domain') != '' " +
-		"THEN LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain') " +
-		"ELSE LOWER(p.NAME) END AS PDB_SERVICE_FQDN, " +
-		"p.OPEN_MODE FROM V$PDBS p WHERE p.NAME != 'PDB$SEED' " +
-		"AND UPPER(p.NAME) IN (" + inClause + ") ORDER BY p.CON_ID"
+	return "SELECT p.CON_ID, p.NAME AS PDB_NAME, s.NAME AS PDB_SERVICE_FQDN, p.OPEN_MODE " +
+		"FROM V$PDBS p JOIN V$SERVICES s ON p.CON_ID = s.CON_ID " +
+		"WHERE p.NAME != 'PDB$SEED' AND UPPER(p.NAME) IN (" + inClause + ") " +
+		"AND s.NAME NOT LIKE '%XDB%' AND UPPER(s.NAME) != UPPER(p.NAME) ORDER BY p.CON_ID"
 }
 
 // escapeSQL performs basic SQL escaping to prevent SQL injection
