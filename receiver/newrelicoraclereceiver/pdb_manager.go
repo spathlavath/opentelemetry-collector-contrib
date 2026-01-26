@@ -147,6 +147,15 @@ func (m *PDBManager) RefreshPDBConnections(ctx context.Context) error {
 	m.logger.Info("Discovered PDBs",
 		zap.Int("count", len(discoveredPDBs)))
 
+	// Log details of discovered PDBs
+	for _, pdb := range discoveredPDBs {
+		m.logger.Info("Discovered PDB details",
+			zap.String("pdb_name", pdb.GetPDBName()),
+			zap.String("service_name", pdb.GetServiceName()),
+			zap.Int64("con_id", pdb.GetConID()),
+			zap.Bool("is_read_write", pdb.IsReadWrite()))
+	}
+
 	// Track which PDBs we currently have
 	currentPDBs := make(map[string]bool)
 	for name := range m.pdbConnections {
@@ -226,6 +235,12 @@ func (m *PDBManager) RefreshPDBConnections(ctx context.Context) error {
 func (m *PDBManager) connectToPDB(ctx context.Context, pdb *models.DiscoveredPDB) error {
 	pdbName := pdb.GetPDBName()
 	serviceName := pdb.GetServiceName()
+
+	m.logger.Info("Attempting to connect to PDB",
+		zap.String("pdb_name", pdbName),
+		zap.String("service_name", serviceName),
+		zap.String("host", m.hostAddr),
+		zap.Int64("port", m.hostPort))
 
 	// Build connection string for PDB
 	// Format: user/password@host:port/pdb_service_name
