@@ -130,7 +130,7 @@ func (s *sqlServerScraper) Start(ctx context.Context, _ component.Host) error {
 	s.databaseRoleMembershipScraper = scrapers.NewDatabaseRoleMembershipScraper(s.logger, s.connection, s.mb, s.engineEdition)
 
 	// Initialize query performance scraper for blocking sessions and performance monitoring
-	// Pass smoothing and simplified interval calculator configuration parameters from config
+	// Pass smoothing, interval calculator, and execution plan cache configuration parameters from config
 	s.queryPerformanceScraper = scrapers.NewQueryPerformanceScraper(
 		s.connection,
 		s.logger,
@@ -142,6 +142,8 @@ func (s *sqlServerScraper) Start(ctx context.Context, _ component.Host) error {
 		s.config.SlowQuerySmoothingMaxAgeMinutes,
 		s.config.EnableIntervalBasedAveraging,
 		s.config.IntervalCalculatorCacheTTLMinutes,
+		s.config.EnableExecutionPlanCaching,
+		s.config.ExecutionPlanCacheTTLMinutes,
 		s.metadataCache,
 	)
 	// s.slowQueryScraper = scrapers.NewSlowQueryScraper(s.logger, s.connection)
@@ -453,6 +455,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 				zap.Int("unique_query_id_count", len(slowQueryIDs)),
 				zap.Int("plan_data_map_size", len(slowQueryPlanDataMap)))
 
+			// Periodic cleanup of execution plan cache to prevent unbounded growth
+			s.queryPerformanceScraper.CleanupExecutionPlanCache()
 		}
 	} else {
 		s.logger.Info("Slow query scraping SKIPPED - EnableQueryMonitoring is false")
@@ -463,7 +467,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 	defer cancel()
 
 	// Use config values for active running queries parameters
-	limit := s.config.QueryMonitoringCountThreshold // Reuse count threshold for active queries limit
+	limit := s.config.QueryMonitoringCountThreshold                           // Reuse count threshold for active queries limit
 	elapsedTimeThreshold := s.config.ActiveRunningQueriesElapsedTimeThreshold // Minimum elapsed time in ms
 
 	s.logger.Info("Attempting to scrape active running queries metrics",

@@ -240,7 +240,7 @@ type LockedObject struct {
 // Used for in-memory correlation with active queries (NO database query needed)
 // Contains ONLY the fields needed for sqlserver.plan.* metrics
 type SlowQueryPlanData struct {
-	QueryID            *QueryID // query_hash - for correlation
+	QueryHash          *QueryID // query_hash - for correlation
 	PlanHandle         *QueryID // plan_handle - for fetching XML
 	CreationTime       *string  // When plan was created
 	LastExecutionTime  *string  // Last execution timestamp

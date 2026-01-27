@@ -31,6 +31,7 @@ type QueryPerformanceScraper struct {
 	slowQuerySmoother   *SlowQuerySmoother            // EWMA-based smoothing algorithm for slow queries
 	intervalCalculator  *SimplifiedIntervalCalculator // Simplified delta-based interval calculator
 	metadataCache       *helpers.MetadataCache        // Metadata cache for wait resource enrichment
+	executionPlanCache  *helpers.ExecutionPlanCache   // Cache for execution plan deduplication
 }
 
 // NewQueryPerformanceScraper creates a new query performance scraper with smoothing and interval calculator configuration
@@ -45,10 +46,13 @@ func NewQueryPerformanceScraper(
 	maxAgeMinutes int,
 	intervalCalcEnabled bool,
 	intervalCalcCacheTTLMinutes int,
+	execPlanCacheEnabled bool,
+	execPlanCacheTTLMinutes int,
 	metadataCache *helpers.MetadataCache,
 ) *QueryPerformanceScraper {
 	var smoother *SlowQuerySmoother
 	var intervalCalc *SimplifiedIntervalCalculator
+	var execPlanCache *helpers.ExecutionPlanCache
 
 	if smoothingEnabled {
 		maxAge := time.Duration(maxAgeMinutes) * time.Minute
@@ -58,6 +62,13 @@ func NewQueryPerformanceScraper(
 	if intervalCalcEnabled {
 		cacheTTL := time.Duration(intervalCalcCacheTTLMinutes) * time.Minute
 		intervalCalc = NewSimplifiedIntervalCalculator(logger, cacheTTL)
+	}
+
+	if execPlanCacheEnabled {
+		cacheTTL := time.Duration(execPlanCacheTTLMinutes) * time.Minute
+		execPlanCache = helpers.NewExecutionPlanCache(cacheTTL, logger)
+		logger.Info("Execution plan caching enabled",
+			zap.Duration("ttl", cacheTTL))
 	}
 
 	return &QueryPerformanceScraper{
@@ -70,6 +81,7 @@ func NewQueryPerformanceScraper(
 		slowQuerySmoother:   smoother,
 		intervalCalculator:  intervalCalc,
 		metadataCache:       metadataCache,
+		executionPlanCache:  execPlanCache,
 	}
 }
 
@@ -77,6 +89,13 @@ func NewQueryPerformanceScraper(
 // This is called before each scrape operation to provide the current metrics builder
 func (s *QueryPerformanceScraper) SetMetricsBuilder(mb *metadata.MetricsBuilder) {
 	s.mb = mb
+}
+
+// CleanupExecutionPlanCache removes expired entries from the execution plan cache
+func (s *QueryPerformanceScraper) CleanupExecutionPlanCache() {
+	if s.executionPlanCache != nil {
+		s.executionPlanCache.CleanupStaleEntries()
+	}
 }
 
 func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int, emitMetrics bool) ([]models.SlowQuery, error) {
@@ -178,6 +197,27 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 
 		totalStatsEmitted++
 
+		// Check execution plan cache - skip fetching/parsing if already sent recently
+		if s.executionPlanCache != nil {
+			queryHash := ""
+			if planData.QueryHash != nil {
+				queryHash = planData.QueryHash.String()
+			}
+			planHandle := planData.PlanHandle.String()
+
+			if !s.executionPlanCache.ShouldEmit(queryHash, planHandle) {
+				s.logger.Debug("Skipping execution plan fetch - recently sent (within TTL)",
+					zap.String("query_hash", queryHash),
+					zap.String("plan_handle", planHandle))
+				continue // Skip DB fetch, parsing, and emission for this plan
+			}
+
+			// Log that we're fetching (first time or TTL expired)
+			s.logger.Info("Fetching execution plan from database",
+				zap.String("query_hash", queryHash),
+				zap.String("plan_handle", planHandle))
+		}
+
 		executionPlanXML, err := s.fetchExecutionPlanXML(ctx, planData.PlanHandle)
 		if err != nil {
 			s.logger.Warn("Failed to fetch execution plan XML",
@@ -223,7 +263,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 func (s *QueryPerformanceScraper) convertPlanDataToPlanHandleResult(planData models.SlowQueryPlanData) models.PlanHandleResult {
 	return models.PlanHandleResult{
 		PlanHandle:         planData.PlanHandle,
-		QueryID:            planData.QueryID,
+		QueryID:            planData.QueryHash,
 		CreationTime:       planData.CreationTime,
 		LastExecutionTime:  planData.LastExecutionTime,
 		TotalElapsedTimeMs: planData.TotalElapsedTimeMs,
@@ -333,6 +373,15 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 }
 
 func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan models.ExecutionPlanAnalysis, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
+	// Cache check now happens before DB fetch - this method only emits
+	if s.executionPlanCache != nil {
+		// Log emission (we only reach here if cache check passed earlier)
+		s.logger.Info("Emitting execution plan metrics",
+			zap.String("query_hash", executionPlan.QueryID),
+			zap.String("plan_handle", executionPlan.PlanHandle),
+			zap.Int("node_count", len(executionPlan.Nodes)))
+	}
+
 	// Compute all attribute values once
 	sessionID := int64(0)
 	if activeQuery.CurrentSessionID != nil {
@@ -659,7 +708,7 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 					if newTime > existingTime {
 						duplicatePlanHandles++
 						slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
-							QueryID:            slowQuery.QueryID,
+							QueryHash:          slowQuery.QueryID,
 							PlanHandle:         slowQuery.PlanHandle,
 							CreationTime:       slowQuery.CreationTime,
 							LastExecutionTime:  slowQuery.LastExecutionTimestamp,
@@ -668,7 +717,7 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 					}
 				} else {
 					slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
-						QueryID:            slowQuery.QueryID,
+						QueryHash:          slowQuery.QueryID,
 						PlanHandle:         slowQuery.PlanHandle,
 						CreationTime:       slowQuery.CreationTime,
 						LastExecutionTime:  slowQuery.LastExecutionTimestamp,
