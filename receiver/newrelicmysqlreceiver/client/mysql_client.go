@@ -1,10 +1,11 @@
 // Copyright The OpenTelemetry Authors
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelicmysqlreceiver // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver"
+package client
 
 import (
 	"context"
+	"crypto/tls"
 	"database/sql"
 	"fmt"
 	"strconv"
@@ -12,50 +13,64 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-type client interface {
-	Connect() error
-	getGlobalStats() (map[string]int64, error)
-	getGlobalVariables() (map[string]int64, error)
-	getReplicationStatus() (map[string]string, error)
-	getVersion() (string, error)
-	Close() error
-}
-
-type mySQLClient struct {
+// mySQLClientImpl is the concrete implementation of MySQLClient interface.
+type mySQLClientImpl struct {
 	connStr string
 	db      *sql.DB
 }
 
-var _ client = (*mySQLClient)(nil)
+// Ensure mySQLClientImpl implements MySQLClient interface.
+var _ MySQLClient = (*mySQLClientImpl)(nil)
 
-func newMySQLClient(cfg *Config) (client, error) {
+// Config represents the configuration needed to create a MySQL client.
+type Config struct {
+	Username             string
+	Password             string
+	Endpoint             string
+	Database             string
+	Transport            string
+	AllowNativePasswords bool
+	TLSConfig            TLSConfig
+}
+
+// TLSConfig represents TLS configuration.
+type TLSConfig struct {
+	Insecure bool
+	LoadFunc func(context.Context) (interface{}, error)
+}
+
+// NewMySQLClient creates a new MySQL client with the given configuration.
+func NewMySQLClient(cfg Config) (MySQLClient, error) {
 	driverConf := mysql.NewConfig()
 	driverConf.User = cfg.Username
-	driverConf.Passwd = string(cfg.Password)
-	driverConf.Net = string(cfg.Transport)
+	driverConf.Passwd = cfg.Password
+	driverConf.Net = cfg.Transport
 	driverConf.Addr = cfg.Endpoint
 	driverConf.DBName = cfg.Database
 	driverConf.AllowNativePasswords = cfg.AllowNativePasswords
 
-	if !cfg.TLS.Insecure {
-		tlsConfig, err := cfg.TLS.LoadTLSConfig(context.Background())
+	if !cfg.TLSConfig.Insecure && cfg.TLSConfig.LoadFunc != nil {
+		tlsConfig, err := cfg.TLSConfig.LoadFunc(context.Background())
 		if err != nil {
 			return nil, fmt.Errorf("failed to load TLS config: %w", err)
 		}
 		driverConf.TLSConfig = "custom"
-		if err := mysql.RegisterTLSConfig("custom", tlsConfig); err != nil {
-			return nil, fmt.Errorf("failed to register TLS config: %w", err)
+		if tlsConfigTyped, ok := tlsConfig.(*tls.Config); ok {
+			if err := mysql.RegisterTLSConfig("custom", tlsConfigTyped); err != nil {
+				return nil, fmt.Errorf("failed to register TLS config: %w", err)
+			}
 		}
 	}
 
 	connStr := driverConf.FormatDSN()
 
-	return &mySQLClient{
+	return &mySQLClientImpl{
 		connStr: connStr,
 	}, nil
 }
 
-func (c *mySQLClient) Connect() error {
+// Connect establishes a connection to the MySQL database.
+func (c *mySQLClientImpl) Connect() error {
 	clientDB, err := sql.Open("mysql", c.connStr)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
@@ -65,7 +80,8 @@ func (c *mySQLClient) Connect() error {
 	return c.db.Ping()
 }
 
-func (c *mySQLClient) getGlobalStats() (map[string]int64, error) {
+// GetGlobalStats retrieves MySQL global status variables as numeric values.
+func (c *mySQLClientImpl) GetGlobalStats() (map[string]int64, error) {
 	query := "SHOW GLOBAL STATUS"
 	rows, err := c.db.Query(query)
 	if err != nil {
@@ -91,7 +107,8 @@ func (c *mySQLClient) getGlobalStats() (map[string]int64, error) {
 	return stats, rows.Err()
 }
 
-func (c *mySQLClient) getGlobalVariables() (map[string]int64, error) {
+// GetGlobalVariables retrieves MySQL global variables as numeric values.
+func (c *mySQLClientImpl) GetGlobalVariables() (map[string]int64, error) {
 	query := "SHOW GLOBAL VARIABLES"
 	rows, err := c.db.Query(query)
 	if err != nil {
@@ -117,7 +134,8 @@ func (c *mySQLClient) getGlobalVariables() (map[string]int64, error) {
 	return vars, rows.Err()
 }
 
-func (c *mySQLClient) getReplicationStatus() (map[string]string, error) {
+// GetReplicationStatus retrieves replication status from SHOW SLAVE/REPLICA STATUS.
+func (c *mySQLClientImpl) GetReplicationStatus() (map[string]string, error) {
 	// Try MySQL 8.0+ command first (SHOW REPLICA STATUS)
 	query := "SHOW REPLICA STATUS"
 	rows, err := c.db.Query(query)
@@ -176,13 +194,15 @@ func (c *mySQLClient) getReplicationStatus() (map[string]string, error) {
 	return result, rows.Err()
 }
 
-func (c *mySQLClient) getVersion() (string, error) {
+// GetVersion retrieves the MySQL server version string.
+func (c *mySQLClientImpl) GetVersion() (string, error) {
 	var version string
 	err := c.db.QueryRow("SELECT VERSION()").Scan(&version)
 	return version, err
 }
 
-func (c *mySQLClient) Close() error {
+// Close closes the database connection.
+func (c *mySQLClientImpl) Close() error {
 	if c.db != nil {
 		return c.db.Close()
 	}
