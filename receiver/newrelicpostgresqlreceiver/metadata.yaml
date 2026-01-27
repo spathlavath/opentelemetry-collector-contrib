@@ -35,11 +35,38 @@ resource_attributes:
     enabled: true
 
 attributes:
+  application_name:
+    description: Name of the replication application
+    type: string
+  client_address:
+    description: IP address of the standby server
+    type: string
   database_name:
     description: Name of the PostgreSQL database
     type: string
   newrelicpostgresql.instance_name:
     description: Name of the PostgreSQL instance
+    type: string
+  plugin:
+    description: Name of the output plugin for logical replication slot (NULL for physical slots)
+    type: string
+  replication_state:
+    description: State of the replication connection (streaming, catchup, etc.)
+    type: string
+  slot_name:
+    description: Unique identifier of the replication slot
+    type: string
+  slot_type:
+    description: Type of replication slot (physical or logical)
+    type: string
+  state:
+    description: State of the replication slot (active or inactive)
+    type: string
+  subscription_name:
+    description: Name of the logical replication subscription
+    type: string
+  sync_state:
+    description: Synchronous state of the standby (async, sync, quorum, potential)
     type: string
 
 metrics:
@@ -237,6 +264,242 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.replication.backend_xmin_age:
+    description: Age of the oldest transaction on the standby server that is holding back vacuum
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication.flush_lsn_delay:
+    description: Number of bytes of WAL flushed but not yet applied on standby
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication.replay_lsn_delay:
+    description: Number of bytes of WAL not yet replayed on standby (total replication lag in bytes)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication.sent_lsn_delay:
+    description: Number of bytes of WAL sent but not yet written to disk on standby
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication.wal_flush_lag:
+    description: Time elapsed between WAL flush on primary and confirmation from standby (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication.wal_replay_lag:
+    description: Time elapsed between WAL replay on primary and confirmation from standby (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication.wal_write_lag:
+    description: Time elapsed between WAL write on primary and confirmation from standby (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication.write_lsn_delay:
+    description: Number of bytes of WAL written but not yet flushed on standby
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [application_name, client_address, replication_state, sync_state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_delay:
+    description: Time lag between primary and standby (standby-side metric, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.replication_delay_bytes:
+    description: Byte lag between WAL received and replayed on standby (standby-side metric, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.catalog_xmin_age:
+    description: Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [slot_name, slot_type, plugin]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.confirmed_flush_delay_bytes:
+    description: Number of bytes between current WAL position and confirmed_flush_lsn (logical slots only, PostgreSQL 9.4+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [slot_name, slot_type, plugin]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.restart_delay_bytes:
+    description: Number of bytes of WAL between current position and slot's restart_lsn (PostgreSQL 9.4+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [slot_name, slot_type, plugin]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.spill_bytes:
+    description: Total amount of data spilled to disk for logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.spill_count:
+    description: Number of times transactions were spilled to disk during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{spills}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.spill_txns:
+    description: Number of transactions spilled to disk during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.stream_bytes:
+    description: Total amount of data streamed for in-progress transactions during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.stream_count:
+    description: Number of times in-progress transactions were streamed during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{streams}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.stream_txns:
+    description: Number of in-progress transactions streamed during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.total_bytes:
+    description: Total amount of data decoded for transactions during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.total_txns:
+    description: Total number of decoded transactions during logical decoding (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [slot_name, slot_type, state]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.replication_slot.xmin_age:
+    description: Age of oldest transaction that this replication slot needs to keep (PostgreSQL 9.4+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [slot_name, slot_type, plugin]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
   postgresql.rollbacks:
     description: Number of transactions that have been rolled back
     enabled: true
@@ -387,6 +650,60 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.subscription.apply_error:
+    description: Number of errors encountered while applying logical replication changes (PostgreSQL 15+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "{errors}"
+    stability:
+      level: alpha
+
+  postgresql.subscription.last_msg_receipt_age:
+    description: Time elapsed since last message received from publisher in logical replication (PostgreSQL 15+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.subscription.last_msg_send_age:
+    description: Time elapsed since last message sent from publisher in logical replication (PostgreSQL 15+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.subscription.latest_end_age:
+    description: Time elapsed since latest WAL location reported to publisher in logical replication (PostgreSQL 15+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.subscription.sync_error:
+    description: Number of errors encountered during initial sync in logical replication (PostgreSQL 15+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "{errors}"
+    stability:
+      level: alpha
+
   postgresql.temp_bytes:
     description: Total amount of data written to temporary files
     enabled: true
@@ -408,6 +725,178 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.wal.buffers_full:
+    description: Number of times WAL data was written because WAL buffers became full (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.wal.bytes:
+    description: Total amount of WAL bytes generated (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.wal.fpi:
+    description: Total number of WAL full page images generated (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{images}"
+    stability:
+      level: alpha
+
+  postgresql.wal.records:
+    description: Total number of WAL records generated (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{records}"
+    stability:
+      level: alpha
+
+  postgresql.wal.sync:
+    description: Number of times WAL files were synced to disk (PostgreSQL 14-17)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{syncs}"
+    stability:
+      level: alpha
+
+  postgresql.wal.sync_time:
+    description: Total time spent syncing WAL files to disk (PostgreSQL 14-17)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.wal.write:
+    description: Number of times WAL buffers were written to disk (PostgreSQL 14-17)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{writes}"
+    stability:
+      level: alpha
+
+  postgresql.wal.write_time:
+    description: Total time spent writing WAL buffers to disk (PostgreSQL 14-17)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.wal_files.age:
+    description: Age of the oldest WAL file in seconds (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_files.count:
+    description: Total number of WAL files in the pg_wal directory (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.wal_files.size:
+    description: Total size of all WAL files in bytes (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.connected:
+    description: Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{status}"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.last_msg_receipt_age:
+    description: Time elapsed since last message received by WAL receiver from primary (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.last_msg_send_age:
+    description: Time elapsed since last message sent from primary to WAL receiver (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.latest_end_age:
+    description: Time elapsed since last WAL location reported back to primary by WAL receiver (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.received_timeline:
+    description: Timeline number of last WAL file received and synced to disk by WAL receiver (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{timeline}"
     stability:
       level: alpha
 

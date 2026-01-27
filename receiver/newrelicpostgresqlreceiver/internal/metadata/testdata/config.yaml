@@ -35,6 +35,50 @@ all_set:
       enabled: true
     postgresql.disk_read:
       enabled: true
+    postgresql.replication.backend_xmin_age:
+      enabled: true
+    postgresql.replication.flush_lsn_delay:
+      enabled: true
+    postgresql.replication.replay_lsn_delay:
+      enabled: true
+    postgresql.replication.sent_lsn_delay:
+      enabled: true
+    postgresql.replication.wal_flush_lag:
+      enabled: true
+    postgresql.replication.wal_replay_lag:
+      enabled: true
+    postgresql.replication.wal_write_lag:
+      enabled: true
+    postgresql.replication.write_lsn_delay:
+      enabled: true
+    postgresql.replication_delay:
+      enabled: true
+    postgresql.replication_delay_bytes:
+      enabled: true
+    postgresql.replication_slot.catalog_xmin_age:
+      enabled: true
+    postgresql.replication_slot.confirmed_flush_delay_bytes:
+      enabled: true
+    postgresql.replication_slot.restart_delay_bytes:
+      enabled: true
+    postgresql.replication_slot.spill_bytes:
+      enabled: true
+    postgresql.replication_slot.spill_count:
+      enabled: true
+    postgresql.replication_slot.spill_txns:
+      enabled: true
+    postgresql.replication_slot.stream_bytes:
+      enabled: true
+    postgresql.replication_slot.stream_count:
+      enabled: true
+    postgresql.replication_slot.stream_txns:
+      enabled: true
+    postgresql.replication_slot.total_bytes:
+      enabled: true
+    postgresql.replication_slot.total_txns:
+      enabled: true
+    postgresql.replication_slot.xmin_age:
+      enabled: true
     postgresql.rollbacks:
       enabled: true
     postgresql.rows_deleted:
@@ -61,9 +105,51 @@ all_set:
       enabled: true
     postgresql.sessions.session_time:
       enabled: true
+    postgresql.subscription.apply_error:
+      enabled: true
+    postgresql.subscription.last_msg_receipt_age:
+      enabled: true
+    postgresql.subscription.last_msg_send_age:
+      enabled: true
+    postgresql.subscription.latest_end_age:
+      enabled: true
+    postgresql.subscription.sync_error:
+      enabled: true
     postgresql.temp_bytes:
       enabled: true
     postgresql.temp_files:
+      enabled: true
+    postgresql.wal.buffers_full:
+      enabled: true
+    postgresql.wal.bytes:
+      enabled: true
+    postgresql.wal.fpi:
+      enabled: true
+    postgresql.wal.records:
+      enabled: true
+    postgresql.wal.sync:
+      enabled: true
+    postgresql.wal.sync_time:
+      enabled: true
+    postgresql.wal.write:
+      enabled: true
+    postgresql.wal.write_time:
+      enabled: true
+    postgresql.wal_files.age:
+      enabled: true
+    postgresql.wal_files.count:
+      enabled: true
+    postgresql.wal_files.size:
+      enabled: true
+    postgresql.wal_receiver.connected:
+      enabled: true
+    postgresql.wal_receiver.last_msg_receipt_age:
+      enabled: true
+    postgresql.wal_receiver.last_msg_send_age:
+      enabled: true
+    postgresql.wal_receiver.latest_end_age:
+      enabled: true
+    postgresql.wal_receiver.received_timeline:
       enabled: true
   resource_attributes:
     database_name:
@@ -114,6 +200,50 @@ none_set:
       enabled: false
     postgresql.disk_read:
       enabled: false
+    postgresql.replication.backend_xmin_age:
+      enabled: false
+    postgresql.replication.flush_lsn_delay:
+      enabled: false
+    postgresql.replication.replay_lsn_delay:
+      enabled: false
+    postgresql.replication.sent_lsn_delay:
+      enabled: false
+    postgresql.replication.wal_flush_lag:
+      enabled: false
+    postgresql.replication.wal_replay_lag:
+      enabled: false
+    postgresql.replication.wal_write_lag:
+      enabled: false
+    postgresql.replication.write_lsn_delay:
+      enabled: false
+    postgresql.replication_delay:
+      enabled: false
+    postgresql.replication_delay_bytes:
+      enabled: false
+    postgresql.replication_slot.catalog_xmin_age:
+      enabled: false
+    postgresql.replication_slot.confirmed_flush_delay_bytes:
+      enabled: false
+    postgresql.replication_slot.restart_delay_bytes:
+      enabled: false
+    postgresql.replication_slot.spill_bytes:
+      enabled: false
+    postgresql.replication_slot.spill_count:
+      enabled: false
+    postgresql.replication_slot.spill_txns:
+      enabled: false
+    postgresql.replication_slot.stream_bytes:
+      enabled: false
+    postgresql.replication_slot.stream_count:
+      enabled: false
+    postgresql.replication_slot.stream_txns:
+      enabled: false
+    postgresql.replication_slot.total_bytes:
+      enabled: false
+    postgresql.replication_slot.total_txns:
+      enabled: false
+    postgresql.replication_slot.xmin_age:
+      enabled: false
     postgresql.rollbacks:
       enabled: false
     postgresql.rows_deleted:
@@ -140,9 +270,51 @@ none_set:
       enabled: false
     postgresql.sessions.session_time:
       enabled: false
+    postgresql.subscription.apply_error:
+      enabled: false
+    postgresql.subscription.last_msg_receipt_age:
+      enabled: false
+    postgresql.subscription.last_msg_send_age:
+      enabled: false
+    postgresql.subscription.latest_end_age:
+      enabled: false
+    postgresql.subscription.sync_error:
+      enabled: false
     postgresql.temp_bytes:
       enabled: false
     postgresql.temp_files:
+      enabled: false
+    postgresql.wal.buffers_full:
+      enabled: false
+    postgresql.wal.bytes:
+      enabled: false
+    postgresql.wal.fpi:
+      enabled: false
+    postgresql.wal.records:
+      enabled: false
+    postgresql.wal.sync:
+      enabled: false
+    postgresql.wal.sync_time:
+      enabled: false
+    postgresql.wal.write:
+      enabled: false
+    postgresql.wal.write_time:
+      enabled: false
+    postgresql.wal_files.age:
+      enabled: false
+    postgresql.wal_files.count:
+      enabled: false
+    postgresql.wal_files.size:
+      enabled: false
+    postgresql.wal_receiver.connected:
+      enabled: false
+    postgresql.wal_receiver.last_msg_receipt_age:
+      enabled: false
+    postgresql.wal_receiver.last_msg_send_age:
+      enabled: false
+    postgresql.wal_receiver.latest_end_age:
+      enabled: false
+    postgresql.wal_receiver.received_timeline:
       enabled: false
   resource_attributes:
     database_name:

@@ -38,6 +38,13 @@ func getBool(val sql.NullBool) int64 {
 	return 0
 }
 
+func getString(val sql.NullString) string {
+	if val.Valid {
+		return val.String
+	}
+	return ""
+}
+
 // DatabaseMetricsScraper scrapes database-level metrics from pg_stat_database
 type DatabaseMetricsScraper struct {
 	client       client.PostgreSQLClient

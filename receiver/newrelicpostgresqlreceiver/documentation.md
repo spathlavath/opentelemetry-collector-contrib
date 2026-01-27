@@ -267,6 +267,362 @@ Number of disk blocks read
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.replication.backend_xmin_age
+
+Age of the oldest transaction on the standby server that is holding back vacuum
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.flush_lsn_delay
+
+Number of bytes of WAL flushed but not yet applied on standby
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.replay_lsn_delay
+
+Number of bytes of WAL not yet replayed on standby (total replication lag in bytes)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.sent_lsn_delay
+
+Number of bytes of WAL sent but not yet written to disk on standby
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.wal_flush_lag
+
+Time elapsed between WAL flush on primary and confirmation from standby (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.wal_replay_lag
+
+Time elapsed between WAL replay on primary and confirmation from standby (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.wal_write_lag
+
+Time elapsed between WAL write on primary and confirmation from standby (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication.write_lsn_delay
+
+Number of bytes of WAL written but not yet flushed on standby
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| application_name | Name of the replication application | Any Str | Recommended |
+| client_address | IP address of the standby server | Any Str | Recommended |
+| replication_state | State of the replication connection (streaming, catchup, etc.) | Any Str | Recommended |
+| sync_state | Synchronous state of the standby (async, sync, quorum, potential) | Any Str | Recommended |
+
+### postgresql.replication_delay
+
+Time lag between primary and standby (standby-side metric, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.replication_delay_bytes
+
+Byte lag between WAL received and replayed on standby (standby-side metric, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.replication_slot.catalog_xmin_age
+
+Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
+### postgresql.replication_slot.confirmed_flush_delay_bytes
+
+Number of bytes between current WAL position and confirmed_flush_lsn (logical slots only, PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
+### postgresql.replication_slot.restart_delay_bytes
+
+Number of bytes of WAL between current position and slot's restart_lsn (PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
+### postgresql.replication_slot.spill_bytes
+
+Total amount of data spilled to disk for logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.spill_count
+
+Number of times transactions were spilled to disk during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {spills} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.spill_txns
+
+Number of transactions spilled to disk during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.stream_bytes
+
+Total amount of data streamed for in-progress transactions during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.stream_count
+
+Number of times in-progress transactions were streamed during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {streams} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.stream_txns
+
+Number of in-progress transactions streamed during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.total_bytes
+
+Total amount of data decoded for transactions during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.total_txns
+
+Total number of decoded transactions during logical decoding (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+
+### postgresql.replication_slot.xmin_age
+
+Age of oldest transaction that this replication slot needs to keep (PostgreSQL 9.4+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| slot_name | Unique identifier of the replication slot | Any Str | Recommended |
+| slot_type | Type of replication slot (physical or logical) | Any Str | Recommended |
+| plugin | Name of the output plugin for logical replication slot (NULL for physical slots) | Any Str | Recommended |
+
 ### postgresql.rollbacks
 
 Number of transactions that have been rolled back
@@ -462,6 +818,86 @@ Time spent in sessions for this database (PostgreSQL 14+)
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.subscription.apply_error
+
+Number of errors encountered while applying logical replication changes (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {errors} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.last_msg_receipt_age
+
+Time elapsed since last message received from publisher in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.last_msg_send_age
+
+Time elapsed since last message sent from publisher in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.latest_end_age
+
+Time elapsed since latest WAL location reported to publisher in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.sync_error
+
+Number of errors encountered during initial sync in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {errors} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.temp_bytes
 
 Total amount of data written to temporary files
@@ -490,6 +926,230 @@ Number of temporary files created
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.buffers_full
+
+Number of times WAL data was written because WAL buffers became full (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {buffers} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.bytes
+
+Total amount of WAL bytes generated (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.fpi
+
+Total number of WAL full page images generated (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {images} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.records
+
+Total number of WAL records generated (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {records} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.sync
+
+Number of times WAL files were synced to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {syncs} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.sync_time
+
+Total time spent syncing WAL files to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.write
+
+Number of times WAL buffers were written to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {writes} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.write_time
+
+Total time spent writing WAL buffers to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_files.age
+
+Age of the oldest WAL file in seconds (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_files.count
+
+Total number of WAL files in the pg_wal directory (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {files} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_files.size
+
+Total size of all WAL files in bytes (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_receiver.connected
+
+Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {status} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_receiver.last_msg_receipt_age
+
+Time elapsed since last message received by WAL receiver from primary (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_receiver.last_msg_send_age
+
+Time elapsed since last message sent from primary to WAL receiver (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_receiver.latest_end_age
+
+Time elapsed since last WAL location reported back to primary by WAL receiver (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal_receiver.received_timeline
+
+Timeline number of last WAL file received and synced to disk by WAL receiver (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {timeline} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
 ## Resource Attributes

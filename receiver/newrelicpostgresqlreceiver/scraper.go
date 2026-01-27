@@ -9,8 +9,6 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/lib/pq" // PostgreSQL driver
-
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
@@ -30,12 +28,21 @@ type (
 	dbProviderFunc func() (*sql.DB, error)
 )
 
+// PostgreSQL version constants
+const (
+	PG96Version = 90600  // PostgreSQL 9.6
+	PG10Version = 100000 // PostgreSQL 10.0
+	PG12Version = 120000 // PostgreSQL 12.0
+	PG14Version = 140000 // PostgreSQL 14.0
+)
+
 // newRelicPostgreSQLScraper orchestrates all metric collection scrapers for PostgreSQL database monitoring
 type newRelicPostgreSQLScraper struct {
 	// Scrapers
-	databaseMetricsScraper *scrapers.DatabaseMetricsScraper
-	sessionMetricsScraper  *scrapers.SessionMetricsScraper
-	conflictMetricsScraper *scrapers.ConflictMetricsScraper
+	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
+	sessionMetricsScraper     *scrapers.SessionMetricsScraper
+	conflictMetricsScraper    *scrapers.ConflictMetricsScraper
+	replicationMetricsScraper *scrapers.ReplicationScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -54,6 +61,7 @@ type newRelicPostgreSQLScraper struct {
 	scrapeCfg    scraperhelper.ControllerConfig
 	startTime    pcommon.Timestamp
 	pgVersion    int  // PostgreSQL version number
+	supportsPG96 bool // Whether PostgreSQL version is 9.6 or higher
 	supportsPG12 bool // Whether PostgreSQL version is 12 or higher
 	supportsPG14 bool // Whether PostgreSQL version is 14 or higher
 }
@@ -125,16 +133,19 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 	if err != nil {
 		s.logger.Warn("Failed to detect PostgreSQL version, version-specific features will be disabled", zap.Error(err))
 		s.pgVersion = 0
+		s.supportsPG96 = false
 		s.supportsPG12 = false
 		s.supportsPG14 = false
 	} else {
 		s.pgVersion = version
 		// Version format: Major * 10000 + Minor * 100 + Patch
-		// PostgreSQL 12.0 = 120000, PostgreSQL 14.0 = 140000
-		s.supportsPG12 = version >= 120000
-		s.supportsPG14 = version >= 140000
+		// PostgreSQL 9.6 = 90600, PostgreSQL 12.0 = 120000, PostgreSQL 14.0 = 140000
+		s.supportsPG96 = version >= PG96Version
+		s.supportsPG12 = version >= PG12Version
+		s.supportsPG14 = version >= PG14Version
 		s.logger.Info("PostgreSQL version detected",
 			zap.Int("version", version),
+			zap.Bool("supports_pg96_features", s.supportsPG96),
 			zap.Bool("supports_pg12_features", s.supportsPG12),
 			zap.Bool("supports_pg14_features", s.supportsPG14))
 	}
@@ -171,6 +182,21 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.logger.Info("Session metrics scraper enabled (PostgreSQL 14+)")
 	} else {
 		s.logger.Info("Session metrics scraper disabled (requires PostgreSQL 14+)")
+	}
+
+	// Initialize replication metrics scraper only if PostgreSQL 9.6+
+	if s.supportsPG96 {
+		s.replicationMetricsScraper = scrapers.NewReplicationScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+			s.metricsBuilderConfig,
+			s.pgVersion,
+		)
+		s.logger.Info("Replication metrics scraper enabled (PostgreSQL 9.6+)")
+	} else {
+		s.logger.Info("Replication metrics scraper disabled (requires PostgreSQL 9.6+)")
 	}
 
 	return nil
@@ -211,6 +237,80 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping session metrics",
 				zap.Int("error_count", len(sessionErrs)))
 			scrapeErrors = append(scrapeErrors, sessionErrs...)
+		}
+	}
+
+	// Scrape replication metrics (PostgreSQL 9.6+ only)
+	if s.supportsPG96 && s.replicationMetricsScraper != nil {
+		replicationErrs := s.replicationMetricsScraper.ScrapeReplicationMetrics(scrapeCtx)
+		if len(replicationErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping replication metrics",
+				zap.Int("error_count", len(replicationErrs)))
+			scrapeErrors = append(scrapeErrors, replicationErrs...)
+		}
+
+		// Scrape replication slot metrics (PostgreSQL 9.4+ only)
+		slotErrs := s.replicationMetricsScraper.ScrapeReplicationSlots(scrapeCtx)
+		if len(slotErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping replication slot metrics",
+				zap.Int("error_count", len(slotErrs)))
+			scrapeErrors = append(scrapeErrors, slotErrs...)
+		}
+
+		// Scrape replication delay metrics (PostgreSQL 9.6+ only, standby-side)
+		delayErrs := s.replicationMetricsScraper.ScrapeReplicationDelay(scrapeCtx)
+		if len(delayErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping replication delay metrics",
+				zap.Int("error_count", len(delayErrs)))
+			scrapeErrors = append(scrapeErrors, delayErrs...)
+		}
+
+		// Scrape WAL receiver metrics (PostgreSQL 9.6+ only, standby-side)
+		walReceiverErrs := s.replicationMetricsScraper.ScrapeWalReceiverMetrics(scrapeCtx)
+		if len(walReceiverErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping WAL receiver metrics",
+				zap.Int("error_count", len(walReceiverErrs)))
+			scrapeErrors = append(scrapeErrors, walReceiverErrs...)
+		}
+	}
+
+	// Scrape WAL statistics (PostgreSQL 14+ only, both primary and standby)
+	if s.supportsPG14 && s.replicationMetricsScraper != nil {
+		walStatsErrs := s.replicationMetricsScraper.ScrapeWalStatistics(scrapeCtx)
+		if len(walStatsErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping WAL statistics",
+				zap.Int("error_count", len(walStatsErrs)))
+			scrapeErrors = append(scrapeErrors, walStatsErrs...)
+		}
+	}
+
+	// Scrape WAL files (PostgreSQL 10+ only, both primary and standby)
+	if s.pgVersion >= PG10Version && s.replicationMetricsScraper != nil {
+		walFilesErrs := s.replicationMetricsScraper.ScrapeWalFiles(scrapeCtx)
+		if len(walFilesErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping WAL files statistics",
+				zap.Int("error_count", len(walFilesErrs)))
+			scrapeErrors = append(scrapeErrors, walFilesErrs...)
+		}
+	}
+
+	// Scrape replication slot stats (PostgreSQL 14+ only)
+	if s.supportsPG14 && s.replicationMetricsScraper != nil {
+		slotStatsErrs := s.replicationMetricsScraper.ScrapeReplicationSlotStats(scrapeCtx)
+		if len(slotStatsErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping replication slot stats",
+				zap.Int("error_count", len(slotStatsErrs)))
+			scrapeErrors = append(scrapeErrors, slotStatsErrs...)
+		}
+	}
+
+	// Scrape subscription stats (PostgreSQL 15+ only, subscriber-side)
+	if s.pgVersion >= 150000 && s.replicationMetricsScraper != nil {
+		subscriptionErrs := s.replicationMetricsScraper.ScrapeSubscriptionStats(scrapeCtx)
+		if len(subscriptionErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping subscription statistics",
+				zap.Int("error_count", len(subscriptionErrs)))
+			scrapeErrors = append(scrapeErrors, subscriptionErrs...)
 		}
 	}
 
