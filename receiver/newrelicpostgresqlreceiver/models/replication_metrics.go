@@ -196,3 +196,41 @@ type PgReplicationDelayMetric struct {
 	// Returns 0 on primary servers
 	ReplicationDelayBytes sql.NullInt64
 }
+
+// PgStatWalReceiverMetric represents a row from pg_stat_wal_receiver
+// This view shows the state of the WAL receiver process on a standby server
+// WAL receiver is responsible for receiving WAL data from the primary server
+// Only contains data on standby servers (returns no rows on primary servers)
+//
+// Available in PostgreSQL 9.6+
+type PgStatWalReceiverMetric struct {
+	// Status is the activity status of the WAL receiver process
+	// Possible values: starting, streaming, waiting, restarting, stopped, disconnected
+	// 'streaming' indicates normal operation
+	// 'disconnected' is used when WAL receiver is not running (returned as default)
+	Status sql.NullString
+
+	// ReceivedTli is the timeline number of the last WAL file received and synced to disk
+	// Timeline increases when recovery from a backup or after failover
+	// Useful for tracking timeline changes during recovery
+	ReceivedTli sql.NullInt64
+
+	// LastMsgSendAge is the time elapsed since last message sent from primary
+	// Calculated as: clock_timestamp() - last_msg_send_time
+	// In seconds
+	// Indicates how recently the primary sent data
+	LastMsgSendAge sql.NullFloat64
+
+	// LastMsgReceiptAge is the time elapsed since last message received from primary
+	// Calculated as: clock_timestamp() - last_msg_receipt_time
+	// In seconds
+	// Indicates how recently the standby received data
+	// Large values may indicate network issues or primary being down
+	LastMsgReceiptAge sql.NullFloat64
+
+	// LatestEndAge is the time elapsed since last WAL location reported back to primary
+	// Calculated as: clock_timestamp() - latest_end_time
+	// In seconds
+	// Indicates how recently the standby reported its progress to the primary
+	LatestEndAge sql.NullFloat64
+}

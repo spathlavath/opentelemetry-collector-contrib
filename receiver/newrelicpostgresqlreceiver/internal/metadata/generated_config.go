@@ -82,6 +82,11 @@ type MetricsConfig struct {
 	PostgresqlSessionsSessionTime                     MetricConfig `mapstructure:"postgresql.sessions.session_time"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
+	PostgresqlWalReceiverConnected                    MetricConfig `mapstructure:"postgresql.wal_receiver.connected"`
+	PostgresqlWalReceiverLastMsgReceiptAge            MetricConfig `mapstructure:"postgresql.wal_receiver.last_msg_receipt_age"`
+	PostgresqlWalReceiverLastMsgSendAge               MetricConfig `mapstructure:"postgresql.wal_receiver.last_msg_send_age"`
+	PostgresqlWalReceiverLatestEndAge                 MetricConfig `mapstructure:"postgresql.wal_receiver.latest_end_age"`
+	PostgresqlWalReceiverReceivedTimeline             MetricConfig `mapstructure:"postgresql.wal_receiver.received_timeline"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -246,6 +251,21 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlTempFiles: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalReceiverConnected: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalReceiverLastMsgReceiptAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalReceiverLastMsgSendAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalReceiverLatestEndAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalReceiverReceivedTimeline: MetricConfig{
 			Enabled: true,
 		},
 	}

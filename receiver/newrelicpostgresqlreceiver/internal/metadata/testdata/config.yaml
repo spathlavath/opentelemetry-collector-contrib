@@ -109,6 +109,16 @@ all_set:
       enabled: true
     postgresql.temp_files:
       enabled: true
+    postgresql.wal_receiver.connected:
+      enabled: true
+    postgresql.wal_receiver.last_msg_receipt_age:
+      enabled: true
+    postgresql.wal_receiver.last_msg_send_age:
+      enabled: true
+    postgresql.wal_receiver.latest_end_age:
+      enabled: true
+    postgresql.wal_receiver.received_timeline:
+      enabled: true
   resource_attributes:
     database_name:
       enabled: true
@@ -231,6 +241,16 @@ none_set:
     postgresql.temp_bytes:
       enabled: false
     postgresql.temp_files:
+      enabled: false
+    postgresql.wal_receiver.connected:
+      enabled: false
+    postgresql.wal_receiver.last_msg_receipt_age:
+      enabled: false
+    postgresql.wal_receiver.last_msg_send_age:
+      enabled: false
+    postgresql.wal_receiver.latest_end_age:
+      enabled: false
+    postgresql.wal_receiver.received_timeline:
       enabled: false
   resource_attributes:
     database_name:

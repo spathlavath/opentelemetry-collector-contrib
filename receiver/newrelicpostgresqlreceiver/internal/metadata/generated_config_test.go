@@ -81,6 +81,11 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					PostgresqlSessionsSessionTime:                     MetricConfig{Enabled: true},
 					PostgresqlTempBytes:                               MetricConfig{Enabled: true},
 					PostgresqlTempFiles:                               MetricConfig{Enabled: true},
+					PostgresqlWalReceiverConnected:                    MetricConfig{Enabled: true},
+					PostgresqlWalReceiverLastMsgReceiptAge:            MetricConfig{Enabled: true},
+					PostgresqlWalReceiverLastMsgSendAge:               MetricConfig{Enabled: true},
+					PostgresqlWalReceiverLatestEndAge:                 MetricConfig{Enabled: true},
+					PostgresqlWalReceiverReceivedTimeline:             MetricConfig{Enabled: true},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					DatabaseName:                   ResourceAttributeConfig{Enabled: true},
@@ -150,6 +155,11 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					PostgresqlSessionsSessionTime:                     MetricConfig{Enabled: false},
 					PostgresqlTempBytes:                               MetricConfig{Enabled: false},
 					PostgresqlTempFiles:                               MetricConfig{Enabled: false},
+					PostgresqlWalReceiverConnected:                    MetricConfig{Enabled: false},
+					PostgresqlWalReceiverLastMsgReceiptAge:            MetricConfig{Enabled: false},
+					PostgresqlWalReceiverLastMsgSendAge:               MetricConfig{Enabled: false},
+					PostgresqlWalReceiverLatestEndAge:                 MetricConfig{Enabled: false},
+					PostgresqlWalReceiverReceivedTimeline:             MetricConfig{Enabled: false},
 				},
 				ResourceAttributes: ResourceAttributesConfig{
 					DatabaseName:                   ResourceAttributeConfig{Enabled: false},

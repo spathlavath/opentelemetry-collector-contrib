@@ -244,3 +244,53 @@ func (s *ReplicationScraper) recordReplicationDelayMetrics(now pcommon.Timestamp
 	// Record replication delay bytes (byte lag between receive and replay)
 	s.mb.RecordPostgresqlReplicationDelayBytesDataPoint(now, getInt64(metric.ReplicationDelayBytes), s.instanceName)
 }
+
+// ScrapeWalReceiverMetrics scrapes WAL receiver metrics from pg_stat_wal_receiver
+func (s *ReplicationScraper) ScrapeWalReceiverMetrics(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// WAL receiver metrics available in PostgreSQL 9.6+
+	const PG96Version = 90600 // PostgreSQL 9.6.0
+
+	if s.version < PG96Version {
+		s.logger.Debug("Skipping WAL receiver metrics (PostgreSQL 9.6+ required)",
+			zap.Int("version", s.version))
+		return nil
+	}
+
+	metric, err := s.client.QueryWalReceiverMetrics(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query WAL receiver metrics", zap.Error(err))
+		return []error{err}
+	}
+
+	// nil metric means no WAL receiver found (normal on primary servers)
+	if metric == nil {
+		s.logger.Debug("No WAL receiver found (server is likely a primary)")
+		return nil
+	}
+
+	// Record WAL receiver metrics
+	s.recordWalReceiverMetrics(now, metric)
+
+	s.logger.Debug("WAL receiver metrics scrape completed")
+
+	return nil
+}
+
+// recordWalReceiverMetrics records WAL receiver metrics for the standby server
+func (s *ReplicationScraper) recordWalReceiverMetrics(now pcommon.Timestamp, metric *models.PgStatWalReceiverMetric) {
+	// Convert status to connected metric (1 if streaming, 0 otherwise)
+	status := getString(metric.Status)
+	connected := int64(0)
+	if status == "streaming" {
+		connected = 1
+	}
+
+	// Record WAL receiver metrics
+	s.mb.RecordPostgresqlWalReceiverConnectedDataPoint(now, connected, s.instanceName)
+	s.mb.RecordPostgresqlWalReceiverReceivedTimelineDataPoint(now, getInt64(metric.ReceivedTli), s.instanceName)
+	s.mb.RecordPostgresqlWalReceiverLastMsgSendAgeDataPoint(now, getFloat64(metric.LastMsgSendAge), s.instanceName)
+	s.mb.RecordPostgresqlWalReceiverLastMsgReceiptAgeDataPoint(now, getFloat64(metric.LastMsgReceiptAge), s.instanceName)
+	s.mb.RecordPostgresqlWalReceiverLatestEndAgeDataPoint(now, getFloat64(metric.LatestEndAge), s.instanceName)
+}

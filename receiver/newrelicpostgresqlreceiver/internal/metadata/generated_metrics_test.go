@@ -284,6 +284,26 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordPostgresqlTempFilesDataPoint(ts, 1, "database_name-val", "newrelicpostgresql.instance_name-val")
 
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalReceiverConnectedDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalReceiverLastMsgReceiptAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalReceiverLastMsgSendAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalReceiverLatestEndAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalReceiverReceivedTimelineDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
 			rb := mb.NewResourceBuilder()
 			rb.SetDatabaseName("database_name-val")
 			rb.SetDbSystem("db.system-val")
@@ -1425,6 +1445,81 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal_receiver.connected":
+					assert.False(t, validatedMetrics["postgresql.wal_receiver.connected"], "Found a duplicate in the metrics slice: postgresql.wal_receiver.connected")
+					validatedMetrics["postgresql.wal_receiver.connected"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{status}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal_receiver.last_msg_receipt_age":
+					assert.False(t, validatedMetrics["postgresql.wal_receiver.last_msg_receipt_age"], "Found a duplicate in the metrics slice: postgresql.wal_receiver.last_msg_receipt_age")
+					validatedMetrics["postgresql.wal_receiver.last_msg_receipt_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Time elapsed since last message received by WAL receiver from primary (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal_receiver.last_msg_send_age":
+					assert.False(t, validatedMetrics["postgresql.wal_receiver.last_msg_send_age"], "Found a duplicate in the metrics slice: postgresql.wal_receiver.last_msg_send_age")
+					validatedMetrics["postgresql.wal_receiver.last_msg_send_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Time elapsed since last message sent from primary to WAL receiver (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal_receiver.latest_end_age":
+					assert.False(t, validatedMetrics["postgresql.wal_receiver.latest_end_age"], "Found a duplicate in the metrics slice: postgresql.wal_receiver.latest_end_age")
+					validatedMetrics["postgresql.wal_receiver.latest_end_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Time elapsed since last WAL location reported back to primary by WAL receiver (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal_receiver.received_timeline":
+					assert.False(t, validatedMetrics["postgresql.wal_receiver.received_timeline"], "Found a duplicate in the metrics slice: postgresql.wal_receiver.received_timeline")
+					validatedMetrics["postgresql.wal_receiver.received_timeline"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Timeline number of last WAL file received and synced to disk by WAL receiver (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{timeline}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				}

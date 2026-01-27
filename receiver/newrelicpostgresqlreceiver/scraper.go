@@ -264,6 +264,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 				zap.Int("error_count", len(delayErrs)))
 			scrapeErrors = append(scrapeErrors, delayErrs...)
 		}
+
+		// Scrape WAL receiver metrics (PostgreSQL 9.6+ only, standby-side)
+		walReceiverErrs := s.replicationMetricsScraper.ScrapeWalReceiverMetrics(scrapeCtx)
+		if len(walReceiverErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping WAL receiver metrics",
+				zap.Int("error_count", len(walReceiverErrs)))
+			scrapeErrors = append(scrapeErrors, walReceiverErrs...)
+		}
 	}
 
 	// Scrape replication slot stats (PostgreSQL 14+ only)

@@ -59,4 +59,10 @@ type PostgreSQLClient interface {
 	// Returns single row with replication_delay (seconds) and replication_delay_bytes
 	// Available in PostgreSQL 9.6+
 	QueryReplicationDelay(ctx context.Context, version int) (*models.PgReplicationDelayMetric, error)
+
+	// QueryWalReceiverMetrics retrieves WAL receiver statistics from pg_stat_wal_receiver
+	// This view shows the state of the WAL receiver process on a standby server
+	// Returns nil if no WAL receiver is running (primary servers or standby with WAL receiver stopped)
+	// Available in PostgreSQL 9.6+
+	QueryWalReceiverMetrics(ctx context.Context) (*models.PgStatWalReceiverMetric, error)
 }

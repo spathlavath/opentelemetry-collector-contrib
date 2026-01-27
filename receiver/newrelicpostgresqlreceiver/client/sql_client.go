@@ -357,3 +357,37 @@ func (c *SQLClient) QueryReplicationDelay(ctx context.Context, version int) (*mo
 
 	return &metric, nil
 }
+
+// QueryWalReceiverMetrics retrieves WAL receiver statistics from pg_stat_wal_receiver
+// Returns nil if no WAL receiver is running (primary servers or standby with WAL receiver stopped)
+func (c *SQLClient) QueryWalReceiverMetrics(ctx context.Context) (*models.PgStatWalReceiverMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatWalReceiverSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_wal_receiver: %w", err)
+	}
+	defer rows.Close()
+
+	// Check if we have any rows (WAL receiver only exists on standby servers)
+	if !rows.Next() {
+		// No WAL receiver found - this is normal on primary servers
+		return nil, nil
+	}
+
+	var metric models.PgStatWalReceiverMetric
+	err = rows.Scan(
+		&metric.Status,
+		&metric.ReceivedTli,
+		&metric.LastMsgSendAge,
+		&metric.LastMsgReceiptAge,
+		&metric.LatestEndAge,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to scan pg_stat_wal_receiver row: %w", err)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_wal_receiver rows: %w", err)
+	}
+
+	return &metric, nil
+}

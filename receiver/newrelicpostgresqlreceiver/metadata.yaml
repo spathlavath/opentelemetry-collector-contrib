@@ -671,6 +671,56 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.wal_receiver.connected:
+    description: Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{status}"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.last_msg_receipt_age:
+    description: Time elapsed since last message received by WAL receiver from primary (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.last_msg_send_age:
+    description: Time elapsed since last message sent from primary to WAL receiver (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.latest_end_age:
+    description: Time elapsed since last WAL location reported back to primary by WAL receiver (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_receiver.received_timeline:
+    description: Timeline number of last WAL file received and synced to disk by WAL receiver (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{timeline}"
+    stability:
+      level: alpha
+
 tests:
   config:
     hostname: ""

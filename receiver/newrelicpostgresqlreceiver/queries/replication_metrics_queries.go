@@ -219,4 +219,31 @@ const (
 				THEN COALESCE(pg_wal_lsn_diff(pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn()), 0)
 				ELSE 0
 			END as replication_delay_bytes`
+
+	// WAL Receiver Queries (Standby-side metrics)
+	// PgStatWalReceiverSQL returns WAL receiver statistics on standby servers
+	// This view shows the state of the WAL receiver process
+	// Only returns data on standby servers (no rows on primary servers)
+	// Available in PostgreSQL 9.6+
+	//
+	// Metrics collected:
+	// - status: Activity status (streaming, waiting, restarting, stopped, disconnected)
+	// - received_tli: Timeline number of last received WAL file
+	// - last_msg_send_age: Time since last message sent from primary (seconds)
+	// - last_msg_receipt_age: Time since last message received (seconds)
+	// - latest_end_age: Time since last WAL location reported to primary (seconds)
+	//
+	// Notes:
+	// - Returns no rows on primary servers or when WAL receiver is not running
+	// - Time ages are calculated using clock_timestamp() for accuracy
+	// - COALESCE ensures NULL values are converted to 0
+	// - status is set to 'disconnected' when NULL
+	PgStatWalReceiverSQL = `
+		SELECT
+			CASE WHEN status IS NULL THEN 'disconnected' ELSE status END as status,
+			COALESCE(received_tli, 0) as received_tli,
+			COALESCE(EXTRACT(EPOCH FROM (clock_timestamp() - last_msg_send_time)), 0) as last_msg_send_age,
+			COALESCE(EXTRACT(EPOCH FROM (clock_timestamp() - last_msg_receipt_time)), 0) as last_msg_receipt_age,
+			COALESCE(EXTRACT(EPOCH FROM (clock_timestamp() - latest_end_time)), 0) as latest_end_age
+		FROM pg_stat_wal_receiver`
 )

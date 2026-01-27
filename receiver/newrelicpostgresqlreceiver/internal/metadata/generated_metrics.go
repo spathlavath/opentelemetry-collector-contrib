@@ -175,6 +175,21 @@ var MetricsInfo = metricsInfo{
 	PostgresqlTempFiles: metricInfo{
 		Name: "postgresql.temp_files",
 	},
+	PostgresqlWalReceiverConnected: metricInfo{
+		Name: "postgresql.wal_receiver.connected",
+	},
+	PostgresqlWalReceiverLastMsgReceiptAge: metricInfo{
+		Name: "postgresql.wal_receiver.last_msg_receipt_age",
+	},
+	PostgresqlWalReceiverLastMsgSendAge: metricInfo{
+		Name: "postgresql.wal_receiver.last_msg_send_age",
+	},
+	PostgresqlWalReceiverLatestEndAge: metricInfo{
+		Name: "postgresql.wal_receiver.latest_end_age",
+	},
+	PostgresqlWalReceiverReceivedTimeline: metricInfo{
+		Name: "postgresql.wal_receiver.received_timeline",
+	},
 }
 
 type metricsInfo struct {
@@ -232,6 +247,11 @@ type metricsInfo struct {
 	PostgresqlSessionsSessionTime                     metricInfo
 	PostgresqlTempBytes                               metricInfo
 	PostgresqlTempFiles                               metricInfo
+	PostgresqlWalReceiverConnected                    metricInfo
+	PostgresqlWalReceiverLastMsgReceiptAge            metricInfo
+	PostgresqlWalReceiverLastMsgSendAge               metricInfo
+	PostgresqlWalReceiverLatestEndAge                 metricInfo
+	PostgresqlWalReceiverReceivedTimeline             metricInfo
 }
 
 type metricInfo struct {
@@ -3136,6 +3156,261 @@ func newMetricPostgresqlTempFiles(cfg MetricConfig) metricPostgresqlTempFiles {
 	return m
 }
 
+type metricPostgresqlWalReceiverConnected struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal_receiver.connected metric with initial data.
+func (m *metricPostgresqlWalReceiverConnected) init() {
+	m.data.SetName("postgresql.wal_receiver.connected")
+	m.data.SetDescription("Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)")
+	m.data.SetUnit("{status}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalReceiverConnected) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalReceiverConnected) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalReceiverConnected) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalReceiverConnected(cfg MetricConfig) metricPostgresqlWalReceiverConnected {
+	m := metricPostgresqlWalReceiverConnected{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalReceiverLastMsgReceiptAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal_receiver.last_msg_receipt_age metric with initial data.
+func (m *metricPostgresqlWalReceiverLastMsgReceiptAge) init() {
+	m.data.SetName("postgresql.wal_receiver.last_msg_receipt_age")
+	m.data.SetDescription("Time elapsed since last message received by WAL receiver from primary (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalReceiverLastMsgReceiptAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalReceiverLastMsgReceiptAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalReceiverLastMsgReceiptAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalReceiverLastMsgReceiptAge(cfg MetricConfig) metricPostgresqlWalReceiverLastMsgReceiptAge {
+	m := metricPostgresqlWalReceiverLastMsgReceiptAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalReceiverLastMsgSendAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal_receiver.last_msg_send_age metric with initial data.
+func (m *metricPostgresqlWalReceiverLastMsgSendAge) init() {
+	m.data.SetName("postgresql.wal_receiver.last_msg_send_age")
+	m.data.SetDescription("Time elapsed since last message sent from primary to WAL receiver (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalReceiverLastMsgSendAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalReceiverLastMsgSendAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalReceiverLastMsgSendAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalReceiverLastMsgSendAge(cfg MetricConfig) metricPostgresqlWalReceiverLastMsgSendAge {
+	m := metricPostgresqlWalReceiverLastMsgSendAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalReceiverLatestEndAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal_receiver.latest_end_age metric with initial data.
+func (m *metricPostgresqlWalReceiverLatestEndAge) init() {
+	m.data.SetName("postgresql.wal_receiver.latest_end_age")
+	m.data.SetDescription("Time elapsed since last WAL location reported back to primary by WAL receiver (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalReceiverLatestEndAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalReceiverLatestEndAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalReceiverLatestEndAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalReceiverLatestEndAge(cfg MetricConfig) metricPostgresqlWalReceiverLatestEndAge {
+	m := metricPostgresqlWalReceiverLatestEndAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalReceiverReceivedTimeline struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal_receiver.received_timeline metric with initial data.
+func (m *metricPostgresqlWalReceiverReceivedTimeline) init() {
+	m.data.SetName("postgresql.wal_receiver.received_timeline")
+	m.data.SetDescription("Timeline number of last WAL file received and synced to disk by WAL receiver (PostgreSQL 9.6+)")
+	m.data.SetUnit("{timeline}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalReceiverReceivedTimeline) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalReceiverReceivedTimeline) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalReceiverReceivedTimeline) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalReceiverReceivedTimeline(cfg MetricConfig) metricPostgresqlWalReceiverReceivedTimeline {
+	m := metricPostgresqlWalReceiverReceivedTimeline{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
@@ -3200,6 +3475,11 @@ type MetricsBuilder struct {
 	metricPostgresqlSessionsSessionTime                     metricPostgresqlSessionsSessionTime
 	metricPostgresqlTempBytes                               metricPostgresqlTempBytes
 	metricPostgresqlTempFiles                               metricPostgresqlTempFiles
+	metricPostgresqlWalReceiverConnected                    metricPostgresqlWalReceiverConnected
+	metricPostgresqlWalReceiverLastMsgReceiptAge            metricPostgresqlWalReceiverLastMsgReceiptAge
+	metricPostgresqlWalReceiverLastMsgSendAge               metricPostgresqlWalReceiverLastMsgSendAge
+	metricPostgresqlWalReceiverLatestEndAge                 metricPostgresqlWalReceiverLatestEndAge
+	metricPostgresqlWalReceiverReceivedTimeline             metricPostgresqlWalReceiverReceivedTimeline
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -3279,6 +3559,11 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSessionsSessionTime:                     newMetricPostgresqlSessionsSessionTime(mbc.Metrics.PostgresqlSessionsSessionTime),
 		metricPostgresqlTempBytes:                               newMetricPostgresqlTempBytes(mbc.Metrics.PostgresqlTempBytes),
 		metricPostgresqlTempFiles:                               newMetricPostgresqlTempFiles(mbc.Metrics.PostgresqlTempFiles),
+		metricPostgresqlWalReceiverConnected:                    newMetricPostgresqlWalReceiverConnected(mbc.Metrics.PostgresqlWalReceiverConnected),
+		metricPostgresqlWalReceiverLastMsgReceiptAge:            newMetricPostgresqlWalReceiverLastMsgReceiptAge(mbc.Metrics.PostgresqlWalReceiverLastMsgReceiptAge),
+		metricPostgresqlWalReceiverLastMsgSendAge:               newMetricPostgresqlWalReceiverLastMsgSendAge(mbc.Metrics.PostgresqlWalReceiverLastMsgSendAge),
+		metricPostgresqlWalReceiverLatestEndAge:                 newMetricPostgresqlWalReceiverLatestEndAge(mbc.Metrics.PostgresqlWalReceiverLatestEndAge),
+		metricPostgresqlWalReceiverReceivedTimeline:             newMetricPostgresqlWalReceiverReceivedTimeline(mbc.Metrics.PostgresqlWalReceiverReceivedTimeline),
 		resourceAttributeIncludeFilter:                          make(map[string]filter.Filter),
 		resourceAttributeExcludeFilter:                          make(map[string]filter.Filter),
 	}
@@ -3441,6 +3726,11 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSessionsSessionTime.emit(ils.Metrics())
 	mb.metricPostgresqlTempBytes.emit(ils.Metrics())
 	mb.metricPostgresqlTempFiles.emit(ils.Metrics())
+	mb.metricPostgresqlWalReceiverConnected.emit(ils.Metrics())
+	mb.metricPostgresqlWalReceiverLastMsgReceiptAge.emit(ils.Metrics())
+	mb.metricPostgresqlWalReceiverLastMsgSendAge.emit(ils.Metrics())
+	mb.metricPostgresqlWalReceiverLatestEndAge.emit(ils.Metrics())
+	mb.metricPostgresqlWalReceiverReceivedTimeline.emit(ils.Metrics())
 
 	for _, op := range options {
 		op.apply(rm)
@@ -3740,6 +4030,31 @@ func (mb *MetricsBuilder) RecordPostgresqlTempBytesDataPoint(ts pcommon.Timestam
 // RecordPostgresqlTempFilesDataPoint adds a data point to postgresql.temp_files metric.
 func (mb *MetricsBuilder) RecordPostgresqlTempFilesDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlTempFiles.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalReceiverConnectedDataPoint adds a data point to postgresql.wal_receiver.connected metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalReceiverConnectedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalReceiverConnected.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalReceiverLastMsgReceiptAgeDataPoint adds a data point to postgresql.wal_receiver.last_msg_receipt_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalReceiverLastMsgReceiptAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalReceiverLastMsgReceiptAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalReceiverLastMsgSendAgeDataPoint adds a data point to postgresql.wal_receiver.last_msg_send_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalReceiverLastMsgSendAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalReceiverLastMsgSendAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalReceiverLatestEndAgeDataPoint adds a data point to postgresql.wal_receiver.latest_end_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalReceiverLatestEndAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalReceiverLatestEndAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalReceiverReceivedTimelineDataPoint adds a data point to postgresql.wal_receiver.received_timeline metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalReceiverReceivedTimelineDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalReceiverReceivedTimeline.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // Reset resets metrics builder to its initial state. It should be used when external metrics source is restarted,
