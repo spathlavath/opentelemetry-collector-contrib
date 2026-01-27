@@ -100,4 +100,19 @@ const (
 	// Format: Major version * 10000 + Minor version * 100 + Patch version
 	// Example: PostgreSQL 14.5 returns 140005
 	VersionQuery = `SELECT current_setting('server_version_num')::int`
+
+	// PgUptimeSQL returns the PostgreSQL server uptime in seconds
+	// Calculates time elapsed since server start using pg_postmaster_start_time()
+	// Available in PostgreSQL 9.6+
+	PgUptimeSQL = `SELECT EXTRACT(EPOCH FROM (now() - pg_postmaster_start_time())) as uptime`
+
+	// PgDatabaseCountSQL returns the count of databases that allow connections
+	// Excludes template databases by filtering on datallowconn
+	// Available in PostgreSQL 9.6+
+	PgDatabaseCountSQL = `SELECT COUNT(*) as db_count FROM pg_database WHERE datallowconn`
+
+	// PgRunningStatusSQL returns a simple health check indicator
+	// Returns 1 if the server is running and responding to queries
+	// Available in PostgreSQL 9.6+
+	PgRunningStatusSQL = `SELECT 1 as running`
 )

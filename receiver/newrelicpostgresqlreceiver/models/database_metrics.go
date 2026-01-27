@@ -83,3 +83,30 @@ type PgStatDatabaseConflictsMetric struct {
 	ConflBufferpin  sql.NullInt64 // Queries canceled due to pinned buffers
 	ConflDeadlock   sql.NullInt64 // Queries canceled due to deadlocks
 }
+
+// PgUptimeMetric represents server uptime calculated from pg_postmaster_start_time()
+// This metric shows how long the PostgreSQL server has been running
+// Available in PostgreSQL 9.6+
+type PgUptimeMetric struct {
+	// Uptime is the time in seconds since the PostgreSQL server started
+	// Calculated as: EXTRACT(EPOCH FROM (now() - pg_postmaster_start_time()))
+	Uptime sql.NullFloat64
+}
+
+// PgDatabaseCountMetric represents the count of databases that allow connections
+// This metric shows the total number of databases (excluding templates)
+// Available in PostgreSQL 9.6+
+type PgDatabaseCountMetric struct {
+	// DatabaseCount is the total number of databases that allow connections
+	// Calculated as: COUNT(*) FROM pg_database WHERE datallowconn
+	DatabaseCount sql.NullInt64
+}
+
+// PgRunningStatusMetric represents the PostgreSQL server running status
+// This is a health check metric that confirms the server is responding
+// Available in PostgreSQL 9.6+
+type PgRunningStatusMetric struct {
+	// Running is a simple health check (always returns 1 if query succeeds)
+	// Query: SELECT 1 as running
+	Running sql.NullInt64
+}

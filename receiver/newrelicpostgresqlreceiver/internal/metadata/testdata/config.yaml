@@ -31,6 +31,8 @@ all_set:
       enabled: true
     postgresql.database_size:
       enabled: true
+    postgresql.db.count:
+      enabled: true
     postgresql.deadlocks:
       enabled: true
     postgresql.disk_read:
@@ -91,6 +93,8 @@ all_set:
       enabled: true
     postgresql.rows_updated:
       enabled: true
+    postgresql.running:
+      enabled: true
     postgresql.sessions.abandoned:
       enabled: true
     postgresql.sessions.active_time:
@@ -118,6 +122,8 @@ all_set:
     postgresql.temp_bytes:
       enabled: true
     postgresql.temp_files:
+      enabled: true
+    postgresql.uptime:
       enabled: true
     postgresql.wal.buffers_full:
       enabled: true
@@ -196,6 +202,8 @@ none_set:
       enabled: false
     postgresql.database_size:
       enabled: false
+    postgresql.db.count:
+      enabled: false
     postgresql.deadlocks:
       enabled: false
     postgresql.disk_read:
@@ -256,6 +264,8 @@ none_set:
       enabled: false
     postgresql.rows_updated:
       enabled: false
+    postgresql.running:
+      enabled: false
     postgresql.sessions.abandoned:
       enabled: false
     postgresql.sessions.active_time:
@@ -283,6 +293,8 @@ none_set:
     postgresql.temp_bytes:
       enabled: false
     postgresql.temp_files:
+      enabled: false
+    postgresql.uptime:
       enabled: false
     postgresql.wal.buffers_full:
       enabled: false

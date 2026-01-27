@@ -240,6 +240,16 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.db.count:
+    description: Number of databases that allow connections (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{databases}"
+    stability:
+      level: alpha
+
   postgresql.deadlocks:
     description: Number of deadlocks detected
     enabled: true
@@ -572,6 +582,16 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.running:
+    description: PostgreSQL server running status health check (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{status}"
+    stability:
+      level: alpha
+
   postgresql.sessions.abandoned:
     description: Number of sessions abandoned due to client disconnection (PostgreSQL 14+)
     enabled: true
@@ -725,6 +745,16 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.uptime:
+    description: PostgreSQL server uptime in seconds (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
     stability:
       level: alpha
 

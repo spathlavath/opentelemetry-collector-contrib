@@ -43,6 +43,7 @@ type MetricsConfig struct {
 	PostgresqlConflictsTablespace                     MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
 	PostgresqlConnections                             MetricConfig `mapstructure:"postgresql.connections"`
 	PostgresqlDatabaseSize                            MetricConfig `mapstructure:"postgresql.database_size"`
+	PostgresqlDbCount                                 MetricConfig `mapstructure:"postgresql.db.count"`
 	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
 	PostgresqlDiskRead                                MetricConfig `mapstructure:"postgresql.disk_read"`
 	PostgresqlReplicationBackendXminAge               MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
@@ -73,6 +74,7 @@ type MetricsConfig struct {
 	PostgresqlRowsInserted                            MetricConfig `mapstructure:"postgresql.rows_inserted"`
 	PostgresqlRowsReturned                            MetricConfig `mapstructure:"postgresql.rows_returned"`
 	PostgresqlRowsUpdated                             MetricConfig `mapstructure:"postgresql.rows_updated"`
+	PostgresqlRunning                                 MetricConfig `mapstructure:"postgresql.running"`
 	PostgresqlSessionsAbandoned                       MetricConfig `mapstructure:"postgresql.sessions.abandoned"`
 	PostgresqlSessionsActiveTime                      MetricConfig `mapstructure:"postgresql.sessions.active_time"`
 	PostgresqlSessionsCount                           MetricConfig `mapstructure:"postgresql.sessions.count"`
@@ -87,6 +89,7 @@ type MetricsConfig struct {
 	PostgresqlSubscriptionSyncError                   MetricConfig `mapstructure:"postgresql.subscription.sync_error"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
+	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
 	PostgresqlWalBuffersFull                          MetricConfig `mapstructure:"postgresql.wal.buffers_full"`
 	PostgresqlWalBytes                                MetricConfig `mapstructure:"postgresql.wal.bytes"`
 	PostgresqlWalFpi                                  MetricConfig `mapstructure:"postgresql.wal.fpi"`
@@ -150,6 +153,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlDatabaseSize: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlDbCount: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlDeadlocks: MetricConfig{
@@ -242,6 +248,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlRowsUpdated: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlRunning: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlSessionsAbandoned: MetricConfig{
 			Enabled: true,
 		},
@@ -282,6 +291,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlTempFiles: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlUptime: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlWalBuffersFull: MetricConfig{
