@@ -28,6 +28,16 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					PostgresqlBeforeXidWraparound:                     MetricConfig{Enabled: true},
+					PostgresqlBgwriterBuffersAlloc:                    MetricConfig{Enabled: true},
+					PostgresqlBgwriterBuffersBackend:                  MetricConfig{Enabled: true},
+					PostgresqlBgwriterBuffersBackendFsync:             MetricConfig{Enabled: true},
+					PostgresqlBgwriterBuffersCheckpoint:               MetricConfig{Enabled: true},
+					PostgresqlBgwriterBuffersClean:                    MetricConfig{Enabled: true},
+					PostgresqlBgwriterCheckpointsRequested:            MetricConfig{Enabled: true},
+					PostgresqlBgwriterCheckpointsTimed:                MetricConfig{Enabled: true},
+					PostgresqlBgwriterMaxwrittenClean:                 MetricConfig{Enabled: true},
+					PostgresqlBgwriterSyncTime:                        MetricConfig{Enabled: true},
+					PostgresqlBgwriterWriteTime:                       MetricConfig{Enabled: true},
 					PostgresqlBlkReadTime:                             MetricConfig{Enabled: true},
 					PostgresqlBlkWriteTime:                            MetricConfig{Enabled: true},
 					PostgresqlBufferHit:                               MetricConfig{Enabled: true},
@@ -121,6 +131,16 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					PostgresqlBeforeXidWraparound:                     MetricConfig{Enabled: false},
+					PostgresqlBgwriterBuffersAlloc:                    MetricConfig{Enabled: false},
+					PostgresqlBgwriterBuffersBackend:                  MetricConfig{Enabled: false},
+					PostgresqlBgwriterBuffersBackendFsync:             MetricConfig{Enabled: false},
+					PostgresqlBgwriterBuffersCheckpoint:               MetricConfig{Enabled: false},
+					PostgresqlBgwriterBuffersClean:                    MetricConfig{Enabled: false},
+					PostgresqlBgwriterCheckpointsRequested:            MetricConfig{Enabled: false},
+					PostgresqlBgwriterCheckpointsTimed:                MetricConfig{Enabled: false},
+					PostgresqlBgwriterMaxwrittenClean:                 MetricConfig{Enabled: false},
+					PostgresqlBgwriterSyncTime:                        MetricConfig{Enabled: false},
+					PostgresqlBgwriterWriteTime:                       MetricConfig{Enabled: false},
 					PostgresqlBlkReadTime:                             MetricConfig{Enabled: false},
 					PostgresqlBlkWriteTime:                            MetricConfig{Enabled: false},
 					PostgresqlBufferHit:                               MetricConfig{Enabled: false},

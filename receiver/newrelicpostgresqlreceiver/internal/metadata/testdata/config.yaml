@@ -3,6 +3,26 @@ all_set:
   metrics:
     postgresql.before_xid_wraparound:
       enabled: true
+    postgresql.bgwriter.buffers_alloc:
+      enabled: true
+    postgresql.bgwriter.buffers_backend:
+      enabled: true
+    postgresql.bgwriter.buffers_backend_fsync:
+      enabled: true
+    postgresql.bgwriter.buffers_checkpoint:
+      enabled: true
+    postgresql.bgwriter.buffers_clean:
+      enabled: true
+    postgresql.bgwriter.checkpoints_requested:
+      enabled: true
+    postgresql.bgwriter.checkpoints_timed:
+      enabled: true
+    postgresql.bgwriter.maxwritten_clean:
+      enabled: true
+    postgresql.bgwriter.sync_time:
+      enabled: true
+    postgresql.bgwriter.write_time:
+      enabled: true
     postgresql.blk_read_time:
       enabled: true
     postgresql.blk_write_time:
@@ -173,6 +193,26 @@ all_set:
 none_set:
   metrics:
     postgresql.before_xid_wraparound:
+      enabled: false
+    postgresql.bgwriter.buffers_alloc:
+      enabled: false
+    postgresql.bgwriter.buffers_backend:
+      enabled: false
+    postgresql.bgwriter.buffers_backend_fsync:
+      enabled: false
+    postgresql.bgwriter.buffers_checkpoint:
+      enabled: false
+    postgresql.bgwriter.buffers_clean:
+      enabled: false
+    postgresql.bgwriter.checkpoints_requested:
+      enabled: false
+    postgresql.bgwriter.checkpoints_timed:
+      enabled: false
+    postgresql.bgwriter.maxwritten_clean:
+      enabled: false
+    postgresql.bgwriter.sync_time:
+      enabled: false
+    postgresql.bgwriter.write_time:
       enabled: false
     postgresql.blk_read_time:
       enabled: false

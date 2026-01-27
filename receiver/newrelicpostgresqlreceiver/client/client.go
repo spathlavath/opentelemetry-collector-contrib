@@ -101,4 +101,12 @@ type PostgreSQLClient interface {
 	// Available on subscriber servers only
 	// Available in PostgreSQL 15+
 	QuerySubscriptionStats(ctx context.Context) ([]models.PgStatSubscriptionMetric, error)
+
+	// QueryBgwriterMetrics retrieves background writer and checkpointer statistics
+	// Uses version-specific queries:
+	// - PostgreSQL 17+: Queries both pg_stat_bgwriter and pg_stat_checkpointer
+	// - PostgreSQL < 17: Queries only pg_stat_bgwriter
+	// Returns server-level statistics about background writer and checkpointer processes
+	// Available in PostgreSQL 9.6+
+	QueryBgwriterMetrics(ctx context.Context, version int) (*models.PgStatBgwriterMetric, error)
 }

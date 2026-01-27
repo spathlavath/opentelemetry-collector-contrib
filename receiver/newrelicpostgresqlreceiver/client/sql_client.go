@@ -539,3 +539,35 @@ func (c *SQLClient) QuerySubscriptionStats(ctx context.Context) ([]models.PgStat
 
 	return metrics, nil
 }
+
+// QueryBgwriterMetrics retrieves background writer and checkpointer statistics
+// For PostgreSQL 17+, queries both pg_stat_bgwriter and pg_stat_checkpointer
+// For PostgreSQL < 17, queries only pg_stat_bgwriter
+func (c *SQLClient) QueryBgwriterMetrics(ctx context.Context, version int) (*models.PgStatBgwriterMetric, error) {
+	// Select query based on PostgreSQL version
+	// PostgreSQL 17 = 170000
+	query := queries.PgStatBgwriterPrePG17SQL
+	if version >= 170000 {
+		query = queries.PgStatBgwriterPG17SQL
+	}
+
+	var metric models.PgStatBgwriterMetric
+
+	err := c.db.QueryRowContext(ctx, query).Scan(
+		&metric.BuffersClean,
+		&metric.MaxwrittenClean,
+		&metric.BuffersAlloc,
+		&metric.CheckpointsTimed,
+		&metric.CheckpointsRequested,
+		&metric.BuffersCheckpoint,
+		&metric.CheckpointWriteTime,
+		&metric.CheckpointSyncTime,
+		&metric.BuffersBackend,
+		&metric.BuffersBackendFsync,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_bgwriter: %w", err)
+	}
+
+	return &metric, nil
+}

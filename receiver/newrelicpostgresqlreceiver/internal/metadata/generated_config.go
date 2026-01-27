@@ -29,6 +29,16 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
 	PostgresqlBeforeXidWraparound                     MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
+	PostgresqlBgwriterBuffersAlloc                    MetricConfig `mapstructure:"postgresql.bgwriter.buffers_alloc"`
+	PostgresqlBgwriterBuffersBackend                  MetricConfig `mapstructure:"postgresql.bgwriter.buffers_backend"`
+	PostgresqlBgwriterBuffersBackendFsync             MetricConfig `mapstructure:"postgresql.bgwriter.buffers_backend_fsync"`
+	PostgresqlBgwriterBuffersCheckpoint               MetricConfig `mapstructure:"postgresql.bgwriter.buffers_checkpoint"`
+	PostgresqlBgwriterBuffersClean                    MetricConfig `mapstructure:"postgresql.bgwriter.buffers_clean"`
+	PostgresqlBgwriterCheckpointsRequested            MetricConfig `mapstructure:"postgresql.bgwriter.checkpoints_requested"`
+	PostgresqlBgwriterCheckpointsTimed                MetricConfig `mapstructure:"postgresql.bgwriter.checkpoints_timed"`
+	PostgresqlBgwriterMaxwrittenClean                 MetricConfig `mapstructure:"postgresql.bgwriter.maxwritten_clean"`
+	PostgresqlBgwriterSyncTime                        MetricConfig `mapstructure:"postgresql.bgwriter.sync_time"`
+	PostgresqlBgwriterWriteTime                       MetricConfig `mapstructure:"postgresql.bgwriter.write_time"`
 	PostgresqlBlkReadTime                             MetricConfig `mapstructure:"postgresql.blk_read_time"`
 	PostgresqlBlkWriteTime                            MetricConfig `mapstructure:"postgresql.blk_write_time"`
 	PostgresqlBufferHit                               MetricConfig `mapstructure:"postgresql.buffer_hit"`
@@ -111,6 +121,36 @@ type MetricsConfig struct {
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
 		PostgresqlBeforeXidWraparound: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersAlloc: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersBackend: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersBackendFsync: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersCheckpoint: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersClean: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterCheckpointsRequested: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterCheckpointsTimed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterMaxwrittenClean: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterSyncTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterWriteTime: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlBlkReadTime: MetricConfig{

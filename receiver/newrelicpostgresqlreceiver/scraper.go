@@ -41,6 +41,7 @@ type newRelicPostgreSQLScraper struct {
 	// Scrapers
 	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
 	replicationMetricsScraper *scrapers.ReplicationScraper
+	bgwriterScraper           *scrapers.BgwriterScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -171,6 +172,21 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.logger.Info("Replication metrics scraper enabled (PostgreSQL 9.6+)")
 	} else {
 		s.logger.Info("Replication metrics scraper disabled (requires PostgreSQL 9.6+)")
+	}
+
+	// Initialize background writer scraper only if PostgreSQL 9.6+
+	if s.supportsPG96 {
+		s.bgwriterScraper = scrapers.NewBgwriterScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+			s.metricsBuilderConfig,
+			s.pgVersion,
+		)
+		s.logger.Info("Background writer scraper enabled (PostgreSQL 9.6+)")
+	} else {
+		s.logger.Info("Background writer scraper disabled (requires PostgreSQL 9.6+)")
 	}
 
 	return nil
@@ -307,6 +323,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping subscription statistics",
 				zap.Int("error_count", len(subscriptionErrs)))
 			scrapeErrors = append(scrapeErrors, subscriptionErrs...)
+		}
+	}
+
+	// Scrape background writer metrics (PostgreSQL 9.6+ only)
+	if s.supportsPG96 && s.bgwriterScraper != nil {
+		bgwriterErrs := s.bgwriterScraper.ScrapeBgwriterMetrics(scrapeCtx)
+		if len(bgwriterErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping background writer metrics",
+				zap.Int("error_count", len(bgwriterErrs)))
+			scrapeErrors = append(scrapeErrors, bgwriterErrs...)
 		}
 	}
 

@@ -80,6 +80,126 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.bgwriter.buffers_alloc:
+    description: Number of buffers allocated (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.buffers_backend:
+    description: Number of buffers written directly by a backend (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.buffers_backend_fsync:
+    description: Number of times a backend had to execute its own fsync call (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.buffers_checkpoint:
+    description: Number of buffers written during checkpoints (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.buffers_clean:
+    description: Number of buffers written by the background writer (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.checkpoints_requested:
+    description: Number of requested checkpoints that have been performed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{checkpoints}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.checkpoints_timed:
+    description: Number of scheduled checkpoints that have been performed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{checkpoints}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.maxwritten_clean:
+    description: Number of times the background writer stopped a cleaning scan because it had written too many buffers (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.sync_time:
+    description: Total time spent syncing checkpoint data to disk in milliseconds (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.bgwriter.write_time:
+    description: Total time spent writing checkpoint data to disk in milliseconds (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
   postgresql.blk_read_time:
     description: Time spent reading data file blocks (milliseconds)
     enabled: true
