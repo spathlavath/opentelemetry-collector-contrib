@@ -321,4 +321,34 @@ const (
 			COALESCE(sum(size), 0) as wal_size,
 			COALESCE(EXTRACT(EPOCH FROM (now() - min(modification))), 0) as wal_age
 		FROM pg_ls_waldir()`
+
+	// Subscription Statistics Queries
+	// PgStatSubscriptionSQL returns subscription statistics for logical replication
+	// Joins pg_stat_subscription with pg_stat_subscription_stats
+	// Available in PostgreSQL 15+
+	//
+	// Metrics collected:
+	// - subscription_name: Name of the subscription
+	// - last_msg_send_age: Time since last message sent from publisher (seconds)
+	// - last_msg_receipt_age: Time since last message received (seconds)
+	// - latest_end_age: Time since latest WAL location reported (seconds)
+	// - apply_error_count: Number of apply errors
+	// - sync_error_count: Number of sync errors
+	// - state: active (pid not null) or inactive (pid null)
+	//
+	// Notes:
+	// - Only returns rows on subscriber servers with configured subscriptions
+	// - Empty result set if no subscriptions are configured
+	// - Requires pg_stat_subscription and pg_stat_subscription_stats views
+	PgStatSubscriptionSQL = `
+		SELECT
+			sub.subname as subscription_name,
+			COALESCE(EXTRACT(EPOCH FROM (now() - sub.last_msg_send_time)), 0) as last_msg_send_age,
+			COALESCE(EXTRACT(EPOCH FROM (now() - sub.last_msg_receipt_time)), 0) as last_msg_receipt_age,
+			COALESCE(EXTRACT(EPOCH FROM (now() - sub.latest_end_time)), 0) as latest_end_age,
+			COALESCE(stats.apply_error_count, 0) as apply_error_count,
+			COALESCE(stats.sync_error_count, 0) as sync_error_count,
+			CASE WHEN sub.pid IS NOT NULL THEN 'active' ELSE 'inactive' END as state
+		FROM pg_stat_subscription sub
+		LEFT JOIN pg_stat_subscription_stats stats USING (subid)`
 )

@@ -388,3 +388,52 @@ func (s *ReplicationScraper) recordWalFilesMetrics(now pcommon.Timestamp, metric
 	s.mb.RecordPostgresqlWalFilesSizeDataPoint(now, getInt64(metric.WalSize), s.instanceName)
 	s.mb.RecordPostgresqlWalFilesAgeDataPoint(now, getFloat64(metric.WalAge), s.instanceName)
 }
+
+// ScrapeSubscriptionStats scrapes logical replication subscription statistics
+func (s *ReplicationScraper) ScrapeSubscriptionStats(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// Subscription statistics available in PostgreSQL 15+
+	const PG15Version = 150000 // PostgreSQL 15.0
+
+	if s.version < PG15Version {
+		s.logger.Debug("Skipping subscription statistics (PostgreSQL 15+ required)",
+			zap.Int("version", s.version))
+		return nil
+	}
+
+	metrics, err := s.client.QuerySubscriptionStats(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query subscription statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// No error if no subscriptions (empty result set)
+	if len(metrics) == 0 {
+		s.logger.Debug("No subscriptions found (server may not have subscriptions configured)")
+		return nil
+	}
+
+	for _, metric := range metrics {
+		s.recordSubscriptionMetrics(now, metric)
+	}
+
+	s.logger.Debug("Subscription statistics scrape completed",
+		zap.Int("subscriptions", len(metrics)))
+
+	return nil
+}
+
+// recordSubscriptionMetrics records subscription metrics for a single subscription
+func (s *ReplicationScraper) recordSubscriptionMetrics(now pcommon.Timestamp, metric models.PgStatSubscriptionMetric) {
+	// Get string values for attributes
+	subscriptionName := getString(metric.SubscriptionName)
+	state := getString(metric.State)
+
+	// Record subscription metrics
+	s.mb.RecordPostgresqlSubscriptionLastMsgSendAgeDataPoint(now, getFloat64(metric.LastMsgSendAge), subscriptionName, state, s.instanceName)
+	s.mb.RecordPostgresqlSubscriptionLastMsgReceiptAgeDataPoint(now, getFloat64(metric.LastMsgReceiptAge), subscriptionName, state, s.instanceName)
+	s.mb.RecordPostgresqlSubscriptionLatestEndAgeDataPoint(now, getFloat64(metric.LatestEndAge), subscriptionName, state, s.instanceName)
+	s.mb.RecordPostgresqlSubscriptionApplyErrorDataPoint(now, getInt64(metric.ApplyErrorCount), subscriptionName, state, s.instanceName)
+	s.mb.RecordPostgresqlSubscriptionSyncErrorDataPoint(now, getInt64(metric.SyncErrorCount), subscriptionName, state, s.instanceName)
+}

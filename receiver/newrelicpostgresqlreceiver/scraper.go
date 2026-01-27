@@ -304,6 +304,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape subscription stats (PostgreSQL 15+ only, subscriber-side)
+	if s.pgVersion >= 150000 && s.replicationMetricsScraper != nil {
+		subscriptionErrs := s.replicationMetricsScraper.ScrapeSubscriptionStats(scrapeCtx)
+		if len(subscriptionErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping subscription statistics",
+				zap.Int("error_count", len(subscriptionErrs)))
+			scrapeErrors = append(scrapeErrors, subscriptionErrs...)
+		}
+	}
+
 	metrics := s.buildMetrics()
 
 	s.logScrapeCompletion(scrapeErrors)

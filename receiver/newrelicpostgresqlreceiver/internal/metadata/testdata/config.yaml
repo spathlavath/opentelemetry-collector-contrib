@@ -105,6 +105,16 @@ all_set:
       enabled: true
     postgresql.sessions.session_time:
       enabled: true
+    postgresql.subscription.apply_error:
+      enabled: true
+    postgresql.subscription.last_msg_receipt_age:
+      enabled: true
+    postgresql.subscription.last_msg_send_age:
+      enabled: true
+    postgresql.subscription.latest_end_age:
+      enabled: true
+    postgresql.subscription.sync_error:
+      enabled: true
     postgresql.temp_bytes:
       enabled: true
     postgresql.temp_files:
@@ -259,6 +269,16 @@ none_set:
     postgresql.sessions.killed:
       enabled: false
     postgresql.sessions.session_time:
+      enabled: false
+    postgresql.subscription.apply_error:
+      enabled: false
+    postgresql.subscription.last_msg_receipt_age:
+      enabled: false
+    postgresql.subscription.last_msg_send_age:
+      enabled: false
+    postgresql.subscription.latest_end_age:
+      enabled: false
+    postgresql.subscription.sync_error:
       enabled: false
     postgresql.temp_bytes:
       enabled: false

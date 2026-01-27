@@ -458,3 +458,42 @@ func (c *SQLClient) QueryWalFiles(ctx context.Context) (*models.PgWalFilesMetric
 
 	return &metric, nil
 }
+
+// QuerySubscriptionStats retrieves logical replication subscription statistics
+// Joins pg_stat_subscription with pg_stat_subscription_stats
+// Returns empty slice if no subscriptions are configured
+// Available in PostgreSQL 15+
+func (c *SQLClient) QuerySubscriptionStats(ctx context.Context) ([]models.PgStatSubscriptionMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatSubscriptionSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_subscription: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatSubscriptionMetric
+
+	for rows.Next() {
+		var metric models.PgStatSubscriptionMetric
+
+		err = rows.Scan(
+			&metric.SubscriptionName,
+			&metric.LastMsgSendAge,
+			&metric.LastMsgReceiptAge,
+			&metric.LatestEndAge,
+			&metric.ApplyErrorCount,
+			&metric.SyncErrorCount,
+			&metric.State,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_subscription row: %w", err)
+		}
+
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_subscription rows: %w", err)
+	}
+
+	return metrics, nil
+}

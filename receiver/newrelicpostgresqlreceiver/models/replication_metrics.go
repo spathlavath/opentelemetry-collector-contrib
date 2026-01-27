@@ -304,3 +304,42 @@ type PgWalFilesMetric struct {
 	// High values may indicate archiving or cleanup issues
 	WalAge sql.NullFloat64
 }
+
+// PgStatSubscriptionMetric represents statistics for a logical replication subscription
+// Combines data from pg_stat_subscription and pg_stat_subscription_stats
+// Only available on subscriber side (server receiving logical replication)
+//
+// Available in PostgreSQL 15+
+type PgStatSubscriptionMetric struct {
+	// SubscriptionName is the name of the subscription
+	SubscriptionName sql.NullString
+
+	// LastMsgSendAge is the time elapsed since last message sent from publisher
+	// Calculated as: now() - last_msg_send_time
+	// In seconds
+	LastMsgSendAge sql.NullFloat64
+
+	// LastMsgReceiptAge is the time elapsed since last message received from publisher
+	// Calculated as: now() - last_msg_receipt_time
+	// In seconds
+	// High values may indicate network issues or publisher being down
+	LastMsgReceiptAge sql.NullFloat64
+
+	// LatestEndAge is the time elapsed since latest WAL location reported to publisher
+	// Calculated as: now() - latest_end_time
+	// In seconds
+	LatestEndAge sql.NullFloat64
+
+	// ApplyErrorCount is the number of errors encountered while applying changes
+	// From pg_stat_subscription_stats
+	ApplyErrorCount sql.NullInt64
+
+	// SyncErrorCount is the number of errors encountered during initial sync
+	// From pg_stat_subscription_stats
+	SyncErrorCount sql.NullInt64
+
+	// State indicates whether the subscription is active
+	// 'active' if subscription worker is running (pid is not null)
+	// 'inactive' if subscription worker is not running
+	State sql.NullString
+}

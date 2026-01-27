@@ -818,6 +818,86 @@ Time spent in sessions for this database (PostgreSQL 14+)
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.subscription.apply_error
+
+Number of errors encountered while applying logical replication changes (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {errors} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.last_msg_receipt_age
+
+Time elapsed since last message received from publisher in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.last_msg_send_age
+
+Time elapsed since last message sent from publisher in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.latest_end_age
+
+Time elapsed since latest WAL location reported to publisher in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.subscription.sync_error
+
+Number of errors encountered during initial sync in logical replication (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {errors} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| subscription_name | Name of the logical replication subscription | Any Str | Recommended |
+| state | State of the replication slot (active or inactive) | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.temp_bytes
 
 Total amount of data written to temporary files

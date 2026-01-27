@@ -62,6 +62,9 @@ attributes:
   state:
     description: State of the replication slot (active or inactive)
     type: string
+  subscription_name:
+    description: Name of the logical replication subscription
+    type: string
   sync_state:
     description: Synchronous state of the standby (async, sync, quorum, potential)
     type: string
@@ -644,6 +647,60 @@ metrics:
       value_type: double
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.subscription.apply_error:
+    description: Number of errors encountered while applying logical replication changes (PostgreSQL 15+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "{errors}"
+    stability:
+      level: alpha
+
+  postgresql.subscription.last_msg_receipt_age:
+    description: Time elapsed since last message received from publisher in logical replication (PostgreSQL 15+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.subscription.last_msg_send_age:
+    description: Time elapsed since last message sent from publisher in logical replication (PostgreSQL 15+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.subscription.latest_end_age:
+    description: Time elapsed since latest WAL location reported to publisher in logical replication (PostgreSQL 15+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.subscription.sync_error:
+    description: Number of errors encountered during initial sync in logical replication (PostgreSQL 15+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
+    unit: "{errors}"
     stability:
       level: alpha
 

@@ -79,4 +79,11 @@ type PostgreSQLClient interface {
 	// Available on both primary and standby servers
 	// Available in PostgreSQL 10+
 	QueryWalFiles(ctx context.Context) (*models.PgWalFilesMetric, error)
+
+	// QuerySubscriptionStats retrieves logical replication subscription statistics
+	// Joins pg_stat_subscription with pg_stat_subscription_stats
+	// Returns empty slice if no subscriptions are configured
+	// Available on subscriber servers only
+	// Available in PostgreSQL 15+
+	QuerySubscriptionStats(ctx context.Context) ([]models.PgStatSubscriptionMetric, error)
 }

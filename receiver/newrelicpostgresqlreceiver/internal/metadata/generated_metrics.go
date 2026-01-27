@@ -169,6 +169,21 @@ var MetricsInfo = metricsInfo{
 	PostgresqlSessionsSessionTime: metricInfo{
 		Name: "postgresql.sessions.session_time",
 	},
+	PostgresqlSubscriptionApplyError: metricInfo{
+		Name: "postgresql.subscription.apply_error",
+	},
+	PostgresqlSubscriptionLastMsgReceiptAge: metricInfo{
+		Name: "postgresql.subscription.last_msg_receipt_age",
+	},
+	PostgresqlSubscriptionLastMsgSendAge: metricInfo{
+		Name: "postgresql.subscription.last_msg_send_age",
+	},
+	PostgresqlSubscriptionLatestEndAge: metricInfo{
+		Name: "postgresql.subscription.latest_end_age",
+	},
+	PostgresqlSubscriptionSyncError: metricInfo{
+		Name: "postgresql.subscription.sync_error",
+	},
 	PostgresqlTempBytes: metricInfo{
 		Name: "postgresql.temp_bytes",
 	},
@@ -278,6 +293,11 @@ type metricsInfo struct {
 	PostgresqlSessionsIdleInTransactionTime           metricInfo
 	PostgresqlSessionsKilled                          metricInfo
 	PostgresqlSessionsSessionTime                     metricInfo
+	PostgresqlSubscriptionApplyError                  metricInfo
+	PostgresqlSubscriptionLastMsgReceiptAge           metricInfo
+	PostgresqlSubscriptionLastMsgSendAge              metricInfo
+	PostgresqlSubscriptionLatestEndAge                metricInfo
+	PostgresqlSubscriptionSyncError                   metricInfo
 	PostgresqlTempBytes                               metricInfo
 	PostgresqlTempFiles                               metricInfo
 	PostgresqlWalBuffersFull                          metricInfo
@@ -3092,6 +3112,275 @@ func newMetricPostgresqlSessionsSessionTime(cfg MetricConfig) metricPostgresqlSe
 	return m
 }
 
+type metricPostgresqlSubscriptionApplyError struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.subscription.apply_error metric with initial data.
+func (m *metricPostgresqlSubscriptionApplyError) init() {
+	m.data.SetName("postgresql.subscription.apply_error")
+	m.data.SetDescription("Number of errors encountered while applying logical replication changes (PostgreSQL 15+)")
+	m.data.SetUnit("{errors}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSubscriptionApplyError) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("subscription_name", subscriptionNameAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSubscriptionApplyError) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSubscriptionApplyError) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSubscriptionApplyError(cfg MetricConfig) metricPostgresqlSubscriptionApplyError {
+	m := metricPostgresqlSubscriptionApplyError{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSubscriptionLastMsgReceiptAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.subscription.last_msg_receipt_age metric with initial data.
+func (m *metricPostgresqlSubscriptionLastMsgReceiptAge) init() {
+	m.data.SetName("postgresql.subscription.last_msg_receipt_age")
+	m.data.SetDescription("Time elapsed since last message received from publisher in logical replication (PostgreSQL 15+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSubscriptionLastMsgReceiptAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("subscription_name", subscriptionNameAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSubscriptionLastMsgReceiptAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSubscriptionLastMsgReceiptAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSubscriptionLastMsgReceiptAge(cfg MetricConfig) metricPostgresqlSubscriptionLastMsgReceiptAge {
+	m := metricPostgresqlSubscriptionLastMsgReceiptAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSubscriptionLastMsgSendAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.subscription.last_msg_send_age metric with initial data.
+func (m *metricPostgresqlSubscriptionLastMsgSendAge) init() {
+	m.data.SetName("postgresql.subscription.last_msg_send_age")
+	m.data.SetDescription("Time elapsed since last message sent from publisher in logical replication (PostgreSQL 15+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSubscriptionLastMsgSendAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("subscription_name", subscriptionNameAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSubscriptionLastMsgSendAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSubscriptionLastMsgSendAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSubscriptionLastMsgSendAge(cfg MetricConfig) metricPostgresqlSubscriptionLastMsgSendAge {
+	m := metricPostgresqlSubscriptionLastMsgSendAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSubscriptionLatestEndAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.subscription.latest_end_age metric with initial data.
+func (m *metricPostgresqlSubscriptionLatestEndAge) init() {
+	m.data.SetName("postgresql.subscription.latest_end_age")
+	m.data.SetDescription("Time elapsed since latest WAL location reported to publisher in logical replication (PostgreSQL 15+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSubscriptionLatestEndAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("subscription_name", subscriptionNameAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSubscriptionLatestEndAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSubscriptionLatestEndAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSubscriptionLatestEndAge(cfg MetricConfig) metricPostgresqlSubscriptionLatestEndAge {
+	m := metricPostgresqlSubscriptionLatestEndAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSubscriptionSyncError struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.subscription.sync_error metric with initial data.
+func (m *metricPostgresqlSubscriptionSyncError) init() {
+	m.data.SetName("postgresql.subscription.sync_error")
+	m.data.SetDescription("Number of errors encountered during initial sync in logical replication (PostgreSQL 15+)")
+	m.data.SetUnit("{errors}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSubscriptionSyncError) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("subscription_name", subscriptionNameAttributeValue)
+	dp.Attributes().PutStr("state", stateAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSubscriptionSyncError) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSubscriptionSyncError) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSubscriptionSyncError(cfg MetricConfig) metricPostgresqlSubscriptionSyncError {
+	m := metricPostgresqlSubscriptionSyncError{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlTempBytes struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -4090,6 +4379,11 @@ type MetricsBuilder struct {
 	metricPostgresqlSessionsIdleInTransactionTime           metricPostgresqlSessionsIdleInTransactionTime
 	metricPostgresqlSessionsKilled                          metricPostgresqlSessionsKilled
 	metricPostgresqlSessionsSessionTime                     metricPostgresqlSessionsSessionTime
+	metricPostgresqlSubscriptionApplyError                  metricPostgresqlSubscriptionApplyError
+	metricPostgresqlSubscriptionLastMsgReceiptAge           metricPostgresqlSubscriptionLastMsgReceiptAge
+	metricPostgresqlSubscriptionLastMsgSendAge              metricPostgresqlSubscriptionLastMsgSendAge
+	metricPostgresqlSubscriptionLatestEndAge                metricPostgresqlSubscriptionLatestEndAge
+	metricPostgresqlSubscriptionSyncError                   metricPostgresqlSubscriptionSyncError
 	metricPostgresqlTempBytes                               metricPostgresqlTempBytes
 	metricPostgresqlTempFiles                               metricPostgresqlTempFiles
 	metricPostgresqlWalBuffersFull                          metricPostgresqlWalBuffersFull
@@ -4185,6 +4479,11 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSessionsIdleInTransactionTime:           newMetricPostgresqlSessionsIdleInTransactionTime(mbc.Metrics.PostgresqlSessionsIdleInTransactionTime),
 		metricPostgresqlSessionsKilled:                          newMetricPostgresqlSessionsKilled(mbc.Metrics.PostgresqlSessionsKilled),
 		metricPostgresqlSessionsSessionTime:                     newMetricPostgresqlSessionsSessionTime(mbc.Metrics.PostgresqlSessionsSessionTime),
+		metricPostgresqlSubscriptionApplyError:                  newMetricPostgresqlSubscriptionApplyError(mbc.Metrics.PostgresqlSubscriptionApplyError),
+		metricPostgresqlSubscriptionLastMsgReceiptAge:           newMetricPostgresqlSubscriptionLastMsgReceiptAge(mbc.Metrics.PostgresqlSubscriptionLastMsgReceiptAge),
+		metricPostgresqlSubscriptionLastMsgSendAge:              newMetricPostgresqlSubscriptionLastMsgSendAge(mbc.Metrics.PostgresqlSubscriptionLastMsgSendAge),
+		metricPostgresqlSubscriptionLatestEndAge:                newMetricPostgresqlSubscriptionLatestEndAge(mbc.Metrics.PostgresqlSubscriptionLatestEndAge),
+		metricPostgresqlSubscriptionSyncError:                   newMetricPostgresqlSubscriptionSyncError(mbc.Metrics.PostgresqlSubscriptionSyncError),
 		metricPostgresqlTempBytes:                               newMetricPostgresqlTempBytes(mbc.Metrics.PostgresqlTempBytes),
 		metricPostgresqlTempFiles:                               newMetricPostgresqlTempFiles(mbc.Metrics.PostgresqlTempFiles),
 		metricPostgresqlWalBuffersFull:                          newMetricPostgresqlWalBuffersFull(mbc.Metrics.PostgresqlWalBuffersFull),
@@ -4363,6 +4662,11 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSessionsIdleInTransactionTime.emit(ils.Metrics())
 	mb.metricPostgresqlSessionsKilled.emit(ils.Metrics())
 	mb.metricPostgresqlSessionsSessionTime.emit(ils.Metrics())
+	mb.metricPostgresqlSubscriptionApplyError.emit(ils.Metrics())
+	mb.metricPostgresqlSubscriptionLastMsgReceiptAge.emit(ils.Metrics())
+	mb.metricPostgresqlSubscriptionLastMsgSendAge.emit(ils.Metrics())
+	mb.metricPostgresqlSubscriptionLatestEndAge.emit(ils.Metrics())
+	mb.metricPostgresqlSubscriptionSyncError.emit(ils.Metrics())
 	mb.metricPostgresqlTempBytes.emit(ils.Metrics())
 	mb.metricPostgresqlTempFiles.emit(ils.Metrics())
 	mb.metricPostgresqlWalBuffersFull.emit(ils.Metrics())
@@ -4670,6 +4974,31 @@ func (mb *MetricsBuilder) RecordPostgresqlSessionsKilledDataPoint(ts pcommon.Tim
 // RecordPostgresqlSessionsSessionTimeDataPoint adds a data point to postgresql.sessions.session_time metric.
 func (mb *MetricsBuilder) RecordPostgresqlSessionsSessionTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlSessionsSessionTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSubscriptionApplyErrorDataPoint adds a data point to postgresql.subscription.apply_error metric.
+func (mb *MetricsBuilder) RecordPostgresqlSubscriptionApplyErrorDataPoint(ts pcommon.Timestamp, val int64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSubscriptionApplyError.recordDataPoint(mb.startTime, ts, val, subscriptionNameAttributeValue, stateAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSubscriptionLastMsgReceiptAgeDataPoint adds a data point to postgresql.subscription.last_msg_receipt_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlSubscriptionLastMsgReceiptAgeDataPoint(ts pcommon.Timestamp, val float64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSubscriptionLastMsgReceiptAge.recordDataPoint(mb.startTime, ts, val, subscriptionNameAttributeValue, stateAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSubscriptionLastMsgSendAgeDataPoint adds a data point to postgresql.subscription.last_msg_send_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlSubscriptionLastMsgSendAgeDataPoint(ts pcommon.Timestamp, val float64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSubscriptionLastMsgSendAge.recordDataPoint(mb.startTime, ts, val, subscriptionNameAttributeValue, stateAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSubscriptionLatestEndAgeDataPoint adds a data point to postgresql.subscription.latest_end_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlSubscriptionLatestEndAgeDataPoint(ts pcommon.Timestamp, val float64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSubscriptionLatestEndAge.recordDataPoint(mb.startTime, ts, val, subscriptionNameAttributeValue, stateAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSubscriptionSyncErrorDataPoint adds a data point to postgresql.subscription.sync_error metric.
+func (mb *MetricsBuilder) RecordPostgresqlSubscriptionSyncErrorDataPoint(ts pcommon.Timestamp, val int64, subscriptionNameAttributeValue string, stateAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSubscriptionSyncError.recordDataPoint(mb.startTime, ts, val, subscriptionNameAttributeValue, stateAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlTempBytesDataPoint adds a data point to postgresql.temp_bytes metric.

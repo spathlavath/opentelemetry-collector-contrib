@@ -80,6 +80,11 @@ type MetricsConfig struct {
 	PostgresqlSessionsIdleInTransactionTime           MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
 	PostgresqlSessionsKilled                          MetricConfig `mapstructure:"postgresql.sessions.killed"`
 	PostgresqlSessionsSessionTime                     MetricConfig `mapstructure:"postgresql.sessions.session_time"`
+	PostgresqlSubscriptionApplyError                  MetricConfig `mapstructure:"postgresql.subscription.apply_error"`
+	PostgresqlSubscriptionLastMsgReceiptAge           MetricConfig `mapstructure:"postgresql.subscription.last_msg_receipt_age"`
+	PostgresqlSubscriptionLastMsgSendAge              MetricConfig `mapstructure:"postgresql.subscription.last_msg_send_age"`
+	PostgresqlSubscriptionLatestEndAge                MetricConfig `mapstructure:"postgresql.subscription.latest_end_age"`
+	PostgresqlSubscriptionSyncError                   MetricConfig `mapstructure:"postgresql.subscription.sync_error"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
 	PostgresqlWalBuffersFull                          MetricConfig `mapstructure:"postgresql.wal.buffers_full"`
@@ -256,6 +261,21 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSessionsSessionTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSubscriptionApplyError: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSubscriptionLastMsgReceiptAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSubscriptionLastMsgSendAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSubscriptionLatestEndAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSubscriptionSyncError: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlTempBytes: MetricConfig{
