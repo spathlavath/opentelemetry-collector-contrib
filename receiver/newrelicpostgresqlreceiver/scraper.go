@@ -274,6 +274,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape WAL statistics (PostgreSQL 14+ only, both primary and standby)
+	if s.supportsPG14 && s.replicationMetricsScraper != nil {
+		walStatsErrs := s.replicationMetricsScraper.ScrapeWalStatistics(scrapeCtx)
+		if len(walStatsErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping WAL statistics",
+				zap.Int("error_count", len(walStatsErrs)))
+			scrapeErrors = append(scrapeErrors, walStatsErrs...)
+		}
+	}
+
 	// Scrape replication slot stats (PostgreSQL 14+ only)
 	if s.supportsPG14 && s.replicationMetricsScraper != nil {
 		slotStatsErrs := s.replicationMetricsScraper.ScrapeReplicationSlotStats(scrapeCtx)

@@ -671,6 +671,98 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.wal.buffers_full:
+    description: Number of times WAL data was written because WAL buffers became full (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.wal.bytes:
+    description: Total amount of WAL bytes generated (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.wal.fpi:
+    description: Total number of WAL full page images generated (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{images}"
+    stability:
+      level: alpha
+
+  postgresql.wal.records:
+    description: Total number of WAL records generated (PostgreSQL 14+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{records}"
+    stability:
+      level: alpha
+
+  postgresql.wal.sync:
+    description: Number of times WAL files were synced to disk (PostgreSQL 14-17)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{syncs}"
+    stability:
+      level: alpha
+
+  postgresql.wal.sync_time:
+    description: Total time spent syncing WAL files to disk (PostgreSQL 14-17)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.wal.write:
+    description: Number of times WAL buffers were written to disk (PostgreSQL 14-17)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{writes}"
+    stability:
+      level: alpha
+
+  postgresql.wal.write_time:
+    description: Total time spent writing WAL buffers to disk (PostgreSQL 14-17)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "ms"
+    stability:
+      level: alpha
+
   postgresql.wal_receiver.connected:
     description: Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)
     enabled: true

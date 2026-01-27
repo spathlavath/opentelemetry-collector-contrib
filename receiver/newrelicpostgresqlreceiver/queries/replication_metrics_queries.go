@@ -246,4 +246,57 @@ const (
 			COALESCE(EXTRACT(EPOCH FROM (clock_timestamp() - last_msg_receipt_time)), 0) as last_msg_receipt_age,
 			COALESCE(EXTRACT(EPOCH FROM (clock_timestamp() - latest_end_time)), 0) as latest_end_age
 		FROM pg_stat_wal_receiver`
+
+	// WAL Statistics Queries
+	// PgStatWalPG14SQL returns WAL statistics for PostgreSQL 14-17
+	// Includes all 8 metrics including timing metrics
+	// Available in PostgreSQL 14-17
+	//
+	// Metrics collected:
+	// - wal_records: Total number of WAL records generated
+	// - wal_fpi: Total number of full page images generated
+	// - wal_bytes: Total bytes of WAL generated
+	// - wal_buffers_full: Times WAL buffers became full
+	// - wal_write: Number of times WAL buffers were written to disk
+	// - wal_sync: Number of times WAL files were synced to disk
+	// - wal_write_time: Total time writing WAL buffers (milliseconds)
+	// - wal_sync_time: Total time syncing WAL files (milliseconds)
+	//
+	// Notes:
+	// - Timing metrics require track_wal_io_timing to be enabled
+	// - These metrics are cumulative since server start
+	// - Available on both primary and standby servers
+	PgStatWalPG14SQL = `
+		SELECT
+			COALESCE(wal_records, 0) as wal_records,
+			COALESCE(wal_fpi, 0) as wal_fpi,
+			COALESCE(wal_bytes, 0) as wal_bytes,
+			COALESCE(wal_buffers_full, 0) as wal_buffers_full,
+			COALESCE(wal_write, 0) as wal_write,
+			COALESCE(wal_sync, 0) as wal_sync,
+			COALESCE(wal_write_time, 0) as wal_write_time,
+			COALESCE(wal_sync_time, 0) as wal_sync_time
+		FROM pg_stat_wal`
+
+	// PgStatWalPG18SQL returns WAL statistics for PostgreSQL 18+
+	// Simplified to 4 core metrics (timing metrics removed)
+	// Available in PostgreSQL 18+
+	//
+	// Metrics collected:
+	// - wal_records: Total number of WAL records generated
+	// - wal_fpi: Total number of full page images generated
+	// - wal_bytes: Total bytes of WAL generated
+	// - wal_buffers_full: Times WAL buffers became full
+	//
+	// Notes:
+	// - wal_write, wal_sync, wal_write_time, wal_sync_time columns removed in PG18
+	// - These metrics are cumulative since server start
+	// - Available on both primary and standby servers
+	PgStatWalPG18SQL = `
+		SELECT
+			COALESCE(wal_records, 0) as wal_records,
+			COALESCE(wal_fpi, 0) as wal_fpi,
+			COALESCE(wal_bytes, 0) as wal_bytes,
+			COALESCE(wal_buffers_full, 0) as wal_buffers_full
+		FROM pg_stat_wal`
 )

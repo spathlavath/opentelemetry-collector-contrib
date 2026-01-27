@@ -848,6 +848,118 @@ Number of temporary files created
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.wal.buffers_full
+
+Number of times WAL data was written because WAL buffers became full (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {buffers} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.bytes
+
+Total amount of WAL bytes generated (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.fpi
+
+Total number of WAL full page images generated (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {images} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.records
+
+Total number of WAL records generated (PostgreSQL 14+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {records} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.sync
+
+Number of times WAL files were synced to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {syncs} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.sync_time
+
+Total time spent syncing WAL files to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.write
+
+Number of times WAL buffers were written to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {writes} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.wal.write_time
+
+Total time spent writing WAL buffers to disk (PostgreSQL 14-17)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.wal_receiver.connected
 
 Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)

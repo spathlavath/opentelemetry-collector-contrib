@@ -391,3 +391,52 @@ func (c *SQLClient) QueryWalReceiverMetrics(ctx context.Context) (*models.PgStat
 
 	return &metric, nil
 }
+
+// QueryWalStatistics retrieves WAL statistics from pg_stat_wal
+// Uses version-specific queries:
+// - PostgreSQL 14-17: Returns 8 metrics including write/sync timing
+// - PostgreSQL 18+: Returns 4 core metrics (timing removed)
+// Returns nil if pg_stat_wal returns no rows
+func (c *SQLClient) QueryWalStatistics(ctx context.Context, version int) (*models.PgStatWalMetric, error) {
+	// Select appropriate query based on PostgreSQL version
+	var query string
+	isPG18Plus := version >= 180000 // PostgreSQL 18.0+
+
+	if isPG18Plus {
+		query = queries.PgStatWalPG18SQL
+	} else {
+		query = queries.PgStatWalPG14SQL
+	}
+
+	var metric models.PgStatWalMetric
+
+	if isPG18Plus {
+		// PostgreSQL 18+: Only 4 core metrics
+		err := c.db.QueryRowContext(ctx, query).Scan(
+			&metric.WalRecords,
+			&metric.WalFpi,
+			&metric.WalBytes,
+			&metric.WalBuffersFull,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to query pg_stat_wal (PG18+): %w", err)
+		}
+	} else {
+		// PostgreSQL 14-17: All 8 metrics including timing
+		err := c.db.QueryRowContext(ctx, query).Scan(
+			&metric.WalRecords,
+			&metric.WalFpi,
+			&metric.WalBytes,
+			&metric.WalBuffersFull,
+			&metric.WalWrite,
+			&metric.WalSync,
+			&metric.WalWriteTime,
+			&metric.WalSyncTime,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to query pg_stat_wal (PG14-17): %w", err)
+		}
+	}
+
+	return &metric, nil
+}

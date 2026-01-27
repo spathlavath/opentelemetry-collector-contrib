@@ -234,3 +234,53 @@ type PgStatWalReceiverMetric struct {
 	// Indicates how recently the standby reported its progress to the primary
 	LatestEndAge sql.NullFloat64
 }
+
+// PgStatWalMetric represents a row from pg_stat_wal
+// This view shows WAL (Write-Ahead Logging) activity statistics
+// Available on both primary and standby servers
+//
+// Available in PostgreSQL 14+
+// Note: Columns differ between versions:
+// - PG14-17: Includes wal_write, wal_sync, wal_write_time, wal_sync_time
+// - PG18+: Simplified to 4 core metrics only
+type PgStatWalMetric struct {
+	// WalRecords is the total number of WAL records generated
+	// Each database change creates WAL records
+	WalRecords sql.NullInt64
+
+	// WalFpi is the total number of WAL full page images generated
+	// Full page images are written after checkpoints to ensure crash recovery
+	WalFpi sql.NullInt64
+
+	// WalBytes is the total amount of WAL bytes generated
+	// In bytes
+	// Indicates write volume on the database
+	WalBytes sql.NullInt64
+
+	// WalBuffersFull is the number of times WAL data was written to disk
+	// because WAL buffers became full
+	// High values may indicate WAL buffer sizing issues
+	WalBuffersFull sql.NullInt64
+
+	// WalWrite is the number of times WAL buffers were written out to disk
+	// via XLogWrite request
+	// PostgreSQL 14-17 only (removed in PG18)
+	WalWrite sql.NullInt64
+
+	// WalSync is the number of times WAL files were synced to disk
+	// via fsync or similar methods
+	// PostgreSQL 14-17 only (removed in PG18)
+	WalSync sql.NullInt64
+
+	// WalWriteTime is the total time spent writing WAL buffers to disk
+	// In milliseconds
+	// Requires track_wal_io_timing to be enabled
+	// PostgreSQL 14-17 only (removed in PG18)
+	WalWriteTime sql.NullFloat64
+
+	// WalSyncTime is the total time spent syncing WAL files to disk
+	// In milliseconds
+	// Requires track_wal_io_timing to be enabled
+	// PostgreSQL 14-17 only (removed in PG18)
+	WalSyncTime sql.NullFloat64
+}

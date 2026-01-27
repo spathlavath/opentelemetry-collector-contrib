@@ -82,6 +82,14 @@ type MetricsConfig struct {
 	PostgresqlSessionsSessionTime                     MetricConfig `mapstructure:"postgresql.sessions.session_time"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
+	PostgresqlWalBuffersFull                          MetricConfig `mapstructure:"postgresql.wal.buffers_full"`
+	PostgresqlWalBytes                                MetricConfig `mapstructure:"postgresql.wal.bytes"`
+	PostgresqlWalFpi                                  MetricConfig `mapstructure:"postgresql.wal.fpi"`
+	PostgresqlWalRecords                              MetricConfig `mapstructure:"postgresql.wal.records"`
+	PostgresqlWalSync                                 MetricConfig `mapstructure:"postgresql.wal.sync"`
+	PostgresqlWalSyncTime                             MetricConfig `mapstructure:"postgresql.wal.sync_time"`
+	PostgresqlWalWrite                                MetricConfig `mapstructure:"postgresql.wal.write"`
+	PostgresqlWalWriteTime                            MetricConfig `mapstructure:"postgresql.wal.write_time"`
 	PostgresqlWalReceiverConnected                    MetricConfig `mapstructure:"postgresql.wal_receiver.connected"`
 	PostgresqlWalReceiverLastMsgReceiptAge            MetricConfig `mapstructure:"postgresql.wal_receiver.last_msg_receipt_age"`
 	PostgresqlWalReceiverLastMsgSendAge               MetricConfig `mapstructure:"postgresql.wal_receiver.last_msg_send_age"`
@@ -251,6 +259,30 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlTempFiles: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalBuffersFull: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalFpi: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalRecords: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalSync: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalSyncTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalWrite: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalWriteTime: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlWalReceiverConnected: MetricConfig{

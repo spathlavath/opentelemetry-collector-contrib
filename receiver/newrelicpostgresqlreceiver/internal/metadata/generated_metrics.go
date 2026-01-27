@@ -175,6 +175,30 @@ var MetricsInfo = metricsInfo{
 	PostgresqlTempFiles: metricInfo{
 		Name: "postgresql.temp_files",
 	},
+	PostgresqlWalBuffersFull: metricInfo{
+		Name: "postgresql.wal.buffers_full",
+	},
+	PostgresqlWalBytes: metricInfo{
+		Name: "postgresql.wal.bytes",
+	},
+	PostgresqlWalFpi: metricInfo{
+		Name: "postgresql.wal.fpi",
+	},
+	PostgresqlWalRecords: metricInfo{
+		Name: "postgresql.wal.records",
+	},
+	PostgresqlWalSync: metricInfo{
+		Name: "postgresql.wal.sync",
+	},
+	PostgresqlWalSyncTime: metricInfo{
+		Name: "postgresql.wal.sync_time",
+	},
+	PostgresqlWalWrite: metricInfo{
+		Name: "postgresql.wal.write",
+	},
+	PostgresqlWalWriteTime: metricInfo{
+		Name: "postgresql.wal.write_time",
+	},
 	PostgresqlWalReceiverConnected: metricInfo{
 		Name: "postgresql.wal_receiver.connected",
 	},
@@ -247,6 +271,14 @@ type metricsInfo struct {
 	PostgresqlSessionsSessionTime                     metricInfo
 	PostgresqlTempBytes                               metricInfo
 	PostgresqlTempFiles                               metricInfo
+	PostgresqlWalBuffersFull                          metricInfo
+	PostgresqlWalBytes                                metricInfo
+	PostgresqlWalFpi                                  metricInfo
+	PostgresqlWalRecords                              metricInfo
+	PostgresqlWalSync                                 metricInfo
+	PostgresqlWalSyncTime                             metricInfo
+	PostgresqlWalWrite                                metricInfo
+	PostgresqlWalWriteTime                            metricInfo
 	PostgresqlWalReceiverConnected                    metricInfo
 	PostgresqlWalReceiverLastMsgReceiptAge            metricInfo
 	PostgresqlWalReceiverLastMsgSendAge               metricInfo
@@ -3156,6 +3188,426 @@ func newMetricPostgresqlTempFiles(cfg MetricConfig) metricPostgresqlTempFiles {
 	return m
 }
 
+type metricPostgresqlWalBuffersFull struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.buffers_full metric with initial data.
+func (m *metricPostgresqlWalBuffersFull) init() {
+	m.data.SetName("postgresql.wal.buffers_full")
+	m.data.SetDescription("Number of times WAL data was written because WAL buffers became full (PostgreSQL 14+)")
+	m.data.SetUnit("{buffers}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalBuffersFull) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalBuffersFull) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalBuffersFull) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalBuffersFull(cfg MetricConfig) metricPostgresqlWalBuffersFull {
+	m := metricPostgresqlWalBuffersFull{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.bytes metric with initial data.
+func (m *metricPostgresqlWalBytes) init() {
+	m.data.SetName("postgresql.wal.bytes")
+	m.data.SetDescription("Total amount of WAL bytes generated (PostgreSQL 14+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalBytes) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalBytes(cfg MetricConfig) metricPostgresqlWalBytes {
+	m := metricPostgresqlWalBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalFpi struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.fpi metric with initial data.
+func (m *metricPostgresqlWalFpi) init() {
+	m.data.SetName("postgresql.wal.fpi")
+	m.data.SetDescription("Total number of WAL full page images generated (PostgreSQL 14+)")
+	m.data.SetUnit("{images}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalFpi) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalFpi) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalFpi) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalFpi(cfg MetricConfig) metricPostgresqlWalFpi {
+	m := metricPostgresqlWalFpi{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalRecords struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.records metric with initial data.
+func (m *metricPostgresqlWalRecords) init() {
+	m.data.SetName("postgresql.wal.records")
+	m.data.SetDescription("Total number of WAL records generated (PostgreSQL 14+)")
+	m.data.SetUnit("{records}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalRecords) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalRecords) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalRecords) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalRecords(cfg MetricConfig) metricPostgresqlWalRecords {
+	m := metricPostgresqlWalRecords{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalSync struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.sync metric with initial data.
+func (m *metricPostgresqlWalSync) init() {
+	m.data.SetName("postgresql.wal.sync")
+	m.data.SetDescription("Number of times WAL files were synced to disk (PostgreSQL 14-17)")
+	m.data.SetUnit("{syncs}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalSync) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalSync) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalSync) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalSync(cfg MetricConfig) metricPostgresqlWalSync {
+	m := metricPostgresqlWalSync{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalSyncTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.sync_time metric with initial data.
+func (m *metricPostgresqlWalSyncTime) init() {
+	m.data.SetName("postgresql.wal.sync_time")
+	m.data.SetDescription("Total time spent syncing WAL files to disk (PostgreSQL 14-17)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalSyncTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalSyncTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalSyncTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalSyncTime(cfg MetricConfig) metricPostgresqlWalSyncTime {
+	m := metricPostgresqlWalSyncTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalWrite struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.write metric with initial data.
+func (m *metricPostgresqlWalWrite) init() {
+	m.data.SetName("postgresql.wal.write")
+	m.data.SetDescription("Number of times WAL buffers were written to disk (PostgreSQL 14-17)")
+	m.data.SetUnit("{writes}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalWrite) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalWrite) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalWrite) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalWrite(cfg MetricConfig) metricPostgresqlWalWrite {
+	m := metricPostgresqlWalWrite{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlWalWriteTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.wal.write_time metric with initial data.
+func (m *metricPostgresqlWalWriteTime) init() {
+	m.data.SetName("postgresql.wal.write_time")
+	m.data.SetDescription("Total time spent writing WAL buffers to disk (PostgreSQL 14-17)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlWalWriteTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlWalWriteTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlWalWriteTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlWalWriteTime(cfg MetricConfig) metricPostgresqlWalWriteTime {
+	m := metricPostgresqlWalWriteTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlWalReceiverConnected struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3475,6 +3927,14 @@ type MetricsBuilder struct {
 	metricPostgresqlSessionsSessionTime                     metricPostgresqlSessionsSessionTime
 	metricPostgresqlTempBytes                               metricPostgresqlTempBytes
 	metricPostgresqlTempFiles                               metricPostgresqlTempFiles
+	metricPostgresqlWalBuffersFull                          metricPostgresqlWalBuffersFull
+	metricPostgresqlWalBytes                                metricPostgresqlWalBytes
+	metricPostgresqlWalFpi                                  metricPostgresqlWalFpi
+	metricPostgresqlWalRecords                              metricPostgresqlWalRecords
+	metricPostgresqlWalSync                                 metricPostgresqlWalSync
+	metricPostgresqlWalSyncTime                             metricPostgresqlWalSyncTime
+	metricPostgresqlWalWrite                                metricPostgresqlWalWrite
+	metricPostgresqlWalWriteTime                            metricPostgresqlWalWriteTime
 	metricPostgresqlWalReceiverConnected                    metricPostgresqlWalReceiverConnected
 	metricPostgresqlWalReceiverLastMsgReceiptAge            metricPostgresqlWalReceiverLastMsgReceiptAge
 	metricPostgresqlWalReceiverLastMsgSendAge               metricPostgresqlWalReceiverLastMsgSendAge
@@ -3559,6 +4019,14 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSessionsSessionTime:                     newMetricPostgresqlSessionsSessionTime(mbc.Metrics.PostgresqlSessionsSessionTime),
 		metricPostgresqlTempBytes:                               newMetricPostgresqlTempBytes(mbc.Metrics.PostgresqlTempBytes),
 		metricPostgresqlTempFiles:                               newMetricPostgresqlTempFiles(mbc.Metrics.PostgresqlTempFiles),
+		metricPostgresqlWalBuffersFull:                          newMetricPostgresqlWalBuffersFull(mbc.Metrics.PostgresqlWalBuffersFull),
+		metricPostgresqlWalBytes:                                newMetricPostgresqlWalBytes(mbc.Metrics.PostgresqlWalBytes),
+		metricPostgresqlWalFpi:                                  newMetricPostgresqlWalFpi(mbc.Metrics.PostgresqlWalFpi),
+		metricPostgresqlWalRecords:                              newMetricPostgresqlWalRecords(mbc.Metrics.PostgresqlWalRecords),
+		metricPostgresqlWalSync:                                 newMetricPostgresqlWalSync(mbc.Metrics.PostgresqlWalSync),
+		metricPostgresqlWalSyncTime:                             newMetricPostgresqlWalSyncTime(mbc.Metrics.PostgresqlWalSyncTime),
+		metricPostgresqlWalWrite:                                newMetricPostgresqlWalWrite(mbc.Metrics.PostgresqlWalWrite),
+		metricPostgresqlWalWriteTime:                            newMetricPostgresqlWalWriteTime(mbc.Metrics.PostgresqlWalWriteTime),
 		metricPostgresqlWalReceiverConnected:                    newMetricPostgresqlWalReceiverConnected(mbc.Metrics.PostgresqlWalReceiverConnected),
 		metricPostgresqlWalReceiverLastMsgReceiptAge:            newMetricPostgresqlWalReceiverLastMsgReceiptAge(mbc.Metrics.PostgresqlWalReceiverLastMsgReceiptAge),
 		metricPostgresqlWalReceiverLastMsgSendAge:               newMetricPostgresqlWalReceiverLastMsgSendAge(mbc.Metrics.PostgresqlWalReceiverLastMsgSendAge),
@@ -3726,6 +4194,14 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSessionsSessionTime.emit(ils.Metrics())
 	mb.metricPostgresqlTempBytes.emit(ils.Metrics())
 	mb.metricPostgresqlTempFiles.emit(ils.Metrics())
+	mb.metricPostgresqlWalBuffersFull.emit(ils.Metrics())
+	mb.metricPostgresqlWalBytes.emit(ils.Metrics())
+	mb.metricPostgresqlWalFpi.emit(ils.Metrics())
+	mb.metricPostgresqlWalRecords.emit(ils.Metrics())
+	mb.metricPostgresqlWalSync.emit(ils.Metrics())
+	mb.metricPostgresqlWalSyncTime.emit(ils.Metrics())
+	mb.metricPostgresqlWalWrite.emit(ils.Metrics())
+	mb.metricPostgresqlWalWriteTime.emit(ils.Metrics())
 	mb.metricPostgresqlWalReceiverConnected.emit(ils.Metrics())
 	mb.metricPostgresqlWalReceiverLastMsgReceiptAge.emit(ils.Metrics())
 	mb.metricPostgresqlWalReceiverLastMsgSendAge.emit(ils.Metrics())
@@ -4030,6 +4506,46 @@ func (mb *MetricsBuilder) RecordPostgresqlTempBytesDataPoint(ts pcommon.Timestam
 // RecordPostgresqlTempFilesDataPoint adds a data point to postgresql.temp_files metric.
 func (mb *MetricsBuilder) RecordPostgresqlTempFilesDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlTempFiles.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalBuffersFullDataPoint adds a data point to postgresql.wal.buffers_full metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalBuffersFullDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalBuffersFull.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalBytesDataPoint adds a data point to postgresql.wal.bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalBytes.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalFpiDataPoint adds a data point to postgresql.wal.fpi metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalFpiDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalFpi.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalRecordsDataPoint adds a data point to postgresql.wal.records metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalRecordsDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalRecords.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalSyncDataPoint adds a data point to postgresql.wal.sync metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalSyncDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalSync.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalSyncTimeDataPoint adds a data point to postgresql.wal.sync_time metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalSyncTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalSyncTime.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalWriteDataPoint adds a data point to postgresql.wal.write metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalWriteDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalWrite.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlWalWriteTimeDataPoint adds a data point to postgresql.wal.write_time metric.
+func (mb *MetricsBuilder) RecordPostgresqlWalWriteTimeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlWalWriteTime.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlWalReceiverConnectedDataPoint adds a data point to postgresql.wal_receiver.connected metric.

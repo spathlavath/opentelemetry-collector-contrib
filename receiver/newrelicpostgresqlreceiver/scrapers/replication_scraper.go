@@ -294,3 +294,57 @@ func (s *ReplicationScraper) recordWalReceiverMetrics(now pcommon.Timestamp, met
 	s.mb.RecordPostgresqlWalReceiverLastMsgReceiptAgeDataPoint(now, getFloat64(metric.LastMsgReceiptAge), s.instanceName)
 	s.mb.RecordPostgresqlWalReceiverLatestEndAgeDataPoint(now, getFloat64(metric.LatestEndAge), s.instanceName)
 }
+
+// ScrapeWalStatistics scrapes WAL statistics from pg_stat_wal
+func (s *ReplicationScraper) ScrapeWalStatistics(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// WAL statistics available in PostgreSQL 14+
+	const PG14Version = 140000 // PostgreSQL 14.0
+
+	if s.version < PG14Version {
+		s.logger.Debug("Skipping WAL statistics (PostgreSQL 14+ required)",
+			zap.Int("version", s.version))
+		return nil
+	}
+
+	metric, err := s.client.QueryWalStatistics(ctx, s.version)
+	if err != nil {
+		s.logger.Error("Failed to query WAL statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// nil metric means no pg_stat_wal data (should not happen on PG14+)
+	if metric == nil {
+		s.logger.Debug("No WAL statistics found")
+		return nil
+	}
+
+	// Record WAL statistics metrics
+	s.recordWalStatisticsMetrics(now, metric)
+
+	s.logger.Debug("WAL statistics scrape completed")
+
+	return nil
+}
+
+// recordWalStatisticsMetrics records WAL statistics metrics
+// Handles version-specific metrics (PG14-17 has 8 metrics, PG18+ has 4 metrics)
+func (s *ReplicationScraper) recordWalStatisticsMetrics(now pcommon.Timestamp, metric *models.PgStatWalMetric) {
+	// Core metrics available in all versions (PG14+)
+	s.mb.RecordPostgresqlWalRecordsDataPoint(now, getInt64(metric.WalRecords), s.instanceName)
+	s.mb.RecordPostgresqlWalFpiDataPoint(now, getInt64(metric.WalFpi), s.instanceName)
+	s.mb.RecordPostgresqlWalBytesDataPoint(now, getInt64(metric.WalBytes), s.instanceName)
+	s.mb.RecordPostgresqlWalBuffersFullDataPoint(now, getInt64(metric.WalBuffersFull), s.instanceName)
+
+	// Additional metrics only available in PostgreSQL 14-17
+	// In PostgreSQL 18+, these fields will be NULL/0
+	// Only record if version is < 18
+	const PG18Version = 180000 // PostgreSQL 18.0
+	if s.version < PG18Version {
+		s.mb.RecordPostgresqlWalWriteDataPoint(now, getInt64(metric.WalWrite), s.instanceName)
+		s.mb.RecordPostgresqlWalSyncDataPoint(now, getInt64(metric.WalSync), s.instanceName)
+		s.mb.RecordPostgresqlWalWriteTimeDataPoint(now, getFloat64(metric.WalWriteTime), s.instanceName)
+		s.mb.RecordPostgresqlWalSyncTimeDataPoint(now, getFloat64(metric.WalSyncTime), s.instanceName)
+	}
+}

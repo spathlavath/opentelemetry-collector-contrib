@@ -286,6 +286,38 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlWalBuffersFullDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalBytesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalFpiDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalRecordsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalSyncDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalSyncTimeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalWriteDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlWalWriteTimeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlWalReceiverConnectedDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -1445,6 +1477,138 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.buffers_full":
+					assert.False(t, validatedMetrics["postgresql.wal.buffers_full"], "Found a duplicate in the metrics slice: postgresql.wal.buffers_full")
+					validatedMetrics["postgresql.wal.buffers_full"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of times WAL data was written because WAL buffers became full (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{buffers}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.bytes":
+					assert.False(t, validatedMetrics["postgresql.wal.bytes"], "Found a duplicate in the metrics slice: postgresql.wal.bytes")
+					validatedMetrics["postgresql.wal.bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total amount of WAL bytes generated (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.fpi":
+					assert.False(t, validatedMetrics["postgresql.wal.fpi"], "Found a duplicate in the metrics slice: postgresql.wal.fpi")
+					validatedMetrics["postgresql.wal.fpi"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total number of WAL full page images generated (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{images}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.records":
+					assert.False(t, validatedMetrics["postgresql.wal.records"], "Found a duplicate in the metrics slice: postgresql.wal.records")
+					validatedMetrics["postgresql.wal.records"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total number of WAL records generated (PostgreSQL 14+)", ms.At(i).Description())
+					assert.Equal(t, "{records}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.sync":
+					assert.False(t, validatedMetrics["postgresql.wal.sync"], "Found a duplicate in the metrics slice: postgresql.wal.sync")
+					validatedMetrics["postgresql.wal.sync"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of times WAL files were synced to disk (PostgreSQL 14-17)", ms.At(i).Description())
+					assert.Equal(t, "{syncs}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.sync_time":
+					assert.False(t, validatedMetrics["postgresql.wal.sync_time"], "Found a duplicate in the metrics slice: postgresql.wal.sync_time")
+					validatedMetrics["postgresql.wal.sync_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total time spent syncing WAL files to disk (PostgreSQL 14-17)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.write":
+					assert.False(t, validatedMetrics["postgresql.wal.write"], "Found a duplicate in the metrics slice: postgresql.wal.write")
+					validatedMetrics["postgresql.wal.write"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of times WAL buffers were written to disk (PostgreSQL 14-17)", ms.At(i).Description())
+					assert.Equal(t, "{writes}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.wal.write_time":
+					assert.False(t, validatedMetrics["postgresql.wal.write_time"], "Found a duplicate in the metrics slice: postgresql.wal.write_time")
+					validatedMetrics["postgresql.wal.write_time"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total time spent writing WAL buffers to disk (PostgreSQL 14-17)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				case "postgresql.wal_receiver.connected":

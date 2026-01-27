@@ -65,4 +65,12 @@ type PostgreSQLClient interface {
 	// Returns nil if no WAL receiver is running (primary servers or standby with WAL receiver stopped)
 	// Available in PostgreSQL 9.6+
 	QueryWalReceiverMetrics(ctx context.Context) (*models.PgStatWalReceiverMetric, error)
+
+	// QueryWalStatistics retrieves WAL statistics from pg_stat_wal
+	// Uses version-specific queries:
+	// - PostgreSQL 14-17: Returns 8 metrics including write/sync timing
+	// - PostgreSQL 18+: Returns 4 core metrics (timing removed)
+	// Available on both primary and standby servers
+	// Available in PostgreSQL 14+
+	QueryWalStatistics(ctx context.Context, version int) (*models.PgStatWalMetric, error)
 }
