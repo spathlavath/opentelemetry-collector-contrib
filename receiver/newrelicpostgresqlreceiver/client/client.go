@@ -29,6 +29,21 @@ type PostgreSQLClient interface {
 	// Conflict metrics from pg_stat_database_conflicts (PG9.6+)
 	QueryConflictMetrics(ctx context.Context) ([]models.PgStatDatabaseConflictsMetric, error)
 
+	// QueryServerUptime retrieves the PostgreSQL server uptime in seconds
+	// Uses pg_postmaster_start_time() to calculate elapsed time since server start
+	// Available in PostgreSQL 9.6+
+	QueryServerUptime(ctx context.Context) (*models.PgUptimeMetric, error)
+
+	// QueryDatabaseCount retrieves the count of databases that allow connections
+	// Excludes template databases
+	// Available in PostgreSQL 9.6+
+	QueryDatabaseCount(ctx context.Context) (*models.PgDatabaseCountMetric, error)
+
+	// QueryRunningStatus performs a simple health check query
+	// Returns 1 if the server is running and responding
+	// Available in PostgreSQL 9.6+
+	QueryRunningStatus(ctx context.Context) (*models.PgRunningStatusMetric, error)
+
 	// QueryReplicationMetrics retrieves replication statistics from pg_stat_replication
 	// Uses version-specific queries:
 	// - PostgreSQL 9.6: Uses pg_xlog_location_diff, returns NULL for lag times

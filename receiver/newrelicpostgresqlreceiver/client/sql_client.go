@@ -197,6 +197,48 @@ func (c *SQLClient) QueryConflictMetrics(ctx context.Context) ([]models.PgStatDa
 	return metrics, nil
 }
 
+// QueryServerUptime retrieves the PostgreSQL server uptime in seconds
+// Calculates time elapsed since server start using pg_postmaster_start_time()
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryServerUptime(ctx context.Context) (*models.PgUptimeMetric, error) {
+	var metric models.PgUptimeMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgUptimeSQL).Scan(&metric.Uptime)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query server uptime: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QueryDatabaseCount retrieves the count of databases that allow connections
+// Excludes template databases by filtering on datallowconn
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryDatabaseCount(ctx context.Context) (*models.PgDatabaseCountMetric, error) {
+	var metric models.PgDatabaseCountMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgDatabaseCountSQL).Scan(&metric.DatabaseCount)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query database count: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QueryRunningStatus performs a simple health check query
+// Returns 1 if the server is running and responding to queries
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryRunningStatus(ctx context.Context) (*models.PgRunningStatusMetric, error) {
+	var metric models.PgRunningStatusMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgRunningStatusSQL).Scan(&metric.Running)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query running status: %w", err)
+	}
+
+	return &metric, nil
+}
+
 // QueryReplicationMetrics retrieves replication statistics from pg_stat_replication
 // Uses version-specific queries based on PostgreSQL version
 func (c *SQLClient) QueryReplicationMetrics(ctx context.Context, version int) ([]models.PgStatReplicationMetric, error) {

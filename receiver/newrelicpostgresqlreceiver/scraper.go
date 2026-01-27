@@ -40,8 +40,6 @@ const (
 type newRelicPostgreSQLScraper struct {
 	// Scrapers
 	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
-	sessionMetricsScraper     *scrapers.SessionMetricsScraper
-	conflictMetricsScraper    *scrapers.ConflictMetricsScraper
 	replicationMetricsScraper *scrapers.ReplicationScraper
 
 	// Database and configuration
@@ -160,30 +158,6 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.supportsPG12,
 	)
 
-	// Initialize conflict metrics scraper (available for all supported versions)
-	s.conflictMetricsScraper = scrapers.NewConflictMetricsScraper(
-		s.client,
-		s.mb,
-		s.logger,
-		s.instanceName,
-		s.metricsBuilderConfig,
-	)
-	s.logger.Info("Conflict metrics scraper enabled")
-
-	// Initialize session metrics scraper only if PostgreSQL 14+
-	if s.supportsPG14 {
-		s.sessionMetricsScraper = scrapers.NewSessionMetricsScraper(
-			s.client,
-			s.mb,
-			s.logger,
-			s.instanceName,
-			s.metricsBuilderConfig,
-		)
-		s.logger.Info("Session metrics scraper enabled (PostgreSQL 14+)")
-	} else {
-		s.logger.Info("Session metrics scraper disabled (requires PostgreSQL 14+)")
-	}
-
 	// Initialize replication metrics scraper only if PostgreSQL 9.6+
 	if s.supportsPG96 {
 		s.replicationMetricsScraper = scrapers.NewReplicationScraper(
@@ -220,19 +194,41 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		scrapeErrors = append(scrapeErrors, dbErrs...)
 	}
 
+	// Scrape server uptime (PostgreSQL 9.6+, available on all versions we support)
+	uptimeErrs := s.databaseMetricsScraper.ScrapeServerUptime(scrapeCtx)
+	if len(uptimeErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping server uptime",
+			zap.Int("error_count", len(uptimeErrs)))
+		scrapeErrors = append(scrapeErrors, uptimeErrs...)
+	}
+
+	// Scrape database count (PostgreSQL 9.6+, available on all versions we support)
+	dbCountErrs := s.databaseMetricsScraper.ScrapeDatabaseCount(scrapeCtx)
+	if len(dbCountErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping database count",
+			zap.Int("error_count", len(dbCountErrs)))
+		scrapeErrors = append(scrapeErrors, dbCountErrs...)
+	}
+
+	// Scrape running status health check (PostgreSQL 9.6+, available on all versions we support)
+	runningErrs := s.databaseMetricsScraper.ScrapeRunningStatus(scrapeCtx)
+	if len(runningErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping running status",
+			zap.Int("error_count", len(runningErrs)))
+		scrapeErrors = append(scrapeErrors, runningErrs...)
+	}
+
 	// Scrape conflict metrics (all supported versions)
-	if s.conflictMetricsScraper != nil {
-		conflictErrs := s.conflictMetricsScraper.ScrapeConflictMetrics(scrapeCtx)
-		if len(conflictErrs) > 0 {
-			s.logger.Warn("Errors occurred while scraping conflict metrics",
-				zap.Int("error_count", len(conflictErrs)))
-			scrapeErrors = append(scrapeErrors, conflictErrs...)
-		}
+	conflictErrs := s.databaseMetricsScraper.ScrapeConflictMetrics(scrapeCtx)
+	if len(conflictErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping conflict metrics",
+			zap.Int("error_count", len(conflictErrs)))
+		scrapeErrors = append(scrapeErrors, conflictErrs...)
 	}
 
 	// Scrape session metrics (PostgreSQL 14+ only)
-	if s.supportsPG14 && s.sessionMetricsScraper != nil {
-		sessionErrs := s.sessionMetricsScraper.ScrapeSessionMetrics(scrapeCtx)
+	if s.supportsPG14 {
+		sessionErrs := s.databaseMetricsScraper.ScrapeSessionMetrics(scrapeCtx)
 		if len(sessionErrs) > 0 {
 			s.logger.Warn("Errors occurred while scraping session metrics",
 				zap.Int("error_count", len(sessionErrs)))

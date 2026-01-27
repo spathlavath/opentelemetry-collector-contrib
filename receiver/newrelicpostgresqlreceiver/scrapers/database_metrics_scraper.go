@@ -124,3 +124,123 @@ func (s *DatabaseMetricsScraper) recordMetricsForDatabase(now pcommon.Timestamp,
 		s.mb.RecordPostgresqlChecksumsEnabledDataPoint(now, getBool(metric.ChecksumsEnabled), s.instanceName, databaseName)
 	}
 }
+
+// ScrapeServerUptime scrapes the PostgreSQL server uptime metric
+func (s *DatabaseMetricsScraper) ScrapeServerUptime(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryServerUptime(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query server uptime", zap.Error(err))
+		return []error{err}
+	}
+
+	// Record server uptime with instance name
+	s.mb.RecordPostgresqlUptimeDataPoint(now, getFloat64(metric.Uptime), s.instanceName)
+
+	s.logger.Debug("Server uptime scrape completed")
+
+	return nil
+}
+
+// ScrapeDatabaseCount scrapes the database count metric
+func (s *DatabaseMetricsScraper) ScrapeDatabaseCount(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryDatabaseCount(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query database count", zap.Error(err))
+		return []error{err}
+	}
+
+	// Record database count with instance name
+	s.mb.RecordPostgresqlDbCountDataPoint(now, getInt64(metric.DatabaseCount), s.instanceName)
+
+	s.logger.Debug("Database count scrape completed")
+
+	return nil
+}
+
+// ScrapeRunningStatus scrapes the PostgreSQL server running status (health check)
+func (s *DatabaseMetricsScraper) ScrapeRunningStatus(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryRunningStatus(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query running status", zap.Error(err))
+		return []error{err}
+	}
+
+	// Record running status with instance name
+	s.mb.RecordPostgresqlRunningDataPoint(now, getInt64(metric.Running), s.instanceName)
+
+	s.logger.Debug("Running status scrape completed")
+
+	return nil
+}
+
+// ScrapeSessionMetrics scrapes session-level metrics from pg_stat_database (PostgreSQL 14+)
+func (s *DatabaseMetricsScraper) ScrapeSessionMetrics(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QuerySessionMetrics(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query session metrics", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordSessionMetricsForDatabase(now, metric)
+	}
+
+	s.logger.Debug("Session metrics scrape completed",
+		zap.Int("databases", len(metrics)))
+
+	return nil
+}
+
+// recordSessionMetricsForDatabase records all session metrics for a single database
+func (s *DatabaseMetricsScraper) recordSessionMetricsForDatabase(now pcommon.Timestamp, metric models.PgStatDatabaseSessionMetric) {
+	databaseName := metric.DatName
+
+	// Record session metrics using helper functions to extract values
+	s.mb.RecordPostgresqlSessionsSessionTimeDataPoint(now, getFloat64(metric.SessionTime), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlSessionsActiveTimeDataPoint(now, getFloat64(metric.ActiveTime), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlSessionsIdleInTransactionTimeDataPoint(now, getFloat64(metric.IdleInTransactionTime), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlSessionsCountDataPoint(now, getInt64(metric.SessionCount), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlSessionsAbandonedDataPoint(now, getInt64(metric.SessionsAbandoned), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlSessionsFatalDataPoint(now, getInt64(metric.SessionsFatal), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlSessionsKilledDataPoint(now, getInt64(metric.SessionsKilled), s.instanceName, databaseName)
+}
+
+// ScrapeConflictMetrics scrapes replication conflict metrics from pg_stat_database_conflicts
+func (s *DatabaseMetricsScraper) ScrapeConflictMetrics(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryConflictMetrics(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query conflict metrics", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordConflictMetricsForDatabase(now, metric)
+	}
+
+	s.logger.Debug("Conflict metrics scrape completed",
+		zap.Int("databases", len(metrics)))
+
+	return nil
+}
+
+// recordConflictMetricsForDatabase records all conflict metrics for a single database
+func (s *DatabaseMetricsScraper) recordConflictMetricsForDatabase(now pcommon.Timestamp, metric models.PgStatDatabaseConflictsMetric) {
+	databaseName := metric.DatName
+
+	// Record replication conflict metrics using helper functions to extract values
+	s.mb.RecordPostgresqlConflictsBufferpinDataPoint(now, getInt64(metric.ConflBufferpin), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlConflictsDeadlockDataPoint(now, getInt64(metric.ConflDeadlock), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlConflictsLockDataPoint(now, getInt64(metric.ConflLock), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlConflictsSnapshotDataPoint(now, getInt64(metric.ConflSnapshot), s.instanceName, databaseName)
+	s.mb.RecordPostgresqlConflictsTablespaceDataPoint(now, getInt64(metric.ConflTablespace), s.instanceName, databaseName)
+}
