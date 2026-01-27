@@ -440,3 +440,21 @@ func (c *SQLClient) QueryWalStatistics(ctx context.Context, version int) (*model
 
 	return &metric, nil
 }
+
+// QueryWalFiles retrieves WAL file statistics from pg_ls_waldir()
+// Returns count, total size, and age of WAL files in the pg_wal directory
+// Available in PostgreSQL 10+
+func (c *SQLClient) QueryWalFiles(ctx context.Context) (*models.PgWalFilesMetric, error) {
+	var metric models.PgWalFilesMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgWalFilesSQL).Scan(
+		&metric.WalCount,
+		&metric.WalSize,
+		&metric.WalAge,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query WAL files: %w", err)
+	}
+
+	return &metric, nil
+}

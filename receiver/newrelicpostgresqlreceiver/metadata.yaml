@@ -763,6 +763,36 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.wal_files.age:
+    description: Age of the oldest WAL file in seconds (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.wal_files.count:
+    description: Total number of WAL files in the pg_wal directory (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.wal_files.size:
+    description: Total size of all WAL files in bytes (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
   postgresql.wal_receiver.connected:
     description: Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)
     enabled: true

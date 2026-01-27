@@ -125,6 +125,12 @@ all_set:
       enabled: true
     postgresql.wal.write_time:
       enabled: true
+    postgresql.wal_files.age:
+      enabled: true
+    postgresql.wal_files.count:
+      enabled: true
+    postgresql.wal_files.size:
+      enabled: true
     postgresql.wal_receiver.connected:
       enabled: true
     postgresql.wal_receiver.last_msg_receipt_age:
@@ -273,6 +279,12 @@ none_set:
     postgresql.wal.write:
       enabled: false
     postgresql.wal.write_time:
+      enabled: false
+    postgresql.wal_files.age:
+      enabled: false
+    postgresql.wal_files.count:
+      enabled: false
+    postgresql.wal_files.size:
       enabled: false
     postgresql.wal_receiver.connected:
       enabled: false

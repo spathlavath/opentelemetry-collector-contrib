@@ -284,3 +284,23 @@ type PgStatWalMetric struct {
 	// PostgreSQL 14-17 only (removed in PG18)
 	WalSyncTime sql.NullFloat64
 }
+
+// PgWalFilesMetric represents WAL file statistics from pg_ls_waldir()
+// This shows the count, total size, and age of WAL files in the pg_wal directory
+// Useful for monitoring WAL accumulation, disk usage, and archiving issues
+//
+// Available in PostgreSQL 10+
+type PgWalFilesMetric struct {
+	// WalCount is the total number of WAL files in the pg_wal directory
+	// High values may indicate archiving issues or replication slots holding back cleanup
+	WalCount sql.NullInt64
+
+	// WalSize is the total size of all WAL files in bytes
+	// Useful for disk space monitoring
+	WalSize sql.NullInt64
+
+	// WalAge is the age of the oldest WAL file in seconds
+	// Calculated as: now() - min(modification time)
+	// High values may indicate archiving or cleanup issues
+	WalAge sql.NullFloat64
+}

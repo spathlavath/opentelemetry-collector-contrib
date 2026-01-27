@@ -348,3 +348,43 @@ func (s *ReplicationScraper) recordWalStatisticsMetrics(now pcommon.Timestamp, m
 		s.mb.RecordPostgresqlWalSyncTimeDataPoint(now, getFloat64(metric.WalSyncTime), s.instanceName)
 	}
 }
+
+// ScrapeWalFiles scrapes WAL file statistics from pg_ls_waldir()
+func (s *ReplicationScraper) ScrapeWalFiles(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	// WAL files statistics available in PostgreSQL 10+
+	const PG10Version = 100000 // PostgreSQL 10.0
+
+	if s.version < PG10Version {
+		s.logger.Debug("Skipping WAL files statistics (PostgreSQL 10+ required)",
+			zap.Int("version", s.version))
+		return nil
+	}
+
+	metric, err := s.client.QueryWalFiles(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query WAL files statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// nil metric means no pg_ls_waldir data (should not happen on PG10+)
+	if metric == nil {
+		s.logger.Debug("No WAL files statistics found")
+		return nil
+	}
+
+	// Record WAL files metrics
+	s.recordWalFilesMetrics(now, metric)
+
+	s.logger.Debug("WAL files statistics scrape completed")
+
+	return nil
+}
+
+// recordWalFilesMetrics records WAL file statistics metrics
+func (s *ReplicationScraper) recordWalFilesMetrics(now pcommon.Timestamp, metric *models.PgWalFilesMetric) {
+	s.mb.RecordPostgresqlWalFilesCountDataPoint(now, getInt64(metric.WalCount), s.instanceName)
+	s.mb.RecordPostgresqlWalFilesSizeDataPoint(now, getInt64(metric.WalSize), s.instanceName)
+	s.mb.RecordPostgresqlWalFilesAgeDataPoint(now, getFloat64(metric.WalAge), s.instanceName)
+}

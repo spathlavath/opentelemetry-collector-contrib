@@ -299,4 +299,26 @@ const (
 			COALESCE(wal_bytes, 0) as wal_bytes,
 			COALESCE(wal_buffers_full, 0) as wal_buffers_full
 		FROM pg_stat_wal`
+
+	// WAL Files Queries
+	// PgWalFilesSQL returns WAL file statistics from pg_ls_waldir()
+	// Shows count, total size, and age of WAL files in the pg_wal directory
+	// Available in PostgreSQL 10+
+	//
+	// Metrics collected:
+	// - wal_count: Total number of WAL files
+	// - wal_size: Total size of all WAL files (bytes)
+	// - wal_age: Age of oldest WAL file (seconds)
+	//
+	// Notes:
+	// - Useful for monitoring disk usage and archiving issues
+	// - High wal_count or wal_age may indicate replication slots holding back cleanup
+	// - Available on both primary and standby servers
+	// - Requires superuser or pg_monitor role
+	PgWalFilesSQL = `
+		SELECT
+			COALESCE(count(*), 0) as wal_count,
+			COALESCE(sum(size), 0) as wal_size,
+			COALESCE(EXTRACT(EPOCH FROM (now() - min(modification))), 0) as wal_age
+		FROM pg_ls_waldir()`
 )

@@ -73,4 +73,10 @@ type PostgreSQLClient interface {
 	// Available on both primary and standby servers
 	// Available in PostgreSQL 14+
 	QueryWalStatistics(ctx context.Context, version int) (*models.PgStatWalMetric, error)
+
+	// QueryWalFiles retrieves WAL file statistics from pg_ls_waldir()
+	// Returns count, total size, and age of WAL files
+	// Available on both primary and standby servers
+	// Available in PostgreSQL 10+
+	QueryWalFiles(ctx context.Context) (*models.PgWalFilesMetric, error)
 }

@@ -90,6 +90,9 @@ type MetricsConfig struct {
 	PostgresqlWalSyncTime                             MetricConfig `mapstructure:"postgresql.wal.sync_time"`
 	PostgresqlWalWrite                                MetricConfig `mapstructure:"postgresql.wal.write"`
 	PostgresqlWalWriteTime                            MetricConfig `mapstructure:"postgresql.wal.write_time"`
+	PostgresqlWalFilesAge                             MetricConfig `mapstructure:"postgresql.wal_files.age"`
+	PostgresqlWalFilesCount                           MetricConfig `mapstructure:"postgresql.wal_files.count"`
+	PostgresqlWalFilesSize                            MetricConfig `mapstructure:"postgresql.wal_files.size"`
 	PostgresqlWalReceiverConnected                    MetricConfig `mapstructure:"postgresql.wal_receiver.connected"`
 	PostgresqlWalReceiverLastMsgReceiptAge            MetricConfig `mapstructure:"postgresql.wal_receiver.last_msg_receipt_age"`
 	PostgresqlWalReceiverLastMsgSendAge               MetricConfig `mapstructure:"postgresql.wal_receiver.last_msg_send_age"`
@@ -283,6 +286,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlWalWriteTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalFilesAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalFilesCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlWalFilesSize: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlWalReceiverConnected: MetricConfig{
