@@ -27,6 +27,12 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					PostgresqlAnalyzeChildTablesDone:                  MetricConfig{Enabled: true},
+					PostgresqlAnalyzeChildTablesTotal:                 MetricConfig{Enabled: true},
+					PostgresqlAnalyzeExtStatsComputed:                 MetricConfig{Enabled: true},
+					PostgresqlAnalyzeExtStatsTotal:                    MetricConfig{Enabled: true},
+					PostgresqlAnalyzeSampleBlksScanned:                MetricConfig{Enabled: true},
+					PostgresqlAnalyzeSampleBlksTotal:                  MetricConfig{Enabled: true},
 					PostgresqlAnalyzed:                                MetricConfig{Enabled: true},
 					PostgresqlArchiverArchivedCount:                   MetricConfig{Enabled: true},
 					PostgresqlArchiverFailedCount:                     MetricConfig{Enabled: true},
@@ -160,6 +166,12 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					PostgresqlAnalyzeChildTablesDone:                  MetricConfig{Enabled: false},
+					PostgresqlAnalyzeChildTablesTotal:                 MetricConfig{Enabled: false},
+					PostgresqlAnalyzeExtStatsComputed:                 MetricConfig{Enabled: false},
+					PostgresqlAnalyzeExtStatsTotal:                    MetricConfig{Enabled: false},
+					PostgresqlAnalyzeSampleBlksScanned:                MetricConfig{Enabled: false},
+					PostgresqlAnalyzeSampleBlksTotal:                  MetricConfig{Enabled: false},
 					PostgresqlAnalyzed:                                MetricConfig{Enabled: false},
 					PostgresqlArchiverArchivedCount:                   MetricConfig{Enabled: false},
 					PostgresqlArchiverFailedCount:                     MetricConfig{Enabled: false},

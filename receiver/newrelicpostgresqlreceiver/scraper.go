@@ -417,6 +417,17 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape ANALYZE progress metrics (PostgreSQL 13+ only, enabled by default)
+	// These are naturally low-cardinality (only shows running ANALYZE operations)
+	if s.tableScraper != nil {
+		analyzeErrs := s.tableScraper.ScrapeAnalyzeProgress(scrapeCtx)
+		if len(analyzeErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping ANALYZE progress",
+				zap.Int("error_count", len(analyzeErrs)))
+			scrapeErrors = append(scrapeErrors, analyzeErrs...)
+		}
+	}
+
 	metrics := s.buildMetrics()
 
 	s.logScrapeCompletion(scrapeErrors)

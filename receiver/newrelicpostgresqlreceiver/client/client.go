@@ -137,4 +137,10 @@ type PostgreSQLClient interface {
 	// Filters by specified schemas and tables
 	// Available in PostgreSQL 9.6+
 	QueryUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatUserTablesMetric, error)
+
+	// QueryAnalyzeProgress retrieves ANALYZE operation progress from pg_stat_progress_analyze
+	// Returns real-time progress of running ANALYZE operations
+	// Returns empty slice if no ANALYZE operations are currently running
+	// Available in PostgreSQL 13+
+	QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error)
 }

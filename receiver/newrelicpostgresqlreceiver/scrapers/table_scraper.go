@@ -84,3 +84,59 @@ func (s *TableScraper) recordUserTableMetrics(now pcommon.Timestamp, metric mode
 	s.logger.Debug("Recorded metrics for table",
 		zap.String("table", tableID))
 }
+
+// ScrapeAnalyzeProgress scrapes ANALYZE operation progress from pg_stat_progress_analyze
+// Only available in PostgreSQL 13+
+func (s *TableScraper) ScrapeAnalyzeProgress(ctx context.Context) []error {
+	// Skip if PostgreSQL version < 13
+	if s.pgVersion < 130000 {
+		s.logger.Debug("Skipping ANALYZE progress metrics (PostgreSQL 13+ required)",
+			zap.Int("version", s.pgVersion))
+		return nil
+	}
+
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryAnalyzeProgress(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query ANALYZE progress statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// It's normal to have zero metrics (no ANALYZE operations running)
+	if len(metrics) == 0 {
+		s.logger.Debug("No ANALYZE operations currently running")
+		return nil
+	}
+
+	for _, metric := range metrics {
+		s.recordAnalyzeProgressMetrics(now, metric)
+	}
+
+	s.logger.Debug("ANALYZE progress statistics scrape completed",
+		zap.Int("operation_count", len(metrics)))
+
+	return nil
+}
+
+// recordAnalyzeProgressMetrics records all progress metrics for a single ANALYZE operation
+func (s *TableScraper) recordAnalyzeProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressAnalyze) {
+	// Create composite identifier for table
+	tableID := metric.SchemaName + "." + metric.TableName
+
+	// Record sample block progress
+	s.mb.RecordPostgresqlAnalyzeSampleBlksTotalDataPoint(now, getInt64(metric.SampleBlksTotal), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlAnalyzeSampleBlksScannedDataPoint(now, getInt64(metric.SampleBlksScanned), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record extended statistics progress
+	s.mb.RecordPostgresqlAnalyzeExtStatsTotalDataPoint(now, getInt64(metric.ExtStatsTotal), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlAnalyzeExtStatsComputedDataPoint(now, getInt64(metric.ExtStatsComputed), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record child table progress (for partitioned tables)
+	s.mb.RecordPostgresqlAnalyzeChildTablesTotalDataPoint(now, getInt64(metric.ChildTablesTotal), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlAnalyzeChildTablesDoneDataPoint(now, getInt64(metric.ChildTablesDone), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded ANALYZE progress metrics",
+		zap.String("table", tableID),
+		zap.String("phase", metric.Phase.String))
+}

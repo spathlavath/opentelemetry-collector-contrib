@@ -51,3 +51,34 @@ type PgStatUserTablesMetric struct {
 	AnalyzeCount     sql.NullInt64 // Number of times this table has been manually analyzed
 	AutoanalyzeCount sql.NullInt64 // Number of times this table has been analyzed by autoanalyze
 }
+
+// PgStatProgressAnalyze represents progress of ANALYZE operations from pg_stat_progress_analyze
+// This struct captures real-time progress of running ANALYZE operations
+// Available in PostgreSQL 13+
+type PgStatProgressAnalyze struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing the table being analyzed
+	SchemaName string
+
+	// TableName is the name of the table being analyzed
+	TableName string
+
+	// Phase is the current processing phase of the ANALYZE operation
+	// Common phases: "initializing", "acquiring sample rows", "acquiring inherited sample rows",
+	// "computing statistics", "computing extended statistics", "finalizing analyze"
+	Phase sql.NullString
+
+	// Sample block statistics - number of blocks being sampled
+	SampleBlksTotal   sql.NullInt64 // Total number of heap blocks to sample
+	SampleBlksScanned sql.NullInt64 // Number of heap blocks scanned so far
+
+	// Extended statistics progress (PostgreSQL 13+)
+	ExtStatsTotal    sql.NullInt64 // Total number of extended statistics to compute
+	ExtStatsComputed sql.NullInt64 // Number of extended statistics computed so far
+
+	// Child table progress for partitioned tables
+	ChildTablesTotal sql.NullInt64 // Total number of child tables to analyze (for partitioned tables)
+	ChildTablesDone  sql.NullInt64 // Number of child tables analyzed so far
+}

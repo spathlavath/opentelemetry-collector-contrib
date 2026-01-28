@@ -1,6 +1,18 @@
 default:
 all_set:
   metrics:
+    postgresql.analyze.child_tables_done:
+      enabled: true
+    postgresql.analyze.child_tables_total:
+      enabled: true
+    postgresql.analyze.ext_stats_computed:
+      enabled: true
+    postgresql.analyze.ext_stats_total:
+      enabled: true
+    postgresql.analyze.sample_blks_scanned:
+      enabled: true
+    postgresql.analyze.sample_blks_total:
+      enabled: true
     postgresql.analyzed:
       enabled: true
     postgresql.archiver.archived_count:
@@ -252,6 +264,18 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    postgresql.analyze.child_tables_done:
+      enabled: false
+    postgresql.analyze.child_tables_total:
+      enabled: false
+    postgresql.analyze.ext_stats_computed:
+      enabled: false
+    postgresql.analyze.ext_stats_total:
+      enabled: false
+    postgresql.analyze.sample_blks_scanned:
+      enabled: false
+    postgresql.analyze.sample_blks_total:
+      enabled: false
     postgresql.analyzed:
       enabled: false
     postgresql.archiver.archived_count:

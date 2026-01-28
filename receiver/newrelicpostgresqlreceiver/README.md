@@ -133,6 +133,50 @@ Each metric includes attributes: `schema_name` and `table_name`
 
 **Note:** Cumulative metrics are automatically converted to delta using the `cumulativetodelta` processor for better New Relic compatibility.
 
+### ANALYZE Progress Metrics (PostgreSQL 13+)
+
+The receiver automatically collects real-time progress metrics for running ANALYZE operations. These metrics are **enabled by default** and require no configuration.
+
+#### Why are these safe by default?
+
+ANALYZE progress metrics are naturally low-cardinality:
+- Only tracks **actively running** ANALYZE operations (typically 0-2 concurrent operations)
+- Metrics automatically disappear when ANALYZE completes
+- No cardinality explosion risk (unlike per-table statistics which track ALL tables)
+
+#### Available ANALYZE Progress Metrics (Gauge)
+
+**Sample Block Progress:**
+- `postgresql.analyze.sample_blks_total` - Total number of blocks to sample
+- `postgresql.analyze.sample_blks_scanned` - Number of blocks scanned so far
+
+**Extended Statistics Progress:**
+- `postgresql.analyze.ext_stats_total` - Total extended statistics to compute
+- `postgresql.analyze.ext_stats_computed` - Number of extended statistics computed
+
+**Partitioned Table Progress:**
+- `postgresql.analyze.child_tables_total` - Total child tables to analyze
+- `postgresql.analyze.child_tables_done` - Number of child tables analyzed
+
+Each metric includes attributes: `database_name`, `schema_name`, and `table_name`
+
+#### Use Cases
+
+- **Monitor long-running ANALYZE operations** on large tables
+- **Track progress** of manual ANALYZE commands
+- **Identify bottlenecks** in partitioned table analysis
+- **Alert on stuck ANALYZE** operations that don't make progress
+
+#### Example: Monitor ANALYZE Progress in New Relic
+
+```sql
+FROM Metric
+SELECT latest(postgresql.analyze.sample_blks_scanned) / latest(postgresql.analyze.sample_blks_total) * 100 AS 'Progress %'
+WHERE metricName LIKE 'postgresql.analyze%'
+FACET table_name
+TIMESERIES
+```
+
 ## Prerequisites
 
 ### Database User Permissions

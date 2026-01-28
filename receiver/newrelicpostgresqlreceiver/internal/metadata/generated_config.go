@@ -28,6 +28,12 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PostgresqlAnalyzeChildTablesDone                  MetricConfig `mapstructure:"postgresql.analyze.child_tables_done"`
+	PostgresqlAnalyzeChildTablesTotal                 MetricConfig `mapstructure:"postgresql.analyze.child_tables_total"`
+	PostgresqlAnalyzeExtStatsComputed                 MetricConfig `mapstructure:"postgresql.analyze.ext_stats_computed"`
+	PostgresqlAnalyzeExtStatsTotal                    MetricConfig `mapstructure:"postgresql.analyze.ext_stats_total"`
+	PostgresqlAnalyzeSampleBlksScanned                MetricConfig `mapstructure:"postgresql.analyze.sample_blks_scanned"`
+	PostgresqlAnalyzeSampleBlksTotal                  MetricConfig `mapstructure:"postgresql.analyze.sample_blks_total"`
 	PostgresqlAnalyzed                                MetricConfig `mapstructure:"postgresql.analyzed"`
 	PostgresqlArchiverArchivedCount                   MetricConfig `mapstructure:"postgresql.archiver.archived_count"`
 	PostgresqlArchiverFailedCount                     MetricConfig `mapstructure:"postgresql.archiver.failed_count"`
@@ -150,6 +156,24 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PostgresqlAnalyzeChildTablesDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeChildTablesTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeExtStatsComputed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeExtStatsTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeSampleBlksScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeSampleBlksTotal: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlAnalyzed: MetricConfig{
 			Enabled: true,
 		},

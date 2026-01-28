@@ -735,3 +735,40 @@ func (c *SQLClient) QueryUserTables(ctx context.Context, schemas, tables []strin
 
 	return metrics, nil
 }
+
+func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
+	query := queries.PgStatProgressAnalyzeSQL()
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_analyze: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressAnalyze
+
+	for rows.Next() {
+		var metric models.PgStatProgressAnalyze
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.Phase,
+			&metric.SampleBlksTotal,
+			&metric.SampleBlksScanned,
+			&metric.ExtStatsTotal,
+			&metric.ExtStatsComputed,
+			&metric.ChildTablesTotal,
+			&metric.ChildTablesDone,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_analyze row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_analyze rows: %w", err)
+	}
+
+	return metrics, nil
+}

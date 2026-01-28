@@ -13,6 +13,24 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	PostgresqlAnalyzeChildTablesDone: metricInfo{
+		Name: "postgresql.analyze.child_tables_done",
+	},
+	PostgresqlAnalyzeChildTablesTotal: metricInfo{
+		Name: "postgresql.analyze.child_tables_total",
+	},
+	PostgresqlAnalyzeExtStatsComputed: metricInfo{
+		Name: "postgresql.analyze.ext_stats_computed",
+	},
+	PostgresqlAnalyzeExtStatsTotal: metricInfo{
+		Name: "postgresql.analyze.ext_stats_total",
+	},
+	PostgresqlAnalyzeSampleBlksScanned: metricInfo{
+		Name: "postgresql.analyze.sample_blks_scanned",
+	},
+	PostgresqlAnalyzeSampleBlksTotal: metricInfo{
+		Name: "postgresql.analyze.sample_blks_total",
+	},
 	PostgresqlAnalyzed: metricInfo{
 		Name: "postgresql.analyzed",
 	},
@@ -370,6 +388,12 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	PostgresqlAnalyzeChildTablesDone                  metricInfo
+	PostgresqlAnalyzeChildTablesTotal                 metricInfo
+	PostgresqlAnalyzeExtStatsComputed                 metricInfo
+	PostgresqlAnalyzeExtStatsTotal                    metricInfo
+	PostgresqlAnalyzeSampleBlksScanned                metricInfo
+	PostgresqlAnalyzeSampleBlksTotal                  metricInfo
 	PostgresqlAnalyzed                                metricInfo
 	PostgresqlArchiverArchivedCount                   metricInfo
 	PostgresqlArchiverFailedCount                     metricInfo
@@ -492,6 +516,330 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricPostgresqlAnalyzeChildTablesDone struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.analyze.child_tables_done metric with initial data.
+func (m *metricPostgresqlAnalyzeChildTablesDone) init() {
+	m.data.SetName("postgresql.analyze.child_tables_done")
+	m.data.SetDescription("Number of child tables processed during ANALYZE operation (PostgreSQL 13+)")
+	m.data.SetUnit("{tables}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAnalyzeChildTablesDone) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAnalyzeChildTablesDone) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAnalyzeChildTablesDone) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAnalyzeChildTablesDone(cfg MetricConfig) metricPostgresqlAnalyzeChildTablesDone {
+	m := metricPostgresqlAnalyzeChildTablesDone{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlAnalyzeChildTablesTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.analyze.child_tables_total metric with initial data.
+func (m *metricPostgresqlAnalyzeChildTablesTotal) init() {
+	m.data.SetName("postgresql.analyze.child_tables_total")
+	m.data.SetDescription("Total number of child tables to be analyzed (PostgreSQL 13+)")
+	m.data.SetUnit("{tables}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAnalyzeChildTablesTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAnalyzeChildTablesTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAnalyzeChildTablesTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAnalyzeChildTablesTotal(cfg MetricConfig) metricPostgresqlAnalyzeChildTablesTotal {
+	m := metricPostgresqlAnalyzeChildTablesTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlAnalyzeExtStatsComputed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.analyze.ext_stats_computed metric with initial data.
+func (m *metricPostgresqlAnalyzeExtStatsComputed) init() {
+	m.data.SetName("postgresql.analyze.ext_stats_computed")
+	m.data.SetDescription("Number of extended statistics computed during ANALYZE operation (PostgreSQL 13+)")
+	m.data.SetUnit("{statistics}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAnalyzeExtStatsComputed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAnalyzeExtStatsComputed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAnalyzeExtStatsComputed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAnalyzeExtStatsComputed(cfg MetricConfig) metricPostgresqlAnalyzeExtStatsComputed {
+	m := metricPostgresqlAnalyzeExtStatsComputed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlAnalyzeExtStatsTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.analyze.ext_stats_total metric with initial data.
+func (m *metricPostgresqlAnalyzeExtStatsTotal) init() {
+	m.data.SetName("postgresql.analyze.ext_stats_total")
+	m.data.SetDescription("Total number of extended statistics to be computed (PostgreSQL 13+)")
+	m.data.SetUnit("{statistics}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAnalyzeExtStatsTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAnalyzeExtStatsTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAnalyzeExtStatsTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAnalyzeExtStatsTotal(cfg MetricConfig) metricPostgresqlAnalyzeExtStatsTotal {
+	m := metricPostgresqlAnalyzeExtStatsTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlAnalyzeSampleBlksScanned struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.analyze.sample_blks_scanned metric with initial data.
+func (m *metricPostgresqlAnalyzeSampleBlksScanned) init() {
+	m.data.SetName("postgresql.analyze.sample_blks_scanned")
+	m.data.SetDescription("Number of sample blocks scanned during ANALYZE operation (PostgreSQL 13+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAnalyzeSampleBlksScanned) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAnalyzeSampleBlksScanned) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAnalyzeSampleBlksScanned) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAnalyzeSampleBlksScanned(cfg MetricConfig) metricPostgresqlAnalyzeSampleBlksScanned {
+	m := metricPostgresqlAnalyzeSampleBlksScanned{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlAnalyzeSampleBlksTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.analyze.sample_blks_total metric with initial data.
+func (m *metricPostgresqlAnalyzeSampleBlksTotal) init() {
+	m.data.SetName("postgresql.analyze.sample_blks_total")
+	m.data.SetDescription("Total number of sample blocks to be scanned (PostgreSQL 13+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAnalyzeSampleBlksTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAnalyzeSampleBlksTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAnalyzeSampleBlksTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAnalyzeSampleBlksTotal(cfg MetricConfig) metricPostgresqlAnalyzeSampleBlksTotal {
+	m := metricPostgresqlAnalyzeSampleBlksTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricPostgresqlAnalyzed struct {
@@ -6773,6 +7121,12 @@ type MetricsBuilder struct {
 	buildInfo                                               component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                          map[string]filter.Filter
 	resourceAttributeExcludeFilter                          map[string]filter.Filter
+	metricPostgresqlAnalyzeChildTablesDone                  metricPostgresqlAnalyzeChildTablesDone
+	metricPostgresqlAnalyzeChildTablesTotal                 metricPostgresqlAnalyzeChildTablesTotal
+	metricPostgresqlAnalyzeExtStatsComputed                 metricPostgresqlAnalyzeExtStatsComputed
+	metricPostgresqlAnalyzeExtStatsTotal                    metricPostgresqlAnalyzeExtStatsTotal
+	metricPostgresqlAnalyzeSampleBlksScanned                metricPostgresqlAnalyzeSampleBlksScanned
+	metricPostgresqlAnalyzeSampleBlksTotal                  metricPostgresqlAnalyzeSampleBlksTotal
 	metricPostgresqlAnalyzed                                metricPostgresqlAnalyzed
 	metricPostgresqlArchiverArchivedCount                   metricPostgresqlArchiverArchivedCount
 	metricPostgresqlArchiverFailedCount                     metricPostgresqlArchiverFailedCount
@@ -6916,6 +7270,12 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		startTime:                                               pcommon.NewTimestampFromTime(time.Now()),
 		metricsBuffer:                                           pmetric.NewMetrics(),
 		buildInfo:                                               settings.BuildInfo,
+		metricPostgresqlAnalyzeChildTablesDone:                  newMetricPostgresqlAnalyzeChildTablesDone(mbc.Metrics.PostgresqlAnalyzeChildTablesDone),
+		metricPostgresqlAnalyzeChildTablesTotal:                 newMetricPostgresqlAnalyzeChildTablesTotal(mbc.Metrics.PostgresqlAnalyzeChildTablesTotal),
+		metricPostgresqlAnalyzeExtStatsComputed:                 newMetricPostgresqlAnalyzeExtStatsComputed(mbc.Metrics.PostgresqlAnalyzeExtStatsComputed),
+		metricPostgresqlAnalyzeExtStatsTotal:                    newMetricPostgresqlAnalyzeExtStatsTotal(mbc.Metrics.PostgresqlAnalyzeExtStatsTotal),
+		metricPostgresqlAnalyzeSampleBlksScanned:                newMetricPostgresqlAnalyzeSampleBlksScanned(mbc.Metrics.PostgresqlAnalyzeSampleBlksScanned),
+		metricPostgresqlAnalyzeSampleBlksTotal:                  newMetricPostgresqlAnalyzeSampleBlksTotal(mbc.Metrics.PostgresqlAnalyzeSampleBlksTotal),
 		metricPostgresqlAnalyzed:                                newMetricPostgresqlAnalyzed(mbc.Metrics.PostgresqlAnalyzed),
 		metricPostgresqlArchiverArchivedCount:                   newMetricPostgresqlArchiverArchivedCount(mbc.Metrics.PostgresqlArchiverArchivedCount),
 		metricPostgresqlArchiverFailedCount:                     newMetricPostgresqlArchiverFailedCount(mbc.Metrics.PostgresqlArchiverFailedCount),
@@ -7142,6 +7502,12 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricPostgresqlAnalyzeChildTablesDone.emit(ils.Metrics())
+	mb.metricPostgresqlAnalyzeChildTablesTotal.emit(ils.Metrics())
+	mb.metricPostgresqlAnalyzeExtStatsComputed.emit(ils.Metrics())
+	mb.metricPostgresqlAnalyzeExtStatsTotal.emit(ils.Metrics())
+	mb.metricPostgresqlAnalyzeSampleBlksScanned.emit(ils.Metrics())
+	mb.metricPostgresqlAnalyzeSampleBlksTotal.emit(ils.Metrics())
 	mb.metricPostgresqlAnalyzed.emit(ils.Metrics())
 	mb.metricPostgresqlArchiverArchivedCount.emit(ils.Metrics())
 	mb.metricPostgresqlArchiverFailedCount.emit(ils.Metrics())
@@ -7289,6 +7655,36 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordPostgresqlAnalyzeChildTablesDoneDataPoint adds a data point to postgresql.analyze.child_tables_done metric.
+func (mb *MetricsBuilder) RecordPostgresqlAnalyzeChildTablesDoneDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAnalyzeChildTablesDone.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlAnalyzeChildTablesTotalDataPoint adds a data point to postgresql.analyze.child_tables_total metric.
+func (mb *MetricsBuilder) RecordPostgresqlAnalyzeChildTablesTotalDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAnalyzeChildTablesTotal.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlAnalyzeExtStatsComputedDataPoint adds a data point to postgresql.analyze.ext_stats_computed metric.
+func (mb *MetricsBuilder) RecordPostgresqlAnalyzeExtStatsComputedDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAnalyzeExtStatsComputed.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlAnalyzeExtStatsTotalDataPoint adds a data point to postgresql.analyze.ext_stats_total metric.
+func (mb *MetricsBuilder) RecordPostgresqlAnalyzeExtStatsTotalDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAnalyzeExtStatsTotal.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlAnalyzeSampleBlksScannedDataPoint adds a data point to postgresql.analyze.sample_blks_scanned metric.
+func (mb *MetricsBuilder) RecordPostgresqlAnalyzeSampleBlksScannedDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAnalyzeSampleBlksScanned.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlAnalyzeSampleBlksTotalDataPoint adds a data point to postgresql.analyze.sample_blks_total metric.
+func (mb *MetricsBuilder) RecordPostgresqlAnalyzeSampleBlksTotalDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAnalyzeSampleBlksTotal.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
 // RecordPostgresqlAnalyzedDataPoint adds a data point to postgresql.analyzed metric.

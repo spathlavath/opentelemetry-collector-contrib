@@ -73,3 +73,26 @@ func buildTableFilterClause(schemas, tables []string) string {
 
 	return fmt.Sprintf("%s AND %s", schemaFilter, tableFilter)
 }
+
+// PgStatProgressAnalyzeSQL returns ANALYZE operation progress from pg_stat_progress_analyze (PostgreSQL 13+)
+// This query retrieves real-time progress of running ANALYZE operations
+// The query returns data only for actively running ANALYZE operations
+func PgStatProgressAnalyzeSQL() string {
+	return `
+		SELECT
+			datname as database,
+			COALESCE(n.nspname, '') as schemaname,
+			COALESCE(c.relname, '') as table_name,
+			phase,
+			sample_blks_total,
+			sample_blks_scanned,
+			ext_stats_total,
+			ext_stats_computed,
+			child_tables_total,
+			child_tables_done
+		FROM pg_stat_progress_analyze ppa
+		LEFT JOIN pg_class c ON ppa.relid = c.oid
+		LEFT JOIN pg_namespace n ON c.relnamespace = n.oid
+		WHERE ppa.datname = current_database()
+		ORDER BY n.nspname, c.relname`
+}
