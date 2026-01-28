@@ -18,8 +18,10 @@ import (
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
+	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 // NewFactory creates a new New Relic Oracle receiver factory.
@@ -90,40 +92,30 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			return nil, serviceNameErr
 		}
 
-		mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger, func() (*sql.DB, error) {
-			db, err := sqlOpenerFunc(getDataSource(*sqlCfg))
-			if err != nil {
-				return nil, err
-			}
-
-			// Configure connection pool settings
-			if !sqlCfg.DisableConnectionPool {
-				db.SetMaxOpenConns(sqlCfg.MaxOpenConnections)
-			} else {
-				// Disable connection pooling
-				db.SetMaxOpenConns(1)
-			}
-
-			// Set connection timeouts to ensure proper cancellation
-			// MaxIdleConns should be reasonable to prevent too many idle connections
-			db.SetMaxIdleConns(2)
-			// ConnMaxLifetime ensures connections are refreshed periodically
-			db.SetConnMaxLifetime(10 * time.Minute)
-			// ConnMaxIdleTime closes idle connections
-			db.SetConnMaxIdleTime(30 * time.Second)
-
-			return db, nil
-		}, hostAddress, hostPort, serviceName)
+		// Determine which services to monitor based on pdb_services configuration
+		pdbServiceNames, err := determinePDBServices(sqlOpenerFunc, getDataSource(*sqlCfg), serviceName, sqlCfg.PdbServices, settings.Logger)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to determine PDB services: %w", err)
 		}
-		opt := scraperhelper.AddScraper(metadata.Type, mp)
+
+		// Create scrapers for each PDB
+		var opts []scraperhelper.ControllerOption
+		for _, pdbService := range pdbServiceNames {
+			pdbServiceName := pdbService // Capture loop variable
+			mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger,
+				createDBProviderFunc(sqlOpenerFunc, *sqlCfg, pdbServiceName),
+				hostAddress, hostPort, pdbServiceName)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create scraper for PDB %s: %w", pdbServiceName, err)
+			}
+			opts = append(opts, scraperhelper.AddScraper(metadata.Type, mp))
+		}
 
 		return scraperhelper.NewMetricsController(
 			&sqlCfg.ControllerConfig,
 			settings,
 			consumer,
-			opt,
+			opts...,
 		)
 	}
 }
@@ -196,4 +188,165 @@ func getServiceName(datasource string) (string, error) {
 	// Remove leading / from path
 	serviceName := strings.TrimPrefix(datasourceURL.Path, "/")
 	return serviceName, nil
+}
+
+// getDataSourceWithService builds a connection string with a specific service name
+func getDataSourceWithService(cfg Config, serviceName string) string {
+	if cfg.DataSource != "" {
+		// If DataSource is provided, replace the service name in it
+		datasource := cfg.DataSource
+		if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
+			hostPart := datasource[atIndex+1:]
+			if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
+				// Replace service name
+				return datasource[:atIndex+1+slashIndex+1] + serviceName
+			}
+		}
+		return datasource
+	}
+
+	// Build godror connection string format with specified service
+	// Format: user/password@host:port/service_name
+	host, portStr, _ := net.SplitHostPort(cfg.Endpoint)
+	port, _ := strconv.ParseInt(portStr, 10, 32)
+
+	return fmt.Sprintf("%s/%s@%s:%d/%s", cfg.Username, cfg.Password, host, port, serviceName)
+}
+
+// determinePDBServices determines which services to monitor based on pdb_services configuration
+func determinePDBServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, cdbService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
+	// Case 1: Empty pdb_services - collect only CDB service data
+	if len(pdbServices) == 0 {
+		logger.Info("PDB services not configured, collecting CDB service data only", zap.String("service", cdbService))
+		return []string{cdbService}, nil
+	}
+
+	// Case 2: pdb_services=['ALL'] - fetch all PDB services (excluding CDB)
+	if len(pdbServices) == 1 && strings.EqualFold(pdbServices[0], "ALL") {
+		logger.Info("Fetching all PDB services from database")
+		allPDBs, err := getPDBServiceNames(sqlOpenerFunc, dataSource, logger)
+		if err != nil {
+			return nil, fmt.Errorf("failed to query all PDB services: %w", err)
+		}
+		if len(allPDBs) == 0 {
+			logger.Warn("No PDB services found in database")
+		}
+		return allPDBs, nil
+	}
+
+	// Case 3: pdb_services=['pdb1', 'pdb2'] - fetch only specified PDB services
+	logger.Info("Filtering PDB services based on configuration", zap.Strings("requested_services", pdbServices))
+	allPDBs, err := getPDBServiceNames(sqlOpenerFunc, dataSource, logger)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query PDB services: %w", err)
+	}
+
+	// Filter PDBs based on configuration (case-insensitive matching)
+	filteredPDBs := filterPDBServices(allPDBs, pdbServices, logger)
+	if len(filteredPDBs) == 0 {
+		return nil, fmt.Errorf("none of the requested PDB services found: %v", pdbServices)
+	}
+
+	return filteredPDBs, nil
+}
+
+// filterPDBServices filters PDB services based on requested names (case-insensitive)
+func filterPDBServices(allPDBs []string, requestedPDBs []string, logger *zap.Logger) []string {
+	// Create a map for case-insensitive lookup
+	requestMap := make(map[string]string) // lowercase -> original
+	for _, req := range requestedPDBs {
+		requestMap[strings.ToLower(req)] = req
+	}
+
+	var filtered []string
+	for _, pdb := range allPDBs {
+		// Extract just the PDB name (before the first dot)
+		pdbName := pdb
+		if dotIndex := strings.Index(pdb, "."); dotIndex != -1 {
+			pdbName = pdb[:dotIndex]
+		}
+
+		// Check if this PDB is in the requested list (case-insensitive)
+		if _, found := requestMap[strings.ToLower(pdbName)]; found {
+			filtered = append(filtered, pdb)
+			logger.Info("Including PDB service", zap.String("service_name", pdb))
+		} else if _, found := requestMap[strings.ToLower(pdb)]; found {
+			// Also check the full FQDN
+			filtered = append(filtered, pdb)
+			logger.Info("Including PDB service", zap.String("service_name", pdb))
+		}
+	}
+
+	return filtered
+}
+
+// getPDBServiceNames queries the database for all PDB service names
+func getPDBServiceNames(sqlOpenerFunc sqlOpenerFunc, dataSource string, logger *zap.Logger) ([]string, error) {
+	// Open a temporary connection to query PDB names
+	db, err := sqlOpenerFunc(dataSource)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open connection for PDB query: %w", err)
+	}
+	defer db.Close()
+
+	// Set a timeout for the query
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Query to get PDB service names
+	rows, err := db.QueryContext(ctx, queries.PDBServiceNamesSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query PDB service names: %w", err)
+	}
+	defer rows.Close()
+
+	var pdbServiceNames []string
+	for rows.Next() {
+		var fqdn sql.NullString
+		if err := rows.Scan(&fqdn); err != nil {
+			logger.Warn("Failed to scan PDB service name", zap.Error(err))
+			continue
+		}
+		if fqdn.Valid && fqdn.String != "" {
+			pdbServiceNames = append(pdbServiceNames, fqdn.String)
+			logger.Info("Found PDB service", zap.String("service_name", fqdn.String))
+		}
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating PDB service names: %w", err)
+	}
+
+	logger.Info("Retrieved PDB service names", zap.Int("count", len(pdbServiceNames)), zap.Strings("services", pdbServiceNames))
+	return pdbServiceNames, nil
+}
+
+// createDBProviderFunc creates a database provider function for a specific PDB service
+func createDBProviderFunc(sqlOpenerFunc sqlOpenerFunc, cfg Config, serviceName string) dbProviderFunc {
+	return func() (*sql.DB, error) {
+		// Build PDB-specific connection string
+		dataSource := getDataSourceWithService(cfg, serviceName)
+		db, err := sqlOpenerFunc(dataSource)
+		if err != nil {
+			return nil, err
+		}
+
+		// Configure connection pool settings
+		if !cfg.DisableConnectionPool {
+			db.SetMaxOpenConns(cfg.MaxOpenConnections)
+		} else {
+			// Disable connection pooling
+			db.SetMaxOpenConns(1)
+		}
+
+		// Set connection timeouts to ensure proper cancellation
+		// MaxIdleConns should be reasonable to prevent too many idle connections
+		db.SetMaxIdleConns(2)
+		// ConnMaxLifetime ensures connections are refreshed periodically
+		db.SetConnMaxLifetime(10 * time.Minute)
+		// ConnMaxIdleTime closes idle connections
+		db.SetConnMaxIdleTime(30 * time.Second)
+
+		return db, nil
+	}
 }
