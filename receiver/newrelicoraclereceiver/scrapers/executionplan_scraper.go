@@ -237,7 +237,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPl
 	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),
 		int64(1), // Value of 1 to indicate this execution plan step exists
-		"OracleExecutionPlanTest",
+		"OracleExecutionPlan",
 		queryID,
 		planHashValue,
 		childNumber,
