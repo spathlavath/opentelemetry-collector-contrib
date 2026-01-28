@@ -6,7 +6,7 @@ package scrapers
 import (
 	"context"
 	"fmt"
-	"math"
+	"strconv"
 	"sync"
 	"time"
 
@@ -41,97 +41,34 @@ func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.Metr
 		logger:               logger,
 		metricsBuilderConfig: metricsBuilderConfig,
 		cache:                make(map[string]*planHashCacheEntry),
-		cacheTTL:             5 * time.Minute, // 60-minute window
+		cacheTTL:             5 * time.Minute, // 5-minute window
 	}
 }
 
-func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIdentifiers []models.SQLIdentifier, planHashValues []string) []error {
+func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIdentifiers []models.SQLIdentifier) []error {
 	var errs []error
-
 	if len(sqlIdentifiers) == 0 {
 		return errs
 	}
-
 	now := time.Now()
-
-	// Group SQL identifiers by plan hash value to avoid duplicate execution plans
-	planHashToIdentifier := make(map[string]models.SQLIdentifier)
-	planHashToAllIdentifiers := make(map[string][]models.SQLIdentifier)
-	skippedDueToMissingPlanHash := 0
-
-	// Build a map of available plan hash values for safe lookup
-	planHashMap := make(map[int]string)
-	for i, planHash := range planHashValues {
-		if planHash != "" {
-			planHashMap[i] = planHash
-		}
-	}
-
-	for i, identifier := range sqlIdentifiers {
-		// Get plan hash value if available, skip if not
-		planHashValue, hasPlanHash := planHashMap[i]
-		if !hasPlanHash || planHashValue == "" {
-			skippedDueToMissingPlanHash++
-			s.logger.Debug("Skipping identifier without plan hash value",
-				zap.String("sql_id", identifier.SQLID),
-				zap.Int64("child_number", identifier.ChildNumber))
+	planHashIdentifier := make(map[string]models.SQLIdentifier)
+	s.cacheMutex.Lock()
+	for _, identifier := range sqlIdentifiers {
+		if _, exists := s.cache[identifier.PlanHash]; exists {
 			continue
 		}
-
-		// Keep track of all identifiers for each plan hash (for logging)
-		planHashToAllIdentifiers[planHashValue] = append(planHashToAllIdentifiers[planHashValue], identifier)
-
-		// Store only the first identifier for each unique plan hash value
-		if _, exists := planHashToIdentifier[planHashValue]; !exists {
-			planHashToIdentifier[planHashValue] = identifier
-		}
+		planHashIdentifier[identifier.PlanHash] = identifier
 	}
-
-	if skippedDueToMissingPlanHash > 0 {
-		s.logger.Info("Skipped SQL identifiers without plan hash values",
-			zap.Int("skipped_count", skippedDueToMissingPlanHash),
-			zap.Int("total_identifiers", len(sqlIdentifiers)))
-	}
-
-	// Filter out cached plan hash values (already scraped within TTL window)
-	type identifierWithPlanHash struct {
-		identifier    models.SQLIdentifier
-		planHashValue string
-	}
-	var newIdentifiers []identifierWithPlanHash
-
-	s.cacheMutex.RLock()
-	for planHashValue, identifier := range planHashToIdentifier {
-		if entry, exists := s.cache[planHashValue]; exists {
-			// Check if entry is still within TTL window
-			if now.Sub(entry.lastScraped) < s.cacheTTL {				
-				continue
-			}
-		}
-		// Only add one representative identifier per plan hash value
-		newIdentifiers = append(newIdentifiers, identifierWithPlanHash{
-			identifier:    identifier,
-			planHashValue: planHashValue,
-		})
-	}
-	s.cacheMutex.RUnlock()
-
-	if len(newIdentifiers) == 0 {
+	s.cacheMutex.Unlock()
+	if len(planHashIdentifier) == 0 {
 		s.logger.Debug("All plan hash values are cached, skipping execution plan scraping")
 		return errs
 	}
-
-	// Single timeout context for all queries to prevent excessive total runtime
-	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
 	totalTimeout := 30 * time.Second // Adjust based on your needs
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, item := range newIdentifiers {
-		identifier := item.identifier
-		planHashValue := item.planHashValue
-
-		// Check if context is already cancelled/timed out before proceeding
+	for planHash, identifier := range planHashIdentifier {
 		select {
 		case <-queryCtx.Done():
 			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
@@ -139,20 +76,16 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		default:
 			// Continue processing
 		}
-
 		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
-			continue // Skip this identifier but continue processing others
+			continue 
 		}
-		
 		for _, row := range planRows {
 			if !row.SQLID.Valid || row.SQLID.String == "" {
 				s.logger.Debug("Skipping row with invalid SQL_ID")
 				continue
 			}
-
-			// Pass the timestamp from the identifier (when the query was captured)
 			if err := s.buildExecutionPlanMetrics(&row, identifier.Timestamp); err != nil {
 				s.logger.Warn("Failed to build metrics for execution plan row",
 					zap.String("sql_id", row.SQLID.String),
@@ -163,17 +96,16 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 
 		// Add plan hash value to cache after successful scraping
 		s.cacheMutex.Lock()
-		s.cache[planHashValue] = &planHashCacheEntry{
+		s.cache[planHash] = &planHashCacheEntry{
 			lastScraped: now,
 		}
 		s.cacheMutex.Unlock()
 
-		s.logger.Info("Scraped execution plan")
+		s.logger.Info("Scraped execution plan",
+			zap.String("plan_hash", planHash),
+			zap.String("sql_id", identifier.SQLID))
 	}
-
-	// Clean up stale cache entries (older than TTL)
 	s.cleanupCache(now)
-
 	return errs
 }
 
@@ -300,7 +232,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPl
 	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),
 		int64(1), // Value of 1 to indicate this execution plan step exists
-		"OracleExecutionPlanTest",
+		"",
 		queryID,
 		planHashValue,
 		childNumber,
@@ -328,27 +260,17 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPl
 
 	return nil
 }
-
-// parseIntSafe safely parses a string to int64, handling overflow cases.
-
 func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
 	if value == "" {
 		return -1
 	}
-
-	// Try to parse as int64
-	var result int64
-	_, err := fmt.Sscanf(value, "%d", &result)
+	result, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
-		// If parsing fails, it's likely a very large number that exceeds int64 max
-		// Oracle can return values that exceed int64 max (e.g., 18446744073709551615)
-		// In such cases, we'll use int64 max value to indicate an extremely high cost
-		s.logger.Debug("Failed to parse large numeric value, using int64 max",
+		s.logger.Debug("Failed to parse numeric value",
 			zap.String("value", value),
 			zap.Error(err))
-		return math.MaxInt64
+		return -1
 	}
-
 	return result
 }
 

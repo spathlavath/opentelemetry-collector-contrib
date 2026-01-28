@@ -34,12 +34,9 @@ func NewChildCursorsScraper(oracleClient client.OracleClient, mb *metadata.Metri
 	}
 }
 
-func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Context, identifiers []models.SQLIdentifier, childLimit int) ([]string, []error) {
+func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Context, identifiers []models.SQLIdentifier, childLimit int) ([]models.SQLIdentifier, []error) {
 	var errs []error
-	var planHashValues []string
-
 	s.logger.Debug("Starting child cursors scrape")
-
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricsEmitted := 0
 
@@ -62,14 +59,14 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 
 				// Add plan hash value to the list
 				planHashValue := fmt.Sprintf("%d", cursor.GetPlanHashValue())
-				planHashValues = append(planHashValues, planHashValue)
+				identifier.PlanHash = planHashValue
 			}
 		}
 	}
 
 	s.logger.Info("Child cursors scrape completed")
 
-	return planHashValues, errs
+	return identifiers, errs
 }
 
 // recordChildCursorMetrics records all metrics for a single child cursor
