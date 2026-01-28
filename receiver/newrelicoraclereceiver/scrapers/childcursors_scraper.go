@@ -34,21 +34,20 @@ func NewChildCursorsScraper(oracleClient client.OracleClient, mb *metadata.Metri
 	}
 }
 
-func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Context, identifiers []models.SQLIdentifier, childLimit int) []error {
+func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Context, identifiers []models.SQLIdentifier, childLimit int) ([]models.SQLIdentifier, []error) {
 	var errs []error
-
 	s.logger.Debug("Starting child cursors scrape")
-
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricsEmitted := 0
 
 	if len(identifiers) > 0 {
-		for _, identifier := range identifiers {
-			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifier.SQLID, identifier.ChildNumber)
+		for i := range identifiers {
+
+			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifiers[i].SQLID, identifiers[i].ChildNumber)
 			if err != nil {
 				s.logger.Warn("Failed to fetch specific child cursor from V$SQL",
-					zap.String("sql_id", identifier.SQLID),
-					zap.Int64("child_number", identifier.ChildNumber),
+					zap.String("sql_id", identifiers[i].SQLID),
+					zap.Int64("child_number", identifiers[i].ChildNumber),
 					zap.Error(err))
 				errs = append(errs, err)
 				continue
@@ -57,13 +56,16 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 			if cursor != nil && cursor.HasValidIdentifier() {
 				s.recordChildCursorMetrics(now, cursor)
 				metricsEmitted++
+
+				planHashValue := fmt.Sprintf("%d", cursor.GetPlanHashValue())
+				identifiers[i].PlanHash = planHashValue
 			}
 		}
 	}
 
-	s.logger.Debug("Child cursors scrape completed")
+	s.logger.Info("Child cursors scrape completed")
 
-	return errs
+	return identifiers, errs
 }
 
 // recordChildCursorMetrics records all metrics for a single child cursor

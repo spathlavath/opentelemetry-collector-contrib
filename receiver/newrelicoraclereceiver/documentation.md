@@ -808,6 +808,43 @@ Number of physical disk writes
 | ---- | ----------- | ------ | -------- |
 | instance.id | Oracle database instance ID | Any Str | false |
 
+### newrelicoracledb.execution_plan
+
+ 
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| newrelic.event.type |   | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_id | Step ID in the execution plan | Any Int | false |
+| parent_id | Parent step ID in the execution plan | Any Int | false |
+| depth | Depth level in the execution plan tree | Any Int | false |
+| operation | Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN) | Any Str | false |
+| options | Options for the operation (e.g., FULL, RANGE) | Any Str | false |
+| object_owner | Owner of the database object being accessed | Any Str | false |
+| object_name | Name of the database object being accessed | Any Str | false |
+| position | Order of execution for steps at the same depth level | Any Int | false |
+| cost | Estimated cost of the operation | Any Int | false |
+| cardinality | Estimated number of rows the operation will return | Any Int | false |
+| bytes | Estimated number of bytes the operation will return | Any Int | false |
+| cpu_cost | Estimated CPU cost of the operation | Any Int | false |
+| io_cost | Estimated I/O cost of the operation | Any Int | false |
+| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str | false |
+| plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str | false |
+| temp_space | Estimated temporary space required for the operation (in bytes) | Any Int | false |
+| access_predicates | Access predicates used to locate rows in an access structure | Any Str | false |
+| projection | Column projection information from the operation | Any Str | false |
+| time | Estimated elapsed time for the operation (in seconds) | Any Int | false |
+| filter_predicates | Filter predicates applied after accessing rows | Any Str | false |
+
 ### newrelicoracledb.global_name
 
 Oracle database global name information
@@ -2485,6 +2522,7 @@ Slow Query Details
 
 | Name | Description | Values | Optional |
 | ---- | ----------- | ------ | -------- |
+| newrelic.event.type |   | Any Str | false |
 | collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 | query_id | SQL query identifier | Any Str | false |
@@ -4708,50 +4746,6 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
 | row_wait_file_id | File ID of the row being waited on | Any Str | false |
 | row_wait_block_id | Block ID of the row being waited on | Any Str | false |
-
-## Default Events
-
-The following events are emitted by default. Each of them can be disabled by applying the following configuration:
-
-```yaml
-events:
-  <event_name>:
-    enabled: false
-```
-
-### newrelicoracledb.execution_plan
-
-Oracle SQL execution plan data with individual fields for each plan step. Contains all details from V$SQL_PLAN view including operations, costs, predicates, and projections.
-
-#### Attributes
-
-| Name | Description | Values |
-| ---- | ----------- | ------ |
-| newrelic.event.type | New Relic event type for log categorization | Any Str |
-| query_id | SQL query identifier | Any Str |
-| plan_hash_value | Oracle execution plan hash value | Any Str |
-| query_text | SQL query text | Any Str |
-| child_number | Child cursor number | Any Int |
-| plan_id | Step ID in the execution plan | Any Int |
-| parent_id | Parent step ID in the execution plan | Any Int |
-| depth | Depth level in the execution plan tree | Any Int |
-| operation | Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN) | Any Str |
-| options | Options for the operation (e.g., FULL, RANGE) | Any Str |
-| object_owner | Owner of the database object being accessed | Any Str |
-| object_name | Name of the database object being accessed | Any Str |
-| position | Order of execution for steps at the same depth level | Any Int |
-| cost | Estimated cost of the operation | Any Int |
-| cardinality | Estimated number of rows the operation will return | Any Int |
-| bytes | Estimated number of bytes the operation will return | Any Int |
-| cpu_cost | Estimated CPU cost of the operation | Any Int |
-| io_cost | Estimated I/O cost of the operation | Any Int |
-| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str |
-| plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str |
-| temp_space | Estimated temporary space required for the operation (in bytes) | Any Int |
-| access_predicates | Access predicates used to locate rows in an access structure | Any Str |
-| projection | Column projection information from the operation | Any Str |
-| time | Estimated elapsed time for the operation (in seconds) | Any Int |
-| filter_predicates | Filter predicates applied after accessing rows | Any Str |
 
 ## Resource Attributes
 

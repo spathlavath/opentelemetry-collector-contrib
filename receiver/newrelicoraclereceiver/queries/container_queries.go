@@ -69,4 +69,10 @@ const (
 		FROM GV$SYSMETRIC 
 		WHERE group_id = 2
 			AND ROWNUM <= 5000`
+
+	// PDBServiceNamesSQL returns all PDB service names (excluding seed PDB)
+	PDBServiceNamesSQL = `
+		SELECT LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain') AS FQDN
+		FROM V$PDBS p
+		WHERE p.NAME != 'PDB$SEED'`
 )
