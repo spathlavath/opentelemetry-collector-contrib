@@ -41,13 +41,13 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 	metricsEmitted := 0
 
 	if len(identifiers) > 0 {
-		for _, identifier := range identifiers {
+		for i := range identifiers {
 
-			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifier.SQLID, identifier.ChildNumber)
+			cursor, err := s.client.QuerySpecificChildCursor(ctx, identifiers[i].SQLID, identifiers[i].ChildNumber)
 			if err != nil {
 				s.logger.Warn("Failed to fetch specific child cursor from V$SQL",
-					zap.String("sql_id", identifier.SQLID),
-					zap.Int64("child_number", identifier.ChildNumber),
+					zap.String("sql_id", identifiers[i].SQLID),
+					zap.Int64("child_number", identifiers[i].ChildNumber),
 					zap.Error(err))
 				errs = append(errs, err)
 				continue
@@ -57,9 +57,8 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 				s.recordChildCursorMetrics(now, cursor)
 				metricsEmitted++
 
-				// Add plan hash value to the list
 				planHashValue := fmt.Sprintf("%d", cursor.GetPlanHashValue())
-				identifier.PlanHash = planHashValue
+				identifiers[i].PlanHash = planHashValue
 			}
 		}
 	}
