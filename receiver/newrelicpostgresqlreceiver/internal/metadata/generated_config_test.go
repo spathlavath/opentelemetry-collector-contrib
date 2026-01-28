@@ -27,6 +27,8 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					PostgresqlArchiverArchivedCount:                   MetricConfig{Enabled: true},
+					PostgresqlArchiverFailedCount:                     MetricConfig{Enabled: true},
 					PostgresqlBeforeXidWraparound:                     MetricConfig{Enabled: true},
 					PostgresqlBgwriterBuffersAlloc:                    MetricConfig{Enabled: true},
 					PostgresqlBgwriterBuffersBackend:                  MetricConfig{Enabled: true},
@@ -134,6 +136,8 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					PostgresqlArchiverArchivedCount:                   MetricConfig{Enabled: false},
+					PostgresqlArchiverFailedCount:                     MetricConfig{Enabled: false},
 					PostgresqlBeforeXidWraparound:                     MetricConfig{Enabled: false},
 					PostgresqlBgwriterBuffersAlloc:                    MetricConfig{Enabled: false},
 					PostgresqlBgwriterBuffersBackend:                  MetricConfig{Enabled: false},

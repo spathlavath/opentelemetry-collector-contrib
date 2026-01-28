@@ -90,3 +90,22 @@ func (s *BgwriterScraper) ScrapeControlCheckpoint(ctx context.Context) []error {
 
 	return nil
 }
+
+// ScrapeArchiverStats scrapes WAL archiver statistics from pg_stat_archiver
+func (s *BgwriterScraper) ScrapeArchiverStats(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryArchiverStats(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query archiver statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// Record all archiver metrics
+	s.mb.RecordPostgresqlArchiverArchivedCountDataPoint(now, getInt64(metric.ArchivedCount), s.instanceName)
+	s.mb.RecordPostgresqlArchiverFailedCountDataPoint(now, getInt64(metric.FailedCount), s.instanceName)
+
+	s.logger.Debug("Archiver statistics scrape completed")
+
+	return nil
+}

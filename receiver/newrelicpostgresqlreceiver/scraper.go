@@ -336,6 +336,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape archiver statistics (PostgreSQL 9.6+ only)
+	if s.supportsPG96 && s.bgwriterScraper != nil {
+		archiverErrs := s.bgwriterScraper.ScrapeArchiverStats(scrapeCtx)
+		if len(archiverErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping archiver statistics",
+				zap.Int("error_count", len(archiverErrs)))
+			scrapeErrors = append(scrapeErrors, archiverErrs...)
+		}
+	}
+
 	// Scrape checkpoint control metrics (PostgreSQL 10+ only)
 	if s.pgVersion >= PG10Version && s.bgwriterScraper != nil {
 		checkpointErrs := s.bgwriterScraper.ScrapeControlCheckpoint(scrapeCtx)

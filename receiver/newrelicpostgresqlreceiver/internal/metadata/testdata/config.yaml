@@ -1,6 +1,10 @@
 default:
 all_set:
   metrics:
+    postgresql.archiver.archived_count:
+      enabled: true
+    postgresql.archiver.failed_count:
+      enabled: true
     postgresql.before_xid_wraparound:
       enabled: true
     postgresql.bgwriter.buffers_alloc:
@@ -200,6 +204,10 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    postgresql.archiver.archived_count:
+      enabled: false
+    postgresql.archiver.failed_count:
+      enabled: false
     postgresql.before_xid_wraparound:
       enabled: false
     postgresql.bgwriter.buffers_alloc:

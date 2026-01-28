@@ -54,4 +54,13 @@ const (
 			pg_wal_lsn_diff(pg_current_wal_lsn(), checkpoint_lsn) as checkpoint_delay_bytes,
 			pg_wal_lsn_diff(pg_current_wal_lsn(), redo_lsn) as redo_delay_bytes
 		FROM pg_control_checkpoint()`
+
+	// PgStatArchiverSQL returns WAL archiver statistics (PostgreSQL 9.6+)
+	// This query retrieves the count of successfully archived and failed WAL files
+	// Available in PostgreSQL 9.6+
+	PgStatArchiverSQL = `
+		SELECT
+			archived_count,
+			failed_count
+		FROM pg_stat_archiver`
 )

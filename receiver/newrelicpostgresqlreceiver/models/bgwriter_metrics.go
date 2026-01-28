@@ -60,3 +60,14 @@ type PgControlCheckpointMetric struct {
 	// RedoDelayBytes is the WAL distance from the redo location (bytes)
 	RedoDelayBytes sql.NullInt64
 }
+
+// PgStatArchiverMetric represents WAL archiver statistics from pg_stat_archiver
+// This struct captures archiver success and failure counts
+// Available in PostgreSQL 9.6+
+type PgStatArchiverMetric struct {
+	// ArchivedCount is the number of WAL files successfully archived
+	ArchivedCount sql.NullInt64
+
+	// FailedCount is the number of failed attempts to archive WAL files
+	FailedCount sql.NullInt64
+}

@@ -13,6 +13,12 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	PostgresqlArchiverArchivedCount: metricInfo{
+		Name: "postgresql.archiver.archived_count",
+	},
+	PostgresqlArchiverFailedCount: metricInfo{
+		Name: "postgresql.archiver.failed_count",
+	},
 	PostgresqlBeforeXidWraparound: metricInfo{
 		Name: "postgresql.before_xid_wraparound",
 	},
@@ -292,6 +298,8 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	PostgresqlArchiverArchivedCount                   metricInfo
+	PostgresqlArchiverFailedCount                     metricInfo
 	PostgresqlBeforeXidWraparound                     metricInfo
 	PostgresqlBgwriterBuffersAlloc                    metricInfo
 	PostgresqlBgwriterBuffersBackend                  metricInfo
@@ -388,6 +396,112 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricPostgresqlArchiverArchivedCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.archiver.archived_count metric with initial data.
+func (m *metricPostgresqlArchiverArchivedCount) init() {
+	m.data.SetName("postgresql.archiver.archived_count")
+	m.data.SetDescription("Number of WAL files successfully archived (PostgreSQL 9.6+)")
+	m.data.SetUnit("{files}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlArchiverArchivedCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlArchiverArchivedCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlArchiverArchivedCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlArchiverArchivedCount(cfg MetricConfig) metricPostgresqlArchiverArchivedCount {
+	m := metricPostgresqlArchiverArchivedCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlArchiverFailedCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.archiver.failed_count metric with initial data.
+func (m *metricPostgresqlArchiverFailedCount) init() {
+	m.data.SetName("postgresql.archiver.failed_count")
+	m.data.SetDescription("Number of failed attempts to archive WAL files (PostgreSQL 9.6+)")
+	m.data.SetUnit("{files}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlArchiverFailedCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlArchiverFailedCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlArchiverFailedCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlArchiverFailedCount(cfg MetricConfig) metricPostgresqlArchiverFailedCount {
+	m := metricPostgresqlArchiverFailedCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricPostgresqlBeforeXidWraparound struct {
@@ -5282,6 +5396,8 @@ type MetricsBuilder struct {
 	buildInfo                                               component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                          map[string]filter.Filter
 	resourceAttributeExcludeFilter                          map[string]filter.Filter
+	metricPostgresqlArchiverArchivedCount                   metricPostgresqlArchiverArchivedCount
+	metricPostgresqlArchiverFailedCount                     metricPostgresqlArchiverFailedCount
 	metricPostgresqlBeforeXidWraparound                     metricPostgresqlBeforeXidWraparound
 	metricPostgresqlBgwriterBuffersAlloc                    metricPostgresqlBgwriterBuffersAlloc
 	metricPostgresqlBgwriterBuffersBackend                  metricPostgresqlBgwriterBuffersBackend
@@ -5395,13 +5511,15 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                 mbc,
-		startTime:                              pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                          pmetric.NewMetrics(),
-		buildInfo:                              settings.BuildInfo,
-		metricPostgresqlBeforeXidWraparound:    newMetricPostgresqlBeforeXidWraparound(mbc.Metrics.PostgresqlBeforeXidWraparound),
-		metricPostgresqlBgwriterBuffersAlloc:   newMetricPostgresqlBgwriterBuffersAlloc(mbc.Metrics.PostgresqlBgwriterBuffersAlloc),
-		metricPostgresqlBgwriterBuffersBackend: newMetricPostgresqlBgwriterBuffersBackend(mbc.Metrics.PostgresqlBgwriterBuffersBackend),
+		config:                                                  mbc,
+		startTime:                                               pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                                           pmetric.NewMetrics(),
+		buildInfo:                                               settings.BuildInfo,
+		metricPostgresqlArchiverArchivedCount:                   newMetricPostgresqlArchiverArchivedCount(mbc.Metrics.PostgresqlArchiverArchivedCount),
+		metricPostgresqlArchiverFailedCount:                     newMetricPostgresqlArchiverFailedCount(mbc.Metrics.PostgresqlArchiverFailedCount),
+		metricPostgresqlBeforeXidWraparound:                     newMetricPostgresqlBeforeXidWraparound(mbc.Metrics.PostgresqlBeforeXidWraparound),
+		metricPostgresqlBgwriterBuffersAlloc:                    newMetricPostgresqlBgwriterBuffersAlloc(mbc.Metrics.PostgresqlBgwriterBuffersAlloc),
+		metricPostgresqlBgwriterBuffersBackend:                  newMetricPostgresqlBgwriterBuffersBackend(mbc.Metrics.PostgresqlBgwriterBuffersBackend),
 		metricPostgresqlBgwriterBuffersBackendFsync:             newMetricPostgresqlBgwriterBuffersBackendFsync(mbc.Metrics.PostgresqlBgwriterBuffersBackendFsync),
 		metricPostgresqlBgwriterBuffersCheckpoint:               newMetricPostgresqlBgwriterBuffersCheckpoint(mbc.Metrics.PostgresqlBgwriterBuffersCheckpoint),
 		metricPostgresqlBgwriterBuffersClean:                    newMetricPostgresqlBgwriterBuffersClean(mbc.Metrics.PostgresqlBgwriterBuffersClean),
@@ -5599,6 +5717,8 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricPostgresqlArchiverArchivedCount.emit(ils.Metrics())
+	mb.metricPostgresqlArchiverFailedCount.emit(ils.Metrics())
 	mb.metricPostgresqlBeforeXidWraparound.emit(ils.Metrics())
 	mb.metricPostgresqlBgwriterBuffersAlloc.emit(ils.Metrics())
 	mb.metricPostgresqlBgwriterBuffersBackend.emit(ils.Metrics())
@@ -5720,6 +5840,16 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordPostgresqlArchiverArchivedCountDataPoint adds a data point to postgresql.archiver.archived_count metric.
+func (mb *MetricsBuilder) RecordPostgresqlArchiverArchivedCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlArchiverArchivedCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlArchiverFailedCountDataPoint adds a data point to postgresql.archiver.failed_count metric.
+func (mb *MetricsBuilder) RecordPostgresqlArchiverFailedCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlArchiverFailedCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlBeforeXidWraparoundDataPoint adds a data point to postgresql.before_xid_wraparound metric.

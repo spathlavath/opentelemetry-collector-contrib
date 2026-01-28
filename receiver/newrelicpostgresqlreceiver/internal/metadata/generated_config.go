@@ -28,6 +28,8 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PostgresqlArchiverArchivedCount                   MetricConfig `mapstructure:"postgresql.archiver.archived_count"`
+	PostgresqlArchiverFailedCount                     MetricConfig `mapstructure:"postgresql.archiver.failed_count"`
 	PostgresqlBeforeXidWraparound                     MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
 	PostgresqlBgwriterBuffersAlloc                    MetricConfig `mapstructure:"postgresql.bgwriter.buffers_alloc"`
 	PostgresqlBgwriterBuffersBackend                  MetricConfig `mapstructure:"postgresql.bgwriter.buffers_backend"`
@@ -124,6 +126,12 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PostgresqlArchiverArchivedCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlArchiverFailedCount: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlBeforeXidWraparound: MetricConfig{
 			Enabled: true,
 		},

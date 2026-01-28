@@ -589,3 +589,19 @@ func (c *SQLClient) QueryControlCheckpoint(ctx context.Context) (*models.PgContr
 
 	return &metric, nil
 }
+
+// QueryArchiverStats retrieves WAL archiver statistics from pg_stat_archiver
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryArchiverStats(ctx context.Context) (*models.PgStatArchiverMetric, error) {
+	var metric models.PgStatArchiverMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgStatArchiverSQL).Scan(
+		&metric.ArchivedCount,
+		&metric.FailedCount,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_archiver: %w", err)
+	}
+
+	return &metric, nil
+}

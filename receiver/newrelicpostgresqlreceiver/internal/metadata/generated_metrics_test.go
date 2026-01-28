@@ -70,6 +70,14 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlArchiverArchivedCountDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlArchiverFailedCountDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlBeforeXidWraparoundDataPoint(ts, 1, "database_name-val", "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -465,6 +473,40 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "postgresql.archiver.archived_count":
+					assert.False(t, validatedMetrics["postgresql.archiver.archived_count"], "Found a duplicate in the metrics slice: postgresql.archiver.archived_count")
+					validatedMetrics["postgresql.archiver.archived_count"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of WAL files successfully archived (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{files}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.archiver.failed_count":
+					assert.False(t, validatedMetrics["postgresql.archiver.failed_count"], "Found a duplicate in the metrics slice: postgresql.archiver.failed_count")
+					validatedMetrics["postgresql.archiver.failed_count"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of failed attempts to archive WAL files (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{files}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				case "postgresql.before_xid_wraparound":
 					assert.False(t, validatedMetrics["postgresql.before_xid_wraparound"], "Found a duplicate in the metrics slice: postgresql.before_xid_wraparound")
 					validatedMetrics["postgresql.before_xid_wraparound"] = true

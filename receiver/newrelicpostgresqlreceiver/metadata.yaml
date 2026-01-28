@@ -70,6 +70,30 @@ attributes:
     type: string
 
 metrics:
+  postgresql.archiver.archived_count:
+    description: Number of WAL files successfully archived (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.archiver.failed_count:
+    description: Number of failed attempts to archive WAL files (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{files}"
+    stability:
+      level: alpha
+
   postgresql.before_xid_wraparound:
     description: Number of transactions before XID wraparound occurs
     enabled: true

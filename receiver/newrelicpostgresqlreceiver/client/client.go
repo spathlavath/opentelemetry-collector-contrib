@@ -114,4 +114,9 @@ type PostgreSQLClient interface {
 	// Returns checkpoint timing and WAL location information
 	// Available in PostgreSQL 10+
 	QueryControlCheckpoint(ctx context.Context) (*models.PgControlCheckpointMetric, error)
+
+	// QueryArchiverStats retrieves WAL archiver statistics from pg_stat_archiver
+	// Returns counts of successfully archived and failed WAL files
+	// Available in PostgreSQL 9.6+
+	QueryArchiverStats(ctx context.Context) (*models.PgStatArchiverMetric, error)
 }
