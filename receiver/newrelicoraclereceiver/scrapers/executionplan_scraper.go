@@ -107,11 +107,10 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		}
 		s.cacheMutex.Unlock()
 
-		s.logger.Info("Scraped execution plan",
-			zap.String("plan_hash", identifier.PlanHash),
-			zap.Int64("child_number", identifier.ChildNumber),
-			zap.String("sql_id", identifier.SQLID))
 	}
+	s.logger.Debug("Scraped execution plan",
+		zap.Int("scraped_plans", len(planHashIdentifier)),
+		zap.Int("cached_plans", len(sqlIdentifiers)-len(planHashIdentifier)))
 	return errs
 }
 
