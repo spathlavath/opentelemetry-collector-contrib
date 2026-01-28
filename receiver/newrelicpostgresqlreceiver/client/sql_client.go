@@ -605,3 +605,40 @@ func (c *SQLClient) QueryArchiverStats(ctx context.Context) (*models.PgStatArchi
 
 	return &metric, nil
 }
+
+// QuerySLRUStats retrieves SLRU (Simple LRU) cache statistics from pg_stat_slru
+// Returns per-SLRU cache performance metrics
+// Available in PostgreSQL 13+
+func (c *SQLClient) QuerySLRUStats(ctx context.Context) ([]models.PgStatSLRUMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatSLRUSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_slru: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatSLRUMetric
+
+	for rows.Next() {
+		var metric models.PgStatSLRUMetric
+		err := rows.Scan(
+			&metric.SLRUName,
+			&metric.BlksZeroed,
+			&metric.BlksHit,
+			&metric.BlksRead,
+			&metric.BlksWritten,
+			&metric.BlksExists,
+			&metric.Flushes,
+			&metric.Truncates,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_slru row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_slru rows: %w", err)
+	}
+
+	return metrics, nil
+}

@@ -223,6 +223,27 @@ var MetricsInfo = metricsInfo{
 	PostgresqlSessionsSessionTime: metricInfo{
 		Name: "postgresql.sessions.session_time",
 	},
+	PostgresqlSlruBlksExists: metricInfo{
+		Name: "postgresql.slru.blks_exists",
+	},
+	PostgresqlSlruBlksHit: metricInfo{
+		Name: "postgresql.slru.blks_hit",
+	},
+	PostgresqlSlruBlksRead: metricInfo{
+		Name: "postgresql.slru.blks_read",
+	},
+	PostgresqlSlruBlksWritten: metricInfo{
+		Name: "postgresql.slru.blks_written",
+	},
+	PostgresqlSlruBlksZeroed: metricInfo{
+		Name: "postgresql.slru.blks_zeroed",
+	},
+	PostgresqlSlruFlushes: metricInfo{
+		Name: "postgresql.slru.flushes",
+	},
+	PostgresqlSlruTruncates: metricInfo{
+		Name: "postgresql.slru.truncates",
+	},
 	PostgresqlSubscriptionApplyError: metricInfo{
 		Name: "postgresql.subscription.apply_error",
 	},
@@ -368,6 +389,13 @@ type metricsInfo struct {
 	PostgresqlSessionsIdleInTransactionTime           metricInfo
 	PostgresqlSessionsKilled                          metricInfo
 	PostgresqlSessionsSessionTime                     metricInfo
+	PostgresqlSlruBlksExists                          metricInfo
+	PostgresqlSlruBlksHit                             metricInfo
+	PostgresqlSlruBlksRead                            metricInfo
+	PostgresqlSlruBlksWritten                         metricInfo
+	PostgresqlSlruBlksZeroed                          metricInfo
+	PostgresqlSlruFlushes                             metricInfo
+	PostgresqlSlruTruncates                           metricInfo
 	PostgresqlSubscriptionApplyError                  metricInfo
 	PostgresqlSubscriptionLastMsgReceiptAge           metricInfo
 	PostgresqlSubscriptionLastMsgSendAge              metricInfo
@@ -4130,6 +4158,384 @@ func newMetricPostgresqlSessionsSessionTime(cfg MetricConfig) metricPostgresqlSe
 	return m
 }
 
+type metricPostgresqlSlruBlksExists struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slru.blks_exists metric with initial data.
+func (m *metricPostgresqlSlruBlksExists) init() {
+	m.data.SetName("postgresql.slru.blks_exists")
+	m.data.SetDescription("Number of blocks checked for existence for this SLRU (PostgreSQL 13+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlruBlksExists) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("slru_name", slruNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlruBlksExists) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlruBlksExists) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlruBlksExists(cfg MetricConfig) metricPostgresqlSlruBlksExists {
+	m := metricPostgresqlSlruBlksExists{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlruBlksHit struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slru.blks_hit metric with initial data.
+func (m *metricPostgresqlSlruBlksHit) init() {
+	m.data.SetName("postgresql.slru.blks_hit")
+	m.data.SetDescription("Number of times disk blocks were found already in the SLRU cache (PostgreSQL 13+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlruBlksHit) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("slru_name", slruNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlruBlksHit) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlruBlksHit) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlruBlksHit(cfg MetricConfig) metricPostgresqlSlruBlksHit {
+	m := metricPostgresqlSlruBlksHit{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlruBlksRead struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slru.blks_read metric with initial data.
+func (m *metricPostgresqlSlruBlksRead) init() {
+	m.data.SetName("postgresql.slru.blks_read")
+	m.data.SetDescription("Number of disk blocks read for this SLRU (PostgreSQL 13+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlruBlksRead) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("slru_name", slruNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlruBlksRead) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlruBlksRead) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlruBlksRead(cfg MetricConfig) metricPostgresqlSlruBlksRead {
+	m := metricPostgresqlSlruBlksRead{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlruBlksWritten struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slru.blks_written metric with initial data.
+func (m *metricPostgresqlSlruBlksWritten) init() {
+	m.data.SetName("postgresql.slru.blks_written")
+	m.data.SetDescription("Number of disk blocks written for this SLRU (PostgreSQL 13+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlruBlksWritten) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("slru_name", slruNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlruBlksWritten) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlruBlksWritten) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlruBlksWritten(cfg MetricConfig) metricPostgresqlSlruBlksWritten {
+	m := metricPostgresqlSlruBlksWritten{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlruBlksZeroed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slru.blks_zeroed metric with initial data.
+func (m *metricPostgresqlSlruBlksZeroed) init() {
+	m.data.SetName("postgresql.slru.blks_zeroed")
+	m.data.SetDescription("Number of blocks zeroed during initializations for this SLRU (PostgreSQL 13+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlruBlksZeroed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("slru_name", slruNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlruBlksZeroed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlruBlksZeroed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlruBlksZeroed(cfg MetricConfig) metricPostgresqlSlruBlksZeroed {
+	m := metricPostgresqlSlruBlksZeroed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlruFlushes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slru.flushes metric with initial data.
+func (m *metricPostgresqlSlruFlushes) init() {
+	m.data.SetName("postgresql.slru.flushes")
+	m.data.SetDescription("Number of flushes of dirty data for this SLRU (PostgreSQL 13+)")
+	m.data.SetUnit("{flushes}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlruFlushes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("slru_name", slruNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlruFlushes) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlruFlushes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlruFlushes(cfg MetricConfig) metricPostgresqlSlruFlushes {
+	m := metricPostgresqlSlruFlushes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlruTruncates struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slru.truncates metric with initial data.
+func (m *metricPostgresqlSlruTruncates) init() {
+	m.data.SetName("postgresql.slru.truncates")
+	m.data.SetDescription("Number of truncates for this SLRU (PostgreSQL 13+)")
+	m.data.SetUnit("{truncates}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlruTruncates) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("slru_name", slruNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlruTruncates) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlruTruncates) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlruTruncates(cfg MetricConfig) metricPostgresqlSlruTruncates {
+	m := metricPostgresqlSlruTruncates{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlSubscriptionApplyError struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -5466,6 +5872,13 @@ type MetricsBuilder struct {
 	metricPostgresqlSessionsIdleInTransactionTime           metricPostgresqlSessionsIdleInTransactionTime
 	metricPostgresqlSessionsKilled                          metricPostgresqlSessionsKilled
 	metricPostgresqlSessionsSessionTime                     metricPostgresqlSessionsSessionTime
+	metricPostgresqlSlruBlksExists                          metricPostgresqlSlruBlksExists
+	metricPostgresqlSlruBlksHit                             metricPostgresqlSlruBlksHit
+	metricPostgresqlSlruBlksRead                            metricPostgresqlSlruBlksRead
+	metricPostgresqlSlruBlksWritten                         metricPostgresqlSlruBlksWritten
+	metricPostgresqlSlruBlksZeroed                          metricPostgresqlSlruBlksZeroed
+	metricPostgresqlSlruFlushes                             metricPostgresqlSlruFlushes
+	metricPostgresqlSlruTruncates                           metricPostgresqlSlruTruncates
 	metricPostgresqlSubscriptionApplyError                  metricPostgresqlSubscriptionApplyError
 	metricPostgresqlSubscriptionLastMsgReceiptAge           metricPostgresqlSubscriptionLastMsgReceiptAge
 	metricPostgresqlSubscriptionLastMsgSendAge              metricPostgresqlSubscriptionLastMsgSendAge
@@ -5585,6 +5998,13 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSessionsIdleInTransactionTime:           newMetricPostgresqlSessionsIdleInTransactionTime(mbc.Metrics.PostgresqlSessionsIdleInTransactionTime),
 		metricPostgresqlSessionsKilled:                          newMetricPostgresqlSessionsKilled(mbc.Metrics.PostgresqlSessionsKilled),
 		metricPostgresqlSessionsSessionTime:                     newMetricPostgresqlSessionsSessionTime(mbc.Metrics.PostgresqlSessionsSessionTime),
+		metricPostgresqlSlruBlksExists:                          newMetricPostgresqlSlruBlksExists(mbc.Metrics.PostgresqlSlruBlksExists),
+		metricPostgresqlSlruBlksHit:                             newMetricPostgresqlSlruBlksHit(mbc.Metrics.PostgresqlSlruBlksHit),
+		metricPostgresqlSlruBlksRead:                            newMetricPostgresqlSlruBlksRead(mbc.Metrics.PostgresqlSlruBlksRead),
+		metricPostgresqlSlruBlksWritten:                         newMetricPostgresqlSlruBlksWritten(mbc.Metrics.PostgresqlSlruBlksWritten),
+		metricPostgresqlSlruBlksZeroed:                          newMetricPostgresqlSlruBlksZeroed(mbc.Metrics.PostgresqlSlruBlksZeroed),
+		metricPostgresqlSlruFlushes:                             newMetricPostgresqlSlruFlushes(mbc.Metrics.PostgresqlSlruFlushes),
+		metricPostgresqlSlruTruncates:                           newMetricPostgresqlSlruTruncates(mbc.Metrics.PostgresqlSlruTruncates),
 		metricPostgresqlSubscriptionApplyError:                  newMetricPostgresqlSubscriptionApplyError(mbc.Metrics.PostgresqlSubscriptionApplyError),
 		metricPostgresqlSubscriptionLastMsgReceiptAge:           newMetricPostgresqlSubscriptionLastMsgReceiptAge(mbc.Metrics.PostgresqlSubscriptionLastMsgReceiptAge),
 		metricPostgresqlSubscriptionLastMsgSendAge:              newMetricPostgresqlSubscriptionLastMsgSendAge(mbc.Metrics.PostgresqlSubscriptionLastMsgSendAge),
@@ -5787,6 +6207,13 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSessionsIdleInTransactionTime.emit(ils.Metrics())
 	mb.metricPostgresqlSessionsKilled.emit(ils.Metrics())
 	mb.metricPostgresqlSessionsSessionTime.emit(ils.Metrics())
+	mb.metricPostgresqlSlruBlksExists.emit(ils.Metrics())
+	mb.metricPostgresqlSlruBlksHit.emit(ils.Metrics())
+	mb.metricPostgresqlSlruBlksRead.emit(ils.Metrics())
+	mb.metricPostgresqlSlruBlksWritten.emit(ils.Metrics())
+	mb.metricPostgresqlSlruBlksZeroed.emit(ils.Metrics())
+	mb.metricPostgresqlSlruFlushes.emit(ils.Metrics())
+	mb.metricPostgresqlSlruTruncates.emit(ils.Metrics())
 	mb.metricPostgresqlSubscriptionApplyError.emit(ils.Metrics())
 	mb.metricPostgresqlSubscriptionLastMsgReceiptAge.emit(ils.Metrics())
 	mb.metricPostgresqlSubscriptionLastMsgSendAge.emit(ils.Metrics())
@@ -6190,6 +6617,41 @@ func (mb *MetricsBuilder) RecordPostgresqlSessionsKilledDataPoint(ts pcommon.Tim
 // RecordPostgresqlSessionsSessionTimeDataPoint adds a data point to postgresql.sessions.session_time metric.
 func (mb *MetricsBuilder) RecordPostgresqlSessionsSessionTimeDataPoint(ts pcommon.Timestamp, val float64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlSessionsSessionTime.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSlruBlksExistsDataPoint adds a data point to postgresql.slru.blks_exists metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlruBlksExistsDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	mb.metricPostgresqlSlruBlksExists.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
+}
+
+// RecordPostgresqlSlruBlksHitDataPoint adds a data point to postgresql.slru.blks_hit metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlruBlksHitDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	mb.metricPostgresqlSlruBlksHit.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
+}
+
+// RecordPostgresqlSlruBlksReadDataPoint adds a data point to postgresql.slru.blks_read metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlruBlksReadDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	mb.metricPostgresqlSlruBlksRead.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
+}
+
+// RecordPostgresqlSlruBlksWrittenDataPoint adds a data point to postgresql.slru.blks_written metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlruBlksWrittenDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	mb.metricPostgresqlSlruBlksWritten.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
+}
+
+// RecordPostgresqlSlruBlksZeroedDataPoint adds a data point to postgresql.slru.blks_zeroed metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlruBlksZeroedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	mb.metricPostgresqlSlruBlksZeroed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
+}
+
+// RecordPostgresqlSlruFlushesDataPoint adds a data point to postgresql.slru.flushes metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlruFlushesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	mb.metricPostgresqlSlruFlushes.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
+}
+
+// RecordPostgresqlSlruTruncatesDataPoint adds a data point to postgresql.slru.truncates metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlruTruncatesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
+	mb.metricPostgresqlSlruTruncates.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
 }
 
 // RecordPostgresqlSubscriptionApplyErrorDataPoint adds a data point to postgresql.subscription.apply_error metric.

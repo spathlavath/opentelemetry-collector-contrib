@@ -59,6 +59,9 @@ attributes:
   slot_type:
     description: Type of replication slot (physical or logical)
     type: string
+  slru_name:
+    description: Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact)
+    type: string
   state:
     description: State of the replication slot (active or inactive)
     type: string
@@ -851,6 +854,90 @@ metrics:
       value_type: double
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "ms"
+    stability:
+      level: alpha
+
+  postgresql.slru.blks_exists:
+    description: Number of blocks checked for existence for this SLRU (PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, slru_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.slru.blks_hit:
+    description: Number of times disk blocks were found already in the SLRU cache (PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, slru_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.slru.blks_read:
+    description: Number of disk blocks read for this SLRU (PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, slru_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.slru.blks_written:
+    description: Number of disk blocks written for this SLRU (PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, slru_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.slru.blks_zeroed:
+    description: Number of blocks zeroed during initializations for this SLRU (PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, slru_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.slru.flushes:
+    description: Number of flushes of dirty data for this SLRU (PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, slru_name]
+    unit: "{flushes}"
+    stability:
+      level: alpha
+
+  postgresql.slru.truncates:
+    description: Number of truncates for this SLRU (PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, slru_name]
+    unit: "{truncates}"
     stability:
       level: alpha
 

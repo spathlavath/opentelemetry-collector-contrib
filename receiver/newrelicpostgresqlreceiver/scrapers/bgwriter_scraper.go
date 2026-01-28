@@ -12,6 +12,7 @@ import (
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/models"
 )
 
 // BgwriterScraper scrapes background writer and checkpointer metrics from pg_stat_bgwriter
@@ -108,4 +109,38 @@ func (s *BgwriterScraper) ScrapeArchiverStats(ctx context.Context) []error {
 	s.logger.Debug("Archiver statistics scrape completed")
 
 	return nil
+}
+
+// ScrapeSLRUStats scrapes SLRU (Simple LRU) cache statistics from pg_stat_slru
+func (s *BgwriterScraper) ScrapeSLRUStats(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QuerySLRUStats(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query SLRU statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordSLRUMetricsForCache(now, metric)
+	}
+
+	s.logger.Debug("SLRU statistics scrape completed",
+		zap.Int("slru_caches", len(metrics)))
+
+	return nil
+}
+
+// recordSLRUMetricsForCache records all SLRU metrics for a single SLRU cache
+func (s *BgwriterScraper) recordSLRUMetricsForCache(now pcommon.Timestamp, metric models.PgStatSLRUMetric) {
+	slruName := metric.SLRUName
+
+	// Record all SLRU metrics using helper functions to extract values
+	s.mb.RecordPostgresqlSlruBlksZeroedDataPoint(now, getInt64(metric.BlksZeroed), s.instanceName, slruName)
+	s.mb.RecordPostgresqlSlruBlksHitDataPoint(now, getInt64(metric.BlksHit), s.instanceName, slruName)
+	s.mb.RecordPostgresqlSlruBlksReadDataPoint(now, getInt64(metric.BlksRead), s.instanceName, slruName)
+	s.mb.RecordPostgresqlSlruBlksWrittenDataPoint(now, getInt64(metric.BlksWritten), s.instanceName, slruName)
+	s.mb.RecordPostgresqlSlruBlksExistsDataPoint(now, getInt64(metric.BlksExists), s.instanceName, slruName)
+	s.mb.RecordPostgresqlSlruFlushesDataPoint(now, getInt64(metric.Flushes), s.instanceName, slruName)
+	s.mb.RecordPostgresqlSlruTruncatesDataPoint(now, getInt64(metric.Truncates), s.instanceName, slruName)
 }

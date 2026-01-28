@@ -33,6 +33,7 @@ const (
 	PG96Version = 90600  // PostgreSQL 9.6
 	PG10Version = 100000 // PostgreSQL 10.0
 	PG12Version = 120000 // PostgreSQL 12.0
+	PG13Version = 130000 // PostgreSQL 13.0
 	PG14Version = 140000 // PostgreSQL 14.0
 )
 
@@ -353,6 +354,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping checkpoint control metrics",
 				zap.Int("error_count", len(checkpointErrs)))
 			scrapeErrors = append(scrapeErrors, checkpointErrs...)
+		}
+	}
+
+	// Scrape SLRU statistics (PostgreSQL 13+ only)
+	if s.pgVersion >= PG13Version && s.bgwriterScraper != nil {
+		slruErrs := s.bgwriterScraper.ScrapeSLRUStats(scrapeCtx)
+		if len(slruErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping SLRU statistics",
+				zap.Int("error_count", len(slruErrs)))
+			scrapeErrors = append(scrapeErrors, slruErrs...)
 		}
 	}
 

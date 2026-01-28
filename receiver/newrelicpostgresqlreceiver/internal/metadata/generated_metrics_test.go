@@ -350,6 +350,34 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlSlruBlksExistsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlruBlksHitDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlruBlksReadDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlruBlksWrittenDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlruBlksZeroedDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlruFlushesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlruTruncatesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlSubscriptionApplyErrorDataPoint(ts, 1, "subscription_name-val", "state-val", "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -1841,6 +1869,146 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.slru.blks_exists":
+					assert.False(t, validatedMetrics["postgresql.slru.blks_exists"], "Found a duplicate in the metrics slice: postgresql.slru.blks_exists")
+					validatedMetrics["postgresql.slru.blks_exists"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of blocks checked for existence for this SLRU (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slru_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slru_name-val", attrVal.Str())
+				case "postgresql.slru.blks_hit":
+					assert.False(t, validatedMetrics["postgresql.slru.blks_hit"], "Found a duplicate in the metrics slice: postgresql.slru.blks_hit")
+					validatedMetrics["postgresql.slru.blks_hit"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of times disk blocks were found already in the SLRU cache (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slru_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slru_name-val", attrVal.Str())
+				case "postgresql.slru.blks_read":
+					assert.False(t, validatedMetrics["postgresql.slru.blks_read"], "Found a duplicate in the metrics slice: postgresql.slru.blks_read")
+					validatedMetrics["postgresql.slru.blks_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of disk blocks read for this SLRU (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slru_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slru_name-val", attrVal.Str())
+				case "postgresql.slru.blks_written":
+					assert.False(t, validatedMetrics["postgresql.slru.blks_written"], "Found a duplicate in the metrics slice: postgresql.slru.blks_written")
+					validatedMetrics["postgresql.slru.blks_written"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of disk blocks written for this SLRU (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slru_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slru_name-val", attrVal.Str())
+				case "postgresql.slru.blks_zeroed":
+					assert.False(t, validatedMetrics["postgresql.slru.blks_zeroed"], "Found a duplicate in the metrics slice: postgresql.slru.blks_zeroed")
+					validatedMetrics["postgresql.slru.blks_zeroed"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of blocks zeroed during initializations for this SLRU (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slru_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slru_name-val", attrVal.Str())
+				case "postgresql.slru.flushes":
+					assert.False(t, validatedMetrics["postgresql.slru.flushes"], "Found a duplicate in the metrics slice: postgresql.slru.flushes")
+					validatedMetrics["postgresql.slru.flushes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of flushes of dirty data for this SLRU (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{flushes}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slru_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slru_name-val", attrVal.Str())
+				case "postgresql.slru.truncates":
+					assert.False(t, validatedMetrics["postgresql.slru.truncates"], "Found a duplicate in the metrics slice: postgresql.slru.truncates")
+					validatedMetrics["postgresql.slru.truncates"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of truncates for this SLRU (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{truncates}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("slru_name")
+					assert.True(t, ok)
+					assert.Equal(t, "slru_name-val", attrVal.Str())
 				case "postgresql.subscription.apply_error":
 					assert.False(t, validatedMetrics["postgresql.subscription.apply_error"], "Found a duplicate in the metrics slice: postgresql.subscription.apply_error")
 					validatedMetrics["postgresql.subscription.apply_error"] = true

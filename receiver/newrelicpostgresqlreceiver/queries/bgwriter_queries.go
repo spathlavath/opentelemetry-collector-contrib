@@ -63,4 +63,20 @@ const (
 			archived_count,
 			failed_count
 		FROM pg_stat_archiver`
+
+	// PgStatSLRUSQL returns SLRU (Simple LRU) cache statistics (PostgreSQL 13+)
+	// This query retrieves per-SLRU cache performance metrics
+	// Returns one row per SLRU (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact)
+	// Available in PostgreSQL 13+
+	PgStatSLRUSQL = `
+		SELECT
+			name as slru_name,
+			blks_zeroed,
+			blks_hit,
+			blks_read,
+			blks_written,
+			blks_exists,
+			flushes,
+			truncates
+		FROM pg_stat_slru`
 )

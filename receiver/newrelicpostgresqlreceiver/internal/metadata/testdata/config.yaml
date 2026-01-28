@@ -141,6 +141,20 @@ all_set:
       enabled: true
     postgresql.sessions.session_time:
       enabled: true
+    postgresql.slru.blks_exists:
+      enabled: true
+    postgresql.slru.blks_hit:
+      enabled: true
+    postgresql.slru.blks_read:
+      enabled: true
+    postgresql.slru.blks_written:
+      enabled: true
+    postgresql.slru.blks_zeroed:
+      enabled: true
+    postgresql.slru.flushes:
+      enabled: true
+    postgresql.slru.truncates:
+      enabled: true
     postgresql.subscription.apply_error:
       enabled: true
     postgresql.subscription.last_msg_receipt_age:
@@ -343,6 +357,20 @@ none_set:
     postgresql.sessions.killed:
       enabled: false
     postgresql.sessions.session_time:
+      enabled: false
+    postgresql.slru.blks_exists:
+      enabled: false
+    postgresql.slru.blks_hit:
+      enabled: false
+    postgresql.slru.blks_read:
+      enabled: false
+    postgresql.slru.blks_written:
+      enabled: false
+    postgresql.slru.blks_zeroed:
+      enabled: false
+    postgresql.slru.flushes:
+      enabled: false
+    postgresql.slru.truncates:
       enabled: false
     postgresql.subscription.apply_error:
       enabled: false

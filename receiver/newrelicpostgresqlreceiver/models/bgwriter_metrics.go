@@ -71,3 +71,32 @@ type PgStatArchiverMetric struct {
 	// FailedCount is the number of failed attempts to archive WAL files
 	FailedCount sql.NullInt64
 }
+
+// PgStatSLRUMetric represents SLRU (Simple LRU) cache statistics from pg_stat_slru
+// This struct captures per-SLRU cache performance metrics
+// Available in PostgreSQL 13+
+type PgStatSLRUMetric struct {
+	// SLRUName is the name of the SLRU (e.g., "CommitTs", "MultiXactMember", "MultiXactOffset", "Notify", "Serial", "Subtrans", "Xact")
+	SLRUName string
+
+	// BlksZeroed is the number of blocks zeroed during initializations
+	BlksZeroed sql.NullInt64
+
+	// BlksHit is the number of times disk blocks were found already in the SLRU (cache hits)
+	BlksHit sql.NullInt64
+
+	// BlksRead is the number of disk blocks read for this SLRU
+	BlksRead sql.NullInt64
+
+	// BlksWritten is the number of disk blocks written for this SLRU
+	BlksWritten sql.NullInt64
+
+	// BlksExists is the number of blocks checked for existence for this SLRU
+	BlksExists sql.NullInt64
+
+	// Flushes is the number of flushes of dirty data for this SLRU
+	Flushes sql.NullInt64
+
+	// Truncates is the number of truncates for this SLRU
+	Truncates sql.NullInt64
+}

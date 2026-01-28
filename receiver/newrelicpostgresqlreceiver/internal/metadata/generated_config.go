@@ -98,6 +98,13 @@ type MetricsConfig struct {
 	PostgresqlSessionsIdleInTransactionTime           MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
 	PostgresqlSessionsKilled                          MetricConfig `mapstructure:"postgresql.sessions.killed"`
 	PostgresqlSessionsSessionTime                     MetricConfig `mapstructure:"postgresql.sessions.session_time"`
+	PostgresqlSlruBlksExists                          MetricConfig `mapstructure:"postgresql.slru.blks_exists"`
+	PostgresqlSlruBlksHit                             MetricConfig `mapstructure:"postgresql.slru.blks_hit"`
+	PostgresqlSlruBlksRead                            MetricConfig `mapstructure:"postgresql.slru.blks_read"`
+	PostgresqlSlruBlksWritten                         MetricConfig `mapstructure:"postgresql.slru.blks_written"`
+	PostgresqlSlruBlksZeroed                          MetricConfig `mapstructure:"postgresql.slru.blks_zeroed"`
+	PostgresqlSlruFlushes                             MetricConfig `mapstructure:"postgresql.slru.flushes"`
+	PostgresqlSlruTruncates                           MetricConfig `mapstructure:"postgresql.slru.truncates"`
 	PostgresqlSubscriptionApplyError                  MetricConfig `mapstructure:"postgresql.subscription.apply_error"`
 	PostgresqlSubscriptionLastMsgReceiptAge           MetricConfig `mapstructure:"postgresql.subscription.last_msg_receipt_age"`
 	PostgresqlSubscriptionLastMsgSendAge              MetricConfig `mapstructure:"postgresql.subscription.last_msg_send_age"`
@@ -334,6 +341,27 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSessionsSessionTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksExists: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksWritten: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksZeroed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruFlushes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruTruncates: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlSubscriptionApplyError: MetricConfig{

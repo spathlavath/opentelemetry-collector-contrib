@@ -119,4 +119,10 @@ type PostgreSQLClient interface {
 	// Returns counts of successfully archived and failed WAL files
 	// Available in PostgreSQL 9.6+
 	QueryArchiverStats(ctx context.Context) (*models.PgStatArchiverMetric, error)
+
+	// QuerySLRUStats retrieves SLRU (Simple LRU) cache statistics from pg_stat_slru
+	// Returns per-SLRU cache performance metrics
+	// Returns one row per SLRU (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact)
+	// Available in PostgreSQL 13+
+	QuerySLRUStats(ctx context.Context) ([]models.PgStatSLRUMetric, error)
 }
