@@ -41,7 +41,7 @@ func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.Metr
 		logger:               logger,
 		metricsBuilderConfig: metricsBuilderConfig,
 		cache:                make(map[string]*planHashCacheEntry),
-		cacheTTL:             2 * time.Minute, // 5-minute window
+		cacheTTL:             5 * time.Minute, // 5-minute window
 	}
 }
 
@@ -108,10 +108,9 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		}
 		s.cacheMutex.Unlock()
 
-		s.logger.Info("Scraped execution plan and added to cache",
+		s.logger.Info("Scraped execution plan",
 			zap.String("plan_hash", planHash),
-			zap.String("sql_id", identifier.SQLID),
-			zap.Int("cache_size", len(s.cache)))
+			zap.String("sql_id", identifier.SQLID))
 	}
 	return errs
 }
@@ -286,15 +285,8 @@ func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
 	s.cacheMutex.Lock()
 	defer s.cacheMutex.Unlock()
 
-	s.logger.Info("Cache state before cleanup",
-		zap.Int("total_entries", len(s.cache)))
-
 	var keysToDelete []string
 	for key, entry := range s.cache {
-		s.logger.Info("cached details plan hash",
-			zap.String("plan_hash", key),
-			zap.String("cache_age", now.Sub(entry.lastScraped).String()),
-			zap.String("ttl", s.cacheTTL.String()))
 		if now.Sub(entry.lastScraped) >= s.cacheTTL {
 			keysToDelete = append(keysToDelete, key)
 		}
