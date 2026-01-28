@@ -150,13 +150,13 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 		schName := slowQuery.GetSchemaName()
 		lastActiveTime := slowQuery.GetLastActiveTime()
 
-		// Extract New Relic metadata (nr_service, nr_txn) from sql_fulltext BEFORE normalization
-		// Generate obfuscated query hash from sql_fulltext using New Relic Java agent normalization logic
+		// Extract New Relic metadata (nr_service) from sql_fulltext BEFORE normalization
+		// Generate normalised SQL hash from sql_fulltext using New Relic Java agent normalization logic
 		// The anonymized query text is derived from the normalized SQL (for attribute display)
-		var queryHash, nrService, nrTxn, qText string
+		var queryHash, nrService, qText string
 		if slowQuery.QueryText.Valid && slowQuery.QueryText.String != "" {
 			// Extract New Relic metadata from comment
-			nrService, nrTxn = commonutils.ExtractNewRelicMetadata(slowQuery.QueryText.String)
+			nrService = commonutils.ExtractNewRelicMetadata(slowQuery.QueryText.String)
 			// Generate normalized SQL and hash
 			normalizedSQL, hash := commonutils.NormalizeSqlAndHash(slowQuery.QueryText.String)
 			queryHash = hash
@@ -164,7 +164,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 			qText = normalizedSQL
 		}
 
-		if err := s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrService, nrTxn); err != nil {
+		if err := s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrService); err != nil {
 			s.logger.Warn("Failed to record metrics for slow query",
 				zap.String("sql_id", qID),
 				zap.Error(err))
@@ -183,7 +183,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]string, [
 	return queryIDs, scrapeErrors
 }
 
-func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrService, nrTxn string) error {
+func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrService string) error {
 	if slowQuery == nil {
 		s.logger.Warn("Attempted to record metrics for nil slow query")
 		return fmt.Errorf("slow query is nil")
@@ -254,7 +254,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		userName,
 		queryHash,
 		nrService,
-		nrTxn,
 	)
 
 	// Record interval-based average elapsed time if available (delta metric)
@@ -328,7 +327,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		lastActiveTime,
 		queryHash,
 		nrService,
-		nrTxn,
 	)
 
 	return nil

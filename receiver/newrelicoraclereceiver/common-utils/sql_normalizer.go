@@ -43,32 +43,19 @@ func GenerateMD5Hash(normalizedSQL string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-// ExtractNewRelicMetadata extracts nr_service and nr_txn from New Relic query comments
-// Example: /* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */
-// Returns: (nr_service, nr_txn)
-// Both fields must be present for the metadata to be considered valid (returns empty strings if either is missing)
-func ExtractNewRelicMetadata(sql string) (nrService string, nrTxn string) {
+// ExtractNewRelicMetadata extracts nr_service from New Relic query comments
+// Example: /* nr_service=Oracle-HR-Portal-Java */
+// Returns: nr_service (client_name)
+func ExtractNewRelicMetadata(sql string) (nrService string) {
 	// Match nr_service: capture everything until comma, asterisk, or whitespace (service names don't contain spaces)
 	serviceRegex := regexp.MustCompile(`nr_service=([^,\s\*]+)`)
-	// Match nr_txn: capture everything until comma or closing comment (transaction names can contain spaces like "(GET)")
-	txnRegex := regexp.MustCompile(`nr_txn=([^,\*]+?)(?:\s*(?:\*/|,))`)
 
 	serviceMatch := serviceRegex.FindStringSubmatch(sql)
 	if len(serviceMatch) > 1 {
 		nrService = serviceMatch[1]
 	}
 
-	txnMatch := txnRegex.FindStringSubmatch(sql)
-	if len(txnMatch) > 1 {
-		nrTxn = strings.TrimSpace(txnMatch[1])
-	}
-
-	// Both fields must be present for valid metadata
-	if nrService == "" || nrTxn == "" {
-		return "", ""
-	}
-
-	return nrService, nrTxn
+	return nrService
 }
 
 // sqlNormalizerState holds state during SQL normalization

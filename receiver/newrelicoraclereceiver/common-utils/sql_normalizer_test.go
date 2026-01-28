@@ -156,90 +156,64 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 		name              string
 		input             string
 		expectedNrService string
-		expectedNrTxn     string
 	}{
 		{
 			name:              "Valid New Relic metadata comment",
-			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */ SELECT * FROM employees",
+			input:             "/* nr_service=Oracle-HR-Portal-Java */ SELECT * FROM employees",
 			expectedNrService: "Oracle-HR-Portal-Java",
-			expectedNrTxn:     "WebTransaction/SpringController/employees (GET)",
 		},
 		{
 			name:              "Valid New Relic metadata with extra spaces",
-			input:             "/*  nr_service=MyService, nr_txn=WebTransaction/Controller/api */ SELECT * FROM users",
+			input:             "/*  nr_service=MyService */ SELECT * FROM users",
 			expectedNrService: "MyService",
-			expectedNrTxn:     "WebTransaction/Controller/api",
 		},
 		{
 			name:              "Real APM log example - employees GET",
-			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */ SELECT e.EMPLOYEE_ID, e.FIRST_NAME FROM EMPLOYEES e WHERE e.SALARY >= ? ORDER BY e.SALARY DESC",
+			input:             "/* nr_service=Oracle-HR-Portal-Java */ SELECT e.EMPLOYEE_ID, e.FIRST_NAME FROM EMPLOYEES e WHERE e.SALARY >= ? ORDER BY e.SALARY DESC",
 			expectedNrService: "Oracle-HR-Portal-Java",
-			expectedNrTxn:     "WebTransaction/SpringController/employees (GET)",
 		},
 		{
 			name:              "Real APM log example - employees history GET with path variable",
-			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees/{id}/history (GET) */ SELECT jh.* FROM JOB_HISTORY jh WHERE jh.EMPLOYEE_ID = ?",
+			input:             "/* nr_service=Oracle-HR-Portal-Java */ SELECT jh.* FROM JOB_HISTORY jh WHERE jh.EMPLOYEE_ID = ?",
 			expectedNrService: "Oracle-HR-Portal-Java",
-			expectedNrTxn:     "WebTransaction/SpringController/employees/{id}/history (GET)",
 		},
 		{
 			name:              "No New Relic metadata",
 			input:             "SELECT * FROM employees WHERE id = 1",
 			expectedNrService: "",
-			expectedNrTxn:     "",
 		},
 		{
 			name:              "Comment without New Relic metadata",
 			input:             "/* This is a regular comment */ SELECT * FROM employees",
 			expectedNrService: "",
-			expectedNrTxn:     "",
 		},
 		{
-			name:              "Only nr_service (incomplete)",
-			input:             "/* nr_service=MyService */ SELECT * FROM employees",
-			expectedNrService: "",
-			expectedNrTxn:     "",
+			name:              "Service with additional comment text",
+			input:             "/* nr_service=MyService, some other text */ SELECT * FROM employees",
+			expectedNrService: "MyService",
 		},
 		{
-			name:              "Complex transaction name with special characters",
-			input:             "/* nr_service=Oracle-DB-Service,nr_txn=WebTransaction/Servlet/OrderController/processOrder (POST) */ UPDATE orders SET status = 'processed'",
+			name:              "Complex service name",
+			input:             "/* nr_service=Oracle-DB-Service */ UPDATE orders SET status = 'processed'",
 			expectedNrService: "Oracle-DB-Service",
-			expectedNrTxn:     "WebTransaction/Servlet/OrderController/processOrder (POST)",
 		},
 		{
-			name:              "Transaction with PUT method",
-			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees/{id} (PUT) */ UPDATE employees SET salary = ? WHERE id = ?",
-			expectedNrService: "Oracle-HR-Portal-Java",
-			expectedNrTxn:     "WebTransaction/SpringController/employees/{id} (PUT)",
-		},
-		{
-			name:              "Transaction with DELETE method",
-			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees/{id} (DELETE) */ DELETE FROM employees WHERE id = ?",
-			expectedNrService: "Oracle-HR-Portal-Java",
-			expectedNrTxn:     "WebTransaction/SpringController/employees/{id} (DELETE)",
-		},
-		{
-			name:              "Transaction with PATCH method",
-			input:             "/* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/departments/{id}/status (PATCH) */ UPDATE departments SET active = ?",
-			expectedNrService: "Oracle-HR-Portal-Java",
-			expectedNrTxn:     "WebTransaction/SpringController/departments/{id}/status (PATCH)",
+			name:              "Service name with hyphens and numbers",
+			input:             "/* nr_service=Oracle-HR-Portal-Java-v2 */ UPDATE employees SET salary = ? WHERE id = ?",
+			expectedNrService: "Oracle-HR-Portal-Java-v2",
 		},
 		{
 			name:              "Empty query",
 			input:             "",
 			expectedNrService: "",
-			expectedNrTxn:     "",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nrService, nrTxn := ExtractNewRelicMetadata(tt.input)
+			nrService := ExtractNewRelicMetadata(tt.input)
 			if nrService != tt.expectedNrService {
 				t.Errorf("ExtractNewRelicMetadata(%q) nrService = %q; want %q", tt.input, nrService, tt.expectedNrService)
-			}
-			if nrTxn != tt.expectedNrTxn {
-				t.Errorf("ExtractNewRelicMetadata(%q) nrTxn = %q; want %q", tt.input, nrTxn, tt.expectedNrTxn)
 			}
 		})
 	}

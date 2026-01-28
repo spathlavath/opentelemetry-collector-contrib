@@ -50,14 +50,11 @@ attributes:
   last_active_time:
     description: Last active time for the SQL query
     type: string
-  obfuscated_query_hash:
+  normalised_sql_hash:
     description: "MD5 hash of normalized SQL query following New Relic Java agent normalization logic"
     type: string
-  nr_service:
-    description: "New Relic service name extracted from query comment (nr_service)"
-    type: string
-  nr_txn:
-    description: "New Relic transaction name extracted from query comment (nr_txn)"
+  client_name:
+    description: "Client service name extracted from query comment (nr_service)"
     type: string
   plan_hash_value:
     description: Oracle execution plan hash value
@@ -3264,9 +3261,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.avg_cpu_time:
     description: Average CPU time per execution for slow queries
@@ -3279,9 +3275,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.avg_disk_reads:
     description: Average disk reads per execution for slow queries
@@ -3294,9 +3289,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.avg_disk_writes:
     description: Average disk writes per execution for slow queries
@@ -3309,9 +3303,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
@@ -3324,9 +3317,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.avg_rows_examined:
     description: Average rows examined per execution for slow queries
@@ -3339,9 +3331,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.avg_lock_time:
     description: Average lock/concurrency wait time per execution for slow queries
@@ -3354,9 +3345,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
@@ -3373,9 +3363,8 @@ metrics:
       - schema_name
       - user_name
       - last_active_time
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   # Interval-based (delta) metrics - showing what happened in the LAST polling interval
   # These metrics provide real-time visibility into query performance changes
@@ -3390,9 +3379,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   newrelicoracledb.slow_queries.interval_execution_count:
     description: Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
@@ -3405,9 +3393,8 @@ metrics:
       - database_name
       - query_id
       - user_name
-      - obfuscated_query_hash
-      - nr_service
-      - nr_txn
+      - normalised_sql_hash
+      - client_name
 
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
