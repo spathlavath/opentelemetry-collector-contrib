@@ -287,6 +287,9 @@ func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
 
 	var keysToDelete []string
 	for key, entry := range s.cache {
+		s.logger.Debug("cached details plan hash",
+				zap.String("plan_hash", now.Sub(entry.lastScraped).String()),
+				zap.String("sql_id", s.cacheTTL.String()))
 		if now.Sub(entry.lastScraped) >= s.cacheTTL {
 			keysToDelete = append(keysToDelete, key)
 		}
