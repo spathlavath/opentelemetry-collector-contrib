@@ -285,12 +285,12 @@ func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
 	s.cacheMutex.Lock()
 	defer s.cacheMutex.Unlock()
 
-	s.logger.Debug("Cache state before cleanup",
+	s.logger.Info("Cache state before cleanup",
 		zap.Int("total_entries", len(s.cache)))
 
 	var keysToDelete []string
 	for key, entry := range s.cache {
-		s.logger.Debug("cached details plan hash",
+		s.logger.Info("cached details plan hash",
 			zap.String("plan_hash", key),
 			zap.String("cache_age", now.Sub(entry.lastScraped).String()),
 			zap.String("ttl", s.cacheTTL.String()))
