@@ -68,6 +68,71 @@ receivers:
     timeout: 30s # Query timeout duration
 ```
 
+### Per-Table Metrics Configuration (Optional)
+
+**⚠️ WARNING: HIGH CARDINALITY - Opt-in Feature**
+
+The receiver supports collecting per-table vacuum and analyze metrics from `pg_stat_user_tables`. This feature is **disabled by default** to prevent cardinality explosion.
+
+#### Why is this opt-in?
+
+Per-table metrics can create high cardinality:
+- 1000 tables × 8 metrics = 8,000 unique time series
+- Each time series consumes memory, storage, and processing resources
+- Can significantly impact New Relic costs and performance
+
+#### Configuration
+
+To enable per-table metrics, add the `relations` configuration:
+
+```yaml
+receivers:
+  newrelicpostgresqlreceiver:
+    hostname: "localhost"
+    port: "5432"
+    username: "postgres"
+    password: "password"
+    database: "postgres"
+
+    # Per-table metrics (OPTIONAL - HIGH CARDINALITY!)
+    relations:
+      schemas: [public, myapp]  # Defaults to ["public"] if not specified
+      tables: [users, orders, payments, inventory]  # Specify exact table names
+```
+
+#### Available Per-Table Metrics (PostgreSQL 9.6+)
+
+**Vacuum/Analyze Age Metrics (Gauge):**
+- `postgresql.last_vacuum_age` - Seconds since last manual VACUUM
+- `postgresql.last_autovacuum_age` - Seconds since last autovacuum
+- `postgresql.last_analyze_age` - Seconds since last manual ANALYZE
+- `postgresql.last_autoanalyze_age` - Seconds since last autoanalyze
+
+**Vacuum/Analyze Count Metrics (Cumulative Sum):**
+- `postgresql.vacuumed` - Number of manual vacuum operations
+- `postgresql.autovacuumed` - Number of autovacuum operations
+- `postgresql.analyzed` - Number of manual analyze operations
+- `postgresql.autoanalyzed` - Number of autoanalyze operations
+
+Each metric includes attributes: `schema_name` and `table_name`
+
+#### Performance Guidelines
+
+| Configuration | Tables | Metrics per Interval | Recommended For |
+|--------------|--------|---------------------|-----------------|
+| Disabled (default) | 0 | 0 | Most users |
+| Small (3-5 tables) | 5 | 40 | Critical tables only |
+| Medium (10-20 tables) | 20 | 160 | Important schemas |
+| Large (50+ tables) | 50+ | 400+ | Advanced monitoring (costly) |
+
+**Best Practices:**
+- Only monitor critical tables (authentication, transactions, etc.)
+- Avoid monitoring system tables or temporary tables
+- Start small and add tables as needed
+- Monitor your New Relic metric cardinality dashboard
+
+**Note:** Cumulative metrics are automatically converted to delta using the `cumulativetodelta` processor for better New Relic compatibility.
+
 ## Prerequisites
 
 ### Database User Permissions

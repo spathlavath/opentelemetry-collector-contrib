@@ -28,8 +28,11 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PostgresqlAnalyzed                                MetricConfig `mapstructure:"postgresql.analyzed"`
 	PostgresqlArchiverArchivedCount                   MetricConfig `mapstructure:"postgresql.archiver.archived_count"`
 	PostgresqlArchiverFailedCount                     MetricConfig `mapstructure:"postgresql.archiver.failed_count"`
+	PostgresqlAutoanalyzed                            MetricConfig `mapstructure:"postgresql.autoanalyzed"`
+	PostgresqlAutovacuumed                            MetricConfig `mapstructure:"postgresql.autovacuumed"`
 	PostgresqlBeforeXidWraparound                     MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
 	PostgresqlBgwriterBuffersAlloc                    MetricConfig `mapstructure:"postgresql.bgwriter.buffers_alloc"`
 	PostgresqlBgwriterBuffersBackend                  MetricConfig `mapstructure:"postgresql.bgwriter.buffers_backend"`
@@ -62,6 +65,10 @@ type MetricsConfig struct {
 	PostgresqlDbCount                                 MetricConfig `mapstructure:"postgresql.db.count"`
 	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
 	PostgresqlDiskRead                                MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlLastAnalyzeAge                          MetricConfig `mapstructure:"postgresql.last_analyze_age"`
+	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
+	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
+	PostgresqlLastVacuumAge                           MetricConfig `mapstructure:"postgresql.last_vacuum_age"`
 	PostgresqlRecoveryPrefetchBlockDistance           MetricConfig `mapstructure:"postgresql.recovery_prefetch.block_distance"`
 	PostgresqlRecoveryPrefetchHit                     MetricConfig `mapstructure:"postgresql.recovery_prefetch.hit"`
 	PostgresqlRecoveryPrefetchIoDepth                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.io_depth"`
@@ -122,6 +129,7 @@ type MetricsConfig struct {
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
 	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
+	PostgresqlVacuumed                                MetricConfig `mapstructure:"postgresql.vacuumed"`
 	PostgresqlWalBuffersFull                          MetricConfig `mapstructure:"postgresql.wal.buffers_full"`
 	PostgresqlWalBytes                                MetricConfig `mapstructure:"postgresql.wal.bytes"`
 	PostgresqlWalFpi                                  MetricConfig `mapstructure:"postgresql.wal.fpi"`
@@ -142,10 +150,19 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PostgresqlAnalyzed: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlArchiverArchivedCount: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlArchiverFailedCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAutoanalyzed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAutovacuumed: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlBeforeXidWraparound: MetricConfig{
@@ -242,6 +259,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlDiskRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastAnalyzeAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastAutoanalyzeAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastAutovacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastVacuumAge: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlRecoveryPrefetchBlockDistance: MetricConfig{
@@ -422,6 +451,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlUptime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumed: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlWalBuffersFull: MetricConfig{

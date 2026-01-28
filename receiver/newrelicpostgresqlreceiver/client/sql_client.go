@@ -682,3 +682,56 @@ func (c *SQLClient) QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRe
 
 	return &metric, nil
 }
+
+// QueryUserTables retrieves per-table statistics from pg_stat_user_tables
+// Returns vacuum/analyze statistics and row-level activity per table
+// Filters by specified schemas and tables
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatUserTablesMetric, error) {
+	query := queries.PgStatUserTablesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_user_tables: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatUserTablesMetric
+
+	for rows.Next() {
+		var metric models.PgStatUserTablesMetric
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.SeqScan,
+			&metric.SeqTupRead,
+			&metric.IdxScan,
+			&metric.IdxTupFetch,
+			&metric.NTupIns,
+			&metric.NTupUpd,
+			&metric.NTupDel,
+			&metric.NTupHotUpd,
+			&metric.NLiveTup,
+			&metric.NDeadTup,
+			&metric.NModSinceAnalyze,
+			&metric.LastVacuumAge,
+			&metric.LastAutovacuumAge,
+			&metric.LastAnalyzeAge,
+			&metric.LastAutoanalyzeAge,
+			&metric.VacuumCount,
+			&metric.AutovacuumCount,
+			&metric.AnalyzeCount,
+			&metric.AutoanalyzeCount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_user_tables row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_user_tables rows: %w", err)
+	}
+
+	return metrics, nil
+}

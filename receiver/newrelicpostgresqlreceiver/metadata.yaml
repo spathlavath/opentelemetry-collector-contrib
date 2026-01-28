@@ -53,6 +53,9 @@ attributes:
   replication_state:
     description: State of the replication connection (streaming, catchup, etc.)
     type: string
+  schema_name:
+    description: Name of the schema containing the table
+    type: string
   slot_name:
     description: Unique identifier of the replication slot
     type: string
@@ -71,8 +74,23 @@ attributes:
   sync_state:
     description: Synchronous state of the standby (async, sync, quorum, potential)
     type: string
+  table_name:
+    description: Name of the table
+    type: string
 
 metrics:
+  postgresql.analyzed:
+    description: Number of times this table has been manually analyzed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
   postgresql.archiver.archived_count:
     description: Number of WAL files successfully archived (PostgreSQL 9.6+)
     enabled: true
@@ -94,6 +112,30 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name]
     unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.autoanalyzed:
+    description: Number of times this table has been analyzed by autoanalyze (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.autovacuumed:
+    description: Number of times this table has been vacuumed by autovacuum (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
     stability:
       level: alpha
 
@@ -458,6 +500,46 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.last_analyze_age:
+    description: Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.last_autoanalyze_age:
+    description: Seconds since last autoanalyze on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.last_autovacuum_age:
+    description: Seconds since last autovacuum on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.last_vacuum_age:
+    description: Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
     stability:
       level: alpha
 
@@ -1128,6 +1210,18 @@ metrics:
       value_type: double
     attributes: [newrelicpostgresql.instance_name]
     unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.vacuumed:
+    description: Number of times this table has been manually vacuumed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
     stability:
       level: alpha
 

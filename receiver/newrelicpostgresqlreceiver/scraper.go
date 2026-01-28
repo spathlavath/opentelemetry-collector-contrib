@@ -44,6 +44,7 @@ type newRelicPostgreSQLScraper struct {
 	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
 	replicationMetricsScraper *scrapers.ReplicationScraper
 	bgwriterScraper           *scrapers.BgwriterScraper
+	tableScraper              *scrapers.TableScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -189,6 +190,26 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.logger.Info("Background writer scraper enabled (PostgreSQL 9.6+)")
 	} else {
 		s.logger.Info("Background writer scraper disabled (requires PostgreSQL 9.6+)")
+	}
+
+	// Initialize table scraper only if PostgreSQL 9.6+
+	// Table scraping is opt-in via relations config
+	if s.supportsPG96 {
+		s.tableScraper = scrapers.NewTableScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+			s.metricsBuilderConfig,
+			s.pgVersion,
+		)
+		if s.config.Relations != nil {
+			s.logger.Info("Table metrics scraper enabled (PostgreSQL 9.6+)",
+				zap.Int("schema_count", len(s.config.Relations.Schemas)),
+				zap.Int("table_count", len(s.config.Relations.Tables)))
+		} else {
+			s.logger.Info("Table metrics scraper disabled (relations not configured)")
+		}
 	}
 
 	return nil
@@ -375,6 +396,24 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping recovery prefetch statistics",
 				zap.Int("error_count", len(recoveryErrs)))
 			scrapeErrors = append(scrapeErrors, recoveryErrs...)
+		}
+	}
+
+	// Scrape per-table metrics (PostgreSQL 9.6+ only, requires relations config)
+	// This is opt-in to prevent cardinality explosion
+	if s.config.Relations != nil && s.tableScraper != nil {
+		schemas := s.config.Relations.Schemas
+		tables := s.config.Relations.Tables
+
+		if len(tables) > 0 {
+			tableErrs := s.tableScraper.ScrapeUserTables(scrapeCtx, schemas, tables)
+			if len(tableErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping per-table statistics",
+					zap.Int("error_count", len(tableErrs)))
+				scrapeErrors = append(scrapeErrors, tableErrs...)
+			}
+		} else {
+			s.logger.Debug("Per-table metrics skipped (no tables configured)")
 		}
 	}
 

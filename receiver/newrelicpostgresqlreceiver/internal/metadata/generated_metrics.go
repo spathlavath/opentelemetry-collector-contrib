@@ -13,11 +13,20 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	PostgresqlAnalyzed: metricInfo{
+		Name: "postgresql.analyzed",
+	},
 	PostgresqlArchiverArchivedCount: metricInfo{
 		Name: "postgresql.archiver.archived_count",
 	},
 	PostgresqlArchiverFailedCount: metricInfo{
 		Name: "postgresql.archiver.failed_count",
+	},
+	PostgresqlAutoanalyzed: metricInfo{
+		Name: "postgresql.autoanalyzed",
+	},
+	PostgresqlAutovacuumed: metricInfo{
+		Name: "postgresql.autovacuumed",
 	},
 	PostgresqlBeforeXidWraparound: metricInfo{
 		Name: "postgresql.before_xid_wraparound",
@@ -114,6 +123,18 @@ var MetricsInfo = metricsInfo{
 	},
 	PostgresqlDiskRead: metricInfo{
 		Name: "postgresql.disk_read",
+	},
+	PostgresqlLastAnalyzeAge: metricInfo{
+		Name: "postgresql.last_analyze_age",
+	},
+	PostgresqlLastAutoanalyzeAge: metricInfo{
+		Name: "postgresql.last_autoanalyze_age",
+	},
+	PostgresqlLastAutovacuumAge: metricInfo{
+		Name: "postgresql.last_autovacuum_age",
+	},
+	PostgresqlLastVacuumAge: metricInfo{
+		Name: "postgresql.last_vacuum_age",
 	},
 	PostgresqlRecoveryPrefetchBlockDistance: metricInfo{
 		Name: "postgresql.recovery_prefetch.block_distance",
@@ -295,6 +316,9 @@ var MetricsInfo = metricsInfo{
 	PostgresqlUptime: metricInfo{
 		Name: "postgresql.uptime",
 	},
+	PostgresqlVacuumed: metricInfo{
+		Name: "postgresql.vacuumed",
+	},
 	PostgresqlWalBuffersFull: metricInfo{
 		Name: "postgresql.wal.buffers_full",
 	},
@@ -346,8 +370,11 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	PostgresqlAnalyzed                                metricInfo
 	PostgresqlArchiverArchivedCount                   metricInfo
 	PostgresqlArchiverFailedCount                     metricInfo
+	PostgresqlAutoanalyzed                            metricInfo
+	PostgresqlAutovacuumed                            metricInfo
 	PostgresqlBeforeXidWraparound                     metricInfo
 	PostgresqlBgwriterBuffersAlloc                    metricInfo
 	PostgresqlBgwriterBuffersBackend                  metricInfo
@@ -380,6 +407,10 @@ type metricsInfo struct {
 	PostgresqlDbCount                                 metricInfo
 	PostgresqlDeadlocks                               metricInfo
 	PostgresqlDiskRead                                metricInfo
+	PostgresqlLastAnalyzeAge                          metricInfo
+	PostgresqlLastAutoanalyzeAge                      metricInfo
+	PostgresqlLastAutovacuumAge                       metricInfo
+	PostgresqlLastVacuumAge                           metricInfo
 	PostgresqlRecoveryPrefetchBlockDistance           metricInfo
 	PostgresqlRecoveryPrefetchHit                     metricInfo
 	PostgresqlRecoveryPrefetchIoDepth                 metricInfo
@@ -440,6 +471,7 @@ type metricsInfo struct {
 	PostgresqlTempBytes                               metricInfo
 	PostgresqlTempFiles                               metricInfo
 	PostgresqlUptime                                  metricInfo
+	PostgresqlVacuumed                                metricInfo
 	PostgresqlWalBuffersFull                          metricInfo
 	PostgresqlWalBytes                                metricInfo
 	PostgresqlWalFpi                                  metricInfo
@@ -460,6 +492,61 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricPostgresqlAnalyzed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.analyzed metric with initial data.
+func (m *metricPostgresqlAnalyzed) init() {
+	m.data.SetName("postgresql.analyzed")
+	m.data.SetDescription("Number of times this table has been manually analyzed (PostgreSQL 9.6+)")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAnalyzed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAnalyzed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAnalyzed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAnalyzed(cfg MetricConfig) metricPostgresqlAnalyzed {
+	m := metricPostgresqlAnalyzed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricPostgresqlArchiverArchivedCount struct {
@@ -561,6 +648,116 @@ func (m *metricPostgresqlArchiverFailedCount) emit(metrics pmetric.MetricSlice) 
 
 func newMetricPostgresqlArchiverFailedCount(cfg MetricConfig) metricPostgresqlArchiverFailedCount {
 	m := metricPostgresqlArchiverFailedCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlAutoanalyzed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.autoanalyzed metric with initial data.
+func (m *metricPostgresqlAutoanalyzed) init() {
+	m.data.SetName("postgresql.autoanalyzed")
+	m.data.SetDescription("Number of times this table has been analyzed by autoanalyze (PostgreSQL 9.6+)")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAutoanalyzed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAutoanalyzed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAutoanalyzed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAutoanalyzed(cfg MetricConfig) metricPostgresqlAutoanalyzed {
+	m := metricPostgresqlAutoanalyzed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlAutovacuumed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.autovacuumed metric with initial data.
+func (m *metricPostgresqlAutovacuumed) init() {
+	m.data.SetName("postgresql.autovacuumed")
+	m.data.SetDescription("Number of times this table has been vacuumed by autovacuum (PostgreSQL 9.6+)")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlAutovacuumed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlAutovacuumed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlAutovacuumed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlAutovacuumed(cfg MetricConfig) metricPostgresqlAutovacuumed {
+	m := metricPostgresqlAutovacuumed{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -2254,6 +2451,218 @@ func (m *metricPostgresqlDiskRead) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlDiskRead(cfg MetricConfig) metricPostgresqlDiskRead {
 	m := metricPostgresqlDiskRead{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLastAnalyzeAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.last_analyze_age metric with initial data.
+func (m *metricPostgresqlLastAnalyzeAge) init() {
+	m.data.SetName("postgresql.last_analyze_age")
+	m.data.SetDescription("Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLastAnalyzeAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLastAnalyzeAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLastAnalyzeAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLastAnalyzeAge(cfg MetricConfig) metricPostgresqlLastAnalyzeAge {
+	m := metricPostgresqlLastAnalyzeAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLastAutoanalyzeAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.last_autoanalyze_age metric with initial data.
+func (m *metricPostgresqlLastAutoanalyzeAge) init() {
+	m.data.SetName("postgresql.last_autoanalyze_age")
+	m.data.SetDescription("Seconds since last autoanalyze on this table (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLastAutoanalyzeAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLastAutoanalyzeAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLastAutoanalyzeAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLastAutoanalyzeAge(cfg MetricConfig) metricPostgresqlLastAutoanalyzeAge {
+	m := metricPostgresqlLastAutoanalyzeAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLastAutovacuumAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.last_autovacuum_age metric with initial data.
+func (m *metricPostgresqlLastAutovacuumAge) init() {
+	m.data.SetName("postgresql.last_autovacuum_age")
+	m.data.SetDescription("Seconds since last autovacuum on this table (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLastAutovacuumAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLastAutovacuumAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLastAutovacuumAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLastAutovacuumAge(cfg MetricConfig) metricPostgresqlLastAutovacuumAge {
+	m := metricPostgresqlLastAutovacuumAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLastVacuumAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.last_vacuum_age metric with initial data.
+func (m *metricPostgresqlLastVacuumAge) init() {
+	m.data.SetName("postgresql.last_vacuum_age")
+	m.data.SetDescription("Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLastVacuumAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLastVacuumAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLastVacuumAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLastVacuumAge(cfg MetricConfig) metricPostgresqlLastVacuumAge {
+	m := metricPostgresqlLastVacuumAge{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -5471,6 +5880,61 @@ func newMetricPostgresqlUptime(cfg MetricConfig) metricPostgresqlUptime {
 	return m
 }
 
+type metricPostgresqlVacuumed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.vacuumed metric with initial data.
+func (m *metricPostgresqlVacuumed) init() {
+	m.data.SetName("postgresql.vacuumed")
+	m.data.SetDescription("Number of times this table has been manually vacuumed (PostgreSQL 9.6+)")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlVacuumed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlVacuumed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlVacuumed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlVacuumed(cfg MetricConfig) metricPostgresqlVacuumed {
+	m := metricPostgresqlVacuumed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlWalBuffersFull struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -6309,8 +6773,11 @@ type MetricsBuilder struct {
 	buildInfo                                               component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                          map[string]filter.Filter
 	resourceAttributeExcludeFilter                          map[string]filter.Filter
+	metricPostgresqlAnalyzed                                metricPostgresqlAnalyzed
 	metricPostgresqlArchiverArchivedCount                   metricPostgresqlArchiverArchivedCount
 	metricPostgresqlArchiverFailedCount                     metricPostgresqlArchiverFailedCount
+	metricPostgresqlAutoanalyzed                            metricPostgresqlAutoanalyzed
+	metricPostgresqlAutovacuumed                            metricPostgresqlAutovacuumed
 	metricPostgresqlBeforeXidWraparound                     metricPostgresqlBeforeXidWraparound
 	metricPostgresqlBgwriterBuffersAlloc                    metricPostgresqlBgwriterBuffersAlloc
 	metricPostgresqlBgwriterBuffersBackend                  metricPostgresqlBgwriterBuffersBackend
@@ -6343,6 +6810,10 @@ type MetricsBuilder struct {
 	metricPostgresqlDbCount                                 metricPostgresqlDbCount
 	metricPostgresqlDeadlocks                               metricPostgresqlDeadlocks
 	metricPostgresqlDiskRead                                metricPostgresqlDiskRead
+	metricPostgresqlLastAnalyzeAge                          metricPostgresqlLastAnalyzeAge
+	metricPostgresqlLastAutoanalyzeAge                      metricPostgresqlLastAutoanalyzeAge
+	metricPostgresqlLastAutovacuumAge                       metricPostgresqlLastAutovacuumAge
+	metricPostgresqlLastVacuumAge                           metricPostgresqlLastVacuumAge
 	metricPostgresqlRecoveryPrefetchBlockDistance           metricPostgresqlRecoveryPrefetchBlockDistance
 	metricPostgresqlRecoveryPrefetchHit                     metricPostgresqlRecoveryPrefetchHit
 	metricPostgresqlRecoveryPrefetchIoDepth                 metricPostgresqlRecoveryPrefetchIoDepth
@@ -6403,6 +6874,7 @@ type MetricsBuilder struct {
 	metricPostgresqlTempBytes                               metricPostgresqlTempBytes
 	metricPostgresqlTempFiles                               metricPostgresqlTempFiles
 	metricPostgresqlUptime                                  metricPostgresqlUptime
+	metricPostgresqlVacuumed                                metricPostgresqlVacuumed
 	metricPostgresqlWalBuffersFull                          metricPostgresqlWalBuffersFull
 	metricPostgresqlWalBytes                                metricPostgresqlWalBytes
 	metricPostgresqlWalFpi                                  metricPostgresqlWalFpi
@@ -6444,8 +6916,11 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		startTime:                                               pcommon.NewTimestampFromTime(time.Now()),
 		metricsBuffer:                                           pmetric.NewMetrics(),
 		buildInfo:                                               settings.BuildInfo,
+		metricPostgresqlAnalyzed:                                newMetricPostgresqlAnalyzed(mbc.Metrics.PostgresqlAnalyzed),
 		metricPostgresqlArchiverArchivedCount:                   newMetricPostgresqlArchiverArchivedCount(mbc.Metrics.PostgresqlArchiverArchivedCount),
 		metricPostgresqlArchiverFailedCount:                     newMetricPostgresqlArchiverFailedCount(mbc.Metrics.PostgresqlArchiverFailedCount),
+		metricPostgresqlAutoanalyzed:                            newMetricPostgresqlAutoanalyzed(mbc.Metrics.PostgresqlAutoanalyzed),
+		metricPostgresqlAutovacuumed:                            newMetricPostgresqlAutovacuumed(mbc.Metrics.PostgresqlAutovacuumed),
 		metricPostgresqlBeforeXidWraparound:                     newMetricPostgresqlBeforeXidWraparound(mbc.Metrics.PostgresqlBeforeXidWraparound),
 		metricPostgresqlBgwriterBuffersAlloc:                    newMetricPostgresqlBgwriterBuffersAlloc(mbc.Metrics.PostgresqlBgwriterBuffersAlloc),
 		metricPostgresqlBgwriterBuffersBackend:                  newMetricPostgresqlBgwriterBuffersBackend(mbc.Metrics.PostgresqlBgwriterBuffersBackend),
@@ -6478,6 +6953,10 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlDbCount:                                 newMetricPostgresqlDbCount(mbc.Metrics.PostgresqlDbCount),
 		metricPostgresqlDeadlocks:                               newMetricPostgresqlDeadlocks(mbc.Metrics.PostgresqlDeadlocks),
 		metricPostgresqlDiskRead:                                newMetricPostgresqlDiskRead(mbc.Metrics.PostgresqlDiskRead),
+		metricPostgresqlLastAnalyzeAge:                          newMetricPostgresqlLastAnalyzeAge(mbc.Metrics.PostgresqlLastAnalyzeAge),
+		metricPostgresqlLastAutoanalyzeAge:                      newMetricPostgresqlLastAutoanalyzeAge(mbc.Metrics.PostgresqlLastAutoanalyzeAge),
+		metricPostgresqlLastAutovacuumAge:                       newMetricPostgresqlLastAutovacuumAge(mbc.Metrics.PostgresqlLastAutovacuumAge),
+		metricPostgresqlLastVacuumAge:                           newMetricPostgresqlLastVacuumAge(mbc.Metrics.PostgresqlLastVacuumAge),
 		metricPostgresqlRecoveryPrefetchBlockDistance:           newMetricPostgresqlRecoveryPrefetchBlockDistance(mbc.Metrics.PostgresqlRecoveryPrefetchBlockDistance),
 		metricPostgresqlRecoveryPrefetchHit:                     newMetricPostgresqlRecoveryPrefetchHit(mbc.Metrics.PostgresqlRecoveryPrefetchHit),
 		metricPostgresqlRecoveryPrefetchIoDepth:                 newMetricPostgresqlRecoveryPrefetchIoDepth(mbc.Metrics.PostgresqlRecoveryPrefetchIoDepth),
@@ -6538,6 +7017,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlTempBytes:                               newMetricPostgresqlTempBytes(mbc.Metrics.PostgresqlTempBytes),
 		metricPostgresqlTempFiles:                               newMetricPostgresqlTempFiles(mbc.Metrics.PostgresqlTempFiles),
 		metricPostgresqlUptime:                                  newMetricPostgresqlUptime(mbc.Metrics.PostgresqlUptime),
+		metricPostgresqlVacuumed:                                newMetricPostgresqlVacuumed(mbc.Metrics.PostgresqlVacuumed),
 		metricPostgresqlWalBuffersFull:                          newMetricPostgresqlWalBuffersFull(mbc.Metrics.PostgresqlWalBuffersFull),
 		metricPostgresqlWalBytes:                                newMetricPostgresqlWalBytes(mbc.Metrics.PostgresqlWalBytes),
 		metricPostgresqlWalFpi:                                  newMetricPostgresqlWalFpi(mbc.Metrics.PostgresqlWalFpi),
@@ -6662,8 +7142,11 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricPostgresqlAnalyzed.emit(ils.Metrics())
 	mb.metricPostgresqlArchiverArchivedCount.emit(ils.Metrics())
 	mb.metricPostgresqlArchiverFailedCount.emit(ils.Metrics())
+	mb.metricPostgresqlAutoanalyzed.emit(ils.Metrics())
+	mb.metricPostgresqlAutovacuumed.emit(ils.Metrics())
 	mb.metricPostgresqlBeforeXidWraparound.emit(ils.Metrics())
 	mb.metricPostgresqlBgwriterBuffersAlloc.emit(ils.Metrics())
 	mb.metricPostgresqlBgwriterBuffersBackend.emit(ils.Metrics())
@@ -6696,6 +7179,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlDbCount.emit(ils.Metrics())
 	mb.metricPostgresqlDeadlocks.emit(ils.Metrics())
 	mb.metricPostgresqlDiskRead.emit(ils.Metrics())
+	mb.metricPostgresqlLastAnalyzeAge.emit(ils.Metrics())
+	mb.metricPostgresqlLastAutoanalyzeAge.emit(ils.Metrics())
+	mb.metricPostgresqlLastAutovacuumAge.emit(ils.Metrics())
+	mb.metricPostgresqlLastVacuumAge.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchBlockDistance.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchHit.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchIoDepth.emit(ils.Metrics())
@@ -6756,6 +7243,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlTempBytes.emit(ils.Metrics())
 	mb.metricPostgresqlTempFiles.emit(ils.Metrics())
 	mb.metricPostgresqlUptime.emit(ils.Metrics())
+	mb.metricPostgresqlVacuumed.emit(ils.Metrics())
 	mb.metricPostgresqlWalBuffersFull.emit(ils.Metrics())
 	mb.metricPostgresqlWalBytes.emit(ils.Metrics())
 	mb.metricPostgresqlWalFpi.emit(ils.Metrics())
@@ -6803,6 +7291,11 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	return metrics
 }
 
+// RecordPostgresqlAnalyzedDataPoint adds a data point to postgresql.analyzed metric.
+func (mb *MetricsBuilder) RecordPostgresqlAnalyzedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAnalyzed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
 // RecordPostgresqlArchiverArchivedCountDataPoint adds a data point to postgresql.archiver.archived_count metric.
 func (mb *MetricsBuilder) RecordPostgresqlArchiverArchivedCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlArchiverArchivedCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
@@ -6811,6 +7304,16 @@ func (mb *MetricsBuilder) RecordPostgresqlArchiverArchivedCountDataPoint(ts pcom
 // RecordPostgresqlArchiverFailedCountDataPoint adds a data point to postgresql.archiver.failed_count metric.
 func (mb *MetricsBuilder) RecordPostgresqlArchiverFailedCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlArchiverFailedCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlAutoanalyzedDataPoint adds a data point to postgresql.autoanalyzed metric.
+func (mb *MetricsBuilder) RecordPostgresqlAutoanalyzedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAutoanalyzed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlAutovacuumedDataPoint adds a data point to postgresql.autovacuumed metric.
+func (mb *MetricsBuilder) RecordPostgresqlAutovacuumedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlAutovacuumed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
 // RecordPostgresqlBeforeXidWraparoundDataPoint adds a data point to postgresql.before_xid_wraparound metric.
@@ -6971,6 +7474,26 @@ func (mb *MetricsBuilder) RecordPostgresqlDeadlocksDataPoint(ts pcommon.Timestam
 // RecordPostgresqlDiskReadDataPoint adds a data point to postgresql.disk_read metric.
 func (mb *MetricsBuilder) RecordPostgresqlDiskReadDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlDiskRead.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlLastAnalyzeAgeDataPoint adds a data point to postgresql.last_analyze_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlLastAnalyzeAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlLastAnalyzeAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlLastAutoanalyzeAgeDataPoint adds a data point to postgresql.last_autoanalyze_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlLastAutoanalyzeAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlLastAutoanalyzeAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlLastAutovacuumAgeDataPoint adds a data point to postgresql.last_autovacuum_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlLastAutovacuumAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlLastAutovacuumAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlLastVacuumAgeDataPoint adds a data point to postgresql.last_vacuum_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlLastVacuumAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlLastVacuumAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
 // RecordPostgresqlRecoveryPrefetchBlockDistanceDataPoint adds a data point to postgresql.recovery_prefetch.block_distance metric.
@@ -7271,6 +7794,11 @@ func (mb *MetricsBuilder) RecordPostgresqlTempFilesDataPoint(ts pcommon.Timestam
 // RecordPostgresqlUptimeDataPoint adds a data point to postgresql.uptime metric.
 func (mb *MetricsBuilder) RecordPostgresqlUptimeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlUptime.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlVacuumedDataPoint adds a data point to postgresql.vacuumed metric.
+func (mb *MetricsBuilder) RecordPostgresqlVacuumedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlVacuumed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
 // RecordPostgresqlWalBuffersFullDataPoint adds a data point to postgresql.wal.buffers_full metric.

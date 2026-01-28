@@ -131,4 +131,10 @@ type PostgreSQLClient interface {
 	// Returns nil if not on a standby server or if prefetch is not active
 	// Available in PostgreSQL 15+
 	QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRecoveryPrefetchMetric, error)
+
+	// QueryUserTables retrieves per-table statistics from pg_stat_user_tables
+	// Returns vacuum/analyze statistics and row-level activity per table
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatUserTablesMetric, error)
 }
