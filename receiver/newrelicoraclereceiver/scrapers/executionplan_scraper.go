@@ -41,7 +41,7 @@ func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.Metr
 		logger:               logger,
 		metricsBuilderConfig: metricsBuilderConfig,
 		cache:                make(map[string]*planHashCacheEntry),
-		cacheTTL:             5 * time.Minute, // 5-minute window
+		cacheTTL:             24 * time.Hour, // 24-hour window
 	}
 }
 
