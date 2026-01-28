@@ -364,6 +364,13 @@ func (s *ReplicationScraper) ScrapeWalFiles(ctx context.Context) []error {
 
 	metric, err := s.client.QueryWalFiles(ctx)
 	if err != nil {
+		// pg_ls_waldir() requires superuser or pg_read_server_files role
+		// If permission denied, log as debug and skip (not a critical error)
+		errMsg := err.Error()
+		if errMsg == "failed to query WAL files: pq: permission denied for function pg_ls_waldir" {
+			s.logger.Debug("WAL files statistics not available (insufficient permissions - requires pg_read_server_files role)")
+			return nil
+		}
 		s.logger.Error("Failed to query WAL files statistics", zap.Error(err))
 		return []error{err}
 	}

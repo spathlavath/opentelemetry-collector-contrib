@@ -35,6 +35,7 @@ const (
 	PG12Version = 120000 // PostgreSQL 12.0
 	PG13Version = 130000 // PostgreSQL 13.0
 	PG14Version = 140000 // PostgreSQL 14.0
+	PG15Version = 150000 // PostgreSQL 15.0
 )
 
 // newRelicPostgreSQLScraper orchestrates all metric collection scrapers for PostgreSQL database monitoring
@@ -364,6 +365,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping SLRU statistics",
 				zap.Int("error_count", len(slruErrs)))
 			scrapeErrors = append(scrapeErrors, slruErrs...)
+		}
+	}
+
+	// Scrape recovery prefetch statistics (PostgreSQL 15+ only, standby servers)
+	if s.pgVersion >= PG15Version && s.bgwriterScraper != nil {
+		recoveryErrs := s.bgwriterScraper.ScrapeRecoveryPrefetch(scrapeCtx)
+		if len(recoveryErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping recovery prefetch statistics",
+				zap.Int("error_count", len(recoveryErrs)))
+			scrapeErrors = append(scrapeErrors, recoveryErrs...)
 		}
 	}
 

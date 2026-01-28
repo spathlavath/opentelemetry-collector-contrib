@@ -642,3 +642,43 @@ func (c *SQLClient) QuerySLRUStats(ctx context.Context) ([]models.PgStatSLRUMetr
 
 	return metrics, nil
 }
+
+// QueryRecoveryPrefetch retrieves recovery prefetch statistics from pg_stat_recovery_prefetch
+// Returns standby server prefetch performance metrics during WAL replay
+// Returns nil if not on a standby server or if the view returns no rows
+// Available in PostgreSQL 15+
+func (c *SQLClient) QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRecoveryPrefetchMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatRecoveryPrefetchSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_recovery_prefetch: %w", err)
+	}
+	defer rows.Close()
+
+	// Check if we have any rows (recovery prefetch only exists on standby servers with prefetch enabled)
+	if !rows.Next() {
+		// No recovery prefetch data found - this is normal on primary servers
+		return nil, nil
+	}
+
+	var metric models.PgStatRecoveryPrefetchMetric
+	err = rows.Scan(
+		&metric.Prefetch,
+		&metric.Hit,
+		&metric.SkipInit,
+		&metric.SkipNew,
+		&metric.SkipFpw,
+		&metric.SkipRep,
+		&metric.WalDistance,
+		&metric.BlockDistance,
+		&metric.IoDepth,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to scan pg_stat_recovery_prefetch row: %w", err)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_recovery_prefetch rows: %w", err)
+	}
+
+	return &metric, nil
+}

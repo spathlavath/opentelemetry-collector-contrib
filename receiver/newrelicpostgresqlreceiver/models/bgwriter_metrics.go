@@ -100,3 +100,35 @@ type PgStatSLRUMetric struct {
 	// Truncates is the number of truncates for this SLRU
 	Truncates sql.NullInt64
 }
+
+// PgStatRecoveryPrefetchMetric represents recovery prefetch statistics from pg_stat_recovery_prefetch
+// This struct captures standby server prefetch performance metrics during WAL replay
+// Available in PostgreSQL 15+
+type PgStatRecoveryPrefetchMetric struct {
+	// Prefetch is the number of blocks prefetched during recovery
+	Prefetch sql.NullInt64
+
+	// Hit is the number of prefetch requests that hit the buffer cache
+	Hit sql.NullInt64
+
+	// SkipInit is the number of prefetch requests skipped because the relation was being initialized
+	SkipInit sql.NullInt64
+
+	// SkipNew is the number of prefetch requests skipped because the relation didn't exist yet
+	SkipNew sql.NullInt64
+
+	// SkipFpw is the number of prefetch requests skipped because a full page write was found
+	SkipFpw sql.NullInt64
+
+	// SkipRep is the number of prefetch requests skipped because they were already in progress
+	SkipRep sql.NullInt64
+
+	// WalDistance is the distance in WAL bytes between the current replay position and the prefetch position
+	WalDistance sql.NullInt64
+
+	// BlockDistance is the number of blocks between the current replay position and the prefetch position
+	BlockDistance sql.NullInt64
+
+	// IoDepth is the number of I/O operations in progress
+	IoDepth sql.NullInt64
+}

@@ -79,4 +79,21 @@ const (
 			flushes,
 			truncates
 		FROM pg_stat_slru`
+
+	// PgStatRecoveryPrefetchSQL returns recovery prefetch statistics (PostgreSQL 15+)
+	// This query retrieves standby server prefetch performance metrics during WAL replay
+	// Returns a single row with prefetch statistics
+	// Available in PostgreSQL 15+ (standby servers only)
+	PgStatRecoveryPrefetchSQL = `
+		SELECT
+			prefetch,
+			hit,
+			skip_init,
+			skip_new,
+			skip_fpw,
+			skip_rep,
+			wal_distance,
+			block_distance,
+			io_depth
+		FROM pg_stat_recovery_prefetch`
 )

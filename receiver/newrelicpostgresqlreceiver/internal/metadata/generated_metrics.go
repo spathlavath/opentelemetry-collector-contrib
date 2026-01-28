@@ -115,6 +115,33 @@ var MetricsInfo = metricsInfo{
 	PostgresqlDiskRead: metricInfo{
 		Name: "postgresql.disk_read",
 	},
+	PostgresqlRecoveryPrefetchBlockDistance: metricInfo{
+		Name: "postgresql.recovery_prefetch.block_distance",
+	},
+	PostgresqlRecoveryPrefetchHit: metricInfo{
+		Name: "postgresql.recovery_prefetch.hit",
+	},
+	PostgresqlRecoveryPrefetchIoDepth: metricInfo{
+		Name: "postgresql.recovery_prefetch.io_depth",
+	},
+	PostgresqlRecoveryPrefetchPrefetch: metricInfo{
+		Name: "postgresql.recovery_prefetch.prefetch",
+	},
+	PostgresqlRecoveryPrefetchSkipFpw: metricInfo{
+		Name: "postgresql.recovery_prefetch.skip_fpw",
+	},
+	PostgresqlRecoveryPrefetchSkipInit: metricInfo{
+		Name: "postgresql.recovery_prefetch.skip_init",
+	},
+	PostgresqlRecoveryPrefetchSkipNew: metricInfo{
+		Name: "postgresql.recovery_prefetch.skip_new",
+	},
+	PostgresqlRecoveryPrefetchSkipRep: metricInfo{
+		Name: "postgresql.recovery_prefetch.skip_rep",
+	},
+	PostgresqlRecoveryPrefetchWalDistance: metricInfo{
+		Name: "postgresql.recovery_prefetch.wal_distance",
+	},
 	PostgresqlReplicationBackendXminAge: metricInfo{
 		Name: "postgresql.replication.backend_xmin_age",
 	},
@@ -353,6 +380,15 @@ type metricsInfo struct {
 	PostgresqlDbCount                                 metricInfo
 	PostgresqlDeadlocks                               metricInfo
 	PostgresqlDiskRead                                metricInfo
+	PostgresqlRecoveryPrefetchBlockDistance           metricInfo
+	PostgresqlRecoveryPrefetchHit                     metricInfo
+	PostgresqlRecoveryPrefetchIoDepth                 metricInfo
+	PostgresqlRecoveryPrefetchPrefetch                metricInfo
+	PostgresqlRecoveryPrefetchSkipFpw                 metricInfo
+	PostgresqlRecoveryPrefetchSkipInit                metricInfo
+	PostgresqlRecoveryPrefetchSkipNew                 metricInfo
+	PostgresqlRecoveryPrefetchSkipRep                 metricInfo
+	PostgresqlRecoveryPrefetchWalDistance             metricInfo
 	PostgresqlReplicationBackendXminAge               metricInfo
 	PostgresqlReplicationFlushLsnDelay                metricInfo
 	PostgresqlReplicationReplayLsnDelay               metricInfo
@@ -2218,6 +2254,477 @@ func (m *metricPostgresqlDiskRead) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlDiskRead(cfg MetricConfig) metricPostgresqlDiskRead {
 	m := metricPostgresqlDiskRead{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchBlockDistance struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.block_distance metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchBlockDistance) init() {
+	m.data.SetName("postgresql.recovery_prefetch.block_distance")
+	m.data.SetDescription("Number of blocks between the current replay position and the prefetch position (PostgreSQL 15+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchBlockDistance) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchBlockDistance) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchBlockDistance) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchBlockDistance(cfg MetricConfig) metricPostgresqlRecoveryPrefetchBlockDistance {
+	m := metricPostgresqlRecoveryPrefetchBlockDistance{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchHit struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.hit metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchHit) init() {
+	m.data.SetName("postgresql.recovery_prefetch.hit")
+	m.data.SetDescription("Number of prefetch requests that hit the buffer cache (PostgreSQL 15+)")
+	m.data.SetUnit("{requests}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchHit) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchHit) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchHit) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchHit(cfg MetricConfig) metricPostgresqlRecoveryPrefetchHit {
+	m := metricPostgresqlRecoveryPrefetchHit{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchIoDepth struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.io_depth metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchIoDepth) init() {
+	m.data.SetName("postgresql.recovery_prefetch.io_depth")
+	m.data.SetDescription("Number of I/O operations in progress (PostgreSQL 15+)")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchIoDepth) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchIoDepth) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchIoDepth) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchIoDepth(cfg MetricConfig) metricPostgresqlRecoveryPrefetchIoDepth {
+	m := metricPostgresqlRecoveryPrefetchIoDepth{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchPrefetch struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.prefetch metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchPrefetch) init() {
+	m.data.SetName("postgresql.recovery_prefetch.prefetch")
+	m.data.SetDescription("Number of blocks prefetched during recovery (PostgreSQL 15+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchPrefetch) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchPrefetch) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchPrefetch) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchPrefetch(cfg MetricConfig) metricPostgresqlRecoveryPrefetchPrefetch {
+	m := metricPostgresqlRecoveryPrefetchPrefetch{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchSkipFpw struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.skip_fpw metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchSkipFpw) init() {
+	m.data.SetName("postgresql.recovery_prefetch.skip_fpw")
+	m.data.SetDescription("Number of prefetch requests skipped because a full page write was found (PostgreSQL 15+)")
+	m.data.SetUnit("{requests}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchSkipFpw) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchSkipFpw) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchSkipFpw) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchSkipFpw(cfg MetricConfig) metricPostgresqlRecoveryPrefetchSkipFpw {
+	m := metricPostgresqlRecoveryPrefetchSkipFpw{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchSkipInit struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.skip_init metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchSkipInit) init() {
+	m.data.SetName("postgresql.recovery_prefetch.skip_init")
+	m.data.SetDescription("Number of prefetch requests skipped because the relation was being initialized (PostgreSQL 15+)")
+	m.data.SetUnit("{requests}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchSkipInit) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchSkipInit) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchSkipInit) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchSkipInit(cfg MetricConfig) metricPostgresqlRecoveryPrefetchSkipInit {
+	m := metricPostgresqlRecoveryPrefetchSkipInit{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchSkipNew struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.skip_new metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchSkipNew) init() {
+	m.data.SetName("postgresql.recovery_prefetch.skip_new")
+	m.data.SetDescription("Number of prefetch requests skipped because the relation did not exist yet (PostgreSQL 15+)")
+	m.data.SetUnit("{requests}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchSkipNew) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchSkipNew) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchSkipNew) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchSkipNew(cfg MetricConfig) metricPostgresqlRecoveryPrefetchSkipNew {
+	m := metricPostgresqlRecoveryPrefetchSkipNew{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchSkipRep struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.skip_rep metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchSkipRep) init() {
+	m.data.SetName("postgresql.recovery_prefetch.skip_rep")
+	m.data.SetDescription("Number of prefetch requests skipped because they were already in progress (PostgreSQL 15+)")
+	m.data.SetUnit("{requests}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchSkipRep) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchSkipRep) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchSkipRep) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchSkipRep(cfg MetricConfig) metricPostgresqlRecoveryPrefetchSkipRep {
+	m := metricPostgresqlRecoveryPrefetchSkipRep{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRecoveryPrefetchWalDistance struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.recovery_prefetch.wal_distance metric with initial data.
+func (m *metricPostgresqlRecoveryPrefetchWalDistance) init() {
+	m.data.SetName("postgresql.recovery_prefetch.wal_distance")
+	m.data.SetDescription("Distance in WAL bytes between the current replay position and the prefetch position (PostgreSQL 15+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRecoveryPrefetchWalDistance) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRecoveryPrefetchWalDistance) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRecoveryPrefetchWalDistance) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRecoveryPrefetchWalDistance(cfg MetricConfig) metricPostgresqlRecoveryPrefetchWalDistance {
+	m := metricPostgresqlRecoveryPrefetchWalDistance{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -5836,6 +6343,15 @@ type MetricsBuilder struct {
 	metricPostgresqlDbCount                                 metricPostgresqlDbCount
 	metricPostgresqlDeadlocks                               metricPostgresqlDeadlocks
 	metricPostgresqlDiskRead                                metricPostgresqlDiskRead
+	metricPostgresqlRecoveryPrefetchBlockDistance           metricPostgresqlRecoveryPrefetchBlockDistance
+	metricPostgresqlRecoveryPrefetchHit                     metricPostgresqlRecoveryPrefetchHit
+	metricPostgresqlRecoveryPrefetchIoDepth                 metricPostgresqlRecoveryPrefetchIoDepth
+	metricPostgresqlRecoveryPrefetchPrefetch                metricPostgresqlRecoveryPrefetchPrefetch
+	metricPostgresqlRecoveryPrefetchSkipFpw                 metricPostgresqlRecoveryPrefetchSkipFpw
+	metricPostgresqlRecoveryPrefetchSkipInit                metricPostgresqlRecoveryPrefetchSkipInit
+	metricPostgresqlRecoveryPrefetchSkipNew                 metricPostgresqlRecoveryPrefetchSkipNew
+	metricPostgresqlRecoveryPrefetchSkipRep                 metricPostgresqlRecoveryPrefetchSkipRep
+	metricPostgresqlRecoveryPrefetchWalDistance             metricPostgresqlRecoveryPrefetchWalDistance
 	metricPostgresqlReplicationBackendXminAge               metricPostgresqlReplicationBackendXminAge
 	metricPostgresqlReplicationFlushLsnDelay                metricPostgresqlReplicationFlushLsnDelay
 	metricPostgresqlReplicationReplayLsnDelay               metricPostgresqlReplicationReplayLsnDelay
@@ -5962,6 +6478,15 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlDbCount:                                 newMetricPostgresqlDbCount(mbc.Metrics.PostgresqlDbCount),
 		metricPostgresqlDeadlocks:                               newMetricPostgresqlDeadlocks(mbc.Metrics.PostgresqlDeadlocks),
 		metricPostgresqlDiskRead:                                newMetricPostgresqlDiskRead(mbc.Metrics.PostgresqlDiskRead),
+		metricPostgresqlRecoveryPrefetchBlockDistance:           newMetricPostgresqlRecoveryPrefetchBlockDistance(mbc.Metrics.PostgresqlRecoveryPrefetchBlockDistance),
+		metricPostgresqlRecoveryPrefetchHit:                     newMetricPostgresqlRecoveryPrefetchHit(mbc.Metrics.PostgresqlRecoveryPrefetchHit),
+		metricPostgresqlRecoveryPrefetchIoDepth:                 newMetricPostgresqlRecoveryPrefetchIoDepth(mbc.Metrics.PostgresqlRecoveryPrefetchIoDepth),
+		metricPostgresqlRecoveryPrefetchPrefetch:                newMetricPostgresqlRecoveryPrefetchPrefetch(mbc.Metrics.PostgresqlRecoveryPrefetchPrefetch),
+		metricPostgresqlRecoveryPrefetchSkipFpw:                 newMetricPostgresqlRecoveryPrefetchSkipFpw(mbc.Metrics.PostgresqlRecoveryPrefetchSkipFpw),
+		metricPostgresqlRecoveryPrefetchSkipInit:                newMetricPostgresqlRecoveryPrefetchSkipInit(mbc.Metrics.PostgresqlRecoveryPrefetchSkipInit),
+		metricPostgresqlRecoveryPrefetchSkipNew:                 newMetricPostgresqlRecoveryPrefetchSkipNew(mbc.Metrics.PostgresqlRecoveryPrefetchSkipNew),
+		metricPostgresqlRecoveryPrefetchSkipRep:                 newMetricPostgresqlRecoveryPrefetchSkipRep(mbc.Metrics.PostgresqlRecoveryPrefetchSkipRep),
+		metricPostgresqlRecoveryPrefetchWalDistance:             newMetricPostgresqlRecoveryPrefetchWalDistance(mbc.Metrics.PostgresqlRecoveryPrefetchWalDistance),
 		metricPostgresqlReplicationBackendXminAge:               newMetricPostgresqlReplicationBackendXminAge(mbc.Metrics.PostgresqlReplicationBackendXminAge),
 		metricPostgresqlReplicationFlushLsnDelay:                newMetricPostgresqlReplicationFlushLsnDelay(mbc.Metrics.PostgresqlReplicationFlushLsnDelay),
 		metricPostgresqlReplicationReplayLsnDelay:               newMetricPostgresqlReplicationReplayLsnDelay(mbc.Metrics.PostgresqlReplicationReplayLsnDelay),
@@ -6171,6 +6696,15 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlDbCount.emit(ils.Metrics())
 	mb.metricPostgresqlDeadlocks.emit(ils.Metrics())
 	mb.metricPostgresqlDiskRead.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchBlockDistance.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchHit.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchIoDepth.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchPrefetch.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchSkipFpw.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchSkipInit.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchSkipNew.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchSkipRep.emit(ils.Metrics())
+	mb.metricPostgresqlRecoveryPrefetchWalDistance.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationBackendXminAge.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationFlushLsnDelay.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationReplayLsnDelay.emit(ils.Metrics())
@@ -6437,6 +6971,51 @@ func (mb *MetricsBuilder) RecordPostgresqlDeadlocksDataPoint(ts pcommon.Timestam
 // RecordPostgresqlDiskReadDataPoint adds a data point to postgresql.disk_read metric.
 func (mb *MetricsBuilder) RecordPostgresqlDiskReadDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlDiskRead.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchBlockDistanceDataPoint adds a data point to postgresql.recovery_prefetch.block_distance metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchBlockDistanceDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchBlockDistance.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchHitDataPoint adds a data point to postgresql.recovery_prefetch.hit metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchHitDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchHit.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchIoDepthDataPoint adds a data point to postgresql.recovery_prefetch.io_depth metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchIoDepthDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchIoDepth.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchPrefetchDataPoint adds a data point to postgresql.recovery_prefetch.prefetch metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchPrefetchDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchPrefetch.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchSkipFpwDataPoint adds a data point to postgresql.recovery_prefetch.skip_fpw metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchSkipFpwDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchSkipFpw.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchSkipInitDataPoint adds a data point to postgresql.recovery_prefetch.skip_init metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchSkipInitDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchSkipInit.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchSkipNewDataPoint adds a data point to postgresql.recovery_prefetch.skip_new metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchSkipNewDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchSkipNew.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchSkipRepDataPoint adds a data point to postgresql.recovery_prefetch.skip_rep metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchSkipRepDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchSkipRep.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRecoveryPrefetchWalDistanceDataPoint adds a data point to postgresql.recovery_prefetch.wal_distance metric.
+func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchWalDistanceDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlRecoveryPrefetchWalDistance.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlReplicationBackendXminAgeDataPoint adds a data point to postgresql.replication.backend_xmin_age metric.

@@ -62,6 +62,15 @@ type MetricsConfig struct {
 	PostgresqlDbCount                                 MetricConfig `mapstructure:"postgresql.db.count"`
 	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
 	PostgresqlDiskRead                                MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlRecoveryPrefetchBlockDistance           MetricConfig `mapstructure:"postgresql.recovery_prefetch.block_distance"`
+	PostgresqlRecoveryPrefetchHit                     MetricConfig `mapstructure:"postgresql.recovery_prefetch.hit"`
+	PostgresqlRecoveryPrefetchIoDepth                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.io_depth"`
+	PostgresqlRecoveryPrefetchPrefetch                MetricConfig `mapstructure:"postgresql.recovery_prefetch.prefetch"`
+	PostgresqlRecoveryPrefetchSkipFpw                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_fpw"`
+	PostgresqlRecoveryPrefetchSkipInit                MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_init"`
+	PostgresqlRecoveryPrefetchSkipNew                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_new"`
+	PostgresqlRecoveryPrefetchSkipRep                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_rep"`
+	PostgresqlRecoveryPrefetchWalDistance             MetricConfig `mapstructure:"postgresql.recovery_prefetch.wal_distance"`
 	PostgresqlReplicationBackendXminAge               MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
 	PostgresqlReplicationFlushLsnDelay                MetricConfig `mapstructure:"postgresql.replication.flush_lsn_delay"`
 	PostgresqlReplicationReplayLsnDelay               MetricConfig `mapstructure:"postgresql.replication.replay_lsn_delay"`
@@ -233,6 +242,33 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlDiskRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchBlockDistance: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchIoDepth: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchPrefetch: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipFpw: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipInit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipNew: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipRep: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchWalDistance: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlReplicationBackendXminAge: MetricConfig{

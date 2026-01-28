@@ -125,4 +125,10 @@ type PostgreSQLClient interface {
 	// Returns one row per SLRU (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact)
 	// Available in PostgreSQL 13+
 	QuerySLRUStats(ctx context.Context) ([]models.PgStatSLRUMetric, error)
+
+	// QueryRecoveryPrefetch retrieves recovery prefetch statistics from pg_stat_recovery_prefetch
+	// Returns standby server prefetch performance metrics during WAL replay
+	// Returns nil if not on a standby server or if prefetch is not active
+	// Available in PostgreSQL 15+
+	QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRecoveryPrefetchMetric, error)
 }

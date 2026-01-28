@@ -77,6 +77,12 @@ func (s *BgwriterScraper) ScrapeControlCheckpoint(ctx context.Context) []error {
 
 	metric, err := s.client.QueryControlCheckpoint(ctx)
 	if err != nil {
+		// pg_control_checkpoint() only works on primary servers, not standby servers in recovery
+		// If we get "recovery is in progress" error, it's expected on standby servers
+		if err.Error() == "failed to query pg_control_checkpoint: pq: recovery is in progress" {
+			s.logger.Debug("Checkpoint control metrics not available (server is in recovery mode)")
+			return nil
+		}
 		s.logger.Error("Failed to query checkpoint control metrics", zap.Error(err))
 		return []error{err}
 	}
@@ -143,4 +149,36 @@ func (s *BgwriterScraper) recordSLRUMetricsForCache(now pcommon.Timestamp, metri
 	s.mb.RecordPostgresqlSlruBlksExistsDataPoint(now, getInt64(metric.BlksExists), s.instanceName, slruName)
 	s.mb.RecordPostgresqlSlruFlushesDataPoint(now, getInt64(metric.Flushes), s.instanceName, slruName)
 	s.mb.RecordPostgresqlSlruTruncatesDataPoint(now, getInt64(metric.Truncates), s.instanceName, slruName)
+}
+
+// ScrapeRecoveryPrefetch scrapes recovery prefetch statistics from pg_stat_recovery_prefetch
+func (s *BgwriterScraper) ScrapeRecoveryPrefetch(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryRecoveryPrefetch(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query recovery prefetch statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// If no data returned, it means we're not on a standby server or prefetch is not active
+	if metric == nil {
+		s.logger.Debug("No recovery prefetch data available (not on standby or prefetch disabled)")
+		return nil
+	}
+
+	// Record all recovery prefetch metrics
+	s.mb.RecordPostgresqlRecoveryPrefetchPrefetchDataPoint(now, getInt64(metric.Prefetch), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchHitDataPoint(now, getInt64(metric.Hit), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchSkipInitDataPoint(now, getInt64(metric.SkipInit), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchSkipNewDataPoint(now, getInt64(metric.SkipNew), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchSkipFpwDataPoint(now, getInt64(metric.SkipFpw), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchSkipRepDataPoint(now, getInt64(metric.SkipRep), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchWalDistanceDataPoint(now, getInt64(metric.WalDistance), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchBlockDistanceDataPoint(now, getInt64(metric.BlockDistance), s.instanceName)
+	s.mb.RecordPostgresqlRecoveryPrefetchIoDepthDataPoint(now, getInt64(metric.IoDepth), s.instanceName)
+
+	s.logger.Debug("Recovery prefetch statistics scrape completed")
+
+	return nil
 }

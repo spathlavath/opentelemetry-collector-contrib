@@ -69,6 +69,24 @@ all_set:
       enabled: true
     postgresql.disk_read:
       enabled: true
+    postgresql.recovery_prefetch.block_distance:
+      enabled: true
+    postgresql.recovery_prefetch.hit:
+      enabled: true
+    postgresql.recovery_prefetch.io_depth:
+      enabled: true
+    postgresql.recovery_prefetch.prefetch:
+      enabled: true
+    postgresql.recovery_prefetch.skip_fpw:
+      enabled: true
+    postgresql.recovery_prefetch.skip_init:
+      enabled: true
+    postgresql.recovery_prefetch.skip_new:
+      enabled: true
+    postgresql.recovery_prefetch.skip_rep:
+      enabled: true
+    postgresql.recovery_prefetch.wal_distance:
+      enabled: true
     postgresql.replication.backend_xmin_age:
       enabled: true
     postgresql.replication.flush_lsn_delay:
@@ -285,6 +303,24 @@ none_set:
     postgresql.deadlocks:
       enabled: false
     postgresql.disk_read:
+      enabled: false
+    postgresql.recovery_prefetch.block_distance:
+      enabled: false
+    postgresql.recovery_prefetch.hit:
+      enabled: false
+    postgresql.recovery_prefetch.io_depth:
+      enabled: false
+    postgresql.recovery_prefetch.prefetch:
+      enabled: false
+    postgresql.recovery_prefetch.skip_fpw:
+      enabled: false
+    postgresql.recovery_prefetch.skip_init:
+      enabled: false
+    postgresql.recovery_prefetch.skip_new:
+      enabled: false
+    postgresql.recovery_prefetch.skip_rep:
+      enabled: false
+    postgresql.recovery_prefetch.wal_distance:
       enabled: false
     postgresql.replication.backend_xmin_age:
       enabled: false
