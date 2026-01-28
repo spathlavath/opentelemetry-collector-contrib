@@ -51,20 +51,19 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		return errs
 	}
 	now := time.Now()
-
-	// Clean up expired cache entries first
 	s.cleanupCache(now)
-
 	planHashIdentifier := make(map[string]models.SQLIdentifier)
 	s.cacheMutex.RLock()
 	for _, identifier := range sqlIdentifiers {
-		if _, exists := s.cache[identifier.PlanHash]; exists {
+		cacheKey := fmt.Sprintf("%s_%d", identifier.PlanHash, identifier.ChildNumber)
+		if _, exists := s.cache[cacheKey]; exists {
 			s.logger.Debug("skipping execution plan scrape for cached plan hash",
 				zap.String("plan_hash", identifier.PlanHash),
+				zap.Int64("child_number", identifier.ChildNumber),
 				zap.String("sql_id", identifier.SQLID))
 			continue
 		}
-		planHashIdentifier[identifier.PlanHash] = identifier
+		planHashIdentifier[cacheKey] = identifier
 	}
 	s.cacheMutex.RUnlock()
 	if len(planHashIdentifier) == 0 {
@@ -75,7 +74,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for planHash, identifier := range planHashIdentifier {
+	for cacheKey, identifier := range planHashIdentifier {
 		select {
 		case <-queryCtx.Done():
 			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
@@ -103,13 +102,14 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 
 		// Add plan hash value to cache after successful scraping
 		s.cacheMutex.Lock()
-		s.cache[planHash] = &planHashCacheEntry{
+		s.cache[cacheKey] = &planHashCacheEntry{
 			lastScraped: now,
 		}
 		s.cacheMutex.Unlock()
 
 		s.logger.Info("Scraped execution plan",
-			zap.String("plan_hash", planHash),
+			zap.String("plan_hash", identifier.PlanHash),
+			zap.Int64("child_number", identifier.ChildNumber),
 			zap.String("sql_id", identifier.SQLID))
 	}
 	return errs
