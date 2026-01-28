@@ -49,6 +49,14 @@ all_set:
       enabled: true
     postgresql.connections:
       enabled: true
+    postgresql.control.checkpoint_delay:
+      enabled: true
+    postgresql.control.checkpoint_delay_bytes:
+      enabled: true
+    postgresql.control.redo_delay_bytes:
+      enabled: true
+    postgresql.control.timeline_id:
+      enabled: true
     postgresql.database_size:
       enabled: true
     postgresql.db.count:
@@ -239,6 +247,14 @@ none_set:
     postgresql.conflicts.tablespace:
       enabled: false
     postgresql.connections:
+      enabled: false
+    postgresql.control.checkpoint_delay:
+      enabled: false
+    postgresql.control.checkpoint_delay_bytes:
+      enabled: false
+    postgresql.control.redo_delay_bytes:
+      enabled: false
+    postgresql.control.timeline_id:
       enabled: false
     postgresql.database_size:
       enabled: false

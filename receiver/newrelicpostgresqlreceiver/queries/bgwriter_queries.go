@@ -42,4 +42,16 @@ const (
 			bg.buffers_backend_fsync
 		FROM pg_stat_bgwriter bg
 		CROSS JOIN pg_stat_checkpointer cp`
+
+	// PgControlCheckpointSQL returns checkpoint control statistics (PostgreSQL 10+)
+	// This query retrieves checkpoint timing and WAL location information
+	// Uses pg_control_checkpoint() function and pg_current_wal_lsn() for WAL distances
+	// Available in PostgreSQL 10+
+	PgControlCheckpointSQL = `
+		SELECT
+			timeline_id,
+			EXTRACT(EPOCH FROM (now() - checkpoint_time)) as checkpoint_delay,
+			pg_wal_lsn_diff(pg_current_wal_lsn(), checkpoint_lsn) as checkpoint_delay_bytes,
+			pg_wal_lsn_diff(pg_current_wal_lsn(), redo_lsn) as redo_delay_bytes
+		FROM pg_control_checkpoint()`
 )

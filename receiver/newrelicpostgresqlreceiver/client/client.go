@@ -109,4 +109,9 @@ type PostgreSQLClient interface {
 	// Returns server-level statistics about background writer and checkpointer processes
 	// Available in PostgreSQL 9.6+
 	QueryBgwriterMetrics(ctx context.Context, version int) (*models.PgStatBgwriterMetric, error)
+
+	// QueryControlCheckpoint retrieves checkpoint control statistics from pg_control_checkpoint()
+	// Returns checkpoint timing and WAL location information
+	// Available in PostgreSQL 10+
+	QueryControlCheckpoint(ctx context.Context) (*models.PgControlCheckpointMetric, error)
 }

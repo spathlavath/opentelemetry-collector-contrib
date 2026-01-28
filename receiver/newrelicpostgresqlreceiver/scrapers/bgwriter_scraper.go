@@ -69,3 +69,24 @@ func (s *BgwriterScraper) ScrapeBgwriterMetrics(ctx context.Context) []error {
 
 	return nil
 }
+
+// ScrapeControlCheckpoint scrapes checkpoint control metrics from pg_control_checkpoint()
+func (s *BgwriterScraper) ScrapeControlCheckpoint(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryControlCheckpoint(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query checkpoint control metrics", zap.Error(err))
+		return []error{err}
+	}
+
+	// Record all checkpoint control metrics
+	s.mb.RecordPostgresqlControlTimelineIDDataPoint(now, getInt64(metric.TimelineID), s.instanceName)
+	s.mb.RecordPostgresqlControlCheckpointDelayDataPoint(now, getFloat64(metric.CheckpointDelay), s.instanceName)
+	s.mb.RecordPostgresqlControlCheckpointDelayBytesDataPoint(now, getInt64(metric.CheckpointDelayBytes), s.instanceName)
+	s.mb.RecordPostgresqlControlRedoDelayBytesDataPoint(now, getInt64(metric.RedoDelayBytes), s.instanceName)
+
+	s.logger.Debug("Checkpoint control metrics scrape completed")
+
+	return nil
+}

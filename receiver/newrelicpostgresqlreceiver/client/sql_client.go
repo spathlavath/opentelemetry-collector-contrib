@@ -571,3 +571,21 @@ func (c *SQLClient) QueryBgwriterMetrics(ctx context.Context, version int) (*mod
 
 	return &metric, nil
 }
+
+// QueryControlCheckpoint retrieves checkpoint control statistics from pg_control_checkpoint()
+// Available in PostgreSQL 10+
+func (c *SQLClient) QueryControlCheckpoint(ctx context.Context) (*models.PgControlCheckpointMetric, error) {
+	var metric models.PgControlCheckpointMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgControlCheckpointSQL).Scan(
+		&metric.TimelineID,
+		&metric.CheckpointDelay,
+		&metric.CheckpointDelayBytes,
+		&metric.RedoDelayBytes,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_control_checkpoint: %w", err)
+	}
+
+	return &metric, nil
+}

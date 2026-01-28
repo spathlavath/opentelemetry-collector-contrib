@@ -336,6 +336,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape checkpoint control metrics (PostgreSQL 10+ only)
+	if s.pgVersion >= PG10Version && s.bgwriterScraper != nil {
+		checkpointErrs := s.bgwriterScraper.ScrapeControlCheckpoint(scrapeCtx)
+		if len(checkpointErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping checkpoint control metrics",
+				zap.Int("error_count", len(checkpointErrs)))
+			scrapeErrors = append(scrapeErrors, checkpointErrs...)
+		}
+	}
+
 	metrics := s.buildMetrics()
 
 	s.logScrapeCompletion(scrapeErrors)

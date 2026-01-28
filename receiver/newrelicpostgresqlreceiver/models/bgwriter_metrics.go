@@ -43,3 +43,20 @@ type PgStatBgwriterMetric struct {
 	// (normally the background writer handles these even when the backend does its own write)
 	BuffersBackendFsync sql.NullInt64
 }
+
+// PgControlCheckpointMetric represents checkpoint control statistics from pg_control_checkpoint()
+// This struct captures checkpoint timing and WAL location information
+// Available in PostgreSQL 10+
+type PgControlCheckpointMetric struct {
+	// TimelineID is the current timeline ID
+	TimelineID sql.NullInt64
+
+	// CheckpointDelay is the time elapsed since the last checkpoint (seconds)
+	CheckpointDelay sql.NullFloat64
+
+	// CheckpointDelayBytes is the WAL distance from the last checkpoint (bytes)
+	CheckpointDelayBytes sql.NullInt64
+
+	// RedoDelayBytes is the WAL distance from the redo location (bytes)
+	RedoDelayBytes sql.NullInt64
+}

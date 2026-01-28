@@ -350,6 +350,46 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.control.checkpoint_delay:
+    description: Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.control.checkpoint_delay_bytes:
+    description: WAL distance from the last checkpoint in bytes (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.control.redo_delay_bytes:
+    description: WAL distance from the redo location in bytes (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.control.timeline_id:
+    description: Current timeline ID (PostgreSQL 10+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{timeline}"
+    stability:
+      level: alpha
+
   postgresql.database_size:
     description: Size of the database in bytes
     enabled: true

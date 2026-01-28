@@ -85,6 +85,18 @@ var MetricsInfo = metricsInfo{
 	PostgresqlConnections: metricInfo{
 		Name: "postgresql.connections",
 	},
+	PostgresqlControlCheckpointDelay: metricInfo{
+		Name: "postgresql.control.checkpoint_delay",
+	},
+	PostgresqlControlCheckpointDelayBytes: metricInfo{
+		Name: "postgresql.control.checkpoint_delay_bytes",
+	},
+	PostgresqlControlRedoDelayBytes: metricInfo{
+		Name: "postgresql.control.redo_delay_bytes",
+	},
+	PostgresqlControlTimelineID: metricInfo{
+		Name: "postgresql.control.timeline_id",
+	},
 	PostgresqlDatabaseSize: metricInfo{
 		Name: "postgresql.database_size",
 	},
@@ -304,6 +316,10 @@ type metricsInfo struct {
 	PostgresqlConflictsSnapshot                       metricInfo
 	PostgresqlConflictsTablespace                     metricInfo
 	PostgresqlConnections                             metricInfo
+	PostgresqlControlCheckpointDelay                  metricInfo
+	PostgresqlControlCheckpointDelayBytes             metricInfo
+	PostgresqlControlRedoDelayBytes                   metricInfo
+	PostgresqlControlTimelineID                       metricInfo
 	PostgresqlDatabaseSize                            metricInfo
 	PostgresqlDbCount                                 metricInfo
 	PostgresqlDeadlocks                               metricInfo
@@ -1645,6 +1661,210 @@ func (m *metricPostgresqlConnections) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlConnections(cfg MetricConfig) metricPostgresqlConnections {
 	m := metricPostgresqlConnections{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlControlCheckpointDelay struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.control.checkpoint_delay metric with initial data.
+func (m *metricPostgresqlControlCheckpointDelay) init() {
+	m.data.SetName("postgresql.control.checkpoint_delay")
+	m.data.SetDescription("Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlControlCheckpointDelay) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlControlCheckpointDelay) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlControlCheckpointDelay) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlControlCheckpointDelay(cfg MetricConfig) metricPostgresqlControlCheckpointDelay {
+	m := metricPostgresqlControlCheckpointDelay{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlControlCheckpointDelayBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.control.checkpoint_delay_bytes metric with initial data.
+func (m *metricPostgresqlControlCheckpointDelayBytes) init() {
+	m.data.SetName("postgresql.control.checkpoint_delay_bytes")
+	m.data.SetDescription("WAL distance from the last checkpoint in bytes (PostgreSQL 10+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlControlCheckpointDelayBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlControlCheckpointDelayBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlControlCheckpointDelayBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlControlCheckpointDelayBytes(cfg MetricConfig) metricPostgresqlControlCheckpointDelayBytes {
+	m := metricPostgresqlControlCheckpointDelayBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlControlRedoDelayBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.control.redo_delay_bytes metric with initial data.
+func (m *metricPostgresqlControlRedoDelayBytes) init() {
+	m.data.SetName("postgresql.control.redo_delay_bytes")
+	m.data.SetDescription("WAL distance from the redo location in bytes (PostgreSQL 10+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlControlRedoDelayBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlControlRedoDelayBytes) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlControlRedoDelayBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlControlRedoDelayBytes(cfg MetricConfig) metricPostgresqlControlRedoDelayBytes {
+	m := metricPostgresqlControlRedoDelayBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlControlTimelineID struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.control.timeline_id metric with initial data.
+func (m *metricPostgresqlControlTimelineID) init() {
+	m.data.SetName("postgresql.control.timeline_id")
+	m.data.SetDescription("Current timeline ID (PostgreSQL 10+)")
+	m.data.SetUnit("{timeline}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlControlTimelineID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlControlTimelineID) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlControlTimelineID) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlControlTimelineID(cfg MetricConfig) metricPostgresqlControlTimelineID {
+	m := metricPostgresqlControlTimelineID{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -5086,6 +5306,10 @@ type MetricsBuilder struct {
 	metricPostgresqlConflictsSnapshot                       metricPostgresqlConflictsSnapshot
 	metricPostgresqlConflictsTablespace                     metricPostgresqlConflictsTablespace
 	metricPostgresqlConnections                             metricPostgresqlConnections
+	metricPostgresqlControlCheckpointDelay                  metricPostgresqlControlCheckpointDelay
+	metricPostgresqlControlCheckpointDelayBytes             metricPostgresqlControlCheckpointDelayBytes
+	metricPostgresqlControlRedoDelayBytes                   metricPostgresqlControlRedoDelayBytes
+	metricPostgresqlControlTimelineID                       metricPostgresqlControlTimelineID
 	metricPostgresqlDatabaseSize                            metricPostgresqlDatabaseSize
 	metricPostgresqlDbCount                                 metricPostgresqlDbCount
 	metricPostgresqlDeadlocks                               metricPostgresqlDeadlocks
@@ -5199,6 +5423,10 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlConflictsSnapshot:                       newMetricPostgresqlConflictsSnapshot(mbc.Metrics.PostgresqlConflictsSnapshot),
 		metricPostgresqlConflictsTablespace:                     newMetricPostgresqlConflictsTablespace(mbc.Metrics.PostgresqlConflictsTablespace),
 		metricPostgresqlConnections:                             newMetricPostgresqlConnections(mbc.Metrics.PostgresqlConnections),
+		metricPostgresqlControlCheckpointDelay:                  newMetricPostgresqlControlCheckpointDelay(mbc.Metrics.PostgresqlControlCheckpointDelay),
+		metricPostgresqlControlCheckpointDelayBytes:             newMetricPostgresqlControlCheckpointDelayBytes(mbc.Metrics.PostgresqlControlCheckpointDelayBytes),
+		metricPostgresqlControlRedoDelayBytes:                   newMetricPostgresqlControlRedoDelayBytes(mbc.Metrics.PostgresqlControlRedoDelayBytes),
+		metricPostgresqlControlTimelineID:                       newMetricPostgresqlControlTimelineID(mbc.Metrics.PostgresqlControlTimelineID),
 		metricPostgresqlDatabaseSize:                            newMetricPostgresqlDatabaseSize(mbc.Metrics.PostgresqlDatabaseSize),
 		metricPostgresqlDbCount:                                 newMetricPostgresqlDbCount(mbc.Metrics.PostgresqlDbCount),
 		metricPostgresqlDeadlocks:                               newMetricPostgresqlDeadlocks(mbc.Metrics.PostgresqlDeadlocks),
@@ -5395,6 +5623,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlConflictsSnapshot.emit(ils.Metrics())
 	mb.metricPostgresqlConflictsTablespace.emit(ils.Metrics())
 	mb.metricPostgresqlConnections.emit(ils.Metrics())
+	mb.metricPostgresqlControlCheckpointDelay.emit(ils.Metrics())
+	mb.metricPostgresqlControlCheckpointDelayBytes.emit(ils.Metrics())
+	mb.metricPostgresqlControlRedoDelayBytes.emit(ils.Metrics())
+	mb.metricPostgresqlControlTimelineID.emit(ils.Metrics())
 	mb.metricPostgresqlDatabaseSize.emit(ils.Metrics())
 	mb.metricPostgresqlDbCount.emit(ils.Metrics())
 	mb.metricPostgresqlDeadlocks.emit(ils.Metrics())
@@ -5608,6 +5840,26 @@ func (mb *MetricsBuilder) RecordPostgresqlConflictsTablespaceDataPoint(ts pcommo
 // RecordPostgresqlConnectionsDataPoint adds a data point to postgresql.connections metric.
 func (mb *MetricsBuilder) RecordPostgresqlConnectionsDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlConnections.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlControlCheckpointDelayDataPoint adds a data point to postgresql.control.checkpoint_delay metric.
+func (mb *MetricsBuilder) RecordPostgresqlControlCheckpointDelayDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlControlCheckpointDelay.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlControlCheckpointDelayBytesDataPoint adds a data point to postgresql.control.checkpoint_delay_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlControlCheckpointDelayBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlControlCheckpointDelayBytes.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlControlRedoDelayBytesDataPoint adds a data point to postgresql.control.redo_delay_bytes metric.
+func (mb *MetricsBuilder) RecordPostgresqlControlRedoDelayBytesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlControlRedoDelayBytes.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlControlTimelineIDDataPoint adds a data point to postgresql.control.timeline_id metric.
+func (mb *MetricsBuilder) RecordPostgresqlControlTimelineIDDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlControlTimelineID.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlDatabaseSizeDataPoint adds a data point to postgresql.database_size metric.
