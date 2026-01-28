@@ -122,12 +122,12 @@ processors:
   - gomod: go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.141.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor v0.141.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/cumulativetodeltaprocessor v0.141.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.141.0
   # All other processors commented out
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/coralogixprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatocumulativeprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatorateprocessor v0.141.0
-  # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/geoipprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbytraceprocessor v0.141.0
@@ -145,7 +145,7 @@ processors:
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/schemaprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/tailsamplingprocessor v0.141.0
-  # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.141.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/unrollprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/remotetapprocessor v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/datadogsemanticsprocessor v0.141.0
@@ -271,7 +271,9 @@ receivers:
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zookeeperreceiver v0.141.0
 
 connectors:
-  # No connectors used in config files - comment out all
+  # Add metricsaslogs connector for converting metrics to logs
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/connector/metricsaslogsconnector v0.141.0
+  # Other connectors commented out
   # - gomod: go.opentelemetry.io/collector/connector/forwardconnector v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/connector/countconnector v0.141.0
   # - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/connector/datadogconnector v0.141.0

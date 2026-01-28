@@ -278,6 +278,7 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 	s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 		now,
 		1,
+		"OracleSlowQuery",
 		collectionTimestamp,
 		dbName,
 		qID,

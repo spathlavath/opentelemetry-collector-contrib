@@ -6,7 +6,8 @@ package scrapers
 import (
 	"context"
 	"fmt"
-	"math"
+	"strconv"
+	"sync"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -18,37 +19,62 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
-type ExecutionPlanScraper struct {
-	client            client.OracleClient
-	lb                *metadata.LogsBuilder
-	logger            *zap.Logger
-	logsBuilderConfig metadata.LogsBuilderConfig
+// planHashCacheEntry stores when a plan hash value was last scraped
+type planHashCacheEntry struct {
+	lastScraped time.Time
 }
 
-func NewExecutionPlanScraper(oracleClient client.OracleClient, lb *metadata.LogsBuilder, logger *zap.Logger, logsBuilderConfig metadata.LogsBuilderConfig) *ExecutionPlanScraper {
+type ExecutionPlanScraper struct {
+	client               client.OracleClient
+	mb                   *metadata.MetricsBuilder
+	logger               *zap.Logger
+	metricsBuilderConfig metadata.MetricsBuilderConfig
+	cache                map[string]*planHashCacheEntry // key: plan_hash_value
+	cacheMutex           sync.RWMutex
+	cacheTTL             time.Duration
+}
+
+func NewExecutionPlanScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig) *ExecutionPlanScraper {
 	return &ExecutionPlanScraper{
-		client:            oracleClient,
-		lb:                lb,
-		logger:            logger,
-		logsBuilderConfig: logsBuilderConfig,
+		client:               oracleClient,
+		mb:                   mb,
+		logger:               logger,
+		metricsBuilderConfig: metricsBuilderConfig,
+		cache:                make(map[string]*planHashCacheEntry),
+		cacheTTL:             24 * time.Hour, // 24-hour window
 	}
 }
 
 func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIdentifiers []models.SQLIdentifier) []error {
 	var errs []error
-
 	if len(sqlIdentifiers) == 0 {
 		return errs
 	}
-
-	// Single timeout context for all queries to prevent excessive total runtime
-	// If processing many SQL identifiers, this ensures we don't exceed a reasonable total time
+	now := time.Now()
+	s.cleanupCache(now)
+	planHashIdentifier := make(map[string]models.SQLIdentifier)
+	s.cacheMutex.RLock()
+	for _, identifier := range sqlIdentifiers {
+		cacheKey := fmt.Sprintf("%s_%d", identifier.PlanHash, identifier.ChildNumber)
+		if _, exists := s.cache[cacheKey]; exists {
+			s.logger.Debug("skipping execution plan scrape for cached plan hash",
+				zap.String("plan_hash", identifier.PlanHash),
+				zap.Int64("child_number", identifier.ChildNumber),
+				zap.String("sql_id", identifier.SQLID))
+			continue
+		}
+		planHashIdentifier[cacheKey] = identifier
+	}
+	s.cacheMutex.RUnlock()
+	if len(planHashIdentifier) == 0 {
+		s.logger.Debug("All plan hash values are cached, skipping execution plan scraping")
+		return errs
+	}
 	totalTimeout := 30 * time.Second // Adjust based on your needs
 	queryCtx, cancel := context.WithTimeout(ctx, totalTimeout)
 	defer cancel()
 
-	for _, identifier := range sqlIdentifiers {
-		// Check if context is already cancelled/timed out before proceeding
+	for cacheKey, identifier := range planHashIdentifier {
 		select {
 		case <-queryCtx.Done():
 			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
@@ -56,42 +82,41 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		default:
 			// Continue processing
 		}
-
-		// Query execution plan for specific SQL_ID and CHILD_NUMBER
 		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
-			continue // Skip this identifier but continue processing others
+			continue
 		}
-		s.logger.Debug("Retrieved execution plan rows")
-
-		successCount := 0
 		for _, row := range planRows {
 			if !row.SQLID.Valid || row.SQLID.String == "" {
+				s.logger.Debug("Skipping row with invalid SQL_ID")
 				continue
 			}
-
-			// Pass the timestamp from the identifier (when the query was captured)
-			if err := s.buildExecutionPlanLogs(&row, identifier.Timestamp); err != nil {
-				s.logger.Warn("Failed to build logs for execution plan row",
+			if err := s.buildExecutionPlanMetrics(&row, identifier.Timestamp); err != nil {
+				s.logger.Warn("Failed to build metrics for execution plan row",
 					zap.String("sql_id", row.SQLID.String),
 					zap.Error(err))
 				errs = append(errs, err)
-			} else {
-				successCount++
 			}
 		}
 
-		s.logger.Debug("Scraped execution plan rows")
-	}
+		// Add plan hash value to cache after successful scraping
+		s.cacheMutex.Lock()
+		s.cache[cacheKey] = &planHashCacheEntry{
+			lastScraped: now,
+		}
+		s.cacheMutex.Unlock()
 
+	}
+	s.logger.Debug("Scraped execution plan",
+		zap.Int("scraped_plans", len(planHashIdentifier)),
+		zap.Int("cached_plans", len(sqlIdentifiers)-len(planHashIdentifier)))
 	return errs
 }
 
-// buildExecutionPlanLogs converts an execution plan row to a log event with individual attributes.
-
-func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
-	if !s.logsBuilderConfig.Events.NewrelicoracledbExecutionPlan.Enabled {
+// buildExecutionPlanMetrics converts an execution plan row to a metric data point with all attributes.
+func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
+	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlan.Enabled {
 		return nil
 	}
 
@@ -105,8 +130,6 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 	if row.PlanHashValue.Valid {
 		planHashValue = fmt.Sprintf("%d", row.PlanHashValue.Int64)
 	}
-
-	queryText := "" // Empty for now, should be provided by caller
 
 	childNumber := int64(-1)
 	if row.ChildNumber.Valid {
@@ -211,14 +234,12 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 		filterPredicates = commonutils.AnonymizeAndNormalize(row.FilterPredicates.String)
 	}
 
-	// Record the event with all attributes
-	s.lb.RecordNewrelicoracledbExecutionPlanEvent(
-		context.Background(),
+	s.mb.RecordNewrelicoracledbExecutionPlanDataPoint(
 		pcommon.NewTimestampFromTime(queryTimestamp),
+		int64(1), // Value of 1 to indicate this execution plan step exists
 		"OracleExecutionPlan",
 		queryID,
 		planHashValue,
-		queryText,
 		childNumber,
 		planID,
 		parentID,
@@ -244,26 +265,39 @@ func (s *ExecutionPlanScraper) buildExecutionPlanLogs(row *models.ExecutionPlanR
 
 	return nil
 }
-
-// parseIntSafe safely parses a string to int64, handling overflow cases.
-
 func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
 	if value == "" {
 		return -1
 	}
-
-	// Try to parse as int64
-	var result int64
-	_, err := fmt.Sscanf(value, "%d", &result)
+	result, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
-		// If parsing fails, it's likely a very large number that exceeds int64 max
-		// Oracle can return values that exceed int64 max (e.g., 18446744073709551615)
-		// In such cases, we'll use int64 max value to indicate an extremely high cost
-		s.logger.Debug("Failed to parse large numeric value, using int64 max",
+		s.logger.Debug("Failed to parse numeric value",
 			zap.String("value", value),
 			zap.Error(err))
-		return math.MaxInt64
+		return -1
+	}
+	return result
+}
+
+// cleanupCache removes stale entries from the cache (older than TTL)
+func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
+	s.cacheMutex.Lock()
+	defer s.cacheMutex.Unlock()
+
+	var keysToDelete []string
+	for key, entry := range s.cache {
+		if now.Sub(entry.lastScraped) >= s.cacheTTL {
+			keysToDelete = append(keysToDelete, key)
+		}
 	}
 
-	return result
+	for _, key := range keysToDelete {
+		delete(s.cache, key)
+	}
+
+	if len(keysToDelete) > 0 {
+		s.logger.Debug("Cleaned up stale cache entries",
+			zap.Int("removed_entries", len(keysToDelete)),
+			zap.Int("remaining_entries", len(s.cache)))
+	}
 }
