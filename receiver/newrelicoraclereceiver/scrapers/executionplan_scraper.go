@@ -51,18 +51,22 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		return errs
 	}
 	now := time.Now()
+
+	// Clean up expired cache entries first
+	s.cleanupCache(now)
+
 	planHashIdentifier := make(map[string]models.SQLIdentifier)
-	s.cacheMutex.Lock()
+	s.cacheMutex.RLock()
 	for _, identifier := range sqlIdentifiers {
 		if _, exists := s.cache[identifier.PlanHash]; exists {
-			s.logger.Info("skipping execution plan scrape for cached plan hash",
-			zap.String("plan_hash", identifier.PlanHash),
-			zap.String("sql_id", identifier.SQLID))
+			s.logger.Debug("skipping execution plan scrape for cached plan hash",
+				zap.String("plan_hash", identifier.PlanHash),
+				zap.String("sql_id", identifier.SQLID))
 			continue
 		}
 		planHashIdentifier[identifier.PlanHash] = identifier
 	}
-	s.cacheMutex.Unlock()
+	s.cacheMutex.RUnlock()
 	if len(planHashIdentifier) == 0 {
 		s.logger.Debug("All plan hash values are cached, skipping execution plan scraping")
 		return errs
@@ -82,7 +86,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		planRows, err := s.client.QueryExecutionPlanForChild(queryCtx, identifier.SQLID, identifier.ChildNumber)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
-			continue 
+			continue
 		}
 		for _, row := range planRows {
 			if !row.SQLID.Valid || row.SQLID.String == "" {
@@ -108,7 +112,6 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			zap.String("plan_hash", planHash),
 			zap.String("sql_id", identifier.SQLID))
 	}
-	s.cleanupCache(now)
 	return errs
 }
 
@@ -285,7 +288,6 @@ func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
 	var keysToDelete []string
 	for key, entry := range s.cache {
 		if now.Sub(entry.lastScraped) >= s.cacheTTL {
-			s.logger.Info("skipping execution plan scrape for cached plan hash",zap.String("plan_hash", key))
 			keysToDelete = append(keysToDelete, key)
 		}
 	}
