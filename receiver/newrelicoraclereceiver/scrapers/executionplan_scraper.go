@@ -55,6 +55,9 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	s.cacheMutex.Lock()
 	for _, identifier := range sqlIdentifiers {
 		if _, exists := s.cache[identifier.PlanHash]; exists {
+			s.logger.Info("skipping execution plan scrape for cached plan hash",
+			zap.String("plan_hash", identifier.PlanHash),
+			zap.String("sql_id", identifier.SQLID))
 			continue
 		}
 		planHashIdentifier[identifier.PlanHash] = identifier
@@ -282,6 +285,7 @@ func (s *ExecutionPlanScraper) cleanupCache(now time.Time) {
 	var keysToDelete []string
 	for key, entry := range s.cache {
 		if now.Sub(entry.lastScraped) >= s.cacheTTL {
+			s.logger.Info("skipping execution plan scrape for cached plan hash",zap.String("plan_hash", key))
 			keysToDelete = append(keysToDelete, key)
 		}
 	}
