@@ -19,6 +19,7 @@ type PlanHashMetrics struct {
 	AvgDiskReads        sql.NullFloat64 // Average disk reads per execution
 	AvgBufferGets       sql.NullFloat64 // Average buffer gets per execution
 	AvgRowsReturned     sql.NullFloat64 // Average rows returned per execution
+	FirstLoadTime       sql.NullTime    // Earliest first load time across all child cursors with this plan hash
 	LastActiveTime      sql.NullTime    // Most recent active time across all child cursors
 }
 
@@ -92,6 +93,14 @@ func (phm *PlanHashMetrics) GetAvgRowsReturned() float64 {
 		return phm.AvgRowsReturned.Float64
 	}
 	return 0
+}
+
+// GetFirstLoadTime returns the first load time as time.Time
+func (phm *PlanHashMetrics) GetFirstLoadTime() time.Time {
+	if phm.FirstLoadTime.Valid {
+		return phm.FirstLoadTime.Time
+	}
+	return time.Time{}
 }
 
 // GetLastActiveTime returns the last active time as time.Time

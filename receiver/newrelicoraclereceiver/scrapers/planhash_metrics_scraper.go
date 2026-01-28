@@ -100,6 +100,8 @@ func (s *PlanHashMetricsScraper) recordPlanHashMetrics(now pcommon.Timestamp, me
 	avgDiskReads := metrics.GetAvgDiskReads()
 	avgBufferGets := metrics.GetAvgBufferGets()
 	avgRowsReturned := metrics.GetAvgRowsReturned()
+	firstLoadTime := commonutils.FormatTimestamp(metrics.GetFirstLoadTime())
+	lastActiveTime := commonutils.FormatTimestamp(metrics.GetLastActiveTime())
 
 	// Get client_name, transaction_name, and normalised_sql_hash from sqlIDMap
 	// These will be empty strings if not present in the map or if the metadata values were empty
@@ -110,7 +112,7 @@ func (s *PlanHashMetricsScraper) recordPlanHashMetrics(now pcommon.Timestamp, me
 		normalisedSQLHash = metadata.NormalisedSQLHash
 	}
 
-	// Record all plan hash metrics
+	// Record all plan hash performance metrics (without timestamps to avoid high cardinality)
 	s.mb.RecordNewrelicoracledbPlanHashMetricsExecutionsDataPoint(
 		now, totalExecutions,
 		collectionTimestamp, sqlID, planHashValue,
@@ -145,5 +147,14 @@ func (s *PlanHashMetricsScraper) recordPlanHashMetrics(now pcommon.Timestamp, me
 		now, avgRowsReturned,
 		collectionTimestamp, sqlID, planHashValue,
 		clientName, transactionName, normalisedSQLHash,
+	)
+
+	// Record plan hash details metric with timestamps (similar to slow_queries.query_details)
+	// This avoids high cardinality by separating timestamp attributes into a dedicated metric
+	s.mb.RecordNewrelicoracledbPlanHashMetricsDetailsDataPoint(
+		now, 1, // constant value of 1
+		collectionTimestamp, sqlID, planHashValue,
+		clientName, transactionName, normalisedSQLHash,
+		firstLoadTime, lastActiveTime,
 	)
 }

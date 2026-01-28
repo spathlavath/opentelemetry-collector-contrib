@@ -152,6 +152,7 @@ type MetricsConfig struct {
 	NewrelicoracledbPlanHashMetricsAvgDiskReads                        MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_disk_reads"`
 	NewrelicoracledbPlanHashMetricsAvgElapsedTimeMs                    MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms"`
 	NewrelicoracledbPlanHashMetricsAvgRowsReturned                     MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_rows_returned"`
+	NewrelicoracledbPlanHashMetricsDetails                             MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.details"`
 	NewrelicoracledbPlanHashMetricsExecutions                          MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.executions"`
 	NewrelicoracledbRacInstanceActiveState                             MetricConfig `mapstructure:"newrelicoracledb.rac.instance.active_state"`
 	NewrelicoracledbRacInstanceArchiverStarted                         MetricConfig `mapstructure:"newrelicoracledb.rac.instance.archiver_started"`
@@ -734,6 +735,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbPlanHashMetricsAvgRowsReturned: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPlanHashMetricsDetails: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbPlanHashMetricsExecutions: MetricConfig{

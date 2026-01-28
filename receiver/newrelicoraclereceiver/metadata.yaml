@@ -3770,6 +3770,27 @@ metrics:
       - transaction_name
       - normalised_sql_hash
 
+  newrelicoracledb.plan_hash_metrics.details:
+    description: Plan Hash Metrics Details - Timestamp metadata for plan hash execution
+    extended_documentation: |
+      Contains timestamp metadata for plan hash metrics to avoid high cardinality.
+      This metric provides first_load_time and last_active_time as attributes,
+      similar to slow_queries.query_details pattern.
+      Use this metric to correlate plan hash performance metrics with their load and activity times.
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{count}"
+    attributes:
+      - collection_timestamp
+      - query_id
+      - plan_hash_value
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
+      - first_load_time
+      - last_active_time
+
 tests:
   config:
     endpoint: "localhost:1521"

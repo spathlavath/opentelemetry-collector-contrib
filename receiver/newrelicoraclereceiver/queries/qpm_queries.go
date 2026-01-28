@@ -235,6 +235,7 @@ func GetPlanHashMetricsSQL(sqlID string) string {
 			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.disk_reads) / SUM(s.executions), 1) ELSE 0 END AS avg_disk_reads,
 			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.buffer_gets) / SUM(s.executions), 1) ELSE 0 END AS avg_buffer_gets,
 			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.rows_processed) / SUM(s.executions), 1) ELSE 0 END AS avg_rows_returned,
+			MIN(first_load_time) AS first_load_time,
 			MAX(s.last_active_time) AS last_active_time
 		FROM
 			v$sql s

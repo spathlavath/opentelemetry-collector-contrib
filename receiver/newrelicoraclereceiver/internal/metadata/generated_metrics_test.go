@@ -566,6 +566,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbPlanHashMetricsDetailsDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val", "first_load_time-val", "last_active_time-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbPlanHashMetricsExecutionsDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
 
 			defaultMetricsCount++
@@ -3856,6 +3860,42 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
 					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+				case "newrelicoracledb.plan_hash_metrics.details":
+					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.details"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.details")
+					validatedMetrics["newrelicoracledb.plan_hash_metrics.details"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Plan Hash Metrics Details - Timestamp metadata for plan hash execution", ms.At(i).Description())
+					assert.Equal(t, "{count}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("first_load_time")
+					assert.True(t, ok)
+					assert.Equal(t, "first_load_time-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("last_active_time")
+					assert.True(t, ok)
+					assert.Equal(t, "last_active_time-val", attrVal.Str())
 				case "newrelicoracledb.plan_hash_metrics.executions":
 					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.executions"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.executions")
 					validatedMetrics["newrelicoracledb.plan_hash_metrics.executions"] = true

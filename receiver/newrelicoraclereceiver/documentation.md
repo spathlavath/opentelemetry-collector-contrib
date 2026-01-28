@@ -1891,6 +1891,33 @@ Source: AVG(rows_processed/executions) from v$sql grouped by plan_hash_value.
 | transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 
+### newrelicoracledb.plan_hash_metrics.details
+
+Plan Hash Metrics Details - Timestamp metadata for plan hash execution
+
+Contains timestamp metadata for plan hash metrics to avoid high cardinality.
+This metric provides first_load_time and last_active_time as attributes,
+similar to slow_queries.query_details pattern.
+Use this metric to correlate plan hash performance metrics with their load and activity times.
+
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {count} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
+| last_active_time | Last active time for the SQL query | Any Str | false |
+
 ### newrelicoracledb.plan_hash_metrics.executions
 
 Total number of executions for a specific plan hash value

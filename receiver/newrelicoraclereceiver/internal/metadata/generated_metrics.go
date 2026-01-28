@@ -385,6 +385,9 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbPlanHashMetricsAvgRowsReturned: metricInfo{
 		Name: "newrelicoracledb.plan_hash_metrics.avg_rows_returned",
 	},
+	NewrelicoracledbPlanHashMetricsDetails: metricInfo{
+		Name: "newrelicoracledb.plan_hash_metrics.details",
+	},
 	NewrelicoracledbPlanHashMetricsExecutions: metricInfo{
 		Name: "newrelicoracledb.plan_hash_metrics.executions",
 	},
@@ -1136,6 +1139,7 @@ type metricsInfo struct {
 	NewrelicoracledbPlanHashMetricsAvgDiskReads                        metricInfo
 	NewrelicoracledbPlanHashMetricsAvgElapsedTimeMs                    metricInfo
 	NewrelicoracledbPlanHashMetricsAvgRowsReturned                     metricInfo
+	NewrelicoracledbPlanHashMetricsDetails                             metricInfo
 	NewrelicoracledbPlanHashMetricsExecutions                          metricInfo
 	NewrelicoracledbRacInstanceActiveState                             metricInfo
 	NewrelicoracledbRacInstanceArchiverStarted                         metricInfo
@@ -7857,6 +7861,64 @@ func (m *metricNewrelicoracledbPlanHashMetricsAvgRowsReturned) emit(metrics pmet
 
 func newMetricNewrelicoracledbPlanHashMetricsAvgRowsReturned(cfg MetricConfig) metricNewrelicoracledbPlanHashMetricsAvgRowsReturned {
 	m := metricNewrelicoracledbPlanHashMetricsAvgRowsReturned{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbPlanHashMetricsDetails struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.plan_hash_metrics.details metric with initial data.
+func (m *metricNewrelicoracledbPlanHashMetricsDetails) init() {
+	m.data.SetName("newrelicoracledb.plan_hash_metrics.details")
+	m.data.SetDescription("Plan Hash Metrics Details - Timestamp metadata for plan hash execution")
+	m.data.SetUnit("{count}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbPlanHashMetricsDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, queryIDAttributeValue string, planHashValueAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string, normalisedSQLHashAttributeValue string, firstLoadTimeAttributeValue string, lastActiveTimeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("plan_hash_value", planHashValueAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("first_load_time", firstLoadTimeAttributeValue)
+	dp.Attributes().PutStr("last_active_time", lastActiveTimeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbPlanHashMetricsDetails) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbPlanHashMetricsDetails) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbPlanHashMetricsDetails(cfg MetricConfig) metricNewrelicoracledbPlanHashMetricsDetails {
+	m := metricNewrelicoracledbPlanHashMetricsDetails{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18722,6 +18784,7 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbPlanHashMetricsAvgDiskReads                        metricNewrelicoracledbPlanHashMetricsAvgDiskReads
 	metricNewrelicoracledbPlanHashMetricsAvgElapsedTimeMs                    metricNewrelicoracledbPlanHashMetricsAvgElapsedTimeMs
 	metricNewrelicoracledbPlanHashMetricsAvgRowsReturned                     metricNewrelicoracledbPlanHashMetricsAvgRowsReturned
+	metricNewrelicoracledbPlanHashMetricsDetails                             metricNewrelicoracledbPlanHashMetricsDetails
 	metricNewrelicoracledbPlanHashMetricsExecutions                          metricNewrelicoracledbPlanHashMetricsExecutions
 	metricNewrelicoracledbRacInstanceActiveState                             metricNewrelicoracledbRacInstanceActiveState
 	metricNewrelicoracledbRacInstanceArchiverStarted                         metricNewrelicoracledbRacInstanceArchiverStarted
@@ -19079,6 +19142,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbPlanHashMetricsAvgDiskReads:                        newMetricNewrelicoracledbPlanHashMetricsAvgDiskReads(mbc.Metrics.NewrelicoracledbPlanHashMetricsAvgDiskReads),
 		metricNewrelicoracledbPlanHashMetricsAvgElapsedTimeMs:                    newMetricNewrelicoracledbPlanHashMetricsAvgElapsedTimeMs(mbc.Metrics.NewrelicoracledbPlanHashMetricsAvgElapsedTimeMs),
 		metricNewrelicoracledbPlanHashMetricsAvgRowsReturned:                     newMetricNewrelicoracledbPlanHashMetricsAvgRowsReturned(mbc.Metrics.NewrelicoracledbPlanHashMetricsAvgRowsReturned),
+		metricNewrelicoracledbPlanHashMetricsDetails:                             newMetricNewrelicoracledbPlanHashMetricsDetails(mbc.Metrics.NewrelicoracledbPlanHashMetricsDetails),
 		metricNewrelicoracledbPlanHashMetricsExecutions:                          newMetricNewrelicoracledbPlanHashMetricsExecutions(mbc.Metrics.NewrelicoracledbPlanHashMetricsExecutions),
 		metricNewrelicoracledbRacInstanceActiveState:                             newMetricNewrelicoracledbRacInstanceActiveState(mbc.Metrics.NewrelicoracledbRacInstanceActiveState),
 		metricNewrelicoracledbRacInstanceArchiverStarted:                         newMetricNewrelicoracledbRacInstanceArchiverStarted(mbc.Metrics.NewrelicoracledbRacInstanceArchiverStarted),
@@ -19501,6 +19565,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbPlanHashMetricsAvgDiskReads.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPlanHashMetricsAvgElapsedTimeMs.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPlanHashMetricsAvgRowsReturned.emit(ils.Metrics())
+	mb.metricNewrelicoracledbPlanHashMetricsDetails.emit(ils.Metrics())
 	mb.metricNewrelicoracledbPlanHashMetricsExecutions.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacInstanceActiveState.emit(ils.Metrics())
 	mb.metricNewrelicoracledbRacInstanceArchiverStarted.emit(ils.Metrics())
@@ -20358,6 +20423,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbPlanHashMetricsAvgElapsedTimeMsD
 // RecordNewrelicoracledbPlanHashMetricsAvgRowsReturnedDataPoint adds a data point to newrelicoracledb.plan_hash_metrics.avg_rows_returned metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbPlanHashMetricsAvgRowsReturnedDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, queryIDAttributeValue string, planHashValueAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	mb.metricNewrelicoracledbPlanHashMetricsAvgRowsReturned.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, queryIDAttributeValue, planHashValueAttributeValue, clientNameAttributeValue, transactionNameAttributeValue, normalisedSQLHashAttributeValue)
+}
+
+// RecordNewrelicoracledbPlanHashMetricsDetailsDataPoint adds a data point to newrelicoracledb.plan_hash_metrics.details metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbPlanHashMetricsDetailsDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, queryIDAttributeValue string, planHashValueAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string, normalisedSQLHashAttributeValue string, firstLoadTimeAttributeValue string, lastActiveTimeAttributeValue string) {
+	mb.metricNewrelicoracledbPlanHashMetricsDetails.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, queryIDAttributeValue, planHashValueAttributeValue, clientNameAttributeValue, transactionNameAttributeValue, normalisedSQLHashAttributeValue, firstLoadTimeAttributeValue, lastActiveTimeAttributeValue)
 }
 
 // RecordNewrelicoracledbPlanHashMetricsExecutionsDataPoint adds a data point to newrelicoracledb.plan_hash_metrics.executions metric.
