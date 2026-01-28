@@ -33,7 +33,9 @@ const (
 	PG96Version = 90600  // PostgreSQL 9.6
 	PG10Version = 100000 // PostgreSQL 10.0
 	PG12Version = 120000 // PostgreSQL 12.0
+	PG13Version = 130000 // PostgreSQL 13.0
 	PG14Version = 140000 // PostgreSQL 14.0
+	PG15Version = 150000 // PostgreSQL 15.0
 )
 
 // newRelicPostgreSQLScraper orchestrates all metric collection scrapers for PostgreSQL database monitoring
@@ -41,6 +43,7 @@ type newRelicPostgreSQLScraper struct {
 	// Scrapers
 	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
 	replicationMetricsScraper *scrapers.ReplicationScraper
+	bgwriterScraper           *scrapers.BgwriterScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -171,6 +174,21 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.logger.Info("Replication metrics scraper enabled (PostgreSQL 9.6+)")
 	} else {
 		s.logger.Info("Replication metrics scraper disabled (requires PostgreSQL 9.6+)")
+	}
+
+	// Initialize background writer scraper only if PostgreSQL 9.6+
+	if s.supportsPG96 {
+		s.bgwriterScraper = scrapers.NewBgwriterScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+			s.metricsBuilderConfig,
+			s.pgVersion,
+		)
+		s.logger.Info("Background writer scraper enabled (PostgreSQL 9.6+)")
+	} else {
+		s.logger.Info("Background writer scraper disabled (requires PostgreSQL 9.6+)")
 	}
 
 	return nil
@@ -307,6 +325,56 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping subscription statistics",
 				zap.Int("error_count", len(subscriptionErrs)))
 			scrapeErrors = append(scrapeErrors, subscriptionErrs...)
+		}
+	}
+
+	// Scrape background writer metrics (PostgreSQL 9.6+ only)
+	if s.supportsPG96 && s.bgwriterScraper != nil {
+		bgwriterErrs := s.bgwriterScraper.ScrapeBgwriterMetrics(scrapeCtx)
+		if len(bgwriterErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping background writer metrics",
+				zap.Int("error_count", len(bgwriterErrs)))
+			scrapeErrors = append(scrapeErrors, bgwriterErrs...)
+		}
+	}
+
+	// Scrape archiver statistics (PostgreSQL 9.6+ only)
+	if s.supportsPG96 && s.bgwriterScraper != nil {
+		archiverErrs := s.bgwriterScraper.ScrapeArchiverStats(scrapeCtx)
+		if len(archiverErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping archiver statistics",
+				zap.Int("error_count", len(archiverErrs)))
+			scrapeErrors = append(scrapeErrors, archiverErrs...)
+		}
+	}
+
+	// Scrape checkpoint control metrics (PostgreSQL 10+ only)
+	if s.pgVersion >= PG10Version && s.bgwriterScraper != nil {
+		checkpointErrs := s.bgwriterScraper.ScrapeControlCheckpoint(scrapeCtx)
+		if len(checkpointErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping checkpoint control metrics",
+				zap.Int("error_count", len(checkpointErrs)))
+			scrapeErrors = append(scrapeErrors, checkpointErrs...)
+		}
+	}
+
+	// Scrape SLRU statistics (PostgreSQL 13+ only)
+	if s.pgVersion >= PG13Version && s.bgwriterScraper != nil {
+		slruErrs := s.bgwriterScraper.ScrapeSLRUStats(scrapeCtx)
+		if len(slruErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping SLRU statistics",
+				zap.Int("error_count", len(slruErrs)))
+			scrapeErrors = append(scrapeErrors, slruErrs...)
+		}
+	}
+
+	// Scrape recovery prefetch statistics (PostgreSQL 15+ only, standby servers)
+	if s.pgVersion >= PG15Version && s.bgwriterScraper != nil {
+		recoveryErrs := s.bgwriterScraper.ScrapeRecoveryPrefetch(scrapeCtx)
+		if len(recoveryErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping recovery prefetch statistics",
+				zap.Int("error_count", len(recoveryErrs)))
+			scrapeErrors = append(scrapeErrors, recoveryErrs...)
 		}
 	}
 

@@ -539,3 +539,146 @@ func (c *SQLClient) QuerySubscriptionStats(ctx context.Context) ([]models.PgStat
 
 	return metrics, nil
 }
+
+// QueryBgwriterMetrics retrieves background writer and checkpointer statistics
+// For PostgreSQL 17+, queries both pg_stat_bgwriter and pg_stat_checkpointer
+// For PostgreSQL < 17, queries only pg_stat_bgwriter
+func (c *SQLClient) QueryBgwriterMetrics(ctx context.Context, version int) (*models.PgStatBgwriterMetric, error) {
+	// Select query based on PostgreSQL version
+	// PostgreSQL 17 = 170000
+	query := queries.PgStatBgwriterPrePG17SQL
+	if version >= 170000 {
+		query = queries.PgStatBgwriterPG17SQL
+	}
+
+	var metric models.PgStatBgwriterMetric
+
+	err := c.db.QueryRowContext(ctx, query).Scan(
+		&metric.BuffersClean,
+		&metric.MaxwrittenClean,
+		&metric.BuffersAlloc,
+		&metric.CheckpointsTimed,
+		&metric.CheckpointsRequested,
+		&metric.BuffersCheckpoint,
+		&metric.CheckpointWriteTime,
+		&metric.CheckpointSyncTime,
+		&metric.BuffersBackend,
+		&metric.BuffersBackendFsync,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_bgwriter: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QueryControlCheckpoint retrieves checkpoint control statistics from pg_control_checkpoint()
+// Available in PostgreSQL 10+
+func (c *SQLClient) QueryControlCheckpoint(ctx context.Context) (*models.PgControlCheckpointMetric, error) {
+	var metric models.PgControlCheckpointMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgControlCheckpointSQL).Scan(
+		&metric.TimelineID,
+		&metric.CheckpointDelay,
+		&metric.CheckpointDelayBytes,
+		&metric.RedoDelayBytes,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_control_checkpoint: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QueryArchiverStats retrieves WAL archiver statistics from pg_stat_archiver
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryArchiverStats(ctx context.Context) (*models.PgStatArchiverMetric, error) {
+	var metric models.PgStatArchiverMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgStatArchiverSQL).Scan(
+		&metric.ArchivedCount,
+		&metric.FailedCount,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_archiver: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QuerySLRUStats retrieves SLRU (Simple LRU) cache statistics from pg_stat_slru
+// Returns per-SLRU cache performance metrics
+// Available in PostgreSQL 13+
+func (c *SQLClient) QuerySLRUStats(ctx context.Context) ([]models.PgStatSLRUMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatSLRUSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_slru: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatSLRUMetric
+
+	for rows.Next() {
+		var metric models.PgStatSLRUMetric
+		err := rows.Scan(
+			&metric.SLRUName,
+			&metric.BlksZeroed,
+			&metric.BlksHit,
+			&metric.BlksRead,
+			&metric.BlksWritten,
+			&metric.BlksExists,
+			&metric.Flushes,
+			&metric.Truncates,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_slru row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_slru rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+// QueryRecoveryPrefetch retrieves recovery prefetch statistics from pg_stat_recovery_prefetch
+// Returns standby server prefetch performance metrics during WAL replay
+// Returns nil if not on a standby server or if the view returns no rows
+// Available in PostgreSQL 15+
+func (c *SQLClient) QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRecoveryPrefetchMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatRecoveryPrefetchSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_recovery_prefetch: %w", err)
+	}
+	defer rows.Close()
+
+	// Check if we have any rows (recovery prefetch only exists on standby servers with prefetch enabled)
+	if !rows.Next() {
+		// No recovery prefetch data found - this is normal on primary servers
+		return nil, nil
+	}
+
+	var metric models.PgStatRecoveryPrefetchMetric
+	err = rows.Scan(
+		&metric.Prefetch,
+		&metric.Hit,
+		&metric.SkipInit,
+		&metric.SkipNew,
+		&metric.SkipFpw,
+		&metric.SkipRep,
+		&metric.WalDistance,
+		&metric.BlockDistance,
+		&metric.IoDepth,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to scan pg_stat_recovery_prefetch row: %w", err)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_recovery_prefetch rows: %w", err)
+	}
+
+	return &metric, nil
+}

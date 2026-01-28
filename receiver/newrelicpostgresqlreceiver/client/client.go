@@ -101,4 +101,34 @@ type PostgreSQLClient interface {
 	// Available on subscriber servers only
 	// Available in PostgreSQL 15+
 	QuerySubscriptionStats(ctx context.Context) ([]models.PgStatSubscriptionMetric, error)
+
+	// QueryBgwriterMetrics retrieves background writer and checkpointer statistics
+	// Uses version-specific queries:
+	// - PostgreSQL 17+: Queries both pg_stat_bgwriter and pg_stat_checkpointer
+	// - PostgreSQL < 17: Queries only pg_stat_bgwriter
+	// Returns server-level statistics about background writer and checkpointer processes
+	// Available in PostgreSQL 9.6+
+	QueryBgwriterMetrics(ctx context.Context, version int) (*models.PgStatBgwriterMetric, error)
+
+	// QueryControlCheckpoint retrieves checkpoint control statistics from pg_control_checkpoint()
+	// Returns checkpoint timing and WAL location information
+	// Available in PostgreSQL 10+
+	QueryControlCheckpoint(ctx context.Context) (*models.PgControlCheckpointMetric, error)
+
+	// QueryArchiverStats retrieves WAL archiver statistics from pg_stat_archiver
+	// Returns counts of successfully archived and failed WAL files
+	// Available in PostgreSQL 9.6+
+	QueryArchiverStats(ctx context.Context) (*models.PgStatArchiverMetric, error)
+
+	// QuerySLRUStats retrieves SLRU (Simple LRU) cache statistics from pg_stat_slru
+	// Returns per-SLRU cache performance metrics
+	// Returns one row per SLRU (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact)
+	// Available in PostgreSQL 13+
+	QuerySLRUStats(ctx context.Context) ([]models.PgStatSLRUMetric, error)
+
+	// QueryRecoveryPrefetch retrieves recovery prefetch statistics from pg_stat_recovery_prefetch
+	// Returns standby server prefetch performance metrics during WAL replay
+	// Returns nil if not on a standby server or if prefetch is not active
+	// Available in PostgreSQL 15+
+	QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRecoveryPrefetchMetric, error)
 }

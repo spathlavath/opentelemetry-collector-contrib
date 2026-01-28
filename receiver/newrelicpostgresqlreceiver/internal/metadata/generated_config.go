@@ -28,7 +28,19 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PostgresqlArchiverArchivedCount                   MetricConfig `mapstructure:"postgresql.archiver.archived_count"`
+	PostgresqlArchiverFailedCount                     MetricConfig `mapstructure:"postgresql.archiver.failed_count"`
 	PostgresqlBeforeXidWraparound                     MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
+	PostgresqlBgwriterBuffersAlloc                    MetricConfig `mapstructure:"postgresql.bgwriter.buffers_alloc"`
+	PostgresqlBgwriterBuffersBackend                  MetricConfig `mapstructure:"postgresql.bgwriter.buffers_backend"`
+	PostgresqlBgwriterBuffersBackendFsync             MetricConfig `mapstructure:"postgresql.bgwriter.buffers_backend_fsync"`
+	PostgresqlBgwriterBuffersCheckpoint               MetricConfig `mapstructure:"postgresql.bgwriter.buffers_checkpoint"`
+	PostgresqlBgwriterBuffersClean                    MetricConfig `mapstructure:"postgresql.bgwriter.buffers_clean"`
+	PostgresqlBgwriterCheckpointsRequested            MetricConfig `mapstructure:"postgresql.bgwriter.checkpoints_requested"`
+	PostgresqlBgwriterCheckpointsTimed                MetricConfig `mapstructure:"postgresql.bgwriter.checkpoints_timed"`
+	PostgresqlBgwriterMaxwrittenClean                 MetricConfig `mapstructure:"postgresql.bgwriter.maxwritten_clean"`
+	PostgresqlBgwriterSyncTime                        MetricConfig `mapstructure:"postgresql.bgwriter.sync_time"`
+	PostgresqlBgwriterWriteTime                       MetricConfig `mapstructure:"postgresql.bgwriter.write_time"`
 	PostgresqlBlkReadTime                             MetricConfig `mapstructure:"postgresql.blk_read_time"`
 	PostgresqlBlkWriteTime                            MetricConfig `mapstructure:"postgresql.blk_write_time"`
 	PostgresqlBufferHit                               MetricConfig `mapstructure:"postgresql.buffer_hit"`
@@ -42,10 +54,23 @@ type MetricsConfig struct {
 	PostgresqlConflictsSnapshot                       MetricConfig `mapstructure:"postgresql.conflicts.snapshot"`
 	PostgresqlConflictsTablespace                     MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
 	PostgresqlConnections                             MetricConfig `mapstructure:"postgresql.connections"`
+	PostgresqlControlCheckpointDelay                  MetricConfig `mapstructure:"postgresql.control.checkpoint_delay"`
+	PostgresqlControlCheckpointDelayBytes             MetricConfig `mapstructure:"postgresql.control.checkpoint_delay_bytes"`
+	PostgresqlControlRedoDelayBytes                   MetricConfig `mapstructure:"postgresql.control.redo_delay_bytes"`
+	PostgresqlControlTimelineID                       MetricConfig `mapstructure:"postgresql.control.timeline_id"`
 	PostgresqlDatabaseSize                            MetricConfig `mapstructure:"postgresql.database_size"`
 	PostgresqlDbCount                                 MetricConfig `mapstructure:"postgresql.db.count"`
 	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
 	PostgresqlDiskRead                                MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlRecoveryPrefetchBlockDistance           MetricConfig `mapstructure:"postgresql.recovery_prefetch.block_distance"`
+	PostgresqlRecoveryPrefetchHit                     MetricConfig `mapstructure:"postgresql.recovery_prefetch.hit"`
+	PostgresqlRecoveryPrefetchIoDepth                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.io_depth"`
+	PostgresqlRecoveryPrefetchPrefetch                MetricConfig `mapstructure:"postgresql.recovery_prefetch.prefetch"`
+	PostgresqlRecoveryPrefetchSkipFpw                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_fpw"`
+	PostgresqlRecoveryPrefetchSkipInit                MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_init"`
+	PostgresqlRecoveryPrefetchSkipNew                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_new"`
+	PostgresqlRecoveryPrefetchSkipRep                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_rep"`
+	PostgresqlRecoveryPrefetchWalDistance             MetricConfig `mapstructure:"postgresql.recovery_prefetch.wal_distance"`
 	PostgresqlReplicationBackendXminAge               MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
 	PostgresqlReplicationFlushLsnDelay                MetricConfig `mapstructure:"postgresql.replication.flush_lsn_delay"`
 	PostgresqlReplicationReplayLsnDelay               MetricConfig `mapstructure:"postgresql.replication.replay_lsn_delay"`
@@ -82,6 +107,13 @@ type MetricsConfig struct {
 	PostgresqlSessionsIdleInTransactionTime           MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
 	PostgresqlSessionsKilled                          MetricConfig `mapstructure:"postgresql.sessions.killed"`
 	PostgresqlSessionsSessionTime                     MetricConfig `mapstructure:"postgresql.sessions.session_time"`
+	PostgresqlSlruBlksExists                          MetricConfig `mapstructure:"postgresql.slru.blks_exists"`
+	PostgresqlSlruBlksHit                             MetricConfig `mapstructure:"postgresql.slru.blks_hit"`
+	PostgresqlSlruBlksRead                            MetricConfig `mapstructure:"postgresql.slru.blks_read"`
+	PostgresqlSlruBlksWritten                         MetricConfig `mapstructure:"postgresql.slru.blks_written"`
+	PostgresqlSlruBlksZeroed                          MetricConfig `mapstructure:"postgresql.slru.blks_zeroed"`
+	PostgresqlSlruFlushes                             MetricConfig `mapstructure:"postgresql.slru.flushes"`
+	PostgresqlSlruTruncates                           MetricConfig `mapstructure:"postgresql.slru.truncates"`
 	PostgresqlSubscriptionApplyError                  MetricConfig `mapstructure:"postgresql.subscription.apply_error"`
 	PostgresqlSubscriptionLastMsgReceiptAge           MetricConfig `mapstructure:"postgresql.subscription.last_msg_receipt_age"`
 	PostgresqlSubscriptionLastMsgSendAge              MetricConfig `mapstructure:"postgresql.subscription.last_msg_send_age"`
@@ -110,7 +142,43 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PostgresqlArchiverArchivedCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlArchiverFailedCount: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlBeforeXidWraparound: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersAlloc: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersBackend: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersBackendFsync: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersCheckpoint: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterBuffersClean: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterCheckpointsRequested: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterCheckpointsTimed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterMaxwrittenClean: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterSyncTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBgwriterWriteTime: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlBlkReadTime: MetricConfig{
@@ -152,6 +220,18 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlConnections: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlControlCheckpointDelay: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlControlCheckpointDelayBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlControlRedoDelayBytes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlControlTimelineID: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlDatabaseSize: MetricConfig{
 			Enabled: true,
 		},
@@ -162,6 +242,33 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlDiskRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchBlockDistance: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchIoDepth: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchPrefetch: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipFpw: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipInit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipNew: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchSkipRep: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRecoveryPrefetchWalDistance: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlReplicationBackendXminAge: MetricConfig{
@@ -270,6 +377,27 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSessionsSessionTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksExists: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksWritten: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruBlksZeroed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruFlushes: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlruTruncates: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlSubscriptionApplyError: MetricConfig{

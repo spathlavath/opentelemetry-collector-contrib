@@ -1,7 +1,31 @@
 default:
 all_set:
   metrics:
+    postgresql.archiver.archived_count:
+      enabled: true
+    postgresql.archiver.failed_count:
+      enabled: true
     postgresql.before_xid_wraparound:
+      enabled: true
+    postgresql.bgwriter.buffers_alloc:
+      enabled: true
+    postgresql.bgwriter.buffers_backend:
+      enabled: true
+    postgresql.bgwriter.buffers_backend_fsync:
+      enabled: true
+    postgresql.bgwriter.buffers_checkpoint:
+      enabled: true
+    postgresql.bgwriter.buffers_clean:
+      enabled: true
+    postgresql.bgwriter.checkpoints_requested:
+      enabled: true
+    postgresql.bgwriter.checkpoints_timed:
+      enabled: true
+    postgresql.bgwriter.maxwritten_clean:
+      enabled: true
+    postgresql.bgwriter.sync_time:
+      enabled: true
+    postgresql.bgwriter.write_time:
       enabled: true
     postgresql.blk_read_time:
       enabled: true
@@ -29,6 +53,14 @@ all_set:
       enabled: true
     postgresql.connections:
       enabled: true
+    postgresql.control.checkpoint_delay:
+      enabled: true
+    postgresql.control.checkpoint_delay_bytes:
+      enabled: true
+    postgresql.control.redo_delay_bytes:
+      enabled: true
+    postgresql.control.timeline_id:
+      enabled: true
     postgresql.database_size:
       enabled: true
     postgresql.db.count:
@@ -36,6 +68,24 @@ all_set:
     postgresql.deadlocks:
       enabled: true
     postgresql.disk_read:
+      enabled: true
+    postgresql.recovery_prefetch.block_distance:
+      enabled: true
+    postgresql.recovery_prefetch.hit:
+      enabled: true
+    postgresql.recovery_prefetch.io_depth:
+      enabled: true
+    postgresql.recovery_prefetch.prefetch:
+      enabled: true
+    postgresql.recovery_prefetch.skip_fpw:
+      enabled: true
+    postgresql.recovery_prefetch.skip_init:
+      enabled: true
+    postgresql.recovery_prefetch.skip_new:
+      enabled: true
+    postgresql.recovery_prefetch.skip_rep:
+      enabled: true
+    postgresql.recovery_prefetch.wal_distance:
       enabled: true
     postgresql.replication.backend_xmin_age:
       enabled: true
@@ -108,6 +158,20 @@ all_set:
     postgresql.sessions.killed:
       enabled: true
     postgresql.sessions.session_time:
+      enabled: true
+    postgresql.slru.blks_exists:
+      enabled: true
+    postgresql.slru.blks_hit:
+      enabled: true
+    postgresql.slru.blks_read:
+      enabled: true
+    postgresql.slru.blks_written:
+      enabled: true
+    postgresql.slru.blks_zeroed:
+      enabled: true
+    postgresql.slru.flushes:
+      enabled: true
+    postgresql.slru.truncates:
       enabled: true
     postgresql.subscription.apply_error:
       enabled: true
@@ -172,7 +236,31 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    postgresql.archiver.archived_count:
+      enabled: false
+    postgresql.archiver.failed_count:
+      enabled: false
     postgresql.before_xid_wraparound:
+      enabled: false
+    postgresql.bgwriter.buffers_alloc:
+      enabled: false
+    postgresql.bgwriter.buffers_backend:
+      enabled: false
+    postgresql.bgwriter.buffers_backend_fsync:
+      enabled: false
+    postgresql.bgwriter.buffers_checkpoint:
+      enabled: false
+    postgresql.bgwriter.buffers_clean:
+      enabled: false
+    postgresql.bgwriter.checkpoints_requested:
+      enabled: false
+    postgresql.bgwriter.checkpoints_timed:
+      enabled: false
+    postgresql.bgwriter.maxwritten_clean:
+      enabled: false
+    postgresql.bgwriter.sync_time:
+      enabled: false
+    postgresql.bgwriter.write_time:
       enabled: false
     postgresql.blk_read_time:
       enabled: false
@@ -200,6 +288,14 @@ none_set:
       enabled: false
     postgresql.connections:
       enabled: false
+    postgresql.control.checkpoint_delay:
+      enabled: false
+    postgresql.control.checkpoint_delay_bytes:
+      enabled: false
+    postgresql.control.redo_delay_bytes:
+      enabled: false
+    postgresql.control.timeline_id:
+      enabled: false
     postgresql.database_size:
       enabled: false
     postgresql.db.count:
@@ -207,6 +303,24 @@ none_set:
     postgresql.deadlocks:
       enabled: false
     postgresql.disk_read:
+      enabled: false
+    postgresql.recovery_prefetch.block_distance:
+      enabled: false
+    postgresql.recovery_prefetch.hit:
+      enabled: false
+    postgresql.recovery_prefetch.io_depth:
+      enabled: false
+    postgresql.recovery_prefetch.prefetch:
+      enabled: false
+    postgresql.recovery_prefetch.skip_fpw:
+      enabled: false
+    postgresql.recovery_prefetch.skip_init:
+      enabled: false
+    postgresql.recovery_prefetch.skip_new:
+      enabled: false
+    postgresql.recovery_prefetch.skip_rep:
+      enabled: false
+    postgresql.recovery_prefetch.wal_distance:
       enabled: false
     postgresql.replication.backend_xmin_age:
       enabled: false
@@ -279,6 +393,20 @@ none_set:
     postgresql.sessions.killed:
       enabled: false
     postgresql.sessions.session_time:
+      enabled: false
+    postgresql.slru.blks_exists:
+      enabled: false
+    postgresql.slru.blks_hit:
+      enabled: false
+    postgresql.slru.blks_read:
+      enabled: false
+    postgresql.slru.blks_written:
+      enabled: false
+    postgresql.slru.blks_zeroed:
+      enabled: false
+    postgresql.slru.flushes:
+      enabled: false
+    postgresql.slru.truncates:
       enabled: false
     postgresql.subscription.apply_error:
       enabled: false

@@ -12,6 +12,34 @@ metrics:
     enabled: false
 ```
 
+### postgresql.archiver.archived_count
+
+Number of WAL files successfully archived (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {files} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.archiver.failed_count
+
+Number of failed attempts to archive WAL files (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {files} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.before_xid_wraparound
 
 Number of transactions before XID wraparound occurs
@@ -25,6 +53,146 @@ Number of transactions before XID wraparound occurs
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.buffers_alloc
+
+Number of buffers allocated (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {buffers} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.buffers_backend
+
+Number of buffers written directly by a backend (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {buffers} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.buffers_backend_fsync
+
+Number of times a backend had to execute its own fsync call (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.buffers_checkpoint
+
+Number of buffers written during checkpoints (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {buffers} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.buffers_clean
+
+Number of buffers written by the background writer (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {buffers} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.checkpoints_requested
+
+Number of requested checkpoints that have been performed (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {checkpoints} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.checkpoints_timed
+
+Number of scheduled checkpoints that have been performed (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {checkpoints} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.maxwritten_clean
+
+Number of times the background writer stopped a cleaning scan because it had written too many buffers (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.sync_time
+
+Total time spent syncing checkpoint data to disk in milliseconds (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| ms | Sum | Double | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.bgwriter.write_time
+
+Total time spent writing checkpoint data to disk in milliseconds (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| ms | Sum | Double | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
 ### postgresql.blk_read_time
@@ -222,6 +390,62 @@ Number of active connections (backends) to the database
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.control.checkpoint_delay
+
+Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.control.checkpoint_delay_bytes
+
+WAL distance from the last checkpoint in bytes (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.control.redo_delay_bytes
+
+WAL distance from the redo location in bytes (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.control.timeline_id
+
+Current timeline ID (PostgreSQL 10+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {timeline} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.database_size
 
 Size of the database in bytes
@@ -279,6 +503,132 @@ Number of disk blocks read
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.block_distance
+
+Number of blocks between the current replay position and the prefetch position (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.hit
+
+Number of prefetch requests that hit the buffer cache (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {requests} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.io_depth
+
+Number of I/O operations in progress (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {operations} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.prefetch
+
+Number of blocks prefetched during recovery (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.skip_fpw
+
+Number of prefetch requests skipped because a full page write was found (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {requests} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.skip_init
+
+Number of prefetch requests skipped because the relation was being initialized (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {requests} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.skip_new
+
+Number of prefetch requests skipped because the relation did not exist yet (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {requests} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.skip_rep
+
+Number of prefetch requests skipped because they were already in progress (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {requests} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.recovery_prefetch.wal_distance
+
+Distance in WAL bytes between the current replay position and the prefetch position (PostgreSQL 15+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
 ### postgresql.replication.backend_xmin_age
@@ -845,6 +1195,111 @@ Time spent in sessions for this database (PostgreSQL 14+)
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.slru.blks_exists
+
+Number of blocks checked for existence for this SLRU (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
+
+### postgresql.slru.blks_hit
+
+Number of times disk blocks were found already in the SLRU cache (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
+
+### postgresql.slru.blks_read
+
+Number of disk blocks read for this SLRU (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
+
+### postgresql.slru.blks_written
+
+Number of disk blocks written for this SLRU (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
+
+### postgresql.slru.blks_zeroed
+
+Number of blocks zeroed during initializations for this SLRU (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
+
+### postgresql.slru.flushes
+
+Number of flushes of dirty data for this SLRU (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {flushes} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
+
+### postgresql.slru.truncates
+
+Number of truncates for this SLRU (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {truncates} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
 
 ### postgresql.subscription.apply_error
 
