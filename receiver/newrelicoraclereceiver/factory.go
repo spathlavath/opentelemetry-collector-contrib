@@ -93,20 +93,20 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 		}
 
 		// Determine which services to monitor based on pdb_services configuration
-		pdbServiceNames, err := determinePDBServices(sqlOpenerFunc, getDataSource(*sqlCfg), serviceName, sqlCfg.PdbServices, settings.Logger)
+		monitoredServices, err := determineMonitoredServices(sqlOpenerFunc, getDataSource(*sqlCfg), serviceName, sqlCfg.PdbServices, settings.Logger)
 		if err != nil {
-			return nil, fmt.Errorf("failed to determine PDB services: %w", err)
+			return nil, fmt.Errorf("failed to determine monitored services: %w", err)
 		}
 
-		// Create scrapers for each PDB
+		// Create scrapers for each service (CDB or PDB)
 		var opts []scraperhelper.ControllerOption
-		for _, pdbService := range pdbServiceNames {
-			pdbServiceName := pdbService // Capture loop variable
+		for _, service := range monitoredServices {
+			serviceName := service // Capture loop variable
 			mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger,
-				createDBProviderFunc(sqlOpenerFunc, *sqlCfg, pdbServiceName),
-				hostAddress, hostPort, pdbServiceName)
+				createDBProviderFunc(sqlOpenerFunc, *sqlCfg, serviceName),
+				hostAddress, hostPort, serviceName)
 			if err != nil {
-				return nil, fmt.Errorf("failed to create scraper for PDB %s: %w", pdbServiceName, err)
+				return nil, fmt.Errorf("failed to create scraper for service %s: %w", serviceName, err)
 			}
 			opts = append(opts, scraperhelper.AddScraper(metadata.Type, mp))
 		}
@@ -213,79 +213,79 @@ func getDataSourceWithService(cfg Config, serviceName string) string {
 	return fmt.Sprintf("%s/%s@%s:%d/%s", cfg.Username, cfg.Password, host, port, serviceName)
 }
 
-// determinePDBServices determines which services to monitor based on pdb_services configuration
-func determinePDBServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, cdbService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
-	// Case 1: Empty pdb_services - collect only CDB service data
+// determineMonitoredServices determines which services to monitor based on pdb_services configuration
+func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, configuredService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
+	// Case 1: Empty pdb_services - collect only configured service data (CDB or PDB)
 	if len(pdbServices) == 0 {
-		logger.Info("PDB services not configured, collecting CDB service data only", zap.String("service", cdbService))
-		return []string{cdbService}, nil
+		logger.Info("PDB services not configured, collecting configured service data only", zap.String("service", configuredService))
+		return []string{configuredService}, nil
 	}
 
-	// Case 2: pdb_services=['ALL'] - fetch all PDB services (excluding CDB)
+	// Case 2: pdb_services=['ALL'] - fetch all available services from database
 	if len(pdbServices) == 1 && strings.EqualFold(pdbServices[0], "ALL") {
-		logger.Info("Fetching all PDB services from database")
-		allPDBs, err := getPDBServiceNames(sqlOpenerFunc, dataSource, logger)
+		logger.Info("Fetching all available services from database")
+		allServices, err := getAvailableServiceNames(sqlOpenerFunc, dataSource, logger)
 		if err != nil {
-			return nil, fmt.Errorf("failed to query all PDB services: %w", err)
+			return nil, fmt.Errorf("failed to query all services: %w", err)
 		}
-		if len(allPDBs) == 0 {
-			logger.Warn("No PDB services found in database")
+		if len(allServices) == 0 {
+			logger.Warn("No services found in database")
 		}
-		return allPDBs, nil
+		return allServices, nil
 	}
 
-	// Case 3: pdb_services=['pdb1', 'pdb2'] - fetch only specified PDB services
-	logger.Info("Filtering PDB services based on configuration", zap.Strings("requested_services", pdbServices))
-	allPDBs, err := getPDBServiceNames(sqlOpenerFunc, dataSource, logger)
+	// Case 3: pdb_services=['pdb1', 'pdb2'] - fetch only specified services
+	logger.Info("Filtering services based on configuration", zap.Strings("requested_services", pdbServices))
+	allServices, err := getAvailableServiceNames(sqlOpenerFunc, dataSource, logger)
 	if err != nil {
-		return nil, fmt.Errorf("failed to query PDB services: %w", err)
+		return nil, fmt.Errorf("failed to query services: %w", err)
 	}
 
-	// Filter PDBs based on configuration (case-insensitive matching)
-	filteredPDBs := filterPDBServices(allPDBs, pdbServices, logger)
-	if len(filteredPDBs) == 0 {
-		return nil, fmt.Errorf("none of the requested PDB services found: %v", pdbServices)
+	// Filter services based on configuration (case-insensitive matching)
+	filteredServices := filterServices(allServices, pdbServices, logger)
+	if len(filteredServices) == 0 {
+		return nil, fmt.Errorf("none of the requested services found: %v", pdbServices)
 	}
 
-	return filteredPDBs, nil
+	return filteredServices, nil
 }
 
-// filterPDBServices filters PDB services based on requested names (case-insensitive)
-func filterPDBServices(allPDBs []string, requestedPDBs []string, logger *zap.Logger) []string {
+// filterServices filters services based on requested names (case-insensitive)
+func filterServices(allServices []string, requestedServices []string, logger *zap.Logger) []string {
 	// Create a map for case-insensitive lookup
 	requestMap := make(map[string]string) // lowercase -> original
-	for _, req := range requestedPDBs {
+	for _, req := range requestedServices {
 		requestMap[strings.ToLower(req)] = req
 	}
 
 	var filtered []string
-	for _, pdb := range allPDBs {
-		// Extract just the PDB name (before the first dot)
-		pdbName := pdb
-		if dotIndex := strings.Index(pdb, "."); dotIndex != -1 {
-			pdbName = pdb[:dotIndex]
+	for _, service := range allServices {
+		// Extract just the service name (before the first dot)
+		serviceName := service
+		if dotIndex := strings.Index(service, "."); dotIndex != -1 {
+			serviceName = service[:dotIndex]
 		}
 
-		// Check if this PDB is in the requested list (case-insensitive)
-		if _, found := requestMap[strings.ToLower(pdbName)]; found {
-			filtered = append(filtered, pdb)
-			logger.Info("Including PDB service", zap.String("service_name", pdb))
-		} else if _, found := requestMap[strings.ToLower(pdb)]; found {
+		// Check if this service is in the requested list (case-insensitive)
+		if _, found := requestMap[strings.ToLower(serviceName)]; found {
+			filtered = append(filtered, service)
+			logger.Info("Including service", zap.String("service_name", service))
+		} else if _, found := requestMap[strings.ToLower(service)]; found {
 			// Also check the full FQDN
-			filtered = append(filtered, pdb)
-			logger.Info("Including PDB service", zap.String("service_name", pdb))
+			filtered = append(filtered, service)
+			logger.Info("Including service", zap.String("service_name", service))
 		}
 	}
 
 	return filtered
 }
 
-// getPDBServiceNames queries the database for all PDB service names
-func getPDBServiceNames(sqlOpenerFunc sqlOpenerFunc, dataSource string, logger *zap.Logger) ([]string, error) {
-	// Open a temporary connection to query PDB names
+// getAvailableServiceNames queries the database for all available service names
+func getAvailableServiceNames(sqlOpenerFunc sqlOpenerFunc, dataSource string, logger *zap.Logger) ([]string, error) {
+	// Open a temporary connection to query service names
 	db, err := sqlOpenerFunc(dataSource)
 	if err != nil {
-		return nil, fmt.Errorf("failed to open connection for PDB query: %w", err)
+		return nil, fmt.Errorf("failed to open connection for service query: %w", err)
 	}
 	defer db.Close()
 
@@ -293,38 +293,38 @@ func getPDBServiceNames(sqlOpenerFunc sqlOpenerFunc, dataSource string, logger *
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	// Query to get PDB service names
+	// Query to get service names (PDB services)
 	rows, err := db.QueryContext(ctx, queries.PDBServiceNamesSQL)
 	if err != nil {
-		return nil, fmt.Errorf("failed to query PDB service names: %w", err)
+		return nil, fmt.Errorf("failed to query service names: %w", err)
 	}
 	defer rows.Close()
 
-	var pdbServiceNames []string
+	var serviceNames []string
 	for rows.Next() {
 		var fqdn sql.NullString
 		if err := rows.Scan(&fqdn); err != nil {
-			logger.Warn("Failed to scan PDB service name", zap.Error(err))
+			logger.Warn("Failed to scan service name", zap.Error(err))
 			continue
 		}
 		if fqdn.Valid && fqdn.String != "" {
-			pdbServiceNames = append(pdbServiceNames, fqdn.String)
-			logger.Info("Found PDB service", zap.String("service_name", fqdn.String))
+			serviceNames = append(serviceNames, fqdn.String)
+			logger.Info("Found service", zap.String("service_name", fqdn.String))
 		}
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error iterating PDB service names: %w", err)
+		return nil, fmt.Errorf("error iterating service names: %w", err)
 	}
 
-	logger.Info("Retrieved PDB service names", zap.Int("count", len(pdbServiceNames)), zap.Strings("services", pdbServiceNames))
-	return pdbServiceNames, nil
+	logger.Info("Retrieved service names", zap.Int("count", len(serviceNames)), zap.Strings("services", serviceNames))
+	return serviceNames, nil
 }
 
-// createDBProviderFunc creates a database provider function for a specific PDB service
+// createDBProviderFunc creates a database provider function for a specific service (CDB or PDB)
 func createDBProviderFunc(sqlOpenerFunc sqlOpenerFunc, cfg Config, serviceName string) dbProviderFunc {
 	return func() (*sql.DB, error) {
-		// Build PDB-specific connection string
+		// Build service-specific connection string
 		dataSource := getDataSourceWithService(cfg, serviceName)
 		db, err := sqlOpenerFunc(dataSource)
 		if err != nil {
