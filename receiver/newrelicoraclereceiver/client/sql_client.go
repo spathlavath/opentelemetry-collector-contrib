@@ -184,6 +184,51 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 	return nil, nil
 }
 
+// QueryPlanHashMetrics queries for plan hash metrics aggregated by plan_hash_value for a given SQL_ID
+func (c *SQLClient) QueryPlanHashMetrics(ctx context.Context, sqlID string) ([]models.PlanHashMetrics, error) {
+	if c == nil || c.db == nil {
+		return nil, fmt.Errorf("SQL client or database connection is nil")
+	}
+
+	query := queries.GetPlanHashMetricsSQL(sqlID)
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []models.PlanHashMetrics
+
+	for rows.Next() {
+		var metrics models.PlanHashMetrics
+
+		err := rows.Scan(
+			&metrics.CollectionTimestamp,
+			&metrics.SQLID,
+			&metrics.PlanHashValue,
+			&metrics.TotalExecutions,
+			&metrics.AvgElapsedTimeMs,
+			&metrics.AvgCPUTimeMs,
+			&metrics.AvgDiskReads,
+			&metrics.AvgBufferGets,
+			&metrics.AvgRowsReturned,
+			&metrics.LastActiveTime,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		results = append(results, metrics)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
 // QueryWaitEventsWithBlocking executes the combined wait events with blocking information query.
 // This replaces the separate QueryBlockingQueries and QueryWaitEvents methods.
 // slowQuerySQLIDs: Optional list of SQL_IDs to filter by at database level (empty slice returns all)

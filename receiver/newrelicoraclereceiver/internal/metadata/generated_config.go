@@ -147,6 +147,12 @@ type MetricsConfig struct {
 	NewrelicoracledbPdbUserRollbacksPerSecond                          MetricConfig `mapstructure:"newrelicoracledb.pdb.user_rollbacks_per_second"`
 	NewrelicoracledbPdbUserRollbacksPercentage                         MetricConfig `mapstructure:"newrelicoracledb.pdb.user_rollbacks_percentage"`
 	NewrelicoracledbPdbWaitTimeRatio                                   MetricConfig `mapstructure:"newrelicoracledb.pdb.wait_time_ratio"`
+	NewrelicoracledbPlanHashMetricsAvgBufferGets                       MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_buffer_gets"`
+	NewrelicoracledbPlanHashMetricsAvgCPUTimeMs                        MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms"`
+	NewrelicoracledbPlanHashMetricsAvgDiskReads                        MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_disk_reads"`
+	NewrelicoracledbPlanHashMetricsAvgElapsedTimeMs                    MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms"`
+	NewrelicoracledbPlanHashMetricsAvgRowsReturned                     MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_rows_returned"`
+	NewrelicoracledbPlanHashMetricsExecutions                          MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.executions"`
 	NewrelicoracledbRacInstanceActiveState                             MetricConfig `mapstructure:"newrelicoracledb.rac.instance.active_state"`
 	NewrelicoracledbRacInstanceArchiverStarted                         MetricConfig `mapstructure:"newrelicoracledb.rac.instance.archiver_started"`
 	NewrelicoracledbRacInstanceDatabaseStatus                          MetricConfig `mapstructure:"newrelicoracledb.rac.instance.database_status"`
@@ -713,6 +719,24 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbPdbWaitTimeRatio: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPlanHashMetricsAvgBufferGets: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPlanHashMetricsAvgCPUTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPlanHashMetricsAvgDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPlanHashMetricsAvgElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPlanHashMetricsAvgRowsReturned: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbPlanHashMetricsExecutions: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbRacInstanceActiveState: MetricConfig{

@@ -58,6 +58,7 @@ type newRelicOracleScraper struct {
 	slowQueriesScraper       *scrapers.SlowQueriesScraper
 	executionPlanScraper     *scrapers.ExecutionPlanScraper
 	waitEventBlockingScraper *scrapers.WaitEventBlockingScraper
+	planHashMetricsScraper   *scrapers.PlanHashMetricsScraper
 	childCursorsScraper      *scrapers.ChildCursorsScraper
 
 	// Database and configuration
@@ -227,6 +228,13 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		return fmt.Errorf("failed to create wait event blocking scraper: %w", err)
 	}
 
+	s.planHashMetricsScraper, err = scrapers.NewPlanHashMetricsScraper(
+		s.client, s.mb, s.logger, s.metricsBuilderConfig,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create plan hash metrics scraper: %w", err)
+	}
+
 	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 
 	return nil
@@ -283,7 +291,13 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	}
 
 	s.logger.Debug("Starting slow queries scraper")
-	queryIDs, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
+	slowQueryIdentifiers, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
+
+	// Extract just the query IDs for logging
+	queryIDs := make([]string, len(slowQueryIdentifiers))
+	for i, id := range slowQueryIdentifiers {
+		queryIDs[i] = id.SQLID
+	}
 
 	s.logger.Info("Slow queries scraper completed",
 		zap.Int("query_ids_found", len(queryIDs)),
@@ -292,27 +306,50 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 
 	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
 
-	s.logger.Debug("Starting wait events & blocking scraper for slow query SQL_IDs",
-		zap.Int("slow_query_ids", len(queryIDs)))
-	waitEventSQLIdentifiers, waitEventErrs := s.waitEventBlockingScraper.ScrapeWaitEventsAndBlocking(ctx, queryIDs)
+	// Run wait events and plan hash metrics scrapers in parallel using goroutines
+	var wg sync.WaitGroup
+	var planHashErrs []error
 
-	s.logger.Info("Wait events & blocking scraper completed",
-		zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)),
-		zap.Int("errors", len(waitEventErrs)))
+	wg.Add(2)
 
-	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
+	// Wait events & blocking scraper with child cursors and execution plans
+	go func() {
+		defer wg.Done()
+		s.logger.Debug("Starting wait events & blocking scraper for slow query SQL_IDs",
+			zap.Int("slow_query_ids", len(slowQueryIdentifiers)))
+		waitEventSQLIdentifiers, waitEventErrs := s.waitEventBlockingScraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
+		s.logger.Info("Wait events & blocking scraper completed",
+			zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)),
+			zap.Int("errors", len(waitEventErrs)))
 
-	if len(waitEventSQLIdentifiers) > 0 {
-		// First scrape child cursors to get plan hash values
-		waitEventSQLIdentifiers, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, waitEventSQLIdentifiers, s.config.ChildCursorsPerSQLID)
-		s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
+		s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
-		// Then scrape execution plans using the plan hash values for caching
-		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, waitEventSQLIdentifiers)
-		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
-	} else {
-		s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
-	}
+		if len(waitEventSQLIdentifiers) > 0 {
+			// First scrape child cursors to get plan hash values
+			waitEventSQLIdentifiers, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, waitEventSQLIdentifiers, s.config.ChildCursorsPerSQLID)
+			s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
+
+			// Then scrape execution plans using the plan hash values for caching
+			executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, waitEventSQLIdentifiers)
+			s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
+		} else {
+			s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
+		}
+	}()
+
+	// Plan hash metrics scraper
+	go func() {
+		defer wg.Done()
+		s.logger.Debug("Starting plan hash metrics scraper for slow query SQL_IDs",
+			zap.Int("slow_query_ids", len(slowQueryIdentifiers)))
+		planHashErrs = s.planHashMetricsScraper.ScrapePlanHashMetrics(ctx, slowQueryIdentifiers)
+		s.logger.Info("Plan hash metrics scraper completed",
+			zap.Int("errors", len(planHashErrs)))
+
+		s.sendErrorsToChannel(errChan, planHashErrs, "plan hash metrics")
+	}()
+
+	wg.Wait()
 }
 
 // executeIndependentScrapers launches concurrent scrapers for independent metrics

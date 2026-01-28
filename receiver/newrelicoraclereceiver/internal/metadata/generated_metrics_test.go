@@ -82,7 +82,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -546,6 +546,30 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicoracledbPlanHashMetricsAvgBufferGetsDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbPlanHashMetricsAvgCPUTimeMsDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbPlanHashMetricsAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbPlanHashMetricsAvgElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbPlanHashMetricsAvgRowsReturnedDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicoracledbPlanHashMetricsExecutionsDataPoint(ts, 1, "collection_timestamp-val", "query_id-val", "plan_hash_value-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicoracledbRacInstanceActiveStateDataPoint(ts, 1, "instance.id-val", "rac.instance.name-val", "host.name.rac-val", "active.state-val")
 
 			defaultMetricsCount++
@@ -710,43 +734,43 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", "user_name-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.event.type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val", "normalised_sql_hash-val", "client_name-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.event.type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val", "normalised_sql_hash-val", "client_name-val", "transaction_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1370,7 +1394,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val")
+			mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_status-val", "session_state-val", "query_id-val", 16, "wait_event_name-val", "wait_category-val", "session_program-val", "session_machine-val", "wait_object_owner-val", "wait_object_name-val", "wait_object_type-val", "sql_exec_start-val", 11, "row_wait_obj_id-val", "row_wait_file_id-val", "row_wait_block_id-val", "client_name-val", "transaction_name-val", "normalised_sql_hash-val")
 
 			rb := mb.NewResourceBuilder()
 			rb.SetHostAddress("host.address-val")
@@ -1524,6 +1548,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("final_blocker_query_text")
 					assert.True(t, ok)
 					assert.Equal(t, "final_blocker_query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.buffer_gets":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.buffer_gets")
 					validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"] = true
@@ -3673,6 +3706,186 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "newrelicoracledb.plan_hash_metrics.avg_buffer_gets":
+					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_buffer_gets"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.avg_buffer_gets")
+					validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_buffer_gets"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average buffer gets per execution for a specific plan hash value", ms.At(i).Description())
+					assert.Equal(t, "{gets}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+				case "newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms":
+					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms")
+					validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average CPU time per execution for a specific plan hash value", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+				case "newrelicoracledb.plan_hash_metrics.avg_disk_reads":
+					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_disk_reads"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.avg_disk_reads")
+					validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_disk_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average disk reads per execution for a specific plan hash value", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+				case "newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms":
+					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms")
+					validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average elapsed time per execution for a specific plan hash value", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+				case "newrelicoracledb.plan_hash_metrics.avg_rows_returned":
+					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_rows_returned"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.avg_rows_returned")
+					validatedMetrics["newrelicoracledb.plan_hash_metrics.avg_rows_returned"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average rows returned per execution for a specific plan hash value", ms.At(i).Description())
+					assert.Equal(t, "{rows}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+				case "newrelicoracledb.plan_hash_metrics.executions":
+					assert.False(t, validatedMetrics["newrelicoracledb.plan_hash_metrics.executions"], "Found a duplicate in the metrics slice: newrelicoracledb.plan_hash_metrics.executions")
+					validatedMetrics["newrelicoracledb.plan_hash_metrics.executions"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of executions for a specific plan hash value", ms.At(i).Description())
+					assert.Equal(t, "{executions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("plan_hash_value")
+					assert.True(t, ok)
+					assert.Equal(t, "plan_hash_value-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 				case "newrelicoracledb.rac.instance.active_state":
 					assert.False(t, validatedMetrics["newrelicoracledb.rac.instance.active_state"], "Found a duplicate in the metrics slice: newrelicoracledb.rac.instance.active_state")
 					validatedMetrics["newrelicoracledb.rac.instance.active_state"] = true
@@ -4378,6 +4591,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_disk_reads":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_disk_reads")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_disk_reads"] = true
@@ -4408,6 +4624,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_disk_writes":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_disk_writes"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_disk_writes")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_disk_writes"] = true
@@ -4438,6 +4657,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_elapsed_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_elapsed_time")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_elapsed_time"] = true
@@ -4468,6 +4690,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_lock_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_lock_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_lock_time")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_lock_time"] = true
@@ -4498,6 +4723,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.avg_rows_examined":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.avg_rows_examined"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.avg_rows_examined")
 					validatedMetrics["newrelicoracledb.slow_queries.avg_rows_examined"] = true
@@ -4528,6 +4756,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.execution_count":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.execution_count")
 					validatedMetrics["newrelicoracledb.slow_queries.execution_count"] = true
@@ -4558,6 +4789,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.interval_avg_elapsed_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.interval_avg_elapsed_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.interval_avg_elapsed_time")
 					validatedMetrics["newrelicoracledb.slow_queries.interval_avg_elapsed_time"] = true
@@ -4588,6 +4822,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.interval_execution_count":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.interval_execution_count"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.interval_execution_count")
 					validatedMetrics["newrelicoracledb.slow_queries.interval_execution_count"] = true
@@ -4618,6 +4855,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.query_details":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.query_details"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.query_details")
 					validatedMetrics["newrelicoracledb.slow_queries.query_details"] = true
@@ -4660,6 +4900,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("client_name")
 					assert.True(t, ok)
 					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
 				case "newrelicoracledb.sorts_disk":
 					assert.False(t, validatedMetrics["newrelicoracledb.sorts_disk"], "Found a duplicate in the metrics slice: newrelicoracledb.sorts_disk")
 					validatedMetrics["newrelicoracledb.sorts_disk"] = true
@@ -7075,6 +7318,15 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("row_wait_block_id")
 					assert.True(t, ok)
 					assert.Equal(t, "row_wait_block_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("client_name")
+					assert.True(t, ok)
+					assert.Equal(t, "client_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("transaction_name")
+					assert.True(t, ok)
+					assert.Equal(t, "transaction_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 				}
 			}
 		})

@@ -56,6 +56,9 @@ attributes:
   client_name:
     description: "Client service name extracted from query comment (nr_service)"
     type: string
+  transaction_name:
+    description: "Transaction name extracted from query comment (nr_txn)"
+    type: string
   plan_hash_value:
     description: Oracle execution plan hash value
     type: string
@@ -3263,6 +3266,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.avg_cpu_time:
     description: Average CPU time per execution for slow queries
@@ -3277,6 +3281,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.avg_disk_reads:
     description: Average disk reads per execution for slow queries
@@ -3291,6 +3296,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.avg_disk_writes:
     description: Average disk writes per execution for slow queries
@@ -3305,6 +3311,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.avg_elapsed_time:
     description: Average elapsed time per execution for slow queries
@@ -3319,6 +3326,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.avg_rows_examined:
     description: Average rows examined per execution for slow queries
@@ -3333,6 +3341,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.avg_lock_time:
     description: Average lock/concurrency wait time per execution for slow queries
@@ -3347,6 +3356,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
@@ -3365,6 +3375,7 @@ metrics:
       - last_active_time
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   # Interval-based (delta) metrics - showing what happened in the LAST polling interval
   # These metrics provide real-time visibility into query performance changes
@@ -3381,6 +3392,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   newrelicoracledb.slow_queries.interval_execution_count:
     description: Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
@@ -3395,6 +3407,7 @@ metrics:
       - user_name
       - normalised_sql_hash
       - client_name
+      - transaction_name
 
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
@@ -3540,6 +3553,9 @@ metrics:
       - final_blocker_serial
       - final_blocker_query_id
       - final_blocker_query_text
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.total_wait_time_ms:
@@ -3628,6 +3644,9 @@ metrics:
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
 
   # Disabled old wait events metrics - replaced with current_wait_time_ms
   # newrelicoracledb.wait_events.avg_wait_time_ms:
@@ -3640,7 +3659,116 @@ metrics:
   #       - database_name
   #       - query_id
   #       - wait_event_name
-  #       - wait_category    
+  #       - wait_category
+
+  # Plan Hash Metrics - Aggregated execution metrics by plan hash value
+  newrelicoracledb.plan_hash_metrics.executions:
+    description: Total number of executions for a specific plan hash value
+    extended_documentation: |
+      Total executions across all child cursors that share the same plan hash value.
+      Helps identify which execution plans are most frequently used for a given SQL statement.
+      Source: SUM(executions) from v$sql grouped by plan_hash_value.
+    enabled: true
+    gauge:
+      value_type: int
+    unit: "{executions}"
+    attributes:
+      - collection_timestamp
+      - query_id
+      - plan_hash_value
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
+
+  newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms:
+    description: Average elapsed time per execution for a specific plan hash value
+    extended_documentation: |
+      Average elapsed time in milliseconds per execution for this plan hash.
+      Aggregated across all child cursors with the same plan hash value.
+      Source: AVG(elapsed_time/executions) from v$sql grouped by plan_hash_value.
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - query_id
+      - plan_hash_value
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
+
+  newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms:
+    description: Average CPU time per execution for a specific plan hash value
+    extended_documentation: |
+      Average CPU time in milliseconds per execution for this plan hash.
+      Aggregated across all child cursors with the same plan hash value.
+      Source: AVG(cpu_time/executions) from v$sql grouped by plan_hash_value.
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - query_id
+      - plan_hash_value
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
+
+  newrelicoracledb.plan_hash_metrics.avg_disk_reads:
+    description: Average disk reads per execution for a specific plan hash value
+    extended_documentation: |
+      Average number of disk reads per execution for this plan hash.
+      Aggregated across all child cursors with the same plan hash value.
+      Source: AVG(disk_reads/executions) from v$sql grouped by plan_hash_value.
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{reads}"
+    attributes:
+      - collection_timestamp
+      - query_id
+      - plan_hash_value
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
+
+  newrelicoracledb.plan_hash_metrics.avg_buffer_gets:
+    description: Average buffer gets per execution for a specific plan hash value
+    extended_documentation: |
+      Average number of buffer gets per execution for this plan hash.
+      Aggregated across all child cursors with the same plan hash value.
+      Source: AVG(buffer_gets/executions) from v$sql grouped by plan_hash_value.
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{gets}"
+    attributes:
+      - collection_timestamp
+      - query_id
+      - plan_hash_value
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
+
+  newrelicoracledb.plan_hash_metrics.avg_rows_returned:
+    description: Average rows returned per execution for a specific plan hash value
+    extended_documentation: |
+      Average number of rows returned per execution for this plan hash.
+      Aggregated across all child cursors with the same plan hash value.
+      Source: AVG(rows_processed/executions) from v$sql grouped by plan_hash_value.
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{rows}"
+    attributes:
+      - collection_timestamp
+      - query_id
+      - plan_hash_value
+      - client_name
+      - transaction_name
+      - normalised_sql_hash
 
 tests:
   config:

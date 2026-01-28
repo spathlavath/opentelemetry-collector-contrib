@@ -55,15 +55,23 @@ func (s *WaitEventBlockingScraper) fetchWaitEvents(ctx context.Context, slowQuer
 }
 
 // ScrapeWaitEventsAndBlocking collects both wait events and blocking query metrics in a single query
-func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Context, slowQuerySQLIDs []string) ([]models.SQLIdentifier, []error) {
-	waitEvents, err := s.fetchWaitEvents(ctx, slowQuerySQLIDs)
+func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Context, slowQueryIdentifiers []models.SQLIdentifier) ([]models.SQLIdentifier, []error) {
+	// Extract SQL IDs and create a map for metadata lookup
+	sqlIDMap := make(map[string]models.SQLIdentifier)
+	sqlIDs := make([]string, len(slowQueryIdentifiers))
+	for i, identifier := range slowQueryIdentifiers {
+		sqlIDs[i] = identifier.SQLID
+		sqlIDMap[identifier.SQLID] = identifier
+	}
+
+	waitEvents, err := s.fetchWaitEvents(ctx, sqlIDs)
 	if err != nil {
 		return nil, []error{err}
 	}
 
 	now := pcommon.NewTimestampFromTime(time.Now())
-	s.emitWaitEventMetrics(now, waitEvents)
-	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents)
+	s.emitWaitEventMetrics(now, waitEvents, sqlIDMap)
+	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents, sqlIDMap)
 
 	s.logger.Debug("Wait events and blocking scrape completed")
 
@@ -71,7 +79,7 @@ func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Conte
 }
 
 // recordWaitEventMetrics records wait event metrics for a session
-func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking) {
+func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking, sqlIDMap map[string]models.SQLIdentifier) {
 	if !event.HasValidCurrentWaitSeconds() {
 		return
 	}
@@ -98,6 +106,15 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	rowWaitFileID := commonutils.FormatInt64(event.GetLockedFileID())
 	rowWaitBlockID := commonutils.FormatInt64(event.GetLockedBlockID())
 
+	// Get client_name, transaction_name, and normalised_sql_hash from sqlIDMap
+	// These will be empty strings if not present in the map or if the metadata values were empty
+	var clientName, transactionName, normalisedSQLHash string
+	if metadata, exists := sqlIDMap[queryID]; exists {
+		clientName = metadata.ClientName
+		transactionName = metadata.TransactionName
+		normalisedSQLHash = metadata.NormalisedSQLHash
+	}
+
 	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(
 		now,
 		event.GetCurrentWaitMs(),
@@ -122,17 +139,28 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		rowWaitObjID,
 		rowWaitFileID,
 		rowWaitBlockID,
+		clientName,
+		transactionName,
+		normalisedSQLHash,
 	)
 }
 
 // GetSQLIdentifiers retrieves unique SQL identifiers from wait events without emitting metrics
-func (s *WaitEventBlockingScraper) GetSQLIdentifiers(ctx context.Context, slowQuerySQLIDs []string) ([]models.SQLIdentifier, []error) {
-	waitEvents, err := s.fetchWaitEvents(ctx, slowQuerySQLIDs)
+func (s *WaitEventBlockingScraper) GetSQLIdentifiers(ctx context.Context, slowQueryIdentifiers []models.SQLIdentifier) ([]models.SQLIdentifier, []error) {
+	// Extract SQL IDs and create a map for metadata lookup
+	sqlIDMap := make(map[string]models.SQLIdentifier)
+	sqlIDs := make([]string, len(slowQueryIdentifiers))
+	for i, identifier := range slowQueryIdentifiers {
+		sqlIDs[i] = identifier.SQLID
+		sqlIDMap[identifier.SQLID] = identifier
+	}
+
+	waitEvents, err := s.fetchWaitEvents(ctx, sqlIDs)
 	if err != nil {
 		return nil, []error{err}
 	}
 
-	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents)
+	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents, sqlIDMap)
 
 	s.logger.Debug("SQL identifiers collected without emitting metrics")
 
@@ -143,18 +171,19 @@ func (s *WaitEventBlockingScraper) GetSQLIdentifiers(ctx context.Context, slowQu
 func (s *WaitEventBlockingScraper) emitWaitEventMetrics(
 	now pcommon.Timestamp,
 	waitEvents []models.WaitEventWithBlocking,
+	sqlIDMap map[string]models.SQLIdentifier,
 ) (int, int) {
 	waitEventMetricCount := 0
 	blockingMetricCount := 0
 
 	for _, event := range waitEvents {
 		if event.IsValidForMetrics() {
-			s.recordWaitEventMetrics(now, &event)
+			s.recordWaitEventMetrics(now, &event, sqlIDMap)
 			waitEventMetricCount++
 		}
 
 		if event.IsBlocked() {
-			s.recordBlockingMetrics(now, &event)
+			s.recordBlockingMetrics(now, &event, sqlIDMap)
 			blockingMetricCount++
 		}
 	}
@@ -170,6 +199,7 @@ func (s *WaitEventBlockingScraper) shouldIncludeIdentifier(event *models.WaitEve
 // extractSQLIdentifiers extracts unique SQL identifiers from wait events
 func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 	waitEvents []models.WaitEventWithBlocking,
+	sqlIDMap map[string]models.SQLIdentifier,
 ) []models.SQLIdentifier {
 	identifiersMap := make(map[string]models.SQLIdentifier)
 
@@ -188,10 +218,22 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 				timestamp = time.Now()
 			}
 
+			// Get metadata from slow queries if available
+			// These will be empty strings if not present
+			var clientName, transactionName, normalisedSQLHash string
+			if metadata, exists := sqlIDMap[sqlID]; exists {
+				clientName = metadata.ClientName
+				transactionName = metadata.TransactionName
+				normalisedSQLHash = metadata.NormalisedSQLHash
+			}
+
 			identifiersMap[key] = models.SQLIdentifier{
-				SQLID:       sqlID,
-				ChildNumber: childNumber,
-				Timestamp:   timestamp,
+				SQLID:             sqlID,
+				ChildNumber:       childNumber,
+				Timestamp:         timestamp,
+				ClientName:        clientName,
+				TransactionName:   transactionName,
+				NormalisedSQLHash: normalisedSQLHash,
 			}
 		}
 	}
@@ -205,7 +247,7 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 }
 
 // recordBlockingMetrics records blocking query metrics when a session is blocked
-func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking) {
+func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking, sqlIDMap map[string]models.SQLIdentifier) {
 	blockedWaitMs := event.GetCurrentWaitMs()
 	if blockedWaitMs <= 0 {
 		return
@@ -235,6 +277,15 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
 	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
 
+	// Get client_name, transaction_name, and normalised_sql_hash from sqlIDMap
+	// These will be empty strings if not present in the map or if the metadata values were empty
+	var clientName, transactionName, normalisedSQLHash string
+	if metadata, exists := sqlIDMap[queryID]; exists {
+		clientName = metadata.ClientName
+		transactionName = metadata.TransactionName
+		normalisedSQLHash = metadata.NormalisedSQLHash
+	}
+
 	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(
 		now,
 		blockedWaitMs,
@@ -261,5 +312,8 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		finalBlockerSerial,
 		finalBlockerQueryID,
 		finalBlockerQueryText,
+		clientName,
+		transactionName,
+		normalisedSQLHash,
 	)
 }

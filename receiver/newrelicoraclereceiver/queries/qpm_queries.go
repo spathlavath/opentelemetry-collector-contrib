@@ -218,3 +218,31 @@ func GetExecutionPlanForChildQuery(sqlID string, childNumber int64) string {
 			SQL_ID = '%s'
 			AND CHILD_NUMBER = %d`, sqlID, childNumber)
 }
+
+// GetPlanHashMetricsSQL returns SQL for plan hash metrics aggregated by plan_hash_value
+// This query aggregates execution metrics by plan hash value for a given SQL_ID
+// Parameters:
+// - sqlID: The SQL identifier to get plan hash metrics for
+func GetPlanHashMetricsSQL(sqlID string) string {
+	return fmt.Sprintf(`
+		SELECT
+			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
+			s.sql_id,
+			s.plan_hash_value,
+			SUM(s.executions) AS total_executions,
+			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.elapsed_time) / SUM(s.executions) / 1000, 3) ELSE 0 END AS avg_elapsed_time_ms,
+			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.cpu_time) / SUM(s.executions) / 1000, 3) ELSE 0 END AS avg_cpu_time_ms,
+			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.disk_reads) / SUM(s.executions), 1) ELSE 0 END AS avg_disk_reads,
+			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.buffer_gets) / SUM(s.executions), 1) ELSE 0 END AS avg_buffer_gets,
+			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.rows_processed) / SUM(s.executions), 1) ELSE 0 END AS avg_rows_returned,
+			MAX(s.last_active_time) AS last_active_time
+		FROM
+			v$sql s
+		WHERE
+			s.sql_id = '%s'
+		GROUP BY
+			s.sql_id,
+			s.plan_hash_value
+		ORDER BY
+			total_executions DESC`, sqlID)
+}

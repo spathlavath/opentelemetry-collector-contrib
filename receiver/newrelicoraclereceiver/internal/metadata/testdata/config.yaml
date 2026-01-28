@@ -239,6 +239,18 @@ all_set:
       enabled: true
     newrelicoracledb.pdb.wait_time_ratio:
       enabled: true
+    newrelicoracledb.plan_hash_metrics.avg_buffer_gets:
+      enabled: true
+    newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms:
+      enabled: true
+    newrelicoracledb.plan_hash_metrics.avg_disk_reads:
+      enabled: true
+    newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms:
+      enabled: true
+    newrelicoracledb.plan_hash_metrics.avg_rows_returned:
+      enabled: true
+    newrelicoracledb.plan_hash_metrics.executions:
+      enabled: true
     newrelicoracledb.rac.instance.active_state:
       enabled: true
     newrelicoracledb.rac.instance.archiver_started:
@@ -899,6 +911,18 @@ none_set:
     newrelicoracledb.pdb.user_rollbacks_percentage:
       enabled: false
     newrelicoracledb.pdb.wait_time_ratio:
+      enabled: false
+    newrelicoracledb.plan_hash_metrics.avg_buffer_gets:
+      enabled: false
+    newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms:
+      enabled: false
+    newrelicoracledb.plan_hash_metrics.avg_disk_reads:
+      enabled: false
+    newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms:
+      enabled: false
+    newrelicoracledb.plan_hash_metrics.avg_rows_returned:
+      enabled: false
+    newrelicoracledb.plan_hash_metrics.executions:
       enabled: false
     newrelicoracledb.rac.instance.active_state:
       enabled: false
