@@ -83,9 +83,9 @@ func TestScrapeSGAMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -103,9 +103,9 @@ func TestScrapeSGAMetrics_AllMetricTypes(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -121,9 +121,9 @@ func TestScrapeSGAMetrics_NullValue(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -137,9 +137,9 @@ func TestScrapeSGAMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -158,9 +158,9 @@ func TestScrapePGAMetrics_AllMetricTypes(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -174,9 +174,9 @@ func TestScrapePGAMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -195,9 +195,9 @@ func TestScrapePGAMetrics_MultipleInstances(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -215,9 +215,9 @@ func TestScrapeSGAUGATotalMemoryMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -230,9 +230,9 @@ func TestScrapeSGAUGATotalMemoryMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -247,9 +247,9 @@ func TestScrapeSGAUGATotalMemoryMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -265,9 +265,9 @@ func TestScrapeSGAUGATotalMemoryMetrics_ZeroValue(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -283,9 +283,9 @@ func TestScrapeSGAUGATotalMemoryMetrics_NilInstanceID(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -303,9 +303,9 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -318,9 +318,9 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -335,9 +335,9 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -355,9 +355,9 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_MultipleInstances(t *testing.T) 
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -375,9 +375,9 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_Success(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -390,9 +390,9 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_QueryError(t *testing.T) {
 	mockClient := &client.MockClient{QueryErr: expectedErr}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -407,9 +407,9 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -425,9 +425,9 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_LargeValue(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()

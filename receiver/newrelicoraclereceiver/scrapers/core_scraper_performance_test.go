@@ -177,9 +177,9 @@ func TestScrapeRedoLogWaitsMetrics_AllEventTypes(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -195,9 +195,9 @@ func TestScrapeRedoLogWaitsMetrics_NullValues(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -211,9 +211,9 @@ func TestScrapeRedoLogWaitsMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -231,9 +231,9 @@ func TestScrapeRedoLogWaitsMetrics_MultipleInstances(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -249,9 +249,9 @@ func TestScrapeSysstatMetrics_UnknownMetric(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -265,9 +265,9 @@ func TestScrapeSysstatMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -285,9 +285,9 @@ func TestScrapeSysstatMetrics_MultipleInstances(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -304,9 +304,9 @@ func TestScrapeSysstatMetrics_ZeroValues(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -327,9 +327,9 @@ func TestScrapeRollbackSegmentsMetrics_NullValues(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -343,9 +343,9 @@ func TestScrapeRollbackSegmentsMetrics_EmptyResult(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -378,9 +378,9 @@ func TestScrapeRollbackSegmentsMetrics_MultipleInstances(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()
@@ -401,9 +401,9 @@ func TestScrapeRollbackSegmentsMetrics_ZeroRatio(t *testing.T) {
 	}
 
 	scraper := &CoreScraper{
-		client:       mockClient,
-		logger:       zap.NewNop(),
-		mb:           metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
+		client: mockClient,
+		logger: zap.NewNop(),
+		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
 	ctx := context.Background()

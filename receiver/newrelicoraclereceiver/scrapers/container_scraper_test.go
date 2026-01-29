@@ -993,7 +993,7 @@ func TestScrapeCDBTablespaceUsage_EdgeCases(t *testing.T) {
 		config := metadata.DefaultMetricsBuilderConfig()
 
 		includeTablespaces := []string{"SYSTEM"}
-		scraper, err := NewContainerScraper(mockClient, mb, logger,  config, includeTablespaces, nil)
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, includeTablespaces, nil)
 		require.NoError(t, err)
 
 		ctx := context.Background()
@@ -1028,7 +1028,7 @@ func TestScrapeCDBTablespaceUsage_EdgeCases(t *testing.T) {
 		config := metadata.DefaultMetricsBuilderConfig()
 
 		excludeTablespaces := []string{"TEMP"}
-		scraper, err := NewContainerScraper(mockClient, mb, logger,  config, nil, excludeTablespaces)
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, excludeTablespaces)
 		require.NoError(t, err)
 
 		ctx := context.Background()

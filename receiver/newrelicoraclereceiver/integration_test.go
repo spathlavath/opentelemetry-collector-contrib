@@ -7,6 +7,7 @@ package newrelicoraclereceiver // import "github.com/open-telemetry/opentelemetr
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 	"time"
 
