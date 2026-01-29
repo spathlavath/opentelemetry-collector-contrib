@@ -147,6 +147,12 @@ type MetricsConfig struct {
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
 	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
+	PostgresqlVacuumHeapBlksScanned                   MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_scanned"`
+	PostgresqlVacuumHeapBlksTotal                     MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_total"`
+	PostgresqlVacuumHeapBlksVacuumed                  MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_vacuumed"`
+	PostgresqlVacuumIndexVacuumCount                  MetricConfig `mapstructure:"postgresql.vacuum.index_vacuum_count"`
+	PostgresqlVacuumMaxDeadTuples                     MetricConfig `mapstructure:"postgresql.vacuum.max_dead_tuples"`
+	PostgresqlVacuumNumDeadTuples                     MetricConfig `mapstructure:"postgresql.vacuum.num_dead_tuples"`
 	PostgresqlVacuumed                                MetricConfig `mapstructure:"postgresql.vacuumed"`
 	PostgresqlWalBuffersFull                          MetricConfig `mapstructure:"postgresql.wal.buffers_full"`
 	PostgresqlWalBytes                                MetricConfig `mapstructure:"postgresql.wal.bytes"`
@@ -523,6 +529,24 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlUptime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumHeapBlksScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumHeapBlksTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumHeapBlksVacuumed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumIndexVacuumCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumMaxDeadTuples: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumNumDeadTuples: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlVacuumed: MetricConfig{

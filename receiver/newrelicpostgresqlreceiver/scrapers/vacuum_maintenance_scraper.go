@@ -15,8 +15,9 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/models"
 )
 
-// TableScraper scrapes per-table metrics from various PostgreSQL system views
-type TableScraper struct {
+// VacuumMaintenanceScraper scrapes vacuum and maintenance progress metrics from PostgreSQL progress views
+// (pg_stat_progress_vacuum, pg_stat_progress_analyze, pg_stat_progress_cluster, pg_stat_progress_create_index)
+type VacuumMaintenanceScraper struct {
 	client       client.PostgreSQLClient
 	mb           *metadata.MetricsBuilder
 	logger       *zap.Logger
@@ -25,16 +26,16 @@ type TableScraper struct {
 	pgVersion    int // PostgreSQL version number for query selection
 }
 
-// NewTableScraper creates a new TableScraper
-func NewTableScraper(
+// NewVacuumMaintenanceScraper creates a new VacuumMaintenanceScraper
+func NewVacuumMaintenanceScraper(
 	client client.PostgreSQLClient,
 	mb *metadata.MetricsBuilder,
 	logger *zap.Logger,
 	instanceName string,
 	mbConfig metadata.MetricsBuilderConfig,
 	pgVersion int,
-) *TableScraper {
-	return &TableScraper{
+) *VacuumMaintenanceScraper {
+	return &VacuumMaintenanceScraper{
 		client:       client,
 		mb:           mb,
 		logger:       logger,
@@ -45,7 +46,7 @@ func NewTableScraper(
 }
 
 // ScrapeUserTables scrapes per-table statistics from pg_stat_user_tables
-func (s *TableScraper) ScrapeUserTables(ctx context.Context, schemas, tables []string) []error {
+func (s *VacuumMaintenanceScraper) ScrapeUserTables(ctx context.Context, schemas, tables []string) []error {
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	metrics, err := s.client.QueryUserTables(ctx, schemas, tables)
@@ -65,7 +66,7 @@ func (s *TableScraper) ScrapeUserTables(ctx context.Context, schemas, tables []s
 }
 
 // recordUserTableMetrics records all metrics for a single table
-func (s *TableScraper) recordUserTableMetrics(now pcommon.Timestamp, metric models.PgStatUserTablesMetric) {
+func (s *VacuumMaintenanceScraper) recordUserTableMetrics(now pcommon.Timestamp, metric models.PgStatUserTablesMetric) {
 	// Create composite identifier for table
 	tableID := metric.SchemaName + "." + metric.TableName
 
@@ -87,7 +88,7 @@ func (s *TableScraper) recordUserTableMetrics(now pcommon.Timestamp, metric mode
 
 // ScrapeAnalyzeProgress scrapes ANALYZE operation progress from pg_stat_progress_analyze
 // Only available in PostgreSQL 13+
-func (s *TableScraper) ScrapeAnalyzeProgress(ctx context.Context) []error {
+func (s *VacuumMaintenanceScraper) ScrapeAnalyzeProgress(ctx context.Context) []error {
 	// Skip if PostgreSQL version < 13
 	if s.pgVersion < 130000 {
 		s.logger.Debug("Skipping ANALYZE progress metrics (PostgreSQL 13+ required)",
@@ -120,7 +121,7 @@ func (s *TableScraper) ScrapeAnalyzeProgress(ctx context.Context) []error {
 }
 
 // recordAnalyzeProgressMetrics records all progress metrics for a single ANALYZE operation
-func (s *TableScraper) recordAnalyzeProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressAnalyze) {
+func (s *VacuumMaintenanceScraper) recordAnalyzeProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressAnalyze) {
 	// Create composite identifier for table
 	tableID := metric.SchemaName + "." + metric.TableName
 
@@ -143,7 +144,7 @@ func (s *TableScraper) recordAnalyzeProgressMetrics(now pcommon.Timestamp, metri
 
 // ScrapeClusterProgress scrapes CLUSTER/VACUUM FULL operation progress from pg_stat_progress_cluster
 // Only available in PostgreSQL 12+
-func (s *TableScraper) ScrapeClusterProgress(ctx context.Context) []error {
+func (s *VacuumMaintenanceScraper) ScrapeClusterProgress(ctx context.Context) []error {
 	// Skip if PostgreSQL version < 12
 	if s.pgVersion < 120000 {
 		s.logger.Debug("Skipping CLUSTER/VACUUM FULL progress metrics (PostgreSQL 12+ required)",
@@ -176,7 +177,7 @@ func (s *TableScraper) ScrapeClusterProgress(ctx context.Context) []error {
 }
 
 // recordClusterProgressMetrics records all progress metrics for a single CLUSTER/VACUUM FULL operation
-func (s *TableScraper) recordClusterProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressCluster) {
+func (s *VacuumMaintenanceScraper) recordClusterProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressCluster) {
 	// Create composite identifier for table
 	tableID := metric.SchemaName + "." + metric.TableName
 
@@ -199,7 +200,7 @@ func (s *TableScraper) recordClusterProgressMetrics(now pcommon.Timestamp, metri
 
 // ScrapeCreateIndexProgress scrapes CREATE INDEX operation progress from pg_stat_progress_create_index
 // Only available in PostgreSQL 12+
-func (s *TableScraper) ScrapeCreateIndexProgress(ctx context.Context) []error {
+func (s *VacuumMaintenanceScraper) ScrapeCreateIndexProgress(ctx context.Context) []error {
 	// Skip if PostgreSQL version < 12
 	if s.pgVersion < 120000 {
 		s.logger.Debug("Skipping CREATE INDEX progress metrics (PostgreSQL 12+ required)",
@@ -232,7 +233,7 @@ func (s *TableScraper) ScrapeCreateIndexProgress(ctx context.Context) []error {
 }
 
 // recordCreateIndexProgressMetrics records all progress metrics for a single CREATE INDEX operation
-func (s *TableScraper) recordCreateIndexProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressCreateIndex) {
+func (s *VacuumMaintenanceScraper) recordCreateIndexProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressCreateIndex) {
 	// Create composite identifier for table and index
 	tableID := metric.SchemaName + "." + metric.TableName
 	indexName := metric.IndexName.String
@@ -256,5 +257,61 @@ func (s *TableScraper) recordCreateIndexProgressMetrics(now pcommon.Timestamp, m
 	s.logger.Debug("Recorded CREATE INDEX progress metrics",
 		zap.String("table", tableID),
 		zap.String("index", indexName),
+		zap.String("phase", metric.Phase.String))
+}
+
+// ScrapeVacuumProgress scrapes VACUUM operation progress from pg_stat_progress_vacuum
+// Only available in PostgreSQL 12+
+func (s *VacuumMaintenanceScraper) ScrapeVacuumProgress(ctx context.Context) []error {
+	// Skip if PostgreSQL version < 12
+	if s.pgVersion < 120000 {
+		s.logger.Debug("Skipping VACUUM progress metrics (PostgreSQL 12+ required)",
+			zap.Int("version", s.pgVersion))
+		return nil
+	}
+
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryVacuumProgress(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query VACUUM progress statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// It's normal to have zero metrics (no VACUUM operations running)
+	if len(metrics) == 0 {
+		s.logger.Debug("No VACUUM operations currently running")
+		return nil
+	}
+
+	for _, metric := range metrics {
+		s.recordVacuumProgressMetrics(now, metric)
+	}
+
+	s.logger.Debug("VACUUM progress statistics scrape completed",
+		zap.Int("operation_count", len(metrics)))
+
+	return nil
+}
+
+// recordVacuumProgressMetrics records all progress metrics for a single VACUUM operation
+func (s *VacuumMaintenanceScraper) recordVacuumProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressVacuum) {
+	// Create composite identifier for table
+	tableID := metric.SchemaName + "." + metric.TableName
+
+	// Record heap block progress
+	s.mb.RecordPostgresqlVacuumHeapBlksTotalDataPoint(now, getInt64(metric.HeapBlksTotal), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlVacuumHeapBlksScannedDataPoint(now, getInt64(metric.HeapBlksScanned), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlVacuumHeapBlksVacuumedDataPoint(now, getInt64(metric.HeapBlksVacuumed), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record index vacuum count
+	s.mb.RecordPostgresqlVacuumIndexVacuumCountDataPoint(now, getInt64(metric.IndexVacuumCount), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record dead tuple statistics
+	s.mb.RecordPostgresqlVacuumMaxDeadTuplesDataPoint(now, getInt64(metric.MaxDeadTuples), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlVacuumNumDeadTuplesDataPoint(now, getInt64(metric.NumDeadTuples), metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded VACUUM progress metrics",
+		zap.String("table", tableID),
 		zap.String("phase", metric.Phase.String))
 }

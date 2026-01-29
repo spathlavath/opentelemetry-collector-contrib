@@ -156,3 +156,34 @@ type PgStatProgressCreateIndex struct {
 	PartitionsTotal sql.NullInt64 // Total number of partitions to be indexed
 	PartitionsDone  sql.NullInt64 // Number of partitions indexed
 }
+
+// PgStatProgressVacuum represents progress of VACUUM operations from pg_stat_progress_vacuum
+// This struct captures real-time progress of running VACUUM operations
+// Available in PostgreSQL 12+
+type PgStatProgressVacuum struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing the table being vacuumed
+	SchemaName string
+
+	// TableName is the name of the table being vacuumed
+	TableName string
+
+	// Phase is the current processing phase of the VACUUM operation
+	// Common phases: "initializing", "scanning heap", "vacuuming indexes",
+	// "vacuuming heap", "cleaning up indexes", "truncating heap", "performing final cleanup"
+	Phase sql.NullString
+
+	// Heap block statistics - progress of scanning and vacuuming the heap
+	HeapBlksTotal    sql.NullInt64 // Total number of heap blocks in the table
+	HeapBlksScanned  sql.NullInt64 // Number of heap blocks scanned so far
+	HeapBlksVacuumed sql.NullInt64 // Number of heap blocks vacuumed so far
+
+	// Index vacuum statistics
+	IndexVacuumCount sql.NullInt64 // Number of completed index vacuum cycles
+
+	// Dead tuple statistics - tuples collected for removal
+	MaxDeadTuples sql.NullInt64 // Maximum number of dead tuples that can be stored before index vacuum
+	NumDeadTuples sql.NullInt64 // Current number of dead tuples collected
+}

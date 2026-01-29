@@ -44,7 +44,7 @@ type newRelicPostgreSQLScraper struct {
 	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
 	replicationMetricsScraper *scrapers.ReplicationScraper
 	bgwriterScraper           *scrapers.BgwriterScraper
-	tableScraper              *scrapers.TableScraper
+	vacuumMaintenanceScraper  *scrapers.VacuumMaintenanceScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -192,10 +192,10 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.logger.Info("Background writer scraper disabled (requires PostgreSQL 9.6+)")
 	}
 
-	// Initialize table scraper only if PostgreSQL 9.6+
-	// Table scraping is opt-in via relations config
+	// Initialize vacuum maintenance scraper only if PostgreSQL 9.6+
+	// Tracks vacuum/analyze/cluster/create index progress
 	if s.supportsPG96 {
-		s.tableScraper = scrapers.NewTableScraper(
+		s.vacuumMaintenanceScraper = scrapers.NewVacuumMaintenanceScraper(
 			s.client,
 			s.mb,
 			s.logger,
@@ -204,11 +204,11 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 			s.pgVersion,
 		)
 		if s.config.Relations != nil {
-			s.logger.Info("Table metrics scraper enabled (PostgreSQL 9.6+)",
+			s.logger.Info("Vacuum maintenance scraper enabled (PostgreSQL 9.6+)",
 				zap.Int("schema_count", len(s.config.Relations.Schemas)),
 				zap.Int("table_count", len(s.config.Relations.Tables)))
 		} else {
-			s.logger.Info("Table metrics scraper disabled (relations not configured)")
+			s.logger.Info("Vacuum maintenance scraper initialized (relations not configured - progress metrics only)")
 		}
 	}
 
@@ -401,12 +401,12 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 
 	// Scrape per-table metrics (PostgreSQL 9.6+ only, requires relations config)
 	// This is opt-in to prevent cardinality explosion
-	if s.config.Relations != nil && s.tableScraper != nil {
+	if s.config.Relations != nil && s.vacuumMaintenanceScraper != nil {
 		schemas := s.config.Relations.Schemas
 		tables := s.config.Relations.Tables
 
 		if len(tables) > 0 {
-			tableErrs := s.tableScraper.ScrapeUserTables(scrapeCtx, schemas, tables)
+			tableErrs := s.vacuumMaintenanceScraper.ScrapeUserTables(scrapeCtx, schemas, tables)
 			if len(tableErrs) > 0 {
 				s.logger.Warn("Errors occurred while scraping per-table statistics",
 					zap.Int("error_count", len(tableErrs)))
@@ -419,8 +419,8 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 
 	// Scrape ANALYZE progress metrics (PostgreSQL 13+ only, enabled by default)
 	// These are naturally low-cardinality (only shows running ANALYZE operations)
-	if s.tableScraper != nil {
-		analyzeErrs := s.tableScraper.ScrapeAnalyzeProgress(scrapeCtx)
+	if s.vacuumMaintenanceScraper != nil {
+		analyzeErrs := s.vacuumMaintenanceScraper.ScrapeAnalyzeProgress(scrapeCtx)
 		if len(analyzeErrs) > 0 {
 			s.logger.Warn("Errors occurred while scraping ANALYZE progress",
 				zap.Int("error_count", len(analyzeErrs)))
@@ -430,8 +430,8 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 
 	// Scrape CLUSTER/VACUUM FULL progress metrics (PostgreSQL 12+ only, enabled by default)
 	// These are naturally low-cardinality (only shows running CLUSTER/VACUUM FULL operations)
-	if s.tableScraper != nil {
-		clusterErrs := s.tableScraper.ScrapeClusterProgress(scrapeCtx)
+	if s.vacuumMaintenanceScraper != nil {
+		clusterErrs := s.vacuumMaintenanceScraper.ScrapeClusterProgress(scrapeCtx)
 		if len(clusterErrs) > 0 {
 			s.logger.Warn("Errors occurred while scraping CLUSTER/VACUUM FULL progress",
 				zap.Int("error_count", len(clusterErrs)))
@@ -441,12 +441,23 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 
 	// Scrape CREATE INDEX progress metrics (PostgreSQL 12+ only, enabled by default)
 	// These are naturally low-cardinality (only shows running CREATE INDEX operations)
-	if s.tableScraper != nil {
-		createIndexErrs := s.tableScraper.ScrapeCreateIndexProgress(scrapeCtx)
+	if s.vacuumMaintenanceScraper != nil {
+		createIndexErrs := s.vacuumMaintenanceScraper.ScrapeCreateIndexProgress(scrapeCtx)
 		if len(createIndexErrs) > 0 {
 			s.logger.Warn("Errors occurred while scraping CREATE INDEX progress",
 				zap.Int("error_count", len(createIndexErrs)))
 			scrapeErrors = append(scrapeErrors, createIndexErrs...)
+		}
+	}
+
+	// Scrape VACUUM progress metrics (PostgreSQL 12+ only, enabled by default)
+	// These are naturally low-cardinality (only shows running VACUUM operations)
+	if s.vacuumMaintenanceScraper != nil {
+		vacuumErrs := s.vacuumMaintenanceScraper.ScrapeVacuumProgress(scrapeCtx)
+		if len(vacuumErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping VACUUM progress",
+				zap.Int("error_count", len(vacuumErrs)))
+			scrapeErrors = append(scrapeErrors, vacuumErrs...)
 		}
 	}
 

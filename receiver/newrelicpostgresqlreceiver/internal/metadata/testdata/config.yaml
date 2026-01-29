@@ -239,6 +239,18 @@ all_set:
       enabled: true
     postgresql.uptime:
       enabled: true
+    postgresql.vacuum.heap_blks_scanned:
+      enabled: true
+    postgresql.vacuum.heap_blks_total:
+      enabled: true
+    postgresql.vacuum.heap_blks_vacuumed:
+      enabled: true
+    postgresql.vacuum.index_vacuum_count:
+      enabled: true
+    postgresql.vacuum.max_dead_tuples:
+      enabled: true
+    postgresql.vacuum.num_dead_tuples:
+      enabled: true
     postgresql.vacuumed:
       enabled: true
     postgresql.wal.buffers_full:
@@ -525,6 +537,18 @@ none_set:
     postgresql.temp_files:
       enabled: false
     postgresql.uptime:
+      enabled: false
+    postgresql.vacuum.heap_blks_scanned:
+      enabled: false
+    postgresql.vacuum.heap_blks_total:
+      enabled: false
+    postgresql.vacuum.heap_blks_vacuumed:
+      enabled: false
+    postgresql.vacuum.index_vacuum_count:
+      enabled: false
+    postgresql.vacuum.max_dead_tuples:
+      enabled: false
+    postgresql.vacuum.num_dead_tuples:
       enabled: false
     postgresql.vacuumed:
       enabled: false

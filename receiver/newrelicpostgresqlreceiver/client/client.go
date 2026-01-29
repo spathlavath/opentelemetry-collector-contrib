@@ -155,4 +155,10 @@ type PostgreSQLClient interface {
 	// Returns empty slice if no CREATE INDEX operations are currently running
 	// Available in PostgreSQL 12+
 	QueryCreateIndexProgress(ctx context.Context) ([]models.PgStatProgressCreateIndex, error)
+
+	// QueryVacuumProgress retrieves VACUUM operation progress from pg_stat_progress_vacuum
+	// Returns real-time progress of running VACUUM operations
+	// Returns empty slice if no VACUUM operations are currently running
+	// Available in PostgreSQL 12+
+	QueryVacuumProgress(ctx context.Context) ([]models.PgStatProgressVacuum, error)
 }

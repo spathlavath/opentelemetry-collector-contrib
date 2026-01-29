@@ -850,3 +850,42 @@ func (c *SQLClient) QueryCreateIndexProgress(ctx context.Context) ([]models.PgSt
 
 	return metrics, nil
 }
+
+// QueryVacuumProgress retrieves VACUUM operation progress from pg_stat_progress_vacuum
+// Returns real-time progress of running VACUUM operations (PostgreSQL 12+)
+func (c *SQLClient) QueryVacuumProgress(ctx context.Context) ([]models.PgStatProgressVacuum, error) {
+	query := queries.PgStatProgressVacuumSQL()
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_vacuum: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressVacuum
+
+	for rows.Next() {
+		var metric models.PgStatProgressVacuum
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.Phase,
+			&metric.HeapBlksTotal,
+			&metric.HeapBlksScanned,
+			&metric.HeapBlksVacuumed,
+			&metric.IndexVacuumCount,
+			&metric.MaxDeadTuples,
+			&metric.NumDeadTuples,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_vacuum row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_vacuum rows: %w", err)
+	}
+
+	return metrics, nil
+}

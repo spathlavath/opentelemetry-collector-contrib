@@ -267,6 +267,53 @@ FACET table_name, index_name
 TIMESERIES
 ```
 
+### VACUUM Progress Metrics (PostgreSQL 12+)
+
+The receiver automatically collects real-time progress metrics for running VACUUM operations. These metrics are **enabled by default** and require no configuration.
+
+#### Why are these safe by default?
+
+VACUUM progress metrics are naturally low-cardinality:
+- Only tracks **actively running** VACUUM operations (typically 0-3 concurrent operations)
+- Metrics automatically disappear when the vacuum completes
+- No cardinality explosion risk (unlike per-table statistics which track ALL tables)
+
+#### Available VACUUM Progress Metrics (Gauge)
+
+**Heap Block Progress:**
+- `postgresql.vacuum.heap_blks_total` - Total number of heap blocks in the table
+- `postgresql.vacuum.heap_blks_scanned` - Number of heap blocks scanned so far
+- `postgresql.vacuum.heap_blks_vacuumed` - Number of heap blocks vacuumed so far
+
+**Index Vacuum Progress:**
+- `postgresql.vacuum.index_vacuum_count` - Number of completed index vacuum cycles
+
+**Dead Tuple Statistics:**
+- `postgresql.vacuum.max_dead_tuples` - Maximum number of dead tuples before index vacuum is required
+- `postgresql.vacuum.num_dead_tuples` - Current number of dead tuples collected
+
+Each metric includes attributes: `database_name`, `schema_name`, and `table_name`
+
+#### Use Cases
+
+- **Monitor vacuum progress** for large tables
+- **Track autovacuum operations** to ensure tables are being maintained
+- **Identify slow vacuum operations** that may impact performance
+- **Alert on stuck VACUUM** operations that don't make progress
+- **Optimize vacuum_cost_delay settings** based on observed progress
+
+#### Example: Monitor VACUUM Progress in New Relic
+
+```sql
+FROM Metric
+SELECT latest(postgresql.vacuum.heap_blks_scanned) / latest(postgresql.vacuum.heap_blks_total) * 100 AS 'Progress %',
+       latest(postgresql.vacuum.num_dead_tuples) AS 'Dead Tuples',
+       latest(postgresql.vacuum.index_vacuum_count) AS 'Index Vacuum Cycles'
+WHERE metricName LIKE 'postgresql.vacuum%'
+FACET table_name
+TIMESERIES
+```
+
 ## Prerequisites
 
 ### Database User Permissions

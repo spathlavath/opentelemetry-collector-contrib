@@ -1399,6 +1399,66 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.vacuum.heap_blks_scanned:
+    description: Number of heap blocks scanned during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.heap_blks_total:
+    description: Total number of heap blocks to be scanned during VACUUM (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.heap_blks_vacuumed:
+    description: Number of heap blocks vacuumed during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.index_vacuum_count:
+    description: Number of completed index vacuum cycles during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{cycles}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.max_dead_tuples:
+    description: Maximum number of dead tuples that can be stored before index vacuum is required (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.num_dead_tuples:
+    description: Current number of dead tuples collected during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
   postgresql.vacuumed:
     description: Number of times this table has been manually vacuumed (PostgreSQL 9.6+)
     enabled: true

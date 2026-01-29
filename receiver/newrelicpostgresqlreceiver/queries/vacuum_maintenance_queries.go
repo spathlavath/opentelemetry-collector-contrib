@@ -147,3 +147,26 @@ func PgStatProgressCreateIndexSQL() string {
 		WHERE ppci.datname = current_database()
 		ORDER BY n.nspname, c.relname`
 }
+
+// PgStatProgressVacuumSQL returns VACUUM operation progress from pg_stat_progress_vacuum (PostgreSQL 12+)
+// This query retrieves real-time progress of running VACUUM operations
+// The query returns data only for actively running VACUUM operations
+func PgStatProgressVacuumSQL() string {
+	return `
+		SELECT
+			datname as database,
+			COALESCE(n.nspname, '') as schemaname,
+			COALESCE(c.relname, '') as table_name,
+			phase,
+			heap_blks_total,
+			heap_blks_scanned,
+			heap_blks_vacuumed,
+			index_vacuum_count,
+			max_dead_tuples,
+			num_dead_tuples
+		FROM pg_stat_progress_vacuum ppv
+		LEFT JOIN pg_class c ON ppv.relid = c.oid
+		LEFT JOIN pg_namespace n ON c.relnamespace = n.oid
+		WHERE ppv.datname = current_database()
+		ORDER BY n.nspname, c.relname`
+}
