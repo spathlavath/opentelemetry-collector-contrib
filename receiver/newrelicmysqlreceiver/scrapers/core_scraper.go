@@ -16,16 +16,14 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 )
 
-// CoreScraper handles MySQL core metrics collection.
-// These metrics are based on the Datadog MySQL integration's always-collected metrics.
 type CoreScraper struct {
-	client client.MySQLClient
+	client client.Client
 	mb     *metadata.MetricsBuilder
 	logger *zap.Logger
 }
 
 // NewCoreScraper creates a new core metrics scraper.
-func NewCoreScraper(c client.MySQLClient, mb *metadata.MetricsBuilder, logger *zap.Logger) (*CoreScraper, error) {
+func NewCoreScraper(c client.Client, mb *metadata.MetricsBuilder, logger *zap.Logger) (*CoreScraper, error) {
 	if c == nil {
 		return nil, errors.New("client cannot be nil")
 	}
@@ -46,6 +44,16 @@ func NewCoreScraper(c client.MySQLClient, mb *metadata.MetricsBuilder, logger *z
 // ScrapeMetrics collects MySQL core database metrics.
 func (s *CoreScraper) ScrapeMetrics(_ context.Context, now pcommon.Timestamp, errs *scrapererror.ScrapeErrors) {
 	s.logger.Debug("Scraping MySQL core metrics")
+
+	// Fetch and log MySQL version information
+	version, err := s.client.GetVersion()
+	if err != nil {
+		s.logger.Error("Failed to fetch version", zap.Error(err))
+		errs.AddPartial(1, err)
+	} else {
+		// Log version info (string metrics not supported in OpenTelemetry)
+		s.logger.Info("MySQL version detected", zap.String("version", version))
+	}
 
 	globalStats, err := s.client.GetGlobalStats()
 	if err != nil {

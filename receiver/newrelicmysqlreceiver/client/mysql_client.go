@@ -13,14 +13,14 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-// mySQLClientImpl is the concrete implementation of MySQLClient interface.
-type mySQLClientImpl struct {
+// mySQLClient is the concrete implementation of Client interface.
+type mySQLClient struct {
 	connStr string
 	db      *sql.DB
 }
 
-// Ensure mySQLClientImpl implements MySQLClient interface.
-var _ MySQLClient = (*mySQLClientImpl)(nil)
+// Ensure mySQLClient implements Client interface.
+var _ Client = (*mySQLClient)(nil)
 
 // Config represents the configuration needed to create a MySQL client.
 type Config struct {
@@ -40,7 +40,7 @@ type TLSConfig struct {
 }
 
 // NewMySQLClient creates a new MySQL client with the given configuration.
-func NewMySQLClient(cfg Config) (MySQLClient, error) {
+func NewMySQLClient(cfg Config) (Client, error) {
 	driverConf := mysql.NewConfig()
 	driverConf.User = cfg.Username
 	driverConf.Passwd = cfg.Password
@@ -64,13 +64,13 @@ func NewMySQLClient(cfg Config) (MySQLClient, error) {
 
 	connStr := driverConf.FormatDSN()
 
-	return &mySQLClientImpl{
+	return &mySQLClient{
 		connStr: connStr,
 	}, nil
 }
 
 // Connect establishes a connection to the MySQL database.
-func (c *mySQLClientImpl) Connect() error {
+func (c *mySQLClient) Connect() error {
 	clientDB, err := sql.Open("mysql", c.connStr)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
@@ -80,16 +80,16 @@ func (c *mySQLClientImpl) Connect() error {
 	return c.db.Ping()
 }
 
-// GetGlobalStats retrieves MySQL global status variables as numeric values.
-func (c *mySQLClientImpl) GetGlobalStats() (map[string]int64, error) {
-	query := "SHOW GLOBAL STATUS"
+// queryNumericKeyValues executes a query and returns numeric key-value pairs.
+// Non-numeric values are skipped.
+func (c *mySQLClient) queryNumericKeyValues(query string) (map[string]int64, error) {
 	rows, err := c.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	stats := make(map[string]int64)
+	result := make(map[string]int64)
 	for rows.Next() {
 		var name, value string
 		if err := rows.Scan(&name, &value); err != nil {
@@ -101,41 +101,24 @@ func (c *mySQLClientImpl) GetGlobalStats() (map[string]int64, error) {
 			// Skip non-numeric values
 			continue
 		}
-		stats[name] = intValue
+		result[name] = intValue
 	}
 
-	return stats, rows.Err()
+	return result, rows.Err()
+}
+
+// GetGlobalStats retrieves MySQL global status variables as numeric values.
+func (c *mySQLClient) GetGlobalStats() (map[string]int64, error) {
+	return c.queryNumericKeyValues("SHOW GLOBAL STATUS")
 }
 
 // GetGlobalVariables retrieves MySQL global variables as numeric values.
-func (c *mySQLClientImpl) GetGlobalVariables() (map[string]int64, error) {
-	query := "SHOW GLOBAL VARIABLES"
-	rows, err := c.db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	vars := make(map[string]int64)
-	for rows.Next() {
-		var name, value string
-		if err := rows.Scan(&name, &value); err != nil {
-			return nil, err
-		}
-		// Convert string value to int64
-		intValue, err := strconv.ParseInt(value, 10, 64)
-		if err != nil {
-			// Skip non-numeric values
-			continue
-		}
-		vars[name] = intValue
-	}
-
-	return vars, rows.Err()
+func (c *mySQLClient) GetGlobalVariables() (map[string]int64, error) {
+	return c.queryNumericKeyValues("SHOW GLOBAL VARIABLES")
 }
 
 // GetReplicationStatus retrieves replication status from SHOW SLAVE/REPLICA STATUS.
-func (c *mySQLClientImpl) GetReplicationStatus() (map[string]string, error) {
+func (c *mySQLClient) GetReplicationStatus() (map[string]string, error) {
 	// Try MySQL 8.0+ command first (SHOW REPLICA STATUS)
 	query := "SHOW REPLICA STATUS"
 	rows, err := c.db.Query(query)
@@ -195,14 +178,14 @@ func (c *mySQLClientImpl) GetReplicationStatus() (map[string]string, error) {
 }
 
 // GetVersion retrieves the MySQL server version string.
-func (c *mySQLClientImpl) GetVersion() (string, error) {
+func (c *mySQLClient) GetVersion() (string, error) {
 	var version string
 	err := c.db.QueryRow("SELECT VERSION()").Scan(&version)
 	return version, err
 }
 
 // Close closes the database connection.
-func (c *mySQLClientImpl) Close() error {
+func (c *mySQLClient) Close() error {
 	if c.db != nil {
 		return c.db.Close()
 	}

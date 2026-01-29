@@ -19,13 +19,13 @@ import (
 // ReplicationScraper handles MySQL replication metrics collection.
 // Only collects data if the instance is configured as a replication slave.
 type ReplicationScraper struct {
-	client client.MySQLClient
+	client client.Client
 	mb     *metadata.MetricsBuilder
 	logger *zap.Logger
 }
 
 // NewReplicationScraper creates a new replication metrics scraper.
-func NewReplicationScraper(c client.MySQLClient, mb *metadata.MetricsBuilder, logger *zap.Logger) (*ReplicationScraper, error) {
+func NewReplicationScraper(c client.Client, mb *metadata.MetricsBuilder, logger *zap.Logger) (*ReplicationScraper, error) {
 	if c == nil {
 		return nil, errors.New("client cannot be nil")
 	}

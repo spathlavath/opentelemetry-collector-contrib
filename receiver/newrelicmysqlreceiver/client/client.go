@@ -3,9 +3,9 @@
 
 package client
 
-// MySQLClient defines the interface for MySQL database operations.
+// Client defines the interface for MySQL database operations.
 // This interface allows for easy mocking and testing of scrapers.
-type MySQLClient interface {
+type Client interface {
 	// Connect establishes a connection to the MySQL database.
 	Connect() error
 

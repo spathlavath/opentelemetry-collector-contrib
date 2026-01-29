@@ -22,13 +22,11 @@ import (
 
 // newRelicMySQLScraper orchestrates all metric collection scrapers for MySQL database monitoring.
 type newRelicMySQLScraper struct {
-	// Specialized scrapers for different metric categories
-	coreScraper        *scrapers.CoreScraper
-	replicationScraper *scrapers.ReplicationScraper
-	versionScraper     *scrapers.VersionScraper
+	// Slice of all metric scrapers
+	scrapers []scrapers.Scraper
 
 	// Database client and configuration
-	sqlclient client.MySQLClient
+	sqlclient client.Client
 	logger    *zap.Logger
 	config    *Config
 	mb        *metadata.MetricsBuilder
@@ -75,20 +73,21 @@ func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error 
 	}
 	n.sqlclient = sqlclient
 
-	// Initialize scrapers
-	n.coreScraper, err = scrapers.NewCoreScraper(n.sqlclient, n.mb, n.logger)
+	// Initialize all scrapers
+	// Adding new scrapers requires only adding one line here
+	coreScraper, err := scrapers.NewCoreScraper(n.sqlclient, n.mb, n.logger)
 	if err != nil {
 		return err
 	}
 
-	n.replicationScraper, err = scrapers.NewReplicationScraper(n.sqlclient, n.mb, n.logger)
+	replicationScraper, err := scrapers.NewReplicationScraper(n.sqlclient, n.mb, n.logger)
 	if err != nil {
 		return err
 	}
 
-	n.versionScraper, err = scrapers.NewVersionScraper(n.sqlclient, n.logger)
-	if err != nil {
-		return err
+	n.scrapers = []scrapers.Scraper{
+		coreScraper,
+		replicationScraper,
 	}
 
 	return nil
@@ -111,11 +110,11 @@ func (n *newRelicMySQLScraper) scrape(ctx context.Context) (pmetric.Metrics, err
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := &scrapererror.ScrapeErrors{}
 
-	// Delegate to specialized scrapers for metric collection
+	// Delegate to all registered scrapers for metric collection
 	n.logger.Info("Scraping MySQL metrics using newrelicmysql receiver started")
-	n.coreScraper.ScrapeMetrics(ctx, now, errs)
-	n.versionScraper.ScrapeMetrics(ctx, now, errs)
-	n.replicationScraper.ScrapeMetrics(ctx, now, errs)
+	for _, scraper := range n.scrapers {
+		scraper.ScrapeMetrics(ctx, now, errs)
+	}
 	n.logger.Info("Scraping MySQL metrics using newrelicmysql receiver completed")
 
 	return n.mb.Emit(), nil
