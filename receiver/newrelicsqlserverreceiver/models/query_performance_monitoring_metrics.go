@@ -134,81 +134,42 @@ type ExecutionPlanAnalysis struct {
 // ActiveRunningQuery represents currently executing queries with wait and blocking details
 // This model captures real-time execution state from sys.dm_exec_requests
 //
-// RCA Enhancement: Includes query_hash (query_id) for correlation with slow queries, plus a
-// correlation_query_id fallback that uses text hash when query_hash is NULL (non-cached queries)
+// OPTIMIZED: Contains only 21 fields required by NRQL queries
 type ActiveRunningQuery struct {
-	// A. Current Session Details
-	CurrentSessionID         *int64   `db:"current_session_id" metric_name:"sqlserver.activequery.session_id" source_type:"gauge"`
-	RequestID                *int64   `db:"request_id" metric_name:"request_id" source_type:"attribute"`
-	DatabaseName             *string  `db:"database_name" metric_name:"database_name" source_type:"attribute"`
-	SchemaName               *string  `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
-	ObjectName               *string  `db:"object_name" metric_name:"object_name" source_type:"attribute"`
-	LoginName                *string  `db:"login_name" metric_name:"login_name" source_type:"attribute"`
-	HostName                 *string  `db:"host_name" metric_name:"host_name" source_type:"attribute"`
-	ProgramName              *string  `db:"program_name" metric_name:"program_name" source_type:"attribute"`
-	RequestCommand           *string  `db:"request_command" metric_name:"request_command" source_type:"attribute"`
-	RequestStatus            *string  `db:"request_status" metric_name:"request_status" source_type:"attribute"`
-	QueryID                  *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
-	WaitType                 *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
-	WaitTimeS                *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
-	WaitResource             *string  `db:"wait_resource" metric_name:"wait_resource" source_type:"attribute"`
-	WaitResourceDecoded      *string  `db:"wait_resource_decoded" metric_name:"wait_resource_decoded" source_type:"attribute"`
-	WaitResourceObjectName   *string  `db:"wait_resource_object_name" metric_name:"wait_resource_object_name" source_type:"attribute"`
-	WaitResourceDatabaseName *string  `db:"wait_resource_database_name" metric_name:"wait_resource_database_name" source_type:"attribute"`
-	LastWaitType             *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
+	// A. Session Identification (Required for correlation)
+	CurrentSessionID *int64 `db:"current_session_id" metric_name:"sqlserver.activequery.session_id" source_type:"gauge"`
+	RequestID        *int64 `db:"request_id" metric_name:"request_id" source_type:"attribute"`
 
-	WaitResourceSchemaNameObject *string `db:"wait_resource_schema_name_object" metric_name:"wait_resource_schema_name_object" source_type:"attribute"`
-	WaitResourceObjectType       *string `db:"wait_resource_object_type" metric_name:"wait_resource_object_type" source_type:"attribute"`
+	// B. Session Context (Required by NRQL Query 2)
+	DatabaseName *string `db:"database_name" metric_name:"database_name" source_type:"attribute"`
+	LoginName    *string `db:"login_name" metric_name:"login_name" source_type:"attribute"`
+	HostName     *string `db:"host_name" metric_name:"host_name" source_type:"attribute"`
 
-	WaitResourceSchemaNameIndex *string `db:"wait_resource_schema_name_index" metric_name:"wait_resource_schema_name_index" source_type:"attribute"`
-	WaitResourceTableNameIndex  *string `db:"wait_resource_table_name_index" metric_name:"wait_resource_table_name_index" source_type:"attribute"`
-	WaitResourceIndexName       *string `db:"wait_resource_index_name" metric_name:"wait_resource_index_name" source_type:"attribute"`
-	WaitResourceIndexType       *string `db:"wait_resource_index_type" metric_name:"wait_resource_index_type" source_type:"attribute"`
+	// C. Query Correlation (Required for slow query correlation)
+	QueryID            *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
+	QueryStatementText *string  `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
 
-	// Unified fields that work for both OBJECT and KEY locks (using COALESCE)
-	WaitResourceSchemaName *string `db:"wait_resource_schema_name" metric_name:"wait_resource_schema_name" source_type:"attribute"`
-	WaitResourceTableName  *string `db:"wait_resource_table_name" metric_name:"wait_resource_table_name" source_type:"attribute"`
+	// D. Wait Details (Required by NRQL Query 1)
+	WaitType               *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
+	WaitTimeS              *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
+	WaitResource           *string  `db:"wait_resource" metric_name:"wait_resource" source_type:"attribute"`
+	LastWaitType           *string  `db:"last_wait_type" metric_name:"last_wait_type" source_type:"attribute"`
+	WaitResourceObjectName *string  `db:"wait_resource_object_name" metric_name:"wait_resource_object_name" source_type:"attribute"`
 
-	CPUTimeMs               *int64  `db:"cpu_time_ms" metric_name:"sqlserver.activequery.cpu_time_ms" source_type:"gauge"`
-	TotalElapsedTimeMs      *int64  `db:"total_elapsed_time_ms" metric_name:"sqlserver.activequery.elapsed_time_ms" source_type:"gauge"`
-	Reads                   *int64  `db:"reads" metric_name:"sqlserver.activequery.reads" source_type:"gauge"`
-	Writes                  *int64  `db:"writes" metric_name:"sqlserver.activequery.writes" source_type:"gauge"`
-	LogicalReads            *int64  `db:"logical_reads" metric_name:"sqlserver.activequery.logical_reads" source_type:"gauge"`
-	RowCount                *int64  `db:"row_count" metric_name:"sqlserver.activequery.row_count" source_type:"gauge"`
-	GrantedQueryMemoryPages *int64  `db:"granted_query_memory_pages" metric_name:"sqlserver.activequery.granted_query_memory_pages" source_type:"gauge"`
-	RequestStartTime        *string `db:"request_start_time" metric_name:"request_start_time" source_type:"attribute"`
-	CollectionTimestamp     *string `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
+	// E. Timestamps (Required by NRQL queries)
+	RequestStartTime    *string `db:"request_start_time" metric_name:"request_start_time" source_type:"attribute"`
+	CollectionTimestamp *string `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
 
-	// E. Transaction Context (RCA for long-running transactions)
-	TransactionID             *int64 `db:"transaction_id" metric_name:"transaction_id" source_type:"attribute"`
-	OpenTransactionCount      *int64 `db:"open_transaction_count" metric_name:"open_transaction_count" source_type:"gauge"`
-	TransactionIsolationLevel *int64 `db:"transaction_isolation_level" metric_name:"transaction_isolation_level" source_type:"attribute"`
+	// F. Transaction Context (Required by NRQL Query 1)
+	TransactionID        *int64 `db:"transaction_id" metric_name:"transaction_id" source_type:"attribute"`
+	OpenTransactionCount *int64 `db:"open_transaction_count" metric_name:"open_transaction_count" source_type:"gauge"`
 
-	// F. Parallel Execution Details (RCA for CXPACKET waits)
-	DegreeOfParallelism *int64 `db:"degree_of_parallelism" metric_name:"degree_of_parallelism" source_type:"gauge"`
-	ParallelWorkerCount *int64 `db:"parallel_worker_count" metric_name:"parallel_worker_count" source_type:"gauge"`
+	// G. Plan Handle (Required for execution plan retrieval)
+	PlanHandle *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
 
-	// G. Session Context
-	SessionStatus       *string `db:"session_status" metric_name:"session_status" source_type:"attribute"`
-	ClientInterfaceName *string `db:"client_interface_name" metric_name:"client_interface_name" source_type:"attribute"`
-
-	// H. Plan Handle for execution plan fetching
-	PlanHandle       *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
-	ExecutionPlanXML *string  `db:"execution_plan_xml" metric_name:"execution_plan_xml" source_type:"attribute"`
-
-	// I. Blocking Details
-	// LINKING FIX: Changed from *string to *int64 for proper numeric joins
-	// NULL when not blocked (was "N/A" string) - enables: WHERE blocking_session_id = 123
-	BlockingSessionID           *int64  `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
-	BlockerLoginName            *string `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
-	BlockerHostName             *string `db:"blocker_host_name" metric_name:"blocker_host_name" source_type:"attribute"`
-	BlockerProgramName          *string `db:"blocker_program_name" metric_name:"blocker_program_name" source_type:"attribute"`
-	BlockerStatus               *string `db:"blocker_status" metric_name:"blocker_status" source_type:"attribute"`
-	BlockerIsolationLevel       *int64  `db:"blocker_isolation_level" metric_name:"blocker_isolation_level" source_type:"attribute"`
-	BlockerOpenTransactionCount *int64  `db:"blocker_open_transaction_count" metric_name:"blocker_open_transaction_count" source_type:"gauge"`
-
-	// J. Query Text
-	QueryStatementText         *string  `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
+	// H. Blocking Details (Required by NRQL Query 1)
+	BlockingSessionID          *int64   `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
+	BlockerLoginName           *string  `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
 	BlockingQueryStatementText *string  `db:"blocking_query_statement_text" metric_name:"blocking_query_statement_text" source_type:"attribute"`
 	BlockingQueryHash          *QueryID `db:"blocking_query_hash" metric_name:"blocking_query_hash" source_type:"attribute"`
 }

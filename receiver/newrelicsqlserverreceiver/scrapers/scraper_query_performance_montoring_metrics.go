@@ -391,9 +391,7 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 	}
 
 	getSchemaName := func() string {
-		if activeQuery.SchemaName != nil {
-			return *activeQuery.SchemaName
-		}
+		// SchemaName field was removed from ActiveRunningQuery
 		return ""
 	}
 
