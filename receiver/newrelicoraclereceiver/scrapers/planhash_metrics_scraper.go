@@ -100,8 +100,8 @@ func (s *PlanHashMetricsScraper) recordPlanHashMetrics(now pcommon.Timestamp, me
 	avgDiskReads := metrics.GetAvgDiskReads()
 	avgBufferGets := metrics.GetAvgBufferGets()
 	avgRowsReturned := metrics.GetAvgRowsReturned()
-	firstLoadTime := commonutils.FormatTimestamp(metrics.GetFirstLoadTime())
-	lastActiveTime := commonutils.FormatTimestamp(metrics.GetLastActiveTime())
+	firstLoadTime := metrics.GetFirstLoadTime()                        // VARCHAR2 - already a string
+	lastActiveTime := commonutils.FormatTimestamp(metrics.GetLastActiveTime()) // DATE - needs formatting
 
 	// Get client_name, transaction_name, and normalised_sql_hash from sqlIDMap
 	// These will be empty strings if not present in the map or if the metadata values were empty
