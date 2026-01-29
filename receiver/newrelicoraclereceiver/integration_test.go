@@ -1,4 +1,4 @@
-// Copyright The OpenTelemetry Authors
+// Copyright 2025 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 //go:build integration
@@ -7,6 +7,7 @@ package newrelicoraclereceiver // import "github.com/open-telemetry/opentelemetr
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 	"time"
 

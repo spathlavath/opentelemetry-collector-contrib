@@ -1,4 +1,4 @@
-// Copyright The OpenTelemetry Authors
+// Copyright 2025 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package models
@@ -11,5 +11,5 @@ type SQLIdentifier struct {
 	SQLID       string
 	ChildNumber int64
 	Timestamp   time.Time // Timestamp when the query was captured (from wait event or slow query)
-	PlanHash  string    // Plan hash value associated with the SQL statement
+	PlanHash    string    // Plan hash value associated with the SQL statement
 }

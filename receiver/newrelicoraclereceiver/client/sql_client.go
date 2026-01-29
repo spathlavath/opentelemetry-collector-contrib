@@ -1,4 +1,4 @@
-// Copyright The OpenTelemetry Authors
+// Copyright 2025 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package client
@@ -1635,4 +1635,3 @@ func (c *SQLClient) QueryTablespacePDBNonWriteCurrentContainer(ctx context.Conte
 
 	return tablespaces, nil
 }
-
