@@ -213,6 +213,7 @@ func (c *SQLClient) QueryPlanHashMetrics(ctx context.Context, sqlID string) ([]m
 			&metrics.AvgDiskReads,
 			&metrics.AvgBufferGets,
 			&metrics.AvgRowsReturned,
+			&metrics.FirstLoadTime,
 			&metrics.LastActiveTime,
 		)
 		if err != nil {
