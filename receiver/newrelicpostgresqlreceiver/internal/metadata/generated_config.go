@@ -28,8 +28,17 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PostgresqlAnalyzeChildTablesDone                  MetricConfig `mapstructure:"postgresql.analyze.child_tables_done"`
+	PostgresqlAnalyzeChildTablesTotal                 MetricConfig `mapstructure:"postgresql.analyze.child_tables_total"`
+	PostgresqlAnalyzeExtStatsComputed                 MetricConfig `mapstructure:"postgresql.analyze.ext_stats_computed"`
+	PostgresqlAnalyzeExtStatsTotal                    MetricConfig `mapstructure:"postgresql.analyze.ext_stats_total"`
+	PostgresqlAnalyzeSampleBlksScanned                MetricConfig `mapstructure:"postgresql.analyze.sample_blks_scanned"`
+	PostgresqlAnalyzeSampleBlksTotal                  MetricConfig `mapstructure:"postgresql.analyze.sample_blks_total"`
+	PostgresqlAnalyzed                                MetricConfig `mapstructure:"postgresql.analyzed"`
 	PostgresqlArchiverArchivedCount                   MetricConfig `mapstructure:"postgresql.archiver.archived_count"`
 	PostgresqlArchiverFailedCount                     MetricConfig `mapstructure:"postgresql.archiver.failed_count"`
+	PostgresqlAutoanalyzed                            MetricConfig `mapstructure:"postgresql.autoanalyzed"`
+	PostgresqlAutovacuumed                            MetricConfig `mapstructure:"postgresql.autovacuumed"`
 	PostgresqlBeforeXidWraparound                     MetricConfig `mapstructure:"postgresql.before_xid_wraparound"`
 	PostgresqlBgwriterBuffersAlloc                    MetricConfig `mapstructure:"postgresql.bgwriter.buffers_alloc"`
 	PostgresqlBgwriterBuffersBackend                  MetricConfig `mapstructure:"postgresql.bgwriter.buffers_backend"`
@@ -46,6 +55,10 @@ type MetricsConfig struct {
 	PostgresqlBufferHit                               MetricConfig `mapstructure:"postgresql.buffer_hit"`
 	PostgresqlChecksumsEnabled                        MetricConfig `mapstructure:"postgresql.checksums.enabled"`
 	PostgresqlChecksumsFailures                       MetricConfig `mapstructure:"postgresql.checksums.failures"`
+	PostgresqlClusterVacuumHeapBlksScanned            MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_blks_scanned"`
+	PostgresqlClusterVacuumHeapBlksTotal              MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_blks_total"`
+	PostgresqlClusterVacuumHeapTuplesScanned          MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_tuples_scanned"`
+	PostgresqlClusterVacuumHeapTuplesWritten          MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_tuples_written"`
 	PostgresqlCommits                                 MetricConfig `mapstructure:"postgresql.commits"`
 	PostgresqlConflicts                               MetricConfig `mapstructure:"postgresql.conflicts"`
 	PostgresqlConflictsBufferpin                      MetricConfig `mapstructure:"postgresql.conflicts.bufferpin"`
@@ -58,10 +71,22 @@ type MetricsConfig struct {
 	PostgresqlControlCheckpointDelayBytes             MetricConfig `mapstructure:"postgresql.control.checkpoint_delay_bytes"`
 	PostgresqlControlRedoDelayBytes                   MetricConfig `mapstructure:"postgresql.control.redo_delay_bytes"`
 	PostgresqlControlTimelineID                       MetricConfig `mapstructure:"postgresql.control.timeline_id"`
+	PostgresqlCreateIndexBlocksDone                   MetricConfig `mapstructure:"postgresql.create_index.blocks_done"`
+	PostgresqlCreateIndexBlocksTotal                  MetricConfig `mapstructure:"postgresql.create_index.blocks_total"`
+	PostgresqlCreateIndexLockersDone                  MetricConfig `mapstructure:"postgresql.create_index.lockers_done"`
+	PostgresqlCreateIndexLockersTotal                 MetricConfig `mapstructure:"postgresql.create_index.lockers_total"`
+	PostgresqlCreateIndexPartitionsDone               MetricConfig `mapstructure:"postgresql.create_index.partitions_done"`
+	PostgresqlCreateIndexPartitionsTotal              MetricConfig `mapstructure:"postgresql.create_index.partitions_total"`
+	PostgresqlCreateIndexTuplesDone                   MetricConfig `mapstructure:"postgresql.create_index.tuples_done"`
+	PostgresqlCreateIndexTuplesTotal                  MetricConfig `mapstructure:"postgresql.create_index.tuples_total"`
 	PostgresqlDatabaseSize                            MetricConfig `mapstructure:"postgresql.database_size"`
 	PostgresqlDbCount                                 MetricConfig `mapstructure:"postgresql.db.count"`
 	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
 	PostgresqlDiskRead                                MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlLastAnalyzeAge                          MetricConfig `mapstructure:"postgresql.last_analyze_age"`
+	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
+	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
+	PostgresqlLastVacuumAge                           MetricConfig `mapstructure:"postgresql.last_vacuum_age"`
 	PostgresqlRecoveryPrefetchBlockDistance           MetricConfig `mapstructure:"postgresql.recovery_prefetch.block_distance"`
 	PostgresqlRecoveryPrefetchHit                     MetricConfig `mapstructure:"postgresql.recovery_prefetch.hit"`
 	PostgresqlRecoveryPrefetchIoDepth                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.io_depth"`
@@ -122,6 +147,13 @@ type MetricsConfig struct {
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
 	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
+	PostgresqlVacuumHeapBlksScanned                   MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_scanned"`
+	PostgresqlVacuumHeapBlksTotal                     MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_total"`
+	PostgresqlVacuumHeapBlksVacuumed                  MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_vacuumed"`
+	PostgresqlVacuumIndexVacuumCount                  MetricConfig `mapstructure:"postgresql.vacuum.index_vacuum_count"`
+	PostgresqlVacuumMaxDeadTuples                     MetricConfig `mapstructure:"postgresql.vacuum.max_dead_tuples"`
+	PostgresqlVacuumNumDeadTuples                     MetricConfig `mapstructure:"postgresql.vacuum.num_dead_tuples"`
+	PostgresqlVacuumed                                MetricConfig `mapstructure:"postgresql.vacuumed"`
 	PostgresqlWalBuffersFull                          MetricConfig `mapstructure:"postgresql.wal.buffers_full"`
 	PostgresqlWalBytes                                MetricConfig `mapstructure:"postgresql.wal.bytes"`
 	PostgresqlWalFpi                                  MetricConfig `mapstructure:"postgresql.wal.fpi"`
@@ -142,10 +174,37 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PostgresqlAnalyzeChildTablesDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeChildTablesTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeExtStatsComputed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeExtStatsTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeSampleBlksScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzeSampleBlksTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAnalyzed: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlArchiverArchivedCount: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlArchiverFailedCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAutoanalyzed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlAutovacuumed: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlBeforeXidWraparound: MetricConfig{
@@ -196,6 +255,18 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlChecksumsFailures: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlClusterVacuumHeapBlksScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlClusterVacuumHeapBlksTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlClusterVacuumHeapTuplesScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlClusterVacuumHeapTuplesWritten: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlCommits: MetricConfig{
 			Enabled: true,
 		},
@@ -232,6 +303,30 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlControlTimelineID: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlCreateIndexBlocksDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexBlocksTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexLockersDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexLockersTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexPartitionsDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexPartitionsTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexTuplesDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexTuplesTotal: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlDatabaseSize: MetricConfig{
 			Enabled: true,
 		},
@@ -242,6 +337,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlDiskRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastAnalyzeAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastAutoanalyzeAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastAutovacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLastVacuumAge: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlRecoveryPrefetchBlockDistance: MetricConfig{
@@ -422,6 +529,27 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlUptime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumHeapBlksScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumHeapBlksTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumHeapBlksVacuumed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumIndexVacuumCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumMaxDeadTuples: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumNumDeadTuples: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlVacuumed: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlWalBuffersFull: MetricConfig{

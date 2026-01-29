@@ -131,4 +131,34 @@ type PostgreSQLClient interface {
 	// Returns nil if not on a standby server or if prefetch is not active
 	// Available in PostgreSQL 15+
 	QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRecoveryPrefetchMetric, error)
+
+	// QueryUserTables retrieves per-table statistics from pg_stat_user_tables
+	// Returns vacuum/analyze statistics and row-level activity per table
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatUserTablesMetric, error)
+
+	// QueryAnalyzeProgress retrieves ANALYZE operation progress from pg_stat_progress_analyze
+	// Returns real-time progress of running ANALYZE operations
+	// Returns empty slice if no ANALYZE operations are currently running
+	// Available in PostgreSQL 13+
+	QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error)
+
+	// QueryClusterProgress retrieves CLUSTER/VACUUM FULL operation progress from pg_stat_progress_cluster
+	// Returns real-time progress of running CLUSTER or VACUUM FULL operations
+	// Returns empty slice if no CLUSTER/VACUUM FULL operations are currently running
+	// Available in PostgreSQL 12+
+	QueryClusterProgress(ctx context.Context) ([]models.PgStatProgressCluster, error)
+
+	// QueryCreateIndexProgress retrieves CREATE INDEX operation progress from pg_stat_progress_create_index
+	// Returns real-time progress of running CREATE INDEX operations
+	// Returns empty slice if no CREATE INDEX operations are currently running
+	// Available in PostgreSQL 12+
+	QueryCreateIndexProgress(ctx context.Context) ([]models.PgStatProgressCreateIndex, error)
+
+	// QueryVacuumProgress retrieves VACUUM operation progress from pg_stat_progress_vacuum
+	// Returns real-time progress of running VACUUM operations
+	// Returns empty slice if no VACUUM operations are currently running
+	// Available in PostgreSQL 12+
+	QueryVacuumProgress(ctx context.Context) ([]models.PgStatProgressVacuum, error)
 }

@@ -682,3 +682,210 @@ func (c *SQLClient) QueryRecoveryPrefetch(ctx context.Context) (*models.PgStatRe
 
 	return &metric, nil
 }
+
+// QueryUserTables retrieves per-table statistics from pg_stat_user_tables
+// Returns vacuum/analyze statistics and row-level activity per table
+// Filters by specified schemas and tables
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatUserTablesMetric, error) {
+	query := queries.PgStatUserTablesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_user_tables: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatUserTablesMetric
+
+	for rows.Next() {
+		var metric models.PgStatUserTablesMetric
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.SeqScan,
+			&metric.SeqTupRead,
+			&metric.IdxScan,
+			&metric.IdxTupFetch,
+			&metric.NTupIns,
+			&metric.NTupUpd,
+			&metric.NTupDel,
+			&metric.NTupHotUpd,
+			&metric.NLiveTup,
+			&metric.NDeadTup,
+			&metric.NModSinceAnalyze,
+			&metric.LastVacuumAge,
+			&metric.LastAutovacuumAge,
+			&metric.LastAnalyzeAge,
+			&metric.LastAutoanalyzeAge,
+			&metric.VacuumCount,
+			&metric.AutovacuumCount,
+			&metric.AnalyzeCount,
+			&metric.AutoanalyzeCount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_user_tables row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_user_tables rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
+	query := queries.PgStatProgressAnalyzeSQL
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_analyze: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressAnalyze
+
+	for rows.Next() {
+		var metric models.PgStatProgressAnalyze
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.Phase,
+			&metric.SampleBlksTotal,
+			&metric.SampleBlksScanned,
+			&metric.ExtStatsTotal,
+			&metric.ExtStatsComputed,
+			&metric.ChildTablesTotal,
+			&metric.ChildTablesDone,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_analyze row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_analyze rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryClusterProgress(ctx context.Context) ([]models.PgStatProgressCluster, error) {
+	query := queries.PgStatProgressClusterSQL
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_cluster: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressCluster
+
+	for rows.Next() {
+		var metric models.PgStatProgressCluster
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.Command,
+			&metric.Phase,
+			&metric.HeapBlksTotal,
+			&metric.HeapBlksScanned,
+			&metric.HeapTuplesScanned,
+			&metric.HeapTuplesWritten,
+			&metric.IndexRebuildCount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_cluster row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_cluster rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryCreateIndexProgress(ctx context.Context) ([]models.PgStatProgressCreateIndex, error) {
+	query := queries.PgStatProgressCreateIndexSQL
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_create_index: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressCreateIndex
+
+	for rows.Next() {
+		var metric models.PgStatProgressCreateIndex
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.IndexName,
+			&metric.Command,
+			&metric.Phase,
+			&metric.LockersTotal,
+			&metric.LockersDone,
+			&metric.BlocksTotal,
+			&metric.BlocksDone,
+			&metric.TuplesTotal,
+			&metric.TuplesDone,
+			&metric.PartitionsTotal,
+			&metric.PartitionsDone,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_create_index row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_create_index rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+// QueryVacuumProgress retrieves VACUUM operation progress from pg_stat_progress_vacuum
+// Returns real-time progress of running VACUUM operations (PostgreSQL 12+)
+func (c *SQLClient) QueryVacuumProgress(ctx context.Context) ([]models.PgStatProgressVacuum, error) {
+	query := queries.PgStatProgressVacuumSQL
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_vacuum: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressVacuum
+
+	for rows.Next() {
+		var metric models.PgStatProgressVacuum
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.Phase,
+			&metric.HeapBlksTotal,
+			&metric.HeapBlksScanned,
+			&metric.HeapBlksVacuumed,
+			&metric.IndexVacuumCount,
+			&metric.MaxDeadTuples,
+			&metric.NumDeadTuples,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_vacuum row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_vacuum rows: %w", err)
+	}
+
+	return metrics, nil
+}

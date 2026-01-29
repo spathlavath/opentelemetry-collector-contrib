@@ -41,8 +41,14 @@ attributes:
   client_address:
     description: IP address of the standby server
     type: string
+  command:
+    description: Command type (CLUSTER or VACUUM FULL)
+    type: string
   database_name:
     description: Name of the PostgreSQL database
+    type: string
+  index_name:
+    description: Name of the index being created
     type: string
   newrelicpostgresql.instance_name:
     description: Name of the PostgreSQL instance
@@ -52,6 +58,9 @@ attributes:
     type: string
   replication_state:
     description: State of the replication connection (streaming, catchup, etc.)
+    type: string
+  schema_name:
+    description: Name of the schema containing the table
     type: string
   slot_name:
     description: Unique identifier of the replication slot
@@ -71,8 +80,83 @@ attributes:
   sync_state:
     description: Synchronous state of the standby (async, sync, quorum, potential)
     type: string
+  table_name:
+    description: Name of the table
+    type: string
 
 metrics:
+  postgresql.analyze.child_tables_done:
+    description: Number of child tables processed during ANALYZE operation (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tables}"
+    stability:
+      level: alpha
+
+  postgresql.analyze.child_tables_total:
+    description: Total number of child tables to be analyzed (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tables}"
+    stability:
+      level: alpha
+
+  postgresql.analyze.ext_stats_computed:
+    description: Number of extended statistics computed during ANALYZE operation (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{statistics}"
+    stability:
+      level: alpha
+
+  postgresql.analyze.ext_stats_total:
+    description: Total number of extended statistics to be computed (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{statistics}"
+    stability:
+      level: alpha
+
+  postgresql.analyze.sample_blks_scanned:
+    description: Number of sample blocks scanned during ANALYZE operation (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.analyze.sample_blks_total:
+    description: Total number of sample blocks to be scanned (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.analyzed:
+    description: Number of times this table has been manually analyzed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
   postgresql.archiver.archived_count:
     description: Number of WAL files successfully archived (PostgreSQL 9.6+)
     enabled: true
@@ -94,6 +178,30 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name]
     unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.autoanalyzed:
+    description: Number of times this table has been analyzed by autoanalyze (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.autovacuumed:
+    description: Number of times this table has been vacuumed by autovacuum (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
     stability:
       level: alpha
 
@@ -281,6 +389,46 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.cluster_vacuum.heap_blks_scanned:
+    description: Number of heap blocks scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.cluster_vacuum.heap_blks_total:
+    description: Total number of heap blocks to be scanned during CLUSTER/VACUUM FULL (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.cluster_vacuum.heap_tuples_scanned:
+    description: Number of heap tuples scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.cluster_vacuum.heap_tuples_written:
+    description: Number of heap tuples written during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
   postgresql.commits:
     description: Number of transactions that have been committed
     enabled: true
@@ -417,6 +565,86 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.create_index.blocks_done:
+    description: Number of blocks processed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.blocks_total:
+    description: Total number of blocks to be processed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.lockers_done:
+    description: Number of lockers processed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{lockers}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.lockers_total:
+    description: Total number of lockers to be processed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{lockers}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.partitions_done:
+    description: Number of partitions processed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{partitions}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.partitions_total:
+    description: Total number of partitions to be processed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{partitions}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.tuples_done:
+    description: Number of tuples indexed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.tuples_total:
+    description: Total number of tuples to be indexed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
   postgresql.database_size:
     description: Size of the database in bytes
     enabled: true
@@ -458,6 +686,46 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.last_analyze_age:
+    description: Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.last_autoanalyze_age:
+    description: Seconds since last autoanalyze on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.last_autovacuum_age:
+    description: Seconds since last autovacuum on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.last_vacuum_age:
+    description: Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
     stability:
       level: alpha
 
@@ -1128,6 +1396,78 @@ metrics:
       value_type: double
     attributes: [newrelicpostgresql.instance_name]
     unit: "s"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.heap_blks_scanned:
+    description: Number of heap blocks scanned during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.heap_blks_total:
+    description: Total number of heap blocks to be scanned during VACUUM (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.heap_blks_vacuumed:
+    description: Number of heap blocks vacuumed during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.index_vacuum_count:
+    description: Number of completed index vacuum cycles during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{cycles}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.max_dead_tuples:
+    description: Maximum number of dead tuples that can be stored before index vacuum is required (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.vacuum.num_dead_tuples:
+    description: Current number of dead tuples collected during VACUUM operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.vacuumed:
+    description: Number of times this table has been manually vacuumed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
     stability:
       level: alpha
 

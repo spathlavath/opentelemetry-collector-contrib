@@ -1,9 +1,27 @@
 default:
 all_set:
   metrics:
+    postgresql.analyze.child_tables_done:
+      enabled: true
+    postgresql.analyze.child_tables_total:
+      enabled: true
+    postgresql.analyze.ext_stats_computed:
+      enabled: true
+    postgresql.analyze.ext_stats_total:
+      enabled: true
+    postgresql.analyze.sample_blks_scanned:
+      enabled: true
+    postgresql.analyze.sample_blks_total:
+      enabled: true
+    postgresql.analyzed:
+      enabled: true
     postgresql.archiver.archived_count:
       enabled: true
     postgresql.archiver.failed_count:
+      enabled: true
+    postgresql.autoanalyzed:
+      enabled: true
+    postgresql.autovacuumed:
       enabled: true
     postgresql.before_xid_wraparound:
       enabled: true
@@ -37,6 +55,14 @@ all_set:
       enabled: true
     postgresql.checksums.failures:
       enabled: true
+    postgresql.cluster_vacuum.heap_blks_scanned:
+      enabled: true
+    postgresql.cluster_vacuum.heap_blks_total:
+      enabled: true
+    postgresql.cluster_vacuum.heap_tuples_scanned:
+      enabled: true
+    postgresql.cluster_vacuum.heap_tuples_written:
+      enabled: true
     postgresql.commits:
       enabled: true
     postgresql.conflicts:
@@ -61,6 +87,22 @@ all_set:
       enabled: true
     postgresql.control.timeline_id:
       enabled: true
+    postgresql.create_index.blocks_done:
+      enabled: true
+    postgresql.create_index.blocks_total:
+      enabled: true
+    postgresql.create_index.lockers_done:
+      enabled: true
+    postgresql.create_index.lockers_total:
+      enabled: true
+    postgresql.create_index.partitions_done:
+      enabled: true
+    postgresql.create_index.partitions_total:
+      enabled: true
+    postgresql.create_index.tuples_done:
+      enabled: true
+    postgresql.create_index.tuples_total:
+      enabled: true
     postgresql.database_size:
       enabled: true
     postgresql.db.count:
@@ -68,6 +110,14 @@ all_set:
     postgresql.deadlocks:
       enabled: true
     postgresql.disk_read:
+      enabled: true
+    postgresql.last_analyze_age:
+      enabled: true
+    postgresql.last_autoanalyze_age:
+      enabled: true
+    postgresql.last_autovacuum_age:
+      enabled: true
+    postgresql.last_vacuum_age:
       enabled: true
     postgresql.recovery_prefetch.block_distance:
       enabled: true
@@ -188,6 +238,20 @@ all_set:
     postgresql.temp_files:
       enabled: true
     postgresql.uptime:
+      enabled: true
+    postgresql.vacuum.heap_blks_scanned:
+      enabled: true
+    postgresql.vacuum.heap_blks_total:
+      enabled: true
+    postgresql.vacuum.heap_blks_vacuumed:
+      enabled: true
+    postgresql.vacuum.index_vacuum_count:
+      enabled: true
+    postgresql.vacuum.max_dead_tuples:
+      enabled: true
+    postgresql.vacuum.num_dead_tuples:
+      enabled: true
+    postgresql.vacuumed:
       enabled: true
     postgresql.wal.buffers_full:
       enabled: true
@@ -236,9 +300,27 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    postgresql.analyze.child_tables_done:
+      enabled: false
+    postgresql.analyze.child_tables_total:
+      enabled: false
+    postgresql.analyze.ext_stats_computed:
+      enabled: false
+    postgresql.analyze.ext_stats_total:
+      enabled: false
+    postgresql.analyze.sample_blks_scanned:
+      enabled: false
+    postgresql.analyze.sample_blks_total:
+      enabled: false
+    postgresql.analyzed:
+      enabled: false
     postgresql.archiver.archived_count:
       enabled: false
     postgresql.archiver.failed_count:
+      enabled: false
+    postgresql.autoanalyzed:
+      enabled: false
+    postgresql.autovacuumed:
       enabled: false
     postgresql.before_xid_wraparound:
       enabled: false
@@ -272,6 +354,14 @@ none_set:
       enabled: false
     postgresql.checksums.failures:
       enabled: false
+    postgresql.cluster_vacuum.heap_blks_scanned:
+      enabled: false
+    postgresql.cluster_vacuum.heap_blks_total:
+      enabled: false
+    postgresql.cluster_vacuum.heap_tuples_scanned:
+      enabled: false
+    postgresql.cluster_vacuum.heap_tuples_written:
+      enabled: false
     postgresql.commits:
       enabled: false
     postgresql.conflicts:
@@ -296,6 +386,22 @@ none_set:
       enabled: false
     postgresql.control.timeline_id:
       enabled: false
+    postgresql.create_index.blocks_done:
+      enabled: false
+    postgresql.create_index.blocks_total:
+      enabled: false
+    postgresql.create_index.lockers_done:
+      enabled: false
+    postgresql.create_index.lockers_total:
+      enabled: false
+    postgresql.create_index.partitions_done:
+      enabled: false
+    postgresql.create_index.partitions_total:
+      enabled: false
+    postgresql.create_index.tuples_done:
+      enabled: false
+    postgresql.create_index.tuples_total:
+      enabled: false
     postgresql.database_size:
       enabled: false
     postgresql.db.count:
@@ -303,6 +409,14 @@ none_set:
     postgresql.deadlocks:
       enabled: false
     postgresql.disk_read:
+      enabled: false
+    postgresql.last_analyze_age:
+      enabled: false
+    postgresql.last_autoanalyze_age:
+      enabled: false
+    postgresql.last_autovacuum_age:
+      enabled: false
+    postgresql.last_vacuum_age:
       enabled: false
     postgresql.recovery_prefetch.block_distance:
       enabled: false
@@ -423,6 +537,20 @@ none_set:
     postgresql.temp_files:
       enabled: false
     postgresql.uptime:
+      enabled: false
+    postgresql.vacuum.heap_blks_scanned:
+      enabled: false
+    postgresql.vacuum.heap_blks_total:
+      enabled: false
+    postgresql.vacuum.heap_blks_vacuumed:
+      enabled: false
+    postgresql.vacuum.index_vacuum_count:
+      enabled: false
+    postgresql.vacuum.max_dead_tuples:
+      enabled: false
+    postgresql.vacuum.num_dead_tuples:
+      enabled: false
+    postgresql.vacuumed:
       enabled: false
     postgresql.wal.buffers_full:
       enabled: false

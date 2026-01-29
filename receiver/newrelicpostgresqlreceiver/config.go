@@ -14,6 +14,19 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/internal/metadata"
 )
 
+// RelationConfig configures which tables to collect per-table metrics from
+// This is an opt-in feature to prevent cardinality explosion
+type RelationConfig struct {
+	// Schemas to collect from (e.g., ["public", "myapp"])
+	// If empty, defaults to ["public"]
+	Schemas []string `mapstructure:"schemas"`
+
+	// Tables to collect metrics from
+	// Can use exact names: ["users", "orders"]
+	// If empty, no per-table metrics will be collected
+	Tables []string `mapstructure:"tables"`
+}
+
 // Config represents the receiver config settings within the collector's config.yaml
 type Config struct {
 	scraperhelper.ControllerConfig `mapstructure:",squash"`
@@ -34,6 +47,15 @@ type Config struct {
 
 	// Timeout for database operations
 	Timeout time.Duration `mapstructure:"timeout"`
+
+	// Relations configuration for per-table metrics (OPTIONAL)
+	// If nil (not configured), per-table metrics will NOT be collected
+	// This prevents cardinality explosion in databases with many tables
+	// Example:
+	//   relations:
+	//     schemas: [public, myapp]
+	//     tables: [users, orders, payments]
+	Relations *RelationConfig `mapstructure:"relations"`
 }
 
 // Validate checks if the receiver configuration is valid
