@@ -1,5 +1,7 @@
 # New Relic Oracle Receiver
 
+## Overview
+
 The New Relic Oracle Receiver is a comprehensive OpenTelemetry receiver that collects extensive Oracle database metrics, performance data, and telemetry for monitoring Oracle database health, performance, and resource utilization.
 
 ## Features
@@ -43,15 +45,6 @@ This receiver collects comprehensive Oracle database metrics across multiple cat
 ```yaml
 receivers:
   newrelicoracledb:
-    datasource: "oracle://username:password@hostname:1521/service"
-    collection_interval: 60s
-```
-
-### Alternative Configuration (Individual Parameters)
-
-```yaml
-receivers:
-  newrelicoracledb:
     endpoint: "hostname:1521"
     username: "oracle_user"
     password: "oracle_password"
@@ -64,7 +57,10 @@ receivers:
 ```yaml
 receivers:
   newrelicoracledb:
-    datasource: "oracle://username:password@hostname:1521/service"
+    endpoint: "hostname:1521"
+    username: "oracle_user"
+    password: "oracle_password"
+    service: "XE"
     collection_interval: 60s
     initial_delay: 10s
     timeout: 30s
@@ -82,30 +78,36 @@ receivers:
     # PDB Configuration
     pdb_services: ["ALL"]
     
-    # Enable/disable specific scrapers (all true by default)
-    enable_session_scraper: true
-    enable_tablespace_scraper: true
-    enable_core_scraper: true
-    enable_pdb_scraper: true
-    enable_system_scraper: true
-    enable_connection_scraper: true
-    enable_container_scraper: true
-    enable_rac_scraper: true
-    enable_database_info_scraper: true
+    # Enable/disable specific scrapers (optional, all true by default)
+    # enable_session_scraper: true
+    # enable_tablespace_scraper: true
+    # enable_core_scraper: true
+    # enable_pdb_scraper: true
+    # enable_system_scraper: true
+    # enable_connection_scraper: true
+    # enable_container_scraper: true
+    # enable_rac_scraper: true
+    # enable_database_info_scraper: true
 ```
 
 ### Configuration Parameters
 
+**Note**: The receiver supports two connection methods:
+1. **Individual parameters** (recommended): `endpoint`, `username`, `password`, `service`
+2. **Connection string**: `datasource` with oracle:// URL format
+
+You must provide either `datasource` OR all individual parameters.
+
 #### Connection Settings
 | Parameter | Description | Required | Default |
 |-----------|-------------|----------|---------|
-| `datasource` | Complete Oracle connection string (oracle://user:pass@host:port/service) | No* | |
 | `endpoint` | Oracle database host and port (host:port) | No* | |
 | `username` | Oracle database username | No* | |
 | `password` | Oracle database password (supports ${env:VAR} syntax) | No* | |
 | `service` | Oracle service name or SID | No* | |
+| `datasource` | Alternative: Complete connection string (oracle://user:pass@host:port/service) | No* | |
 
-*Either `datasource` OR all of `endpoint`, `username`, `password`, and `service` must be provided.
+*Either all of `endpoint`, `username`, `password`, `service` OR `datasource` must be provided.
 
 #### Collection Settings
 | Parameter | Description | Default |
@@ -154,55 +156,115 @@ receivers:
 
 ### Required Database Permissions
 
-The monitoring user needs `SELECT` permissions on the following views:
+#### For CDB/PDB Monitoring (Oracle 12c+)
 
-#### Basic Monitoring (All Editions)
+Create a common user with `C##` prefix and grant all required permissions:
+
 ```sql
-GRANT SELECT ON v$session TO monitoring_user;
-GRANT SELECT ON v$database TO monitoring_user;
-GRANT SELECT ON v$instance TO monitoring_user;
-GRANT SELECT ON dba_tablespaces TO monitoring_user;
-GRANT SELECT ON dba_data_files TO monitoring_user;
-GRANT SELECT ON v$sysstat TO monitoring_user;
-GRANT SELECT ON v$sgastat TO monitoring_user;
-GRANT SELECT ON v$pgastat TO monitoring_user;
-GRANT SELECT ON v$resource_limit TO monitoring_user;
+CREATE USER c##<YOUR_DB_USERNAME> IDENTIFIED BY <YOUR_PASSWORD> CONTAINER=ALL;
+
+-- Session and connection grants
+GRANT CREATE SESSION TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SET CONTAINER TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT CONNECT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Performance and session monitoring views
+GRANT SELECT ON SYS.V_$SESSION TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$SYSSTAT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$SESSTAT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$STATNAME TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$SYSTEM_EVENT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Shared server and dispatcher views
+GRANT SELECT ON SYS.V_$SHARED_SERVER TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$DISPATCHER TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$CIRCUIT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Resource and locking views
+GRANT SELECT ON SYS.V_$RESOURCE_LIMIT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$LOCK TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Database configuration and parameters
+GRANT SELECT ON SYS.V_$DATABASE TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$PARAMETER TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- SQL performance and execution plans
+GRANT SELECT ON SYS.V_$SQLAREA TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$SQL TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.V_$SQL_PLAN TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- PDB views
+GRANT SELECT ON SYS.V_$PDBS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Global views for RAC and multi-instance monitoring
+GRANT SELECT ON SYS.GV_$INSTANCE TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$SGA TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$SESSTAT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$STATNAME TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$SYSSTAT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$SQLAREA TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Cache and memory views
+GRANT SELECT ON SYS.GV_$LIBRARYCACHE TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$ROWCACHE TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$PGASTAT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Container and PDB views
+GRANT SELECT ON SYS.GV_$CONTAINERS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$PDBS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- System metrics and statistics
+GRANT SELECT ON SYS.GV_$CON_SYSMETRIC TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$SYSMETRIC TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- File and I/O statistics
+GRANT SELECT ON SYS.GV_$FILESTAT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Wait events and session monitoring
+GRANT SELECT ON SYS.GV_$SYSTEM_EVENT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$ACTIVE_SERVICES TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$SESSION TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON SYS.GV_$SESSION_WAIT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- Rollback segment statistics
+GRANT SELECT ON SYS.GV_$ROLLSTAT TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- DBA views for objects and tablespaces
+GRANT SELECT ON DBA_OBJECTS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON DBA_TABLESPACES TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON DBA_TABLESPACE_USAGE_METRICS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON DBA_DATA_FILES TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON DBA_USERS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- CDB views for multi-tenant monitoring
+GRANT SELECT ON CDB_SERVICES TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON CDB_DATA_FILES TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON CDB_TABLESPACE_USAGE_METRICS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON CDB_USERS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON CDB_PDBS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+
+-- General access views
+GRANT SELECT ON ALL_USERS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON ALL_VIEWS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
+GRANT SELECT ON GLOBAL_NAME TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
 ```
 
-#### Performance Monitoring
-```sql
-GRANT SELECT ON v$sql TO monitoring_user;
-GRANT SELECT ON v$sql_plan TO monitoring_user;
-GRANT SELECT ON v$sqlarea TO monitoring_user;
-GRANT SELECT ON v$session_wait TO monitoring_user;
-GRANT SELECT ON v$session_longops TO monitoring_user;
-GRANT SELECT ON v$system_event TO monitoring_user;
-```
+#### For Non-CDB or PDB-Specific Monitoring (Oracle 11g/12c Standard)
 
-#### CDB/PDB Monitoring (12c+)
-```sql
-GRANT SELECT ON v$containers TO monitoring_user;
-GRANT SELECT ON v$pdbs TO monitoring_user;
-GRANT SELECT ON cdb_tablespaces TO monitoring_user;
-GRANT SELECT ON cdb_data_files TO monitoring_user;
-```
+For non-container databases or when connecting directly to a PDB, use a regular user without the `C##` prefix:
 
-#### RAC Monitoring (Enterprise Edition with RAC)
 ```sql
-GRANT SELECT ON gv$instance TO monitoring_user;
-GRANT SELECT ON gv$session TO monitoring_user;
-GRANT SELECT ON gv$active_services TO monitoring_user;
-GRANT SELECT ON v$asm_diskgroup TO monitoring_user;
-GRANT SELECT ON gv$system_event TO monitoring_user;
-```
+CREATE USER <YOUR_DB_USERNAME> IDENTIFIED BY <YOUR_PASSWORD>;
 
-#### For CDB Monitoring
-Create a common user with `C##` prefix:
-```sql
-CREATE USER c##monitoring_user IDENTIFIED BY password CONTAINER=ALL;
-GRANT CONNECT, SELECT_CATALOG_ROLE TO c##monitoring_user CONTAINER=ALL;
-GRANT SELECT ON v$session TO c##monitoring_user CONTAINER=ALL;
--- Grant other permissions as needed with CONTAINER=ALL
+-- Session and connection grants
+GRANT CREATE SESSION TO <YOUR_DB_USERNAME>;
+GRANT CONNECT TO <YOUR_DB_USERNAME>;
+
+-- Grant SELECT on the same views as above, but without CONTAINER=ALL
+-- Example:
+GRANT SELECT ON SYS.V_$SESSION TO <YOUR_DB_USERNAME>;
+GRANT SELECT ON SYS.V_$SYSSTAT TO <YOUR_DB_USERNAME>;
+-- ... (repeat all SELECT grants from above without CONTAINER=ALL)
 ```
 
 ## Metrics
@@ -294,7 +356,7 @@ receivers:
     endpoint: "oraclehost:1521"
     username: "monitor"
     password: "${env:ORACLE_PASSWORD}"
-    service: "PDB1"
+    service: "CDB"
     collection_interval: 45s
     timeout: 45s
     # Query monitoring enabled for PDBs - track application performance
@@ -373,116 +435,6 @@ service:
       level: debug
     metrics:
       level: detailed
-```
-
-### Basic CDB and PDB Configuration
-
-A simpler configuration for monitoring CDB and multiple PDBs:
-
-```yaml
-receivers:
-  newrelicoracledb/cdb:
-    endpoint: "oraclehost:1521"
-    username: "c##monitor"
-    password: "${env:ORACLE_PASSWORD}"
-    service: "ORCL"
-    collection_interval: 60s
-  
-  newrelicoracledb/pdb1:
-    endpoint: "oraclehost:1521"
-    username: "monitor"
-    password: "${env:ORACLE_PASSWORD}"
-    service: "PDB1"
-    collection_interval: 60s
-  
-  newrelicoracledb/pdb2:
-    endpoint: "oraclehost:1521"
-    username: "monitor"
-    password: "${env:ORACLE_PASSWORD}"
-    service: "PDB2"
-    collection_interval: 60s
-
-processors:
-  batch:
-    timeout: 10s
-
-exporters:
-  otlp:
-    endpoint: "https://otlp.nr-data.net:4317"
-    headers:
-      api-key: "${env:NEW_RELIC_LICENSE_KEY}"
-
-service:
-  pipelines:
-    metrics:
-      receivers: [newrelicoracledb/cdb, newrelicoracledb/pdb1, newrelicoracledb/pdb2]
-      processors: [batch]
-      exporters: [otlp]
-```
-
-### RAC Monitoring
-
-```yaml
-receivers:
-  newrelicoracledb/rac:
-    endpoint: "scan-address:1521"
-    username: "monitor"
-    password: "${env:ORACLE_PASSWORD}"
-    service: "RACDB"
-    collection_interval: 60s
-    enable_rac_scraper: true
-    enable_core_scraper: true
-    enable_system_scraper: true
-
-exporters:
-  otlp:
-    endpoint: "https://otlp.nr-data.net:4317"
-    headers:
-      api-key: "${env:NEW_RELIC_LICENSE_KEY}"
-
-service:
-  pipelines:
-    metrics:
-      receivers: [newrelicoracledb/rac]
-      exporters: [otlp]
-```
-
-### Query Performance Monitoring Only
-
-To focus exclusively on query performance without infrastructure metrics:
-
-```yaml
-receivers:
-  newrelicoracledb/queries:
-    endpoint: "oraclehost:1521"
-    username: "monitor"
-    password: "${env:ORACLE_PASSWORD}"
-    service: "PDB1"
-    collection_interval: 30s
-    enable_query_monitoring: true
-    enable_interval_based_averaging: true
-    query_monitoring_response_time_threshold: 1.0  # Only queries slower than 1 second
-    query_monitoring_count_threshold: 10  # Only queries executed at least 10 times
-    # Disable infrastructure scrapers
-    enable_session_scraper: false
-    enable_tablespace_scraper: false
-    enable_core_scraper: false
-    enable_pdb_scraper: false
-    enable_system_scraper: false
-    enable_connection_scraper: false
-    enable_container_scraper: false
-
-exporters:
-  otlp:
-    endpoint: "https://otlp.nr-data.net:4317"
-    headers:
-      api-key: "${env:NEW_RELIC_LICENSE_KEY}"
-
-service:
-  pipelines:
-    metrics:
-      receivers: [newrelicoracledb/queries]
-      exporters: [otlp]
 ```
 
 ## Troubleshooting
