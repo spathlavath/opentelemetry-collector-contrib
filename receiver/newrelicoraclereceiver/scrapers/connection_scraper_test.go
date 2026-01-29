@@ -241,6 +241,47 @@ func TestConnectionScraper_LogonStats(t *testing.T) {
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs)
 	})
+
+	t.Run("logon stats with invalid data", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.LogonStatsList = []models.LogonStat{
+			{
+				Name:  sql.NullString{Valid: false},
+				Value: sql.NullFloat64{Float64: 1500.0, Valid: true},
+			},
+			{
+				Name:  sql.NullString{String: "logons current", Valid: true},
+				Value: sql.NullFloat64{Valid: false},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Invalid data should be skipped
+	})
+
+	t.Run("logon stats query error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("logon stats query failed")
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.NotEmpty(t, errs)
+	})
 }
 
 func TestConnectionScraper_SessionResourceConsumption(t *testing.T) {
@@ -350,6 +391,54 @@ func TestConnectionScraper_WaitEvents(t *testing.T) {
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs)
 	})
+
+	t.Run("wait events with invalid data", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CurrentWaitEventsList = []models.CurrentWaitEvent{
+			{
+				SID:           sql.NullInt64{Valid: false},
+				Event:         sql.NullString{String: "test event", Valid: true},
+				SecondsInWait: sql.NullInt64{Int64: 10, Valid: true},
+			},
+			{
+				SID:           sql.NullInt64{Int64: 123, Valid: true},
+				Event:         sql.NullString{Valid: false},
+				SecondsInWait: sql.NullInt64{Int64: 10, Valid: true},
+			},
+			{
+				SID:           sql.NullInt64{Int64: 123, Valid: true},
+				Event:         sql.NullString{String: "test event", Valid: true},
+				SecondsInWait: sql.NullInt64{Valid: false},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Invalid data should be skipped
+	})
+
+	t.Run("wait events query error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("wait events query failed")
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.NotEmpty(t, errs)
+	})
 }
 
 func TestConnectionScraper_BlockingSessions(t *testing.T) {
@@ -403,6 +492,54 @@ func TestConnectionScraper_BlockingSessions(t *testing.T) {
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs)
 	})
+
+	t.Run("blocking sessions with invalid data", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.BlockingSessionsList = []models.BlockingSession{
+			{
+				SID:             sql.NullInt64{Valid: false},
+				BlockingSession: sql.NullInt64{Int64: 123, Valid: true},
+				SecondsInWait:   sql.NullInt64{Int64: 100, Valid: true},
+			},
+			{
+				SID:             sql.NullInt64{Int64: 456, Valid: true},
+				BlockingSession: sql.NullInt64{Valid: false},
+				SecondsInWait:   sql.NullInt64{Int64: 100, Valid: true},
+			},
+			{
+				SID:             sql.NullInt64{Int64: 456, Valid: true},
+				BlockingSession: sql.NullInt64{Int64: 123, Valid: true},
+				SecondsInWait:   sql.NullInt64{Valid: false},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Invalid data should be skipped
+	})
+
+	t.Run("blocking sessions query error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("blocking sessions query failed")
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.NotEmpty(t, errs)
+	})
 }
 
 func TestConnectionScraper_WaitEventSummary(t *testing.T) {
@@ -452,6 +589,54 @@ func TestConnectionScraper_WaitEventSummary(t *testing.T) {
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs)
 	})
+
+	t.Run("wait event summary with invalid data", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.WaitEventSummaryList = []models.WaitEventSummary{
+			{
+				Event:           sql.NullString{Valid: false},
+				TotalWaits:      sql.NullInt64{Int64: 100, Valid: true},
+				TimeWaitedMicro: sql.NullInt64{Int64: 50000, Valid: true},
+			},
+			{
+				Event:           sql.NullString{String: "test event", Valid: true},
+				TotalWaits:      sql.NullInt64{Valid: false},
+				TimeWaitedMicro: sql.NullInt64{Int64: 50000, Valid: true},
+			},
+			{
+				Event:           sql.NullString{String: "test event", Valid: true},
+				TotalWaits:      sql.NullInt64{Int64: 100, Valid: true},
+				TimeWaitedMicro: sql.NullInt64{Valid: false},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Invalid data should be skipped
+	})
+
+	t.Run("wait event summary query error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("wait event summary query failed")
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.NotEmpty(t, errs)
+	})
 }
 
 func TestConnectionScraper_ConnectionPoolMetrics(t *testing.T) {
@@ -498,6 +683,47 @@ func TestConnectionScraper_ConnectionPoolMetrics(t *testing.T) {
 
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs)
+	})
+
+	t.Run("pool metrics with invalid data", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.ConnectionPoolMetricsList = []models.ConnectionPoolMetric{
+			{
+				MetricName: sql.NullString{Valid: false},
+				Value:      sql.NullInt64{Int64: 10, Valid: true},
+			},
+			{
+				MetricName: sql.NullString{String: "shared_servers", Valid: true},
+				Value:      sql.NullInt64{Valid: false},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Invalid data should be skipped
+	})
+
+	t.Run("pool metrics query error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("pool metrics query failed")
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.NotEmpty(t, errs)
 	})
 }
 
@@ -547,6 +773,47 @@ func TestConnectionScraper_SessionLimits(t *testing.T) {
 
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs)
+	})
+
+	t.Run("session limits with invalid data", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.SessionLimitsList = []models.SessionLimit{
+			{
+				ResourceName:       sql.NullString{Valid: false},
+				CurrentUtilization: sql.NullInt64{Int64: 100, Valid: true},
+			},
+			{
+				ResourceName:       sql.NullString{String: "sessions", Valid: true},
+				CurrentUtilization: sql.NullInt64{Valid: false},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Invalid data should be skipped
+	})
+
+	t.Run("session limits query error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("session limits query failed")
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.NotEmpty(t, errs)
 	})
 }
 
@@ -614,5 +881,285 @@ func TestConnectionScraper_ConnectionQuality(t *testing.T) {
 
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs)
+	})
+
+	t.Run("connection quality metrics with invalid data", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.ConnectionQualityMetricsList = []models.ConnectionQualityMetric{
+			{
+				Name:  sql.NullString{Valid: false},
+				Value: sql.NullFloat64{Float64: 100.0, Valid: true},
+			},
+			{
+				Name:  sql.NullString{String: "user commits", Valid: true},
+				Value: sql.NullFloat64{Valid: false},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Invalid data should be skipped
+	})
+
+	t.Run("connection quality query error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("connection quality query failed")
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.NotEmpty(t, errs)
+	})
+}
+
+func TestConnectionScraper_HelperFunctions(t *testing.T) {
+	mockClient := client.NewMockClient()
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+	logger := zap.NewNop()
+
+	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+	require.NoError(t, err)
+
+	t.Run("formatInt64 with valid value", func(t *testing.T) {
+		result := scraper.formatInt64(sql.NullInt64{Int64: 12345, Valid: true})
+		assert.Equal(t, "12345", result)
+	})
+
+	t.Run("formatInt64 with invalid value", func(t *testing.T) {
+		result := scraper.formatInt64(sql.NullInt64{Valid: false})
+		assert.Equal(t, "", result)
+	})
+
+	t.Run("formatString with valid value", func(t *testing.T) {
+		result := scraper.formatString(sql.NullString{String: "test-string", Valid: true})
+		assert.Equal(t, "test-string", result)
+	})
+
+	t.Run("formatString with invalid value", func(t *testing.T) {
+		result := scraper.formatString(sql.NullString{Valid: false})
+		assert.Equal(t, "", result)
+	})
+}
+
+func TestConnectionScraper_IntegrationWithMultipleErrors(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.QueryErr = errors.New("database error")
+
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+	logger := zap.NewNop()
+
+	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+	require.NoError(t, err)
+
+	errs := scraper.ScrapeConnectionMetrics(context.Background())
+	// Should collect errors from multiple failing queries
+	assert.NotEmpty(t, errs)
+	// We expect multiple errors since all queries will fail
+	assert.Greater(t, len(errs), 1)
+}
+
+func TestConnectionScraper_NullValuesHandling(t *testing.T) {
+	t.Run("wait event summary with null average wait time", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.WaitEventSummaryList = []models.WaitEventSummary{
+			{
+				Event:            sql.NullString{String: "test event", Valid: true},
+				TotalWaits:       sql.NullInt64{Int64: 100, Valid: true},
+				TimeWaitedMicro:  sql.NullInt64{Int64: 50000, Valid: true},
+				AverageWaitMicro: sql.NullFloat64{Valid: false}, // Null average
+				WaitClass:        sql.NullString{String: "Other", Valid: true},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Should handle null gracefully
+	})
+
+	t.Run("session limits with invalid limit value", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.SessionLimitsList = []models.SessionLimit{
+			{
+				ResourceName:       sql.NullString{String: "sessions", Valid: true},
+				CurrentUtilization: sql.NullInt64{Int64: 100, Valid: true},
+				MaxUtilization:     sql.NullInt64{Int64: 150, Valid: true},
+				InitialAllocation:  sql.NullString{String: "50", Valid: true},
+				LimitValue:         sql.NullString{String: "not-a-number", Valid: true}, // Invalid number
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Should handle parse error gracefully
+	})
+
+	t.Run("session resource with null optional fields", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		logonTime := time.Date(2024, 10, 28, 10, 0, 0, 0, time.UTC)
+		mockClient.SessionResourcesList = []models.SessionResource{
+			{
+				SID:             sql.NullInt64{Int64: 123, Valid: true},
+				Username:        sql.NullString{Valid: false}, // Null username
+				Status:          sql.NullString{Valid: false}, // Null status
+				Program:         sql.NullString{Valid: false}, // Null program
+				Machine:         sql.NullString{String: "WORKSTATION1", Valid: true},
+				OSUser:          sql.NullString{String: "john.doe", Valid: true},
+				LogonTime:       sql.NullTime{Time: logonTime, Valid: true},
+				LastCallET:      sql.NullInt64{Int64: 300, Valid: true},
+				CPUUsageSeconds: sql.NullFloat64{Float64: 45.5, Valid: true},
+				PGAMemoryBytes:  sql.NullInt64{Valid: false}, // Null PGA
+				LogicalReads:    sql.NullInt64{Valid: false}, // Null reads
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Should handle null fields gracefully
+	})
+}
+
+func TestConnectionScraper_ContextCancellation(t *testing.T) {
+	mockClient := client.NewMockClient()
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+	logger := zap.NewNop()
+
+	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+	require.NoError(t, err)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel() // Cancel immediately
+
+	// Should handle cancelled context
+	_ = scraper.ScrapeConnectionMetrics(ctx)
+	// The function passes context to client methods which may respect cancellation
+}
+
+func TestConnectionScraper_SessionLimitsUnlimitedValue(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.SessionLimitsList = []models.SessionLimit{
+		{
+			ResourceName:       sql.NullString{String: "processes", Valid: true},
+			CurrentUtilization: sql.NullInt64{Int64: 100, Valid: true},
+			MaxUtilization:     sql.NullInt64{Int64: 120, Valid: true},
+			InitialAllocation:  sql.NullString{String: "50", Valid: true},
+			LimitValue:         sql.NullString{String: "UNLIMITED", Valid: true},
+		},
+	}
+
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+	logger := zap.NewNop()
+
+	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+	require.NoError(t, err)
+
+	errs := scraper.ScrapeConnectionMetrics(context.Background())
+	assert.Empty(t, errs)
+	// Should not record limit value for UNLIMITED resources
+}
+
+func TestConnectionScraper_UnknownMetricNames(t *testing.T) {
+	t.Run("unknown connection quality metric", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.ConnectionQualityMetricsList = []models.ConnectionQualityMetric{
+			{
+				Name:  sql.NullString{String: "unknown metric", Valid: true},
+				Value: sql.NullFloat64{Float64: 100.0, Valid: true},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Should ignore unknown metrics
+	})
+
+	t.Run("unknown pool metric", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.ConnectionPoolMetricsList = []models.ConnectionPoolMetric{
+			{
+				MetricName: sql.NullString{String: "unknown_pool_metric", Valid: true},
+				Value:      sql.NullInt64{Int64: 42, Valid: true},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Should ignore unknown pool metrics
+	})
+
+	t.Run("unknown logon stat", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.LogonStatsList = []models.LogonStat{
+			{
+				Name:  sql.NullString{String: "unknown logon stat", Valid: true},
+				Value: sql.NullFloat64{Float64: 50.0, Valid: true},
+			},
+		}
+
+		config := metadata.DefaultMetricsBuilderConfig()
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
+		require.NoError(t, err)
+
+		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		assert.Empty(t, errs) // Should ignore unknown logon stats
 	})
 }

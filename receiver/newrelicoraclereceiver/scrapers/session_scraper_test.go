@@ -4,6 +4,9 @@
 package scrapers
 
 import (
+	"context"
+	"database/sql"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,6 +15,7 @@ import (
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewSessionScraper(t *testing.T) {
@@ -144,4 +148,179 @@ func TestSessionScraper_DifferentConfigs(t *testing.T) {
 
 	assert.True(t, scraper1.config.Metrics.NewrelicoracledbSessionsCount.Enabled)
 	assert.False(t, scraper2.config.Metrics.NewrelicoracledbSessionsCount.Enabled)
+}
+
+// Tests for ScrapeSessionCount
+
+func TestScrapeSessionCount_Success(t *testing.T) {
+	mockClient := &client.MockClient{
+		SessionCount: &models.SessionCount{Count: 150},
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.Nil(t, errs)
+	assert.Len(t, errs, 0)
+}
+
+func TestScrapeSessionCount_MetricDisabled(t *testing.T) {
+	mockClient := &client.MockClient{}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbSessionsCount.Enabled = false
+	mb := metadata.NewMetricsBuilder(config, settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, config)
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.Nil(t, errs)
+	assert.Len(t, errs, 0)
+}
+
+func TestScrapeSessionCount_NoRows(t *testing.T) {
+	mockClient := &client.MockClient{
+		QueryErr: sql.ErrNoRows,
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.Nil(t, errs)
+	assert.Len(t, errs, 0)
+}
+
+func TestScrapeSessionCount_QueryError(t *testing.T) {
+	mockClient := &client.MockClient{
+		QueryErr: errors.New("database connection failed"),
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.NotNil(t, errs)
+	assert.Len(t, errs, 1)
+	assert.Contains(t, errs[0].Error(), "database connection failed")
+}
+
+func TestScrapeSessionCount_ZeroCount(t *testing.T) {
+	mockClient := &client.MockClient{
+		SessionCount: &models.SessionCount{Count: 0},
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.Nil(t, errs)
+	assert.Len(t, errs, 0)
+}
+
+func TestScrapeSessionCount_LargeCount(t *testing.T) {
+	mockClient := &client.MockClient{
+		SessionCount: &models.SessionCount{Count: 9999},
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.Nil(t, errs)
+	assert.Len(t, errs, 0)
+}
+
+func TestScrapeSessionCount_NilCount(t *testing.T) {
+	mockClient := &client.MockClient{
+		SessionCount: nil,
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.Nil(t, errs)
+	assert.Len(t, errs, 0)
+}
+
+func TestScrapeSessionCount_ContextCanceled(t *testing.T) {
+	mockClient := &client.MockClient{
+		QueryErr: context.Canceled,
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+	errs := scraper.ScrapeSessionCount(ctx)
+
+	assert.NotNil(t, errs)
+	assert.Len(t, errs, 1)
+}
+
+func TestScrapeSessionCount_MultipleSuccessfulCalls(t *testing.T) {
+	mockClient := &client.MockClient{
+		SessionCount: &models.SessionCount{Count: 100},
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+
+	// First call
+	errs1 := scraper.ScrapeSessionCount(ctx)
+	assert.Nil(t, errs1)
+
+	// Second call with different count
+	mockClient.SessionCount = &models.SessionCount{Count: 200}
+	errs2 := scraper.ScrapeSessionCount(ctx)
+	assert.Nil(t, errs2)
+}
+
+func TestScrapeSessionCount_ErrorThenSuccess(t *testing.T) {
+	mockClient := &client.MockClient{
+		QueryErr: errors.New("temporary error"),
+	}
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	logger := zap.NewNop()
+	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
+
+	ctx := context.Background()
+
+	// First call fails
+	errs1 := scraper.ScrapeSessionCount(ctx)
+	assert.NotNil(t, errs1)
+	assert.Len(t, errs1, 1)
+
+	// Second call succeeds
+	mockClient.QueryErr = nil
+	mockClient.SessionCount = &models.SessionCount{Count: 150}
+	errs2 := scraper.ScrapeSessionCount(ctx)
+	assert.Nil(t, errs2)
 }

@@ -5,6 +5,7 @@ package scrapers
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 	"time"
 
@@ -14,6 +15,7 @@ import (
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewDatabaseInfoScraper(t *testing.T) {
@@ -153,3 +155,426 @@ func TestEnsureCacheValid_UsesCacheWhenValid(t *testing.T) {
 	assert.Equal(t, "19.3", scraper.cachedInfo.Version)
 }
 
+func TestScrapeDatabaseInfo_Success(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "19.3.0.0.0", Valid: true}},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseInfo(ctx)
+	assert.Empty(t, errs)
+	assert.NotNil(t, scraper.cachedInfo)
+	assert.Equal(t, "19.3", scraper.cachedInfo.Version)
+	assert.Equal(t, "standard", scraper.cachedInfo.Edition)
+}
+
+func TestScrapeDatabaseInfo_QueryError(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.QueryErr = assert.AnError
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseInfo(ctx)
+	assert.NotEmpty(t, errs)
+}
+
+func TestScrapeDatabaseInfo_EmptyMetrics(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseInfo(ctx)
+	assert.Empty(t, errs)
+}
+
+func TestScrapeDatabaseInfo_UsesCachedData(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "19.3.0.0.0", Valid: true}},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	// First call populates cache
+	errs := scraper.ScrapeDatabaseInfo(ctx)
+	assert.Empty(t, errs)
+
+	// Verify cache was populated
+	assert.NotNil(t, scraper.cachedInfo)
+	cachedVersion := scraper.cachedInfo.Version
+
+	// Change mock data
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "23.0.0.0.0", Valid: true}},
+	}
+
+	// Second call should use cached data
+	errs = scraper.ScrapeDatabaseInfo(ctx)
+	assert.Empty(t, errs)
+	assert.Equal(t, cachedVersion, scraper.cachedInfo.Version)
+}
+
+func TestScrapeHostingInfo_Success(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "19.3.0.0.0", Valid: true}},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbHostingInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeHostingInfo(ctx)
+	assert.Empty(t, errs)
+	assert.NotNil(t, scraper.cachedInfo)
+}
+
+func TestScrapeHostingInfo_QueryError(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.QueryErr = assert.AnError
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbHostingInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeHostingInfo(ctx)
+	assert.NotEmpty(t, errs)
+}
+
+func TestScrapeHostingInfo_UsesCachedData(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "19.3.0.0.0", Valid: true}},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbHostingInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	// First call populates cache
+	errs := scraper.ScrapeHostingInfo(ctx)
+	assert.Empty(t, errs)
+	assert.NotNil(t, scraper.cachedInfo)
+
+	// Second call should use cached data
+	errs = scraper.ScrapeHostingInfo(ctx)
+	assert.Empty(t, errs)
+}
+
+func TestScrapeDatabaseRole_Success(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseRole = &models.DatabaseRole{
+		DatabaseRole:    sql.NullString{String: "PRIMARY", Valid: true},
+		OpenMode:        sql.NullString{String: "READ WRITE", Valid: true},
+		ProtectionMode:  sql.NullString{String: "MAXIMUM PERFORMANCE", Valid: true},
+		ProtectionLevel: sql.NullString{String: "UNPROTECTED", Valid: true},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseRole.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseRole(ctx)
+	assert.Empty(t, errs)
+}
+
+func TestScrapeDatabaseRole_MetricDisabled(t *testing.T) {
+	mockClient := client.NewMockClient()
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseRole.Enabled = false
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseRole(ctx)
+	assert.Empty(t, errs)
+}
+
+func TestScrapeDatabaseRole_QueryError(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.QueryErr = assert.AnError
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseRole.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseRole(ctx)
+	assert.NotEmpty(t, errs)
+}
+
+func TestScrapeDatabaseRole_NullValues(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseRole = &models.DatabaseRole{
+		DatabaseRole:    sql.NullString{String: "", Valid: true},
+		OpenMode:        sql.NullString{String: "", Valid: true},
+		ProtectionMode:  sql.NullString{String: "", Valid: true},
+		ProtectionLevel: sql.NullString{String: "", Valid: true},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseRole.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseRole(ctx)
+	assert.Empty(t, errs)
+}
+
+func TestScrapeDatabaseRole_StandbyRole(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseRole = &models.DatabaseRole{
+		DatabaseRole:    sql.NullString{String: "PHYSICAL STANDBY", Valid: true},
+		OpenMode:        sql.NullString{String: "READ ONLY", Valid: true},
+		ProtectionMode:  sql.NullString{String: "MAXIMUM AVAILABILITY", Valid: true},
+		ProtectionLevel: sql.NullString{String: "RESYNCHRONIZATION", Valid: true},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbDatabaseRole.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeDatabaseRole(ctx)
+	assert.Empty(t, errs)
+}
+
+func TestEnsureCacheValid_RefreshesExpiredCache(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "19.3.0.0.0", Valid: true}},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+
+	// Set expired cache
+	scraper.cachedInfo = &DatabaseInfo{
+		Version:     "11.2",
+		VersionFull: "11.2.0.4.0",
+		Edition:     "standard",
+	}
+	scraper.cacheValidUntil = time.Now().Add(-1 * time.Minute)
+
+	ctx := context.Background()
+	err := scraper.ensureCacheValid(ctx)
+
+	assert.NoError(t, err)
+	assert.Equal(t, "19.3", scraper.cachedInfo.Version)
+}
+
+func TestProcessDatabaseInfoMetrics_Oracle23(t *testing.T) {
+	mockClient := client.NewMockClient()
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+
+	metrics := []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "23.0.0.0.0", Valid: true}},
+	}
+
+	err := scraper.processDatabaseInfoMetrics(metrics)
+	assert.NoError(t, err)
+	assert.Equal(t, "23.0", scraper.cachedInfo.Version)
+	assert.Equal(t, "free", scraper.cachedInfo.Edition)
+}
+
+func TestProcessDatabaseInfoMetrics_EmptyList(t *testing.T) {
+	mockClient := client.NewMockClient()
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+
+	metrics := []models.DatabaseInfoMetric{}
+
+	err := scraper.processDatabaseInfoMetrics(metrics)
+	assert.NoError(t, err)
+	assert.Nil(t, scraper.cachedInfo)
+}
+
+func TestExtractVersionFromFull_EdgeCases(t *testing.T) {
+	tests := []struct {
+		name        string
+		versionFull string
+		expected    string
+	}{
+		{"With spaces", "  19.3.0.0.0  ", "19.3"},
+		{"Many parts", "19.3.0.0.0.1.2.3", "19.3"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := extractVersionFromFull(tt.versionFull)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestEnsureCacheValid_ConcurrentAccess(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "19.3.0.0.0", Valid: true}},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	// Simulate concurrent access
+	done := make(chan bool)
+	for i := 0; i < 5; i++ {
+		go func() {
+			err := scraper.ensureCacheValid(ctx)
+			assert.NoError(t, err)
+			done <- true
+		}()
+	}
+
+	for i := 0; i < 5; i++ {
+		<-done
+	}
+
+	assert.NotNil(t, scraper.cachedInfo)
+}
+
+func TestScrapeHostingInfo_EmptyCache(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	config.Metrics.NewrelicoracledbHostingInfo.Enabled = true
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+	ctx := context.Background()
+
+	errs := scraper.ScrapeHostingInfo(ctx)
+	assert.Empty(t, errs)
+}
+
+func TestEnsureCacheValid_DoubleCheckLocking(t *testing.T) {
+	mockClient := client.NewMockClient()
+	mockClient.DatabaseInfoList = []models.DatabaseInfoMetric{
+		{VersionFull: sql.NullString{String: "21.0.0.0.0", Valid: true}},
+	}
+
+	logger := zap.NewNop()
+	config := metadata.DefaultMetricsBuilderConfig()
+	settings := receivertest.NewNopSettings(metadata.Type)
+	mb := metadata.NewMetricsBuilder(config, settings)
+
+	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
+
+	// Set expired cache
+	scraper.cachedInfo = &DatabaseInfo{
+		Version: "19.3",
+	}
+	scraper.cacheValidUntil = time.Now().Add(-1 * time.Minute)
+
+	ctx := context.Background()
+
+	// Multiple goroutines trying to refresh at once
+	done := make(chan bool)
+	for i := 0; i < 3; i++ {
+		go func() {
+			err := scraper.ensureCacheValid(ctx)
+			assert.NoError(t, err)
+			done <- true
+		}()
+	}
+
+	for i := 0; i < 3; i++ {
+		<-done
+	}
+
+	// Should be refreshed to 21.0
+	assert.Equal(t, "21.0", scraper.cachedInfo.Version)
+}
+
+func TestExtractVersionFromFull_FallbackToFull(t *testing.T) {
+	// When split returns empty, should return full version
+	result := extractVersionFromFull("invalid")
+	assert.Equal(t, "invalid", result)
+}
