@@ -30,14 +30,15 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			au.username AS user_name,
 			sa.executions AS execution_count,
 			sa.sql_fulltext AS query_text,
-			sa.cpu_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_cpu_time_ms,
-			sa.disk_reads / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_reads,
 			sa.direct_writes / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_writes,
 			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms,
-			sa.buffer_gets / DECODE(sa.executions, 0, 1, sa.executions) AS rows_examined,
 			sa.concurrency_wait_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_lock_time_ms,
 			sa.last_active_time AS last_active_time_ms,
-			sa.elapsed_time / 1000 AS total_elapsed_time_ms
+			sa.elapsed_time / 1000 AS total_elapsed_time_ms,
+			sa.cpu_time / 1000 AS total_cpu_time_ms,
+			sa.disk_reads AS total_disk_reads,
+			sa.buffer_gets AS total_buffer_gets,
+			sa.rows_processed AS total_rows_processed
 		FROM
 			v$sqlarea sa
 		INNER JOIN
@@ -217,33 +218,4 @@ func GetExecutionPlanForChildQuery(sqlID string, childNumber int64) string {
 		WHERE
 			SQL_ID = '%s'
 			AND CHILD_NUMBER = %d`, sqlID, childNumber)
-}
-
-// GetPlanHashMetricsSQL returns SQL for plan hash metrics aggregated by plan_hash_value
-// This query aggregates execution metrics by plan hash value for a given SQL_ID
-// Parameters:
-// - sqlID: The SQL identifier to get plan hash metrics for
-func GetPlanHashMetricsSQL(sqlID string) string {
-	return fmt.Sprintf(`
-		SELECT
-			SYSTIMESTAMP AS COLLECTION_TIMESTAMP,
-			s.sql_id,
-			s.plan_hash_value,
-			SUM(s.executions) AS total_executions,
-			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.elapsed_time) / SUM(s.executions) / 1000, 3) ELSE 0 END AS avg_elapsed_time_ms,
-			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.cpu_time) / SUM(s.executions) / 1000, 3) ELSE 0 END AS avg_cpu_time_ms,
-			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.disk_reads) / SUM(s.executions), 1) ELSE 0 END AS avg_disk_reads,
-			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.buffer_gets) / SUM(s.executions), 1) ELSE 0 END AS avg_buffer_gets,
-			CASE WHEN SUM(s.executions) > 0 THEN ROUND(SUM(s.rows_processed) / SUM(s.executions), 1) ELSE 0 END AS avg_rows_returned,
-			MIN(first_load_time) AS first_load_time,
-			MAX(s.last_active_time) AS last_active_time
-		FROM
-			v$sql s
-		WHERE
-			s.sql_id = '%s'
-		GROUP BY
-			s.sql_id,
-			s.plan_hash_value
-		ORDER BY
-			total_executions DESC`, sqlID)
 }

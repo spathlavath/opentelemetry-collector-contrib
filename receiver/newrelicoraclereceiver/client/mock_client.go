@@ -158,15 +158,6 @@ func (m *MockClient) QuerySpecificChildCursor(ctx context.Context, sqlID string,
 	return nil, nil
 }
 
-func (m *MockClient) QueryPlanHashMetrics(ctx context.Context, sqlID string) ([]models.PlanHashMetrics, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	// Return mock plan hash metrics data if available
-	// In tests, this would be populated with test data
-	return []models.PlanHashMetrics{}, nil
-}
-
 func (m *MockClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int, slowQuerySQLIDs []string) ([]models.WaitEventWithBlocking, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr

@@ -11,20 +11,24 @@ type SlowQuery struct {
 	UserName            sql.NullString // NEW: The user who parsed the statement
 	ExecutionCount      sql.NullInt64
 	QueryText           sql.NullString // Full query text from sql_fulltext (used for metadata extraction, normalization, and hash generation)
-	AvgCPUTimeMs        sql.NullFloat64
-	AvgDiskReads        sql.NullFloat64
-	AvgDiskWrites       sql.NullFloat64
-	AvgElapsedTimeMs    sql.NullFloat64
-	AvgRowsExamined     sql.NullFloat64
-	AvgLockTimeMs       sql.NullFloat64
+	AvgDiskWrites       sql.NullFloat64 // Average disk writes per execution (kept - no total available)
+	AvgElapsedTimeMs    sql.NullFloat64 // Average elapsed time per execution (kept - used for ORDER BY and threshold filtering)
+	AvgLockTimeMs       sql.NullFloat64 // Average lock time per execution (kept - no total available for concurrency_wait_time)
 	LastActiveTime      sql.NullString
 	HasFullTableScan    sql.NullString
-	TotalElapsedTimeMS  sql.NullFloat64 // Used for precise delta calculation only
+	TotalElapsedTimeMS  sql.NullFloat64 // Total elapsed time - used for precise delta calculation
+	TotalCPUTimeMS      sql.NullFloat64 // Total CPU time - used for delta calculation and computing historical avg
+	TotalDiskReads      sql.NullInt64   // Total disk reads - used for delta calculation and computing historical avg
+	TotalBufferGets     sql.NullInt64   // Total buffer gets (rows examined) - used for delta calculation and computing historical avg
+	TotalRowsProcessed  sql.NullInt64   // Total rows processed (rows returned) - used for delta calculation and computing historical avg
 
 	// Interval-based delta metrics (calculated in-memory, not from DB)
 	// These are populated by the OracleIntervalCalculator
-	// NOTE: Only elapsed time has delta calculation, CPU uses historical average from DB
 	IntervalAvgElapsedTimeMS *float64 // Average elapsed time in the last interval (milliseconds)
+	IntervalAvgCPUTimeMS     *float64 // Average CPU time in the last interval (milliseconds)
+	IntervalAvgDiskReads     *float64 // Average disk reads in the last interval
+	IntervalAvgBufferGets    *float64 // Average buffer gets in the last interval
+	IntervalAvgRowsProcessed *float64 // Average rows processed in the last interval
 	IntervalExecutionCount   *int64   // Number of executions in the last interval
 }
 

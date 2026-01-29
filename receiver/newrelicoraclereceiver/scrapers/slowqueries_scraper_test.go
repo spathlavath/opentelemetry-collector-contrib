@@ -47,31 +47,35 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.SlowQueries = []models.SlowQuery{
 		{
-			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
-			QueryID:          sql.NullString{String: "test_query_1", Valid: true},
-			SchemaName:       sql.NullString{String: "TEST_SCHEMA", Valid: true},
-			UserName:         sql.NullString{String: "TEST_USER", Valid: true},
-			ExecutionCount:   sql.NullInt64{Int64: 150, Valid: true},
-			QueryText:        sql.NullString{String: "SELECT * FROM users WHERE id = 1", Valid: true},
-			AvgCPUTimeMs:     sql.NullFloat64{Float64: 125.5, Valid: true},
-			AvgDiskReads:     sql.NullFloat64{Float64: 50.2, Valid: true},
-			AvgDiskWrites:    sql.NullFloat64{Float64: 10.3, Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.75, Valid: true},
+			DatabaseName:       sql.NullString{String: "TESTDB", Valid: true},
+			QueryID:            sql.NullString{String: "test_query_1", Valid: true},
+			SchemaName:         sql.NullString{String: "TEST_SCHEMA", Valid: true},
+			UserName:           sql.NullString{String: "TEST_USER", Valid: true},
+			ExecutionCount:     sql.NullInt64{Int64: 150, Valid: true},
+			QueryText:          sql.NullString{String: "SELECT * FROM users WHERE id = 1", Valid: true},
+			AvgDiskWrites:      sql.NullFloat64{Float64: 10.3, Valid: true},
+			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 1500.75, Valid: true},
+			TotalCPUTimeMS:     sql.NullFloat64{Float64: 18825.0, Valid: true}, // 150 * 125.5
+			TotalDiskReads:     sql.NullInt64{Int64: 7530, Valid: true},         // 150 * 50.2
+			TotalBufferGets:    sql.NullInt64{Int64: 15000, Valid: true},
+			TotalRowsProcessed: sql.NullInt64{Int64: 30000, Valid: true},
 		},
 		{
-			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
-			QueryID:          sql.NullString{String: "test_query_2", Valid: true},
-			UserName:         sql.NullString{String: "TEST_USER2", Valid: true},
-			ExecutionCount:   sql.NullInt64{Int64: 200, Valid: true},
-			QueryText:        sql.NullString{String: "SELECT * FROM orders", Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 2000.0, Valid: true},
+			DatabaseName:       sql.NullString{String: "TESTDB", Valid: true},
+			QueryID:            sql.NullString{String: "test_query_2", Valid: true},
+			UserName:           sql.NullString{String: "TEST_USER2", Valid: true},
+			ExecutionCount:     sql.NullInt64{Int64: 200, Valid: true},
+			QueryText:          sql.NullString{String: "SELECT * FROM orders", Valid: true},
+			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 2000.0, Valid: true},
+			TotalCPUTimeMS:     sql.NullFloat64{Float64: 50000.0, Valid: true},
+			TotalDiskReads:     sql.NullInt64{Int64: 10000, Valid: true},
+			TotalBufferGets:    sql.NullInt64{Int64: 20000, Valid: true},
+			TotalRowsProcessed: sql.NullInt64{Int64: 40000, Valid: true},
 		},
 	}
 
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbSlowQueriesExecutionCount.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgCPUTime.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads.Enabled = true
 	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites.Enabled = true
 	config.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime.Enabled = true
 
@@ -83,8 +87,9 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 
 	assert.Empty(t, errs)
 	assert.Len(t, queryIDs, 2)
-	assert.Contains(t, queryIDs, "test_query_1")
-	assert.Contains(t, queryIDs, "test_query_2")
+	// Check that the SQL IDs are present
+	assert.Equal(t, "test_query_1", queryIDs[0].SQLID)
+	assert.Equal(t, "test_query_2", queryIDs[1].SQLID)
 }
 
 func TestSlowQueriesScraper_ScrapeWithEmptyResults(t *testing.T) {
@@ -142,28 +147,28 @@ func TestSlowQueriesScraper_ScrapeWithInvalidData(t *testing.T) {
 
 	assert.Empty(t, errs)
 	assert.Len(t, queryIDs, 1)
-	assert.Equal(t, "valid_query", queryIDs[0])
+	assert.Equal(t, "valid_query", queryIDs[0].SQLID)
 }
 
 func TestSlowQueriesScraper_RecordMetrics(t *testing.T) {
 	mockClient := client.NewMockClient()
 	mockClient.SlowQueries = []models.SlowQuery{
 		{
-			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
-			QueryID:          sql.NullString{String: "test_query", Valid: true},
-			UserName:         sql.NullString{String: "TEST_USER", Valid: true},
-			ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
-			AvgCPUTimeMs:     sql.NullFloat64{Float64: 50.5, Valid: true},
-			AvgDiskReads:     sql.NullFloat64{Float64: 20.2, Valid: true},
-			AvgDiskWrites:    sql.NullFloat64{Float64: 5.3, Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1000.0, Valid: true},
+			DatabaseName:       sql.NullString{String: "TESTDB", Valid: true},
+			QueryID:            sql.NullString{String: "test_query", Valid: true},
+			UserName:           sql.NullString{String: "TEST_USER", Valid: true},
+			ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
+			AvgDiskWrites:      sql.NullFloat64{Float64: 5.3, Valid: true},
+			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 1000.0, Valid: true},
+			TotalCPUTimeMS:     sql.NullFloat64{Float64: 5050.0, Valid: true},
+			TotalDiskReads:     sql.NullInt64{Int64: 2020, Valid: true},
+			TotalBufferGets:    sql.NullInt64{Int64: 10000, Valid: true},
+			TotalRowsProcessed: sql.NullInt64{Int64: 5000, Valid: true},
 		},
 	}
 
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbSlowQueriesExecutionCount.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgCPUTime.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads.Enabled = true
 	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites.Enabled = true
 	config.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime.Enabled = true
 

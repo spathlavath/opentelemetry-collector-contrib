@@ -20,9 +20,6 @@ type OracleClient interface {
 	// Execution plan queries
 	QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error)
 
-	// Plan hash metrics
-	QueryPlanHashMetrics(ctx context.Context, sqlID string) ([]models.PlanHashMetrics, error)
-
 	// Slow queries
 	// intervalSeconds: Time window to fetch queries (e.g., 60 = last 60 seconds)
 	// responseTimeThreshold: Threshold filtering done in Go after delta calculation

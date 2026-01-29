@@ -17,9 +17,13 @@
 // Algorithm:
 // 1. First Scrape: Use historical (cumulative) average, filter by threshold
 // 2. Subsequent Scrapes: Calculate delta between current and previous values
-//   - interval_avg = (current_total_elapsed - prev_total_elapsed) / (current_exec_count - prev_exec_count)
+//   - interval_avg_elapsed = (current_total_elapsed - prev_total_elapsed) / (current_exec_count - prev_exec_count)
+//   - interval_avg_cpu = (current_total_cpu - prev_total_cpu) / (current_exec_count - prev_exec_count)
+//   - interval_avg_disk_reads = (current_total_disk_reads - prev_total_disk_reads) / (current_exec_count - prev_exec_count)
+//   - interval_avg_buffer_gets = (current_total_buffer_gets - prev_total_buffer_gets) / (current_exec_count - prev_exec_count)
+//   - interval_avg_rows_processed = (current_total_rows_processed - prev_total_rows_processed) / (current_exec_count - prev_exec_count)
 //
-// 3. Emit both interval average AND historical average
+// 3. Emit both interval average AND historical average for all metrics
 // 4. Only emit metrics if interval average > threshold (memory efficient)
 // 5. Eviction: Only TTL-based (inactive queries), NOT threshold-based
 //   - This preserves delta calculation ability when queries oscillate
@@ -46,6 +50,10 @@ type OracleQueryState struct {
 	// Previous cumulative values from Oracle V$SQLAREA
 	PrevExecutionCount     int64
 	PrevTotalElapsedTimeMs float64 // milliseconds
+	PrevTotalCPUTimeMs     float64 // milliseconds
+	PrevTotalDiskReads     int64   // disk reads
+	PrevTotalBufferGets    int64   // buffer gets (logical reads)
+	PrevTotalRowsProcessed int64   // rows processed (rows returned)
 
 	// Timestamps for TTL-based cleanup
 	LastSeenTimestamp  time.Time
@@ -54,13 +62,20 @@ type OracleQueryState struct {
 
 // OracleIntervalMetrics holds both interval and historical metrics
 type OracleIntervalMetrics struct {
-	// Interval-based metrics (delta calculation) - ONLY for elapsed time
+	// Interval-based metrics (delta calculation)
 	IntervalAvgElapsedTimeMs float64
+	IntervalAvgCPUTimeMs     float64
+	IntervalAvgDiskReads     float64
+	IntervalAvgBufferGets    float64
+	IntervalAvgRowsProcessed float64
 	IntervalExecutionCount   int64
 
 	// Historical metrics (cumulative from Oracle)
 	HistoricalAvgElapsedTimeMs float64
 	HistoricalAvgCPUTimeMs     float64
+	HistoricalAvgDiskReads     float64
+	HistoricalAvgBufferGets    float64
+	HistoricalAvgRowsProcessed float64
 	HistoricalExecutionCount   int64
 
 	// Metadata
@@ -118,15 +133,51 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		currentTotalElapsedMs = query.TotalElapsedTimeMS.Float64
 	}
 
-	// Historical (cumulative) averages
+	currentTotalCPUMs := 0.0
+	if query.TotalCPUTimeMS.Valid {
+		currentTotalCPUMs = query.TotalCPUTimeMS.Float64
+	}
+
+	currentTotalDiskReads := int64(0)
+	if query.TotalDiskReads.Valid {
+		currentTotalDiskReads = query.TotalDiskReads.Int64
+	}
+
+	currentTotalBufferGets := int64(0)
+	if query.TotalBufferGets.Valid {
+		currentTotalBufferGets = query.TotalBufferGets.Int64
+	}
+
+	currentTotalRowsProcessed := int64(0)
+	if query.TotalRowsProcessed.Valid {
+		currentTotalRowsProcessed = query.TotalRowsProcessed.Int64
+	}
+
+	// Historical (cumulative) averages - computed from totals / executions
 	historicalAvgElapsedMs := 0.0
 	if query.AvgElapsedTimeMs.Valid {
 		historicalAvgElapsedMs = query.AvgElapsedTimeMs.Float64
 	}
 
+	// Compute historical averages from totals (instead of querying from DB)
 	historicalAvgCPUMs := 0.0
-	if query.AvgCPUTimeMs.Valid {
-		historicalAvgCPUMs = query.AvgCPUTimeMs.Float64
+	if currentExecCount > 0 {
+		historicalAvgCPUMs = currentTotalCPUMs / float64(currentExecCount)
+	}
+
+	historicalAvgDiskReads := 0.0
+	if currentExecCount > 0 {
+		historicalAvgDiskReads = float64(currentTotalDiskReads) / float64(currentExecCount)
+	}
+
+	historicalAvgBufferGets := 0.0
+	if currentExecCount > 0 {
+		historicalAvgBufferGets = float64(currentTotalBufferGets) / float64(currentExecCount)
+	}
+
+	historicalAvgRowsProcessed := 0.0
+	if currentExecCount > 0 {
+		historicalAvgRowsProcessed = float64(currentTotalRowsProcessed) / float64(currentExecCount)
 	}
 
 	// Calculate time since last execution from Oracle timestamp
@@ -159,6 +210,10 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		oic.stateCache[queryID] = &OracleQueryState{
 			PrevExecutionCount:     currentExecCount,
 			PrevTotalElapsedTimeMs: currentTotalElapsedMs,
+			PrevTotalCPUTimeMs:     currentTotalCPUMs,
+			PrevTotalDiskReads:     currentTotalDiskReads,
+			PrevTotalBufferGets:    currentTotalBufferGets,
+			PrevTotalRowsProcessed: currentTotalRowsProcessed,
 			FirstSeenTimestamp:     now,
 			LastSeenTimestamp:      now,
 		}
@@ -168,9 +223,16 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		// Caller will filter by threshold
 		return &OracleIntervalMetrics{
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
+			IntervalAvgCPUTimeMs:       historicalAvgCPUMs,
+			IntervalAvgDiskReads:       historicalAvgDiskReads,
+			IntervalAvgBufferGets:      historicalAvgBufferGets,
+			IntervalAvgRowsProcessed:   historicalAvgRowsProcessed,
 			IntervalExecutionCount:     currentExecCount, // All executions since plan cache
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
+			HistoricalAvgDiskReads:     historicalAvgDiskReads,
+			HistoricalAvgBufferGets:    historicalAvgBufferGets,
+			HistoricalAvgRowsProcessed: historicalAvgRowsProcessed,
 			HistoricalExecutionCount:   currentExecCount,
 			IsFirstScrape:              true,
 			HasNewExecutions:           true,
@@ -195,9 +257,16 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		// Caller can decide whether to emit
 		return &OracleIntervalMetrics{
 			IntervalAvgElapsedTimeMs:   0,
+			IntervalAvgCPUTimeMs:       0,
+			IntervalAvgDiskReads:       0,
+			IntervalAvgBufferGets:      0,
+			IntervalAvgRowsProcessed:   0,
 			IntervalExecutionCount:     0,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
+			HistoricalAvgDiskReads:     historicalAvgDiskReads,
+			HistoricalAvgBufferGets:    historicalAvgBufferGets,
+			HistoricalAvgRowsProcessed: historicalAvgRowsProcessed,
 			HistoricalExecutionCount:   currentExecCount,
 			IsFirstScrape:              false,
 			HasNewExecutions:           false,
@@ -218,6 +287,10 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		oic.stateCache[queryID] = &OracleQueryState{
 			PrevExecutionCount:     currentExecCount,
 			PrevTotalElapsedTimeMs: currentTotalElapsedMs,
+			PrevTotalCPUTimeMs:     currentTotalCPUMs,
+			PrevTotalDiskReads:     currentTotalDiskReads,
+			PrevTotalBufferGets:    currentTotalBufferGets,
+			PrevTotalRowsProcessed: currentTotalRowsProcessed,
 			FirstSeenTimestamp:     state.FirstSeenTimestamp, // Preserve original timestamp
 			LastSeenTimestamp:      now,
 		}
@@ -227,9 +300,16 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		// Alternative: Could skip emitting by setting HasNewExecutions: false
 		return &OracleIntervalMetrics{
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
+			IntervalAvgCPUTimeMs:       historicalAvgCPUMs,
+			IntervalAvgDiskReads:       historicalAvgDiskReads,
+			IntervalAvgBufferGets:      historicalAvgBufferGets,
+			IntervalAvgRowsProcessed:   historicalAvgRowsProcessed,
 			IntervalExecutionCount:     currentExecCount, // All executions since cache reset
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
+			HistoricalAvgDiskReads:     historicalAvgDiskReads,
+			HistoricalAvgBufferGets:    historicalAvgBufferGets,
+			HistoricalAvgRowsProcessed: historicalAvgRowsProcessed,
 			HistoricalExecutionCount:   currentExecCount,
 			IsFirstScrape:              true, // Treat as first scrape after reset
 			HasNewExecutions:           true,
@@ -237,8 +317,17 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		}
 	}
 
-	// NORMAL CASE: Calculate interval average (ONLY for elapsed time, no CPU)
+	// NORMAL CASE: Calculate interval averages for all metrics
+	deltaCPUMs := currentTotalCPUMs - state.PrevTotalCPUTimeMs
+	deltaDiskReads := currentTotalDiskReads - state.PrevTotalDiskReads
+	deltaBufferGets := currentTotalBufferGets - state.PrevTotalBufferGets
+	deltaRowsProcessed := currentTotalRowsProcessed - state.PrevTotalRowsProcessed
+
 	intervalAvgElapsedMs := deltaElapsedMs / float64(deltaExecCount)
+	intervalAvgCPUMs := deltaCPUMs / float64(deltaExecCount)
+	intervalAvgDiskReads := float64(deltaDiskReads) / float64(deltaExecCount)
+	intervalAvgBufferGets := float64(deltaBufferGets) / float64(deltaExecCount)
+	intervalAvgRowsProcessed := float64(deltaRowsProcessed) / float64(deltaExecCount)
 
 	// Warn if we have executions but zero elapsed time
 	if deltaElapsedMs == 0 && deltaExecCount > 0 {
@@ -249,13 +338,24 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	// Update state for next scrape
 	state.PrevExecutionCount = currentExecCount
 	state.PrevTotalElapsedTimeMs = currentTotalElapsedMs
+	state.PrevTotalCPUTimeMs = currentTotalCPUMs
+	state.PrevTotalDiskReads = currentTotalDiskReads
+	state.PrevTotalBufferGets = currentTotalBufferGets
+	state.PrevTotalRowsProcessed = currentTotalRowsProcessed
 	state.LastSeenTimestamp = now
 
 	return &OracleIntervalMetrics{
 		IntervalAvgElapsedTimeMs:   intervalAvgElapsedMs,
+		IntervalAvgCPUTimeMs:       intervalAvgCPUMs,
+		IntervalAvgDiskReads:       intervalAvgDiskReads,
+		IntervalAvgBufferGets:      intervalAvgBufferGets,
+		IntervalAvgRowsProcessed:   intervalAvgRowsProcessed,
 		IntervalExecutionCount:     deltaExecCount,
 		HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 		HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
+		HistoricalAvgDiskReads:     historicalAvgDiskReads,
+		HistoricalAvgBufferGets:    historicalAvgBufferGets,
+		HistoricalAvgRowsProcessed: historicalAvgRowsProcessed,
 		HistoricalExecutionCount:   currentExecCount,
 		IsFirstScrape:              false,
 		HasNewExecutions:           true,

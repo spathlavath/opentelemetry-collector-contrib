@@ -147,13 +147,6 @@ type MetricsConfig struct {
 	NewrelicoracledbPdbUserRollbacksPerSecond                          MetricConfig `mapstructure:"newrelicoracledb.pdb.user_rollbacks_per_second"`
 	NewrelicoracledbPdbUserRollbacksPercentage                         MetricConfig `mapstructure:"newrelicoracledb.pdb.user_rollbacks_percentage"`
 	NewrelicoracledbPdbWaitTimeRatio                                   MetricConfig `mapstructure:"newrelicoracledb.pdb.wait_time_ratio"`
-	NewrelicoracledbPlanHashMetricsAvgBufferGets                       MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_buffer_gets"`
-	NewrelicoracledbPlanHashMetricsAvgCPUTimeMs                        MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms"`
-	NewrelicoracledbPlanHashMetricsAvgDiskReads                        MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_disk_reads"`
-	NewrelicoracledbPlanHashMetricsAvgElapsedTimeMs                    MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms"`
-	NewrelicoracledbPlanHashMetricsAvgRowsReturned                     MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.avg_rows_returned"`
-	NewrelicoracledbPlanHashMetricsDetails                             MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.details"`
-	NewrelicoracledbPlanHashMetricsExecutions                          MetricConfig `mapstructure:"newrelicoracledb.plan_hash_metrics.executions"`
 	NewrelicoracledbRacInstanceActiveState                             MetricConfig `mapstructure:"newrelicoracledb.rac.instance.active_state"`
 	NewrelicoracledbRacInstanceArchiverStarted                         MetricConfig `mapstructure:"newrelicoracledb.rac.instance.archiver_started"`
 	NewrelicoracledbRacInstanceDatabaseStatus                          MetricConfig `mapstructure:"newrelicoracledb.rac.instance.database_status"`
@@ -201,8 +194,13 @@ type MetricsConfig struct {
 	NewrelicoracledbSlowQueriesAvgElapsedTime                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_elapsed_time"`
 	NewrelicoracledbSlowQueriesAvgLockTime                             MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_lock_time"`
 	NewrelicoracledbSlowQueriesAvgRowsExamined                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_rows_examined"`
+	NewrelicoracledbSlowQueriesAvgRowsReturned                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_rows_returned"`
 	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
+	NewrelicoracledbSlowQueriesIntervalAvgBufferGets                   MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_buffer_gets"`
+	NewrelicoracledbSlowQueriesIntervalAvgCPUTime                      MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_cpu_time"`
+	NewrelicoracledbSlowQueriesIntervalAvgDiskReads                    MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_disk_reads"`
 	NewrelicoracledbSlowQueriesIntervalAvgElapsedTime                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_elapsed_time"`
+	NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed                MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_rows_processed"`
 	NewrelicoracledbSlowQueriesIntervalExecutionCount                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_execution_count"`
 	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
 	NewrelicoracledbSortsDisk                                          MetricConfig `mapstructure:"newrelicoracledb.sorts_disk"`
@@ -722,27 +720,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbPdbWaitTimeRatio: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbPlanHashMetricsAvgBufferGets: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbPlanHashMetricsAvgCPUTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbPlanHashMetricsAvgDiskReads: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbPlanHashMetricsAvgElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbPlanHashMetricsAvgRowsReturned: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbPlanHashMetricsDetails: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbPlanHashMetricsExecutions: MetricConfig{
-			Enabled: true,
-		},
 		NewrelicoracledbRacInstanceActiveState: MetricConfig{
 			Enabled: true,
 		},
@@ -884,10 +861,25 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbSlowQueriesAvgRowsExamined: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbSlowQueriesAvgRowsReturned: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSlowQueriesExecutionCount: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbSlowQueriesIntervalAvgBufferGets: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalAvgCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalAvgDiskReads: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSlowQueriesIntervalAvgElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesIntervalExecutionCount: MetricConfig{

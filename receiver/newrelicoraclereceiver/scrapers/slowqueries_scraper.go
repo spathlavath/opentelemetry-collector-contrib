@@ -99,6 +99,10 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 			// Historical values remain unchanged from DB
 			slowQuery.IntervalAvgElapsedTimeMS = &metrics.IntervalAvgElapsedTimeMs
 			slowQuery.IntervalExecutionCount = &metrics.IntervalExecutionCount
+			slowQuery.IntervalAvgCPUTimeMS = &metrics.IntervalAvgCPUTimeMs
+			slowQuery.IntervalAvgDiskReads = &metrics.IntervalAvgDiskReads
+			slowQuery.IntervalAvgBufferGets = &metrics.IntervalAvgBufferGets
+			slowQuery.IntervalAvgRowsProcessed = &metrics.IntervalAvgRowsProcessed
 
 			queriesToProcess = append(queriesToProcess, slowQuery)
 		}
@@ -209,34 +213,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	if slowQuery.AvgCPUTimeMs.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
-			now,
-			slowQuery.AvgCPUTimeMs.Float64,
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrService,
-			nrTxn,
-		)
-	}
-
-	if slowQuery.AvgDiskReads.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
-			now,
-			slowQuery.AvgDiskReads.Float64,
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrService,
-			nrTxn,
-		)
-	}
-
 	if slowQuery.AvgDiskWrites.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(
 			now,
@@ -294,10 +270,56 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	if slowQuery.AvgRowsExamined.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(
+	// Record interval CPU time if available (delta metric)
+	if slowQuery.IntervalAvgCPUTimeMS != nil {
+		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgCPUTimeDataPoint(
 			now,
-			slowQuery.AvgRowsExamined.Float64,
+			*slowQuery.IntervalAvgCPUTimeMS,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
+	// Record interval disk reads if available (delta metric)
+	if slowQuery.IntervalAvgDiskReads != nil {
+		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgDiskReadsDataPoint(
+			now,
+			*slowQuery.IntervalAvgDiskReads,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
+	// Record interval buffer gets if available (delta metric)
+	if slowQuery.IntervalAvgBufferGets != nil {
+		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgBufferGetsDataPoint(
+			now,
+			*slowQuery.IntervalAvgBufferGets,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
+	// Record interval rows processed if available (delta metric)
+	if slowQuery.IntervalAvgRowsProcessed != nil {
+		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgRowsProcessedDataPoint(
+			now,
+			*slowQuery.IntervalAvgRowsProcessed,
 			collectionTimestamp,
 			dbName,
 			qID,

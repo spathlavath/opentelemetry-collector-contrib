@@ -1771,177 +1771,6 @@ Database wait time ratio in PDB
 | instance.id | Oracle database instance ID | Any Str | false |
 | database_name | Oracle database name | Any Str | false |
 
-### newrelicoracledb.plan_hash_metrics.avg_buffer_gets
-
-Average buffer gets per execution for a specific plan hash value
-
-Average number of buffer gets per execution for this plan hash.
-Aggregated across all child cursors with the same plan hash value.
-Source: AVG(buffer_gets/executions) from v$sql grouped by plan_hash_value.
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {gets} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
-| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-
-### newrelicoracledb.plan_hash_metrics.avg_cpu_time_ms
-
-Average CPU time per execution for a specific plan hash value
-
-Average CPU time in milliseconds per execution for this plan hash.
-Aggregated across all child cursors with the same plan hash value.
-Source: AVG(cpu_time/executions) from v$sql grouped by plan_hash_value.
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
-| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-
-### newrelicoracledb.plan_hash_metrics.avg_disk_reads
-
-Average disk reads per execution for a specific plan hash value
-
-Average number of disk reads per execution for this plan hash.
-Aggregated across all child cursors with the same plan hash value.
-Source: AVG(disk_reads/executions) from v$sql grouped by plan_hash_value.
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
-| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-
-### newrelicoracledb.plan_hash_metrics.avg_elapsed_time_ms
-
-Average elapsed time per execution for a specific plan hash value
-
-Average elapsed time in milliseconds per execution for this plan hash.
-Aggregated across all child cursors with the same plan hash value.
-Source: AVG(elapsed_time/executions) from v$sql grouped by plan_hash_value.
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
-| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-
-### newrelicoracledb.plan_hash_metrics.avg_rows_returned
-
-Average rows returned per execution for a specific plan hash value
-
-Average number of rows returned per execution for this plan hash.
-Aggregated across all child cursors with the same plan hash value.
-Source: AVG(rows_processed/executions) from v$sql grouped by plan_hash_value.
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
-| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-
-### newrelicoracledb.plan_hash_metrics.details
-
-Plan Hash Metrics Details - Timestamp metadata for plan hash execution
-
-Contains timestamp metadata for plan hash metrics to avoid high cardinality.
-This metric provides first_load_time and last_active_time as attributes,
-similar to slow_queries.query_details pattern.
-Use this metric to correlate plan hash performance metrics with their load and activity times.
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {count} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
-| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
-| last_active_time | Last active time for the SQL query | Any Str | false |
-
-### newrelicoracledb.plan_hash_metrics.executions
-
-Total number of executions for a specific plan hash value
-
-Total executions across all child cursors that share the same plan hash value.
-Helps identify which execution plans are most frequently used for a given SQL statement.
-Source: SUM(executions) from v$sql grouped by plan_hash_value.
-
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
-| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-
 ### newrelicoracledb.rac.instance.active_state
 
 Instance active state indicator (1=NORMAL, 0=other)
@@ -2633,7 +2462,27 @@ Average lock/concurrency wait time per execution for slow queries
 
 ### newrelicoracledb.slow_queries.avg_rows_examined
 
-Average rows examined per execution for slow queries
+Average rows examined per execution for slow queries (buffer gets/logical reads)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.avg_rows_returned
+
+Average rows returned per execution for slow queries (rows processed)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -2671,6 +2520,66 @@ Number of executions for slow queries
 | client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
 | transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
 
+### newrelicoracledb.slow_queries.interval_avg_buffer_gets
+
+Average buffer gets (logical reads) per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {gets} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_avg_cpu_time
+
+Average CPU time per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_avg_disk_reads
+
+Average disk reads per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
 ### newrelicoracledb.slow_queries.interval_avg_elapsed_time
 
 Average elapsed time per execution in the last polling interval (delta metric)
@@ -2678,6 +2587,26 @@ Average elapsed time per execution in the last polling interval (delta metric)
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_avg_rows_processed
+
+Average rows processed (returned) per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Double |
 
 #### Attributes
 
