@@ -737,7 +737,7 @@ func (c *SQLClient) QueryUserTables(ctx context.Context, schemas, tables []strin
 }
 
 func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
-	query := queries.PgStatProgressAnalyzeSQL()
+	query := queries.PgStatProgressAnalyzeSQL
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query pg_stat_progress_analyze: %w", err)
@@ -774,7 +774,7 @@ func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatPr
 }
 
 func (c *SQLClient) QueryClusterProgress(ctx context.Context) ([]models.PgStatProgressCluster, error) {
-	query := queries.PgStatProgressClusterSQL()
+	query := queries.PgStatProgressClusterSQL
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query pg_stat_progress_cluster: %w", err)
@@ -811,7 +811,7 @@ func (c *SQLClient) QueryClusterProgress(ctx context.Context) ([]models.PgStatPr
 }
 
 func (c *SQLClient) QueryCreateIndexProgress(ctx context.Context) ([]models.PgStatProgressCreateIndex, error) {
-	query := queries.PgStatProgressCreateIndexSQL()
+	query := queries.PgStatProgressCreateIndexSQL
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query pg_stat_progress_create_index: %w", err)
@@ -854,7 +854,7 @@ func (c *SQLClient) QueryCreateIndexProgress(ctx context.Context) ([]models.PgSt
 // QueryVacuumProgress retrieves VACUUM operation progress from pg_stat_progress_vacuum
 // Returns real-time progress of running VACUUM operations (PostgreSQL 12+)
 func (c *SQLClient) QueryVacuumProgress(ctx context.Context) ([]models.PgStatProgressVacuum, error) {
-	query := queries.PgStatProgressVacuumSQL()
+	query := queries.PgStatProgressVacuumSQL
 	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query pg_stat_progress_vacuum: %w", err)
