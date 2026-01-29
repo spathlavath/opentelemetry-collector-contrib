@@ -75,3 +75,48 @@ func (s *TableIOScraper) recordUserTableMetrics(now pcommon.Timestamp, metric mo
 	s.logger.Debug("Recorded metrics for table",
 		zap.String("table", tableID))
 }
+
+// ScrapeIOUserTables scrapes per-table disk IO statistics from pg_statio_user_tables
+func (s *TableIOScraper) ScrapeIOUserTables(ctx context.Context, schemas, tables []string) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryIOUserTables(ctx, schemas, tables)
+	if err != nil {
+		s.logger.Error("Failed to query user tables IO statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordIOUserTablesMetrics(now, metric)
+	}
+
+	s.logger.Debug("User tables IO statistics scrape completed",
+		zap.Int("table_count", len(metrics)))
+
+	return nil
+}
+
+// recordIOUserTablesMetrics records all IO metrics for a single table
+func (s *TableIOScraper) recordIOUserTablesMetrics(now pcommon.Timestamp, metric models.PgStatIOUserTables) {
+	// Create composite identifier for table
+	tableID := metric.SchemaName + "." + metric.TableName
+
+	// Record heap block statistics (cumulative counters)
+	s.mb.RecordPostgresqlHeapBlocksReadDataPoint(now, getInt64(metric.HeapBlksRead), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlHeapBlocksHitDataPoint(now, getInt64(metric.HeapBlksHit), s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record index block statistics (cumulative counters)
+	s.mb.RecordPostgresqlIndexBlocksReadDataPoint(now, getInt64(metric.IdxBlksRead), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlIndexBlocksHitDataPoint(now, getInt64(metric.IdxBlksHit), s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record TOAST block statistics (cumulative counters)
+	s.mb.RecordPostgresqlToastBlocksReadDataPoint(now, getInt64(metric.ToastBlksRead), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlToastBlocksHitDataPoint(now, getInt64(metric.ToastBlksHit), s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record TOAST index block statistics (cumulative counters)
+	s.mb.RecordPostgresqlToastIndexBlocksReadDataPoint(now, getInt64(metric.TidxBlksRead), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlToastIndexBlocksHitDataPoint(now, getInt64(metric.TidxBlksHit), s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded IO metrics for table",
+		zap.String("table", tableID))
+}

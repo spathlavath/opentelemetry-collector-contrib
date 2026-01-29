@@ -138,6 +138,12 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatUserTablesMetric, error)
 
+	// QueryIOUserTables retrieves per-table disk IO statistics from pg_statio_user_tables
+	// Returns heap, index, and TOAST block reads from disk vs buffer cache
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryIOUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatIOUserTables, error)
+
 	// QueryAnalyzeProgress retrieves ANALYZE operation progress from pg_stat_progress_analyze
 	// Returns real-time progress of running ANALYZE operations
 	// Returns empty slice if no ANALYZE operations are currently running

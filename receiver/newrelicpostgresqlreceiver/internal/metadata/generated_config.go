@@ -83,6 +83,10 @@ type MetricsConfig struct {
 	PostgresqlDbCount                                 MetricConfig `mapstructure:"postgresql.db.count"`
 	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
 	PostgresqlDiskRead                                MetricConfig `mapstructure:"postgresql.disk_read"`
+	PostgresqlHeapBlocksHit                           MetricConfig `mapstructure:"postgresql.heap_blocks_hit"`
+	PostgresqlHeapBlocksRead                          MetricConfig `mapstructure:"postgresql.heap_blocks_read"`
+	PostgresqlIndexBlocksHit                          MetricConfig `mapstructure:"postgresql.index_blocks_hit"`
+	PostgresqlIndexBlocksRead                         MetricConfig `mapstructure:"postgresql.index_blocks_read"`
 	PostgresqlLastAnalyzeAge                          MetricConfig `mapstructure:"postgresql.last_analyze_age"`
 	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
 	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
@@ -146,6 +150,10 @@ type MetricsConfig struct {
 	PostgresqlSubscriptionSyncError                   MetricConfig `mapstructure:"postgresql.subscription.sync_error"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
+	PostgresqlToastBlocksHit                          MetricConfig `mapstructure:"postgresql.toast_blocks_hit"`
+	PostgresqlToastBlocksRead                         MetricConfig `mapstructure:"postgresql.toast_blocks_read"`
+	PostgresqlToastIndexBlocksHit                     MetricConfig `mapstructure:"postgresql.toast_index_blocks_hit"`
+	PostgresqlToastIndexBlocksRead                    MetricConfig `mapstructure:"postgresql.toast_index_blocks_read"`
 	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
 	PostgresqlVacuumHeapBlksScanned                   MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_scanned"`
 	PostgresqlVacuumHeapBlksTotal                     MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_total"`
@@ -339,6 +347,18 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlDiskRead: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlHeapBlocksHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlHeapBlocksRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlIndexBlocksHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlIndexBlocksRead: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlLastAnalyzeAge: MetricConfig{
 			Enabled: true,
 		},
@@ -526,6 +546,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlTempFiles: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastBlocksHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastBlocksRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastIndexBlocksHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastIndexBlocksRead: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlUptime: MetricConfig{

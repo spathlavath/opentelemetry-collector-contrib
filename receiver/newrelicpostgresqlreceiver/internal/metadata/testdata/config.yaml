@@ -111,6 +111,14 @@ all_set:
       enabled: true
     postgresql.disk_read:
       enabled: true
+    postgresql.heap_blocks_hit:
+      enabled: true
+    postgresql.heap_blocks_read:
+      enabled: true
+    postgresql.index_blocks_hit:
+      enabled: true
+    postgresql.index_blocks_read:
+      enabled: true
     postgresql.last_analyze_age:
       enabled: true
     postgresql.last_autoanalyze_age:
@@ -236,6 +244,14 @@ all_set:
     postgresql.temp_bytes:
       enabled: true
     postgresql.temp_files:
+      enabled: true
+    postgresql.toast_blocks_hit:
+      enabled: true
+    postgresql.toast_blocks_read:
+      enabled: true
+    postgresql.toast_index_blocks_hit:
+      enabled: true
+    postgresql.toast_index_blocks_read:
       enabled: true
     postgresql.uptime:
       enabled: true
@@ -410,6 +426,14 @@ none_set:
       enabled: false
     postgresql.disk_read:
       enabled: false
+    postgresql.heap_blocks_hit:
+      enabled: false
+    postgresql.heap_blocks_read:
+      enabled: false
+    postgresql.index_blocks_hit:
+      enabled: false
+    postgresql.index_blocks_read:
+      enabled: false
     postgresql.last_analyze_age:
       enabled: false
     postgresql.last_autoanalyze_age:
@@ -535,6 +559,14 @@ none_set:
     postgresql.temp_bytes:
       enabled: false
     postgresql.temp_files:
+      enabled: false
+    postgresql.toast_blocks_hit:
+      enabled: false
+    postgresql.toast_blocks_read:
+      enabled: false
+    postgresql.toast_index_blocks_hit:
+      enabled: false
+    postgresql.toast_index_blocks_read:
       enabled: false
     postgresql.uptime:
       enabled: false

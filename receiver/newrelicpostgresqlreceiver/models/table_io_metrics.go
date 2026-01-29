@@ -51,3 +51,33 @@ type PgStatUserTablesMetric struct {
 	AnalyzeCount     sql.NullInt64 // Number of times this table has been manually analyzed
 	AutoanalyzeCount sql.NullInt64 // Number of times this table has been analyzed by autoanalyze
 }
+
+// PgStatIOUserTables represents per-table disk IO statistics from pg_statio_user_tables
+// This struct captures heap, index, and TOAST block reads from disk vs buffer cache
+// Available in PostgreSQL 9.6+
+type PgStatIOUserTables struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing this table
+	SchemaName string
+
+	// TableName is the name of the table
+	TableName string
+
+	// Heap block statistics - table data blocks
+	HeapBlksRead sql.NullInt64 // Number of disk blocks read from the heap (table data)
+	HeapBlksHit  sql.NullInt64 // Number of buffer cache hits in the heap (table data)
+
+	// Index block statistics - all indexes combined
+	IdxBlksRead sql.NullInt64 // Number of disk blocks read from indexes
+	IdxBlksHit  sql.NullInt64 // Number of buffer cache hits in indexes
+
+	// TOAST block statistics - for oversized column values
+	ToastBlksRead sql.NullInt64 // Number of disk blocks read from TOAST tables
+	ToastBlksHit  sql.NullInt64 // Number of buffer cache hits in TOAST tables
+
+	// TOAST index block statistics
+	TidxBlksRead sql.NullInt64 // Number of disk blocks read from TOAST indexes
+	TidxBlksHit  sql.NullInt64 // Number of buffer cache hits in TOAST indexes
+}

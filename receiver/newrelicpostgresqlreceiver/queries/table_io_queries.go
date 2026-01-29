@@ -73,3 +73,27 @@ func buildTableFilterClause(schemas, tables []string) string {
 
 	return fmt.Sprintf("%s AND %s", schemaFilter, tableFilter)
 }
+
+// PgStatIOUserTablesSQL returns per-table disk IO statistics from pg_statio_user_tables (PostgreSQL 9.6+)
+// This query retrieves heap, index, and TOAST block reads from disk vs buffer cache
+// The WHERE clause is dynamically built based on schema and table filters
+func PgStatIOUserTablesSQL(schemas, tables []string) string {
+	whereClause := buildTableFilterClause(schemas, tables)
+
+	return fmt.Sprintf(`
+		SELECT
+			current_database() as database,
+			schemaname,
+			relname as table_name,
+			heap_blks_read,
+			heap_blks_hit,
+			idx_blks_read,
+			idx_blks_hit,
+			toast_blks_read,
+			toast_blks_hit,
+			tidx_blks_read,
+			tidx_blks_hit
+		FROM pg_statio_user_tables
+		WHERE %s
+		ORDER BY schemaname, relname`, whereClause)
+}

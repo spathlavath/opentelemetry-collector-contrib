@@ -871,6 +871,70 @@ Number of disk blocks read
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.heap_blocks_hit
+
+Number of heap blocks read from buffer cache for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.heap_blocks_read
+
+Number of heap blocks read from disk for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.index_blocks_hit
+
+Number of index blocks read from buffer cache for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.index_blocks_read
+
+Number of index blocks read from disk for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
 ### postgresql.last_analyze_age
 
 Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)
@@ -1840,6 +1904,70 @@ Number of temporary files created
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.toast_blocks_hit
+
+Number of TOAST blocks read from buffer cache for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.toast_blocks_read
+
+Number of TOAST blocks read from disk for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.toast_index_blocks_hit
+
+Number of TOAST index blocks read from buffer cache for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.toast_index_blocks_read
+
+Number of TOAST index blocks read from disk for this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
 
 ### postgresql.uptime
 

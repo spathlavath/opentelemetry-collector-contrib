@@ -689,6 +689,54 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.heap_blocks_hit:
+    description: Number of heap blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.heap_blocks_read:
+    description: Number of heap blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.index_blocks_hit:
+    description: Number of index blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.index_blocks_read:
+    description: Number of index blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
   postgresql.last_analyze_age:
     description: Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)
     enabled: true
@@ -1386,6 +1434,54 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.toast_blocks_hit:
+    description: Number of TOAST blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_blocks_read:
+    description: Number of TOAST blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_index_blocks_hit:
+    description: Number of TOAST index blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_index_blocks_read:
+    description: Number of TOAST index blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
     stability:
       level: alpha
 

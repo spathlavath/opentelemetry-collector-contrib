@@ -290,6 +290,22 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlHeapBlocksHitDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlHeapBlocksReadDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlIndexBlocksHitDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlIndexBlocksReadDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlLastAnalyzeAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
 
 			defaultMetricsCount++
@@ -539,6 +555,22 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordPostgresqlTempFilesDataPoint(ts, 1, "database_name-val", "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlToastBlocksHitDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlToastBlocksReadDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlToastIndexBlocksHitDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlToastIndexBlocksReadDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1811,6 +1843,98 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.heap_blocks_hit":
+					assert.False(t, validatedMetrics["postgresql.heap_blocks_hit"], "Found a duplicate in the metrics slice: postgresql.heap_blocks_hit")
+					validatedMetrics["postgresql.heap_blocks_hit"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of heap blocks read from buffer cache for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.heap_blocks_read":
+					assert.False(t, validatedMetrics["postgresql.heap_blocks_read"], "Found a duplicate in the metrics slice: postgresql.heap_blocks_read")
+					validatedMetrics["postgresql.heap_blocks_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of heap blocks read from disk for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.index_blocks_hit":
+					assert.False(t, validatedMetrics["postgresql.index_blocks_hit"], "Found a duplicate in the metrics slice: postgresql.index_blocks_hit")
+					validatedMetrics["postgresql.index_blocks_hit"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of index blocks read from buffer cache for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.index_blocks_read":
+					assert.False(t, validatedMetrics["postgresql.index_blocks_read"], "Found a duplicate in the metrics slice: postgresql.index_blocks_read")
+					validatedMetrics["postgresql.index_blocks_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of index blocks read from disk for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
 				case "postgresql.last_analyze_age":
 					assert.False(t, validatedMetrics["postgresql.last_analyze_age"], "Found a duplicate in the metrics slice: postgresql.last_analyze_age")
 					validatedMetrics["postgresql.last_analyze_age"] = true
@@ -3090,6 +3214,98 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.toast_blocks_hit":
+					assert.False(t, validatedMetrics["postgresql.toast_blocks_hit"], "Found a duplicate in the metrics slice: postgresql.toast_blocks_hit")
+					validatedMetrics["postgresql.toast_blocks_hit"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of TOAST blocks read from buffer cache for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.toast_blocks_read":
+					assert.False(t, validatedMetrics["postgresql.toast_blocks_read"], "Found a duplicate in the metrics slice: postgresql.toast_blocks_read")
+					validatedMetrics["postgresql.toast_blocks_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of TOAST blocks read from disk for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.toast_index_blocks_hit":
+					assert.False(t, validatedMetrics["postgresql.toast_index_blocks_hit"], "Found a duplicate in the metrics slice: postgresql.toast_index_blocks_hit")
+					validatedMetrics["postgresql.toast_index_blocks_hit"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of TOAST index blocks read from buffer cache for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.toast_index_blocks_read":
+					assert.False(t, validatedMetrics["postgresql.toast_index_blocks_read"], "Found a duplicate in the metrics slice: postgresql.toast_index_blocks_read")
+					validatedMetrics["postgresql.toast_index_blocks_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of TOAST index blocks read from disk for this table (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
 				case "postgresql.uptime":
 					assert.False(t, validatedMetrics["postgresql.uptime"], "Found a duplicate in the metrics slice: postgresql.uptime")
 					validatedMetrics["postgresql.uptime"] = true
