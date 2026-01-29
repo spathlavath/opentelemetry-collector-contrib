@@ -772,3 +772,40 @@ func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatPr
 
 	return metrics, nil
 }
+
+func (c *SQLClient) QueryClusterProgress(ctx context.Context) ([]models.PgStatProgressCluster, error) {
+	query := queries.PgStatProgressClusterSQL()
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_cluster: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressCluster
+
+	for rows.Next() {
+		var metric models.PgStatProgressCluster
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.Command,
+			&metric.Phase,
+			&metric.HeapBlksTotal,
+			&metric.HeapBlksScanned,
+			&metric.HeapTuplesScanned,
+			&metric.HeapTuplesWritten,
+			&metric.IndexRebuildCount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_cluster row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_cluster rows: %w", err)
+	}
+
+	return metrics, nil
+}

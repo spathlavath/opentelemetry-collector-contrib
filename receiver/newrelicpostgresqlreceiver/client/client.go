@@ -143,4 +143,10 @@ type PostgreSQLClient interface {
 	// Returns empty slice if no ANALYZE operations are currently running
 	// Available in PostgreSQL 13+
 	QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error)
+
+	// QueryClusterProgress retrieves CLUSTER/VACUUM FULL operation progress from pg_stat_progress_cluster
+	// Returns real-time progress of running CLUSTER or VACUUM FULL operations
+	// Returns empty slice if no CLUSTER/VACUUM FULL operations are currently running
+	// Available in PostgreSQL 12+
+	QueryClusterProgress(ctx context.Context) ([]models.PgStatProgressCluster, error)
 }

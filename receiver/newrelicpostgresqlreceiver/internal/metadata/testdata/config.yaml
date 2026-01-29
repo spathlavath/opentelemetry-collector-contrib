@@ -55,6 +55,14 @@ all_set:
       enabled: true
     postgresql.checksums.failures:
       enabled: true
+    postgresql.cluster_vacuum.heap_blks_scanned:
+      enabled: true
+    postgresql.cluster_vacuum.heap_blks_total:
+      enabled: true
+    postgresql.cluster_vacuum.heap_tuples_scanned:
+      enabled: true
+    postgresql.cluster_vacuum.heap_tuples_written:
+      enabled: true
     postgresql.commits:
       enabled: true
     postgresql.conflicts:
@@ -317,6 +325,14 @@ none_set:
     postgresql.checksums.enabled:
       enabled: false
     postgresql.checksums.failures:
+      enabled: false
+    postgresql.cluster_vacuum.heap_blks_scanned:
+      enabled: false
+    postgresql.cluster_vacuum.heap_blks_total:
+      enabled: false
+    postgresql.cluster_vacuum.heap_tuples_scanned:
+      enabled: false
+    postgresql.cluster_vacuum.heap_tuples_written:
       enabled: false
     postgresql.commits:
       enabled: false

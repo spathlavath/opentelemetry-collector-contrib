@@ -177,6 +177,47 @@ FACET table_name
 TIMESERIES
 ```
 
+### CLUSTER/VACUUM FULL Progress Metrics (PostgreSQL 12+)
+
+The receiver automatically collects real-time progress metrics for running CLUSTER and VACUUM FULL operations. These metrics are **enabled by default** and require no configuration.
+
+#### Why are these safe by default?
+
+CLUSTER/VACUUM FULL progress metrics are naturally low-cardinality:
+- Only tracks **actively running** CLUSTER or VACUUM FULL operations (typically 0-1 concurrent operations)
+- Metrics automatically disappear when the operation completes
+- No cardinality explosion risk (unlike per-table statistics which track ALL tables)
+
+#### Available CLUSTER/VACUUM FULL Progress Metrics (Gauge)
+
+**Heap Block Progress:**
+- `postgresql.cluster_vacuum.heap_blks_total` - Total number of heap blocks to scan
+- `postgresql.cluster_vacuum.heap_blks_scanned` - Number of heap blocks scanned so far
+
+**Tuple Progress:**
+- `postgresql.cluster_vacuum.heap_tuples_scanned` - Number of heap tuples scanned
+- `postgresql.cluster_vacuum.heap_tuples_written` - Number of heap tuples written to new heap
+
+Each metric includes attributes: `command` (CLUSTER or VACUUM FULL), `database_name`, `schema_name`, and `table_name`
+
+#### Use Cases
+
+- **Monitor long-running CLUSTER operations** on large tables
+- **Track progress** of manual VACUUM FULL commands
+- **Identify bottlenecks** in table reorganization
+- **Alert on stuck operations** that don't make progress
+- **Compare performance** between CLUSTER and VACUUM FULL
+
+#### Example: Monitor CLUSTER/VACUUM FULL Progress in New Relic
+
+```sql
+FROM Metric
+SELECT latest(postgresql.cluster_vacuum.heap_blks_scanned) / latest(postgresql.cluster_vacuum.heap_blks_total) * 100 AS 'Progress %'
+WHERE metricName LIKE 'postgresql.cluster_vacuum%'
+FACET table_name, command
+TIMESERIES
+```
+
 ## Prerequisites
 
 ### Database User Permissions

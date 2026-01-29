@@ -41,6 +41,9 @@ attributes:
   client_address:
     description: IP address of the standby server
     type: string
+  command:
+    description: Command type (CLUSTER or VACUUM FULL)
+    type: string
   database_name:
     description: Name of the PostgreSQL database
     type: string
@@ -380,6 +383,46 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{failures}"
+    stability:
+      level: alpha
+
+  postgresql.cluster_vacuum.heap_blks_scanned:
+    description: Number of heap blocks scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.cluster_vacuum.heap_blks_total:
+    description: Total number of heap blocks to be scanned during CLUSTER/VACUUM FULL (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.cluster_vacuum.heap_tuples_scanned:
+    description: Number of heap tuples scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.cluster_vacuum.heap_tuples_written:
+    description: Number of heap tuples written during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
     stability:
       level: alpha
 

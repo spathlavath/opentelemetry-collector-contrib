@@ -420,6 +420,78 @@ Number of data page checksum failures detected (PostgreSQL 12+)
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.cluster_vacuum.heap_blks_scanned
+
+Number of heap blocks scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| command | Command type (CLUSTER or VACUUM FULL) | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.cluster_vacuum.heap_blks_total
+
+Total number of heap blocks to be scanned during CLUSTER/VACUUM FULL (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| command | Command type (CLUSTER or VACUUM FULL) | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.cluster_vacuum.heap_tuples_scanned
+
+Number of heap tuples scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tuples} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| command | Command type (CLUSTER or VACUUM FULL) | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.cluster_vacuum.heap_tuples_written
+
+Number of heap tuples written during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tuples} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| command | Command type (CLUSTER or VACUUM FULL) | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
 ### postgresql.commits
 
 Number of transactions that have been committed

@@ -82,3 +82,36 @@ type PgStatProgressAnalyze struct {
 	ChildTablesTotal sql.NullInt64 // Total number of child tables to analyze (for partitioned tables)
 	ChildTablesDone  sql.NullInt64 // Number of child tables analyzed so far
 }
+
+// PgStatProgressCluster represents progress of CLUSTER/VACUUM FULL operations from pg_stat_progress_cluster
+// This struct captures real-time progress of running CLUSTER or VACUUM FULL operations
+// Available in PostgreSQL 12+
+type PgStatProgressCluster struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing the table being clustered/vacuumed
+	SchemaName string
+
+	// TableName is the name of the table being clustered/vacuumed
+	TableName string
+
+	// Command is the command type (CLUSTER or VACUUM FULL)
+	Command sql.NullString
+
+	// Phase is the current processing phase of the operation
+	// Common phases: "initializing", "seq scanning heap", "index scanning heap",
+	// "sorting tuples", "writing new heap", "swapping relation files", "rebuilding index", "performing final cleanup"
+	Phase sql.NullString
+
+	// Heap block statistics - progress of scanning the old heap
+	HeapBlksTotal   sql.NullInt64 // Total number of heap blocks in the table
+	HeapBlksScanned sql.NullInt64 // Number of heap blocks scanned so far
+
+	// Tuple statistics - tuples scanned and written
+	HeapTuplesScanned sql.NullInt64 // Number of heap tuples scanned
+	HeapTuplesWritten sql.NullInt64 // Number of heap tuples written to the new heap
+
+	// Index rebuild progress
+	IndexRebuildCount sql.NullInt64 // Number of indexes rebuilt
+}

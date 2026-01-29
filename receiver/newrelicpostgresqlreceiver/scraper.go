@@ -428,6 +428,17 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape CLUSTER/VACUUM FULL progress metrics (PostgreSQL 12+ only, enabled by default)
+	// These are naturally low-cardinality (only shows running CLUSTER/VACUUM FULL operations)
+	if s.tableScraper != nil {
+		clusterErrs := s.tableScraper.ScrapeClusterProgress(scrapeCtx)
+		if len(clusterErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping CLUSTER/VACUUM FULL progress",
+				zap.Int("error_count", len(clusterErrs)))
+			scrapeErrors = append(scrapeErrors, clusterErrs...)
+		}
+	}
+
 	metrics := s.buildMetrics()
 
 	s.logScrapeCompletion(scrapeErrors)

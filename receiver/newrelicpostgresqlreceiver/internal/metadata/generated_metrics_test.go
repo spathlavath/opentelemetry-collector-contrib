@@ -178,6 +178,22 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlClusterVacuumHeapBlksScannedDataPoint(ts, 1, "command-val", "database_name-val", "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlClusterVacuumHeapBlksTotalDataPoint(ts, 1, "command-val", "database_name-val", "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlClusterVacuumHeapTuplesScannedDataPoint(ts, 1, "command-val", "database_name-val", "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlClusterVacuumHeapTuplesWrittenDataPoint(ts, 1, "command-val", "database_name-val", "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlCommitsDataPoint(ts, 1, "database_name-val", "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -1122,6 +1138,114 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.cluster_vacuum.heap_blks_scanned":
+					assert.False(t, validatedMetrics["postgresql.cluster_vacuum.heap_blks_scanned"], "Found a duplicate in the metrics slice: postgresql.cluster_vacuum.heap_blks_scanned")
+					validatedMetrics["postgresql.cluster_vacuum.heap_blks_scanned"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of heap blocks scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("command")
+					assert.True(t, ok)
+					assert.Equal(t, "command-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.cluster_vacuum.heap_blks_total":
+					assert.False(t, validatedMetrics["postgresql.cluster_vacuum.heap_blks_total"], "Found a duplicate in the metrics slice: postgresql.cluster_vacuum.heap_blks_total")
+					validatedMetrics["postgresql.cluster_vacuum.heap_blks_total"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Total number of heap blocks to be scanned during CLUSTER/VACUUM FULL (PostgreSQL 12+)", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("command")
+					assert.True(t, ok)
+					assert.Equal(t, "command-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.cluster_vacuum.heap_tuples_scanned":
+					assert.False(t, validatedMetrics["postgresql.cluster_vacuum.heap_tuples_scanned"], "Found a duplicate in the metrics slice: postgresql.cluster_vacuum.heap_tuples_scanned")
+					validatedMetrics["postgresql.cluster_vacuum.heap_tuples_scanned"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of heap tuples scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)", ms.At(i).Description())
+					assert.Equal(t, "{tuples}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("command")
+					assert.True(t, ok)
+					assert.Equal(t, "command-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.cluster_vacuum.heap_tuples_written":
+					assert.False(t, validatedMetrics["postgresql.cluster_vacuum.heap_tuples_written"], "Found a duplicate in the metrics slice: postgresql.cluster_vacuum.heap_tuples_written")
+					validatedMetrics["postgresql.cluster_vacuum.heap_tuples_written"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of heap tuples written during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)", ms.At(i).Description())
+					assert.Equal(t, "{tuples}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("command")
+					assert.True(t, ok)
+					assert.Equal(t, "command-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
 				case "postgresql.commits":
 					assert.False(t, validatedMetrics["postgresql.commits"], "Found a duplicate in the metrics slice: postgresql.commits")
 					validatedMetrics["postgresql.commits"] = true

@@ -96,3 +96,26 @@ func PgStatProgressAnalyzeSQL() string {
 		WHERE ppa.datname = current_database()
 		ORDER BY n.nspname, c.relname`
 }
+
+// PgStatProgressClusterSQL returns CLUSTER/VACUUM FULL operation progress from pg_stat_progress_cluster (PostgreSQL 12+)
+// This query retrieves real-time progress of running CLUSTER or VACUUM FULL operations
+// The query returns data only for actively running operations
+func PgStatProgressClusterSQL() string {
+	return `
+		SELECT
+			datname as database,
+			COALESCE(n.nspname, '') as schemaname,
+			COALESCE(c.relname, '') as table_name,
+			command,
+			phase,
+			heap_blks_total,
+			heap_blks_scanned,
+			heap_tuples_scanned,
+			heap_tuples_written,
+			index_rebuild_count
+		FROM pg_stat_progress_cluster ppc
+		LEFT JOIN pg_class c ON ppc.relid = c.oid
+		LEFT JOIN pg_namespace n ON c.relnamespace = n.oid
+		WHERE ppc.datname = current_database()
+		ORDER BY n.nspname, c.relname`
+}

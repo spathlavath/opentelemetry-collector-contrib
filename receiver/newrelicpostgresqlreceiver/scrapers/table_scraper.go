@@ -140,3 +140,59 @@ func (s *TableScraper) recordAnalyzeProgressMetrics(now pcommon.Timestamp, metri
 		zap.String("table", tableID),
 		zap.String("phase", metric.Phase.String))
 }
+
+// ScrapeClusterProgress scrapes CLUSTER/VACUUM FULL operation progress from pg_stat_progress_cluster
+// Only available in PostgreSQL 12+
+func (s *TableScraper) ScrapeClusterProgress(ctx context.Context) []error {
+	// Skip if PostgreSQL version < 12
+	if s.pgVersion < 120000 {
+		s.logger.Debug("Skipping CLUSTER/VACUUM FULL progress metrics (PostgreSQL 12+ required)",
+			zap.Int("version", s.pgVersion))
+		return nil
+	}
+
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryClusterProgress(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query CLUSTER/VACUUM FULL progress statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// It's normal to have zero metrics (no CLUSTER/VACUUM FULL operations running)
+	if len(metrics) == 0 {
+		s.logger.Debug("No CLUSTER/VACUUM FULL operations currently running")
+		return nil
+	}
+
+	for _, metric := range metrics {
+		s.recordClusterProgressMetrics(now, metric)
+	}
+
+	s.logger.Debug("CLUSTER/VACUUM FULL progress statistics scrape completed",
+		zap.Int("operation_count", len(metrics)))
+
+	return nil
+}
+
+// recordClusterProgressMetrics records all progress metrics for a single CLUSTER/VACUUM FULL operation
+func (s *TableScraper) recordClusterProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressCluster) {
+	// Create composite identifier for table
+	tableID := metric.SchemaName + "." + metric.TableName
+
+	// Get command type (CLUSTER or VACUUM FULL)
+	command := metric.Command.String
+
+	// Record heap block progress
+	s.mb.RecordPostgresqlClusterVacuumHeapBlksTotalDataPoint(now, getInt64(metric.HeapBlksTotal), command, metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlClusterVacuumHeapBlksScannedDataPoint(now, getInt64(metric.HeapBlksScanned), command, metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record tuple progress
+	s.mb.RecordPostgresqlClusterVacuumHeapTuplesScannedDataPoint(now, getInt64(metric.HeapTuplesScanned), command, metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlClusterVacuumHeapTuplesWrittenDataPoint(now, getInt64(metric.HeapTuplesWritten), command, metric.Database, s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded CLUSTER/VACUUM FULL progress metrics",
+		zap.String("table", tableID),
+		zap.String("command", command),
+		zap.String("phase", metric.Phase.String))
+}

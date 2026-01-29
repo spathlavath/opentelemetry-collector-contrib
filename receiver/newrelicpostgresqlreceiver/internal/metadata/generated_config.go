@@ -55,6 +55,10 @@ type MetricsConfig struct {
 	PostgresqlBufferHit                               MetricConfig `mapstructure:"postgresql.buffer_hit"`
 	PostgresqlChecksumsEnabled                        MetricConfig `mapstructure:"postgresql.checksums.enabled"`
 	PostgresqlChecksumsFailures                       MetricConfig `mapstructure:"postgresql.checksums.failures"`
+	PostgresqlClusterVacuumHeapBlksScanned            MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_blks_scanned"`
+	PostgresqlClusterVacuumHeapBlksTotal              MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_blks_total"`
+	PostgresqlClusterVacuumHeapTuplesScanned          MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_tuples_scanned"`
+	PostgresqlClusterVacuumHeapTuplesWritten          MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_tuples_written"`
 	PostgresqlCommits                                 MetricConfig `mapstructure:"postgresql.commits"`
 	PostgresqlConflicts                               MetricConfig `mapstructure:"postgresql.conflicts"`
 	PostgresqlConflictsBufferpin                      MetricConfig `mapstructure:"postgresql.conflicts.bufferpin"`
@@ -235,6 +239,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlChecksumsFailures: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlClusterVacuumHeapBlksScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlClusterVacuumHeapBlksTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlClusterVacuumHeapTuplesScanned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlClusterVacuumHeapTuplesWritten: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlCommits: MetricConfig{
