@@ -240,6 +240,70 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		nrTxn,
 	)
 
+	// Record historical (cumulative) average CPU time
+	if slowQuery.TotalCPUTimeMS.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
+		historicalAvgCPUTime := slowQuery.TotalCPUTimeMS.Float64 / float64(slowQuery.ExecutionCount.Int64)
+		s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
+			now,
+			historicalAvgCPUTime,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
+	// Record historical (cumulative) average disk reads
+	if slowQuery.TotalDiskReads.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
+		historicalAvgDiskReads := float64(slowQuery.TotalDiskReads.Int64) / float64(slowQuery.ExecutionCount.Int64)
+		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
+			now,
+			historicalAvgDiskReads,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
+	// Record historical (cumulative) average rows examined (buffer gets)
+	if slowQuery.TotalBufferGets.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
+		historicalAvgBufferGets := float64(slowQuery.TotalBufferGets.Int64) / float64(slowQuery.ExecutionCount.Int64)
+		s.mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(
+			now,
+			historicalAvgBufferGets,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
+	// Record historical (cumulative) average rows returned (rows processed)
+	if slowQuery.TotalRowsProcessed.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
+		historicalAvgRowsProcessed := float64(slowQuery.TotalRowsProcessed.Int64) / float64(slowQuery.ExecutionCount.Int64)
+		s.mb.RecordNewrelicoracledbSlowQueriesAvgRowsReturnedDataPoint(
+			now,
+			historicalAvgRowsProcessed,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
 	// Record interval-based average elapsed time if available (delta metric)
 	if slowQuery.IntervalAvgElapsedTimeMS != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(
