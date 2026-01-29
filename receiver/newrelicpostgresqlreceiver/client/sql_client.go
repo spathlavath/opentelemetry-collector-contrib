@@ -809,3 +809,44 @@ func (c *SQLClient) QueryClusterProgress(ctx context.Context) ([]models.PgStatPr
 
 	return metrics, nil
 }
+
+func (c *SQLClient) QueryCreateIndexProgress(ctx context.Context) ([]models.PgStatProgressCreateIndex, error) {
+	query := queries.PgStatProgressCreateIndexSQL()
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_progress_create_index: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatProgressCreateIndex
+
+	for rows.Next() {
+		var metric models.PgStatProgressCreateIndex
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.IndexName,
+			&metric.Command,
+			&metric.Phase,
+			&metric.LockersTotal,
+			&metric.LockersDone,
+			&metric.BlocksTotal,
+			&metric.BlocksDone,
+			&metric.TuplesTotal,
+			&metric.TuplesDone,
+			&metric.PartitionsTotal,
+			&metric.PartitionsDone,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_progress_create_index row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_progress_create_index rows: %w", err)
+	}
+
+	return metrics, nil
+}

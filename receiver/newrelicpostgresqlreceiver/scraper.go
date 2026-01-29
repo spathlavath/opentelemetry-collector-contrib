@@ -439,6 +439,17 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape CREATE INDEX progress metrics (PostgreSQL 12+ only, enabled by default)
+	// These are naturally low-cardinality (only shows running CREATE INDEX operations)
+	if s.tableScraper != nil {
+		createIndexErrs := s.tableScraper.ScrapeCreateIndexProgress(scrapeCtx)
+		if len(createIndexErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping CREATE INDEX progress",
+				zap.Int("error_count", len(createIndexErrs)))
+			scrapeErrors = append(scrapeErrors, createIndexErrs...)
+		}
+	}
+
 	metrics := s.buildMetrics()
 
 	s.logScrapeCompletion(scrapeErrors)

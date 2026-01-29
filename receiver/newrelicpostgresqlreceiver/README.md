@@ -218,6 +218,55 @@ FACET table_name, command
 TIMESERIES
 ```
 
+### CREATE INDEX Progress Metrics (PostgreSQL 12+)
+
+The receiver automatically collects real-time progress metrics for running CREATE INDEX operations. These metrics are **enabled by default** and require no configuration.
+
+#### Why are these safe by default?
+
+CREATE INDEX progress metrics are naturally low-cardinality:
+- Only tracks **actively running** CREATE INDEX operations (typically 0-2 concurrent operations)
+- Metrics automatically disappear when the index creation completes
+- No cardinality explosion risk (unlike per-table statistics which track ALL tables)
+
+#### Available CREATE INDEX Progress Metrics (Gauge)
+
+**Locker Progress (for concurrent index builds):**
+- `postgresql.create_index.lockers_total` - Total number of lockers to wait for (concurrent builds only)
+- `postgresql.create_index.lockers_done` - Number of lockers processed
+
+**Block Progress:**
+- `postgresql.create_index.blocks_total` - Total number of blocks to be processed
+- `postgresql.create_index.blocks_done` - Number of blocks processed
+
+**Tuple Progress:**
+- `postgresql.create_index.tuples_total` - Total number of tuples to be indexed
+- `postgresql.create_index.tuples_done` - Number of tuples indexed
+
+**Partition Progress (for partitioned tables):**
+- `postgresql.create_index.partitions_total` - Total number of partitions to be indexed
+- `postgresql.create_index.partitions_done` - Number of partitions indexed
+
+Each metric includes attributes: `database_name`, `index_name`, `schema_name`, and `table_name`
+
+#### Use Cases
+
+- **Monitor index build progress** for large tables
+- **Track REINDEX operations** on critical indexes
+- **Identify slow index builds** that may impact performance
+- **Alert on stuck CREATE INDEX CONCURRENTLY** operations
+- **Optimize concurrent index creation** strategies
+
+#### Example: Monitor CREATE INDEX Progress in New Relic
+
+```sql
+FROM Metric
+SELECT latest(postgresql.create_index.tuples_done) / latest(postgresql.create_index.tuples_total) * 100 AS 'Progress %'
+WHERE metricName LIKE 'postgresql.create_index%'
+FACET table_name, index_name
+TIMESERIES
+```
+
 ## Prerequisites
 
 ### Database User Permissions

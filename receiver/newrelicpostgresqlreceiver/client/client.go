@@ -149,4 +149,10 @@ type PostgreSQLClient interface {
 	// Returns empty slice if no CLUSTER/VACUUM FULL operations are currently running
 	// Available in PostgreSQL 12+
 	QueryClusterProgress(ctx context.Context) ([]models.PgStatProgressCluster, error)
+
+	// QueryCreateIndexProgress retrieves CREATE INDEX operation progress from pg_stat_progress_create_index
+	// Returns real-time progress of running CREATE INDEX operations
+	// Returns empty slice if no CREATE INDEX operations are currently running
+	// Available in PostgreSQL 12+
+	QueryCreateIndexProgress(ctx context.Context) ([]models.PgStatProgressCreateIndex, error)
 }

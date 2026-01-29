@@ -115,3 +115,44 @@ type PgStatProgressCluster struct {
 	// Index rebuild progress
 	IndexRebuildCount sql.NullInt64 // Number of indexes rebuilt
 }
+
+// PgStatProgressCreateIndex represents progress of CREATE INDEX operations from pg_stat_progress_create_index
+// This struct captures real-time progress of running CREATE INDEX operations
+// Available in PostgreSQL 12+
+type PgStatProgressCreateIndex struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing the table being indexed
+	SchemaName string
+
+	// TableName is the name of the table being indexed
+	TableName string
+
+	// IndexName is the name of the index being created
+	IndexName sql.NullString
+
+	// Command is the command type (e.g., CREATE INDEX, CREATE INDEX CONCURRENTLY, REINDEX)
+	Command sql.NullString
+
+	// Phase is the current processing phase of the CREATE INDEX operation
+	// Common phases: "initializing", "waiting for writers before build", "building index",
+	// "waiting for writers before validation", "validating index", "waiting for old snapshots", "waiting for readers before marking dead"
+	Phase sql.NullString
+
+	// Locker statistics - concurrent index creation waits for locks
+	LockersTotal sql.NullInt64 // Total number of lockers to wait for
+	LockersDone  sql.NullInt64 // Number of lockers processed
+
+	// Block statistics - blocks read during index build
+	BlocksTotal sql.NullInt64 // Total number of blocks to be processed
+	BlocksDone  sql.NullInt64 // Number of blocks processed
+
+	// Tuple statistics - tuples indexed
+	TuplesTotal sql.NullInt64 // Total number of tuples to be indexed
+	TuplesDone  sql.NullInt64 // Number of tuples indexed
+
+	// Partition statistics - for partitioned tables
+	PartitionsTotal sql.NullInt64 // Total number of partitions to be indexed
+	PartitionsDone  sql.NullInt64 // Number of partitions indexed
+}

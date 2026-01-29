@@ -87,6 +87,22 @@ all_set:
       enabled: true
     postgresql.control.timeline_id:
       enabled: true
+    postgresql.create_index.blocks_done:
+      enabled: true
+    postgresql.create_index.blocks_total:
+      enabled: true
+    postgresql.create_index.lockers_done:
+      enabled: true
+    postgresql.create_index.lockers_total:
+      enabled: true
+    postgresql.create_index.partitions_done:
+      enabled: true
+    postgresql.create_index.partitions_total:
+      enabled: true
+    postgresql.create_index.tuples_done:
+      enabled: true
+    postgresql.create_index.tuples_total:
+      enabled: true
     postgresql.database_size:
       enabled: true
     postgresql.db.count:
@@ -357,6 +373,22 @@ none_set:
     postgresql.control.redo_delay_bytes:
       enabled: false
     postgresql.control.timeline_id:
+      enabled: false
+    postgresql.create_index.blocks_done:
+      enabled: false
+    postgresql.create_index.blocks_total:
+      enabled: false
+    postgresql.create_index.lockers_done:
+      enabled: false
+    postgresql.create_index.lockers_total:
+      enabled: false
+    postgresql.create_index.partitions_done:
+      enabled: false
+    postgresql.create_index.partitions_total:
+      enabled: false
+    postgresql.create_index.tuples_done:
+      enabled: false
+    postgresql.create_index.tuples_total:
       enabled: false
     postgresql.database_size:
       enabled: false

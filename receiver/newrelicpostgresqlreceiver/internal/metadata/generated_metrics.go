@@ -142,6 +142,30 @@ var MetricsInfo = metricsInfo{
 	PostgresqlControlTimelineID: metricInfo{
 		Name: "postgresql.control.timeline_id",
 	},
+	PostgresqlCreateIndexBlocksDone: metricInfo{
+		Name: "postgresql.create_index.blocks_done",
+	},
+	PostgresqlCreateIndexBlocksTotal: metricInfo{
+		Name: "postgresql.create_index.blocks_total",
+	},
+	PostgresqlCreateIndexLockersDone: metricInfo{
+		Name: "postgresql.create_index.lockers_done",
+	},
+	PostgresqlCreateIndexLockersTotal: metricInfo{
+		Name: "postgresql.create_index.lockers_total",
+	},
+	PostgresqlCreateIndexPartitionsDone: metricInfo{
+		Name: "postgresql.create_index.partitions_done",
+	},
+	PostgresqlCreateIndexPartitionsTotal: metricInfo{
+		Name: "postgresql.create_index.partitions_total",
+	},
+	PostgresqlCreateIndexTuplesDone: metricInfo{
+		Name: "postgresql.create_index.tuples_done",
+	},
+	PostgresqlCreateIndexTuplesTotal: metricInfo{
+		Name: "postgresql.create_index.tuples_total",
+	},
 	PostgresqlDatabaseSize: metricInfo{
 		Name: "postgresql.database_size",
 	},
@@ -443,6 +467,14 @@ type metricsInfo struct {
 	PostgresqlControlCheckpointDelayBytes             metricInfo
 	PostgresqlControlRedoDelayBytes                   metricInfo
 	PostgresqlControlTimelineID                       metricInfo
+	PostgresqlCreateIndexBlocksDone                   metricInfo
+	PostgresqlCreateIndexBlocksTotal                  metricInfo
+	PostgresqlCreateIndexLockersDone                  metricInfo
+	PostgresqlCreateIndexLockersTotal                 metricInfo
+	PostgresqlCreateIndexPartitionsDone               metricInfo
+	PostgresqlCreateIndexPartitionsTotal              metricInfo
+	PostgresqlCreateIndexTuplesDone                   metricInfo
+	PostgresqlCreateIndexTuplesTotal                  metricInfo
 	PostgresqlDatabaseSize                            metricInfo
 	PostgresqlDbCount                                 metricInfo
 	PostgresqlDeadlocks                               metricInfo
@@ -2824,6 +2856,446 @@ func (m *metricPostgresqlControlTimelineID) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlControlTimelineID(cfg MetricConfig) metricPostgresqlControlTimelineID {
 	m := metricPostgresqlControlTimelineID{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexBlocksDone struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.blocks_done metric with initial data.
+func (m *metricPostgresqlCreateIndexBlocksDone) init() {
+	m.data.SetName("postgresql.create_index.blocks_done")
+	m.data.SetDescription("Number of blocks processed during CREATE INDEX operation (PostgreSQL 12+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexBlocksDone) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexBlocksDone) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexBlocksDone) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexBlocksDone(cfg MetricConfig) metricPostgresqlCreateIndexBlocksDone {
+	m := metricPostgresqlCreateIndexBlocksDone{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexBlocksTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.blocks_total metric with initial data.
+func (m *metricPostgresqlCreateIndexBlocksTotal) init() {
+	m.data.SetName("postgresql.create_index.blocks_total")
+	m.data.SetDescription("Total number of blocks to be processed during CREATE INDEX (PostgreSQL 12+)")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexBlocksTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexBlocksTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexBlocksTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexBlocksTotal(cfg MetricConfig) metricPostgresqlCreateIndexBlocksTotal {
+	m := metricPostgresqlCreateIndexBlocksTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexLockersDone struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.lockers_done metric with initial data.
+func (m *metricPostgresqlCreateIndexLockersDone) init() {
+	m.data.SetName("postgresql.create_index.lockers_done")
+	m.data.SetDescription("Number of lockers processed during CREATE INDEX operation (PostgreSQL 12+)")
+	m.data.SetUnit("{lockers}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexLockersDone) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexLockersDone) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexLockersDone) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexLockersDone(cfg MetricConfig) metricPostgresqlCreateIndexLockersDone {
+	m := metricPostgresqlCreateIndexLockersDone{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexLockersTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.lockers_total metric with initial data.
+func (m *metricPostgresqlCreateIndexLockersTotal) init() {
+	m.data.SetName("postgresql.create_index.lockers_total")
+	m.data.SetDescription("Total number of lockers to be processed during CREATE INDEX (PostgreSQL 12+)")
+	m.data.SetUnit("{lockers}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexLockersTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexLockersTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexLockersTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexLockersTotal(cfg MetricConfig) metricPostgresqlCreateIndexLockersTotal {
+	m := metricPostgresqlCreateIndexLockersTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexPartitionsDone struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.partitions_done metric with initial data.
+func (m *metricPostgresqlCreateIndexPartitionsDone) init() {
+	m.data.SetName("postgresql.create_index.partitions_done")
+	m.data.SetDescription("Number of partitions processed during CREATE INDEX operation (PostgreSQL 12+)")
+	m.data.SetUnit("{partitions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexPartitionsDone) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexPartitionsDone) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexPartitionsDone) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexPartitionsDone(cfg MetricConfig) metricPostgresqlCreateIndexPartitionsDone {
+	m := metricPostgresqlCreateIndexPartitionsDone{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexPartitionsTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.partitions_total metric with initial data.
+func (m *metricPostgresqlCreateIndexPartitionsTotal) init() {
+	m.data.SetName("postgresql.create_index.partitions_total")
+	m.data.SetDescription("Total number of partitions to be processed during CREATE INDEX (PostgreSQL 12+)")
+	m.data.SetUnit("{partitions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexPartitionsTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexPartitionsTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexPartitionsTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexPartitionsTotal(cfg MetricConfig) metricPostgresqlCreateIndexPartitionsTotal {
+	m := metricPostgresqlCreateIndexPartitionsTotal{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexTuplesDone struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.tuples_done metric with initial data.
+func (m *metricPostgresqlCreateIndexTuplesDone) init() {
+	m.data.SetName("postgresql.create_index.tuples_done")
+	m.data.SetDescription("Number of tuples indexed during CREATE INDEX operation (PostgreSQL 12+)")
+	m.data.SetUnit("{tuples}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexTuplesDone) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexTuplesDone) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexTuplesDone) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexTuplesDone(cfg MetricConfig) metricPostgresqlCreateIndexTuplesDone {
+	m := metricPostgresqlCreateIndexTuplesDone{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlCreateIndexTuplesTotal struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.create_index.tuples_total metric with initial data.
+func (m *metricPostgresqlCreateIndexTuplesTotal) init() {
+	m.data.SetName("postgresql.create_index.tuples_total")
+	m.data.SetDescription("Total number of tuples to be indexed during CREATE INDEX (PostgreSQL 12+)")
+	m.data.SetUnit("{tuples}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlCreateIndexTuplesTotal) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlCreateIndexTuplesTotal) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlCreateIndexTuplesTotal) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlCreateIndexTuplesTotal(cfg MetricConfig) metricPostgresqlCreateIndexTuplesTotal {
+	m := metricPostgresqlCreateIndexTuplesTotal{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -7400,6 +7872,14 @@ type MetricsBuilder struct {
 	metricPostgresqlControlCheckpointDelayBytes             metricPostgresqlControlCheckpointDelayBytes
 	metricPostgresqlControlRedoDelayBytes                   metricPostgresqlControlRedoDelayBytes
 	metricPostgresqlControlTimelineID                       metricPostgresqlControlTimelineID
+	metricPostgresqlCreateIndexBlocksDone                   metricPostgresqlCreateIndexBlocksDone
+	metricPostgresqlCreateIndexBlocksTotal                  metricPostgresqlCreateIndexBlocksTotal
+	metricPostgresqlCreateIndexLockersDone                  metricPostgresqlCreateIndexLockersDone
+	metricPostgresqlCreateIndexLockersTotal                 metricPostgresqlCreateIndexLockersTotal
+	metricPostgresqlCreateIndexPartitionsDone               metricPostgresqlCreateIndexPartitionsDone
+	metricPostgresqlCreateIndexPartitionsTotal              metricPostgresqlCreateIndexPartitionsTotal
+	metricPostgresqlCreateIndexTuplesDone                   metricPostgresqlCreateIndexTuplesDone
+	metricPostgresqlCreateIndexTuplesTotal                  metricPostgresqlCreateIndexTuplesTotal
 	metricPostgresqlDatabaseSize                            metricPostgresqlDatabaseSize
 	metricPostgresqlDbCount                                 metricPostgresqlDbCount
 	metricPostgresqlDeadlocks                               metricPostgresqlDeadlocks
@@ -7553,6 +8033,14 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlControlCheckpointDelayBytes:             newMetricPostgresqlControlCheckpointDelayBytes(mbc.Metrics.PostgresqlControlCheckpointDelayBytes),
 		metricPostgresqlControlRedoDelayBytes:                   newMetricPostgresqlControlRedoDelayBytes(mbc.Metrics.PostgresqlControlRedoDelayBytes),
 		metricPostgresqlControlTimelineID:                       newMetricPostgresqlControlTimelineID(mbc.Metrics.PostgresqlControlTimelineID),
+		metricPostgresqlCreateIndexBlocksDone:                   newMetricPostgresqlCreateIndexBlocksDone(mbc.Metrics.PostgresqlCreateIndexBlocksDone),
+		metricPostgresqlCreateIndexBlocksTotal:                  newMetricPostgresqlCreateIndexBlocksTotal(mbc.Metrics.PostgresqlCreateIndexBlocksTotal),
+		metricPostgresqlCreateIndexLockersDone:                  newMetricPostgresqlCreateIndexLockersDone(mbc.Metrics.PostgresqlCreateIndexLockersDone),
+		metricPostgresqlCreateIndexLockersTotal:                 newMetricPostgresqlCreateIndexLockersTotal(mbc.Metrics.PostgresqlCreateIndexLockersTotal),
+		metricPostgresqlCreateIndexPartitionsDone:               newMetricPostgresqlCreateIndexPartitionsDone(mbc.Metrics.PostgresqlCreateIndexPartitionsDone),
+		metricPostgresqlCreateIndexPartitionsTotal:              newMetricPostgresqlCreateIndexPartitionsTotal(mbc.Metrics.PostgresqlCreateIndexPartitionsTotal),
+		metricPostgresqlCreateIndexTuplesDone:                   newMetricPostgresqlCreateIndexTuplesDone(mbc.Metrics.PostgresqlCreateIndexTuplesDone),
+		metricPostgresqlCreateIndexTuplesTotal:                  newMetricPostgresqlCreateIndexTuplesTotal(mbc.Metrics.PostgresqlCreateIndexTuplesTotal),
 		metricPostgresqlDatabaseSize:                            newMetricPostgresqlDatabaseSize(mbc.Metrics.PostgresqlDatabaseSize),
 		metricPostgresqlDbCount:                                 newMetricPostgresqlDbCount(mbc.Metrics.PostgresqlDbCount),
 		metricPostgresqlDeadlocks:                               newMetricPostgresqlDeadlocks(mbc.Metrics.PostgresqlDeadlocks),
@@ -7789,6 +8277,14 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlControlCheckpointDelayBytes.emit(ils.Metrics())
 	mb.metricPostgresqlControlRedoDelayBytes.emit(ils.Metrics())
 	mb.metricPostgresqlControlTimelineID.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexBlocksDone.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexBlocksTotal.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexLockersDone.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexLockersTotal.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexPartitionsDone.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexPartitionsTotal.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexTuplesDone.emit(ils.Metrics())
+	mb.metricPostgresqlCreateIndexTuplesTotal.emit(ils.Metrics())
 	mb.metricPostgresqlDatabaseSize.emit(ils.Metrics())
 	mb.metricPostgresqlDbCount.emit(ils.Metrics())
 	mb.metricPostgresqlDeadlocks.emit(ils.Metrics())
@@ -8118,6 +8614,46 @@ func (mb *MetricsBuilder) RecordPostgresqlControlRedoDelayBytesDataPoint(ts pcom
 // RecordPostgresqlControlTimelineIDDataPoint adds a data point to postgresql.control.timeline_id metric.
 func (mb *MetricsBuilder) RecordPostgresqlControlTimelineIDDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlControlTimelineID.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexBlocksDoneDataPoint adds a data point to postgresql.create_index.blocks_done metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexBlocksDoneDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexBlocksDone.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexBlocksTotalDataPoint adds a data point to postgresql.create_index.blocks_total metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexBlocksTotalDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexBlocksTotal.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexLockersDoneDataPoint adds a data point to postgresql.create_index.lockers_done metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexLockersDoneDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexLockersDone.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexLockersTotalDataPoint adds a data point to postgresql.create_index.lockers_total metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexLockersTotalDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexLockersTotal.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexPartitionsDoneDataPoint adds a data point to postgresql.create_index.partitions_done metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexPartitionsDoneDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexPartitionsDone.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexPartitionsTotalDataPoint adds a data point to postgresql.create_index.partitions_total metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexPartitionsTotalDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexPartitionsTotal.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexTuplesDoneDataPoint adds a data point to postgresql.create_index.tuples_done metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexTuplesDoneDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexTuplesDone.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlCreateIndexTuplesTotalDataPoint adds a data point to postgresql.create_index.tuples_total metric.
+func (mb *MetricsBuilder) RecordPostgresqlCreateIndexTuplesTotalDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, indexNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlCreateIndexTuplesTotal.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, indexNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
 // RecordPostgresqlDatabaseSizeDataPoint adds a data point to postgresql.database_size metric.

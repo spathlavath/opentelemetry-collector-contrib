@@ -47,6 +47,9 @@ attributes:
   database_name:
     description: Name of the PostgreSQL database
     type: string
+  index_name:
+    description: Name of the index being created
+    type: string
   newrelicpostgresql.instance_name:
     description: Name of the PostgreSQL instance
     type: string
@@ -559,6 +562,86 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name]
     unit: "{timeline}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.blocks_done:
+    description: Number of blocks processed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.blocks_total:
+    description: Total number of blocks to be processed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.lockers_done:
+    description: Number of lockers processed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{lockers}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.lockers_total:
+    description: Total number of lockers to be processed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{lockers}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.partitions_done:
+    description: Number of partitions processed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{partitions}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.partitions_total:
+    description: Total number of partitions to be processed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{partitions}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.tuples_done:
+    description: Number of tuples indexed during CREATE INDEX operation (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.create_index.tuples_total:
+    description: Total number of tuples to be indexed during CREATE INDEX (PostgreSQL 12+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{tuples}"
     stability:
       level: alpha
 

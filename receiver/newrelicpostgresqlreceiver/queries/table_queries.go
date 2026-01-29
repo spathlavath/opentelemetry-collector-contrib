@@ -119,3 +119,31 @@ func PgStatProgressClusterSQL() string {
 		WHERE ppc.datname = current_database()
 		ORDER BY n.nspname, c.relname`
 }
+
+// PgStatProgressCreateIndexSQL returns CREATE INDEX operation progress from pg_stat_progress_create_index (PostgreSQL 12+)
+// This query retrieves real-time progress of running CREATE INDEX operations
+// The query returns data only for actively running CREATE INDEX operations
+func PgStatProgressCreateIndexSQL() string {
+	return `
+		SELECT
+			datname as database,
+			COALESCE(n.nspname, '') as schemaname,
+			COALESCE(c.relname, '') as table_name,
+			COALESCE(ci.relname, '') as index_name,
+			command,
+			phase,
+			lockers_total,
+			lockers_done,
+			blocks_total,
+			blocks_done,
+			tuples_total,
+			tuples_done,
+			partitions_total,
+			partitions_done
+		FROM pg_stat_progress_create_index ppci
+		LEFT JOIN pg_class c ON ppci.relid = c.oid
+		LEFT JOIN pg_namespace n ON c.relnamespace = n.oid
+		LEFT JOIN pg_class ci ON ppci.index_relid = ci.oid
+		WHERE ppci.datname = current_database()
+		ORDER BY n.nspname, c.relname`
+}

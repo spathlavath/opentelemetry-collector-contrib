@@ -668,6 +668,150 @@ Current timeline ID (PostgreSQL 10+)
 | ---- | ----------- | ------ | -------- |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.create_index.blocks_done
+
+Number of blocks processed during CREATE INDEX operation (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.create_index.blocks_total
+
+Total number of blocks to be processed during CREATE INDEX (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.create_index.lockers_done
+
+Number of lockers processed during CREATE INDEX operation (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {lockers} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.create_index.lockers_total
+
+Total number of lockers to be processed during CREATE INDEX (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {lockers} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.create_index.partitions_done
+
+Number of partitions processed during CREATE INDEX operation (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {partitions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.create_index.partitions_total
+
+Total number of partitions to be processed during CREATE INDEX (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {partitions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.create_index.tuples_done
+
+Number of tuples indexed during CREATE INDEX operation (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tuples} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.create_index.tuples_total
+
+Total number of tuples to be indexed during CREATE INDEX (PostgreSQL 12+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tuples} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| index_name | Name of the index being created | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
 ### postgresql.database_size
 
 Size of the database in bytes

@@ -71,6 +71,14 @@ type MetricsConfig struct {
 	PostgresqlControlCheckpointDelayBytes             MetricConfig `mapstructure:"postgresql.control.checkpoint_delay_bytes"`
 	PostgresqlControlRedoDelayBytes                   MetricConfig `mapstructure:"postgresql.control.redo_delay_bytes"`
 	PostgresqlControlTimelineID                       MetricConfig `mapstructure:"postgresql.control.timeline_id"`
+	PostgresqlCreateIndexBlocksDone                   MetricConfig `mapstructure:"postgresql.create_index.blocks_done"`
+	PostgresqlCreateIndexBlocksTotal                  MetricConfig `mapstructure:"postgresql.create_index.blocks_total"`
+	PostgresqlCreateIndexLockersDone                  MetricConfig `mapstructure:"postgresql.create_index.lockers_done"`
+	PostgresqlCreateIndexLockersTotal                 MetricConfig `mapstructure:"postgresql.create_index.lockers_total"`
+	PostgresqlCreateIndexPartitionsDone               MetricConfig `mapstructure:"postgresql.create_index.partitions_done"`
+	PostgresqlCreateIndexPartitionsTotal              MetricConfig `mapstructure:"postgresql.create_index.partitions_total"`
+	PostgresqlCreateIndexTuplesDone                   MetricConfig `mapstructure:"postgresql.create_index.tuples_done"`
+	PostgresqlCreateIndexTuplesTotal                  MetricConfig `mapstructure:"postgresql.create_index.tuples_total"`
 	PostgresqlDatabaseSize                            MetricConfig `mapstructure:"postgresql.database_size"`
 	PostgresqlDbCount                                 MetricConfig `mapstructure:"postgresql.db.count"`
 	PostgresqlDeadlocks                               MetricConfig `mapstructure:"postgresql.deadlocks"`
@@ -287,6 +295,30 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlControlTimelineID: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexBlocksDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexBlocksTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexLockersDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexLockersTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexPartitionsDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexPartitionsTotal: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexTuplesDone: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlCreateIndexTuplesTotal: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlDatabaseSize: MetricConfig{

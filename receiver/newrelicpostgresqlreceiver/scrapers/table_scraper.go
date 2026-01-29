@@ -196,3 +196,65 @@ func (s *TableScraper) recordClusterProgressMetrics(now pcommon.Timestamp, metri
 		zap.String("command", command),
 		zap.String("phase", metric.Phase.String))
 }
+
+// ScrapeCreateIndexProgress scrapes CREATE INDEX operation progress from pg_stat_progress_create_index
+// Only available in PostgreSQL 12+
+func (s *TableScraper) ScrapeCreateIndexProgress(ctx context.Context) []error {
+	// Skip if PostgreSQL version < 12
+	if s.pgVersion < 120000 {
+		s.logger.Debug("Skipping CREATE INDEX progress metrics (PostgreSQL 12+ required)",
+			zap.Int("version", s.pgVersion))
+		return nil
+	}
+
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryCreateIndexProgress(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query CREATE INDEX progress statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	// It's normal to have zero metrics (no CREATE INDEX operations running)
+	if len(metrics) == 0 {
+		s.logger.Debug("No CREATE INDEX operations currently running")
+		return nil
+	}
+
+	for _, metric := range metrics {
+		s.recordCreateIndexProgressMetrics(now, metric)
+	}
+
+	s.logger.Debug("CREATE INDEX progress statistics scrape completed",
+		zap.Int("operation_count", len(metrics)))
+
+	return nil
+}
+
+// recordCreateIndexProgressMetrics records all progress metrics for a single CREATE INDEX operation
+func (s *TableScraper) recordCreateIndexProgressMetrics(now pcommon.Timestamp, metric models.PgStatProgressCreateIndex) {
+	// Create composite identifier for table and index
+	tableID := metric.SchemaName + "." + metric.TableName
+	indexName := metric.IndexName.String
+
+	// Record locker progress
+	s.mb.RecordPostgresqlCreateIndexLockersTotalDataPoint(now, getInt64(metric.LockersTotal), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlCreateIndexLockersDoneDataPoint(now, getInt64(metric.LockersDone), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record block progress
+	s.mb.RecordPostgresqlCreateIndexBlocksTotalDataPoint(now, getInt64(metric.BlocksTotal), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlCreateIndexBlocksDoneDataPoint(now, getInt64(metric.BlocksDone), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record tuple progress
+	s.mb.RecordPostgresqlCreateIndexTuplesTotalDataPoint(now, getInt64(metric.TuplesTotal), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlCreateIndexTuplesDoneDataPoint(now, getInt64(metric.TuplesDone), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record partition progress
+	s.mb.RecordPostgresqlCreateIndexPartitionsTotalDataPoint(now, getInt64(metric.PartitionsTotal), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlCreateIndexPartitionsDoneDataPoint(now, getInt64(metric.PartitionsDone), metric.Database, indexName, s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded CREATE INDEX progress metrics",
+		zap.String("table", tableID),
+		zap.String("index", indexName),
+		zap.String("phase", metric.Phase.String))
+}
