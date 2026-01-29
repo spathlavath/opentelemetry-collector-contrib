@@ -97,3 +97,25 @@ func PgStatIOUserTablesSQL(schemas, tables []string) string {
 		WHERE %s
 		ORDER BY schemaname, relname`, whereClause)
 }
+
+// PgStatUserIndexesSQL returns per-index statistics from pg_stat_user_indexes (PostgreSQL 9.6+)
+// This query retrieves index usage statistics for individual indexes
+// The WHERE clause is dynamically built based on schema and table filters
+// Also calculates index size using pg_relation_size function
+func PgStatUserIndexesSQL(schemas, tables []string) string {
+	whereClause := buildTableFilterClause(schemas, tables)
+
+	return fmt.Sprintf(`
+		SELECT
+			current_database() as database,
+			schemaname,
+			relname as table_name,
+			indexrelname as index_name,
+			indexrelid,
+			idx_scan,
+			idx_tup_read,
+			idx_tup_fetch
+		FROM pg_stat_user_indexes
+		WHERE %s
+		ORDER BY schemaname, relname, indexrelname`, whereClause)
+}

@@ -81,3 +81,28 @@ type PgStatIOUserTables struct {
 	TidxBlksRead sql.NullInt64 // Number of disk blocks read from TOAST indexes
 	TidxBlksHit  sql.NullInt64 // Number of buffer cache hits in TOAST indexes
 }
+
+// PgStatUserIndexes represents per-index statistics from pg_stat_user_indexes
+// This struct captures index usage statistics for individual indexes
+// Available in PostgreSQL 9.6+
+type PgStatUserIndexes struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing this table
+	SchemaName string
+
+	// TableName is the name of the table this index belongs to
+	TableName string
+
+	// IndexName is the name of the index
+	IndexName string
+
+	// IndexRelID is the OID of the index (used to calculate size)
+	IndexRelID sql.NullInt64
+
+	// Index scan statistics
+	IdxScan     sql.NullInt64 // Number of index scans initiated on this index
+	IdxTupRead  sql.NullInt64 // Number of index entries returned by scans on this index
+	IdxTupFetch sql.NullInt64 // Number of live table rows fetched by simple index scans using this index
+}

@@ -144,6 +144,12 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryIOUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatIOUserTables, error)
 
+	// QueryUserIndexes retrieves per-index statistics from pg_stat_user_indexes
+	// Returns index usage statistics for individual indexes
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryUserIndexes(ctx context.Context, schemas, tables []string) ([]models.PgStatUserIndexes, error)
+
 	// QueryAnalyzeProgress retrieves ANALYZE operation progress from pg_stat_progress_analyze
 	// Returns real-time progress of running ANALYZE operations
 	// Returns empty slice if no ANALYZE operations are currently running

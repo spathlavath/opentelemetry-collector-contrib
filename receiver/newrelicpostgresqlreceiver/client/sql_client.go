@@ -778,6 +778,41 @@ func (c *SQLClient) QueryIOUserTables(ctx context.Context, schemas, tables []str
 	return metrics, nil
 }
 
+func (c *SQLClient) QueryUserIndexes(ctx context.Context, schemas, tables []string) ([]models.PgStatUserIndexes, error) {
+	query := queries.PgStatUserIndexesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_user_indexes: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatUserIndexes
+
+	for rows.Next() {
+		var metric models.PgStatUserIndexes
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.IndexName,
+			&metric.IndexRelID,
+			&metric.IdxScan,
+			&metric.IdxTupRead,
+			&metric.IdxTupFetch,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_user_indexes row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_user_indexes rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
 	query := queries.PgStatProgressAnalyzeSQL
 	rows, err := c.db.QueryContext(ctx, query)

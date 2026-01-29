@@ -737,6 +737,52 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.index_scans:
+    description: Number of index scans initiated on this index (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: "{scans}"
+    stability:
+      level: alpha
+
+  postgresql.index_size:
+    description: Size of this index in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: By
+    stability:
+      level: alpha
+
+  postgresql.index_tuples_fetched:
+    description: Number of live table rows fetched by simple index scans using this index (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.index_tuples_read:
+    description: Number of index entries returned by scans on this index (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
   postgresql.last_analyze_age:
     description: Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)
     enabled: true

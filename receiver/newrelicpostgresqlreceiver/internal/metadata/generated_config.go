@@ -87,6 +87,10 @@ type MetricsConfig struct {
 	PostgresqlHeapBlocksRead                          MetricConfig `mapstructure:"postgresql.heap_blocks_read"`
 	PostgresqlIndexBlocksHit                          MetricConfig `mapstructure:"postgresql.index_blocks_hit"`
 	PostgresqlIndexBlocksRead                         MetricConfig `mapstructure:"postgresql.index_blocks_read"`
+	PostgresqlIndexScans                              MetricConfig `mapstructure:"postgresql.index_scans"`
+	PostgresqlIndexSize                               MetricConfig `mapstructure:"postgresql.index_size"`
+	PostgresqlIndexTuplesFetched                      MetricConfig `mapstructure:"postgresql.index_tuples_fetched"`
+	PostgresqlIndexTuplesRead                         MetricConfig `mapstructure:"postgresql.index_tuples_read"`
 	PostgresqlLastAnalyzeAge                          MetricConfig `mapstructure:"postgresql.last_analyze_age"`
 	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
 	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
@@ -357,6 +361,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlIndexBlocksRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlIndexScans: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlIndexSize: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlIndexTuplesFetched: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlIndexTuplesRead: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlLastAnalyzeAge: MetricConfig{

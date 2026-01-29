@@ -306,6 +306,22 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlIndexScansDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val", "index_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlIndexSizeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val", "index_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlIndexTuplesFetchedDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val", "index_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlIndexTuplesReadDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val", "index_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlLastAnalyzeAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
 
 			defaultMetricsCount++
@@ -1935,6 +1951,108 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("table_name")
 					assert.True(t, ok)
 					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.index_scans":
+					assert.False(t, validatedMetrics["postgresql.index_scans"], "Found a duplicate in the metrics slice: postgresql.index_scans")
+					validatedMetrics["postgresql.index_scans"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of index scans initiated on this index (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{scans}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("index_name")
+					assert.True(t, ok)
+					assert.Equal(t, "index_name-val", attrVal.Str())
+				case "postgresql.index_size":
+					assert.False(t, validatedMetrics["postgresql.index_size"], "Found a duplicate in the metrics slice: postgresql.index_size")
+					validatedMetrics["postgresql.index_size"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Size of this index in bytes (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("index_name")
+					assert.True(t, ok)
+					assert.Equal(t, "index_name-val", attrVal.Str())
+				case "postgresql.index_tuples_fetched":
+					assert.False(t, validatedMetrics["postgresql.index_tuples_fetched"], "Found a duplicate in the metrics slice: postgresql.index_tuples_fetched")
+					validatedMetrics["postgresql.index_tuples_fetched"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of live table rows fetched by simple index scans using this index (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{tuples}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("index_name")
+					assert.True(t, ok)
+					assert.Equal(t, "index_name-val", attrVal.Str())
+				case "postgresql.index_tuples_read":
+					assert.False(t, validatedMetrics["postgresql.index_tuples_read"], "Found a duplicate in the metrics slice: postgresql.index_tuples_read")
+					validatedMetrics["postgresql.index_tuples_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of index entries returned by scans on this index (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{tuples}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("index_name")
+					assert.True(t, ok)
+					assert.Equal(t, "index_name-val", attrVal.Str())
 				case "postgresql.last_analyze_age":
 					assert.False(t, validatedMetrics["postgresql.last_analyze_age"], "Found a duplicate in the metrics slice: postgresql.last_analyze_age")
 					validatedMetrics["postgresql.last_analyze_age"] = true

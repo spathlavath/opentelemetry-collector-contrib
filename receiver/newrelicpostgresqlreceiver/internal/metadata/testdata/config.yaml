@@ -119,6 +119,14 @@ all_set:
       enabled: true
     postgresql.index_blocks_read:
       enabled: true
+    postgresql.index_scans:
+      enabled: true
+    postgresql.index_size:
+      enabled: true
+    postgresql.index_tuples_fetched:
+      enabled: true
+    postgresql.index_tuples_read:
+      enabled: true
     postgresql.last_analyze_age:
       enabled: true
     postgresql.last_autoanalyze_age:
@@ -433,6 +441,14 @@ none_set:
     postgresql.index_blocks_hit:
       enabled: false
     postgresql.index_blocks_read:
+      enabled: false
+    postgresql.index_scans:
+      enabled: false
+    postgresql.index_size:
+      enabled: false
+    postgresql.index_tuples_fetched:
+      enabled: false
+    postgresql.index_tuples_read:
       enabled: false
     postgresql.last_analyze_age:
       enabled: false

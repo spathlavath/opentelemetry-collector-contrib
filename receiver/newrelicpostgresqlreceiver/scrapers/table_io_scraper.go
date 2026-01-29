@@ -120,3 +120,54 @@ func (s *TableIOScraper) recordIOUserTablesMetrics(now pcommon.Timestamp, metric
 	s.logger.Debug("Recorded IO metrics for table",
 		zap.String("table", tableID))
 }
+
+// ScrapeUserIndexes scrapes per-index statistics from pg_stat_user_indexes
+func (s *TableIOScraper) ScrapeUserIndexes(ctx context.Context, schemas, tables []string) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryUserIndexes(ctx, schemas, tables)
+	if err != nil {
+		s.logger.Error("Failed to query user indexes statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordUserIndexesMetrics(now, metric)
+	}
+
+	s.logger.Debug("User indexes statistics scrape completed",
+		zap.Int("index_count", len(metrics)))
+
+	return nil
+}
+
+// recordUserIndexesMetrics records all index metrics for a single index
+func (s *TableIOScraper) recordUserIndexesMetrics(now pcommon.Timestamp, metric models.PgStatUserIndexes) {
+	// Create composite identifier for index
+	indexID := metric.SchemaName + "." + metric.TableName + "." + metric.IndexName
+
+	// Record index scan statistics (cumulative counters)
+	s.mb.RecordPostgresqlIndexScansDataPoint(now, getInt64(metric.IdxScan), s.instanceName, metric.SchemaName, metric.TableName, metric.IndexName)
+	s.mb.RecordPostgresqlIndexTuplesReadDataPoint(now, getInt64(metric.IdxTupRead), s.instanceName, metric.SchemaName, metric.TableName, metric.IndexName)
+	s.mb.RecordPostgresqlIndexTuplesFetchedDataPoint(now, getInt64(metric.IdxTupFetch), s.instanceName, metric.SchemaName, metric.TableName, metric.IndexName)
+
+	// Record index size (gauge) - calculated from pg_relation_size
+	// We need to query this separately with the indexrelid
+	if metric.IndexRelID.Valid {
+		indexSize := s.getIndexSize(context.Background(), metric.IndexRelID.Int64)
+		s.mb.RecordPostgresqlIndexSizeDataPoint(now, indexSize, s.instanceName, metric.SchemaName, metric.TableName, metric.IndexName)
+	}
+
+	s.logger.Debug("Recorded metrics for index",
+		zap.String("index", indexID))
+}
+
+// getIndexSize retrieves the size of an index using pg_relation_size
+// This is a simplified implementation that returns 0 for now
+// TODO: Implement proper size calculation using client query method
+func (s *TableIOScraper) getIndexSize(_ context.Context, indexRelID int64) int64 {
+	// Placeholder: Will implement proper pg_relation_size query
+	// query := "SELECT pg_relation_size($1)"
+	s.logger.Debug("Index size calculation not yet implemented", zap.Int64("indexRelID", indexRelID))
+	return 0
+}

@@ -190,6 +190,18 @@ var MetricsInfo = metricsInfo{
 	PostgresqlIndexBlocksRead: metricInfo{
 		Name: "postgresql.index_blocks_read",
 	},
+	PostgresqlIndexScans: metricInfo{
+		Name: "postgresql.index_scans",
+	},
+	PostgresqlIndexSize: metricInfo{
+		Name: "postgresql.index_size",
+	},
+	PostgresqlIndexTuplesFetched: metricInfo{
+		Name: "postgresql.index_tuples_fetched",
+	},
+	PostgresqlIndexTuplesRead: metricInfo{
+		Name: "postgresql.index_tuples_read",
+	},
 	PostgresqlLastAnalyzeAge: metricInfo{
 		Name: "postgresql.last_analyze_age",
 	},
@@ -525,6 +537,10 @@ type metricsInfo struct {
 	PostgresqlHeapBlocksRead                          metricInfo
 	PostgresqlIndexBlocksHit                          metricInfo
 	PostgresqlIndexBlocksRead                         metricInfo
+	PostgresqlIndexScans                              metricInfo
+	PostgresqlIndexSize                               metricInfo
+	PostgresqlIndexTuplesFetched                      metricInfo
+	PostgresqlIndexTuplesRead                         metricInfo
 	PostgresqlLastAnalyzeAge                          metricInfo
 	PostgresqlLastAutoanalyzeAge                      metricInfo
 	PostgresqlLastAutovacuumAge                       metricInfo
@@ -3783,6 +3799,228 @@ func (m *metricPostgresqlIndexBlocksRead) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlIndexBlocksRead(cfg MetricConfig) metricPostgresqlIndexBlocksRead {
 	m := metricPostgresqlIndexBlocksRead{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlIndexScans struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.index_scans metric with initial data.
+func (m *metricPostgresqlIndexScans) init() {
+	m.data.SetName("postgresql.index_scans")
+	m.data.SetDescription("Number of index scans initiated on this index (PostgreSQL 9.6+)")
+	m.data.SetUnit("{scans}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlIndexScans) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlIndexScans) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlIndexScans) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlIndexScans(cfg MetricConfig) metricPostgresqlIndexScans {
+	m := metricPostgresqlIndexScans{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlIndexSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.index_size metric with initial data.
+func (m *metricPostgresqlIndexSize) init() {
+	m.data.SetName("postgresql.index_size")
+	m.data.SetDescription("Size of this index in bytes (PostgreSQL 9.6+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlIndexSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlIndexSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlIndexSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlIndexSize(cfg MetricConfig) metricPostgresqlIndexSize {
+	m := metricPostgresqlIndexSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlIndexTuplesFetched struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.index_tuples_fetched metric with initial data.
+func (m *metricPostgresqlIndexTuplesFetched) init() {
+	m.data.SetName("postgresql.index_tuples_fetched")
+	m.data.SetDescription("Number of live table rows fetched by simple index scans using this index (PostgreSQL 9.6+)")
+	m.data.SetUnit("{tuples}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlIndexTuplesFetched) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlIndexTuplesFetched) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlIndexTuplesFetched) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlIndexTuplesFetched(cfg MetricConfig) metricPostgresqlIndexTuplesFetched {
+	m := metricPostgresqlIndexTuplesFetched{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlIndexTuplesRead struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.index_tuples_read metric with initial data.
+func (m *metricPostgresqlIndexTuplesRead) init() {
+	m.data.SetName("postgresql.index_tuples_read")
+	m.data.SetDescription("Number of index entries returned by scans on this index (PostgreSQL 9.6+)")
+	m.data.SetUnit("{tuples}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlIndexTuplesRead) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+	dp.Attributes().PutStr("index_name", indexNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlIndexTuplesRead) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlIndexTuplesRead) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlIndexTuplesRead(cfg MetricConfig) metricPostgresqlIndexTuplesRead {
+	m := metricPostgresqlIndexTuplesRead{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -8708,6 +8946,10 @@ type MetricsBuilder struct {
 	metricPostgresqlHeapBlocksRead                          metricPostgresqlHeapBlocksRead
 	metricPostgresqlIndexBlocksHit                          metricPostgresqlIndexBlocksHit
 	metricPostgresqlIndexBlocksRead                         metricPostgresqlIndexBlocksRead
+	metricPostgresqlIndexScans                              metricPostgresqlIndexScans
+	metricPostgresqlIndexSize                               metricPostgresqlIndexSize
+	metricPostgresqlIndexTuplesFetched                      metricPostgresqlIndexTuplesFetched
+	metricPostgresqlIndexTuplesRead                         metricPostgresqlIndexTuplesRead
 	metricPostgresqlLastAnalyzeAge                          metricPostgresqlLastAnalyzeAge
 	metricPostgresqlLastAutoanalyzeAge                      metricPostgresqlLastAutoanalyzeAge
 	metricPostgresqlLastAutovacuumAge                       metricPostgresqlLastAutovacuumAge
@@ -8883,6 +9125,10 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlHeapBlocksRead:                          newMetricPostgresqlHeapBlocksRead(mbc.Metrics.PostgresqlHeapBlocksRead),
 		metricPostgresqlIndexBlocksHit:                          newMetricPostgresqlIndexBlocksHit(mbc.Metrics.PostgresqlIndexBlocksHit),
 		metricPostgresqlIndexBlocksRead:                         newMetricPostgresqlIndexBlocksRead(mbc.Metrics.PostgresqlIndexBlocksRead),
+		metricPostgresqlIndexScans:                              newMetricPostgresqlIndexScans(mbc.Metrics.PostgresqlIndexScans),
+		metricPostgresqlIndexSize:                               newMetricPostgresqlIndexSize(mbc.Metrics.PostgresqlIndexSize),
+		metricPostgresqlIndexTuplesFetched:                      newMetricPostgresqlIndexTuplesFetched(mbc.Metrics.PostgresqlIndexTuplesFetched),
+		metricPostgresqlIndexTuplesRead:                         newMetricPostgresqlIndexTuplesRead(mbc.Metrics.PostgresqlIndexTuplesRead),
 		metricPostgresqlLastAnalyzeAge:                          newMetricPostgresqlLastAnalyzeAge(mbc.Metrics.PostgresqlLastAnalyzeAge),
 		metricPostgresqlLastAutoanalyzeAge:                      newMetricPostgresqlLastAutoanalyzeAge(mbc.Metrics.PostgresqlLastAutoanalyzeAge),
 		metricPostgresqlLastAutovacuumAge:                       newMetricPostgresqlLastAutovacuumAge(mbc.Metrics.PostgresqlLastAutovacuumAge),
@@ -9141,6 +9387,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlHeapBlocksRead.emit(ils.Metrics())
 	mb.metricPostgresqlIndexBlocksHit.emit(ils.Metrics())
 	mb.metricPostgresqlIndexBlocksRead.emit(ils.Metrics())
+	mb.metricPostgresqlIndexScans.emit(ils.Metrics())
+	mb.metricPostgresqlIndexSize.emit(ils.Metrics())
+	mb.metricPostgresqlIndexTuplesFetched.emit(ils.Metrics())
+	mb.metricPostgresqlIndexTuplesRead.emit(ils.Metrics())
 	mb.metricPostgresqlLastAnalyzeAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastAutoanalyzeAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastAutovacuumAge.emit(ils.Metrics())
@@ -9556,6 +9806,26 @@ func (mb *MetricsBuilder) RecordPostgresqlIndexBlocksHitDataPoint(ts pcommon.Tim
 // RecordPostgresqlIndexBlocksReadDataPoint adds a data point to postgresql.index_blocks_read metric.
 func (mb *MetricsBuilder) RecordPostgresqlIndexBlocksReadDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
 	mb.metricPostgresqlIndexBlocksRead.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlIndexScansDataPoint adds a data point to postgresql.index_scans metric.
+func (mb *MetricsBuilder) RecordPostgresqlIndexScansDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	mb.metricPostgresqlIndexScans.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue, indexNameAttributeValue)
+}
+
+// RecordPostgresqlIndexSizeDataPoint adds a data point to postgresql.index_size metric.
+func (mb *MetricsBuilder) RecordPostgresqlIndexSizeDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	mb.metricPostgresqlIndexSize.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue, indexNameAttributeValue)
+}
+
+// RecordPostgresqlIndexTuplesFetchedDataPoint adds a data point to postgresql.index_tuples_fetched metric.
+func (mb *MetricsBuilder) RecordPostgresqlIndexTuplesFetchedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	mb.metricPostgresqlIndexTuplesFetched.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue, indexNameAttributeValue)
+}
+
+// RecordPostgresqlIndexTuplesReadDataPoint adds a data point to postgresql.index_tuples_read metric.
+func (mb *MetricsBuilder) RecordPostgresqlIndexTuplesReadDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string, indexNameAttributeValue string) {
+	mb.metricPostgresqlIndexTuplesRead.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue, indexNameAttributeValue)
 }
 
 // RecordPostgresqlLastAnalyzeAgeDataPoint adds a data point to postgresql.last_analyze_age metric.
