@@ -139,12 +139,11 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 			LastSeenTimestamp:      now,
 		}
 
-		// Use last_elapsed_time as proxy (most recent execution)
-		lastElapsedMs := getFloat64ValueFromQuery(query.LastElapsedTimeMs)
+		// Use cumulative average as proxy (most recent execution data not available)
 		cumulativeAvgMs := getFloat64ValueFromQuery(query.AvgElapsedTimeMS)
 
 		return &IntervalMetrics{
-			IntervalAvgElapsedTimeMs:   lastElapsedMs,
+			IntervalAvgElapsedTimeMs:   cumulativeAvgMs,
 			IntervalAvgCPUTimeMs:       getFloat64ValueFromQuery(query.AvgCPUTimeMS),
 			IntervalExecutionCount:     currentExecCount,
 			DetectionMethod:            "initial_observation",
@@ -172,11 +171,11 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 			LastSeenTimestamp:      now,
 		}
 
-		lastElapsedMs := getFloat64ValueFromQuery(query.LastElapsedTimeMs)
+		// Use cumulative average as proxy (plan cache was reset)
 		cumulativeAvgMs := getFloat64ValueFromQuery(query.AvgElapsedTimeMS)
 
 		return &IntervalMetrics{
-			IntervalAvgElapsedTimeMs:   lastElapsedMs,
+			IntervalAvgElapsedTimeMs:   cumulativeAvgMs,
 			IntervalAvgCPUTimeMs:       getFloat64ValueFromQuery(query.AvgCPUTimeMS),
 			IntervalExecutionCount:     currentExecCount,
 			DetectionMethod:            "plan_cache_reset",
@@ -241,10 +240,8 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 			intervalAvgCPUMs = float64(deltaCPUUs) / float64(deltaExecCount) / 1000.0 // Convert μs to ms
 		}
 
-		// Use hybrid approach: weighted average of interval_avg and last_elapsed_time
-		lastElapsedMs := getFloat64ValueFromQuery(query.LastElapsedTimeMs)
-		hybridWeight := 0.6 // 60% interval avg, 40% last elapsed
-		hybridAvgElapsedMs := hybridWeight*intervalAvgElapsedMs + (1-hybridWeight)*lastElapsedMs
+		// Use interval average (calculated from delta executions)
+		hybridAvgElapsedMs := intervalAvgElapsedMs
 
 		// Update state
 		state.PrevExecutionCount = currentExecCount

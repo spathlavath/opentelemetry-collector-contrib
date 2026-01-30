@@ -39,18 +39,6 @@ WITH StatementDetails AS (
 		(qs.total_logical_writes / qs.execution_count) AS avg_disk_writes,
 		-- Average rows processed (returned by query)
 		(qs.total_rows / qs.execution_count) AS avg_rows_processed,
-		-- RCA Enhancement Fields: Performance variance
-		qs.min_elapsed_time / 1000.0 AS min_elapsed_time_ms,
-		qs.max_elapsed_time / 1000.0 AS max_elapsed_time_ms,
-		qs.last_elapsed_time / 1000.0 AS last_elapsed_time_ms,
-		-- RCA Enhancement Fields: Memory grants
-		qs.last_grant_kb,
-		qs.last_used_grant_kb,
-		-- RCA Enhancement Fields: TempDB spills
-		qs.last_spills,
-		qs.max_spills,
-		-- RCA Enhancement Fields: Parallelism
-		qs.last_dop,
 		-- Lock wait time approximation: elapsed_time - (cpu_time + io_time)
 		-- NOTE: This is an approximation as dm_exec_query_stats doesn't track lock waits separately
 		-- For precise lock wait time, Query Store wait_category = 4 (Lock waits) should be used
@@ -111,15 +99,6 @@ SELECT
     s.avg_rows_processed,
     s.avg_lock_wait_time_ms,
     s.statement_type,
-    -- RCA Enhancement Fields
-    s.min_elapsed_time_ms,
-    s.max_elapsed_time_ms,
-    s.last_elapsed_time_ms,
-    s.last_grant_kb,
-    s.last_used_grant_kb,
-    s.last_spills,
-    s.max_spills,
-    s.last_dop,
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
 FROM
     StatementDetails s`

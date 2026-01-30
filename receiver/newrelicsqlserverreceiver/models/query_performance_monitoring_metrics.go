@@ -24,15 +24,6 @@ type SlowQuery struct {
 	AvgLockWaitTimeMs      *float64 `db:"avg_lock_wait_time_ms" metric_name:"sqlserver.slowquery.avg_lock_wait_time_ms" source_type:"gauge"`
 	StatementType          *string  `db:"statement_type" metric_name:"sqlserver.slowquery.statement_type" source_type:"attribute"`
 	CollectionTimestamp    *string  `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
-	// RCA Enhancement Fields
-	MinElapsedTimeMs  *float64 `db:"min_elapsed_time_ms" metric_name:"sqlserver.slowquery.min_elapsed_time_ms" source_type:"gauge"`
-	MaxElapsedTimeMs  *float64 `db:"max_elapsed_time_ms" metric_name:"sqlserver.slowquery.max_elapsed_time_ms" source_type:"gauge"`
-	LastElapsedTimeMs *float64 `db:"last_elapsed_time_ms" metric_name:"sqlserver.slowquery.last_elapsed_time_ms" source_type:"gauge"`
-	LastGrantKB       *float64 `db:"last_grant_kb" metric_name:"sqlserver.slowquery.last_grant_kb" source_type:"gauge"`
-	LastUsedGrantKB   *float64 `db:"last_used_grant_kb" metric_name:"sqlserver.slowquery.last_used_grant_kb" source_type:"gauge"`
-	LastSpills        *float64 `db:"last_spills" metric_name:"sqlserver.slowquery.last_spills" source_type:"gauge"`
-	MaxSpills         *float64 `db:"max_spills" metric_name:"sqlserver.slowquery.max_spills" source_type:"gauge"`
-	LastDOP           *float64 `db:"last_dop" metric_name:"sqlserver.slowquery.last_dop" source_type:"gauge"`
 
 	// Interval-based delta metrics (calculated in-memory, not from DB)
 	// These are populated by the SimplifiedIntervalCalculator

@@ -304,19 +304,11 @@ func (s *QueryPerformanceScraper) convertPlanDataToPlanHandleResult(planData mod
 		// All other fields are nil (not needed for plan metrics)
 		ExecutionCount:    nil,
 		AvgElapsedTimeMs:  nil,
-		MinElapsedTimeMs:  nil,
-		MaxElapsedTimeMs:  nil,
-		LastElapsedTimeMs: nil,
 		AvgWorkerTimeMs:   nil,
 		TotalWorkerTimeMs: nil,
 		AvgLogicalReads:   nil,
 		AvgLogicalWrites:  nil,
 		AvgRows:           nil,
-		LastGrantKB:       nil,
-		LastUsedGrantKB:   nil,
-		LastSpills:        nil,
-		MaxSpills:         nil,
-		LastDOP:           nil,
 	}
 }
 
@@ -491,13 +483,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		return ""
 	}
 
-	getQuerySignature := func() string {
-		if result.QueryText != nil {
-			return helpers.ComputeQueryHash(*result.QueryText)
-		}
-		return ""
-	}
-
 	// Create detailed attributes for logging/debugging (not used in metrics)
 	logAttributes := func() []zap.Field {
 		var fields []zap.Field
@@ -648,133 +633,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	// This eliminates redundant metric emission
 
 	// Create query_text metric with cardinality control
-	if result.QueryText != nil {
-		s.mb.RecordSqlserverSlowqueryQueryTextDataPoint(
-			timestamp,
-			1,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-			getQuerySignature(),
-		)
-	}
-
-	// ========================================
-	// RCA ENHANCEMENT METRICS
-	// ========================================
-
-	// Min/Max/Last Elapsed Time Metrics
-	if result.MinElapsedTimeMs != nil {
-		s.mb.RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(
-			timestamp,
-			*result.MinElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	if result.MaxElapsedTimeMs != nil {
-		s.mb.RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(
-			timestamp,
-			*result.MaxElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	if result.LastElapsedTimeMs != nil {
-		s.mb.RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(
-			timestamp,
-			*result.LastElapsedTimeMs,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	// Memory Grant Metrics
-	if result.LastGrantKB != nil {
-		s.mb.RecordSqlserverSlowqueryLastGrantKbDataPoint(
-			timestamp,
-			*result.LastGrantKB,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	if result.LastUsedGrantKB != nil {
-		s.mb.RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(
-			timestamp,
-			*result.LastUsedGrantKB,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	// TempDB Spill Metrics
-	if result.LastSpills != nil {
-		s.mb.RecordSqlserverSlowqueryLastSpillsDataPoint(
-			timestamp,
-			*result.LastSpills,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	if result.MaxSpills != nil {
-		s.mb.RecordSqlserverSlowqueryMaxSpillsDataPoint(
-			timestamp,
-			*result.MaxSpills,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	// Parallelism Metrics
-	if result.LastDOP != nil {
-		s.mb.RecordSqlserverSlowqueryLastDopDataPoint(
-			timestamp,
-			*result.LastDOP,
-			getQueryID(),
-			getPlanHandle(),
-			getDatabaseName(),
-			getSchemaName(),
-			getStatementType(),
-			getQueryText(),
-		)
-	}
-
-	// Use dedicated logging function with cardinality-safe approach
 	s.logger.Debug("Processed slow query metrics with cardinality safety", logAttributes()...)
 
 	return nil
