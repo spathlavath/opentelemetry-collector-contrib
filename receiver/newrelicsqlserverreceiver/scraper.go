@@ -13,6 +13,8 @@ import (
 	"go.opentelemetry.io/collector/pdata/plog"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.opentelemetry.io/collector/receiver"
+	"go.opentelemetry.io/collector/scraper/scrapererror"
+	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver/helpers"
@@ -1288,8 +1290,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			zap.Int("error_count", len(scrapeErrors)),
 			zap.Int("metrics_collected", metrics.MetricCount()))
 
-		// Return the first error but with partial metrics
-		return metrics, scrapeErrors[0]
+		return metrics, scrapererror.NewPartialScrapeError(multierr.Combine(scrapeErrors...), len(scrapeErrors))
 	}
 
 	s.logger.Debug("Successfully completed SQL Server metrics collection",

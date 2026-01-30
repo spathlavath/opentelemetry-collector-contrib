@@ -92,42 +92,42 @@ WHERE spc.object_name LIKE '%:Databases%'
 
 const DatabasePageFileQuery = `SELECT TOP 1
 	'%DATABASE%' AS db_name,
-	(SUM(a.total_pages) * 8.0 - SUM(a.used_pages) * 8.0) * 1024 AS reserved_space_not_used
+	(SUM(CAST(a.total_pages AS BIGINT)) * 8.0 - SUM(CAST(a.used_pages AS BIGINT)) * 8.0) * 1024 AS reserved_space_not_used
 FROM [%DATABASE%].sys.partitions p WITH (NOLOCK)
 INNER JOIN [%DATABASE%].sys.allocation_units a WITH (NOLOCK) ON p.partition_id = a.container_id
 LEFT JOIN [%DATABASE%].sys.internal_tables it WITH (NOLOCK) ON p.object_id = it.object_id`
 
 const DatabasePageFileTotalQuery = `SELECT TOP 1
 	'%DATABASE%' AS db_name,
-	SUM(a.total_pages) * 8.0 * 1024 AS reserved_space
+	SUM(CAST(a.total_pages AS BIGINT)) * 8.0 * 1024 AS reserved_space
 FROM [%DATABASE%].sys.partitions p WITH (NOLOCK)
 INNER JOIN [%DATABASE%].sys.allocation_units a WITH (NOLOCK) ON p.partition_id = a.container_id
 LEFT JOIN [%DATABASE%].sys.internal_tables it WITH (NOLOCK) ON p.object_id = it.object_id`
 
 const DatabasePageFileQueryAzureSQL = `SELECT
 	DB_NAME() AS db_name,
-	(SUM(a.total_pages) * 8.0 - SUM(a.used_pages) * 8.0) * 1024 AS reserved_space_not_used
+	(SUM(CAST(a.total_pages AS BIGINT)) * 8.0 - SUM(CAST(a.used_pages AS BIGINT)) * 8.0) * 1024 AS reserved_space_not_used
 FROM sys.partitions p WITH (NOLOCK)
 INNER JOIN sys.allocation_units a WITH (NOLOCK) ON p.partition_id = a.container_id
 LEFT JOIN sys.internal_tables it WITH (NOLOCK) ON p.object_id = it.object_id`
 
 const DatabasePageFileTotalQueryAzureSQL = `SELECT
 	DB_NAME() AS db_name,
-	SUM(a.total_pages) * 8.0 * 1024 AS reserved_space
+	SUM(CAST(a.total_pages AS BIGINT)) * 8.0 * 1024 AS reserved_space
 FROM sys.partitions p WITH (NOLOCK)
 INNER JOIN sys.allocation_units a WITH (NOLOCK) ON p.partition_id = a.container_id
 LEFT JOIN sys.internal_tables it WITH (NOLOCK) ON p.object_id = it.object_id`
 
-const DatabasePageFileQueryAzureMI = `SELECT 
+const DatabasePageFileQueryAzureMI = `SELECT
 	DB_NAME() AS db_name,
-	(SUM(a.total_pages) * 8.0 - SUM(a.used_pages) * 8.0) * 1024 AS reserved_space_not_used
+	(SUM(CAST(a.total_pages AS BIGINT)) * 8.0 - SUM(CAST(a.used_pages AS BIGINT)) * 8.0) * 1024 AS reserved_space_not_used
 FROM sys.partitions p WITH (NOLOCK)
 INNER JOIN sys.allocation_units a WITH (NOLOCK) ON p.partition_id = a.container_id
 LEFT JOIN sys.internal_tables it WITH (NOLOCK) ON p.object_id = it.object_id`
 
-const DatabasePageFileTotalQueryAzureMI = `SELECT 
+const DatabasePageFileTotalQueryAzureMI = `SELECT
 	DB_NAME() AS db_name,
-	SUM(a.total_pages) * 8.0 * 1024 AS reserved_space
+	SUM(CAST(a.total_pages AS BIGINT)) * 8.0 * 1024 AS reserved_space
 FROM sys.partitions p WITH (NOLOCK)
 INNER JOIN sys.allocation_units a WITH (NOLOCK) ON p.partition_id = a.container_id
 LEFT JOIN sys.internal_tables it WITH (NOLOCK) ON p.object_id = it.object_id`
@@ -171,9 +171,9 @@ const DatabaseSizeQuery = `
 SELECT
     d.name AS [DatabaseName],
     -- Calculate Total Size (Data + Log) in MB
-    CAST(SUM(mf.size) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [TotalSizeMB],
+    CAST(SUM(CAST(mf.size AS BIGINT)) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [TotalSizeMB],
     -- Calculate Data Size (Rows only) in MB
-    CAST(SUM(CASE WHEN mf.type_desc = 'ROWS' THEN mf.size ELSE 0 END) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [DataSizeMB]
+    CAST(SUM(CASE WHEN mf.type_desc = 'ROWS' THEN CAST(mf.size AS BIGINT) ELSE 0 END) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [DataSizeMB]
 FROM
     sys.master_files AS mf
 JOIN
@@ -191,9 +191,9 @@ const DatabaseSizeQueryAzureSQL = `
 SELECT
     DB_NAME() AS [DatabaseName],
     -- Calculate Total Size using database files
-    CAST(SUM(size) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [TotalSizeMB],
+    CAST(SUM(CAST(size AS BIGINT)) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [TotalSizeMB],
     -- Calculate Data Size (Rows only)
-    CAST(SUM(CASE WHEN type_desc = 'ROWS' THEN size ELSE 0 END) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [DataSizeMB]
+    CAST(SUM(CASE WHEN type_desc = 'ROWS' THEN CAST(size AS BIGINT) ELSE 0 END) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [DataSizeMB]
 FROM
     sys.database_files
 WHERE
@@ -204,9 +204,9 @@ const DatabaseSizeQueryAzureMI = `
 SELECT
     d.name AS [DatabaseName],
     -- Calculate Total Size (Data + Log) in MB
-    CAST(SUM(mf.size) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [TotalSizeMB],
+    CAST(SUM(CAST(mf.size AS BIGINT)) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [TotalSizeMB],
     -- Calculate Data Size (Rows only) in MB
-    CAST(SUM(CASE WHEN mf.type_desc = 'ROWS' THEN mf.size ELSE 0 END) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [DataSizeMB]
+    CAST(SUM(CASE WHEN mf.type_desc = 'ROWS' THEN CAST(mf.size AS BIGINT) ELSE 0 END) * 8.0 / 1024 AS DECIMAL(18, 2)) AS [DataSizeMB]
 FROM
     sys.master_files AS mf
 JOIN
