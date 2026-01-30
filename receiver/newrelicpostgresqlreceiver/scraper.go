@@ -42,6 +42,7 @@ const (
 type newRelicPostgreSQLScraper struct {
 	// Scrapers
 	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
+	activityScraper           *scrapers.ActivityScraper
 	replicationMetricsScraper *scrapers.ReplicationScraper
 	bgwriterScraper           *scrapers.BgwriterScraper
 	vacuumMaintenanceScraper  *scrapers.VacuumMaintenanceScraper
@@ -163,6 +164,19 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.supportsPG12,
 	)
 
+	// Initialize activity metrics scraper only if PostgreSQL 9.6+
+	if s.supportsPG96 {
+		s.activityScraper = scrapers.NewActivityScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+		)
+		s.logger.Info("Activity metrics scraper enabled (PostgreSQL 9.6+)")
+	} else {
+		s.logger.Info("Activity metrics scraper disabled (requires PostgreSQL 9.6+)")
+	}
+
 	// Initialize replication metrics scraper only if PostgreSQL 9.6+
 	if s.supportsPG96 {
 		s.replicationMetricsScraper = scrapers.NewReplicationScraper(
@@ -251,6 +265,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		s.logger.Warn("Errors occurred while scraping database metrics",
 			zap.Int("error_count", len(dbErrs)))
 		scrapeErrors = append(scrapeErrors, dbErrs...)
+	}
+
+	// Scrape activity metrics (PostgreSQL 9.6+)
+	if s.supportsPG96 && s.activityScraper != nil {
+		activityErrs := s.activityScraper.ScrapeActivityMetrics(scrapeCtx)
+		if len(activityErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping activity metrics",
+				zap.Int("error_count", len(activityErrs)))
+			scrapeErrors = append(scrapeErrors, activityErrs...)
+		}
 	}
 
 	// Scrape server uptime (PostgreSQL 9.6+, available on all versions we support)

@@ -27,6 +27,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "all_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					PostgresqlActiveWaitingQueries:                    MetricConfig{Enabled: true},
+					PostgresqlActivityBackendXidAge:                   MetricConfig{Enabled: true},
+					PostgresqlActivityBackendXminAge:                  MetricConfig{Enabled: true},
+					PostgresqlActivityXactStartAge:                    MetricConfig{Enabled: true},
 					PostgresqlAnalyzeChildTablesDone:                  MetricConfig{Enabled: true},
 					PostgresqlAnalyzeChildTablesTotal:                 MetricConfig{Enabled: true},
 					PostgresqlAnalyzeExtStatsComputed:                 MetricConfig{Enabled: true},
@@ -167,6 +171,8 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					PostgresqlToastIndexBlocksHit:                     MetricConfig{Enabled: true},
 					PostgresqlToastIndexBlocksRead:                    MetricConfig{Enabled: true},
 					PostgresqlToastSize:                               MetricConfig{Enabled: true},
+					PostgresqlTransactionsDurationMax:                 MetricConfig{Enabled: true},
+					PostgresqlTransactionsDurationSum:                 MetricConfig{Enabled: true},
 					PostgresqlUptime:                                  MetricConfig{Enabled: true},
 					PostgresqlVacuumHeapBlksScanned:                   MetricConfig{Enabled: true},
 					PostgresqlVacuumHeapBlksTotal:                     MetricConfig{Enabled: true},
@@ -206,6 +212,10 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			name: "none_set",
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
+					PostgresqlActiveWaitingQueries:                    MetricConfig{Enabled: false},
+					PostgresqlActivityBackendXidAge:                   MetricConfig{Enabled: false},
+					PostgresqlActivityBackendXminAge:                  MetricConfig{Enabled: false},
+					PostgresqlActivityXactStartAge:                    MetricConfig{Enabled: false},
 					PostgresqlAnalyzeChildTablesDone:                  MetricConfig{Enabled: false},
 					PostgresqlAnalyzeChildTablesTotal:                 MetricConfig{Enabled: false},
 					PostgresqlAnalyzeExtStatsComputed:                 MetricConfig{Enabled: false},
@@ -346,6 +356,8 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					PostgresqlToastIndexBlocksHit:                     MetricConfig{Enabled: false},
 					PostgresqlToastIndexBlocksRead:                    MetricConfig{Enabled: false},
 					PostgresqlToastSize:                               MetricConfig{Enabled: false},
+					PostgresqlTransactionsDurationMax:                 MetricConfig{Enabled: false},
+					PostgresqlTransactionsDurationSum:                 MetricConfig{Enabled: false},
 					PostgresqlUptime:                                  MetricConfig{Enabled: false},
 					PostgresqlVacuumHeapBlksScanned:                   MetricConfig{Enabled: false},
 					PostgresqlVacuumHeapBlksTotal:                     MetricConfig{Enabled: false},

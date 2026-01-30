@@ -1,6 +1,14 @@
 default:
 all_set:
   metrics:
+    postgresql.active_waiting_queries:
+      enabled: true
+    postgresql.activity.backend_xid_age:
+      enabled: true
+    postgresql.activity.backend_xmin_age:
+      enabled: true
+    postgresql.activity.xact_start_age:
+      enabled: true
     postgresql.analyze.child_tables_done:
       enabled: true
     postgresql.analyze.child_tables_total:
@@ -280,6 +288,10 @@ all_set:
     postgresql.toast_index_blocks_read:
       enabled: true
     postgresql.toast_size:
+      enabled: true
+    postgresql.transactions.duration.max:
+      enabled: true
+    postgresql.transactions.duration.sum:
       enabled: true
     postgresql.uptime:
       enabled: true
@@ -344,6 +356,14 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    postgresql.active_waiting_queries:
+      enabled: false
+    postgresql.activity.backend_xid_age:
+      enabled: false
+    postgresql.activity.backend_xmin_age:
+      enabled: false
+    postgresql.activity.xact_start_age:
+      enabled: false
     postgresql.analyze.child_tables_done:
       enabled: false
     postgresql.analyze.child_tables_total:
@@ -623,6 +643,10 @@ none_set:
     postgresql.toast_index_blocks_read:
       enabled: false
     postgresql.toast_size:
+      enabled: false
+    postgresql.transactions.duration.max:
+      enabled: false
+    postgresql.transactions.duration.sum:
       enabled: false
     postgresql.uptime:
       enabled: false

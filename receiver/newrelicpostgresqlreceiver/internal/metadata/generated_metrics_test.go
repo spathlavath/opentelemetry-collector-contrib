@@ -70,6 +70,22 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlActiveWaitingQueriesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlActivityBackendXidAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlActivityBackendXminAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlActivityXactStartAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlAnalyzeChildTablesDoneDataPoint(ts, 1, "database_name-val", "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
 
 			defaultMetricsCount++
@@ -630,6 +646,14 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlTransactionsDurationMaxDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlTransactionsDurationSumDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlUptimeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -753,6 +777,114 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "postgresql.active_waiting_queries":
+					assert.False(t, validatedMetrics["postgresql.active_waiting_queries"], "Found a duplicate in the metrics slice: postgresql.active_waiting_queries")
+					validatedMetrics["postgresql.active_waiting_queries"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{queries}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
+				case "postgresql.activity.backend_xid_age":
+					assert.False(t, validatedMetrics["postgresql.activity.backend_xid_age"], "Found a duplicate in the metrics slice: postgresql.activity.backend_xid_age")
+					validatedMetrics["postgresql.activity.backend_xid_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Maximum age of backend transaction IDs currently in use (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
+				case "postgresql.activity.backend_xmin_age":
+					assert.False(t, validatedMetrics["postgresql.activity.backend_xmin_age"], "Found a duplicate in the metrics slice: postgresql.activity.backend_xmin_age")
+					validatedMetrics["postgresql.activity.backend_xmin_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Maximum age of backend xmin values (oldest transaction visible to any backend) (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
+				case "postgresql.activity.xact_start_age":
+					assert.False(t, validatedMetrics["postgresql.activity.xact_start_age"], "Found a duplicate in the metrics slice: postgresql.activity.xact_start_age")
+					validatedMetrics["postgresql.activity.xact_start_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Maximum age in seconds of the oldest transaction start time across all backends (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
 				case "postgresql.analyze.child_tables_done":
 					assert.False(t, validatedMetrics["postgresql.analyze.child_tables_done"], "Found a duplicate in the metrics slice: postgresql.analyze.child_tables_done")
 					validatedMetrics["postgresql.analyze.child_tables_done"] = true
@@ -3678,6 +3810,60 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("table_name")
 					assert.True(t, ok)
 					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.transactions.duration.max":
+					assert.False(t, validatedMetrics["postgresql.transactions.duration.max"], "Found a duplicate in the metrics slice: postgresql.transactions.duration.max")
+					validatedMetrics["postgresql.transactions.duration.max"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Maximum transaction duration in seconds across all active backends (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
+				case "postgresql.transactions.duration.sum":
+					assert.False(t, validatedMetrics["postgresql.transactions.duration.sum"], "Found a duplicate in the metrics slice: postgresql.transactions.duration.sum")
+					validatedMetrics["postgresql.transactions.duration.sum"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Sum of transaction durations in seconds across all active backends (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
 				case "postgresql.uptime":
 					assert.False(t, validatedMetrics["postgresql.uptime"], "Found a duplicate in the metrics slice: postgresql.uptime")
 					validatedMetrics["postgresql.uptime"] = true

@@ -28,6 +28,10 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PostgresqlActiveWaitingQueries                    MetricConfig `mapstructure:"postgresql.active_waiting_queries"`
+	PostgresqlActivityBackendXidAge                   MetricConfig `mapstructure:"postgresql.activity.backend_xid_age"`
+	PostgresqlActivityBackendXminAge                  MetricConfig `mapstructure:"postgresql.activity.backend_xmin_age"`
+	PostgresqlActivityXactStartAge                    MetricConfig `mapstructure:"postgresql.activity.xact_start_age"`
 	PostgresqlAnalyzeChildTablesDone                  MetricConfig `mapstructure:"postgresql.analyze.child_tables_done"`
 	PostgresqlAnalyzeChildTablesTotal                 MetricConfig `mapstructure:"postgresql.analyze.child_tables_total"`
 	PostgresqlAnalyzeExtStatsComputed                 MetricConfig `mapstructure:"postgresql.analyze.ext_stats_computed"`
@@ -168,6 +172,8 @@ type MetricsConfig struct {
 	PostgresqlToastIndexBlocksHit                     MetricConfig `mapstructure:"postgresql.toast_index_blocks_hit"`
 	PostgresqlToastIndexBlocksRead                    MetricConfig `mapstructure:"postgresql.toast_index_blocks_read"`
 	PostgresqlToastSize                               MetricConfig `mapstructure:"postgresql.toast_size"`
+	PostgresqlTransactionsDurationMax                 MetricConfig `mapstructure:"postgresql.transactions.duration.max"`
+	PostgresqlTransactionsDurationSum                 MetricConfig `mapstructure:"postgresql.transactions.duration.sum"`
 	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
 	PostgresqlVacuumHeapBlksScanned                   MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_scanned"`
 	PostgresqlVacuumHeapBlksTotal                     MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_total"`
@@ -196,6 +202,18 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PostgresqlActiveWaitingQueries: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityBackendXidAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityBackendXminAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityXactStartAge: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlAnalyzeChildTablesDone: MetricConfig{
 			Enabled: true,
 		},
@@ -614,6 +632,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlToastSize: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTransactionsDurationMax: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTransactionsDurationSum: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlUptime: MetricConfig{

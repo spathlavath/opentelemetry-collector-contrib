@@ -38,6 +38,9 @@ attributes:
   application_name:
     description: Name of the replication application
     type: string
+  backend_type:
+    description: Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.)
+    type: string
   client_address:
     description: IP address of the standby server
     type: string
@@ -83,8 +86,51 @@ attributes:
   table_name:
     description: Name of the table
     type: string
+  user_name:
+    description: Name of the user/role connected to the database
+    type: string
 
 metrics:
+  postgresql.active_waiting_queries:
+    description: Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.activity.backend_xid_age:
+    description: Maximum age of backend transaction IDs currently in use (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.activity.backend_xmin_age:
+    description: Maximum age of backend xmin values (oldest transaction visible to any backend) (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.activity.xact_start_age:
+    description: Maximum age in seconds of the oldest transaction start time across all backends (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: s
+    stability:
+      level: alpha
+
   postgresql.analyze.child_tables_done:
     description: Number of child tables processed during ANALYZE operation (PostgreSQL 13+)
     enabled: true
@@ -1632,6 +1678,26 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
     unit: By
+    stability:
+      level: alpha
+
+  postgresql.transactions.duration.max:
+    description: Maximum transaction duration in seconds across all active backends (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.transactions.duration.sum:
+    description: Sum of transaction durations in seconds across all active backends (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: s
     stability:
       level: alpha
 

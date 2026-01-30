@@ -197,6 +197,42 @@ func (c *SQLClient) QueryConflictMetrics(ctx context.Context) ([]models.PgStatDa
 	return metrics, nil
 }
 
+func (c *SQLClient) QueryActivityMetrics(ctx context.Context) ([]models.PgStatActivity, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatActivitySQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_activity: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatActivity
+
+	for rows.Next() {
+		var metric models.PgStatActivity
+		err := rows.Scan(
+			&metric.DatName,
+			&metric.UserName,
+			&metric.ApplicationName,
+			&metric.BackendType,
+			&metric.ActiveWaitingQueries,
+			&metric.XactStartAge,
+			&metric.BackendXIDAge,
+			&metric.BackendXminAge,
+			&metric.MaxTransactionDuration,
+			&metric.SumTransactionDuration,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_activity row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_activity rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 // QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 // Calculates time elapsed since server start using pg_postmaster_start_time()
 // Available in PostgreSQL 9.6+

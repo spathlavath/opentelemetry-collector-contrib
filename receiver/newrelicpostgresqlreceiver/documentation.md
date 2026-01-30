@@ -12,6 +12,78 @@ metrics:
     enabled: false
 ```
 
+### postgresql.active_waiting_queries
+
+Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {queries} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.activity.backend_xid_age
+
+Maximum age of backend transaction IDs currently in use (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.activity.backend_xmin_age
+
+Maximum age of backend xmin values (oldest transaction visible to any backend) (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.activity.xact_start_age
+
+Maximum age in seconds of the oldest transaction start time across all backends (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
 ### postgresql.analyze.child_tables_done
 
 Number of child tables processed during ANALYZE operation (PostgreSQL 13+)
@@ -2196,6 +2268,42 @@ Size of the TOAST data for this table in bytes (PostgreSQL 9.6+)
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 | schema_name | Name of the schema containing the table | Any Str | Recommended |
 | table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.transactions.duration.max
+
+Maximum transaction duration in seconds across all active backends (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.transactions.duration.sum
+
+Sum of transaction durations in seconds across all active backends (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
 
 ### postgresql.uptime
 
