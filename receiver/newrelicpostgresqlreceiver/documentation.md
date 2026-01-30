@@ -66,6 +66,25 @@ Maximum age of backend xmin values (oldest transaction visible to any backend) (
 | application_name | Name of the replication application | Any Str | Recommended |
 | backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
 
+### postgresql.activity.wait_event
+
+Count of backends grouped by wait event type for performance analysis (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {backends} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+| wait_event | Type of wait event (lock, IO, etc.) or NoWaitEvent if not waiting | Any Str | Recommended |
+
 ### postgresql.activity.xact_start_age
 
 Maximum age in seconds of the oldest transaction start time across all backends (PostgreSQL 9.6+)

@@ -7,6 +7,8 @@ all_set:
       enabled: true
     postgresql.activity.backend_xmin_age:
       enabled: true
+    postgresql.activity.wait_event:
+      enabled: true
     postgresql.activity.xact_start_age:
       enabled: true
     postgresql.analyze.child_tables_done:
@@ -361,6 +363,8 @@ none_set:
     postgresql.activity.backend_xid_age:
       enabled: false
     postgresql.activity.backend_xmin_age:
+      enabled: false
+    postgresql.activity.wait_event:
       enabled: false
     postgresql.activity.xact_start_age:
       enabled: false

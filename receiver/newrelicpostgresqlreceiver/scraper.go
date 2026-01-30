@@ -275,6 +275,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 				zap.Int("error_count", len(activityErrs)))
 			scrapeErrors = append(scrapeErrors, activityErrs...)
 		}
+
+		// Scrape wait events (PostgreSQL 9.6+)
+		waitEventsErrs := s.activityScraper.ScrapeWaitEvents(scrapeCtx)
+		if len(waitEventsErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping wait events",
+				zap.Int("error_count", len(waitEventsErrs)))
+			scrapeErrors = append(scrapeErrors, waitEventsErrs...)
+		}
 	}
 
 	// Scrape server uptime (PostgreSQL 9.6+, available on all versions we support)

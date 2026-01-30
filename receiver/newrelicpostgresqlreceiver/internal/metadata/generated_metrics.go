@@ -22,6 +22,9 @@ var MetricsInfo = metricsInfo{
 	PostgresqlActivityBackendXminAge: metricInfo{
 		Name: "postgresql.activity.backend_xmin_age",
 	},
+	PostgresqlActivityWaitEvent: metricInfo{
+		Name: "postgresql.activity.wait_event",
+	},
 	PostgresqlActivityXactStartAge: metricInfo{
 		Name: "postgresql.activity.xact_start_age",
 	},
@@ -529,6 +532,7 @@ type metricsInfo struct {
 	PostgresqlActiveWaitingQueries                    metricInfo
 	PostgresqlActivityBackendXidAge                   metricInfo
 	PostgresqlActivityBackendXminAge                  metricInfo
+	PostgresqlActivityWaitEvent                       metricInfo
 	PostgresqlActivityXactStartAge                    metricInfo
 	PostgresqlAnalyzeChildTablesDone                  metricInfo
 	PostgresqlAnalyzeChildTablesTotal                 metricInfo
@@ -860,6 +864,62 @@ func (m *metricPostgresqlActivityBackendXminAge) emit(metrics pmetric.MetricSlic
 
 func newMetricPostgresqlActivityBackendXminAge(cfg MetricConfig) metricPostgresqlActivityBackendXminAge {
 	m := metricPostgresqlActivityBackendXminAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlActivityWaitEvent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.activity.wait_event metric with initial data.
+func (m *metricPostgresqlActivityWaitEvent) init() {
+	m.data.SetName("postgresql.activity.wait_event")
+	m.data.SetDescription("Count of backends grouped by wait event type for performance analysis (PostgreSQL 9.6+)")
+	m.data.SetUnit("{backends}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlActivityWaitEvent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, applicationNameAttributeValue string, backendTypeAttributeValue string, waitEventAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("application_name", applicationNameAttributeValue)
+	dp.Attributes().PutStr("backend_type", backendTypeAttributeValue)
+	dp.Attributes().PutStr("wait_event", waitEventAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlActivityWaitEvent) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlActivityWaitEvent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlActivityWaitEvent(cfg MetricConfig) metricPostgresqlActivityWaitEvent {
+	m := metricPostgresqlActivityWaitEvent{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9818,6 +9878,7 @@ type MetricsBuilder struct {
 	metricPostgresqlActiveWaitingQueries                    metricPostgresqlActiveWaitingQueries
 	metricPostgresqlActivityBackendXidAge                   metricPostgresqlActivityBackendXidAge
 	metricPostgresqlActivityBackendXminAge                  metricPostgresqlActivityBackendXminAge
+	metricPostgresqlActivityWaitEvent                       metricPostgresqlActivityWaitEvent
 	metricPostgresqlActivityXactStartAge                    metricPostgresqlActivityXactStartAge
 	metricPostgresqlAnalyzeChildTablesDone                  metricPostgresqlAnalyzeChildTablesDone
 	metricPostgresqlAnalyzeChildTablesTotal                 metricPostgresqlAnalyzeChildTablesTotal
@@ -10013,6 +10074,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlActiveWaitingQueries:                    newMetricPostgresqlActiveWaitingQueries(mbc.Metrics.PostgresqlActiveWaitingQueries),
 		metricPostgresqlActivityBackendXidAge:                   newMetricPostgresqlActivityBackendXidAge(mbc.Metrics.PostgresqlActivityBackendXidAge),
 		metricPostgresqlActivityBackendXminAge:                  newMetricPostgresqlActivityBackendXminAge(mbc.Metrics.PostgresqlActivityBackendXminAge),
+		metricPostgresqlActivityWaitEvent:                       newMetricPostgresqlActivityWaitEvent(mbc.Metrics.PostgresqlActivityWaitEvent),
 		metricPostgresqlActivityXactStartAge:                    newMetricPostgresqlActivityXactStartAge(mbc.Metrics.PostgresqlActivityXactStartAge),
 		metricPostgresqlAnalyzeChildTablesDone:                  newMetricPostgresqlAnalyzeChildTablesDone(mbc.Metrics.PostgresqlAnalyzeChildTablesDone),
 		metricPostgresqlAnalyzeChildTablesTotal:                 newMetricPostgresqlAnalyzeChildTablesTotal(mbc.Metrics.PostgresqlAnalyzeChildTablesTotal),
@@ -10291,6 +10353,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlActiveWaitingQueries.emit(ils.Metrics())
 	mb.metricPostgresqlActivityBackendXidAge.emit(ils.Metrics())
 	mb.metricPostgresqlActivityBackendXminAge.emit(ils.Metrics())
+	mb.metricPostgresqlActivityWaitEvent.emit(ils.Metrics())
 	mb.metricPostgresqlActivityXactStartAge.emit(ils.Metrics())
 	mb.metricPostgresqlAnalyzeChildTablesDone.emit(ils.Metrics())
 	mb.metricPostgresqlAnalyzeChildTablesTotal.emit(ils.Metrics())
@@ -10502,6 +10565,11 @@ func (mb *MetricsBuilder) RecordPostgresqlActivityBackendXidAgeDataPoint(ts pcom
 // RecordPostgresqlActivityBackendXminAgeDataPoint adds a data point to postgresql.activity.backend_xmin_age metric.
 func (mb *MetricsBuilder) RecordPostgresqlActivityBackendXminAgeDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, applicationNameAttributeValue string, backendTypeAttributeValue string) {
 	mb.metricPostgresqlActivityBackendXminAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, applicationNameAttributeValue, backendTypeAttributeValue)
+}
+
+// RecordPostgresqlActivityWaitEventDataPoint adds a data point to postgresql.activity.wait_event metric.
+func (mb *MetricsBuilder) RecordPostgresqlActivityWaitEventDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, applicationNameAttributeValue string, backendTypeAttributeValue string, waitEventAttributeValue string) {
+	mb.metricPostgresqlActivityWaitEvent.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, applicationNameAttributeValue, backendTypeAttributeValue, waitEventAttributeValue)
 }
 
 // RecordPostgresqlActivityXactStartAgeDataPoint adds a data point to postgresql.activity.xact_start_age metric.

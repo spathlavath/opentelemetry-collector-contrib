@@ -31,6 +31,7 @@ type MetricsConfig struct {
 	PostgresqlActiveWaitingQueries                    MetricConfig `mapstructure:"postgresql.active_waiting_queries"`
 	PostgresqlActivityBackendXidAge                   MetricConfig `mapstructure:"postgresql.activity.backend_xid_age"`
 	PostgresqlActivityBackendXminAge                  MetricConfig `mapstructure:"postgresql.activity.backend_xmin_age"`
+	PostgresqlActivityWaitEvent                       MetricConfig `mapstructure:"postgresql.activity.wait_event"`
 	PostgresqlActivityXactStartAge                    MetricConfig `mapstructure:"postgresql.activity.xact_start_age"`
 	PostgresqlAnalyzeChildTablesDone                  MetricConfig `mapstructure:"postgresql.analyze.child_tables_done"`
 	PostgresqlAnalyzeChildTablesTotal                 MetricConfig `mapstructure:"postgresql.analyze.child_tables_total"`
@@ -209,6 +210,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlActivityBackendXminAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityWaitEvent: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlActivityXactStartAge: MetricConfig{

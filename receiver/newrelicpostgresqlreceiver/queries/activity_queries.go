@@ -26,4 +26,21 @@ const (
 		FROM pg_stat_activity
 		WHERE datname IS NOT NULL
 		GROUP BY datname, usename, application_name, backend_type`
+
+	// PgStatActivityWaitEventsSQL returns wait event statistics from pg_stat_activity
+	// This query retrieves backend counts grouped by wait event type
+	// COALESCE is used to handle NULL wait_event values (backends not waiting)
+	// Filters out system background processes (where datname IS NULL) since they don't have database-specific activity
+	// Available in PostgreSQL 9.6+
+	PgStatActivityWaitEventsSQL = `
+		SELECT
+			datname,
+			usename,
+			application_name,
+			backend_type,
+			COALESCE(wait_event, 'NoWaitEvent') as wait_event,
+			COUNT(*) as wait_event_count
+		FROM pg_stat_activity
+		WHERE datname IS NOT NULL
+		GROUP BY datname, usename, application_name, backend_type, wait_event`
 )

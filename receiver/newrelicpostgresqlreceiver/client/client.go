@@ -35,6 +35,12 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryActivityMetrics(ctx context.Context) ([]models.PgStatActivity, error)
 
+	// Wait event metrics from pg_stat_activity
+	// Retrieves backend counts grouped by wait event type for performance analysis
+	// grouped by database, user, application, backend type, and wait event
+	// Available in PostgreSQL 9.6+
+	QueryWaitEvents(ctx context.Context) ([]models.PgStatActivityWaitEvents, error)
+
 	// QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 	// Uses pg_postmaster_start_time() to calculate elapsed time since server start
 	// Available in PostgreSQL 9.6+

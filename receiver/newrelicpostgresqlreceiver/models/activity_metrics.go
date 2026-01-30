@@ -30,3 +30,19 @@ type PgStatActivity struct {
 	MaxTransactionDuration sql.NullFloat64 // Maximum transaction duration in seconds (non-idle)
 	SumTransactionDuration sql.NullFloat64 // Sum of all transaction durations in seconds (non-idle)
 }
+
+// PgStatActivityWaitEvents represents wait event statistics from pg_stat_activity
+// This struct captures the count of backends grouped by wait event type
+// grouped by database, user, application, backend type, and wait event
+// Available in PostgreSQL 9.6+
+type PgStatActivityWaitEvents struct {
+	// Grouping dimensions (can be NULL for system background processes)
+	DatName         sql.NullString // Database name
+	UserName        sql.NullString // User/role name
+	ApplicationName sql.NullString // Application name from connection
+	BackendType     sql.NullString // Type of backend process
+	WaitEvent       sql.NullString // Type of wait event (or NoWaitEvent)
+
+	// Wait event metric
+	WaitEventCount sql.NullInt64 // Count of backends in this wait event state
+}

@@ -74,3 +74,36 @@ func (s *ActivityScraper) recordActivityMetrics(now pcommon.Timestamp, metric mo
 	s.mb.RecordPostgresqlTransactionsDurationMaxDataPoint(now, getFloat64(metric.MaxTransactionDuration), s.instanceName, databaseName, userName, applicationName, backendType)
 	s.mb.RecordPostgresqlTransactionsDurationSumDataPoint(now, getFloat64(metric.SumTransactionDuration), s.instanceName, databaseName, userName, applicationName, backendType)
 }
+
+// ScrapeWaitEvents scrapes wait event metrics from pg_stat_activity
+func (s *ActivityScraper) ScrapeWaitEvents(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryWaitEvents(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query wait events", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordWaitEventMetrics(now, metric)
+	}
+
+	s.logger.Debug("Wait event metrics scrape completed",
+		zap.Int("wait_event_groups", len(metrics)))
+
+	return nil
+}
+
+// recordWaitEventMetrics records wait event metrics for a single wait event group
+func (s *ActivityScraper) recordWaitEventMetrics(now pcommon.Timestamp, metric models.PgStatActivityWaitEvents) {
+	// Get string values for attributes
+	databaseName := getString(metric.DatName)
+	userName := getString(metric.UserName)
+	applicationName := getString(metric.ApplicationName)
+	backendType := getString(metric.BackendType)
+	waitEvent := getString(metric.WaitEvent)
+
+	// Record wait event metric
+	s.mb.RecordPostgresqlActivityWaitEventDataPoint(now, getInt64(metric.WaitEventCount), s.instanceName, databaseName, userName, applicationName, backendType, waitEvent)
+}

@@ -233,6 +233,41 @@ func (c *SQLClient) QueryActivityMetrics(ctx context.Context) ([]models.PgStatAc
 	return metrics, nil
 }
 
+// QueryWaitEvents retrieves wait event statistics from pg_stat_activity
+// Returns backend counts grouped by wait event type for performance analysis
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryWaitEvents(ctx context.Context) ([]models.PgStatActivityWaitEvents, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatActivityWaitEventsSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_activity wait events: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatActivityWaitEvents
+
+	for rows.Next() {
+		var metric models.PgStatActivityWaitEvents
+		err := rows.Scan(
+			&metric.DatName,
+			&metric.UserName,
+			&metric.ApplicationName,
+			&metric.BackendType,
+			&metric.WaitEvent,
+			&metric.WaitEventCount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_activity wait events row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_activity wait events rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 // QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 // Calculates time elapsed since server start using pg_postmaster_start_time()
 // Available in PostgreSQL 9.6+

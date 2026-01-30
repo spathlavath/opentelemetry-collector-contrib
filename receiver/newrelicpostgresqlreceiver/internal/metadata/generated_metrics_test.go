@@ -82,6 +82,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlActivityWaitEventDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val", "wait_event-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlActivityXactStartAgeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
 
 			defaultMetricsCount++
@@ -858,6 +862,36 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("backend_type")
 					assert.True(t, ok)
 					assert.Equal(t, "backend_type-val", attrVal.Str())
+				case "postgresql.activity.wait_event":
+					assert.False(t, validatedMetrics["postgresql.activity.wait_event"], "Found a duplicate in the metrics slice: postgresql.activity.wait_event")
+					validatedMetrics["postgresql.activity.wait_event"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Count of backends grouped by wait event type for performance analysis (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{backends}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("wait_event")
+					assert.True(t, ok)
+					assert.Equal(t, "wait_event-val", attrVal.Str())
 				case "postgresql.activity.xact_start_age":
 					assert.False(t, validatedMetrics["postgresql.activity.xact_start_age"], "Found a duplicate in the metrics slice: postgresql.activity.xact_start_age")
 					validatedMetrics["postgresql.activity.xact_start_age"] = true
