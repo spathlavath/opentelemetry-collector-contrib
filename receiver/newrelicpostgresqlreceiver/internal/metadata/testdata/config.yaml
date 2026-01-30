@@ -153,6 +153,14 @@ all_set:
       enabled: true
     postgresql.recovery_prefetch.wal_distance:
       enabled: true
+    postgresql.relation.all_visible:
+      enabled: true
+    postgresql.relation.pages:
+      enabled: true
+    postgresql.relation.tuples:
+      enabled: true
+    postgresql.relation.xmin:
+      enabled: true
     postgresql.relation_size:
       enabled: true
     postgresql.replication.backend_xmin_age:
@@ -487,6 +495,14 @@ none_set:
     postgresql.recovery_prefetch.skip_rep:
       enabled: false
     postgresql.recovery_prefetch.wal_distance:
+      enabled: false
+    postgresql.relation.all_visible:
+      enabled: false
+    postgresql.relation.pages:
+      enabled: false
+    postgresql.relation.tuples:
+      enabled: false
+    postgresql.relation.xmin:
       enabled: false
     postgresql.relation_size:
       enabled: false

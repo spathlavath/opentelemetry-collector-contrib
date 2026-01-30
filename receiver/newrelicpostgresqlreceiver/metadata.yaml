@@ -925,6 +925,46 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.relation.all_visible:
+    description: Number of pages marked all-visible in the visibility map (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{pages}"
+    stability:
+      level: alpha
+
+  postgresql.relation.pages:
+    description: Number of disk pages in the relation (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{pages}"
+    stability:
+      level: alpha
+
+  postgresql.relation.tuples:
+    description: Estimated number of live rows in the relation (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.relation.xmin:
+    description: Age of the oldest unfrozen transaction ID in the relation (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
   postgresql.relation_size:
     description: Size of the table data (heap) in bytes (PostgreSQL 9.6+)
     enabled: true

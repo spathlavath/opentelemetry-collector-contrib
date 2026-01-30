@@ -104,6 +104,10 @@ type MetricsConfig struct {
 	PostgresqlRecoveryPrefetchSkipNew                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_new"`
 	PostgresqlRecoveryPrefetchSkipRep                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_rep"`
 	PostgresqlRecoveryPrefetchWalDistance             MetricConfig `mapstructure:"postgresql.recovery_prefetch.wal_distance"`
+	PostgresqlRelationAllVisible                      MetricConfig `mapstructure:"postgresql.relation.all_visible"`
+	PostgresqlRelationPages                           MetricConfig `mapstructure:"postgresql.relation.pages"`
+	PostgresqlRelationTuples                          MetricConfig `mapstructure:"postgresql.relation.tuples"`
+	PostgresqlRelationXmin                            MetricConfig `mapstructure:"postgresql.relation.xmin"`
 	PostgresqlRelationSize                            MetricConfig `mapstructure:"postgresql.relation_size"`
 	PostgresqlReplicationBackendXminAge               MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
 	PostgresqlReplicationFlushLsnDelay                MetricConfig `mapstructure:"postgresql.replication.flush_lsn_delay"`
@@ -418,6 +422,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlRecoveryPrefetchWalDistance: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRelationAllVisible: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRelationPages: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRelationTuples: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlRelationXmin: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlRelationSize: MetricConfig{

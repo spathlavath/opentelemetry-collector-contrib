@@ -163,6 +163,12 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryTableSizes(ctx context.Context, schemas, tables []string) ([]models.PgClassSizes, error)
 
+	// QueryRelationStats retrieves relation statistics from pg_class
+	// Returns relation metadata and transaction age for specified tables
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryRelationStats(ctx context.Context, schemas, tables []string) ([]models.PgClassStats, error)
+
 	// QueryAnalyzeProgress retrieves ANALYZE operation progress from pg_stat_progress_analyze
 	// Returns real-time progress of running ANALYZE operations
 	// Returns empty slice if no ANALYZE operations are currently running

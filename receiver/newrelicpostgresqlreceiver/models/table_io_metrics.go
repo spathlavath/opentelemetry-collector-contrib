@@ -149,3 +149,29 @@ type PgClassSizes struct {
 	// ToastSize is the size of TOAST data for this table in bytes
 	ToastSize sql.NullInt64
 }
+
+// PgClassStats represents relation statistics from pg_class
+// This struct captures relation metadata and transaction age for tables
+// Available in PostgreSQL 9.6+
+type PgClassStats struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing this table
+	SchemaName string
+
+	// TableName is the name of the table
+	TableName string
+
+	// RelPages is the number of disk pages in the relation
+	RelPages sql.NullInt64
+
+	// RelTuples is the estimated number of live rows in the relation
+	RelTuples sql.NullFloat64
+
+	// RelAllVisible is the number of pages marked all-visible in the visibility map
+	RelAllVisible sql.NullInt64
+
+	// Xmin is the age of the oldest unfrozen transaction ID in the relation
+	Xmin sql.NullInt64
+}

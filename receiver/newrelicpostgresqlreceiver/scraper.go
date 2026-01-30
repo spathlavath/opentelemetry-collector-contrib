@@ -508,6 +508,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 					zap.Int("error_count", len(sizeErrs)))
 				scrapeErrors = append(scrapeErrors, sizeErrs...)
 			}
+
+			// Scrape relation statistics
+			relationErrs := s.tableIOScraper.ScrapeRelationStats(scrapeCtx, schemas, tables)
+			if len(relationErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping relation statistics",
+					zap.Int("error_count", len(relationErrs)))
+				scrapeErrors = append(scrapeErrors, relationErrs...)
+			}
 		} else {
 			s.logger.Debug("Per-table metrics skipped (no tables configured)")
 		}

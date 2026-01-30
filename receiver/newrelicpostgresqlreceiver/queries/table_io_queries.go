@@ -172,3 +172,29 @@ func PgClassSizesSQL(schemas, tables []string) string {
 			AND %s
 		ORDER BY n.nspname, c.relname`, whereClause)
 }
+
+// PgClassStatsSQL returns relation statistics from pg_class (PostgreSQL 9.6+)
+// This query retrieves relation metadata and transaction age for tables
+// The WHERE clause is dynamically built based on schema and table filters
+func PgClassStatsSQL(schemas, tables []string) string {
+	whereClause := buildTableFilterClause(schemas, tables)
+
+	// Replace filters to use namespace and class table aliases
+	whereClause = strings.Replace(whereClause, "schemaname", "n.nspname", -1)
+	whereClause = strings.Replace(whereClause, "relname", "c.relname", -1)
+
+	return fmt.Sprintf(`
+		SELECT
+			current_database() as database,
+			n.nspname as schema_name,
+			c.relname as table_name,
+			c.relpages as pages,
+			c.reltuples as tuples,
+			c.relallvisible as all_visible,
+			age(c.relfrozenxid) as xmin
+		FROM pg_class c
+		JOIN pg_namespace n ON n.oid = c.relnamespace
+		WHERE c.relkind = 'r'
+			AND %s
+		ORDER BY n.nspname, c.relname`, whereClause)
+}

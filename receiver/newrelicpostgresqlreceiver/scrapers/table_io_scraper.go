@@ -241,3 +241,37 @@ func (s *TableIOScraper) recordTableSizesMetrics(now pcommon.Timestamp, metric m
 	s.logger.Debug("Recorded table size metrics",
 		zap.String("table", tableID))
 }
+
+func (s *TableIOScraper) ScrapeRelationStats(ctx context.Context, schemas, tables []string) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryRelationStats(ctx, schemas, tables)
+	if err != nil {
+		s.logger.Error("Failed to query relation statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordRelationStatsMetrics(now, metric)
+	}
+
+	s.logger.Debug("Relation statistics scrape completed",
+		zap.Int("table_count", len(metrics)))
+
+	return nil
+}
+
+// recordRelationStatsMetrics records all relation statistics metrics for a single table
+func (s *TableIOScraper) recordRelationStatsMetrics(now pcommon.Timestamp, metric models.PgClassStats) {
+	// Create composite identifier for table
+	tableID := metric.SchemaName + "." + metric.TableName
+
+	// Record relation statistics (gauges)
+	s.mb.RecordPostgresqlRelationPagesDataPoint(now, getInt64(metric.RelPages), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlRelationTuplesDataPoint(now, getFloat64(metric.RelTuples), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlRelationAllVisibleDataPoint(now, getInt64(metric.RelAllVisible), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlRelationXminDataPoint(now, getInt64(metric.Xmin), s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded relation statistics metrics",
+		zap.String("table", tableID))
+}

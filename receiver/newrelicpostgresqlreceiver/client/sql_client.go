@@ -879,6 +879,40 @@ func (c *SQLClient) QueryTableSizes(ctx context.Context, schemas, tables []strin
 	return metrics, nil
 }
 
+func (c *SQLClient) QueryRelationStats(ctx context.Context, schemas, tables []string) ([]models.PgClassStats, error) {
+	query := queries.PgClassStatsSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query relation statistics: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgClassStats
+
+	for rows.Next() {
+		var metric models.PgClassStats
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.RelPages,
+			&metric.RelTuples,
+			&metric.RelAllVisible,
+			&metric.Xmin,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan relation statistics row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating relation statistics rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
 	query := queries.PgStatProgressAnalyzeSQL
 	rows, err := c.db.QueryContext(ctx, query)

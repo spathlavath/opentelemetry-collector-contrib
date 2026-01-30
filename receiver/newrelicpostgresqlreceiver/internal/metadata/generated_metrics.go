@@ -241,6 +241,18 @@ var MetricsInfo = metricsInfo{
 	PostgresqlRecoveryPrefetchWalDistance: metricInfo{
 		Name: "postgresql.recovery_prefetch.wal_distance",
 	},
+	PostgresqlRelationAllVisible: metricInfo{
+		Name: "postgresql.relation.all_visible",
+	},
+	PostgresqlRelationPages: metricInfo{
+		Name: "postgresql.relation.pages",
+	},
+	PostgresqlRelationTuples: metricInfo{
+		Name: "postgresql.relation.tuples",
+	},
+	PostgresqlRelationXmin: metricInfo{
+		Name: "postgresql.relation.xmin",
+	},
 	PostgresqlRelationSize: metricInfo{
 		Name: "postgresql.relation_size",
 	},
@@ -572,6 +584,10 @@ type metricsInfo struct {
 	PostgresqlRecoveryPrefetchSkipNew                 metricInfo
 	PostgresqlRecoveryPrefetchSkipRep                 metricInfo
 	PostgresqlRecoveryPrefetchWalDistance             metricInfo
+	PostgresqlRelationAllVisible                      metricInfo
+	PostgresqlRelationPages                           metricInfo
+	PostgresqlRelationTuples                          metricInfo
+	PostgresqlRelationXmin                            metricInfo
 	PostgresqlRelationSize                            metricInfo
 	PostgresqlReplicationBackendXminAge               metricInfo
 	PostgresqlReplicationFlushLsnDelay                metricInfo
@@ -4728,6 +4744,218 @@ func (m *metricPostgresqlRecoveryPrefetchWalDistance) emit(metrics pmetric.Metri
 
 func newMetricPostgresqlRecoveryPrefetchWalDistance(cfg MetricConfig) metricPostgresqlRecoveryPrefetchWalDistance {
 	m := metricPostgresqlRecoveryPrefetchWalDistance{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRelationAllVisible struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.relation.all_visible metric with initial data.
+func (m *metricPostgresqlRelationAllVisible) init() {
+	m.data.SetName("postgresql.relation.all_visible")
+	m.data.SetDescription("Number of pages marked all-visible in the visibility map (PostgreSQL 9.6+)")
+	m.data.SetUnit("{pages}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRelationAllVisible) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRelationAllVisible) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRelationAllVisible) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRelationAllVisible(cfg MetricConfig) metricPostgresqlRelationAllVisible {
+	m := metricPostgresqlRelationAllVisible{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRelationPages struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.relation.pages metric with initial data.
+func (m *metricPostgresqlRelationPages) init() {
+	m.data.SetName("postgresql.relation.pages")
+	m.data.SetDescription("Number of disk pages in the relation (PostgreSQL 9.6+)")
+	m.data.SetUnit("{pages}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRelationPages) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRelationPages) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRelationPages) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRelationPages(cfg MetricConfig) metricPostgresqlRelationPages {
+	m := metricPostgresqlRelationPages{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRelationTuples struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.relation.tuples metric with initial data.
+func (m *metricPostgresqlRelationTuples) init() {
+	m.data.SetName("postgresql.relation.tuples")
+	m.data.SetDescription("Estimated number of live rows in the relation (PostgreSQL 9.6+)")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRelationTuples) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRelationTuples) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRelationTuples) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRelationTuples(cfg MetricConfig) metricPostgresqlRelationTuples {
+	m := metricPostgresqlRelationTuples{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlRelationXmin struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.relation.xmin metric with initial data.
+func (m *metricPostgresqlRelationXmin) init() {
+	m.data.SetName("postgresql.relation.xmin")
+	m.data.SetDescription("Age of the oldest unfrozen transaction ID in the relation (PostgreSQL 9.6+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlRelationXmin) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlRelationXmin) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlRelationXmin) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlRelationXmin(cfg MetricConfig) metricPostgresqlRelationXmin {
+	m := metricPostgresqlRelationXmin{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9309,6 +9537,10 @@ type MetricsBuilder struct {
 	metricPostgresqlRecoveryPrefetchSkipNew                 metricPostgresqlRecoveryPrefetchSkipNew
 	metricPostgresqlRecoveryPrefetchSkipRep                 metricPostgresqlRecoveryPrefetchSkipRep
 	metricPostgresqlRecoveryPrefetchWalDistance             metricPostgresqlRecoveryPrefetchWalDistance
+	metricPostgresqlRelationAllVisible                      metricPostgresqlRelationAllVisible
+	metricPostgresqlRelationPages                           metricPostgresqlRelationPages
+	metricPostgresqlRelationTuples                          metricPostgresqlRelationTuples
+	metricPostgresqlRelationXmin                            metricPostgresqlRelationXmin
 	metricPostgresqlRelationSize                            metricPostgresqlRelationSize
 	metricPostgresqlReplicationBackendXminAge               metricPostgresqlReplicationBackendXminAge
 	metricPostgresqlReplicationFlushLsnDelay                metricPostgresqlReplicationFlushLsnDelay
@@ -9494,6 +9726,10 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlRecoveryPrefetchSkipNew:                 newMetricPostgresqlRecoveryPrefetchSkipNew(mbc.Metrics.PostgresqlRecoveryPrefetchSkipNew),
 		metricPostgresqlRecoveryPrefetchSkipRep:                 newMetricPostgresqlRecoveryPrefetchSkipRep(mbc.Metrics.PostgresqlRecoveryPrefetchSkipRep),
 		metricPostgresqlRecoveryPrefetchWalDistance:             newMetricPostgresqlRecoveryPrefetchWalDistance(mbc.Metrics.PostgresqlRecoveryPrefetchWalDistance),
+		metricPostgresqlRelationAllVisible:                      newMetricPostgresqlRelationAllVisible(mbc.Metrics.PostgresqlRelationAllVisible),
+		metricPostgresqlRelationPages:                           newMetricPostgresqlRelationPages(mbc.Metrics.PostgresqlRelationPages),
+		metricPostgresqlRelationTuples:                          newMetricPostgresqlRelationTuples(mbc.Metrics.PostgresqlRelationTuples),
+		metricPostgresqlRelationXmin:                            newMetricPostgresqlRelationXmin(mbc.Metrics.PostgresqlRelationXmin),
 		metricPostgresqlRelationSize:                            newMetricPostgresqlRelationSize(mbc.Metrics.PostgresqlRelationSize),
 		metricPostgresqlReplicationBackendXminAge:               newMetricPostgresqlReplicationBackendXminAge(mbc.Metrics.PostgresqlReplicationBackendXminAge),
 		metricPostgresqlReplicationFlushLsnDelay:                newMetricPostgresqlReplicationFlushLsnDelay(mbc.Metrics.PostgresqlReplicationFlushLsnDelay),
@@ -9762,6 +9998,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlRecoveryPrefetchSkipNew.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchSkipRep.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchWalDistance.emit(ils.Metrics())
+	mb.metricPostgresqlRelationAllVisible.emit(ils.Metrics())
+	mb.metricPostgresqlRelationPages.emit(ils.Metrics())
+	mb.metricPostgresqlRelationTuples.emit(ils.Metrics())
+	mb.metricPostgresqlRelationXmin.emit(ils.Metrics())
 	mb.metricPostgresqlRelationSize.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationBackendXminAge.emit(ils.Metrics())
 	mb.metricPostgresqlReplicationFlushLsnDelay.emit(ils.Metrics())
@@ -10255,6 +10495,26 @@ func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchSkipRepDataPoint(ts pc
 // RecordPostgresqlRecoveryPrefetchWalDistanceDataPoint adds a data point to postgresql.recovery_prefetch.wal_distance metric.
 func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchWalDistanceDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlRecoveryPrefetchWalDistance.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlRelationAllVisibleDataPoint adds a data point to postgresql.relation.all_visible metric.
+func (mb *MetricsBuilder) RecordPostgresqlRelationAllVisibleDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlRelationAllVisible.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlRelationPagesDataPoint adds a data point to postgresql.relation.pages metric.
+func (mb *MetricsBuilder) RecordPostgresqlRelationPagesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlRelationPages.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlRelationTuplesDataPoint adds a data point to postgresql.relation.tuples metric.
+func (mb *MetricsBuilder) RecordPostgresqlRelationTuplesDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlRelationTuples.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlRelationXminDataPoint adds a data point to postgresql.relation.xmin metric.
+func (mb *MetricsBuilder) RecordPostgresqlRelationXminDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlRelationXmin.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
 // RecordPostgresqlRelationSizeDataPoint adds a data point to postgresql.relation_size metric.
