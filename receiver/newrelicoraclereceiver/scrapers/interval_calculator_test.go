@@ -78,7 +78,7 @@ func TestCalculateMetrics_FirstScrape(t *testing.T) {
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
 		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
-		AvgCPUTimeMs:       sql.NullFloat64{Float64: 30.0, Valid: true},
+		TotalCPUTimeMS:     sql.NullFloat64{Float64: 3000.0, Valid: true}, // 100 * 30 = 3000
 	}
 
 	metrics := calc.CalculateMetrics(query, now)
@@ -118,7 +118,7 @@ func TestCalculateMetrics_SubsequentScrape_WithNewExecutions(t *testing.T) {
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
 		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
-		AvgCPUTimeMs:       sql.NullFloat64{Float64: 30.0, Valid: true},
+		TotalCPUTimeMS:     sql.NullFloat64{Float64: 3000.0, Valid: true}, // 100 * 30 = 3000
 	}
 
 	// First scrape
@@ -130,7 +130,7 @@ func TestCalculateMetrics_SubsequentScrape_WithNewExecutions(t *testing.T) {
 		ExecutionCount:     sql.NullInt64{Int64: 120, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 7000.0, Valid: true},
 		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 58.33, Valid: true},
-		AvgCPUTimeMs:       sql.NullFloat64{Float64: 35.0, Valid: true},
+		TotalCPUTimeMS:     sql.NullFloat64{Float64: 4200.0, Valid: true}, // 120 * 35 = 4200
 	}
 
 	metrics := calc.CalculateMetrics(query2, now.Add(1*time.Minute))
@@ -140,7 +140,7 @@ func TestCalculateMetrics_SubsequentScrape_WithNewExecutions(t *testing.T) {
 	assert.Equal(t, 100.0, metrics.IntervalAvgElapsedTimeMs)
 	assert.Equal(t, int64(20), metrics.IntervalExecutionCount)
 	assert.Equal(t, 58.33, metrics.HistoricalAvgElapsedTimeMs)
-	assert.Equal(t, 35.0, metrics.HistoricalAvgCPUTimeMs)
+	assert.Equal(t, 35.0, metrics.HistoricalAvgCPUTimeMs) // 4200 / 120 = 35
 	assert.Equal(t, int64(120), metrics.HistoricalExecutionCount)
 	assert.False(t, metrics.IsFirstScrape)
 	assert.True(t, metrics.HasNewExecutions)
@@ -315,7 +315,7 @@ func TestCalculateMetrics_NullFields(t *testing.T) {
 		ExecutionCount:     sql.NullInt64{Valid: false},
 		TotalElapsedTimeMS: sql.NullFloat64{Valid: false},
 		AvgElapsedTimeMs:   sql.NullFloat64{Valid: false},
-		AvgCPUTimeMs:       sql.NullFloat64{Valid: false},
+		TotalCPUTimeMS:     sql.NullFloat64{Valid: false},
 	}
 
 	metrics := calc.CalculateMetrics(query, time.Now())

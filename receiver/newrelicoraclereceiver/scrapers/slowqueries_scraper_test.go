@@ -260,8 +260,8 @@ func TestScrapeSlowQueries_IntervalCalculatorTopN(t *testing.T) {
 	queryIDs, errs := scraper.ScrapeSlowQueries(ctx)
 
 	assert.Empty(t, errs)
-	assert.Len(t, queryIDs, 1)              // Only top 1 due to countThreshold
-	assert.Equal(t, "query_1", queryIDs[0]) // Slowest query
+	assert.Len(t, queryIDs, 1)                      // Only top 1 due to countThreshold
+	assert.Equal(t, "query_1", queryIDs[0].SQLID) // Slowest query
 }
 
 func TestScrapeSlowQueries_NilIntervalCalculator(t *testing.T) {
@@ -295,7 +295,7 @@ func TestRecordMetrics_NilSlowQuery(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
 	scraper := NewSlowQueriesScraper(mockClient, mb, zap.NewNop(), metadata.DefaultMetricsBuilderConfig(), 1000, 100, 15, false, 10)
 
-	err := scraper.recordMetrics(0, nil, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive")
+	err := scraper.recordMetrics(0, nil, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive", "hash123", "", "")
 
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "slow query is nil")
@@ -308,16 +308,16 @@ func TestRecordMetrics_AllFieldsValid(t *testing.T) {
 	scraper := NewSlowQueriesScraper(mockClient, mb, zap.NewNop(), metadata.DefaultMetricsBuilderConfig(), 1000, 100, 15, false, 10)
 
 	slowQuery := &models.SlowQuery{
-		ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
-		AvgCPUTimeMs:     sql.NullFloat64{Float64: 50.0, Valid: true},
-		AvgDiskReads:     sql.NullFloat64{Float64: 25.0, Valid: true},
-		AvgDiskWrites:    sql.NullFloat64{Float64: 10.0, Valid: true},
-		AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
-		AvgRowsExamined:  sql.NullFloat64{Float64: 1000.0, Valid: true},
-		AvgLockTimeMs:    sql.NullFloat64{Float64: 5.0, Valid: true},
+		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
+		TotalCPUTimeMS:     sql.NullFloat64{Float64: 5000.0, Valid: true},   // 100 * 50 = 5000
+		TotalDiskReads:     sql.NullInt64{Int64: 2500, Valid: true},         // 100 * 25 = 2500
+		AvgDiskWrites:      sql.NullFloat64{Float64: 10.0, Valid: true},
+		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 1500.0, Valid: true},
+		TotalBufferGets:    sql.NullInt64{Int64: 100000, Valid: true},       // Buffer gets (rows examined)
+		AvgLockTimeMs:      sql.NullFloat64{Float64: 5.0, Valid: true},
 	}
 
-	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive")
+	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive", "hash123", "MyApp", "WebTransaction/API")
 
 	assert.Nil(t, err)
 }
@@ -337,7 +337,7 @@ func TestRecordMetrics_IntervalMetrics(t *testing.T) {
 		IntervalExecutionCount:   &intervalCount,
 	}
 
-	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive")
+	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive", "hash123", "", "")
 
 	assert.Nil(t, err)
 }
@@ -352,12 +352,12 @@ func TestRecordMetrics_PartialFields(t *testing.T) {
 		ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
 		AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		// Other fields invalid
-		AvgCPUTimeMs:  sql.NullFloat64{Valid: false},
-		AvgDiskReads:  sql.NullFloat64{Valid: false},
-		AvgDiskWrites: sql.NullFloat64{Valid: false},
+		TotalCPUTimeMS:  sql.NullFloat64{Valid: false},
+		TotalDiskReads:  sql.NullInt64{Valid: false},
+		AvgDiskWrites:   sql.NullFloat64{Valid: false},
 	}
 
-	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive")
+	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive", "hash123", "", "")
 
 	assert.Nil(t, err)
 }
