@@ -689,6 +689,100 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.heap_blocks_hit:
+    description: Number of heap blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.heap_blocks_read:
+    description: Number of heap blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.index_blocks_hit:
+    description: Number of index blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.index_blocks_read:
+    description: Number of index blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.index_scans:
+    description: Number of index scans initiated on this index (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: "{scans}"
+    stability:
+      level: alpha
+
+  postgresql.index_size:
+    description: Size of this index in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: By
+    stability:
+      level: alpha
+
+  postgresql.index_tuples_fetched:
+    description: Number of live table rows fetched by simple index scans using this index (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
+  postgresql.index_tuples_read:
+    description: Number of index entries returned by scans on this index (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    unit: "{tuples}"
+    stability:
+      level: alpha
+
   postgresql.last_analyze_age:
     description: Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)
     enabled: true
@@ -828,6 +922,56 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name]
     unit: "By"
+    stability:
+      level: alpha
+
+  postgresql.relation.all_visible:
+    description: Number of pages marked all-visible in the visibility map (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{pages}"
+    stability:
+      level: alpha
+
+  postgresql.relation.pages:
+    description: Number of disk pages in the relation (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{pages}"
+    stability:
+      level: alpha
+
+  postgresql.relation.tuples:
+    description: Estimated number of live rows in the relation (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.relation.xmin:
+    description: Age of the oldest unfrozen transaction ID in the relation (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.relation_size:
+    description: Size of the table data (heap) in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: By
     stability:
       level: alpha
 
@@ -1386,6 +1530,108 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{files}"
+    stability:
+      level: alpha
+
+  postgresql.toast.autovacuumed:
+    description: Number of times this TOAST table has been vacuumed by autovacuum (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.toast.last_autovacuum_age:
+    description: Seconds since last autovacuum on this TOAST table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.toast.last_vacuum_age:
+    description: Seconds since last manual VACUUM on this TOAST table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.toast.vacuumed:
+    description: Number of times this TOAST table has been manually vacuumed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.toast_blocks_hit:
+    description: Number of TOAST blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_blocks_read:
+    description: Number of TOAST blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_index_blocks_hit:
+    description: Number of TOAST index blocks read from buffer cache for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_index_blocks_read:
+    description: Number of TOAST index blocks read from disk for this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_size:
+    description: Size of the TOAST data for this table in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: By
     stability:
       level: alpha
 

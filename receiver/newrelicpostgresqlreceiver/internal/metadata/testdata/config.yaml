@@ -111,6 +111,22 @@ all_set:
       enabled: true
     postgresql.disk_read:
       enabled: true
+    postgresql.heap_blocks_hit:
+      enabled: true
+    postgresql.heap_blocks_read:
+      enabled: true
+    postgresql.index_blocks_hit:
+      enabled: true
+    postgresql.index_blocks_read:
+      enabled: true
+    postgresql.index_scans:
+      enabled: true
+    postgresql.index_size:
+      enabled: true
+    postgresql.index_tuples_fetched:
+      enabled: true
+    postgresql.index_tuples_read:
+      enabled: true
     postgresql.last_analyze_age:
       enabled: true
     postgresql.last_autoanalyze_age:
@@ -136,6 +152,16 @@ all_set:
     postgresql.recovery_prefetch.skip_rep:
       enabled: true
     postgresql.recovery_prefetch.wal_distance:
+      enabled: true
+    postgresql.relation.all_visible:
+      enabled: true
+    postgresql.relation.pages:
+      enabled: true
+    postgresql.relation.tuples:
+      enabled: true
+    postgresql.relation.xmin:
+      enabled: true
+    postgresql.relation_size:
       enabled: true
     postgresql.replication.backend_xmin_age:
       enabled: true
@@ -236,6 +262,24 @@ all_set:
     postgresql.temp_bytes:
       enabled: true
     postgresql.temp_files:
+      enabled: true
+    postgresql.toast.autovacuumed:
+      enabled: true
+    postgresql.toast.last_autovacuum_age:
+      enabled: true
+    postgresql.toast.last_vacuum_age:
+      enabled: true
+    postgresql.toast.vacuumed:
+      enabled: true
+    postgresql.toast_blocks_hit:
+      enabled: true
+    postgresql.toast_blocks_read:
+      enabled: true
+    postgresql.toast_index_blocks_hit:
+      enabled: true
+    postgresql.toast_index_blocks_read:
+      enabled: true
+    postgresql.toast_size:
       enabled: true
     postgresql.uptime:
       enabled: true
@@ -410,6 +454,22 @@ none_set:
       enabled: false
     postgresql.disk_read:
       enabled: false
+    postgresql.heap_blocks_hit:
+      enabled: false
+    postgresql.heap_blocks_read:
+      enabled: false
+    postgresql.index_blocks_hit:
+      enabled: false
+    postgresql.index_blocks_read:
+      enabled: false
+    postgresql.index_scans:
+      enabled: false
+    postgresql.index_size:
+      enabled: false
+    postgresql.index_tuples_fetched:
+      enabled: false
+    postgresql.index_tuples_read:
+      enabled: false
     postgresql.last_analyze_age:
       enabled: false
     postgresql.last_autoanalyze_age:
@@ -435,6 +495,16 @@ none_set:
     postgresql.recovery_prefetch.skip_rep:
       enabled: false
     postgresql.recovery_prefetch.wal_distance:
+      enabled: false
+    postgresql.relation.all_visible:
+      enabled: false
+    postgresql.relation.pages:
+      enabled: false
+    postgresql.relation.tuples:
+      enabled: false
+    postgresql.relation.xmin:
+      enabled: false
+    postgresql.relation_size:
       enabled: false
     postgresql.replication.backend_xmin_age:
       enabled: false
@@ -535,6 +605,24 @@ none_set:
     postgresql.temp_bytes:
       enabled: false
     postgresql.temp_files:
+      enabled: false
+    postgresql.toast.autovacuumed:
+      enabled: false
+    postgresql.toast.last_autovacuum_age:
+      enabled: false
+    postgresql.toast.last_vacuum_age:
+      enabled: false
+    postgresql.toast.vacuumed:
+      enabled: false
+    postgresql.toast_blocks_hit:
+      enabled: false
+    postgresql.toast_blocks_read:
+      enabled: false
+    postgresql.toast_index_blocks_hit:
+      enabled: false
+    postgresql.toast_index_blocks_read:
+      enabled: false
+    postgresql.toast_size:
       enabled: false
     postgresql.uptime:
       enabled: false

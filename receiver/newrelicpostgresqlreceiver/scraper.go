@@ -45,6 +45,7 @@ type newRelicPostgreSQLScraper struct {
 	replicationMetricsScraper *scrapers.ReplicationScraper
 	bgwriterScraper           *scrapers.BgwriterScraper
 	vacuumMaintenanceScraper  *scrapers.VacuumMaintenanceScraper
+	tableIOScraper            *scrapers.TableIOScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -209,6 +210,25 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 				zap.Int("table_count", len(s.config.Relations.Tables)))
 		} else {
 			s.logger.Info("Vacuum maintenance scraper initialized (relations not configured - progress metrics only)")
+		}
+	}
+
+	// Initialize table IO scraper only if PostgreSQL 9.6+
+	// Tracks table and index IO metrics
+	if s.supportsPG96 {
+		s.tableIOScraper = scrapers.NewTableIOScraper(
+			s.client,
+			s.logger,
+			s.mb,
+			s.instanceName,
+			s.pgVersion,
+		)
+		if s.config.Relations != nil {
+			s.logger.Info("Table IO scraper enabled (PostgreSQL 9.6+)",
+				zap.Int("schema_count", len(s.config.Relations.Schemas)),
+				zap.Int("table_count", len(s.config.Relations.Tables)))
+		} else {
+			s.logger.Info("Table IO scraper initialized (relations not configured)")
 		}
 	}
 
@@ -399,24 +419,6 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
-	// Scrape per-table metrics (PostgreSQL 9.6+ only, requires relations config)
-	// This is opt-in to prevent cardinality explosion
-	if s.config.Relations != nil && s.vacuumMaintenanceScraper != nil {
-		schemas := s.config.Relations.Schemas
-		tables := s.config.Relations.Tables
-
-		if len(tables) > 0 {
-			tableErrs := s.vacuumMaintenanceScraper.ScrapeUserTables(scrapeCtx, schemas, tables)
-			if len(tableErrs) > 0 {
-				s.logger.Warn("Errors occurred while scraping per-table statistics",
-					zap.Int("error_count", len(tableErrs)))
-				scrapeErrors = append(scrapeErrors, tableErrs...)
-			}
-		} else {
-			s.logger.Debug("Per-table metrics skipped (no tables configured)")
-		}
-	}
-
 	// Scrape ANALYZE progress metrics (PostgreSQL 13+ only, enabled by default)
 	// These are naturally low-cardinality (only shows running ANALYZE operations)
 	if s.vacuumMaintenanceScraper != nil {
@@ -458,6 +460,64 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			s.logger.Warn("Errors occurred while scraping VACUUM progress",
 				zap.Int("error_count", len(vacuumErrs)))
 			scrapeErrors = append(scrapeErrors, vacuumErrs...)
+		}
+	}
+
+	// Scrape per-table metrics (PostgreSQL 9.6+ only, requires relations config)
+	// This is opt-in to prevent cardinality explosion
+	if s.config.Relations != nil && s.tableIOScraper != nil {
+		schemas := s.config.Relations.Schemas
+		tables := s.config.Relations.Tables
+
+		if len(tables) > 0 {
+			tableErrs := s.tableIOScraper.ScrapeUserTables(scrapeCtx, schemas, tables)
+			if len(tableErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping per-table statistics",
+					zap.Int("error_count", len(tableErrs)))
+				scrapeErrors = append(scrapeErrors, tableErrs...)
+			}
+
+			// Scrape per-table IO statistics
+			tableIOErrs := s.tableIOScraper.ScrapeIOUserTables(scrapeCtx, schemas, tables)
+			if len(tableIOErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping per-table IO statistics",
+					zap.Int("error_count", len(tableIOErrs)))
+				scrapeErrors = append(scrapeErrors, tableIOErrs...)
+			}
+
+			// Scrape per-index statistics
+			indexErrs := s.tableIOScraper.ScrapeUserIndexes(scrapeCtx, schemas, tables)
+			if len(indexErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping per-index statistics",
+					zap.Int("error_count", len(indexErrs)))
+				scrapeErrors = append(scrapeErrors, indexErrs...)
+			}
+
+			// Scrape TOAST table statistics
+			toastErrs := s.tableIOScraper.ScrapeToastTables(scrapeCtx, schemas, tables)
+			if len(toastErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping TOAST table statistics",
+					zap.Int("error_count", len(toastErrs)))
+				scrapeErrors = append(scrapeErrors, toastErrs...)
+			}
+
+			// Scrape table size statistics
+			sizeErrs := s.tableIOScraper.ScrapeTableSizes(scrapeCtx, schemas, tables)
+			if len(sizeErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping table sizes",
+					zap.Int("error_count", len(sizeErrs)))
+				scrapeErrors = append(scrapeErrors, sizeErrs...)
+			}
+
+			// Scrape relation statistics
+			relationErrs := s.tableIOScraper.ScrapeRelationStats(scrapeCtx, schemas, tables)
+			if len(relationErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping relation statistics",
+					zap.Int("error_count", len(relationErrs)))
+				scrapeErrors = append(scrapeErrors, relationErrs...)
+			}
+		} else {
+			s.logger.Debug("Per-table metrics skipped (no tables configured)")
 		}
 	}
 

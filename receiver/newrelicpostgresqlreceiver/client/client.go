@@ -138,6 +138,37 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatUserTablesMetric, error)
 
+	// QueryIOUserTables retrieves per-table disk IO statistics from pg_statio_user_tables
+	// Returns heap, index, and TOAST block reads from disk vs buffer cache
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryIOUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatIOUserTables, error)
+
+	// QueryUserIndexes retrieves per-index statistics from pg_stat_user_indexes
+	// Returns index usage statistics for individual indexes
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryUserIndexes(ctx context.Context, schemas, tables []string) ([]models.PgStatUserIndexes, error)
+
+	// QueryToastTables retrieves TOAST table vacuum statistics
+	// Returns vacuum/autovacuum statistics for TOAST tables of specified base tables
+	// TOAST tables are automatically created for tables with large column values
+	// Filters by specified schemas and tables (base table names)
+	// Available in PostgreSQL 9.6+
+	QueryToastTables(ctx context.Context, schemas, tables []string) ([]models.PgStatToastTables, error)
+
+	// QueryTableSizes retrieves table size statistics from pg_class
+	// Returns relation size and TOAST size for specified tables
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryTableSizes(ctx context.Context, schemas, tables []string) ([]models.PgClassSizes, error)
+
+	// QueryRelationStats retrieves relation statistics from pg_class
+	// Returns relation metadata and transaction age for specified tables
+	// Filters by specified schemas and tables
+	// Available in PostgreSQL 9.6+
+	QueryRelationStats(ctx context.Context, schemas, tables []string) ([]models.PgClassStats, error)
+
 	// QueryAnalyzeProgress retrieves ANALYZE operation progress from pg_stat_progress_analyze
 	// Returns real-time progress of running ANALYZE operations
 	// Returns empty slice if no ANALYZE operations are currently running

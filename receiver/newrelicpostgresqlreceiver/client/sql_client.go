@@ -736,6 +736,183 @@ func (c *SQLClient) QueryUserTables(ctx context.Context, schemas, tables []strin
 	return metrics, nil
 }
 
+// QueryIOUserTables retrieves per-table disk IO statistics from pg_statio_user_tables
+// Returns heap, index, and TOAST block reads from disk vs buffer cache
+// Filters by specified schemas and tables
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryIOUserTables(ctx context.Context, schemas, tables []string) ([]models.PgStatIOUserTables, error) {
+	query := queries.PgStatIOUserTablesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_statio_user_tables: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatIOUserTables
+
+	for rows.Next() {
+		var metric models.PgStatIOUserTables
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.HeapBlksRead,
+			&metric.HeapBlksHit,
+			&metric.IdxBlksRead,
+			&metric.IdxBlksHit,
+			&metric.ToastBlksRead,
+			&metric.ToastBlksHit,
+			&metric.TidxBlksRead,
+			&metric.TidxBlksHit,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_statio_user_tables row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_statio_user_tables rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryUserIndexes(ctx context.Context, schemas, tables []string) ([]models.PgStatUserIndexes, error) {
+	query := queries.PgStatUserIndexesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_user_indexes: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatUserIndexes
+
+	for rows.Next() {
+		var metric models.PgStatUserIndexes
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.IndexName,
+			&metric.IndexRelID,
+			&metric.IdxScan,
+			&metric.IdxTupRead,
+			&metric.IdxTupFetch,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_user_indexes row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_user_indexes rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryToastTables(ctx context.Context, schemas, tables []string) ([]models.PgStatToastTables, error) {
+	query := queries.PgStatToastTablesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query TOAST table statistics: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatToastTables
+
+	for rows.Next() {
+		var metric models.PgStatToastTables
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.ToastVacuumCount,
+			&metric.ToastAutovacuumCount,
+			&metric.ToastLastVacuumAge,
+			&metric.ToastLastAutovacuumAge,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan TOAST table statistics row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating TOAST table statistics rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryTableSizes(ctx context.Context, schemas, tables []string) ([]models.PgClassSizes, error) {
+	query := queries.PgClassSizesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query table sizes: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgClassSizes
+
+	for rows.Next() {
+		var metric models.PgClassSizes
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.RelationSize,
+			&metric.ToastSize,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan table sizes row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating table sizes rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+func (c *SQLClient) QueryRelationStats(ctx context.Context, schemas, tables []string) ([]models.PgClassStats, error) {
+	query := queries.PgClassStatsSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query relation statistics: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgClassStats
+
+	for rows.Next() {
+		var metric models.PgClassStats
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.RelPages,
+			&metric.RelTuples,
+			&metric.RelAllVisible,
+			&metric.Xmin,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan relation statistics row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating relation statistics rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
 	query := queries.PgStatProgressAnalyzeSQL
 	rows, err := c.db.QueryContext(ctx, query)
