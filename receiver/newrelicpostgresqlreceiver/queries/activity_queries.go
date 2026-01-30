@@ -43,4 +43,23 @@ const (
 		FROM pg_stat_activity
 		WHERE datname IS NOT NULL
 		GROUP BY datname, usename, application_name, backend_type, wait_event`
+
+	// PgStatStatementsInfoSQL returns deallocation statistics from pg_stat_statements_info
+	// This query retrieves the number of times pg_stat_statements has deallocated least-used statements
+	// Requires pg_stat_statements extension to be installed and enabled
+	// Returns NULL (handled by sql.NullInt64) if extension is not available
+	// Available in PostgreSQL 13+
+	PgStatStatementsInfoSQL = `SELECT dealloc FROM pg_stat_statements_info`
+
+	// PgSnapshotSQL returns transaction snapshot information using pg_snapshot functions
+	// This query retrieves the current transaction visibility snapshot including:
+	// - xmin: earliest transaction ID still active
+	// - xmax: first as-yet-unassigned transaction ID
+	// - xip_count: number of in-progress transactions
+	// Available in PostgreSQL 13+
+	PgSnapshotSQL = `
+		SELECT
+			pg_snapshot_xmin(pg_current_snapshot()) as xmin,
+			pg_snapshot_xmax(pg_current_snapshot()) as xmax,
+			(SELECT COUNT(*) FROM pg_snapshot_xip(pg_current_snapshot())) as xip_count`
 )

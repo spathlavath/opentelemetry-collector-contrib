@@ -268,6 +268,36 @@ func (c *SQLClient) QueryWaitEvents(ctx context.Context) ([]models.PgStatActivit
 	return metrics, nil
 }
 
+// QueryPgStatStatementsDealloc retrieves deallocation statistics from pg_stat_statements_info
+// Returns the number of times pg_stat_statements has deallocated least-used statements
+// Requires pg_stat_statements extension to be installed and enabled
+// Returns error if extension is not available or query fails
+// Available in PostgreSQL 13+
+func (c *SQLClient) QueryPgStatStatementsDealloc(ctx context.Context) (*models.PgStatStatementsDealloc, error) {
+	var metric models.PgStatStatementsDealloc
+
+	err := c.db.QueryRowContext(ctx, queries.PgStatStatementsInfoSQL).Scan(&metric.Dealloc)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_statements_info: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QuerySnapshot retrieves transaction snapshot information using pg_snapshot functions
+// Returns the current transaction visibility snapshot (xmin, xmax, xip_count)
+// Available in PostgreSQL 13+
+func (c *SQLClient) QuerySnapshot(ctx context.Context) (*models.PgSnapshot, error) {
+	var metric models.PgSnapshot
+
+	err := c.db.QueryRowContext(ctx, queries.PgSnapshotSQL).Scan(&metric.Xmin, &metric.Xmax, &metric.XipCount)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_snapshot: %w", err)
+	}
+
+	return &metric, nil
+}
+
 // QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 // Calculates time elapsed since server start using pg_postmaster_start_time()
 // Available in PostgreSQL 9.6+

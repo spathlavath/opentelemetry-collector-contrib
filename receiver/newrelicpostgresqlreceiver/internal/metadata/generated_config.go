@@ -100,6 +100,7 @@ type MetricsConfig struct {
 	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
 	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
 	PostgresqlLastVacuumAge                           MetricConfig `mapstructure:"postgresql.last_vacuum_age"`
+	PostgresqlPgStatStatementsDealloc                 MetricConfig `mapstructure:"postgresql.pg_stat_statements.dealloc"`
 	PostgresqlRecoveryPrefetchBlockDistance           MetricConfig `mapstructure:"postgresql.recovery_prefetch.block_distance"`
 	PostgresqlRecoveryPrefetchHit                     MetricConfig `mapstructure:"postgresql.recovery_prefetch.hit"`
 	PostgresqlRecoveryPrefetchIoDepth                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.io_depth"`
@@ -157,6 +158,9 @@ type MetricsConfig struct {
 	PostgresqlSlruBlksZeroed                          MetricConfig `mapstructure:"postgresql.slru.blks_zeroed"`
 	PostgresqlSlruFlushes                             MetricConfig `mapstructure:"postgresql.slru.flushes"`
 	PostgresqlSlruTruncates                           MetricConfig `mapstructure:"postgresql.slru.truncates"`
+	PostgresqlSnapshotXipCount                        MetricConfig `mapstructure:"postgresql.snapshot.xip_count"`
+	PostgresqlSnapshotXmax                            MetricConfig `mapstructure:"postgresql.snapshot.xmax"`
+	PostgresqlSnapshotXmin                            MetricConfig `mapstructure:"postgresql.snapshot.xmin"`
 	PostgresqlSubscriptionApplyError                  MetricConfig `mapstructure:"postgresql.subscription.apply_error"`
 	PostgresqlSubscriptionLastMsgReceiptAge           MetricConfig `mapstructure:"postgresql.subscription.last_msg_receipt_age"`
 	PostgresqlSubscriptionLastMsgSendAge              MetricConfig `mapstructure:"postgresql.subscription.last_msg_send_age"`
@@ -419,6 +423,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlLastVacuumAge: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlPgStatStatementsDealloc: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlRecoveryPrefetchBlockDistance: MetricConfig{
 			Enabled: true,
 		},
@@ -588,6 +595,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSlruTruncates: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSnapshotXipCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSnapshotXmax: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSnapshotXmin: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlSubscriptionApplyError: MetricConfig{

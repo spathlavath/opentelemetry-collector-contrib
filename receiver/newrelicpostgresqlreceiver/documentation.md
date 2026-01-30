@@ -1158,6 +1158,20 @@ Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)
 | schema_name | Name of the schema containing the table | Any Str | Recommended |
 | table_name | Name of the table | Any Str | Recommended |
 
+### postgresql.pg_stat_statements.dealloc
+
+Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {deallocations} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.recovery_prefetch.block_distance
 
 Number of blocks between the current replay position and the prefetch position (PostgreSQL 15+)
@@ -2033,6 +2047,48 @@ Number of truncates for this SLRU (PostgreSQL 13+)
 | ---- | ----------- | ------ | -------- |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 | slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
+
+### postgresql.snapshot.xip_count
+
+Number of in-progress transactions in the current snapshot (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.snapshot.xmax
+
+First as-yet-unassigned transaction ID in the current snapshot (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {xid} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.snapshot.xmin
+
+Earliest transaction ID still active in the current snapshot (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {xid} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
 ### postgresql.subscription.apply_error
 

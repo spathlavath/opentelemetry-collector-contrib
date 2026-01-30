@@ -358,6 +358,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlPgStatStatementsDeallocDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlRecoveryPrefetchBlockDistanceDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -583,6 +587,18 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordPostgresqlSlruTruncatesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "slru_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSnapshotXipCountDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSnapshotXmaxDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSnapshotXminDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2343,6 +2359,23 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("table_name")
 					assert.True(t, ok)
 					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.pg_stat_statements.dealloc":
+					assert.False(t, validatedMetrics["postgresql.pg_stat_statements.dealloc"], "Found a duplicate in the metrics slice: postgresql.pg_stat_statements.dealloc")
+					validatedMetrics["postgresql.pg_stat_statements.dealloc"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{deallocations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				case "postgresql.recovery_prefetch.block_distance":
 					assert.False(t, validatedMetrics["postgresql.recovery_prefetch.block_distance"], "Found a duplicate in the metrics slice: postgresql.recovery_prefetch.block_distance")
 					validatedMetrics["postgresql.recovery_prefetch.block_distance"] = true
@@ -3494,6 +3527,51 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("slru_name")
 					assert.True(t, ok)
 					assert.Equal(t, "slru_name-val", attrVal.Str())
+				case "postgresql.snapshot.xip_count":
+					assert.False(t, validatedMetrics["postgresql.snapshot.xip_count"], "Found a duplicate in the metrics slice: postgresql.snapshot.xip_count")
+					validatedMetrics["postgresql.snapshot.xip_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of in-progress transactions in the current snapshot (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.snapshot.xmax":
+					assert.False(t, validatedMetrics["postgresql.snapshot.xmax"], "Found a duplicate in the metrics slice: postgresql.snapshot.xmax")
+					validatedMetrics["postgresql.snapshot.xmax"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "First as-yet-unassigned transaction ID in the current snapshot (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{xid}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.snapshot.xmin":
+					assert.False(t, validatedMetrics["postgresql.snapshot.xmin"], "Found a duplicate in the metrics slice: postgresql.snapshot.xmin")
+					validatedMetrics["postgresql.snapshot.xmin"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Earliest transaction ID still active in the current snapshot (PostgreSQL 13+)", ms.At(i).Description())
+					assert.Equal(t, "{xid}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				case "postgresql.subscription.apply_error":
 					assert.False(t, validatedMetrics["postgresql.subscription.apply_error"], "Found a duplicate in the metrics slice: postgresql.subscription.apply_error")
 					validatedMetrics["postgresql.subscription.apply_error"] = true

@@ -285,6 +285,26 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape pg_stat_statements deallocation metric (PostgreSQL 13+, requires pg_stat_statements extension)
+	if s.pgVersion >= PG13Version && s.activityScraper != nil {
+		pgStatStatementsErrs := s.activityScraper.ScrapePgStatStatementsDealloc(scrapeCtx)
+		if len(pgStatStatementsErrs) > 0 {
+			s.logger.Debug("pg_stat_statements extension not available or query failed",
+				zap.Int("error_count", len(pgStatStatementsErrs)))
+			// Don't append to scrapeErrors - extension may not be installed, which is acceptable
+		}
+	}
+
+	// Scrape transaction snapshot metrics (PostgreSQL 13+)
+	if s.pgVersion >= PG13Version && s.activityScraper != nil {
+		snapshotErrs := s.activityScraper.ScrapeSnapshot(scrapeCtx)
+		if len(snapshotErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping snapshot metrics",
+				zap.Int("error_count", len(snapshotErrs)))
+			scrapeErrors = append(scrapeErrors, snapshotErrs...)
+		}
+	}
+
 	// Scrape server uptime (PostgreSQL 9.6+, available on all versions we support)
 	uptimeErrs := s.databaseMetricsScraper.ScrapeServerUptime(scrapeCtx)
 	if len(uptimeErrs) > 0 {

@@ -229,6 +229,9 @@ var MetricsInfo = metricsInfo{
 	PostgresqlLastVacuumAge: metricInfo{
 		Name: "postgresql.last_vacuum_age",
 	},
+	PostgresqlPgStatStatementsDealloc: metricInfo{
+		Name: "postgresql.pg_stat_statements.dealloc",
+	},
 	PostgresqlRecoveryPrefetchBlockDistance: metricInfo{
 		Name: "postgresql.recovery_prefetch.block_distance",
 	},
@@ -399,6 +402,15 @@ var MetricsInfo = metricsInfo{
 	},
 	PostgresqlSlruTruncates: metricInfo{
 		Name: "postgresql.slru.truncates",
+	},
+	PostgresqlSnapshotXipCount: metricInfo{
+		Name: "postgresql.snapshot.xip_count",
+	},
+	PostgresqlSnapshotXmax: metricInfo{
+		Name: "postgresql.snapshot.xmax",
+	},
+	PostgresqlSnapshotXmin: metricInfo{
+		Name: "postgresql.snapshot.xmin",
 	},
 	PostgresqlSubscriptionApplyError: metricInfo{
 		Name: "postgresql.subscription.apply_error",
@@ -601,6 +613,7 @@ type metricsInfo struct {
 	PostgresqlLastAutoanalyzeAge                      metricInfo
 	PostgresqlLastAutovacuumAge                       metricInfo
 	PostgresqlLastVacuumAge                           metricInfo
+	PostgresqlPgStatStatementsDealloc                 metricInfo
 	PostgresqlRecoveryPrefetchBlockDistance           metricInfo
 	PostgresqlRecoveryPrefetchHit                     metricInfo
 	PostgresqlRecoveryPrefetchIoDepth                 metricInfo
@@ -658,6 +671,9 @@ type metricsInfo struct {
 	PostgresqlSlruBlksZeroed                          metricInfo
 	PostgresqlSlruFlushes                             metricInfo
 	PostgresqlSlruTruncates                           metricInfo
+	PostgresqlSnapshotXipCount                        metricInfo
+	PostgresqlSnapshotXmax                            metricInfo
+	PostgresqlSnapshotXmin                            metricInfo
 	PostgresqlSubscriptionApplyError                  metricInfo
 	PostgresqlSubscriptionLastMsgReceiptAge           metricInfo
 	PostgresqlSubscriptionLastMsgSendAge              metricInfo
@@ -4584,6 +4600,59 @@ func newMetricPostgresqlLastVacuumAge(cfg MetricConfig) metricPostgresqlLastVacu
 	return m
 }
 
+type metricPostgresqlPgStatStatementsDealloc struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.pg_stat_statements.dealloc metric with initial data.
+func (m *metricPostgresqlPgStatStatementsDealloc) init() {
+	m.data.SetName("postgresql.pg_stat_statements.dealloc")
+	m.data.SetDescription("Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)")
+	m.data.SetUnit("{deallocations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlPgStatStatementsDealloc) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlPgStatStatementsDealloc) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlPgStatStatementsDealloc) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlPgStatStatementsDealloc(cfg MetricConfig) metricPostgresqlPgStatStatementsDealloc {
+	m := metricPostgresqlPgStatStatementsDealloc{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlRecoveryPrefetchBlockDistance struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -7631,6 +7700,159 @@ func newMetricPostgresqlSlruTruncates(cfg MetricConfig) metricPostgresqlSlruTrun
 	return m
 }
 
+type metricPostgresqlSnapshotXipCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.snapshot.xip_count metric with initial data.
+func (m *metricPostgresqlSnapshotXipCount) init() {
+	m.data.SetName("postgresql.snapshot.xip_count")
+	m.data.SetDescription("Number of in-progress transactions in the current snapshot (PostgreSQL 13+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSnapshotXipCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSnapshotXipCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSnapshotXipCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSnapshotXipCount(cfg MetricConfig) metricPostgresqlSnapshotXipCount {
+	m := metricPostgresqlSnapshotXipCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSnapshotXmax struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.snapshot.xmax metric with initial data.
+func (m *metricPostgresqlSnapshotXmax) init() {
+	m.data.SetName("postgresql.snapshot.xmax")
+	m.data.SetDescription("First as-yet-unassigned transaction ID in the current snapshot (PostgreSQL 13+)")
+	m.data.SetUnit("{xid}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSnapshotXmax) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSnapshotXmax) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSnapshotXmax) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSnapshotXmax(cfg MetricConfig) metricPostgresqlSnapshotXmax {
+	m := metricPostgresqlSnapshotXmax{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSnapshotXmin struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.snapshot.xmin metric with initial data.
+func (m *metricPostgresqlSnapshotXmin) init() {
+	m.data.SetName("postgresql.snapshot.xmin")
+	m.data.SetDescription("Earliest transaction ID still active in the current snapshot (PostgreSQL 13+)")
+	m.data.SetUnit("{xid}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSnapshotXmin) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSnapshotXmin) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSnapshotXmin) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSnapshotXmin(cfg MetricConfig) metricPostgresqlSnapshotXmin {
+	m := metricPostgresqlSnapshotXmin{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlSubscriptionApplyError struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9947,6 +10169,7 @@ type MetricsBuilder struct {
 	metricPostgresqlLastAutoanalyzeAge                      metricPostgresqlLastAutoanalyzeAge
 	metricPostgresqlLastAutovacuumAge                       metricPostgresqlLastAutovacuumAge
 	metricPostgresqlLastVacuumAge                           metricPostgresqlLastVacuumAge
+	metricPostgresqlPgStatStatementsDealloc                 metricPostgresqlPgStatStatementsDealloc
 	metricPostgresqlRecoveryPrefetchBlockDistance           metricPostgresqlRecoveryPrefetchBlockDistance
 	metricPostgresqlRecoveryPrefetchHit                     metricPostgresqlRecoveryPrefetchHit
 	metricPostgresqlRecoveryPrefetchIoDepth                 metricPostgresqlRecoveryPrefetchIoDepth
@@ -10004,6 +10227,9 @@ type MetricsBuilder struct {
 	metricPostgresqlSlruBlksZeroed                          metricPostgresqlSlruBlksZeroed
 	metricPostgresqlSlruFlushes                             metricPostgresqlSlruFlushes
 	metricPostgresqlSlruTruncates                           metricPostgresqlSlruTruncates
+	metricPostgresqlSnapshotXipCount                        metricPostgresqlSnapshotXipCount
+	metricPostgresqlSnapshotXmax                            metricPostgresqlSnapshotXmax
+	metricPostgresqlSnapshotXmin                            metricPostgresqlSnapshotXmin
 	metricPostgresqlSubscriptionApplyError                  metricPostgresqlSubscriptionApplyError
 	metricPostgresqlSubscriptionLastMsgReceiptAge           metricPostgresqlSubscriptionLastMsgReceiptAge
 	metricPostgresqlSubscriptionLastMsgSendAge              metricPostgresqlSubscriptionLastMsgSendAge
@@ -10143,6 +10369,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlLastAutoanalyzeAge:                      newMetricPostgresqlLastAutoanalyzeAge(mbc.Metrics.PostgresqlLastAutoanalyzeAge),
 		metricPostgresqlLastAutovacuumAge:                       newMetricPostgresqlLastAutovacuumAge(mbc.Metrics.PostgresqlLastAutovacuumAge),
 		metricPostgresqlLastVacuumAge:                           newMetricPostgresqlLastVacuumAge(mbc.Metrics.PostgresqlLastVacuumAge),
+		metricPostgresqlPgStatStatementsDealloc:                 newMetricPostgresqlPgStatStatementsDealloc(mbc.Metrics.PostgresqlPgStatStatementsDealloc),
 		metricPostgresqlRecoveryPrefetchBlockDistance:           newMetricPostgresqlRecoveryPrefetchBlockDistance(mbc.Metrics.PostgresqlRecoveryPrefetchBlockDistance),
 		metricPostgresqlRecoveryPrefetchHit:                     newMetricPostgresqlRecoveryPrefetchHit(mbc.Metrics.PostgresqlRecoveryPrefetchHit),
 		metricPostgresqlRecoveryPrefetchIoDepth:                 newMetricPostgresqlRecoveryPrefetchIoDepth(mbc.Metrics.PostgresqlRecoveryPrefetchIoDepth),
@@ -10200,6 +10427,9 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSlruBlksZeroed:                          newMetricPostgresqlSlruBlksZeroed(mbc.Metrics.PostgresqlSlruBlksZeroed),
 		metricPostgresqlSlruFlushes:                             newMetricPostgresqlSlruFlushes(mbc.Metrics.PostgresqlSlruFlushes),
 		metricPostgresqlSlruTruncates:                           newMetricPostgresqlSlruTruncates(mbc.Metrics.PostgresqlSlruTruncates),
+		metricPostgresqlSnapshotXipCount:                        newMetricPostgresqlSnapshotXipCount(mbc.Metrics.PostgresqlSnapshotXipCount),
+		metricPostgresqlSnapshotXmax:                            newMetricPostgresqlSnapshotXmax(mbc.Metrics.PostgresqlSnapshotXmax),
+		metricPostgresqlSnapshotXmin:                            newMetricPostgresqlSnapshotXmin(mbc.Metrics.PostgresqlSnapshotXmin),
 		metricPostgresqlSubscriptionApplyError:                  newMetricPostgresqlSubscriptionApplyError(mbc.Metrics.PostgresqlSubscriptionApplyError),
 		metricPostgresqlSubscriptionLastMsgReceiptAge:           newMetricPostgresqlSubscriptionLastMsgReceiptAge(mbc.Metrics.PostgresqlSubscriptionLastMsgReceiptAge),
 		metricPostgresqlSubscriptionLastMsgSendAge:              newMetricPostgresqlSubscriptionLastMsgSendAge(mbc.Metrics.PostgresqlSubscriptionLastMsgSendAge),
@@ -10422,6 +10652,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlLastAutoanalyzeAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastAutovacuumAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastVacuumAge.emit(ils.Metrics())
+	mb.metricPostgresqlPgStatStatementsDealloc.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchBlockDistance.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchHit.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchIoDepth.emit(ils.Metrics())
@@ -10479,6 +10710,9 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSlruBlksZeroed.emit(ils.Metrics())
 	mb.metricPostgresqlSlruFlushes.emit(ils.Metrics())
 	mb.metricPostgresqlSlruTruncates.emit(ils.Metrics())
+	mb.metricPostgresqlSnapshotXipCount.emit(ils.Metrics())
+	mb.metricPostgresqlSnapshotXmax.emit(ils.Metrics())
+	mb.metricPostgresqlSnapshotXmin.emit(ils.Metrics())
 	mb.metricPostgresqlSubscriptionApplyError.emit(ils.Metrics())
 	mb.metricPostgresqlSubscriptionLastMsgReceiptAge.emit(ils.Metrics())
 	mb.metricPostgresqlSubscriptionLastMsgSendAge.emit(ils.Metrics())
@@ -10912,6 +11146,11 @@ func (mb *MetricsBuilder) RecordPostgresqlLastVacuumAgeDataPoint(ts pcommon.Time
 	mb.metricPostgresqlLastVacuumAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
+// RecordPostgresqlPgStatStatementsDeallocDataPoint adds a data point to postgresql.pg_stat_statements.dealloc metric.
+func (mb *MetricsBuilder) RecordPostgresqlPgStatStatementsDeallocDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlPgStatStatementsDealloc.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
 // RecordPostgresqlRecoveryPrefetchBlockDistanceDataPoint adds a data point to postgresql.recovery_prefetch.block_distance metric.
 func (mb *MetricsBuilder) RecordPostgresqlRecoveryPrefetchBlockDistanceDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlRecoveryPrefetchBlockDistance.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
@@ -11195,6 +11434,21 @@ func (mb *MetricsBuilder) RecordPostgresqlSlruFlushesDataPoint(ts pcommon.Timest
 // RecordPostgresqlSlruTruncatesDataPoint adds a data point to postgresql.slru.truncates metric.
 func (mb *MetricsBuilder) RecordPostgresqlSlruTruncatesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, slruNameAttributeValue string) {
 	mb.metricPostgresqlSlruTruncates.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, slruNameAttributeValue)
+}
+
+// RecordPostgresqlSnapshotXipCountDataPoint adds a data point to postgresql.snapshot.xip_count metric.
+func (mb *MetricsBuilder) RecordPostgresqlSnapshotXipCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSnapshotXipCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSnapshotXmaxDataPoint adds a data point to postgresql.snapshot.xmax metric.
+func (mb *MetricsBuilder) RecordPostgresqlSnapshotXmaxDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSnapshotXmax.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlSnapshotXminDataPoint adds a data point to postgresql.snapshot.xmin metric.
+func (mb *MetricsBuilder) RecordPostgresqlSnapshotXminDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSnapshotXmin.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlSubscriptionApplyErrorDataPoint adds a data point to postgresql.subscription.apply_error metric.

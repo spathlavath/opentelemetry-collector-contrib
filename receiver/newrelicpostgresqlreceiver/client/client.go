@@ -41,6 +41,19 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryWaitEvents(ctx context.Context) ([]models.PgStatActivityWaitEvents, error)
 
+	// pg_stat_statements deallocation metrics from pg_stat_statements_info
+	// Retrieves the number of times pg_stat_statements has deallocated least-used statements
+	// Requires pg_stat_statements extension to be installed and enabled
+	// Returns nil if extension is not available (query will fail gracefully)
+	// Available in PostgreSQL 13+
+	QueryPgStatStatementsDealloc(ctx context.Context) (*models.PgStatStatementsDealloc, error)
+
+	// Snapshot metrics from pg_snapshot functions
+	// Retrieves transaction snapshot information including xmin, xmax, and in-progress transaction count
+	// Provides insight into current transaction state and visibility
+	// Available in PostgreSQL 13+
+	QuerySnapshot(ctx context.Context) (*models.PgSnapshot, error)
+
 	// QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 	// Uses pg_postmaster_start_time() to calculate elapsed time since server start
 	// Available in PostgreSQL 9.6+

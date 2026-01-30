@@ -46,3 +46,24 @@ type PgStatActivityWaitEvents struct {
 	// Wait event metric
 	WaitEventCount sql.NullInt64 // Count of backends in this wait event state
 }
+
+// PgStatStatementsDealloc represents statement deallocation statistics from pg_stat_statements_info
+// This metric tracks the number of times pg_stat_statements has deallocated least-used statements
+// Requires pg_stat_statements extension to be installed and enabled
+// Available in PostgreSQL 13+
+type PgStatStatementsDealloc struct {
+	// Dealloc is the number of times statements have been deallocated
+	Dealloc sql.NullInt64
+}
+
+// PgSnapshot represents transaction snapshot information from pg_snapshot functions
+// This provides insight into the current transaction state and visibility
+// Available in PostgreSQL 13+
+type PgSnapshot struct {
+	// Xmin is the earliest transaction ID still active
+	Xmin sql.NullInt64
+	// Xmax is the first as-yet-unassigned transaction ID
+	Xmax sql.NullInt64
+	// XipCount is the number of in-progress transactions
+	XipCount sql.NullInt64
+}

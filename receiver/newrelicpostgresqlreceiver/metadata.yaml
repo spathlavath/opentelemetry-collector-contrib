@@ -882,6 +882,18 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.pg_stat_statements.dealloc:
+    description: Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{deallocations}"
+    stability:
+      level: alpha
+
   postgresql.recovery_prefetch.block_distance:
     description: Number of blocks between the current replay position and the prefetch position (PostgreSQL 15+)
     enabled: true
@@ -1511,6 +1523,36 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name, slru_name]
     unit: "{truncates}"
+    stability:
+      level: alpha
+
+  postgresql.snapshot.xip_count:
+    description: Number of in-progress transactions in the current snapshot (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.snapshot.xmax:
+    description: First as-yet-unassigned transaction ID in the current snapshot (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{xid}"
+    stability:
+      level: alpha
+
+  postgresql.snapshot.xmin:
+    description: Earliest transaction ID still active in the current snapshot (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{xid}"
     stability:
       level: alpha
 

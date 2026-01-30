@@ -145,6 +145,8 @@ all_set:
       enabled: true
     postgresql.last_vacuum_age:
       enabled: true
+    postgresql.pg_stat_statements.dealloc:
+      enabled: true
     postgresql.recovery_prefetch.block_distance:
       enabled: true
     postgresql.recovery_prefetch.hit:
@@ -258,6 +260,12 @@ all_set:
     postgresql.slru.flushes:
       enabled: true
     postgresql.slru.truncates:
+      enabled: true
+    postgresql.snapshot.xip_count:
+      enabled: true
+    postgresql.snapshot.xmax:
+      enabled: true
+    postgresql.snapshot.xmin:
       enabled: true
     postgresql.subscription.apply_error:
       enabled: true
@@ -502,6 +510,8 @@ none_set:
       enabled: false
     postgresql.last_vacuum_age:
       enabled: false
+    postgresql.pg_stat_statements.dealloc:
+      enabled: false
     postgresql.recovery_prefetch.block_distance:
       enabled: false
     postgresql.recovery_prefetch.hit:
@@ -615,6 +625,12 @@ none_set:
     postgresql.slru.flushes:
       enabled: false
     postgresql.slru.truncates:
+      enabled: false
+    postgresql.snapshot.xip_count:
+      enabled: false
+    postgresql.snapshot.xmax:
+      enabled: false
+    postgresql.snapshot.xmin:
       enabled: false
     postgresql.subscription.apply_error:
       enabled: false

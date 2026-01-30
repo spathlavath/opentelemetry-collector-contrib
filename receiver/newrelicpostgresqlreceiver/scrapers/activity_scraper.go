@@ -107,3 +107,50 @@ func (s *ActivityScraper) recordWaitEventMetrics(now pcommon.Timestamp, metric m
 	// Record wait event metric
 	s.mb.RecordPostgresqlActivityWaitEventDataPoint(now, getInt64(metric.WaitEventCount), s.instanceName, databaseName, userName, applicationName, backendType, waitEvent)
 }
+
+// ScrapePgStatStatementsDealloc scrapes pg_stat_statements deallocation metric
+// Requires pg_stat_statements extension to be installed and enabled
+// Available in PostgreSQL 13+
+func (s *ActivityScraper) ScrapePgStatStatementsDealloc(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryPgStatStatementsDealloc(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query pg_stat_statements_info", zap.Error(err))
+		return []error{err}
+	}
+
+	if metric != nil && metric.Dealloc.Valid {
+		s.mb.RecordPostgresqlPgStatStatementsDeallocDataPoint(now, metric.Dealloc.Int64, s.instanceName)
+		s.logger.Debug("pg_stat_statements dealloc metric scraped", zap.Int64("dealloc", metric.Dealloc.Int64))
+	}
+
+	return nil
+}
+
+// ScrapeSnapshot scrapes transaction snapshot metrics
+// Available in PostgreSQL 13+
+func (s *ActivityScraper) ScrapeSnapshot(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QuerySnapshot(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query pg_snapshot", zap.Error(err))
+		return []error{err}
+	}
+
+	if metric != nil {
+		if metric.Xmin.Valid {
+			s.mb.RecordPostgresqlSnapshotXminDataPoint(now, metric.Xmin.Int64, s.instanceName)
+		}
+		if metric.Xmax.Valid {
+			s.mb.RecordPostgresqlSnapshotXmaxDataPoint(now, metric.Xmax.Int64, s.instanceName)
+		}
+		if metric.XipCount.Valid {
+			s.mb.RecordPostgresqlSnapshotXipCountDataPoint(now, metric.XipCount.Int64, s.instanceName)
+		}
+		s.logger.Debug("Snapshot metrics scraped")
+	}
+
+	return nil
+}
