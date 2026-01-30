@@ -105,6 +105,8 @@ type MetricsConfig struct {
 	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
 	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
 	PostgresqlLastVacuumAge                           MetricConfig `mapstructure:"postgresql.last_vacuum_age"`
+	PostgresqlMaxConnections                          MetricConfig `mapstructure:"postgresql.max_connections"`
+	PostgresqlPercentUsageConnections                 MetricConfig `mapstructure:"postgresql.percent_usage_connections"`
 	PostgresqlPgStatStatementsDealloc                 MetricConfig `mapstructure:"postgresql.pg_stat_statements.dealloc"`
 	PostgresqlRecoveryPrefetchBlockDistance           MetricConfig `mapstructure:"postgresql.recovery_prefetch.block_distance"`
 	PostgresqlRecoveryPrefetchHit                     MetricConfig `mapstructure:"postgresql.recovery_prefetch.hit"`
@@ -441,6 +443,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlLastVacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlMaxConnections: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlPercentUsageConnections: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlPgStatStatementsDealloc: MetricConfig{

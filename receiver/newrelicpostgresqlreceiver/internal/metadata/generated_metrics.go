@@ -244,6 +244,12 @@ var MetricsInfo = metricsInfo{
 	PostgresqlLastVacuumAge: metricInfo{
 		Name: "postgresql.last_vacuum_age",
 	},
+	PostgresqlMaxConnections: metricInfo{
+		Name: "postgresql.max_connections",
+	},
+	PostgresqlPercentUsageConnections: metricInfo{
+		Name: "postgresql.percent_usage_connections",
+	},
 	PostgresqlPgStatStatementsDealloc: metricInfo{
 		Name: "postgresql.pg_stat_statements.dealloc",
 	},
@@ -633,6 +639,8 @@ type metricsInfo struct {
 	PostgresqlLastAutoanalyzeAge                      metricInfo
 	PostgresqlLastAutovacuumAge                       metricInfo
 	PostgresqlLastVacuumAge                           metricInfo
+	PostgresqlMaxConnections                          metricInfo
+	PostgresqlPercentUsageConnections                 metricInfo
 	PostgresqlPgStatStatementsDealloc                 metricInfo
 	PostgresqlRecoveryPrefetchBlockDistance           metricInfo
 	PostgresqlRecoveryPrefetchHit                     metricInfo
@@ -4883,6 +4891,108 @@ func (m *metricPostgresqlLastVacuumAge) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlLastVacuumAge(cfg MetricConfig) metricPostgresqlLastVacuumAge {
 	m := metricPostgresqlLastVacuumAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlMaxConnections struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.max_connections metric with initial data.
+func (m *metricPostgresqlMaxConnections) init() {
+	m.data.SetName("postgresql.max_connections")
+	m.data.SetDescription("Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlMaxConnections) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlMaxConnections) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlMaxConnections) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlMaxConnections(cfg MetricConfig) metricPostgresqlMaxConnections {
+	m := metricPostgresqlMaxConnections{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlPercentUsageConnections struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.percent_usage_connections metric with initial data.
+func (m *metricPostgresqlPercentUsageConnections) init() {
+	m.data.SetName("postgresql.percent_usage_connections")
+	m.data.SetDescription("Percentage of max_connections currently in use (PostgreSQL 9.6+)")
+	m.data.SetUnit("%")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlPercentUsageConnections) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlPercentUsageConnections) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlPercentUsageConnections) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlPercentUsageConnections(cfg MetricConfig) metricPostgresqlPercentUsageConnections {
+	m := metricPostgresqlPercentUsageConnections{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10464,6 +10574,8 @@ type MetricsBuilder struct {
 	metricPostgresqlLastAutoanalyzeAge                      metricPostgresqlLastAutoanalyzeAge
 	metricPostgresqlLastAutovacuumAge                       metricPostgresqlLastAutovacuumAge
 	metricPostgresqlLastVacuumAge                           metricPostgresqlLastVacuumAge
+	metricPostgresqlMaxConnections                          metricPostgresqlMaxConnections
+	metricPostgresqlPercentUsageConnections                 metricPostgresqlPercentUsageConnections
 	metricPostgresqlPgStatStatementsDealloc                 metricPostgresqlPgStatStatementsDealloc
 	metricPostgresqlRecoveryPrefetchBlockDistance           metricPostgresqlRecoveryPrefetchBlockDistance
 	metricPostgresqlRecoveryPrefetchHit                     metricPostgresqlRecoveryPrefetchHit
@@ -10669,6 +10781,8 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlLastAutoanalyzeAge:                      newMetricPostgresqlLastAutoanalyzeAge(mbc.Metrics.PostgresqlLastAutoanalyzeAge),
 		metricPostgresqlLastAutovacuumAge:                       newMetricPostgresqlLastAutovacuumAge(mbc.Metrics.PostgresqlLastAutovacuumAge),
 		metricPostgresqlLastVacuumAge:                           newMetricPostgresqlLastVacuumAge(mbc.Metrics.PostgresqlLastVacuumAge),
+		metricPostgresqlMaxConnections:                          newMetricPostgresqlMaxConnections(mbc.Metrics.PostgresqlMaxConnections),
+		metricPostgresqlPercentUsageConnections:                 newMetricPostgresqlPercentUsageConnections(mbc.Metrics.PostgresqlPercentUsageConnections),
 		metricPostgresqlPgStatStatementsDealloc:                 newMetricPostgresqlPgStatStatementsDealloc(mbc.Metrics.PostgresqlPgStatStatementsDealloc),
 		metricPostgresqlRecoveryPrefetchBlockDistance:           newMetricPostgresqlRecoveryPrefetchBlockDistance(mbc.Metrics.PostgresqlRecoveryPrefetchBlockDistance),
 		metricPostgresqlRecoveryPrefetchHit:                     newMetricPostgresqlRecoveryPrefetchHit(mbc.Metrics.PostgresqlRecoveryPrefetchHit),
@@ -10957,6 +11071,8 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlLastAutoanalyzeAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastAutovacuumAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastVacuumAge.emit(ils.Metrics())
+	mb.metricPostgresqlMaxConnections.emit(ils.Metrics())
+	mb.metricPostgresqlPercentUsageConnections.emit(ils.Metrics())
 	mb.metricPostgresqlPgStatStatementsDealloc.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchBlockDistance.emit(ils.Metrics())
 	mb.metricPostgresqlRecoveryPrefetchHit.emit(ils.Metrics())
@@ -11474,6 +11590,16 @@ func (mb *MetricsBuilder) RecordPostgresqlLastAutovacuumAgeDataPoint(ts pcommon.
 // RecordPostgresqlLastVacuumAgeDataPoint adds a data point to postgresql.last_vacuum_age metric.
 func (mb *MetricsBuilder) RecordPostgresqlLastVacuumAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
 	mb.metricPostgresqlLastVacuumAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlMaxConnectionsDataPoint adds a data point to postgresql.max_connections metric.
+func (mb *MetricsBuilder) RecordPostgresqlMaxConnectionsDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlMaxConnections.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlPercentUsageConnectionsDataPoint adds a data point to postgresql.percent_usage_connections metric.
+func (mb *MetricsBuilder) RecordPostgresqlPercentUsageConnectionsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlPercentUsageConnections.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlPgStatStatementsDeallocDataPoint adds a data point to postgresql.pg_stat_statements.dealloc metric.

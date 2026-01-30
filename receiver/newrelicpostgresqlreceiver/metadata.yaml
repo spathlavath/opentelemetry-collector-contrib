@@ -932,6 +932,26 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.max_connections:
+    description: Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  postgresql.percent_usage_connections:
+    description: Percentage of max_connections currently in use (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "%"
+    stability:
+      level: alpha
+
   postgresql.pg_stat_statements.dealloc:
     description: Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)
     enabled: true

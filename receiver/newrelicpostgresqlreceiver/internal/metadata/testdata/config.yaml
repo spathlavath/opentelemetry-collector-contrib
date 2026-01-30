@@ -155,6 +155,10 @@ all_set:
       enabled: true
     postgresql.last_vacuum_age:
       enabled: true
+    postgresql.max_connections:
+      enabled: true
+    postgresql.percent_usage_connections:
+      enabled: true
     postgresql.pg_stat_statements.dealloc:
       enabled: true
     postgresql.recovery_prefetch.block_distance:
@@ -529,6 +533,10 @@ none_set:
     postgresql.last_autovacuum_age:
       enabled: false
     postgresql.last_vacuum_age:
+      enabled: false
+    postgresql.max_connections:
+      enabled: false
+    postgresql.percent_usage_connections:
       enabled: false
     postgresql.pg_stat_statements.dealloc:
       enabled: false

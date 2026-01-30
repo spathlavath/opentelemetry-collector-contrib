@@ -339,6 +339,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		scrapeErrors = append(scrapeErrors, runningErrs...)
 	}
 
+	// Scrape connection statistics (PostgreSQL 9.6+, available on all versions we support)
+	connectionStatsErrs := s.databaseMetricsScraper.ScrapeConnectionStats(scrapeCtx)
+	if len(connectionStatsErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping connection statistics",
+			zap.Int("error_count", len(connectionStatsErrs)))
+		scrapeErrors = append(scrapeErrors, connectionStatsErrs...)
+	}
+
 	// Scrape conflict metrics (all supported versions)
 	conflictErrs := s.databaseMetricsScraper.ScrapeConflictMetrics(scrapeCtx)
 	if len(conflictErrs) > 0 {

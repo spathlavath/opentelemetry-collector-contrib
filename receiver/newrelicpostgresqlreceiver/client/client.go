@@ -76,6 +76,11 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryRunningStatus(ctx context.Context) (*models.PgRunningStatusMetric, error)
 
+	// QueryConnectionStats retrieves connection statistics from pg_settings and pg_stat_activity
+	// Returns max_connections setting and current connection count
+	// Available in PostgreSQL 9.6+
+	QueryConnectionStats(ctx context.Context) (*models.PgConnectionStatsMetric, error)
+
 	// QueryReplicationMetrics retrieves replication statistics from pg_stat_replication
 	// Uses version-specific queries:
 	// - PostgreSQL 9.6: Uses pg_xlog_location_diff, returns NULL for lag times

@@ -378,6 +378,14 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlMaxConnectionsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlPercentUsageConnectionsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlPgStatStatementsDeallocDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -2499,6 +2507,36 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("table_name")
 					assert.True(t, ok)
 					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.max_connections":
+					assert.False(t, validatedMetrics["postgresql.max_connections"], "Found a duplicate in the metrics slice: postgresql.max_connections")
+					validatedMetrics["postgresql.max_connections"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.percent_usage_connections":
+					assert.False(t, validatedMetrics["postgresql.percent_usage_connections"], "Found a duplicate in the metrics slice: postgresql.percent_usage_connections")
+					validatedMetrics["postgresql.percent_usage_connections"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Percentage of max_connections currently in use (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "%", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				case "postgresql.pg_stat_statements.dealloc":
 					assert.False(t, validatedMetrics["postgresql.pg_stat_statements.dealloc"], "Found a duplicate in the metrics slice: postgresql.pg_stat_statements.dealloc")
 					validatedMetrics["postgresql.pg_stat_statements.dealloc"] = true

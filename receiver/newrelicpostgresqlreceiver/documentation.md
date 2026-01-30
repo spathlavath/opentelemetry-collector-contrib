@@ -1243,6 +1243,34 @@ Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)
 | schema_name | Name of the schema containing the table | Any Str | Recommended |
 | table_name | Name of the table | Any Str | Recommended |
 
+### postgresql.max_connections
+
+Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.percent_usage_connections
+
+Percentage of max_connections currently in use (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.pg_stat_statements.dealloc
 
 Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)

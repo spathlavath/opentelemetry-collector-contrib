@@ -377,6 +377,20 @@ func (c *SQLClient) QueryRunningStatus(ctx context.Context) (*models.PgRunningSt
 	return &metric, nil
 }
 
+// QueryConnectionStats retrieves connection statistics from pg_settings and pg_stat_activity
+// Returns max_connections setting and current connection count
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryConnectionStats(ctx context.Context) (*models.PgConnectionStatsMetric, error) {
+	var metric models.PgConnectionStatsMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgConnectionStatsSQL).Scan(&metric.MaxConnections, &metric.CurrentConnections)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query connection stats: %w", err)
+	}
+
+	return &metric, nil
+}
+
 // QueryReplicationMetrics retrieves replication statistics from pg_stat_replication
 // Uses version-specific queries based on PostgreSQL version
 func (c *SQLClient) QueryReplicationMetrics(ctx context.Context, version int) ([]models.PgStatReplicationMetric, error) {
