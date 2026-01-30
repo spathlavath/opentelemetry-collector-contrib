@@ -129,3 +129,23 @@ type PgStatToastTables struct {
 	ToastLastVacuumAge     sql.NullFloat64 // Seconds since last manual VACUUM on TOAST table
 	ToastLastAutovacuumAge sql.NullFloat64 // Seconds since last autovacuum on TOAST table
 }
+
+// PgClassSizes represents table size statistics from pg_class
+// This struct captures relation and TOAST sizes for tables
+// Available in PostgreSQL 9.6+
+type PgClassSizes struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing this table
+	SchemaName string
+
+	// TableName is the name of the table
+	TableName string
+
+	// RelationSize is the size of the table data (heap) in bytes
+	RelationSize sql.NullInt64
+
+	// ToastSize is the size of TOAST data for this table in bytes
+	ToastSize sql.NullInt64
+}

@@ -104,6 +104,7 @@ type MetricsConfig struct {
 	PostgresqlRecoveryPrefetchSkipNew                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_new"`
 	PostgresqlRecoveryPrefetchSkipRep                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.skip_rep"`
 	PostgresqlRecoveryPrefetchWalDistance             MetricConfig `mapstructure:"postgresql.recovery_prefetch.wal_distance"`
+	PostgresqlRelationSize                            MetricConfig `mapstructure:"postgresql.relation_size"`
 	PostgresqlReplicationBackendXminAge               MetricConfig `mapstructure:"postgresql.replication.backend_xmin_age"`
 	PostgresqlReplicationFlushLsnDelay                MetricConfig `mapstructure:"postgresql.replication.flush_lsn_delay"`
 	PostgresqlReplicationReplayLsnDelay               MetricConfig `mapstructure:"postgresql.replication.replay_lsn_delay"`
@@ -162,6 +163,7 @@ type MetricsConfig struct {
 	PostgresqlToastBlocksRead                         MetricConfig `mapstructure:"postgresql.toast_blocks_read"`
 	PostgresqlToastIndexBlocksHit                     MetricConfig `mapstructure:"postgresql.toast_index_blocks_hit"`
 	PostgresqlToastIndexBlocksRead                    MetricConfig `mapstructure:"postgresql.toast_index_blocks_read"`
+	PostgresqlToastSize                               MetricConfig `mapstructure:"postgresql.toast_size"`
 	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
 	PostgresqlVacuumHeapBlksScanned                   MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_scanned"`
 	PostgresqlVacuumHeapBlksTotal                     MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_total"`
@@ -418,6 +420,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlRecoveryPrefetchWalDistance: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlRelationSize: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlReplicationBackendXminAge: MetricConfig{
 			Enabled: true,
 		},
@@ -590,6 +595,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlToastIndexBlocksRead: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastSize: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlUptime: MetricConfig{

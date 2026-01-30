@@ -925,6 +925,16 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.relation_size:
+    description: Size of the table data (heap) in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: By
+    stability:
+      level: alpha
+
   postgresql.replication.backend_xmin_age:
     description: Age of the oldest transaction on the standby server that is holding back vacuum
     enabled: true
@@ -1572,6 +1582,16 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
     unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.toast_size:
+    description: Size of the TOAST data for this table in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: By
     stability:
       level: alpha
 

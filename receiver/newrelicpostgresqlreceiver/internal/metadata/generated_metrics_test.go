@@ -374,6 +374,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlRelationSizeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlReplicationBackendXminAgeDataPoint(ts, 1, "application_name-val", "client_address-val", "replication_state-val", "sync_state-val")
 
 			defaultMetricsCount++
@@ -603,6 +607,10 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordPostgresqlToastIndexBlocksReadDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlToastSizeDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "schema_name-val", "table_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -2300,6 +2308,27 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.relation_size":
+					assert.False(t, validatedMetrics["postgresql.relation_size"], "Found a duplicate in the metrics slice: postgresql.relation_size")
+					validatedMetrics["postgresql.relation_size"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Size of the table data (heap) in bytes (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
 				case "postgresql.replication.backend_xmin_age":
 					assert.False(t, validatedMetrics["postgresql.replication.backend_xmin_age"], "Found a duplicate in the metrics slice: postgresql.replication.backend_xmin_age")
 					validatedMetrics["postgresql.replication.backend_xmin_age"] = true
@@ -3515,6 +3544,27 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.True(t, ms.At(i).Sum().IsMonotonic())
 					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
 					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("schema_name")
+					assert.True(t, ok)
+					assert.Equal(t, "schema_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("table_name")
+					assert.True(t, ok)
+					assert.Equal(t, "table_name-val", attrVal.Str())
+				case "postgresql.toast_size":
+					assert.False(t, validatedMetrics["postgresql.toast_size"], "Found a duplicate in the metrics slice: postgresql.toast_size")
+					validatedMetrics["postgresql.toast_size"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Size of the TOAST data for this table in bytes (PostgreSQL 9.6+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())

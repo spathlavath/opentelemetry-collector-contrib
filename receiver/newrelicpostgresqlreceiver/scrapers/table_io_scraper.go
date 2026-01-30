@@ -208,3 +208,36 @@ func (s *TableIOScraper) recordToastTablesMetrics(now pcommon.Timestamp, metric 
 	s.logger.Debug("Recorded TOAST table metrics",
 		zap.String("table", tableID))
 }
+
+// ScrapeTableSizes scrapes table size statistics from pg_class
+func (s *TableIOScraper) ScrapeTableSizes(ctx context.Context, schemas, tables []string) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryTableSizes(ctx, schemas, tables)
+	if err != nil {
+		s.logger.Error("Failed to query table sizes", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordTableSizesMetrics(now, metric)
+	}
+
+	s.logger.Debug("Table sizes scrape completed",
+		zap.Int("table_count", len(metrics)))
+
+	return nil
+}
+
+// recordTableSizesMetrics records all table size metrics for a single table
+func (s *TableIOScraper) recordTableSizesMetrics(now pcommon.Timestamp, metric models.PgClassSizes) {
+	// Create composite identifier for table
+	tableID := metric.SchemaName + "." + metric.TableName
+
+	// Record table sizes (gauges)
+	s.mb.RecordPostgresqlRelationSizeDataPoint(now, getInt64(metric.RelationSize), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlToastSizeDataPoint(now, getInt64(metric.ToastSize), s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded table size metrics",
+		zap.String("table", tableID))
+}

@@ -153,6 +153,8 @@ all_set:
       enabled: true
     postgresql.recovery_prefetch.wal_distance:
       enabled: true
+    postgresql.relation_size:
+      enabled: true
     postgresql.replication.backend_xmin_age:
       enabled: true
     postgresql.replication.flush_lsn_delay:
@@ -268,6 +270,8 @@ all_set:
     postgresql.toast_index_blocks_hit:
       enabled: true
     postgresql.toast_index_blocks_read:
+      enabled: true
+    postgresql.toast_size:
       enabled: true
     postgresql.uptime:
       enabled: true
@@ -484,6 +488,8 @@ none_set:
       enabled: false
     postgresql.recovery_prefetch.wal_distance:
       enabled: false
+    postgresql.relation_size:
+      enabled: false
     postgresql.replication.backend_xmin_age:
       enabled: false
     postgresql.replication.flush_lsn_delay:
@@ -599,6 +605,8 @@ none_set:
     postgresql.toast_index_blocks_hit:
       enabled: false
     postgresql.toast_index_blocks_read:
+      enabled: false
+    postgresql.toast_size:
       enabled: false
     postgresql.uptime:
       enabled: false

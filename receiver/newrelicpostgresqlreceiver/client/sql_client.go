@@ -847,6 +847,38 @@ func (c *SQLClient) QueryToastTables(ctx context.Context, schemas, tables []stri
 	return metrics, nil
 }
 
+func (c *SQLClient) QueryTableSizes(ctx context.Context, schemas, tables []string) ([]models.PgClassSizes, error) {
+	query := queries.PgClassSizesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query table sizes: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgClassSizes
+
+	for rows.Next() {
+		var metric models.PgClassSizes
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.RelationSize,
+			&metric.ToastSize,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan table sizes row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating table sizes rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
 	query := queries.PgStatProgressAnalyzeSQL
 	rows, err := c.db.QueryContext(ctx, query)

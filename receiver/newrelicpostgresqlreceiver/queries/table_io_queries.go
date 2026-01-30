@@ -148,3 +148,27 @@ func PgStatToastTablesSQL(schemas, tables []string) string {
 		WHERE %s AND c.reltoastrelid != 0
 		ORDER BY stat.schemaname, stat.relname`, whereClause)
 }
+
+// PgClassSizesSQL returns table size statistics from pg_class (PostgreSQL 9.6+)
+// This query retrieves relation and TOAST sizes for tables
+// The WHERE clause is dynamically built based on schema and table filters
+func PgClassSizesSQL(schemas, tables []string) string {
+	whereClause := buildTableFilterClause(schemas, tables)
+
+	// Replace filters to use namespace and class table aliases
+	whereClause = strings.Replace(whereClause, "schemaname", "n.nspname", -1)
+	whereClause = strings.Replace(whereClause, "relname", "c.relname", -1)
+
+	return fmt.Sprintf(`
+		SELECT
+			current_database() as database,
+			n.nspname as schema_name,
+			c.relname as table_name,
+			pg_relation_size(c.oid) as relation_size,
+			COALESCE(pg_relation_size(c.reltoastrelid), 0) as toast_size
+		FROM pg_class c
+		JOIN pg_namespace n ON n.oid = c.relnamespace
+		WHERE c.relkind = 'r'
+			AND %s
+		ORDER BY n.nspname, c.relname`, whereClause)
+}

@@ -1193,6 +1193,22 @@ Distance in WAL bytes between the current replay position and the prefetch posit
 | ---- | ----------- | ------ | -------- |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.relation_size
+
+Size of the table data (heap) in bytes (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
 ### postgresql.replication.backend_xmin_age
 
 Age of the oldest transaction on the standby server that is holding back vacuum
@@ -2092,6 +2108,22 @@ Number of TOAST index blocks read from disk for this table (PostgreSQL 9.6+)
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | {blocks} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.toast_size
+
+Size of the TOAST data for this table in bytes (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
