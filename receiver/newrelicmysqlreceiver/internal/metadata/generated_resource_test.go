@@ -13,7 +13,7 @@ func TestResourceBuilder(t *testing.T) {
 		t.Run(tt, func(t *testing.T) {
 			cfg := loadResourceAttributesConfig(t, tt)
 			rb := NewResourceBuilder(cfg)
-			rb.SetMysqlInstanceEndpoint("mysql.instance.endpoint-val")
+			rb.SetNewrelicmysqlInstanceEndpoint("newrelicmysql.instance.endpoint-val")
 
 			res := rb.Emit()
 			assert.Equal(t, 0, rb.Emit().Attributes().Len()) // Second call should return empty Resource
@@ -30,10 +30,10 @@ func TestResourceBuilder(t *testing.T) {
 				assert.Failf(t, "unexpected test case: %s", tt)
 			}
 
-			val, ok := res.Attributes().Get("mysql.instance.endpoint")
+			val, ok := res.Attributes().Get("newrelicmysql.instance.endpoint")
 			assert.True(t, ok)
 			if ok {
-				assert.Equal(t, "mysql.instance.endpoint-val", val.Str())
+				assert.Equal(t, "newrelicmysql.instance.endpoint-val", val.Str())
 			}
 		})
 	}

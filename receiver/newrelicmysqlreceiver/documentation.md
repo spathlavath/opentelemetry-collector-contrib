@@ -24,7 +24,7 @@ The number of times each type of command has been executed.
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| command | The command types. | Str: ``delete``, ``delete_multi``, ``insert``, ``select``, ``update``, ``update_multi`` | Recommended |
+| command | The command types. | Str: ``commit``, ``delete``, ``delete_multi``, ``insert``, ``insert_select``, ``load``, ``replace``, ``replace_select``, ``rollback``, ``select``, ``update``, ``update_multi`` | Recommended |
 
 ### newrelicmysql.connection.count
 
@@ -34,6 +34,462 @@ The number of connection attempts (successful or not) to the MySQL server.
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | Development |
 
+### newrelicmysql.db.handler_rollback
+
+The number of internal ROLLBACK statements.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.db.opened_tables
+
+The number of tables that have been opened.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.buffer_pool_dirty
+
+The number of dirty pages in the InnoDB buffer pool.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.innodb.buffer_pool_free
+
+The number of free pages in the InnoDB buffer pool.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.innodb.buffer_pool_read_requests
+
+The number of logical read requests.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.buffer_pool_reads
+
+The number of reads that InnoDB could not satisfy from the buffer pool.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.buffer_pool_total
+
+The total size of the InnoDB buffer pool in pages.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.innodb.buffer_pool_used
+
+The number of used pages in the InnoDB buffer pool.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.innodb.buffer_pool_utilization
+
+The InnoDB buffer pool utilization percentage.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Development |
+
+### newrelicmysql.innodb.current_row_locks
+
+The number of current row locks.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.innodb.data_reads
+
+The amount of data read.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.data_writes
+
+The amount of data written.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.data_written
+
+The amount of data written to InnoDB tables in bytes.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.log_waits
+
+The number of times the log buffer was too small and a wait was required for it to be flushed.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.mutex_os_waits
+
+The number of mutex OS waits.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.mutex_spin_rounds
+
+The number of mutex spin rounds.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.mutex_spin_waits
+
+The number of mutex spin waits.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.os_log_fsyncs
+
+The number of fsync writes done to the InnoDB redo log files.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.row_lock_current_waits
+
+The number of row locks currently being waited for.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.innodb.row_lock_time
+
+The total time spent in acquiring row locks.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| ms | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.innodb.row_lock_waits
+
+The number of times operations had to wait for a row lock.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.myisam.key_buffer_bytes_unflushed
+
+MyISAM key buffer bytes unflushed.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Development |
+
+### newrelicmysql.myisam.key_buffer_bytes_used
+
+MyISAM key buffer bytes used.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Development |
+
+### newrelicmysql.myisam.key_buffer_size
+
+Size of the buffer used for index blocks.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Development |
+
+### newrelicmysql.myisam.key_read_requests
+
+The number of requests to read a key block from the MyISAM key cache.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.myisam.key_reads
+
+The number of physical reads of a key block from disk into the MyISAM key cache.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.myisam.key_write_requests
+
+The number of requests to write a key block to the MyISAM key cache.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.myisam.key_writes
+
+The number of physical writes of a key block from the MyISAM key cache to disk.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.net.aborted_clients
+
+The number of connections that were aborted because the client died without closing the connection properly.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.net.aborted_connects
+
+The number of failed attempts to connect to the MySQL server.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.net.connections
+
+The number of connection attempts (successful or not) to the MySQL server.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.net.max_connections
+
+The maximum permitted number of simultaneous client connections.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.net.max_connections_available
+
+The number of available connections (max_connections - threads_connected).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.net.max_used_connections
+
+The maximum number of connections that have been in use simultaneously since the server started.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.bytes_received
+
+The number of bytes received from all clients.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.bytes_sent
+
+The number of bytes sent to all clients.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.created_tmp_disk_tables
+
+The number of internal on-disk temporary tables created by the server.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.created_tmp_files
+
+How many temporary files mysqld has created.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.created_tmp_tables
+
+The number of internal temporary tables created by the server.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.key_cache_utilization
+
+The key cache utilization percentage.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Development |
+
+### newrelicmysql.performance.max_prepared_stmt_count
+
+Maximum number of prepared statements.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.open_files
+
+The number of files that are currently open.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.open_tables
+
+The number of tables that are currently open.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.performance_schema_digest_lost
+
+Number of digest lost in performance schema.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.prepared_stmt_count
+
+Current number of prepared statements.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.qcache_hits
+
+The number of query cache hits.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.qcache_inserts
+
+The number of queries added to the query cache.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.qcache_lowmem_prunes
+
+The number of queries that were deleted from the query cache because of low memory.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.qcache_not_cached
+
+The number of queries that were not cached in the query cache.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.qcache_size
+
+The amount of memory allocated for the query cache.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Development |
+
+### newrelicmysql.performance.questions
+
+The number of statements executed by the server (sent by clients).
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.slow_queries
+
+The number of queries that have taken more than long_query_time seconds.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.table_locks_waited
+
+The total number of times that a request for a table lock could not be granted immediately.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.table_open_cache
+
+The number of open tables for all threads.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.thread_cache_size
+
+Thread cache size.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.threads_connected
+
+The number of currently open connections.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.threads_running
+
+The number of threads that are not sleeping.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
 ### newrelicmysql.query.count
 
 The number of statements executed by the server.
@@ -41,6 +497,78 @@ The number of statements executed by the server.
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.replication.exec_master_log_pos
+
+The position in the current master binary log file to which the replication SQL thread has read and executed.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.replication.last_io_errno
+
+The error number of the most recent error that caused the replication I/O thread to stop.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.replication.last_sql_errno
+
+The error number of the most recent error that caused the replication SQL thread to stop.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.replication.read_master_log_pos
+
+The position in the current master binary log file up to which the replication I/O thread has read.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.replication.relay_log_space
+
+The total combined size of all existing relay log files.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Development |
+
+### newrelicmysql.replication.seconds_behind_master
+
+The number of seconds that the replica SQL thread is behind processing the master binary log.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Int | Development |
+
+### newrelicmysql.replication.slave_io_running
+
+Status of the replication I/O thread. 0=No/Stopped, 1=Yes/Running, 2=Connecting.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.replication.slave_running
+
+Whether the replica is currently running (both I/O and SQL threads are running). 1=Both running, 0=One or both stopped.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.replication.slave_sql_running
+
+Status of the replication SQL thread. 0=No/Stopped, 1=Yes/Running.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
 
 ### newrelicmysql.uptime
 
@@ -54,4 +582,4 @@ The number of seconds that the server has been up.
 
 | Name | Description | Values | Enabled |
 | ---- | ----------- | ------ | ------- |
-| mysql.instance.endpoint | Endpoint of the MySQL instance. | Any Str | true |
+| newrelicmysql.instance.endpoint | Endpoint of the MySQL instance. | Any Str | true |

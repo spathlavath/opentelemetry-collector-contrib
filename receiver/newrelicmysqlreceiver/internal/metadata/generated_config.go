@@ -28,10 +28,76 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicmysql metrics.
 type MetricsConfig struct {
-	NewrelicmysqlCommands        MetricConfig `mapstructure:"newrelicmysql.commands"`
-	NewrelicmysqlConnectionCount MetricConfig `mapstructure:"newrelicmysql.connection.count"`
-	NewrelicmysqlQueryCount      MetricConfig `mapstructure:"newrelicmysql.query.count"`
-	NewrelicmysqlUptime          MetricConfig `mapstructure:"newrelicmysql.uptime"`
+	NewrelicmysqlCommands                               MetricConfig `mapstructure:"newrelicmysql.commands"`
+	NewrelicmysqlConnectionCount                        MetricConfig `mapstructure:"newrelicmysql.connection.count"`
+	NewrelicmysqlDbHandlerRollback                      MetricConfig `mapstructure:"newrelicmysql.db.handler_rollback"`
+	NewrelicmysqlDbOpenedTables                         MetricConfig `mapstructure:"newrelicmysql.db.opened_tables"`
+	NewrelicmysqlInnodbBufferPoolDirty                  MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_dirty"`
+	NewrelicmysqlInnodbBufferPoolFree                   MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_free"`
+	NewrelicmysqlInnodbBufferPoolReadRequests           MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_read_requests"`
+	NewrelicmysqlInnodbBufferPoolReads                  MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_reads"`
+	NewrelicmysqlInnodbBufferPoolTotal                  MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_total"`
+	NewrelicmysqlInnodbBufferPoolUsed                   MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_used"`
+	NewrelicmysqlInnodbBufferPoolUtilization            MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_utilization"`
+	NewrelicmysqlInnodbCurrentRowLocks                  MetricConfig `mapstructure:"newrelicmysql.innodb.current_row_locks"`
+	NewrelicmysqlInnodbDataReads                        MetricConfig `mapstructure:"newrelicmysql.innodb.data_reads"`
+	NewrelicmysqlInnodbDataWrites                       MetricConfig `mapstructure:"newrelicmysql.innodb.data_writes"`
+	NewrelicmysqlInnodbDataWritten                      MetricConfig `mapstructure:"newrelicmysql.innodb.data_written"`
+	NewrelicmysqlInnodbLogWaits                         MetricConfig `mapstructure:"newrelicmysql.innodb.log_waits"`
+	NewrelicmysqlInnodbMutexOsWaits                     MetricConfig `mapstructure:"newrelicmysql.innodb.mutex_os_waits"`
+	NewrelicmysqlInnodbMutexSpinRounds                  MetricConfig `mapstructure:"newrelicmysql.innodb.mutex_spin_rounds"`
+	NewrelicmysqlInnodbMutexSpinWaits                   MetricConfig `mapstructure:"newrelicmysql.innodb.mutex_spin_waits"`
+	NewrelicmysqlInnodbOsLogFsyncs                      MetricConfig `mapstructure:"newrelicmysql.innodb.os_log_fsyncs"`
+	NewrelicmysqlInnodbRowLockCurrentWaits              MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_current_waits"`
+	NewrelicmysqlInnodbRowLockTime                      MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_time"`
+	NewrelicmysqlInnodbRowLockWaits                     MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_waits"`
+	NewrelicmysqlMyisamKeyBufferBytesUnflushed          MetricConfig `mapstructure:"newrelicmysql.myisam.key_buffer_bytes_unflushed"`
+	NewrelicmysqlMyisamKeyBufferBytesUsed               MetricConfig `mapstructure:"newrelicmysql.myisam.key_buffer_bytes_used"`
+	NewrelicmysqlMyisamKeyBufferSize                    MetricConfig `mapstructure:"newrelicmysql.myisam.key_buffer_size"`
+	NewrelicmysqlMyisamKeyReadRequests                  MetricConfig `mapstructure:"newrelicmysql.myisam.key_read_requests"`
+	NewrelicmysqlMyisamKeyReads                         MetricConfig `mapstructure:"newrelicmysql.myisam.key_reads"`
+	NewrelicmysqlMyisamKeyWriteRequests                 MetricConfig `mapstructure:"newrelicmysql.myisam.key_write_requests"`
+	NewrelicmysqlMyisamKeyWrites                        MetricConfig `mapstructure:"newrelicmysql.myisam.key_writes"`
+	NewrelicmysqlNetAbortedClients                      MetricConfig `mapstructure:"newrelicmysql.net.aborted_clients"`
+	NewrelicmysqlNetAbortedConnects                     MetricConfig `mapstructure:"newrelicmysql.net.aborted_connects"`
+	NewrelicmysqlNetConnections                         MetricConfig `mapstructure:"newrelicmysql.net.connections"`
+	NewrelicmysqlNetMaxConnections                      MetricConfig `mapstructure:"newrelicmysql.net.max_connections"`
+	NewrelicmysqlNetMaxConnectionsAvailable             MetricConfig `mapstructure:"newrelicmysql.net.max_connections_available"`
+	NewrelicmysqlNetMaxUsedConnections                  MetricConfig `mapstructure:"newrelicmysql.net.max_used_connections"`
+	NewrelicmysqlPerformanceBytesReceived               MetricConfig `mapstructure:"newrelicmysql.performance.bytes_received"`
+	NewrelicmysqlPerformanceBytesSent                   MetricConfig `mapstructure:"newrelicmysql.performance.bytes_sent"`
+	NewrelicmysqlPerformanceCreatedTmpDiskTables        MetricConfig `mapstructure:"newrelicmysql.performance.created_tmp_disk_tables"`
+	NewrelicmysqlPerformanceCreatedTmpFiles             MetricConfig `mapstructure:"newrelicmysql.performance.created_tmp_files"`
+	NewrelicmysqlPerformanceCreatedTmpTables            MetricConfig `mapstructure:"newrelicmysql.performance.created_tmp_tables"`
+	NewrelicmysqlPerformanceKeyCacheUtilization         MetricConfig `mapstructure:"newrelicmysql.performance.key_cache_utilization"`
+	NewrelicmysqlPerformanceMaxPreparedStmtCount        MetricConfig `mapstructure:"newrelicmysql.performance.max_prepared_stmt_count"`
+	NewrelicmysqlPerformanceOpenFiles                   MetricConfig `mapstructure:"newrelicmysql.performance.open_files"`
+	NewrelicmysqlPerformanceOpenTables                  MetricConfig `mapstructure:"newrelicmysql.performance.open_tables"`
+	NewrelicmysqlPerformancePerformanceSchemaDigestLost MetricConfig `mapstructure:"newrelicmysql.performance.performance_schema_digest_lost"`
+	NewrelicmysqlPerformancePreparedStmtCount           MetricConfig `mapstructure:"newrelicmysql.performance.prepared_stmt_count"`
+	NewrelicmysqlPerformanceQcacheHits                  MetricConfig `mapstructure:"newrelicmysql.performance.qcache_hits"`
+	NewrelicmysqlPerformanceQcacheInserts               MetricConfig `mapstructure:"newrelicmysql.performance.qcache_inserts"`
+	NewrelicmysqlPerformanceQcacheLowmemPrunes          MetricConfig `mapstructure:"newrelicmysql.performance.qcache_lowmem_prunes"`
+	NewrelicmysqlPerformanceQcacheNotCached             MetricConfig `mapstructure:"newrelicmysql.performance.qcache_not_cached"`
+	NewrelicmysqlPerformanceQcacheSize                  MetricConfig `mapstructure:"newrelicmysql.performance.qcache_size"`
+	NewrelicmysqlPerformanceQuestions                   MetricConfig `mapstructure:"newrelicmysql.performance.questions"`
+	NewrelicmysqlPerformanceSlowQueries                 MetricConfig `mapstructure:"newrelicmysql.performance.slow_queries"`
+	NewrelicmysqlPerformanceTableLocksWaited            MetricConfig `mapstructure:"newrelicmysql.performance.table_locks_waited"`
+	NewrelicmysqlPerformanceTableOpenCache              MetricConfig `mapstructure:"newrelicmysql.performance.table_open_cache"`
+	NewrelicmysqlPerformanceThreadCacheSize             MetricConfig `mapstructure:"newrelicmysql.performance.thread_cache_size"`
+	NewrelicmysqlPerformanceThreadsConnected            MetricConfig `mapstructure:"newrelicmysql.performance.threads_connected"`
+	NewrelicmysqlPerformanceThreadsRunning              MetricConfig `mapstructure:"newrelicmysql.performance.threads_running"`
+	NewrelicmysqlQueryCount                             MetricConfig `mapstructure:"newrelicmysql.query.count"`
+	NewrelicmysqlReplicationExecMasterLogPos            MetricConfig `mapstructure:"newrelicmysql.replication.exec_master_log_pos"`
+	NewrelicmysqlReplicationLastIoErrno                 MetricConfig `mapstructure:"newrelicmysql.replication.last_io_errno"`
+	NewrelicmysqlReplicationLastSQLErrno                MetricConfig `mapstructure:"newrelicmysql.replication.last_sql_errno"`
+	NewrelicmysqlReplicationReadMasterLogPos            MetricConfig `mapstructure:"newrelicmysql.replication.read_master_log_pos"`
+	NewrelicmysqlReplicationRelayLogSpace               MetricConfig `mapstructure:"newrelicmysql.replication.relay_log_space"`
+	NewrelicmysqlReplicationSecondsBehindMaster         MetricConfig `mapstructure:"newrelicmysql.replication.seconds_behind_master"`
+	NewrelicmysqlReplicationSlaveIoRunning              MetricConfig `mapstructure:"newrelicmysql.replication.slave_io_running"`
+	NewrelicmysqlReplicationSlaveRunning                MetricConfig `mapstructure:"newrelicmysql.replication.slave_running"`
+	NewrelicmysqlReplicationSlaveSQLRunning             MetricConfig `mapstructure:"newrelicmysql.replication.slave_sql_running"`
+	NewrelicmysqlUptime                                 MetricConfig `mapstructure:"newrelicmysql.uptime"`
 }
 
 func DefaultMetricsConfig() MetricsConfig {
@@ -42,7 +108,205 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlConnectionCount: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlDbHandlerRollback: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlDbOpenedTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolDirty: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolFree: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolReadRequests: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolTotal: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolUsed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolUtilization: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbCurrentRowLocks: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataWritten: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLogWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMutexOsWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMutexSpinRounds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMutexSpinWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbOsLogFsyncs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowLockCurrentWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowLockTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowLockWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlMyisamKeyBufferBytesUnflushed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlMyisamKeyBufferBytesUsed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlMyisamKeyBufferSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlMyisamKeyReadRequests: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlMyisamKeyReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlMyisamKeyWriteRequests: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlMyisamKeyWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlNetAbortedClients: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlNetAbortedConnects: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlNetConnections: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlNetMaxConnections: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlNetMaxConnectionsAvailable: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlNetMaxUsedConnections: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceBytesReceived: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceBytesSent: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceCreatedTmpDiskTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceCreatedTmpFiles: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceCreatedTmpTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceKeyCacheUtilization: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceMaxPreparedStmtCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceOpenFiles: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceOpenTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformancePerformanceSchemaDigestLost: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformancePreparedStmtCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheHits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheInserts: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheLowmemPrunes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheNotCached: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQuestions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSlowQueries: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceTableLocksWaited: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceTableOpenCache: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceThreadCacheSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceThreadsConnected: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceThreadsRunning: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlQueryCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationExecMasterLogPos: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationLastIoErrno: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationLastSQLErrno: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationReadMasterLogPos: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationRelayLogSpace: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationSecondsBehindMaster: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationSlaveIoRunning: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationSlaveRunning: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlReplicationSlaveSQLRunning: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlUptime: MetricConfig{
@@ -79,12 +343,12 @@ func (rac *ResourceAttributeConfig) Unmarshal(parser *confmap.Conf) error {
 
 // ResourceAttributesConfig provides config for newrelicmysql resource attributes.
 type ResourceAttributesConfig struct {
-	MysqlInstanceEndpoint ResourceAttributeConfig `mapstructure:"mysql.instance.endpoint"`
+	NewrelicmysqlInstanceEndpoint ResourceAttributeConfig `mapstructure:"newrelicmysql.instance.endpoint"`
 }
 
 func DefaultResourceAttributesConfig() ResourceAttributesConfig {
 	return ResourceAttributesConfig{
-		MysqlInstanceEndpoint: ResourceAttributeConfig{
+		NewrelicmysqlInstanceEndpoint: ResourceAttributeConfig{
 			Enabled: true,
 		},
 	}

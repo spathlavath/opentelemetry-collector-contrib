@@ -21,10 +21,10 @@ func NewResourceBuilder(rac ResourceAttributesConfig) *ResourceBuilder {
 	}
 }
 
-// SetMysqlInstanceEndpoint sets provided value as "mysql.instance.endpoint" attribute.
-func (rb *ResourceBuilder) SetMysqlInstanceEndpoint(val string) {
-	if rb.config.MysqlInstanceEndpoint.Enabled {
-		rb.res.Attributes().PutStr("mysql.instance.endpoint", val)
+// SetNewrelicmysqlInstanceEndpoint sets provided value as "newrelicmysql.instance.endpoint" attribute.
+func (rb *ResourceBuilder) SetNewrelicmysqlInstanceEndpoint(val string) {
+	if rb.config.NewrelicmysqlInstanceEndpoint.Enabled {
+		rb.res.Attributes().PutStr("newrelicmysql.instance.endpoint", val)
 	}
 }
 
