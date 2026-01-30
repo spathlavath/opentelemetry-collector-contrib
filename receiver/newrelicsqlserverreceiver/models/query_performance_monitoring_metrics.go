@@ -21,6 +21,12 @@ type SlowQuery struct {
 	// These are populated by the SimplifiedIntervalCalculator
 	IntervalAvgElapsedTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_elapsed_time_ms" source_type:"gauge"`
 	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
+
+	// New Relic Metadata Extraction (calculated in-memory from query comments, not from DB)
+	// These fields enable cross-language query correlation and APM integration
+	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
+	TransactionName   *string `db:"-" metric_name:"transaction_name" source_type:"attribute"`    // Extracted from nr_txn comment
+	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
 
 // WaitTimeAnalysis represents wait time analysis data for SQL Server queries

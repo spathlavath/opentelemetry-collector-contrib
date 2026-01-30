@@ -373,6 +373,31 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		queryID = result.QueryID.String()
 	}
 
+	// Extract New Relic metadata and normalize SQL for cross-language correlation
+	// This enables APM integration and query correlation across different language agents
+	if result.QueryText != nil && *result.QueryText != "" {
+		// Extract metadata from New Relic query comments (e.g., /* nr_service=MyApp,nr_txn=WebTransaction/API/users */)
+		clientName, transactionName := helpers.ExtractNewRelicMetadata(*result.QueryText)
+
+		// Normalize SQL and generate MD5 hash for cross-language query correlation
+		normalizedSQL, sqlHash := helpers.NormalizeSqlAndHash(*result.QueryText)
+
+		// Populate model fields with extracted metadata
+		if clientName != "" {
+			result.ClientName = &clientName
+		}
+		if transactionName != "" {
+			result.TransactionName = &transactionName
+		}
+		if sqlHash != "" {
+			result.NormalisedSqlHash = &sqlHash
+		}
+
+		// Replace QueryText with normalized version for privacy and consistency
+		// This removes literals while preserving query structure
+		result.QueryText = &normalizedSQL
+	}
+
 	planHandle := ""
 	if result.PlanHandle != nil {
 		planHandle = result.PlanHandle.String()
