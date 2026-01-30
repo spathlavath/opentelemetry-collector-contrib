@@ -106,3 +106,26 @@ type PgStatUserIndexes struct {
 	IdxTupRead  sql.NullInt64 // Number of index entries returned by scans on this index
 	IdxTupFetch sql.NullInt64 // Number of live table rows fetched by simple index scans using this index
 }
+
+// PgStatToastTables represents TOAST table vacuum statistics
+// This struct captures vacuum/autovacuum statistics for TOAST tables
+// TOAST tables are automatically created for tables with large column values
+// Available in PostgreSQL 9.6+
+type PgStatToastTables struct {
+	// Database name
+	Database string
+
+	// SchemaName is the schema containing the base table
+	SchemaName string
+
+	// TableName is the name of the base table (not the TOAST table)
+	TableName string
+
+	// TOAST vacuum counts
+	ToastVacuumCount     sql.NullInt64 // Number of times TOAST table has been manually vacuumed
+	ToastAutovacuumCount sql.NullInt64 // Number of times TOAST table has been vacuumed by autovacuum
+
+	// TOAST vacuum timing (ages in seconds)
+	ToastLastVacuumAge     sql.NullFloat64 // Seconds since last manual VACUUM on TOAST table
+	ToastLastAutovacuumAge sql.NullFloat64 // Seconds since last autovacuum on TOAST table
+}

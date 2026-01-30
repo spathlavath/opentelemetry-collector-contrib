@@ -154,6 +154,10 @@ type MetricsConfig struct {
 	PostgresqlSubscriptionSyncError                   MetricConfig `mapstructure:"postgresql.subscription.sync_error"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
+	PostgresqlToastAutovacuumed                       MetricConfig `mapstructure:"postgresql.toast.autovacuumed"`
+	PostgresqlToastLastAutovacuumAge                  MetricConfig `mapstructure:"postgresql.toast.last_autovacuum_age"`
+	PostgresqlToastLastVacuumAge                      MetricConfig `mapstructure:"postgresql.toast.last_vacuum_age"`
+	PostgresqlToastVacuumed                           MetricConfig `mapstructure:"postgresql.toast.vacuumed"`
 	PostgresqlToastBlocksHit                          MetricConfig `mapstructure:"postgresql.toast_blocks_hit"`
 	PostgresqlToastBlocksRead                         MetricConfig `mapstructure:"postgresql.toast_blocks_read"`
 	PostgresqlToastIndexBlocksHit                     MetricConfig `mapstructure:"postgresql.toast_index_blocks_hit"`
@@ -562,6 +566,18 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlTempFiles: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastAutovacuumed: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastLastAutovacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastLastVacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlToastVacuumed: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlToastBlocksHit: MetricConfig{

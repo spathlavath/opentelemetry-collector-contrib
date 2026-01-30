@@ -150,6 +150,13 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 9.6+
 	QueryUserIndexes(ctx context.Context, schemas, tables []string) ([]models.PgStatUserIndexes, error)
 
+	// QueryToastTables retrieves TOAST table vacuum statistics
+	// Returns vacuum/autovacuum statistics for TOAST tables of specified base tables
+	// TOAST tables are automatically created for tables with large column values
+	// Filters by specified schemas and tables (base table names)
+	// Available in PostgreSQL 9.6+
+	QueryToastTables(ctx context.Context, schemas, tables []string) ([]models.PgStatToastTables, error)
+
 	// QueryAnalyzeProgress retrieves ANALYZE operation progress from pg_stat_progress_analyze
 	// Returns real-time progress of running ANALYZE operations
 	// Returns empty slice if no ANALYZE operations are currently running

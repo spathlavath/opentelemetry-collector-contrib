@@ -492,6 +492,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 					zap.Int("error_count", len(indexErrs)))
 				scrapeErrors = append(scrapeErrors, indexErrs...)
 			}
+
+			// Scrape TOAST table statistics
+			toastErrs := s.tableIOScraper.ScrapeToastTables(scrapeCtx, schemas, tables)
+			if len(toastErrs) > 0 {
+				s.logger.Warn("Errors occurred while scraping TOAST table statistics",
+					zap.Int("error_count", len(toastErrs)))
+				scrapeErrors = append(scrapeErrors, toastErrs...)
+			}
 		} else {
 			s.logger.Debug("Per-table metrics skipped (no tables configured)")
 		}

@@ -391,6 +391,18 @@ var MetricsInfo = metricsInfo{
 	PostgresqlTempFiles: metricInfo{
 		Name: "postgresql.temp_files",
 	},
+	PostgresqlToastAutovacuumed: metricInfo{
+		Name: "postgresql.toast.autovacuumed",
+	},
+	PostgresqlToastLastAutovacuumAge: metricInfo{
+		Name: "postgresql.toast.last_autovacuum_age",
+	},
+	PostgresqlToastLastVacuumAge: metricInfo{
+		Name: "postgresql.toast.last_vacuum_age",
+	},
+	PostgresqlToastVacuumed: metricInfo{
+		Name: "postgresql.toast.vacuumed",
+	},
 	PostgresqlToastBlocksHit: metricInfo{
 		Name: "postgresql.toast_blocks_hit",
 	},
@@ -604,6 +616,10 @@ type metricsInfo struct {
 	PostgresqlSubscriptionSyncError                   metricInfo
 	PostgresqlTempBytes                               metricInfo
 	PostgresqlTempFiles                               metricInfo
+	PostgresqlToastAutovacuumed                       metricInfo
+	PostgresqlToastLastAutovacuumAge                  metricInfo
+	PostgresqlToastLastVacuumAge                      metricInfo
+	PostgresqlToastVacuumed                           metricInfo
 	PostgresqlToastBlocksHit                          metricInfo
 	PostgresqlToastBlocksRead                         metricInfo
 	PostgresqlToastIndexBlocksHit                     metricInfo
@@ -7399,6 +7415,222 @@ func newMetricPostgresqlTempFiles(cfg MetricConfig) metricPostgresqlTempFiles {
 	return m
 }
 
+type metricPostgresqlToastAutovacuumed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.toast.autovacuumed metric with initial data.
+func (m *metricPostgresqlToastAutovacuumed) init() {
+	m.data.SetName("postgresql.toast.autovacuumed")
+	m.data.SetDescription("Number of times this TOAST table has been vacuumed by autovacuum (PostgreSQL 9.6+)")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlToastAutovacuumed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlToastAutovacuumed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlToastAutovacuumed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlToastAutovacuumed(cfg MetricConfig) metricPostgresqlToastAutovacuumed {
+	m := metricPostgresqlToastAutovacuumed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlToastLastAutovacuumAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.toast.last_autovacuum_age metric with initial data.
+func (m *metricPostgresqlToastLastAutovacuumAge) init() {
+	m.data.SetName("postgresql.toast.last_autovacuum_age")
+	m.data.SetDescription("Seconds since last autovacuum on this TOAST table (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlToastLastAutovacuumAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlToastLastAutovacuumAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlToastLastAutovacuumAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlToastLastAutovacuumAge(cfg MetricConfig) metricPostgresqlToastLastAutovacuumAge {
+	m := metricPostgresqlToastLastAutovacuumAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlToastLastVacuumAge struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.toast.last_vacuum_age metric with initial data.
+func (m *metricPostgresqlToastLastVacuumAge) init() {
+	m.data.SetName("postgresql.toast.last_vacuum_age")
+	m.data.SetDescription("Seconds since last manual VACUUM on this TOAST table (PostgreSQL 9.6+)")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlToastLastVacuumAge) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlToastLastVacuumAge) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlToastLastVacuumAge) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlToastLastVacuumAge(cfg MetricConfig) metricPostgresqlToastLastVacuumAge {
+	m := metricPostgresqlToastLastVacuumAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlToastVacuumed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.toast.vacuumed metric with initial data.
+func (m *metricPostgresqlToastVacuumed) init() {
+	m.data.SetName("postgresql.toast.vacuumed")
+	m.data.SetDescription("Number of times this TOAST table has been manually vacuumed (PostgreSQL 9.6+)")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlToastVacuumed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
+	dp.Attributes().PutStr("table_name", tableNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlToastVacuumed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlToastVacuumed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlToastVacuumed(cfg MetricConfig) metricPostgresqlToastVacuumed {
+	m := metricPostgresqlToastVacuumed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlToastBlocksHit struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -9013,6 +9245,10 @@ type MetricsBuilder struct {
 	metricPostgresqlSubscriptionSyncError                   metricPostgresqlSubscriptionSyncError
 	metricPostgresqlTempBytes                               metricPostgresqlTempBytes
 	metricPostgresqlTempFiles                               metricPostgresqlTempFiles
+	metricPostgresqlToastAutovacuumed                       metricPostgresqlToastAutovacuumed
+	metricPostgresqlToastLastAutovacuumAge                  metricPostgresqlToastLastAutovacuumAge
+	metricPostgresqlToastLastVacuumAge                      metricPostgresqlToastLastVacuumAge
+	metricPostgresqlToastVacuumed                           metricPostgresqlToastVacuumed
 	metricPostgresqlToastBlocksHit                          metricPostgresqlToastBlocksHit
 	metricPostgresqlToastBlocksRead                         metricPostgresqlToastBlocksRead
 	metricPostgresqlToastIndexBlocksHit                     metricPostgresqlToastIndexBlocksHit
@@ -9192,6 +9428,10 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSubscriptionSyncError:                   newMetricPostgresqlSubscriptionSyncError(mbc.Metrics.PostgresqlSubscriptionSyncError),
 		metricPostgresqlTempBytes:                               newMetricPostgresqlTempBytes(mbc.Metrics.PostgresqlTempBytes),
 		metricPostgresqlTempFiles:                               newMetricPostgresqlTempFiles(mbc.Metrics.PostgresqlTempFiles),
+		metricPostgresqlToastAutovacuumed:                       newMetricPostgresqlToastAutovacuumed(mbc.Metrics.PostgresqlToastAutovacuumed),
+		metricPostgresqlToastLastAutovacuumAge:                  newMetricPostgresqlToastLastAutovacuumAge(mbc.Metrics.PostgresqlToastLastAutovacuumAge),
+		metricPostgresqlToastLastVacuumAge:                      newMetricPostgresqlToastLastVacuumAge(mbc.Metrics.PostgresqlToastLastVacuumAge),
+		metricPostgresqlToastVacuumed:                           newMetricPostgresqlToastVacuumed(mbc.Metrics.PostgresqlToastVacuumed),
 		metricPostgresqlToastBlocksHit:                          newMetricPostgresqlToastBlocksHit(mbc.Metrics.PostgresqlToastBlocksHit),
 		metricPostgresqlToastBlocksRead:                         newMetricPostgresqlToastBlocksRead(mbc.Metrics.PostgresqlToastBlocksRead),
 		metricPostgresqlToastIndexBlocksHit:                     newMetricPostgresqlToastIndexBlocksHit(mbc.Metrics.PostgresqlToastIndexBlocksHit),
@@ -9454,6 +9694,10 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSubscriptionSyncError.emit(ils.Metrics())
 	mb.metricPostgresqlTempBytes.emit(ils.Metrics())
 	mb.metricPostgresqlTempFiles.emit(ils.Metrics())
+	mb.metricPostgresqlToastAutovacuumed.emit(ils.Metrics())
+	mb.metricPostgresqlToastLastAutovacuumAge.emit(ils.Metrics())
+	mb.metricPostgresqlToastLastVacuumAge.emit(ils.Metrics())
+	mb.metricPostgresqlToastVacuumed.emit(ils.Metrics())
 	mb.metricPostgresqlToastBlocksHit.emit(ils.Metrics())
 	mb.metricPostgresqlToastBlocksRead.emit(ils.Metrics())
 	mb.metricPostgresqlToastIndexBlocksHit.emit(ils.Metrics())
@@ -10141,6 +10385,26 @@ func (mb *MetricsBuilder) RecordPostgresqlTempBytesDataPoint(ts pcommon.Timestam
 // RecordPostgresqlTempFilesDataPoint adds a data point to postgresql.temp_files metric.
 func (mb *MetricsBuilder) RecordPostgresqlTempFilesDataPoint(ts pcommon.Timestamp, val int64, databaseNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
 	mb.metricPostgresqlTempFiles.recordDataPoint(mb.startTime, ts, val, databaseNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// RecordPostgresqlToastAutovacuumedDataPoint adds a data point to postgresql.toast.autovacuumed metric.
+func (mb *MetricsBuilder) RecordPostgresqlToastAutovacuumedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlToastAutovacuumed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlToastLastAutovacuumAgeDataPoint adds a data point to postgresql.toast.last_autovacuum_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlToastLastAutovacuumAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlToastLastAutovacuumAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlToastLastVacuumAgeDataPoint adds a data point to postgresql.toast.last_vacuum_age metric.
+func (mb *MetricsBuilder) RecordPostgresqlToastLastVacuumAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlToastLastVacuumAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlToastVacuumedDataPoint adds a data point to postgresql.toast.vacuumed metric.
+func (mb *MetricsBuilder) RecordPostgresqlToastVacuumedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
+	mb.metricPostgresqlToastVacuumed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
 }
 
 // RecordPostgresqlToastBlocksHitDataPoint adds a data point to postgresql.toast_blocks_hit metric.

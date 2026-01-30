@@ -253,6 +253,14 @@ all_set:
       enabled: true
     postgresql.temp_files:
       enabled: true
+    postgresql.toast.autovacuumed:
+      enabled: true
+    postgresql.toast.last_autovacuum_age:
+      enabled: true
+    postgresql.toast.last_vacuum_age:
+      enabled: true
+    postgresql.toast.vacuumed:
+      enabled: true
     postgresql.toast_blocks_hit:
       enabled: true
     postgresql.toast_blocks_read:
@@ -575,6 +583,14 @@ none_set:
     postgresql.temp_bytes:
       enabled: false
     postgresql.temp_files:
+      enabled: false
+    postgresql.toast.autovacuumed:
+      enabled: false
+    postgresql.toast.last_autovacuum_age:
+      enabled: false
+    postgresql.toast.last_vacuum_age:
+      enabled: false
+    postgresql.toast.vacuumed:
       enabled: false
     postgresql.toast_blocks_hit:
       enabled: false

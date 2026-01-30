@@ -171,3 +171,40 @@ func (s *TableIOScraper) getIndexSize(_ context.Context, indexRelID int64) int64
 	s.logger.Debug("Index size calculation not yet implemented", zap.Int64("indexRelID", indexRelID))
 	return 0
 }
+
+// ScrapeToastTables scrapes TOAST table vacuum statistics
+func (s *TableIOScraper) ScrapeToastTables(ctx context.Context, schemas, tables []string) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryToastTables(ctx, schemas, tables)
+	if err != nil {
+		s.logger.Error("Failed to query TOAST table statistics", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordToastTablesMetrics(now, metric)
+	}
+
+	s.logger.Debug("TOAST table statistics scrape completed",
+		zap.Int("toast_table_count", len(metrics)))
+
+	return nil
+}
+
+// recordToastTablesMetrics records all TOAST table metrics for a single table
+func (s *TableIOScraper) recordToastTablesMetrics(now pcommon.Timestamp, metric models.PgStatToastTables) {
+	// Create composite identifier for table
+	tableID := metric.SchemaName + "." + metric.TableName
+
+	// Record TOAST vacuum counts (cumulative counters)
+	s.mb.RecordPostgresqlToastVacuumedDataPoint(now, getInt64(metric.ToastVacuumCount), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlToastAutovacuumedDataPoint(now, getInt64(metric.ToastAutovacuumCount), s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record TOAST vacuum ages (gauges)
+	s.mb.RecordPostgresqlToastLastVacuumAgeDataPoint(now, getFloat64(metric.ToastLastVacuumAge), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlToastLastAutovacuumAgeDataPoint(now, getFloat64(metric.ToastLastAutovacuumAge), s.instanceName, metric.SchemaName, metric.TableName)
+
+	s.logger.Debug("Recorded TOAST table metrics",
+		zap.String("table", tableID))
+}

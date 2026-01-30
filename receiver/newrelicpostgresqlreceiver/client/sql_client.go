@@ -813,6 +813,40 @@ func (c *SQLClient) QueryUserIndexes(ctx context.Context, schemas, tables []stri
 	return metrics, nil
 }
 
+func (c *SQLClient) QueryToastTables(ctx context.Context, schemas, tables []string) ([]models.PgStatToastTables, error) {
+	query := queries.PgStatToastTablesSQL(schemas, tables)
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query TOAST table statistics: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatToastTables
+
+	for rows.Next() {
+		var metric models.PgStatToastTables
+		err := rows.Scan(
+			&metric.Database,
+			&metric.SchemaName,
+			&metric.TableName,
+			&metric.ToastVacuumCount,
+			&metric.ToastAutovacuumCount,
+			&metric.ToastLastVacuumAge,
+			&metric.ToastLastAutovacuumAge,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan TOAST table statistics row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating TOAST table statistics rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 func (c *SQLClient) QueryAnalyzeProgress(ctx context.Context) ([]models.PgStatProgressAnalyze, error) {
 	query := queries.PgStatProgressAnalyzeSQL
 	rows, err := c.db.QueryContext(ctx, query)

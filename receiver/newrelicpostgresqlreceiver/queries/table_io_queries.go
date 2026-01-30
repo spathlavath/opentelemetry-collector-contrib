@@ -119,3 +119,32 @@ func PgStatUserIndexesSQL(schemas, tables []string) string {
 		WHERE %s
 		ORDER BY schemaname, relname, indexrelname`, whereClause)
 }
+
+// PgStatToastTablesSQL returns TOAST table vacuum statistics (PostgreSQL 9.6+)
+// This query retrieves vacuum/autovacuum statistics for TOAST tables
+// TOAST tables are automatically created for tables with large column values
+// The WHERE clause is dynamically built based on schema and table filters (applied to base table)
+// Note: TOAST tables are system tables in pg_toast schema, so we use pg_stat_all_tables
+func PgStatToastTablesSQL(schemas, tables []string) string {
+	whereClause := buildTableFilterClause(schemas, tables)
+
+	// Replace the table-level filters to use "stat." prefix since we're joining
+	// This ensures the filter applies to the base table, not the TOAST table
+	whereClause = strings.Replace(whereClause, "schemaname", "stat.schemaname", -1)
+	whereClause = strings.Replace(whereClause, "relname", "stat.relname", -1)
+
+	return fmt.Sprintf(`
+		SELECT
+			current_database() as database,
+			stat.schemaname,
+			stat.relname as table_name,
+			toast.vacuum_count as toast_vacuumed,
+			toast.autovacuum_count as toast_autovacuumed,
+			EXTRACT(EPOCH FROM (now() - toast.last_vacuum)) as toast_last_vacuum_age,
+			EXTRACT(EPOCH FROM (now() - toast.last_autovacuum)) as toast_last_autovacuum_age
+		FROM pg_stat_user_tables stat
+		JOIN pg_class c ON stat.relid = c.oid
+		JOIN pg_stat_all_tables toast ON toast.relid = c.reltoastrelid
+		WHERE %s AND c.reltoastrelid != 0
+		ORDER BY stat.schemaname, stat.relname`, whereClause)
+}

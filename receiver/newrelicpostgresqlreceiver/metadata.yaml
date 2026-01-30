@@ -1483,6 +1483,50 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.toast.autovacuumed:
+    description: Number of times this TOAST table has been vacuumed by autovacuum (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.toast.last_autovacuum_age:
+    description: Seconds since last autovacuum on this TOAST table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.toast.last_vacuum_age:
+    description: Seconds since last manual VACUUM on this TOAST table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.toast.vacuumed:
+    description: Number of times this TOAST table has been manually vacuumed (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
   postgresql.toast_blocks_hit:
     description: Number of TOAST blocks read from buffer cache for this table (PostgreSQL 9.6+)
     enabled: true
