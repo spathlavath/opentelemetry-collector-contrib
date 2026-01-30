@@ -67,3 +67,21 @@ type PgSnapshot struct {
 	// XipCount is the number of in-progress transactions
 	XipCount sql.NullInt64
 }
+
+// PgBuffercache represents buffer cache statistics from pg_buffercache extension
+// This provides insight into shared buffer cache usage grouped by database, schema, and table
+// Requires pg_buffercache extension to be installed and enabled
+// Available in PostgreSQL 9.6+
+type PgBuffercache struct {
+	// Grouping dimensions (can be NULL for shared buffers or system objects)
+	Database sql.NullString // Database name, or 'shared' for shared buffers
+	Schema   sql.NullString // Schema name
+	Table    sql.NullString // Table name
+
+	// Buffer cache metrics
+	UsedBuffers     sql.NullInt64 // Count of buffers with data (relfilenode IS NOT NULL)
+	UnusedBuffers   sql.NullInt64 // Count of empty buffers (relfilenode IS NULL)
+	UsageCount      sql.NullInt64 // Sum of usage counts (how frequently buffers are accessed)
+	DirtyBuffers    sql.NullInt64 // Count of dirty buffers needing write-back
+	PinningBackends sql.NullInt64 // Count of backends currently pinning buffers
+}

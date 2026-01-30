@@ -62,4 +62,25 @@ const (
 			pg_snapshot_xmin(pg_current_snapshot()) as xmin,
 			pg_snapshot_xmax(pg_current_snapshot()) as xmax,
 			(SELECT COUNT(*) FROM pg_snapshot_xip(pg_current_snapshot())) as xip_count`
+
+	// PgBuffercacheSQL returns buffer cache statistics from pg_buffercache extension
+	// This query retrieves shared buffer cache usage metrics grouped by database, schema, and table
+	// Requires pg_buffercache extension to be installed and enabled
+	// COALESCE is used to handle NULL values (shared buffers, system objects)
+	// Available in PostgreSQL 9.6+
+	PgBuffercacheSQL = `
+		SELECT
+			COALESCE(d.datname, 'shared') as database,
+			n.nspname as schema,
+			c.relname as table,
+			COUNT(CASE WHEN b.relfilenode IS NOT NULL THEN 1 END) as used_buffers,
+			COUNT(CASE WHEN b.relfilenode IS NULL THEN 1 END) as unused_buffers,
+			SUM(b.usagecount) as usage_count,
+			SUM(b.isdirty::int) as dirty_buffers,
+			SUM(b.pinning_backends) as pinning_backends
+		FROM pg_buffercache b
+		LEFT JOIN pg_database d ON b.reldatabase = d.oid
+		LEFT JOIN pg_class c ON b.relfilenode = pg_relation_filenode(c.oid)
+		LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
+		GROUP BY d.datname, n.nspname, c.relname`
 )

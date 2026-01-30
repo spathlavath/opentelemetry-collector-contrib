@@ -58,6 +58,11 @@ type MetricsConfig struct {
 	PostgresqlBlkReadTime                             MetricConfig `mapstructure:"postgresql.blk_read_time"`
 	PostgresqlBlkWriteTime                            MetricConfig `mapstructure:"postgresql.blk_write_time"`
 	PostgresqlBufferHit                               MetricConfig `mapstructure:"postgresql.buffer_hit"`
+	PostgresqlBuffercacheDirtyBuffers                 MetricConfig `mapstructure:"postgresql.buffercache.dirty_buffers"`
+	PostgresqlBuffercachePinningBackends              MetricConfig `mapstructure:"postgresql.buffercache.pinning_backends"`
+	PostgresqlBuffercacheUnusedBuffers                MetricConfig `mapstructure:"postgresql.buffercache.unused_buffers"`
+	PostgresqlBuffercacheUsageCount                   MetricConfig `mapstructure:"postgresql.buffercache.usage_count"`
+	PostgresqlBuffercacheUsedBuffers                  MetricConfig `mapstructure:"postgresql.buffercache.used_buffers"`
 	PostgresqlChecksumsEnabled                        MetricConfig `mapstructure:"postgresql.checksums.enabled"`
 	PostgresqlChecksumsFailures                       MetricConfig `mapstructure:"postgresql.checksums.failures"`
 	PostgresqlClusterVacuumHeapBlksScanned            MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_blks_scanned"`
@@ -295,6 +300,21 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlBufferHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheDirtyBuffers: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercachePinningBackends: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheUnusedBuffers: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheUsageCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheUsedBuffers: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlChecksumsEnabled: MetricConfig{

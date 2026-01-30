@@ -61,6 +61,16 @@ all_set:
       enabled: true
     postgresql.buffer_hit:
       enabled: true
+    postgresql.buffercache.dirty_buffers:
+      enabled: true
+    postgresql.buffercache.pinning_backends:
+      enabled: true
+    postgresql.buffercache.unused_buffers:
+      enabled: true
+    postgresql.buffercache.usage_count:
+      enabled: true
+    postgresql.buffercache.used_buffers:
+      enabled: true
     postgresql.checksums.enabled:
       enabled: true
     postgresql.checksums.failures:
@@ -425,6 +435,16 @@ none_set:
     postgresql.blk_write_time:
       enabled: false
     postgresql.buffer_hit:
+      enabled: false
+    postgresql.buffercache.dirty_buffers:
+      enabled: false
+    postgresql.buffercache.pinning_backends:
+      enabled: false
+    postgresql.buffercache.unused_buffers:
+      enabled: false
+    postgresql.buffercache.usage_count:
+      enabled: false
+    postgresql.buffercache.used_buffers:
       enabled: false
     postgresql.checksums.enabled:
       enabled: false

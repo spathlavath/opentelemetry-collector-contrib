@@ -298,6 +298,43 @@ func (c *SQLClient) QuerySnapshot(ctx context.Context) (*models.PgSnapshot, erro
 	return &metric, nil
 }
 
+// QueryBuffercache retrieves buffer cache statistics from pg_buffercache extension
+// Returns buffer usage metrics grouped by database, schema, and table
+// Requires pg_buffercache extension to be installed and enabled
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryBuffercache(ctx context.Context) ([]models.PgBuffercache, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgBuffercacheSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_buffercache: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgBuffercache
+	for rows.Next() {
+		var metric models.PgBuffercache
+		err := rows.Scan(
+			&metric.Database,
+			&metric.Schema,
+			&metric.Table,
+			&metric.UsedBuffers,
+			&metric.UnusedBuffers,
+			&metric.UsageCount,
+			&metric.DirtyBuffers,
+			&metric.PinningBackends,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_buffercache row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_buffercache rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 // QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 // Calculates time elapsed since server start using pg_postmaster_start_time()
 // Available in PostgreSQL 9.6+

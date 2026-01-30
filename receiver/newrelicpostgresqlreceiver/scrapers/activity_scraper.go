@@ -120,9 +120,9 @@ func (s *ActivityScraper) ScrapePgStatStatementsDealloc(ctx context.Context) []e
 		return []error{err}
 	}
 
-	if metric != nil && metric.Dealloc.Valid {
-		s.mb.RecordPostgresqlPgStatStatementsDeallocDataPoint(now, metric.Dealloc.Int64, s.instanceName)
-		s.logger.Debug("pg_stat_statements dealloc metric scraped", zap.Int64("dealloc", metric.Dealloc.Int64))
+	if metric != nil {
+		s.mb.RecordPostgresqlPgStatStatementsDeallocDataPoint(now, getInt64(metric.Dealloc), s.instanceName)
+		s.logger.Debug("pg_stat_statements dealloc metric scraped", zap.Int64("dealloc", getInt64(metric.Dealloc)))
 	}
 
 	return nil
@@ -140,17 +140,47 @@ func (s *ActivityScraper) ScrapeSnapshot(ctx context.Context) []error {
 	}
 
 	if metric != nil {
-		if metric.Xmin.Valid {
-			s.mb.RecordPostgresqlSnapshotXminDataPoint(now, metric.Xmin.Int64, s.instanceName)
-		}
-		if metric.Xmax.Valid {
-			s.mb.RecordPostgresqlSnapshotXmaxDataPoint(now, metric.Xmax.Int64, s.instanceName)
-		}
-		if metric.XipCount.Valid {
-			s.mb.RecordPostgresqlSnapshotXipCountDataPoint(now, metric.XipCount.Int64, s.instanceName)
-		}
+		s.mb.RecordPostgresqlSnapshotXminDataPoint(now, getInt64(metric.Xmin), s.instanceName)
+		s.mb.RecordPostgresqlSnapshotXmaxDataPoint(now, getInt64(metric.Xmax), s.instanceName)
+		s.mb.RecordPostgresqlSnapshotXipCountDataPoint(now, getInt64(metric.XipCount), s.instanceName)
 		s.logger.Debug("Snapshot metrics scraped")
 	}
 
 	return nil
+}
+
+// ScrapeBuffercache scrapes buffer cache metrics from pg_buffercache extension
+// Requires pg_buffercache extension to be installed and enabled
+// Available in PostgreSQL 9.6+
+func (s *ActivityScraper) ScrapeBuffercache(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryBuffercache(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query pg_buffercache", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordBuffercacheMetrics(now, metric)
+	}
+
+	s.logger.Debug("Buffer cache metrics scrape completed", zap.Int("buffercache_groups", len(metrics)))
+
+	return nil
+}
+
+// recordBuffercacheMetrics records all buffer cache metrics for a single group
+func (s *ActivityScraper) recordBuffercacheMetrics(now pcommon.Timestamp, metric models.PgBuffercache) {
+	// Get string values for attributes
+	database := getString(metric.Database)
+	schema := getString(metric.Schema)
+	table := getString(metric.Table)
+
+	// Record all buffer cache metrics using helper functions to extract values
+	s.mb.RecordPostgresqlBuffercacheUsedBuffersDataPoint(now, getInt64(metric.UsedBuffers), s.instanceName, database, schema, table)
+	s.mb.RecordPostgresqlBuffercacheUnusedBuffersDataPoint(now, getInt64(metric.UnusedBuffers), s.instanceName, database, schema, table)
+	s.mb.RecordPostgresqlBuffercacheUsageCountDataPoint(now, getInt64(metric.UsageCount), s.instanceName, database, schema, table)
+	s.mb.RecordPostgresqlBuffercacheDirtyBuffersDataPoint(now, getInt64(metric.DirtyBuffers), s.instanceName, database, schema, table)
+	s.mb.RecordPostgresqlBuffercachePinningBackendsDataPoint(now, getInt64(metric.PinningBackends), s.instanceName, database, schema, table)
 }

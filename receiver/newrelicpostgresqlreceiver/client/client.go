@@ -54,6 +54,13 @@ type PostgreSQLClient interface {
 	// Available in PostgreSQL 13+
 	QuerySnapshot(ctx context.Context) (*models.PgSnapshot, error)
 
+	// QueryBuffercache retrieves buffer cache statistics from pg_buffercache extension
+	// Returns buffer usage metrics grouped by database, schema, and table
+	// Requires pg_buffercache extension to be installed and enabled
+	// Returns empty slice if extension is not available (query will fail gracefully)
+	// Available in PostgreSQL 9.6+
+	QueryBuffercache(ctx context.Context) ([]models.PgBuffercache, error)
+
 	// QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 	// Uses pg_postmaster_start_time() to calculate elapsed time since server start
 	// Available in PostgreSQL 9.6+

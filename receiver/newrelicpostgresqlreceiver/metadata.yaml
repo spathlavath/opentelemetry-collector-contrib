@@ -426,6 +426,56 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.buffercache.dirty_buffers:
+    description: Number of dirty buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.pinning_backends:
+    description: Number of backends pinning buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{backends}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.unused_buffers:
+    description: Number of unused buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.usage_count:
+    description: Sum of usage counts for buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{count}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.used_buffers:
+    description: Number of used buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
   postgresql.checksums.enabled:
     description: Whether data checksums are enabled for this PostgreSQL cluster (PostgreSQL 12+)
     enabled: true

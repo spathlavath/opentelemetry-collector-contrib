@@ -305,6 +305,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	}
 
+	// Scrape buffer cache statistics (PostgreSQL 9.6+, requires pg_buffercache extension)
+	if s.activityScraper != nil {
+		buffercacheErrs := s.activityScraper.ScrapeBuffercache(scrapeCtx)
+		if len(buffercacheErrs) > 0 {
+			s.logger.Debug("pg_buffercache extension not available or query failed",
+				zap.Int("error_count", len(buffercacheErrs)))
+			// Don't append to scrapeErrors - extension may not be installed, which is acceptable
+		}
+	}
+
 	// Scrape server uptime (PostgreSQL 9.6+, available on all versions we support)
 	uptimeErrs := s.databaseMetricsScraper.ScrapeServerUptime(scrapeCtx)
 	if len(uptimeErrs) > 0 {
