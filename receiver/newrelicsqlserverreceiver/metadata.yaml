@@ -1644,6 +1644,15 @@ attributes:
     description: Session ID that is blocking this request
     type: int
   # Removed: child_role_name (used by removed granular metrics)
+<<<<<<< HEAD
+=======
+  client_interface_name:
+    description: Name of the client interface
+    type: string
+  client_name:
+    description: Client application name extracted from New Relic query comments (nr_service)
+    type: string
+>>>>>>> 351c9b6168 (Implementation of generating normalised query hash for APM - DB linking and extracting client name and transaction name for service identification)
   cluster_type_desc:
     description: Cluster type description (WSFC, EXTERNAL, NONE)
     type: string
@@ -1732,6 +1741,9 @@ attributes:
   no_join_predicate:
     description: Whether join lacks a predicate (potential Cartesian product)
     type: bool
+  normalised_sql_hash:
+    description: MD5 hash of normalized SQL for cross-language query correlation
+    type: string
   node_id:
     description: Execution plan node identifier
     type: int
@@ -1821,6 +1833,15 @@ attributes:
   transaction_id:
     description: Transaction identifier
     type: int
+<<<<<<< HEAD
+=======
+  transaction_isolation_level:
+    description: Transaction isolation level
+    type: int
+  transaction_name:
+    description: Transaction name extracted from New Relic query comments (nr_txn)
+    type: string
+>>>>>>> 351c9b6168 (Implementation of generating normalised query hash for APM - DB linking and extracting client name and transaction name for service identification)
   wait_resource:
     description: Resource being waited on
     type: string
