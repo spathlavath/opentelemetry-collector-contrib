@@ -2319,6 +2319,9 @@ attributes:
   client_interface_name:
     description: Name of the client interface
     type: string
+  client_name:
+    description: Client application name extracted from New Relic query comments (nr_service)
+    type: string
   cluster_type_desc:
     description: Cluster type description (WSFC, EXTERNAL, NONE)
     type: string
@@ -2410,6 +2413,9 @@ attributes:
   no_join_predicate:
     description: Whether join lacks a predicate (potential Cartesian product)
     type: bool
+  normalised_sql_hash:
+    description: MD5 hash of normalized SQL for cross-language query correlation
+    type: string
   node_id:
     description: Execution plan node identifier
     type: int
@@ -2535,6 +2541,9 @@ attributes:
   transaction_isolation_level:
     description: Transaction isolation level
     type: int
+  transaction_name:
+    description: Transaction name extracted from New Relic query comments (nr_txn)
+    type: string
   wait_resource:
     description: Resource being waited on
     type: string
