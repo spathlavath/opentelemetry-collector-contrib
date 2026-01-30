@@ -15,7 +15,7 @@ import (
 	"go.opentelemetry.io/collector/scraper/scrapererror"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/scrapers"
 )
@@ -26,7 +26,7 @@ type newRelicMySQLScraper struct {
 	scrapers []scrapers.Scraper
 
 	// Database client and configuration
-	sqlclient client.Client
+	sqlclient common.Client
 	logger    *zap.Logger
 	config    *Config
 	mb        *metadata.MetricsBuilder
@@ -47,22 +47,7 @@ func newNewRelicMySQLScraper(
 // start starts the scraper by initializing the database client connection and scrapers.
 func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error {
 	// Create MySQL client
-	clientCfg := client.Config{
-		Username:             n.config.Username,
-		Password:             string(n.config.Password),
-		Endpoint:             n.config.Endpoint,
-		Database:             n.config.Database,
-		Transport:            string(n.config.Transport),
-		AllowNativePasswords: n.config.AllowNativePasswords,
-		TLSConfig: client.TLSConfig{
-			Insecure: n.config.TLS.Insecure,
-			LoadFunc: func(ctx context.Context) (interface{}, error) {
-				return n.config.TLS.LoadTLSConfig(ctx)
-			},
-		},
-	}
-
-	sqlclient, err := client.NewMySQLClient(clientCfg)
+	sqlclient, err := NewMySQLClient(n.config)
 	if err != nil {
 		return err
 	}

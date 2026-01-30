@@ -12,20 +12,20 @@ import (
 	"go.opentelemetry.io/collector/scraper/scrapererror"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 )
 
 // ReplicationScraper handles MySQL replication metrics collection.
 // Only collects data if the instance is configured as a replication slave.
 type ReplicationScraper struct {
-	client client.Client
+	client common.Client
 	mb     *metadata.MetricsBuilder
 	logger *zap.Logger
 }
 
 // NewReplicationScraper creates a new replication metrics scraper.
-func NewReplicationScraper(c client.Client, mb *metadata.MetricsBuilder, logger *zap.Logger) (*ReplicationScraper, error) {
+func NewReplicationScraper(c common.Client, mb *metadata.MetricsBuilder, logger *zap.Logger) (*ReplicationScraper, error) {
 	if c == nil {
 		return nil, errors.New("client cannot be nil")
 	}
@@ -106,11 +106,11 @@ func (s *ReplicationScraper) ScrapeMetrics(_ context.Context, now pcommon.Timest
 	}
 
 	// Convert IO thread status to numeric: 0=No, 1=Yes, 2=Connecting
-	ioStatus := ConvertReplicationThreadStatus(ioRunning)
+	ioStatus := common.ConvertReplicationThreadStatus(ioRunning)
 	s.mb.RecordNewrelicmysqlReplicationSlaveIoRunningDataPoint(now, ioStatus)
 
 	// Convert SQL thread status to numeric: 0=No, 1=Yes
-	sqlStatus := ConvertReplicationThreadStatus(sqlRunning)
+	sqlStatus := common.ConvertReplicationThreadStatus(sqlRunning)
 	s.mb.RecordNewrelicmysqlReplicationSlaveSQLRunningDataPoint(now, sqlStatus)
 
 	// Calculate composite slave_running (1 if both IO and SQL threads are running, 0 otherwise)
