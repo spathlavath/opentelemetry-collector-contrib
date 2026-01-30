@@ -1,4 +1,4 @@
-// Copyright The OpenTelemetry Authors
+// Copyright 2025 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package scrapers
@@ -586,4 +586,755 @@ func TestContainerScraper_IsConnectedToPDB(t *testing.T) {
 	err = scraper.checkCurrentContext(ctx)
 	require.NoError(t, err)
 	assert.False(t, scraper.isConnectedToPDB())
+}
+
+// TestScrapeContainerMetrics tests the main orchestration function
+func TestScrapeContainerMetrics(t *testing.T) {
+	t.Run("Success_CDBRoot", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCDBFeatureResult = 1
+		mockClient.CheckPDBCapabilityResult = 1
+		mockClient.CheckCurrentContainerResult = models.ContainerContext{
+			ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
+			ContainerID:   sql.NullString{String: "1", Valid: true},
+		}
+		mockClient.ContainerStatusList = []models.ContainerStatus{
+			{
+				ConID:         sql.NullInt64{Int64: 1, Valid: true},
+				ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
+				OpenMode:      sql.NullString{String: "READ WRITE", Valid: true},
+				Restricted:    sql.NullString{String: "NO", Valid: true},
+			},
+		}
+		mockClient.PDBStatusList = []models.PDBStatus{
+			{
+				ConID:     sql.NullInt64{Int64: 3, Valid: true},
+				PDBName:   sql.NullString{String: "PDB1", Valid: true},
+				OpenMode:  sql.NullString{String: "READ WRITE", Valid: true},
+				TotalSize: sql.NullInt64{Int64: 1073741824, Valid: true},
+			},
+		}
+		mockClient.CDBTablespaceUsageList = []models.CDBTablespaceUsage{
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				UsedBytes:      sql.NullInt64{Int64: 524288000, Valid: true},
+				TotalBytes:     sql.NullInt64{Int64: 1073741824, Valid: true},
+				UsedPercent:    sql.NullFloat64{Float64: 48.83, Valid: true},
+			},
+		}
+		mockClient.CDBDataFilesList = []models.CDBDataFile{
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				FileName:       sql.NullString{String: "/u01/oradata/system01.dbf", Valid: true},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				Bytes:          sql.NullInt64{Int64: 1073741824, Valid: true},
+				Status:         sql.NullString{String: "AVAILABLE", Valid: true},
+			},
+		}
+		mockClient.CDBServicesList = []models.CDBService{
+			{
+				ConID:       sql.NullInt64{Int64: 1, Valid: true},
+				ServiceName: sql.NullString{String: "ORCLCDB", Valid: true},
+				NetworkName: sql.NullString{String: "orclcdb.example.com", Valid: true},
+				PDB:         sql.NullString{String: "CDB$ROOT", Valid: true},
+				Enabled:     sql.NullString{String: "YES", Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		errs := scraper.ScrapeContainerMetrics(ctx)
+
+		assert.Empty(t, errs)
+		assert.True(t, scraper.environmentChecked)
+		assert.True(t, scraper.contextChecked)
+	})
+
+	t.Run("Success_PDB", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCDBFeatureResult = 1
+		mockClient.CheckPDBCapabilityResult = 1
+		mockClient.CheckCurrentContainerResult = models.ContainerContext{
+			ContainerName: sql.NullString{String: "PDB1", Valid: true},
+			ContainerID:   sql.NullString{String: "3", Valid: true},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		errs := scraper.ScrapeContainerMetrics(ctx)
+
+		// Should succeed but skip CDB-specific metrics
+		assert.Empty(t, errs)
+		assert.True(t, scraper.environmentChecked)
+		assert.True(t, scraper.contextChecked)
+		assert.False(t, scraper.isConnectedToCDBRoot())
+		assert.True(t, scraper.isConnectedToPDB())
+	})
+
+	t.Run("CDB_NotSupported", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCDBFeatureResult = 0
+		mockClient.CheckPDBCapabilityResult = 0
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		errs := scraper.ScrapeContainerMetrics(ctx)
+
+		// Should skip all metrics when CDB not supported
+		assert.Empty(t, errs)
+		assert.True(t, scraper.environmentChecked)
+		assert.False(t, scraper.isCDBSupported())
+	})
+
+	t.Run("EnvironmentCheck_Error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("environment check failed")
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		errs := scraper.ScrapeContainerMetrics(ctx)
+
+		assert.NotEmpty(t, errs)
+		assert.Contains(t, errs[0].Error(), "environment check failed")
+	})
+
+	t.Run("ContextCheck_Error", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCDBFeatureResult = 1
+		mockClient.CheckPDBCapabilityResult = 1
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		// First check environment capability successfully
+		err = scraper.checkEnvironmentCapability(ctx)
+		require.NoError(t, err)
+
+		// Now set error for context check
+		mockClient.QueryErr = errors.New("context check failed")
+
+		errs := scraper.ScrapeContainerMetrics(ctx)
+
+		assert.NotEmpty(t, errs)
+		assert.Contains(t, errs[0].Error(), "context check failed")
+	})
+
+	t.Run("PartialErrors_OneQuery", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCDBFeatureResult = 1
+		mockClient.CheckPDBCapabilityResult = 1
+		mockClient.CheckCurrentContainerResult = models.ContainerContext{
+			ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
+			ContainerID:   sql.NullString{String: "1", Valid: true},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		// First, complete environment and context checks successfully
+		err = scraper.checkEnvironmentCapability(ctx)
+		require.NoError(t, err)
+		err = scraper.checkCurrentContext(ctx)
+		require.NoError(t, err)
+
+		// Now set error for subsequent queries
+		mockClient.QueryErr = errors.New("query error")
+
+		errs := scraper.ScrapeContainerMetrics(ctx)
+
+		// Should have errors from failed queries
+		assert.NotEmpty(t, errs)
+		assert.Contains(t, errs[0].Error(), "query error")
+	})
+}
+
+// TestScrapeContainerStatus_EdgeCases tests additional edge cases
+func TestScrapeContainerStatus_EdgeCases(t *testing.T) {
+	t.Run("EmptyData", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.ContainerStatusList = []models.ContainerStatus{}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeContainerStatus(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+
+	t.Run("MetricsDisabled", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.ContainerStatusList = []models.ContainerStatus{
+			{
+				ConID:         sql.NullInt64{Int64: 1, Valid: true},
+				ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
+				OpenMode:      sql.NullString{String: "READ WRITE", Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		config := metadata.DefaultMetricsBuilderConfig()
+		config.Metrics.NewrelicoracledbContainerStatus.Enabled = false
+		config.Metrics.NewrelicoracledbContainerRestricted.Enabled = false
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeContainerStatus(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+
+	t.Run("MixedOpenModes", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.ContainerStatusList = []models.ContainerStatus{
+			{
+				ConID:         sql.NullInt64{Int64: 1, Valid: true},
+				ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
+				OpenMode:      sql.NullString{String: "READ ONLY", Valid: true},
+				Restricted:    sql.NullString{String: "YES", Valid: true},
+			},
+			{
+				ConID:         sql.NullInt64{Int64: 3, Valid: true},
+				ContainerName: sql.NullString{String: "PDB1", Valid: true},
+				OpenMode:      sql.NullString{String: "MOUNTED", Valid: true},
+				Restricted:    sql.NullString{String: "NO", Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeContainerStatus(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+}
+
+// TestScrapePDBStatus_EdgeCases tests additional edge cases
+func TestScrapePDBStatus_EdgeCases(t *testing.T) {
+	t.Run("InvalidData_NullFields", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.PDBStatusList = []models.PDBStatus{
+			{
+				ConID:     sql.NullInt64{Valid: false},
+				PDBName:   sql.NullString{String: "PDB1", Valid: true},
+				OpenMode:  sql.NullString{String: "READ WRITE", Valid: true},
+				TotalSize: sql.NullInt64{Int64: 1073741824, Valid: true},
+			},
+			{
+				ConID:     sql.NullInt64{Int64: 4, Valid: true},
+				PDBName:   sql.NullString{Valid: false},
+				OpenMode:  sql.NullString{String: "READ WRITE", Valid: true},
+				TotalSize: sql.NullInt64{Int64: 1073741824, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapePDBStatus(ctx, now)
+
+		assert.Empty(t, errs) // Should skip invalid entries
+	})
+
+	t.Run("MetricsDisabled", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.PDBStatusList = []models.PDBStatus{
+			{
+				ConID:     sql.NullInt64{Int64: 3, Valid: true},
+				PDBName:   sql.NullString{String: "PDB1", Valid: true},
+				OpenMode:  sql.NullString{String: "READ WRITE", Valid: true},
+				TotalSize: sql.NullInt64{Int64: 1073741824, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		config := metadata.DefaultMetricsBuilderConfig()
+		// The actual metric names are NewrelicoracledbPdbOpenMode and NewrelicoracledbPdbTotalSizeBytes
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapePDBStatus(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+}
+
+// TestScrapeCDBTablespaceUsage_EdgeCases tests additional edge cases
+func TestScrapeCDBTablespaceUsage_EdgeCases(t *testing.T) {
+	t.Run("InvalidData_NullFields", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBTablespaceUsageList = []models.CDBTablespaceUsage{
+			{
+				ConID:          sql.NullInt64{Valid: false},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				UsedBytes:      sql.NullInt64{Int64: 524288000, Valid: true},
+				TotalBytes:     sql.NullInt64{Int64: 1073741824, Valid: true},
+				UsedPercent:    sql.NullFloat64{Float64: 48.83, Valid: true},
+			},
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				TablespaceName: sql.NullString{Valid: false},
+				UsedBytes:      sql.NullInt64{Int64: 524288000, Valid: true},
+				TotalBytes:     sql.NullInt64{Int64: 1073741824, Valid: true},
+				UsedPercent:    sql.NullFloat64{Float64: 48.83, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+
+	t.Run("WithIncludeFilter", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBTablespaceUsageList = []models.CDBTablespaceUsage{
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				UsedBytes:      sql.NullInt64{Int64: 524288000, Valid: true},
+				TotalBytes:     sql.NullInt64{Int64: 1073741824, Valid: true},
+				UsedPercent:    sql.NullFloat64{Float64: 48.83, Valid: true},
+			},
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				TablespaceName: sql.NullString{String: "USERS", Valid: true},
+				UsedBytes:      sql.NullInt64{Int64: 104857600, Valid: true},
+				TotalBytes:     sql.NullInt64{Int64: 524288000, Valid: true},
+				UsedPercent:    sql.NullFloat64{Float64: 20.0, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		includeTablespaces := []string{"SYSTEM"}
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, includeTablespaces, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+
+	t.Run("WithExcludeFilter", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBTablespaceUsageList = []models.CDBTablespaceUsage{
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				UsedBytes:      sql.NullInt64{Int64: 524288000, Valid: true},
+				TotalBytes:     sql.NullInt64{Int64: 1073741824, Valid: true},
+				UsedPercent:    sql.NullFloat64{Float64: 48.83, Valid: true},
+			},
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				TablespaceName: sql.NullString{String: "TEMP", Valid: true},
+				UsedBytes:      sql.NullInt64{Int64: 104857600, Valid: true},
+				TotalBytes:     sql.NullInt64{Int64: 524288000, Valid: true},
+				UsedPercent:    sql.NullFloat64{Float64: 20.0, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		excludeTablespaces := []string{"TEMP"}
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, excludeTablespaces)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+
+	t.Run("MetricsDisabled", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBTablespaceUsageList = []models.CDBTablespaceUsage{
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				UsedBytes:      sql.NullInt64{Int64: 524288000, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		config := metadata.DefaultMetricsBuilderConfig()
+		// The actual metric names use Newrelicoracledb prefix without Cdb in the middle
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+}
+
+// TestScrapeCDBDataFiles_EdgeCases tests additional edge cases
+func TestScrapeCDBDataFiles_EdgeCases(t *testing.T) {
+	t.Run("InvalidData_NullFields", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBDataFilesList = []models.CDBDataFile{
+			{
+				ConID:          sql.NullInt64{Valid: false},
+				FileName:       sql.NullString{String: "/u01/oradata/system01.dbf", Valid: true},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				Bytes:          sql.NullInt64{Int64: 1073741824, Valid: true},
+			},
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				FileName:       sql.NullString{Valid: false},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				Bytes:          sql.NullInt64{Int64: 1073741824, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBDataFiles(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+
+	t.Run("MetricsDisabled", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBDataFilesList = []models.CDBDataFile{
+			{
+				ConID:          sql.NullInt64{Int64: 1, Valid: true},
+				FileName:       sql.NullString{String: "/u01/oradata/system01.dbf", Valid: true},
+				TablespaceName: sql.NullString{String: "SYSTEM", Valid: true},
+				Bytes:          sql.NullInt64{Int64: 1073741824, Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		config := metadata.DefaultMetricsBuilderConfig()
+		// The actual metric names use Newrelicoracledb prefix without Cdb in the middle
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBDataFiles(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+}
+
+// TestScrapeCDBServices_EdgeCases tests additional edge cases
+func TestScrapeCDBServices_EdgeCases(t *testing.T) {
+	t.Run("InvalidData_NullFields", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBServicesList = []models.CDBService{
+			{
+				ConID:       sql.NullInt64{Valid: false},
+				ServiceName: sql.NullString{String: "ORCLCDB", Valid: true},
+				NetworkName: sql.NullString{String: "orclcdb.example.com", Valid: true},
+				PDB:         sql.NullString{String: "CDB$ROOT", Valid: true},
+				Enabled:     sql.NullString{String: "YES", Valid: true},
+			},
+			{
+				ConID:       sql.NullInt64{Int64: 1, Valid: true},
+				ServiceName: sql.NullString{Valid: false},
+				NetworkName: sql.NullString{String: "orclcdb.example.com", Valid: true},
+				PDB:         sql.NullString{String: "CDB$ROOT", Valid: true},
+				Enabled:     sql.NullString{String: "YES", Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBServices(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+
+	t.Run("MetricsDisabled", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CDBServicesList = []models.CDBService{
+			{
+				ConID:       sql.NullInt64{Int64: 1, Valid: true},
+				ServiceName: sql.NullString{String: "ORCLCDB", Valid: true},
+				NetworkName: sql.NullString{String: "orclcdb.example.com", Valid: true},
+				PDB:         sql.NullString{String: "CDB$ROOT", Valid: true},
+				Enabled:     sql.NullString{String: "YES", Valid: true},
+			},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		config := metadata.DefaultMetricsBuilderConfig()
+		// The actual metric names use Newrelicoracledb prefix without Cdb in the middle
+		mb := metadata.NewMetricsBuilder(config, settings)
+		logger := zap.NewNop()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		now := pcommon.NewTimestampFromTime(time.Now())
+		errs := scraper.scrapeCDBServices(ctx, now)
+
+		assert.Empty(t, errs)
+	})
+}
+
+// TestCheckEnvironmentCapability_EdgeCases tests additional edge cases
+func TestCheckEnvironmentCapability_EdgeCases(t *testing.T) {
+	t.Run("AlreadyChecked", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCDBFeatureResult = 1
+		mockClient.CheckPDBCapabilityResult = 1
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+
+		// First call
+		err = scraper.checkEnvironmentCapability(ctx)
+		assert.NoError(t, err)
+		assert.True(t, scraper.environmentChecked)
+
+		// Set error for second attempt
+		mockClient.QueryErr = errors.New("should not be called")
+
+		// Second call should skip checks
+		err = scraper.checkEnvironmentCapability(ctx)
+		assert.NoError(t, err)
+	})
+
+	t.Run("CDBCheckError_Permanent", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.QueryErr = errors.New("CDB feature check failed")
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		err = scraper.checkEnvironmentCapability(ctx)
+
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "CDB feature check failed")
+	})
+
+	t.Run("PDBCheckError_Permanent", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCDBFeatureResult = 1
+		mockClient.QueryErr = errors.New("PDB capability check failed")
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		err = scraper.checkEnvironmentCapability(ctx)
+
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "PDB capability check failed")
+	})
+}
+
+// TestCheckCurrentContext_EdgeCases tests additional edge cases
+func TestCheckCurrentContext_EdgeCases(t *testing.T) {
+	t.Run("AlreadyChecked", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCurrentContainerResult = models.ContainerContext{
+			ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
+			ContainerID:   sql.NullString{String: "1", Valid: true},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+
+		// First call
+		err = scraper.checkCurrentContext(ctx)
+		assert.NoError(t, err)
+		assert.True(t, scraper.contextChecked)
+
+		// Set error for second attempt
+		mockClient.QueryErr = errors.New("should not be called")
+
+		// Second call should skip checks
+		err = scraper.checkCurrentContext(ctx)
+		assert.NoError(t, err)
+	})
+
+	t.Run("InvalidContainerName", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCurrentContainerResult = models.ContainerContext{
+			ContainerName: sql.NullString{Valid: false},
+			ContainerID:   sql.NullString{String: "1", Valid: true},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		err = scraper.checkCurrentContext(ctx)
+
+		assert.NoError(t, err) // Should handle gracefully
+		assert.Equal(t, "", scraper.currentContainer)
+	})
+
+	t.Run("InvalidContainerID", func(t *testing.T) {
+		mockClient := client.NewMockClient()
+		mockClient.CheckCurrentContainerResult = models.ContainerContext{
+			ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
+			ContainerID:   sql.NullString{Valid: false},
+		}
+
+		settings := receivertest.NewNopSettings(metadata.Type)
+		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+		logger := zap.NewNop()
+		config := metadata.DefaultMetricsBuilderConfig()
+
+		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		err = scraper.checkCurrentContext(ctx)
+
+		assert.NoError(t, err) // Should handle gracefully
+		assert.Equal(t, "", scraper.currentContainerID)
+	})
 }

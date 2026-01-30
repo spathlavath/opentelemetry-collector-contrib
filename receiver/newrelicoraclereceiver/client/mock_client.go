@@ -1,4 +1,4 @@
-// Copyright The OpenTelemetry Authors
+// Copyright 2025 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package client
@@ -14,6 +14,7 @@ type MockClient struct {
 	SlowQueries            []models.SlowQuery
 	ChildCursors           []models.ChildCursor
 	WaitEventsWithBlocking []models.WaitEventWithBlocking
+	ExecutionPlanRows      []models.ExecutionPlanRow
 
 	// Connection metrics
 	TotalSessions      int64
@@ -133,9 +134,7 @@ func (m *MockClient) QueryExecutionPlanForChild(ctx context.Context, sqlID strin
 		return nil, m.QueryErr
 	}
 
-	// For mock testing, return empty rows
-	// In real tests, this can be populated with test data
-	return []models.ExecutionPlanRow{}, nil
+	return m.ExecutionPlanRows, nil
 }
 
 func (m *MockClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {

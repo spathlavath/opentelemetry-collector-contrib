@@ -1,4 +1,4 @@
-// Copyright The OpenTelemetry Authors
+// Copyright 2025 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package queries
@@ -7,10 +7,10 @@ package queries
 const (
 	// Default values used when configuration is not specified
 	DefaultQueryMonitoringResponseTimeThreshold = 100 // milliseconds
-	DefaultQueryMonitoringCountThreshold        = 20  
+	DefaultQueryMonitoringCountThreshold        = 20
 
 	// Validation ranges for configuration values
-	MinQueryMonitoringResponseTimeThreshold = 0  
-	MinQueryMonitoringCountThreshold        = 20 
+	MinQueryMonitoringResponseTimeThreshold = 0
+	MinQueryMonitoringCountThreshold        = 20
 	MaxQueryMonitoringCountThreshold        = 50
 )
