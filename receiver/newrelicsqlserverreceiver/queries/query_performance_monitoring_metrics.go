@@ -3,10 +3,8 @@
 
 package queries
 
-const SlowQuery = `DECLARE @IntervalSeconds INT = %d; 		-- Define the interval in seconds
-DECLARE @TopN INT = %d; 				-- Number of top queries to retrieve
-DECLARE @ElapsedTimeThreshold INT = %d;  -- Elapsed time threshold in milliseconds
-				
+const SlowQuery = `DECLARE @IntervalSeconds INT = %d;  -- Define the interval in seconds
+
 WITH StatementDetails AS (
 	SELECT
 		qs.plan_handle,
@@ -29,43 +27,10 @@ WITH StatementDetails AS (
 		qs.creation_time,
 		qs.last_execution_time,
 		qs.execution_count,
-        -- Historical average metrics (reflecting all runs since caching)
-		(qs.total_worker_time / qs.execution_count) / 1000.0 AS avg_cpu_time_ms,
+		-- Historical average metrics (reflecting all runs since caching)
 		(qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
 		-- Total elapsed time for precise delta calculation (avoids floating point precision loss)
 		qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
-		(qs.total_logical_reads / qs.execution_count) AS avg_disk_reads,
-		(qs.total_logical_writes / qs.execution_count) AS avg_disk_writes,
-		-- Average rows processed (returned by query)
-		(qs.total_rows / qs.execution_count) AS avg_rows_processed,
-		-- RCA Enhancement Fields: Performance variance
-		qs.min_elapsed_time / 1000.0 AS min_elapsed_time_ms,
-		qs.max_elapsed_time / 1000.0 AS max_elapsed_time_ms,
-		qs.last_elapsed_time / 1000.0 AS last_elapsed_time_ms,
-		-- RCA Enhancement Fields: Memory grants
-		qs.last_grant_kb,
-		qs.last_used_grant_kb,
-		-- RCA Enhancement Fields: TempDB spills
-		qs.last_spills,
-		qs.max_spills,
-		-- RCA Enhancement Fields: Parallelism
-		qs.last_dop,
-		-- Lock wait time approximation: elapsed_time - (cpu_time + io_time)
-		-- NOTE: This is an approximation as dm_exec_query_stats doesn't track lock waits separately
-		-- For precise lock wait time, Query Store wait_category = 4 (Lock waits) should be used
-		CASE
-			WHEN (qs.total_elapsed_time / qs.execution_count) > (qs.total_worker_time / qs.execution_count)
-			THEN ((qs.total_elapsed_time - qs.total_worker_time) / qs.execution_count) / 1000.0
-			ELSE 0.0
-		END AS avg_lock_wait_time_ms,
-		-- Determine statement type (SELECT, INSERT, etc.)
-		CASE
-			WHEN UPPER(LTRIM(SUBSTRING(qt.text, (qs.statement_start_offset / 2) + 1, 6))) LIKE 'SELECT' THEN 'SELECT'
-			WHEN UPPER(LTRIM(SUBSTRING(qt.text, (qs.statement_start_offset / 2) + 1, 6))) LIKE 'INSERT' THEN 'INSERT'
-			WHEN UPPER(LTRIM(SUBSTRING(qt.text, (qs.statement_start_offset / 2) + 1, 6))) LIKE 'UPDATE' THEN 'UPDATE'
-			WHEN UPPER(LTRIM(SUBSTRING(qt.text, (qs.statement_start_offset / 2) + 1, 6))) LIKE 'DELETE' THEN 'DELETE'
-			ELSE 'OTHER'
-		END AS statement_type,
 		CONVERT(INT, pa.value) AS database_id,
 		qt.objectid
 	FROM
@@ -88,37 +53,18 @@ WITH StatementDetails AS (
 		AND (qt.objectid IS NULL OR qt.objectid >= 100)
 )
 -- Select the raw, non-aggregated statement data.
--- NOTE: TOP N filtering removed - will be applied in Go code AFTER delta calculation
+-- NOTE: TOP N filtering and elapsed time threshold filtering applied in Go code AFTER delta calculation
 -- This ensures we get enough candidates for interval-based (delta) averaging
 SELECT
     s.query_id,
 	s.plan_handle,
     s.query_text,
     DB_NAME(s.database_id) AS database_name,
-    COALESCE(
-        OBJECT_SCHEMA_NAME(s.objectid, s.database_id),
-        'N/A'
-    ) AS schema_name,
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_timestamp,
     s.execution_count,
-    s.avg_cpu_time_ms,
     s.avg_elapsed_time_ms,
     s.total_elapsed_time_ms,
-    s.avg_disk_reads,
-    s.avg_disk_writes,
-    s.avg_rows_processed,
-    s.avg_lock_wait_time_ms,
-    s.statement_type,
-    -- RCA Enhancement Fields
-    s.min_elapsed_time_ms,
-    s.max_elapsed_time_ms,
-    s.last_elapsed_time_ms,
-    s.last_grant_kb,
-    s.last_used_grant_kb,
-    s.last_spills,
-    s.max_spills,
-    s.last_dop,
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
 FROM
     StatementDetails s`

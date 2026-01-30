@@ -10,33 +10,15 @@ type SlowQuery struct {
 	PlanHandle             *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
 	QueryText              *string  `db:"query_text" metric_name:"query_text" source_type:"attribute"`
 	DatabaseName           *string  `db:"database_name" metric_name:"database_name" source_type:"attribute"`
-	SchemaName             *string  `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
-	ObjectName             *string  `db:"object_name" metric_name:"object_name" source_type:"attribute"`
 	CreationTime           *string  `db:"creation_time" metric_name:"creation_time" source_type:"attribute"`
 	LastExecutionTimestamp *string  `db:"last_execution_timestamp" metric_name:"last_execution_timestamp" source_type:"attribute"`
 	ExecutionCount         *int64   `db:"execution_count" metric_name:"execution_count" source_type:"gauge"`
-	AvgCPUTimeMS           *float64 `db:"avg_cpu_time_ms" metric_name:"sqlserver.slowquery.avg_cpu_time_ms" source_type:"gauge"`
 	AvgElapsedTimeMS       *float64 `db:"avg_elapsed_time_ms" metric_name:"sqlserver.slowquery.avg_elapsed_time_ms" source_type:"gauge"`
 	TotalElapsedTimeMS     *float64 `db:"total_elapsed_time_ms"` // Used for precise delta calculation only
-	AvgDiskReads           *float64 `db:"avg_disk_reads" metric_name:"sqlserver.slowquery.avg_disk_reads" source_type:"gauge"`
-	AvgDiskWrites          *float64 `db:"avg_disk_writes" metric_name:"sqlserver.slowquery.avg_disk_writes" source_type:"gauge"`
-	AvgRowsProcessed       *float64 `db:"avg_rows_processed" metric_name:"sqlserver.slowquery.rows_processed" source_type:"gauge"`
-	AvgLockWaitTimeMs      *float64 `db:"avg_lock_wait_time_ms" metric_name:"sqlserver.slowquery.avg_lock_wait_time_ms" source_type:"gauge"`
-	StatementType          *string  `db:"statement_type" metric_name:"sqlserver.slowquery.statement_type" source_type:"attribute"`
 	CollectionTimestamp    *string  `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
-	// RCA Enhancement Fields
-	MinElapsedTimeMs  *float64 `db:"min_elapsed_time_ms" metric_name:"sqlserver.slowquery.min_elapsed_time_ms" source_type:"gauge"`
-	MaxElapsedTimeMs  *float64 `db:"max_elapsed_time_ms" metric_name:"sqlserver.slowquery.max_elapsed_time_ms" source_type:"gauge"`
-	LastElapsedTimeMs *float64 `db:"last_elapsed_time_ms" metric_name:"sqlserver.slowquery.last_elapsed_time_ms" source_type:"gauge"`
-	LastGrantKB       *float64 `db:"last_grant_kb" metric_name:"sqlserver.slowquery.last_grant_kb" source_type:"gauge"`
-	LastUsedGrantKB   *float64 `db:"last_used_grant_kb" metric_name:"sqlserver.slowquery.last_used_grant_kb" source_type:"gauge"`
-	LastSpills        *float64 `db:"last_spills" metric_name:"sqlserver.slowquery.last_spills" source_type:"gauge"`
-	MaxSpills         *float64 `db:"max_spills" metric_name:"sqlserver.slowquery.max_spills" source_type:"gauge"`
-	LastDOP           *float64 `db:"last_dop" metric_name:"sqlserver.slowquery.last_dop" source_type:"gauge"`
 
 	// Interval-based delta metrics (calculated in-memory, not from DB)
 	// These are populated by the SimplifiedIntervalCalculator
-	// NOTE: Only elapsed time has delta calculation, CPU uses historical average from DB
 	IntervalAvgElapsedTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_elapsed_time_ms" source_type:"gauge"`
 	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
 }

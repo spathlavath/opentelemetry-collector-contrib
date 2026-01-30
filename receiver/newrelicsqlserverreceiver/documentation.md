@@ -16,2585 +16,2386 @@ metrics:
 
 Page splits per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.activequery.cpu_time_ms
 
 CPU time for currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.elapsed_time_ms
 
 Total elapsed time for currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.granted_query_memory_pages
 
 Number of memory pages granted to currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {pages} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {pages} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.logical_reads
 
 Number of logical reads from buffer cache for currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {reads} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.reads
 
 Number of physical reads from disk for currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {reads} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.row_count
 
 Number of rows returned by currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.wait_time_seconds
 
 Wait time for currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.writes
 
 Number of writes for currently executing query
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writes} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| database_name | Name of the database | Any Str | false |
-| login_name | SQL Server login name | Any Str | false |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
-| request_command | SQL command type being executed | Any Str | false |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | false |
-| session_status | Status of the session | Any Str | false |
-| client_interface_name | Name of the client interface | Any Str | false |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
-| wait_type_description | Human-readable description of the wait type | Any Str | false |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | false |
-| wait_resource | Resource being waited on | Any Str | false |
-| wait_resource_object_name | Name of the object being waited on | Any Str | false |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | false |
-| wait_resource_type | Type of resource being waited on | Any Str | false |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | false |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | false |
-| wait_resource_table_name | Table name of the wait resource | Any Str | false |
-| wait_resource_object_type | Type of the object being waited on | Any Str | false |
-| wait_resource_index_name | Index name of the wait resource | Any Str | false |
-| wait_resource_index_type | Type of index being waited on | Any Str | false |
-| last_wait_type | Last wait type experienced by the request | Any Str | false |
-| last_wait_type_description | Description of the last wait type | Any Str | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| transaction_id | Transaction identifier | Any Int | false |
-| open_transaction_count | Number of open transactions | Any Int | false |
-| transaction_isolation_level | Transaction isolation level | Any Int | false |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | false |
-| parallel_worker_count | Number of parallel workers | Any Int | false |
-| blocking_host_name | Host name of the blocking session | Any Str | false |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | false |
-| blocking_login_name | Login name of the blocking session | Any Str | false |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | false |
-| blocking_program_name | Program name of the blocking session | Any Str | false |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | false |
-| blocking_query_text | SQL query text of the blocking session | Any Str | false |
-| blocking_session_id | Session ID that is blocking this request | Any Int | false |
-| blocking_status | Status of the blocking session | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| login_name | SQL Server login name | Any Str | Recommended |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
+| request_command | SQL command type being executed | Any Str | Recommended |
+| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
+| session_status | Status of the session | Any Str | Recommended |
+| client_interface_name | Name of the client interface | Any Str | Recommended |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
+| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
+| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
+| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
+| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
+| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
+| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
+| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
+| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
+| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| transaction_id | Transaction identifier | Any Int | Recommended |
+| open_transaction_count | Number of open transactions | Any Int | Recommended |
+| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
+| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
+| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
+| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
+| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
+| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_status | Status of the blocking session | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.buffer.cache_hit_ratio
 
 Buffer cache hit ratio percentage
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 ### sqlserver.buffer.checkpoint_pages_per_sec
 
 Checkpoint pages per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.buffer.page_life_expectancy
 
 Page life expectancy in seconds
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Int | Alpha |
 
 ### sqlserver.bufferpool.batch_requests_per_sec
 
 Batch requests per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.bufferpool.page_life_expectancy_ms
 
 Page life expectancy in milliseconds
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 ### sqlserver.connections.user
 
 Number of user connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 ### sqlserver.database.bufferpool.size_per_database_bytes
 
 Size of the SQL Server buffer pool allocated for the database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.io.stall_ms
 
 Total IO stall time for the SQL Server database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.log.bytes_flushed_per_sec
 
 Number of log bytes flushed per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.log.flush_waits_per_sec
 
 Number of flush wait operations per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {operations}/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {operations}/s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.log.flushes_per_sec
 
 Number of log flush operations per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {operations}/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {operations}/s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.log.transaction_growth
 
 Number of log growth events for the SQL Server database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {events} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {events} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.log.used_space_mb
 
 Used log space in megabytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MBy | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MBy | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.max_disk_size_bytes
 
 Maximum disk size allowed for the SQL Server database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.page_file_available_bytes
 
 Available page file space (reserved space not used) for the SQL Server database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.page_file_total_bytes
 
 Total page file space (total reserved space) for the SQL Server database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.principals.applicationRoles
 
 Number of application roles
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {roles} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {roles} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.old
 
 Number of old principals (older than 365 days)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {principals} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {principals} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.orphanedUsers
 
 Number of orphaned users without server login
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {users} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {users} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.recentlyCreated
 
 Number of recently created principals (last 30 days)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {principals} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {principals} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.roles
 
 Number of database roles
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {roles} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {roles} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.sqlUsers
 
 Number of SQL authentication users
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {users} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {users} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.total
 
 Total number of database principals
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {principals} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {principals} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.users
 
 Number of database users
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {users} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {users} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.principals.windowsUsers
 
 Number of Windows authentication users
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {users} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {users} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.members.applicationRoles
 
 Number of application role members
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {members} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {members} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.members.crossRole
 
 Number of cross-role members
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {members} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {members} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.members.highPrivilege
 
 Number of high privilege role members
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {members} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {members} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.members.unique
 
 Number of unique members in roles
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {members} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {members} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.memberships.active
 
 Number of active role memberships
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {memberships} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {memberships} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.memberships.custom
 
 Number of custom role memberships
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {memberships} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {memberships} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.memberships.nested
 
 Number of nested role memberships
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {memberships} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {memberships} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.memberships.total
 
 Total number of role memberships
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {memberships} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {memberships} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.memberships.users
 
 Number of user role memberships
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {memberships} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {memberships} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.permission.memberCount
 
 Number of members in role
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {members} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {members} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| role_name | Database role name | Any Str | false |
-| permission_scope | Permission scope | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
+| role_name | Database role name | Any Str | Recommended |
+| permission_scope | Permission scope | Any Str | Recommended |
 
 ### sqlserver.database.role.permission.riskLevel
 
 Role risk level
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {level} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {level} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| role_name | Database role name | Any Str | false |
-| permission_scope | Permission scope | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
+| role_name | Database role name | Any Str | Recommended |
+| permission_scope | Permission scope | Any Str | Recommended |
 
 ### sqlserver.database.role.roles.empty
 
 Number of empty roles
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {roles} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {roles} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.role.roles.withMembers
 
 Number of unique roles with members
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {roles} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {roles} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.database.size.data_mb
 
 Total data file size excluding log files
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MBy | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MBy | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.size.total_mb
 
 Total database size including data and log files
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MBy | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MBy | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.database.transactions.active
 
 Number of active transactions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {transactions} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | false |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | false |
-| engine_edition_id | SQL Server engine edition ID | Any Int | false |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
 ### sqlserver.execution.plan
 
 SQL Server execution plan operator with detailed cost estimates, performance metrics, and resource usage
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| node_id | Execution plan node identifier | Any Int | false |
-| parent_node_id | Parent node identifier in execution plan tree | Any Int | false |
-| physical_op | Physical operator name (e.g., Index Seek, Table Scan) | Any Str | false |
-| logical_op | Logical operator name | Any Str | false |
-| input_type | Type of input to the operator | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-| table_name | Table name referenced in the operator | Any Str | false |
-| index_name | Index name used by the operator | Any Str | false |
-| referenced_columns | Comma-separated list of columns referenced | Any Str | false |
-| estimate_rows | Estimated number of rows | Any Double | false |
-| estimate_io | Estimated I/O cost | Any Double | false |
-| estimate_cpu | Estimated CPU cost | Any Double | false |
-| avg_row_size | Average row size in bytes | Any Double | false |
-| total_subtree_cost | Cumulative cost of this operator and its children | Any Double | false |
-| estimated_operator_cost | Estimated cost of this operator alone | Any Double | false |
-| estimated_execution_mode | Execution mode (Row, Batch) | Any Str | false |
-| granted_memory_kb | Memory granted in KB | Any Int | false |
-| spill_occurred | Whether memory spill occurred | Any Bool | false |
-| no_join_predicate | Whether join lacks a predicate (potential Cartesian product) | Any Bool | false |
-| total_worker_time | Total CPU time for this operator | Any Double | false |
-| total_elapsed_time | Total elapsed time for this operator | Any Double | false |
-| total_logical_reads | Total logical reads for this operator | Any Int | false |
-| total_logical_writes | Total logical writes for this operator | Any Int | false |
-| execution_count | Number of times this operator executed | Any Int | false |
-| avg_elapsed_time_ms | Average elapsed time in milliseconds | Any Double | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| newrelic.event.type | Event type for New Relic integration | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| node_id | Execution plan node identifier | Any Int | Recommended |
+| parent_node_id | Parent node identifier in execution plan tree | Any Int | Recommended |
+| physical_op | Physical operator name (e.g., Index Seek, Table Scan) | Any Str | Recommended |
+| logical_op | Logical operator name | Any Str | Recommended |
+| input_type | Type of input to the operator | Any Str | Recommended |
+| schema_name | Schema name of the database object | Any Str | Recommended |
+| table_name | Table name referenced in the operator | Any Str | Recommended |
+| index_name | Index name used by the operator | Any Str | Recommended |
+| referenced_columns | Comma-separated list of columns referenced | Any Str | Recommended |
+| estimate_rows | Estimated number of rows | Any Double | Recommended |
+| estimate_io | Estimated I/O cost | Any Double | Recommended |
+| estimate_cpu | Estimated CPU cost | Any Double | Recommended |
+| avg_row_size | Average row size in bytes | Any Double | Recommended |
+| total_subtree_cost | Cumulative cost of this operator and its children | Any Double | Recommended |
+| estimated_operator_cost | Estimated cost of this operator alone | Any Double | Recommended |
+| estimated_execution_mode | Execution mode (Row, Batch) | Any Str | Recommended |
+| granted_memory_kb | Memory granted in KB | Any Int | Recommended |
+| spill_occurred | Whether memory spill occurred | Any Bool | Recommended |
+| no_join_predicate | Whether join lacks a predicate (potential Cartesian product) | Any Bool | Recommended |
+| total_worker_time | Total CPU time for this operator | Any Double | Recommended |
+| total_elapsed_time | Total elapsed time for this operator | Any Double | Recommended |
+| total_logical_reads | Total logical reads for this operator | Any Int | Recommended |
+| total_logical_writes | Total logical writes for this operator | Any Int | Recommended |
+| execution_count | Number of times this operator executed | Any Int | Recommended |
+| avg_elapsed_time_ms | Average elapsed time in milliseconds | Any Double | Recommended |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| last_execution_time | Timestamp of last execution | Any Str | Recommended |
+| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.ag_cluster_type
 
 Cluster type for the availability group (WSFC, EXTERNAL, NONE)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {status} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {status} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| group_name | Availability group name | Any Str | false |
-| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | false |
+| group_name | Availability group name | Any Str | Recommended |
+| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.ag_failure_condition_level
 
 Automatic failover condition level for the availability group (1-5)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {level} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {level} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| group_name | Availability group name | Any Str | false |
-| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | false |
+| group_name | Availability group name | Any Str | Recommended |
+| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.ag_health_check_timeout
 
 Health check timeout for the availability group in milliseconds
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| group_name | Availability group name | Any Str | false |
-| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | false |
+| group_name | Availability group name | Any Str | Recommended |
+| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.ag_replica_role
 
 Current role of the replica within the Availability Group (PRIMARY or SECONDARY)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {status} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {status} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| replica_server_name | Replica server name in availability group | Any Str | false |
-| role_desc | Replica role description (PRIMARY or SECONDARY) | Any Str | false |
-| synchronization_health_desc | Synchronization health description (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY) | Any Str | false |
+| replica_server_name | Replica server name in availability group | Any Str | Recommended |
+| role_desc | Replica role description (PRIMARY or SECONDARY) | Any Str | Recommended |
+| synchronization_health_desc | Synchronization health description (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY) | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.ag_required_sync_secondaries
 
 Number of synchronous secondary replicas required to commit transactions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {replicas} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {replicas} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| group_name | Availability group name | Any Str | false |
-| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | false |
+| group_name | Availability group name | Any Str | Recommended |
+| cluster_type_desc | Cluster type description (WSFC, EXTERNAL, NONE) | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.ag_synchronization_health
 
 Health of data synchronization between primary and secondary replica (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {status} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {status} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| replica_server_name | Replica server name in availability group | Any Str | false |
-| role_desc | Replica role description (PRIMARY or SECONDARY) | Any Str | false |
-| synchronization_health_desc | Synchronization health description (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY) | Any Str | false |
+| replica_server_name | Replica server name in availability group | Any Str | Recommended |
+| role_desc | Replica role description (PRIMARY or SECONDARY) | Any Str | Recommended |
+| synchronization_health_desc | Synchronization health description (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY) | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.flow_control_time_ms
 
 Time spent in flow control by log records from primary replica in milliseconds per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms/s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance_name | SQL Server instance name | Any Str | false |
+| instance_name | SQL Server instance name | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.log_bytes_received_per_sec
 
 Rate of log records received by secondary replica from primary replica in bytes per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance_name | SQL Server instance name | Any Str | false |
+| instance_name | SQL Server instance name | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.log_send_queue_kb
 
 Amount of log records in the log send queue waiting to be sent to the secondary replica in kilobytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| KBy | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| KBy | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| replica_server_name | Replica server name in availability group | Any Str | false |
-| database_name | Name of the database | Any Str | false |
+| replica_server_name | Replica server name in availability group | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.redo_queue_kb
 
 Amount of log records in the redo queue waiting to be redone on the secondary replica in kilobytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| KBy | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| KBy | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| replica_server_name | Replica server name in availability group | Any Str | false |
-| database_name | Name of the database | Any Str | false |
+| replica_server_name | Replica server name in availability group | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.redo_rate_kb_sec
 
 Rate at which log records are being redone on the secondary replica in kilobytes per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| KBy/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| KBy/s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| replica_server_name | Replica server name in availability group | Any Str | false |
-| database_name | Name of the database | Any Str | false |
+| replica_server_name | Replica server name in availability group | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.transaction_delay_ms
 
 Average delay for transactions on the secondary replica in milliseconds
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance_name | SQL Server instance name | Any Str | false |
+| instance_name | SQL Server instance name | Any Str | Recommended |
 
 ### sqlserver.individual_query.total_cpu_ms
 
 Total CPU time in milliseconds for individual query analysis
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_id | Unique identifier for the query execution plan | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| query_plan_id | Unique identifier for the query execution plan | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| creation_time | Timestamp when the plan was created | Any Str | Recommended |
+| last_execution_time | Timestamp of last execution | Any Str | Recommended |
 
 ### sqlserver.individual_query.total_elapsed_ms
 
 Total elapsed time in milliseconds for individual query analysis
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_id | Unique identifier for the query execution plan | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| query_plan_id | Unique identifier for the query execution plan | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| creation_time | Timestamp when the plan was created | Any Str | Recommended |
+| last_execution_time | Timestamp of last execution | Any Str | Recommended |
 
 ### sqlserver.instance.background_processes_count
 
 Number of background processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.blocked_processes_count
 
 Number of blocked processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.buffer_pool_hit_percent
 
 Buffer pool hit percentage
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| Percent | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| Percent | Gauge | Double | Alpha |
 
 ### sqlserver.instance.buffer_pool_size
 
 Buffer pool size
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 ### sqlserver.instance.compilations_per_batch
 
 SQL compilations per batch request
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 ### sqlserver.instance.connections_active
 
 Number of active connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.disk_in_bytes
 
 Total disk space in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 ### sqlserver.instance.dormant_processes_count
 
 Number of dormant processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.forced_parameterizations_per_sec
 
 Forced parameterizations per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.instance.full_scans_rate
 
 Full table/index scans per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Double | Alpha |
 
 ### sqlserver.instance.lock_timeouts_rate
 
 Number of lock timeouts per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Double | Alpha |
 
 ### sqlserver.instance.memory_available
 
 Available physical memory on the system
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Double | Alpha |
 
 ### sqlserver.instance.memory_total
 
 Total physical memory on the system
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Double | Alpha |
 
 ### sqlserver.instance.memory_utilization_percent
 
 Percentage of memory utilization
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 ### sqlserver.instance.page_splits_per_batch
 
 Page splits per batch request
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 ### sqlserver.instance.preconnect_processes_count
 
 Number of preconnect processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.runnable_processes_count
 
 Number of runnable processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.runnable_tasks
 
 Number of runnable tasks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.running_processes_count
 
 Number of running processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.sleeping_processes_count
 
 Number of sleeping processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.suspended_processes_count
 
 Number of suspended processes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.instance.target_memory_kb
 
 Target server memory in KB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| kb | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| kb | Gauge | Double | Alpha |
 
 ### sqlserver.instance.transactions_per_sec
 
 Transactions per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.lock.mode.bulk_update
 
 Number of bulk update locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.mode.exclusive
 
 Number of exclusive locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.mode.intent
 
 Number of intent locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.mode.schema
 
 Number of schema locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.mode.shared
 
 Number of shared locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.mode.shared_intent_exclusive
 
 Number of shared intent exclusive locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.mode.total
 
 Total active locks by mode
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.mode.update
 
 Number of update locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.allocation_unit
 
 Number of allocation unit locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.application
 
 Number of application locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.database_level
 
 Number of database-level locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.extent
 
 Number of extent-level locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.file
 
 Number of file-level locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.hobt
 
 Number of heap or B-tree locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.key
 
 Number of key-level locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.metadata
 
 Number of metadata locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.page
 
 Number of page-level locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.row
 
 Number of row-level locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.table
 
 Number of table-level locks
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.lock.resource.total
 
 Total active locks in the database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | false |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.locked_object
 
 Database object locked by a session
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.memory.target
 
 Target server memory in KB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| kBy | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| kBy | Gauge | Int | Alpha |
 
 ### sqlserver.memory.total
 
 Total server memory in KB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| kBy | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| kBy | Gauge | Int | Alpha |
 
 ### sqlserver.plan.avg_elapsed_time_ms
 
 Average elapsed time per execution of this plan (historical) - Used in NRQL queries
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| query_plan_hash | Hash of the query execution plan | Any Str | Recommended |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| last_execution_time | Timestamp of last execution | Any Str | Recommended |
+| creation_time | Timestamp when the plan was created | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| schema_name | Schema name of the database object | Any Str | Recommended |
 
 ### sqlserver.plan.total_elapsed_time_ms
 
 Total elapsed time across all executions of this plan (historical)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| query_plan_hash | Hash of the query execution plan | Any Str | false |
-| session_id | SQL Server session identifier | Any Int | false |
-| request_id | SQL Server request identifier | Any Int | false |
-| request_start_time | Timestamp when the request started | Any Str | false |
-| last_execution_time | Timestamp of last execution | Any Str | false |
-| creation_time | Timestamp when the plan was created | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| query_plan_hash | Hash of the query execution plan | Any Str | Recommended |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| last_execution_time | Timestamp of last execution | Any Str | Recommended |
+| creation_time | Timestamp when the plan was created | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| schema_name | Schema name of the database object | Any Str | Recommended |
 
 ### sqlserver.security.server_principals_count
 
 Total number of server principals (logins)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| metric.type | Metric aggregation type | Any Str | false |
+| metric.type | Metric aggregation type | Any Str | Recommended |
 
 ### sqlserver.security.server_role_members_count
 
 Total number of server role members
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| metric.type | Metric aggregation type | Any Str | false |
-
-### sqlserver.slowquery.avg_disk_reads
-
-Average disk reads for slow query
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.avg_disk_writes
-
-Average disk writes for slow query
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.avg_rows_processed
-
-Average rows processed (returned) per execution for slow query
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.historical_avg_cpu_time_ms
-
-Historical average CPU time in milliseconds (cumulative since plan cached)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
+| metric.type | Metric aggregation type | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_avg_elapsed_time_ms
 
 Historical average elapsed time in milliseconds (cumulative since plan cached)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_execution_count
 
 Historical execution count (cumulative since plan cached)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_avg_elapsed_time_ms
 
 Interval average elapsed time in milliseconds (delta for this collection interval)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_execution_count
 
 Interval execution count (delta for this collection interval)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.last_dop
-
-Last degree of parallelism
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {threads} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.last_elapsed_time_ms
-
-Last elapsed time in milliseconds
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.last_grant_kb
-
-Last memory grant in KB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| KB | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.last_spills
-
-Last TempDB spills count
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {pages} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.last_used_grant_kb
-
-Last used memory grant in KB
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| KB | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.max_elapsed_time_ms
-
-Maximum elapsed time in milliseconds
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.max_spills
-
-Maximum TempDB spills count
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {pages} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-
-### sqlserver.slowquery.min_elapsed_time_ms
-
-Minimum elapsed time in milliseconds
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
 
 ### sqlserver.slowquery.query_details
 
-Query details including text, signature, and timestamps for slow queries
+Query details including text and timestamps for slow queries
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | false |
-| database_name | Name of the database | Any Str | false |
-| schema_name | Schema name of the database object | Any Str | false |
-| plan_handle | Handle to the cached execution plan | Any Str | false |
-| statement_type | Type of SQL statement (SELECT, INSERT, UPDATE, DELETE, etc.) | Any Str | false |
-| query_text | SQL query text (truncated and anonymized) | Any Str | false |
-| query_signature | SHA256 hash of normalized query for cross-instance correlation | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
-| last_execution_timestamp | Timestamp of the last execution of this query | Any Str | false |
-| newrelic.event.type | Event type for New Relic integration | Any Str | false |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| last_execution_timestamp | Timestamp of the last execution of this query | Any Str | Recommended |
+| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 
 ### sqlserver.stats.connections
 
 Current user connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 ### sqlserver.stats.deadlocks_per_sec
 
 Deadlocks per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.stats.kill_connection_errors_per_sec
 
 Kill connection errors per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.stats.lock_waits_per_sec
 
 Lock waits per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.stats.sql_compilations_per_sec
 
 SQL compilations per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.stats.sql_recompilations_per_sec
 
 SQL recompilations per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.stats.user_errors_per_sec
 
 User errors per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.tempdb.allocation_waits_ms
 
 Total allocation-related wait time (GAM, SGAM, PFS)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| tempdb_health_status | TempDB health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| tempdb_health_status | TempDB health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.tempdb.current_waiters
 
 Number of tasks currently waiting on TempDB page latches
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {tasks} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tasks} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| tempdb_health_status | TempDB health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| tempdb_health_status | TempDB health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.tempdb.data_file_count
 
 Number of TempDB data files
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {files} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {files} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| tempdb_health_status | TempDB health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| tempdb_health_status | TempDB health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.tempdb.pagelatch_waits_ms
 
 Total page latch wait time since server start
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| tempdb_health_status | TempDB health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| tempdb_health_status | TempDB health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.tempdb.total_size_mb
 
 Total size of TempDB data files
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MB | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MB | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| tempdb_health_status | TempDB health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| tempdb_health_status | TempDB health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.threadpool.current_tasks
 
 Total tasks currently assigned to schedulers
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {tasks} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tasks} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| health_status | Health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| health_status | Health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.threadpool.max_workers
 
 Maximum configured worker threads
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {threads} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {threads} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| health_status | Health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| health_status | Health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.threadpool.runnable_tasks
 
 Tasks ready to run but waiting for CPU time
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {tasks} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tasks} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| health_status | Health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| health_status | Health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.threadpool.running_workers
 
 Number of worker threads currently running
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {threads} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {threads} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| health_status | Health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| health_status | Health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.threadpool.utilization_percent
 
 Percentage of worker threads currently in use
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| health_status | Health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| health_status | Health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.threadpool.waiting_tasks
 
 Number of tasks currently waiting for threadpool worker threads
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {tasks} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tasks} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| health_status | Health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| health_status | Health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.threadpool.work_queue_count
 
 Total number of tasks in scheduler work queues
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {tasks} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {tasks} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| sql_hostname | SQL Server hostname | Any Str | false |
-| health_status | Health status indicator | Any Str | false |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | false |
+| sql_hostname | SQL Server hostname | Any Str | Recommended |
+| health_status | Health status indicator | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 
 ### sqlserver.user_connections.authentication.churn_rate
 
 Connection churn rate (logout/login ratio as percentage)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 ### sqlserver.user_connections.authentication.logins_per_sec
 
 Current login rate per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {logins}/s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {logins}/s | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.authentication.recent_failed_logins
 
 Count of failed logins in the last hour
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {attempts} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {attempts} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.authentication.total_failed_logins
 
 Total count of failed login attempts in current error log
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {attempts} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {attempts} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.authentication.unique_failed_sources
 
 Count of distinct source IPs with failed logins
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sources} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {sources} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.authentication.unique_failed_users
 
 Count of distinct usernames with failed logins
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {users} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {users} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.client.count
 
 Number of connections grouped by client host and program
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| host_name | Client host name | Any Str | false |
-| program_name | Client program name | Any Str | false |
+| host_name | Client host name | Any Str | Recommended |
+| program_name | Client program name | Any Str | Recommended |
 
 ### sqlserver.user_connections.client.unique_hosts
 
 Count of unique client hosts with active connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {hosts} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {hosts} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.client.unique_programs
 
 Count of unique programs with active connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {programs} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {programs} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.runnable
 
 Number of runnable user connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.running
 
 Number of running user connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.sleeping
 
 Number of sleeping user connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.suspended
 
 Number of suspended user connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.total
 
 Total number of user connections across all statuses
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {connections} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 ### sqlserver.user_connections.utilization.active_ratio
 
 Ratio of active connections to total connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 ### sqlserver.user_connections.utilization.idle_ratio
 
 Ratio of idle connections to total connections
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 ### sqlserver.wait_stats.latch.wait_time_ms
 
 Latch wait time in milliseconds
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| ms | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| ms | Sum | Double | Cumulative | true | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
 
 ### sqlserver.wait_stats.latch.waiting_tasks_count
 
 Number of tasks waiting on latches
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {tasks} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {tasks} | Sum | Double | Cumulative | true | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
 
 ### sqlserver.wait_stats.wait_time_ms
 
 Total wait time in milliseconds
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| ms | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| ms | Sum | Double | Cumulative | true | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
 
 ### sqlserver.wait_stats.waiting_tasks_count
 
 Number of tasks currently waiting
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {tasks} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {tasks} | Sum | Double | Cumulative | true | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | false |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
 
 ## Resource Attributes
 

@@ -53,18 +53,10 @@ var (
 //
 // Safety Features:
 //   - Handles empty/nil input safely
-//   - Limits processing to prevent performance issues on very large queries
-//   - Returns truncated content with warning for oversized input
+//   - Processes queries of any size (no truncation)
 func AnonymizeQueryText(query string) string {
 	if query == "" {
 		return query
-	}
-
-	// Safety check: Don't process extremely large strings to avoid performance issues
-	const maxSafeLength = 16384 // 16KB limit for safe regex processing
-	if len(query) > maxSafeLength {
-		// For very large content, just truncate with a note rather than risk regex performance issues
-		return query[:maxSafeLength] + "...[content too large for anonymization]"
 	}
 
 	// Step 1: Remove DMV_POP test/synthetic query markers (e.g., /* DMV_POP_1763101875620857000_37433 */)
@@ -173,19 +165,6 @@ func SafeAnonymizeQueryText(queryPtr *string) string {
 	}
 
 	return AnonymizeQueryText(query)
-}
-
-// IsQueryTextSafe checks if a query text is safe to process for anonymization
-// without risking performance issues or memory problems.
-//
-// Parameters:
-//   - query: The query text to check
-//
-// Returns:
-//   - bool: true if safe to process, false if too large or problematic
-func IsQueryTextSafe(query string) bool {
-	const maxSafeLength = 16384 // 16KB limit
-	return len(query) <= maxSafeLength
 }
 
 // IsXMLContentSafe checks if XML content is safe to process for anonymization

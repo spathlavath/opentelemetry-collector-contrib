@@ -60,7 +60,6 @@ type SimplifiedIntervalMetrics struct {
 
 	// Historical metrics (cumulative from DB) - all metrics
 	HistoricalAvgElapsedTimeMs float64
-	HistoricalAvgCPUTimeMs     float64
 	HistoricalExecutionCount   int64
 
 	// Metadata
@@ -128,7 +127,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 
 	// Historical (cumulative) averages
 	historicalAvgElapsedMs := getFloat64FromPtr(query.AvgElapsedTimeMS)
-	historicalAvgCPUMs := getFloat64FromPtr(query.AvgCPUTimeMS)
 
 	// Calculate time since last execution from DB timestamp
 	timeSinceLastExec := 0.0
@@ -179,7 +177,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
 			IntervalExecutionCount:     currentExecCount,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
-			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalExecutionCount:   currentExecCount,
 			IsFirstScrape:              true,
 			HasNewExecutions:           true,
@@ -209,7 +206,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			IntervalAvgElapsedTimeMs:   0,
 			IntervalExecutionCount:     0,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
-			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalExecutionCount:   currentExecCount,
 			IsFirstScrape:              false,
 			HasNewExecutions:           false,
@@ -249,7 +245,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
 			IntervalExecutionCount:     currentExecCount,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
-			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalExecutionCount:   currentExecCount,
 			IsFirstScrape:              true, // Treat as first scrape after reset
 			HasNewExecutions:           true,
@@ -291,7 +286,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 		IntervalAvgElapsedTimeMs:   intervalAvgElapsedMs,
 		IntervalExecutionCount:     deltaExecCount,
 		HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
-		HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 		HistoricalExecutionCount:   currentExecCount,
 		IsFirstScrape:              false,
 		HasNewExecutions:           true,

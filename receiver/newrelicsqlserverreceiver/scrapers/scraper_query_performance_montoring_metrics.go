@@ -99,12 +99,16 @@ func (s *QueryPerformanceScraper) CleanupExecutionPlanCache() {
 }
 
 func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int, emitMetrics bool) ([]models.SlowQuery, error) {
-	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds, topN, elapsedTimeThreshold)
+	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds)
 
 	var rawResults []models.SlowQuery
 	if err := s.connection.Query(ctx, &rawResults, query); err != nil {
 		return nil, fmt.Errorf("failed to execute slow query metrics query: %w", err)
 	}
+
+	s.logger.Debug("Raw slow query metrics fetched", zap.Int("raw_result_count", len(rawResults)))
+
+	// Apply simplified interval-based delta calculation if enabled
 	var resultsWithIntervalMetrics []models.SlowQuery
 	if s.intervalCalculator != nil {
 		now := time.Now()
@@ -113,7 +117,12 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 			metrics := s.intervalCalculator.CalculateMetrics(&rawQuery, now)
 
 			if metrics == nil || !metrics.HasNewExecutions {
+
+				s.logger.Debug("Skipping query with no new executions",
+					zap.String("query_id", rawQuery.QueryID.String()),
+					zap.Float64("time_since_last_exec_sec", metrics.TimeSinceLastExecSec))
 				continue
+
 			}
 
 			if metrics.IntervalAvgElapsedTimeMs < float64(elapsedTimeThreshold) {
@@ -127,6 +136,9 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 		}
 
 		s.intervalCalculator.CleanupStaleEntries(now)
+
+		stats := s.intervalCalculator.GetCacheStats()
+		s.logger.Debug("Interval calculator cache stats", zap.Any("queries are in the cache", stats))
 		rawResults = resultsWithIntervalMetrics
 	}
 
@@ -149,8 +161,11 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 	var resultsToProcess []models.SlowQuery
 	if s.slowQuerySmoother != nil {
 		resultsToProcess = s.slowQuerySmoother.Smooth(rawResults)
+		stats := s.slowQuerySmoother.GetHistoryStats()
+		s.logger.Debug("EWMA smoother statistics", zap.Any("queries in history", stats))
 	} else {
 		resultsToProcess = rawResults
+		s.logger.Debug("EWMA smoothing disabled, using interval-calculated or raw results")
 	}
 
 	if emitMetrics {
@@ -458,19 +473,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		databaseName = *result.DatabaseName
 	}
 
-	schemaName := ""
-	if result.SchemaName != nil {
-		schemaName = *result.SchemaName
-	}
-
-	statementType := ""
-	if result.StatementType != nil {
-		statementType = *result.StatementType
-	}
-
 	queryText := ""
 	if result.QueryText != nil {
-		queryText = *result.QueryText
+		queryText = helpers.AnonymizeQueryText(*result.QueryText)
 	}
 
 	collectionTimestamp := ""
@@ -483,66 +488,18 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		lastExecutionTimestamp = *result.LastExecutionTimestamp
 	}
 
-	querySignature := ""
-	if result.QueryText != nil {
-		querySignature = helpers.ComputeQueryHash(*result.QueryText)
-	}
-
 	// Emit a single metric with all query details (non-numeric attributes)
 	s.mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(
 		timestamp,
 		1,
 		queryID,
 		databaseName,
-		schemaName,
 		planHandle,
-		statementType,
 		queryText,
-		querySignature,
 		collectionTimestamp,
 		lastExecutionTimestamp,
 		"SqlQueryDetails",
 	)
-
-	if result.AvgCPUTimeMS != nil {
-		s.mb.RecordSqlserverSlowqueryHistoricalAvgCPUTimeMsDataPoint(
-			timestamp,
-			*result.AvgCPUTimeMS,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.AvgDiskReads != nil {
-		s.mb.RecordSqlserverSlowqueryAvgDiskReadsDataPoint(
-			timestamp,
-			*result.AvgDiskReads,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.AvgDiskWrites != nil {
-		s.mb.RecordSqlserverSlowqueryAvgDiskWritesDataPoint(
-			timestamp,
-			*result.AvgDiskWrites,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.AvgRowsProcessed != nil {
-		s.mb.RecordSqlserverSlowqueryAvgRowsProcessedDataPoint(
-			timestamp,
-			*result.AvgRowsProcessed,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
 
 	if result.AvgElapsedTimeMS != nil {
 		s.mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(
@@ -550,7 +507,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.AvgElapsedTimeMS,
 			queryID,
 			databaseName,
-			schemaName,
 		)
 	}
 
@@ -560,7 +516,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgElapsedTimeMS,
 			queryID,
 			databaseName,
-			schemaName,
 		)
 	}
 
@@ -570,7 +525,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.ExecutionCount,
 			queryID,
 			databaseName,
-			schemaName,
 		)
 	}
 
@@ -580,87 +534,6 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalExecutionCount,
 			queryID,
 			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.MinElapsedTimeMs != nil {
-		s.mb.RecordSqlserverSlowqueryMinElapsedTimeMsDataPoint(
-			timestamp,
-			*result.MinElapsedTimeMs,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.MaxElapsedTimeMs != nil {
-		s.mb.RecordSqlserverSlowqueryMaxElapsedTimeMsDataPoint(
-			timestamp,
-			*result.MaxElapsedTimeMs,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.LastElapsedTimeMs != nil {
-		s.mb.RecordSqlserverSlowqueryLastElapsedTimeMsDataPoint(
-			timestamp,
-			*result.LastElapsedTimeMs,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.LastGrantKB != nil {
-		s.mb.RecordSqlserverSlowqueryLastGrantKbDataPoint(
-			timestamp,
-			*result.LastGrantKB,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.LastUsedGrantKB != nil {
-		s.mb.RecordSqlserverSlowqueryLastUsedGrantKbDataPoint(
-			timestamp,
-			*result.LastUsedGrantKB,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.LastSpills != nil {
-		s.mb.RecordSqlserverSlowqueryLastSpillsDataPoint(
-			timestamp,
-			*result.LastSpills,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.MaxSpills != nil {
-		s.mb.RecordSqlserverSlowqueryMaxSpillsDataPoint(
-			timestamp,
-			*result.MaxSpills,
-			queryID,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if result.LastDOP != nil {
-		s.mb.RecordSqlserverSlowqueryLastDopDataPoint(
-			timestamp,
-			*result.LastDOP,
-			queryID,
-			databaseName,
-			schemaName,
 		)
 	}
 

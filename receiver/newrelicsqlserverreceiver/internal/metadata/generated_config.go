@@ -143,22 +143,10 @@ type MetricsConfig struct {
 	SqlserverPlanTotalElapsedTimeMs                           MetricConfig `mapstructure:"sqlserver.plan.total_elapsed_time_ms"`
 	SqlserverSecurityServerPrincipalsCount                    MetricConfig `mapstructure:"sqlserver.security.server_principals_count"`
 	SqlserverSecurityServerRoleMembersCount                   MetricConfig `mapstructure:"sqlserver.security.server_role_members_count"`
-	SqlserverSlowqueryAvgDiskReads                            MetricConfig `mapstructure:"sqlserver.slowquery.avg_disk_reads"`
-	SqlserverSlowqueryAvgDiskWrites                           MetricConfig `mapstructure:"sqlserver.slowquery.avg_disk_writes"`
-	SqlserverSlowqueryAvgRowsProcessed                        MetricConfig `mapstructure:"sqlserver.slowquery.avg_rows_processed"`
-	SqlserverSlowqueryHistoricalAvgCPUTimeMs                  MetricConfig `mapstructure:"sqlserver.slowquery.historical_avg_cpu_time_ms"`
 	SqlserverSlowqueryHistoricalAvgElapsedTimeMs              MetricConfig `mapstructure:"sqlserver.slowquery.historical_avg_elapsed_time_ms"`
 	SqlserverSlowqueryHistoricalExecutionCount                MetricConfig `mapstructure:"sqlserver.slowquery.historical_execution_count"`
 	SqlserverSlowqueryIntervalAvgElapsedTimeMs                MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_elapsed_time_ms"`
 	SqlserverSlowqueryIntervalExecutionCount                  MetricConfig `mapstructure:"sqlserver.slowquery.interval_execution_count"`
-	SqlserverSlowqueryLastDop                                 MetricConfig `mapstructure:"sqlserver.slowquery.last_dop"`
-	SqlserverSlowqueryLastElapsedTimeMs                       MetricConfig `mapstructure:"sqlserver.slowquery.last_elapsed_time_ms"`
-	SqlserverSlowqueryLastGrantKb                             MetricConfig `mapstructure:"sqlserver.slowquery.last_grant_kb"`
-	SqlserverSlowqueryLastSpills                              MetricConfig `mapstructure:"sqlserver.slowquery.last_spills"`
-	SqlserverSlowqueryLastUsedGrantKb                         MetricConfig `mapstructure:"sqlserver.slowquery.last_used_grant_kb"`
-	SqlserverSlowqueryMaxElapsedTimeMs                        MetricConfig `mapstructure:"sqlserver.slowquery.max_elapsed_time_ms"`
-	SqlserverSlowqueryMaxSpills                               MetricConfig `mapstructure:"sqlserver.slowquery.max_spills"`
-	SqlserverSlowqueryMinElapsedTimeMs                        MetricConfig `mapstructure:"sqlserver.slowquery.min_elapsed_time_ms"`
 	SqlserverSlowqueryQueryDetails                            MetricConfig `mapstructure:"sqlserver.slowquery.query_details"`
 	SqlserverStatsConnections                                 MetricConfig `mapstructure:"sqlserver.stats.connections"`
 	SqlserverStatsDeadlocksPerSec                             MetricConfig `mapstructure:"sqlserver.stats.deadlocks_per_sec"`
@@ -548,18 +536,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverSecurityServerRoleMembersCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryAvgDiskReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryAvgDiskWrites: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryAvgRowsProcessed: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryHistoricalAvgCPUTimeMs: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverSlowqueryHistoricalAvgElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
@@ -570,30 +546,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverSlowqueryIntervalExecutionCount: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastDop: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastGrantKb: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastSpills: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastUsedGrantKb: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryMaxElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryMaxSpills: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryMinElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSlowqueryQueryDetails: MetricConfig{
