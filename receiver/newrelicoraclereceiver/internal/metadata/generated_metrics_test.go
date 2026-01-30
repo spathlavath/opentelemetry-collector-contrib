@@ -84,11 +84,9 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
@@ -96,7 +94,6 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val", "first_load_time-val", "last_load_time-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
@@ -104,15 +101,12 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
@@ -2505,7 +2499,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.execution_plan"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, " ", ms.At(i).Description())
+					assert.Equal(t, "Oracle SQL execution plan details including operation costs, cardinality, and resource estimates", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())

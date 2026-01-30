@@ -4277,7 +4277,7 @@ type metricNewrelicoracledbExecutionPlan struct {
 // init fills newrelicoracledb.execution_plan metric with initial data.
 func (m *metricNewrelicoracledbExecutionPlan) init() {
 	m.data.SetName("newrelicoracledb.execution_plan")
-	m.data.SetDescription(" ")
+	m.data.SetDescription("Oracle SQL execution plan details including operation costs, cardinality, and resource estimates")
 	m.data.SetUnit("1")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)

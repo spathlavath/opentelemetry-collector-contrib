@@ -3373,7 +3373,7 @@ metrics:
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
     description: Average CPU time per execution for this child cursor (in milliseconds)
-    enabled: true
+    enabled: false
     gauge:
       value_type: double
     unit: ms
@@ -3399,7 +3399,7 @@ metrics:
 
   newrelicoracledb.child_cursors.user_io_wait_time:
     description: Average user I/O wait time per execution for this child cursor (in milliseconds)
-    enabled: true
+    enabled: false
     gauge:
       value_type: double
     unit: ms
@@ -3412,7 +3412,7 @@ metrics:
 
   newrelicoracledb.child_cursors.disk_reads:
     description: Average number of disk reads per execution for this child cursor
-    enabled: true
+    enabled: false
     gauge:
       value_type: double
     unit: "{reads}"
@@ -3425,7 +3425,7 @@ metrics:
 
   newrelicoracledb.child_cursors.buffer_gets:
     description: Average number of buffer gets per execution for this child cursor
-    enabled: true
+    enabled: false
     gauge:
       value_type: double
     unit: "{gets}"
@@ -3438,7 +3438,7 @@ metrics:
 
   newrelicoracledb.child_cursors.executions:
     description: Total number of executions of this child cursor
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "{executions}"
@@ -3451,7 +3451,7 @@ metrics:
 
   newrelicoracledb.child_cursors.invalidations:
     description: Number of times this child cursor was invalidated
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "{invalidations}"
