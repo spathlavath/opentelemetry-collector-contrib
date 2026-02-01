@@ -22,8 +22,10 @@ type ExecutionPlanCache struct {
 	logger *zap.Logger
 }
 
-// NewExecutionPlanCache creates a new execution plan cache with the specified TTL
-func NewExecutionPlanCache(ttl time.Duration, logger *zap.Logger) *ExecutionPlanCache {
+// NewExecutionPlanCache creates a new execution plan cache with hardcoded 24 hour TTL
+// TTL is hardcoded because execution plans rarely change and we want to minimize database load
+func NewExecutionPlanCache(logger *zap.Logger) *ExecutionPlanCache {
+	ttl := 24 * time.Hour // Hardcoded: 24 hours
 	return &ExecutionPlanCache{
 		cache:  make(map[string]time.Time),
 		ttl:    ttl,
@@ -42,15 +44,18 @@ func (c *ExecutionPlanCache) ShouldEmit(queryHash, planHandle string) bool {
 
 	cacheKey := c.buildCacheKey(queryHash, planHandle)
 
-	c.mu.RLock()
+	// Use write lock for entire operation to prevent race conditions
+	// where multiple goroutines could fetch the same plan simultaneously
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	lastSent, exists := c.cache[cacheKey]
-	c.mu.RUnlock()
 
 	if exists {
 		age := time.Since(lastSent)
 		if age < c.ttl {
 			// Still within TTL - skip emission
-			c.logger.Debug("Execution plan found in cache, skipping emission",
+			c.logger.Info(" Execution plan found in cache, skipping fetch/emit (saving DB query)",
 				zap.String("query_hash", queryHash),
 				zap.String("plan_handle", planHandle),
 				zap.Duration("age", age),
@@ -58,23 +63,20 @@ func (c *ExecutionPlanCache) ShouldEmit(queryHash, planHandle string) bool {
 			return false
 		}
 		// TTL expired - will emit and update timestamp
-		c.logger.Debug("Execution plan cache entry expired, will emit",
+		c.logger.Info(" Execution plan TTL expired, will fetch and emit",
 			zap.String("query_hash", queryHash),
 			zap.String("plan_handle", planHandle),
 			zap.Duration("age", age),
 			zap.Duration("ttl", c.ttl))
+	} else {
+		// First time seeing this plan
+		c.logger.Info("First time seeing this execution plan, will fetch and emit",
+			zap.String("query_hash", queryHash),
+			zap.String("plan_handle", planHandle))
 	}
 
 	// First time or expired - mark as sent and return true
-	c.mu.Lock()
 	c.cache[cacheKey] = time.Now()
-	c.mu.Unlock()
-
-	c.logger.Debug("Execution plan will be emitted and cached",
-		zap.String("query_hash", queryHash),
-		zap.String("plan_handle", planHandle),
-		zap.Bool("was_cached", exists))
-
 	return true
 }
 

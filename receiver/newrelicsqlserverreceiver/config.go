@@ -67,11 +67,6 @@ type Config struct {
 	EnableIntervalBasedAveraging      bool `mapstructure:"enable_interval_based_averaging"`       // Enable/disable interval-based averaging
 	IntervalCalculatorCacheTTLMinutes int  `mapstructure:"interval_calculator_cache_ttl_minutes"` // State cache TTL in minutes (default: 10)
 
-	// Execution plan caching configuration
-	// Prevents sending duplicate execution plans to reduce bandwidth and ingestion costs
-	EnableExecutionPlanCaching   bool `mapstructure:"enable_execution_plan_caching"`    // Enable/disable execution plan deduplication caching
-	ExecutionPlanCacheTTLMinutes int  `mapstructure:"execution_plan_cache_ttl_minutes"` // Cache TTL in minutes (default: 10)
-
 	// Wait resource enrichment configuration
 	// Enriches wait_resource with human-readable names (database names, object names, file names, etc.)
 	EnableWaitResourceEnrichment       bool `mapstructure:"enable_wait_resource_enrichment"`        // Enable/disable wait_resource name enrichment
@@ -120,10 +115,6 @@ func DefaultConfig() component.Config {
 		// Default interval-based averaging settings (Simplified delta-based)
 		EnableIntervalBasedAveraging:      true, // Enabled by default for delta-based averaging
 		IntervalCalculatorCacheTTLMinutes: 10,   // 10 minute TTL for state cache
-
-		// Default execution plan caching settings
-		EnableExecutionPlanCaching:   true, // Enabled by default to reduce bandwidth
-		ExecutionPlanCacheTTLMinutes: 10,   // 10 minute TTL for execution plan deduplication
 
 		// Default wait resource enrichment settings
 		EnableWaitResourceEnrichment:       true, // Enabled by default for human-readable wait_resource

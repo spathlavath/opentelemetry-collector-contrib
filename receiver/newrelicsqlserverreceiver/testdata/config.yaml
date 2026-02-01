@@ -14,8 +14,6 @@ receivers:
     query_monitoring_count_threshold: 100         # TopN: emit top 100 slowest queries per collection cycle
     enable_interval_based_averaging: true          # Enable delta-based interval calculations
     interval_calculator_cache_ttl_minutes: 10      # Cache TTL for query state (10 minutes)
-    enable_execution_plan_caching: true            # Enable execution plan deduplication caching
-    execution_plan_cache_ttl_minutes: 10           # Execution plan cache TTL (10 minutes)
 
 processors:
   memory_limiter:

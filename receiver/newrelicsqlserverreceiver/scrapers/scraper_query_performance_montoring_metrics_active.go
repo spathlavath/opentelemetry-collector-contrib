@@ -374,18 +374,15 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, pla
 		return "", fmt.Errorf("failed to fetch execution plan: %w", err)
 	}
 
-	s.logger.Debug("Execution plan query returned",
-		zap.Int("result_count", len(results)),
-		zap.Bool("xml_is_null", len(results) == 0 || results[0].ExecutionPlanXML == nil))
-
 	if len(results) == 0 {
-		s.logger.Warn("sys.dm_exec_query_plan returned 0 rows (plan not in cache or invalid plan_handle)",
+		s.logger.Warn("No execution plan found in database - plan evicted from cache or invalid plan_handle",
 			zap.String("plan_handle", planHandleHex))
 		return "", nil
 	}
 
+	// Defensive check (should never happen due to WHERE clause, but safety first)
 	if results[0].ExecutionPlanXML == nil {
-		s.logger.Warn("sys.dm_exec_query_plan returned NULL for query_plan (plan evicted from cache or not available)",
+		s.logger.Warn("Execution plan XML is NULL (unexpected - WHERE clause should filter this)",
 			zap.String("plan_handle", planHandleHex))
 		return "", nil
 	}

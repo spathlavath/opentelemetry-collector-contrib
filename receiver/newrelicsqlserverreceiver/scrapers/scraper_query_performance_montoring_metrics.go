@@ -46,13 +46,10 @@ func NewQueryPerformanceScraper(
 	maxAgeMinutes int,
 	intervalCalcEnabled bool,
 	intervalCalcCacheTTLMinutes int,
-	execPlanCacheEnabled bool,
-	execPlanCacheTTLMinutes int,
 	metadataCache *helpers.MetadataCache,
 ) *QueryPerformanceScraper {
 	var smoother *SlowQuerySmoother
 	var intervalCalc *SimplifiedIntervalCalculator
-	var execPlanCache *helpers.ExecutionPlanCache
 
 	if smoothingEnabled {
 		maxAge := time.Duration(maxAgeMinutes) * time.Minute
@@ -64,12 +61,9 @@ func NewQueryPerformanceScraper(
 		intervalCalc = NewSimplifiedIntervalCalculator(logger, cacheTTL)
 	}
 
-	if execPlanCacheEnabled {
-		cacheTTL := time.Duration(execPlanCacheTTLMinutes) * time.Minute
-		execPlanCache = helpers.NewExecutionPlanCache(cacheTTL, logger)
-		logger.Info("Execution plan caching enabled",
-			zap.Duration("ttl", cacheTTL))
-	}
+	// Execution plan caching is always enabled (hardcoded 24 hour TTL)
+	execPlanCache := helpers.NewExecutionPlanCache(logger)
+	logger.Info("Execution plan caching enabled (TTL: 24 hours hardcoded)")
 
 	return &QueryPerformanceScraper{
 		connection:          conn,
@@ -221,16 +215,14 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 			planHandle := planData.PlanHandle.String()
 
 			if !s.executionPlanCache.ShouldEmit(queryHash, planHandle) {
-				s.logger.Debug("Skipping execution plan fetch - recently sent (within TTL)",
-					zap.String("query_hash", queryHash),
-					zap.String("plan_handle", planHandle))
+				// ShouldEmit already logged the cache hit, just skip
+				skippedPlanFetch++
 				continue // Skip DB fetch, parsing, and emission for this plan
 			}
 
-			// Log that we're fetching (first time or TTL expired)
-			s.logger.Info("Fetching execution plan from database",
-				zap.String("query_hash", queryHash),
-				zap.String("plan_handle", planHandle))
+		} else {
+			// Cache disabled - always fetch
+			s.logger.Debug("Execution plan cache disabled, will fetch from database")
 		}
 
 		executionPlanXML, err := s.fetchExecutionPlanXML(ctx, planData.PlanHandle)
@@ -330,16 +322,6 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 	}
 
 	// Compute all attribute values once
-	sessionID := int64(0)
-	if activeQuery.CurrentSessionID != nil {
-		sessionID = *activeQuery.CurrentSessionID
-	}
-
-	requestID := int64(0)
-	if activeQuery.RequestID != nil {
-		requestID = *activeQuery.RequestID
-	}
-
 	requestStartTime := ""
 	if activeQuery.RequestStartTime != nil {
 		requestStartTime = *activeQuery.RequestStartTime
@@ -375,13 +357,9 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 			node.TotalLogicalReads,
 			node.TotalLogicalWrites,
 			node.ExecutionCount,
-			node.AvgElapsedTimeMs,
-			sessionID,
-			requestID,
 			requestStartTime,
-			node.CollectionTimestamp,
 			node.LastExecutionTime,
-			"SqlExecutionPlan",
+			"SqlServerExecutionPlan",
 		)
 	}
 }
@@ -430,7 +408,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		queryText,
 		collectionTimestamp,
 		lastExecutionTimestamp,
-		"SqlQueryDetails",
+		"SqlServerSlowQueryDetails",
 	)
 
 	if result.AvgElapsedTimeMS != nil {

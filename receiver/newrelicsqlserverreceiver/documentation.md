@@ -706,11 +706,7 @@ SQL Server execution plan operator with detailed cost estimates, performance met
 | total_logical_reads | Total logical reads for this operator | Any Int | Recommended |
 | total_logical_writes | Total logical writes for this operator | Any Int | Recommended |
 | execution_count | Number of times this operator executed | Any Int | Recommended |
-| avg_elapsed_time_ms | Average elapsed time in milliseconds | Any Double | Recommended |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
 | request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 | last_execution_time | Timestamp of last execution | Any Str | Recommended |
 | newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 

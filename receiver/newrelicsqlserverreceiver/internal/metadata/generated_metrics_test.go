@@ -246,7 +246,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverExecutionPlanDataPoint(ts, 1, "query_id-val", "plan_handle-val", 7, 14, "physical_op-val", "logical_op-val", "input_type-val", "schema_name-val", "table_name-val", "index_name-val", "referenced_columns-val", 13.100000, 11.100000, 12.100000, 12.100000, 18.100000, 23.100000, "estimated_execution_mode-val", 17, true, false, 17.100000, 18.100000, 19, 20, 15, 19.100000, 10, 10, "request_start_time-val", "collection_timestamp-val", "last_execution_time-val", "newrelic.event.type-val")
+			mb.RecordSqlserverExecutionPlanDataPoint(ts, 1, "query_id-val", "plan_handle-val", 7, 14, "physical_op-val", "logical_op-val", "input_type-val", "schema_name-val", "table_name-val", "index_name-val", "referenced_columns-val", 13.100000, 11.100000, 12.100000, 12.100000, 18.100000, 23.100000, "estimated_execution_mode-val", 17, true, false, 17.100000, 18.100000, 19, 20, 15, "request_start_time-val", "last_execution_time-val", "newrelic.event.type-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1679,21 +1679,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("execution_count")
 					assert.True(t, ok)
 					assert.EqualValues(t, 15, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("avg_elapsed_time_ms")
-					assert.True(t, ok)
-					assert.Equal(t, 19.100000, attrVal.Double())
-					attrVal, ok = dp.Attributes().Get("session_id")
-					assert.True(t, ok)
-					assert.EqualValues(t, 10, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("request_id")
-					assert.True(t, ok)
-					assert.EqualValues(t, 10, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("request_start_time")
 					assert.True(t, ok)
 					assert.Equal(t, "request_start_time-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("collection_timestamp")
-					assert.True(t, ok)
-					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("last_execution_time")
 					assert.True(t, ok)
 					assert.Equal(t, "last_execution_time-val", attrVal.Str())

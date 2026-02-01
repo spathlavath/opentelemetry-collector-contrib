@@ -575,11 +575,7 @@ metrics:
         total_logical_reads,
         total_logical_writes,
         execution_count,
-        avg_elapsed_time_ms,
-        session_id,
-        request_id,
         request_start_time,
-        collection_timestamp,
         last_execution_time,
         newrelic.event.type,
       ]
@@ -1667,10 +1663,6 @@ metrics:
     attributes: [wait_type]
 
 attributes:
-  avg_elapsed_time_ms:
-    description: Average elapsed time in milliseconds
-    type: double
-
   avg_row_size:
     description: Average row size in bytes
     type: double

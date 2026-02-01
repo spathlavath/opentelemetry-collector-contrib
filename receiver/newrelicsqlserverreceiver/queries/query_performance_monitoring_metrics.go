@@ -73,7 +73,10 @@ FROM
 // NOTE: This is used only for active running queries, NOT for slow queries from dm_exec_query_stats
 // The plan_handle hex string is converted to VARBINARY(64) format that sys.dm_exec_query_plan expects
 const ActiveQueryExecutionPlanQuery = `
-SELECT query_plan FROM sys.dm_exec_query_plan(CONVERT(VARBINARY(64), '%s', 1));`
+SELECT
+    CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
+FROM sys.dm_exec_query_plan(CONVERT(VARBINARY(64), '%s', 1)) AS qp
+WHERE qp.query_plan IS NOT NULL;`
 
 // ActiveRunningQueriesQuery retrieves currently executing queries with wait and blocking details
 // This query captures real-time execution state including wait types, blocking chains, and query text

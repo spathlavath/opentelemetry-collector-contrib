@@ -144,8 +144,6 @@ func (s *sqlServerScraper) Start(ctx context.Context, _ component.Host) error {
 		s.config.SlowQuerySmoothingMaxAgeMinutes,
 		s.config.EnableIntervalBasedAveraging,
 		s.config.IntervalCalculatorCacheTTLMinutes,
-		s.config.EnableExecutionPlanCaching,
-		s.config.ExecutionPlanCacheTTLMinutes,
 		s.metadataCache,
 	)
 	// s.slowQueryScraper = scrapers.NewSlowQueryScraper(s.logger, s.connection)
