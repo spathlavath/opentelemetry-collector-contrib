@@ -50,11 +50,10 @@ metrics:
       value_type: double
     attributes:
       [
-        session_id,
-        request_id,
         database_name,
         login_name,
         host_name,
+        client_name,
         query_id,
         wait_type,
         wait_type_description,
@@ -67,6 +66,7 @@ metrics:
         request_start_time,
         collection_timestamp,
         transaction_id,
+        normalised_sql_hash,
         open_transaction_count,
         plan_handle,
         blocking_session_id,
@@ -1643,16 +1643,10 @@ attributes:
   blocking_session_id:
     description: Session ID that is blocking this request
     type: int
-  # Removed: child_role_name (used by removed granular metrics)
-<<<<<<< HEAD
-=======
-  client_interface_name:
-    description: Name of the client interface
-    type: string
   client_name:
     description: Client application name extracted from New Relic query comments (nr_service)
     type: string
->>>>>>> 351c9b6168 (Implementation of generating normalised query hash for APM - DB linking and extracting client name and transaction name for service identification)
+  # Removed: child_role_name (used by removed granular metrics)
   cluster_type_desc:
     description: Cluster type description (WSFC, EXTERNAL, NONE)
     type: string

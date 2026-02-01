@@ -44,35 +44,34 @@ func GenerateMD5Hash(normalizedSQL string) string {
 }
 
 // ExtractNewRelicMetadata extracts nr_service and optionally nr_txn from New Relic query comments
-// Handles scenarios where service/transaction names may contain commas and fields can appear in any order:
-// 1. Only nr_service: /* nr_service=MyApp-SQLServer */
-// 2. Both nr_service and nr_txn: /* nr_service=MyApp-SQLServer,nr_txn=WebTransaction/API/customers (GET) */
-// 3. Reverse order: /* nr_txn=WebTransaction/API/users,nr_service=MyApp */
-// 4. Service with commas: /* nr_service=MyApp,Production,nr_txn=WebTransaction/API/users */
-// 5. Transaction with commas: /* nr_service=MyApp,nr_txn=WebTransaction/API/users,v2 */
+// REQUIRED FORMAT: Values must be enclosed in double quotes to handle commas and special characters
+//
+// Examples:
+// 1. Service only: /* nr_service="MyApp-SQLServer, Background Job" */
+// 2. Both fields: /* nr_service="MyApp, Inc",nr_txn="WebTransaction/API/customers/{id}/orders (GET)" */
+// 3. Any order: /* nr_txn="WebTransaction/Test",nr_service="MyApp" */
+// 4. With spaces: /* nr_service = "MyApp" , nr_txn = "WebTransaction/Test" */
+//
 // Returns: (client_name, transaction_name)
 func ExtractNewRelicMetadata(sql string) (nrService string, nrTxn string) {
-	// Match nr_service: capture everything until we see ,nr_txn=, ,nr_trace_id=, comma+space, or */
-	// Order-independent: works whether nr_service comes first or after other fields
-	// Using ,nr_ prefix ensures we only stop at New Relic metadata fields, not commas within the name
-	// Also stop at ", " (comma+space) which indicates end of service name in legacy format
-	serviceRegex := regexp.MustCompile(`nr_service=([^,\*\s]+(?:,[^,\*\s]+)*?)(?:,nr_txn=|,nr_trace_id=|,\s|\s*\*/)`)
+	// Match nr_service with quoted values (spaces around = are optional)
+	// Format: nr_service = "value with, commas and special chars"
+	serviceRegex := regexp.MustCompile(`nr_service\s*=\s*"([^"]+)"`)
 
-	// Match nr_txn: capture everything until we see ,nr_service=, ,nr_trace_id= or */
-	// Order-independent: works whether nr_txn comes first, last, or in the middle
-	// This allows transaction names to contain commas and spaces
-	txnRegex := regexp.MustCompile(`nr_txn=(.+?)(?:,nr_service=|,nr_trace_id=|\s*\*/)`)
+	// Match nr_txn with quoted values (spaces around = are optional)
+	// Format: nr_txn = "value with, commas and special chars"
+	txnRegex := regexp.MustCompile(`nr_txn\s*=\s*"([^"]+)"`)
 
+	// Extract nr_service
 	serviceMatch := serviceRegex.FindStringSubmatch(sql)
 	if len(serviceMatch) > 1 {
-		// Trim whitespace (comma trimming not needed with updated regex)
 		nrService = strings.TrimSpace(serviceMatch[1])
 	}
 
+	// Extract nr_txn
 	txnMatch := txnRegex.FindStringSubmatch(sql)
 	if len(txnMatch) > 1 {
-		// Remove trailing comma if present and trim whitespace
-		nrTxn = strings.TrimRight(strings.TrimSpace(txnMatch[1]), ",")
+		nrTxn = strings.TrimSpace(txnMatch[1])
 	}
 
 	return nrService, nrTxn
