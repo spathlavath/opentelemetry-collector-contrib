@@ -134,7 +134,6 @@ type MetricsConfig struct {
 	SqlserverMemoryTarget                                     MetricConfig `mapstructure:"sqlserver.memory.target"`
 	SqlserverMemoryTotal                                      MetricConfig `mapstructure:"sqlserver.memory.total"`
 	SqlserverPlanAvgElapsedTimeMs                             MetricConfig `mapstructure:"sqlserver.plan.avg_elapsed_time_ms"`
-	SqlserverPlanTotalElapsedTimeMs                           MetricConfig `mapstructure:"sqlserver.plan.total_elapsed_time_ms"`
 	SqlserverSecurityServerPrincipalsCount                    MetricConfig `mapstructure:"sqlserver.security.server_principals_count"`
 	SqlserverSecurityServerRoleMembersCount                   MetricConfig `mapstructure:"sqlserver.security.server_role_members_count"`
 	SqlserverSlowqueryHistoricalAvgElapsedTimeMs              MetricConfig `mapstructure:"sqlserver.slowquery.historical_avg_elapsed_time_ms"`
@@ -501,9 +500,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverPlanAvgElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverPlanTotalElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSecurityServerPrincipalsCount: MetricConfig{

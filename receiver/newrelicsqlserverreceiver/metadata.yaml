@@ -1204,36 +1204,8 @@ metrics:
       [
         query_id,
         plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
         last_execution_time,
         creation_time,
-        database_name,
-        schema_name,
-      ]
-
-  sqlserver.plan.total_elapsed_time_ms:
-    enabled: true
-    stability:
-      level: alpha
-    description: Total elapsed time across all executions of this plan (historical)
-    unit: ms
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_hash,
-        session_id,
-        request_id,
-        request_start_time,
-        last_execution_time,
-        creation_time,
-        database_name,
-        schema_name,
       ]
 
   # Individual Query Analysis Metrics
@@ -1827,9 +1799,6 @@ attributes:
     type: string
   query_id:
     description: Unique identifier for the SQL query
-    type: string
-  query_plan_hash:
-    description: Hash of the query execution plan
     type: string
   query_plan_id:
     description: Unique identifier for the query execution plan

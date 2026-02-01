@@ -277,31 +277,16 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 
 func (s *QueryPerformanceScraper) convertPlanDataToPlanHandleResult(planData models.SlowQueryPlanData) models.PlanHandleResult {
 	return models.PlanHandleResult{
-		PlanHandle:         planData.PlanHandle,
-		QueryID:            planData.QueryHash,
-		CreationTime:       planData.CreationTime,
-		LastExecutionTime:  planData.LastExecutionTime,
-		TotalElapsedTimeMs: planData.TotalElapsedTimeMs,
-		ExecutionCount:     nil,
-		AvgElapsedTimeMs:   nil,
-		MinElapsedTimeMs:   nil,
-		MaxElapsedTimeMs:   nil,
-		LastElapsedTimeMs:  nil,
-		AvgWorkerTimeMs:    nil,
-		TotalWorkerTimeMs:  nil,
-		AvgLogicalReads:    nil,
-		AvgLogicalWrites:   nil,
-		AvgRows:            nil,
-		LastGrantKB:        nil,
-		LastUsedGrantKB:    nil,
-		LastSpills:         nil,
-		MaxSpills:          nil,
-		LastDOP:            nil,
+		QueryID:           planData.QueryHash,
+		PlanHandle:        planData.PlanHandle,
+		LastExecutionTime: planData.LastExecutionTime,
+		CreationTime:      planData.CreationTime,
+		AvgElapsedTimeMs:  planData.AvgElapsedTimeMs,
 	}
 }
 
 func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.PlanHandleResult, activeQuery models.ActiveRunningQuery, timestamp pcommon.Timestamp) {
-	// Compute all attribute values once
+	// Extract only the attributes needed for plan metrics
 	queryID := ""
 	if planResult.QueryID != nil {
 		queryID = planResult.QueryID.String()
@@ -310,26 +295,6 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 	planHandle := ""
 	if planResult.PlanHandle != nil {
 		planHandle = planResult.PlanHandle.String()
-	}
-
-	queryPlanHash := ""
-	if planResult.QueryPlanHash != nil {
-		queryPlanHash = planResult.QueryPlanHash.String()
-	}
-
-	sessionID := int64(0)
-	if activeQuery.CurrentSessionID != nil {
-		sessionID = *activeQuery.CurrentSessionID
-	}
-
-	requestID := int64(0)
-	if activeQuery.RequestID != nil {
-		requestID = *activeQuery.RequestID
-	}
-
-	requestStartTime := ""
-	if activeQuery.RequestStartTime != nil {
-		requestStartTime = *activeQuery.RequestStartTime
 	}
 
 	lastExecutionTime := ""
@@ -342,44 +307,14 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 		creationTime = *planResult.CreationTime
 	}
 
-	databaseName := ""
-	if activeQuery.DatabaseName != nil {
-		databaseName = *activeQuery.DatabaseName
-	}
-
-	schemaName := ""
-
 	if planResult.AvgElapsedTimeMs != nil {
 		s.mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(
 			timestamp,
 			*planResult.AvgElapsedTimeMs,
 			queryID,
 			planHandle,
-			queryPlanHash,
-			sessionID,
-			requestID,
-			requestStartTime,
 			lastExecutionTime,
 			creationTime,
-			databaseName,
-			schemaName,
-		)
-	}
-
-	if planResult.TotalElapsedTimeMs != nil {
-		s.mb.RecordSqlserverPlanTotalElapsedTimeMsDataPoint(
-			timestamp,
-			*planResult.TotalElapsedTimeMs,
-			queryID,
-			planHandle,
-			queryPlanHash,
-			sessionID,
-			requestID,
-			requestStartTime,
-			lastExecutionTime,
-			creationTime,
-			databaseName,
-			schemaName,
 		)
 	}
 }
@@ -578,20 +513,20 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 					if newTime > existingTime {
 						duplicatePlanHandles++
 						slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
-							QueryHash:          slowQuery.QueryID,
-							PlanHandle:         slowQuery.PlanHandle,
-							CreationTime:       slowQuery.CreationTime,
-							LastExecutionTime:  slowQuery.LastExecutionTimestamp,
-							TotalElapsedTimeMs: slowQuery.TotalElapsedTimeMS,
+							QueryHash:         slowQuery.QueryID,
+							PlanHandle:        slowQuery.PlanHandle,
+							CreationTime:      slowQuery.CreationTime,
+							LastExecutionTime: slowQuery.LastExecutionTimestamp,
+							AvgElapsedTimeMs:  slowQuery.AvgElapsedTimeMS,
 						}
 					}
 				} else {
 					slowQueryPlanDataMap[queryIDStr] = models.SlowQueryPlanData{
-						QueryHash:          slowQuery.QueryID,
-						PlanHandle:         slowQuery.PlanHandle,
-						CreationTime:       slowQuery.CreationTime,
-						LastExecutionTime:  slowQuery.LastExecutionTimestamp,
-						TotalElapsedTimeMs: slowQuery.TotalElapsedTimeMS,
+						QueryHash:         slowQuery.QueryID,
+						PlanHandle:        slowQuery.PlanHandle,
+						CreationTime:      slowQuery.CreationTime,
+						LastExecutionTime: slowQuery.LastExecutionTimestamp,
+						AvgElapsedTimeMs:  slowQuery.AvgElapsedTimeMS,
 					}
 				}
 			}

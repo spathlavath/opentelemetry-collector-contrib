@@ -213,8 +213,6 @@ all_set:
       enabled: true
     sqlserver.plan.avg_elapsed_time_ms:
       enabled: true
-    sqlserver.plan.total_elapsed_time_ms:
-      enabled: true
     sqlserver.security.server_principals_count:
       enabled: true
     sqlserver.security.server_role_members_count:
@@ -531,8 +529,6 @@ none_set:
     sqlserver.memory.total:
       enabled: false
     sqlserver.plan.avg_elapsed_time_ms:
-      enabled: false
-    sqlserver.plan.total_elapsed_time_ms:
       enabled: false
     sqlserver.security.server_principals_count:
       enabled: false

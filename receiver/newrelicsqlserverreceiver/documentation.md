@@ -1433,37 +1433,8 @@ Average elapsed time per execution of this plan (historical) - Used in NRQL quer
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| query_plan_hash | Hash of the query execution plan | Any Str | Recommended |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
 | last_execution_time | Timestamp of last execution | Any Str | Recommended |
 | creation_time | Timestamp when the plan was created | Any Str | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| schema_name | Schema name of the database object | Any Str | Recommended |
-
-### sqlserver.plan.total_elapsed_time_ms
-
-Total elapsed time across all executions of this plan (historical)
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| query_plan_hash | Hash of the query execution plan | Any Str | Recommended |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| last_execution_time | Timestamp of last execution | Any Str | Recommended |
-| creation_time | Timestamp when the plan was created | Any Str | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| schema_name | Schema name of the database object | Any Str | Recommended |
 
 ### sqlserver.security.server_principals_count
 

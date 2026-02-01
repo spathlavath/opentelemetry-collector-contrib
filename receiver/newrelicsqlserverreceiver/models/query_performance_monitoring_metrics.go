@@ -183,63 +183,21 @@ type LockedObject struct {
 // Used for in-memory correlation with active queries (NO database query needed)
 // Contains ONLY the fields needed for sqlserver.plan.* metrics
 type SlowQueryPlanData struct {
-	QueryHash          *QueryID // query_hash - for correlation
-	PlanHandle         *QueryID // plan_handle - for fetching XML
-	CreationTime       *string  // When plan was created
-	LastExecutionTime  *string  // Last execution timestamp
-	TotalElapsedTimeMs *float64 // Total elapsed time in milliseconds
+	QueryHash         *QueryID // query_hash - for correlation
+	PlanHandle        *QueryID // plan_handle - for fetching XML
+	CreationTime      *string  // When plan was created
+	LastExecutionTime *string  // Last execution timestamp
+	AvgElapsedTimeMs  *float64 // Average elapsed time per execution
 }
 
-// PlanHandleResult represents a plan_handle and its associated execution plan for an active query
-// Used to fetch top N most recently used execution plans for a given query_hash
+// PlanHandleResult represents lightweight plan data for emitting plan metrics
+// Contains only the fields needed for sqlserver.plan.* metrics
 type PlanHandleResult struct {
-	PlanHandle        *QueryID `db:"plan_handle"`
-	QueryHash         *QueryID `db:"query_hash"`
-	QueryID           *QueryID `db:"query_id"` // Alias for query_hash (used in slow query context)
-	QueryPlanHash     *QueryID `db:"query_plan_hash"`
-	LastExecutionTime *string  `db:"last_execution_time"`
-	CreationTime      *string  `db:"creation_time"`
-	ExecutionCount    *int64   `db:"execution_count"`
-
-	// Elapsed Time Statistics
-	TotalElapsedTimeMs *float64 `db:"total_elapsed_time_ms"`
-	AvgElapsedTimeMs   *float64 `db:"avg_elapsed_time_ms"`
-	MinElapsedTimeMs   *float64 `db:"min_elapsed_time_ms"`
-	MaxElapsedTimeMs   *float64 `db:"max_elapsed_time_ms"`
-	LastElapsedTimeMs  *float64 `db:"last_elapsed_time_ms"`
-
-	// Worker Time Statistics
-	TotalWorkerTimeMs *float64 `db:"total_worker_time_ms"`
-	AvgWorkerTimeMs   *float64 `db:"avg_worker_time_ms"`
-
-	// I/O Statistics
-	TotalLogicalReads  *int64   `db:"total_logical_reads"`
-	TotalLogicalWrites *int64   `db:"total_logical_writes"`
-	TotalPhysicalReads *int64   `db:"total_physical_reads"`
-	AvgLogicalReads    *float64 `db:"avg_logical_reads"`
-	AvgLogicalWrites   *float64 `db:"avg_logical_writes"`
-	AvgPhysicalReads   *float64 `db:"avg_physical_reads"`
-
-	// Row Statistics
-	AvgRows *float64 `db:"avg_rows"`
-
-	// Memory Grant Statistics
-	LastGrantKB     *float64 `db:"last_grant_kb"`
-	LastUsedGrantKB *float64 `db:"last_used_grant_kb"`
-	MinGrantKB      *float64 `db:"min_grant_kb"`
-	MaxGrantKB      *float64 `db:"max_grant_kb"`
-
-	// Spill Statistics
-	LastSpills *int64 `db:"last_spills"`
-	MaxSpills  *int64 `db:"max_spills"`
-
-	// Parallelism Statistics
-	LastDOP *int64 `db:"last_dop"`
-	MinDOP  *int64 `db:"min_dop"`
-	MaxDOP  *int64 `db:"max_dop"`
-
-	// Execution Plan XML
-	ExecutionPlanXML *string `db:"execution_plan_xml"`
+	QueryID           *QueryID // query_hash - for correlation
+	PlanHandle        *QueryID // plan_handle identifier
+	LastExecutionTime *string  // Last execution timestamp
+	CreationTime      *string  // When plan was created
+	AvgElapsedTimeMs  *float64 // Average elapsed time per execution
 }
 
 // ExecutionPlanTopLevelDetails represents high-level execution plan details (not node-level)

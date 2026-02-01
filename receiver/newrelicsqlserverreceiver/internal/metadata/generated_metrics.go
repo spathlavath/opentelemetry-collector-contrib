@@ -331,9 +331,6 @@ var MetricsInfo = metricsInfo{
 	SqlserverPlanAvgElapsedTimeMs: metricInfo{
 		Name: "sqlserver.plan.avg_elapsed_time_ms",
 	},
-	SqlserverPlanTotalElapsedTimeMs: metricInfo{
-		Name: "sqlserver.plan.total_elapsed_time_ms",
-	},
 	SqlserverSecurityServerPrincipalsCount: metricInfo{
 		Name: "sqlserver.security.server_principals_count",
 	},
@@ -581,7 +578,6 @@ type metricsInfo struct {
 	SqlserverMemoryTarget                                     metricInfo
 	SqlserverMemoryTotal                                      metricInfo
 	SqlserverPlanAvgElapsedTimeMs                             metricInfo
-	SqlserverPlanTotalElapsedTimeMs                           metricInfo
 	SqlserverSecurityServerPrincipalsCount                    metricInfo
 	SqlserverSecurityServerRoleMembersCount                   metricInfo
 	SqlserverSlowqueryHistoricalAvgElapsedTimeMs              metricInfo
@@ -6073,7 +6069,7 @@ func (m *metricSqlserverPlanAvgElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverPlanAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
+func (m *metricSqlserverPlanAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6083,14 +6079,8 @@ func (m *metricSqlserverPlanAvgElapsedTimeMs) recordDataPoint(start pcommon.Time
 	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
 	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
 	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6111,66 +6101,6 @@ func (m *metricSqlserverPlanAvgElapsedTimeMs) emit(metrics pmetric.MetricSlice) 
 
 func newMetricSqlserverPlanAvgElapsedTimeMs(cfg MetricConfig) metricSqlserverPlanAvgElapsedTimeMs {
 	m := metricSqlserverPlanAvgElapsedTimeMs{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverPlanTotalElapsedTimeMs struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.plan.total_elapsed_time_ms metric with initial data.
-func (m *metricSqlserverPlanTotalElapsedTimeMs) init() {
-	m.data.SetName("sqlserver.plan.total_elapsed_time_ms")
-	m.data.SetDescription("Total elapsed time across all executions of this plan (historical)")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverPlanTotalElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_hash", queryPlanHashAttributeValue)
-	dp.Attributes().PutInt("session_id", sessionIDAttributeValue)
-	dp.Attributes().PutInt("request_id", requestIDAttributeValue)
-	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("schema_name", schemaNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverPlanTotalElapsedTimeMs) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverPlanTotalElapsedTimeMs) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverPlanTotalElapsedTimeMs(cfg MetricConfig) metricSqlserverPlanTotalElapsedTimeMs {
-	m := metricSqlserverPlanTotalElapsedTimeMs{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -8639,7 +8569,6 @@ type MetricsBuilder struct {
 	metricSqlserverMemoryTarget                                     metricSqlserverMemoryTarget
 	metricSqlserverMemoryTotal                                      metricSqlserverMemoryTotal
 	metricSqlserverPlanAvgElapsedTimeMs                             metricSqlserverPlanAvgElapsedTimeMs
-	metricSqlserverPlanTotalElapsedTimeMs                           metricSqlserverPlanTotalElapsedTimeMs
 	metricSqlserverSecurityServerPrincipalsCount                    metricSqlserverSecurityServerPrincipalsCount
 	metricSqlserverSecurityServerRoleMembersCount                   metricSqlserverSecurityServerRoleMembersCount
 	metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs              metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs
@@ -8817,7 +8746,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverMemoryTarget:                                     newMetricSqlserverMemoryTarget(mbc.Metrics.SqlserverMemoryTarget),
 		metricSqlserverMemoryTotal:                                      newMetricSqlserverMemoryTotal(mbc.Metrics.SqlserverMemoryTotal),
 		metricSqlserverPlanAvgElapsedTimeMs:                             newMetricSqlserverPlanAvgElapsedTimeMs(mbc.Metrics.SqlserverPlanAvgElapsedTimeMs),
-		metricSqlserverPlanTotalElapsedTimeMs:                           newMetricSqlserverPlanTotalElapsedTimeMs(mbc.Metrics.SqlserverPlanTotalElapsedTimeMs),
 		metricSqlserverSecurityServerPrincipalsCount:                    newMetricSqlserverSecurityServerPrincipalsCount(mbc.Metrics.SqlserverSecurityServerPrincipalsCount),
 		metricSqlserverSecurityServerRoleMembersCount:                   newMetricSqlserverSecurityServerRoleMembersCount(mbc.Metrics.SqlserverSecurityServerRoleMembersCount),
 		metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs:              newMetricSqlserverSlowqueryHistoricalAvgElapsedTimeMs(mbc.Metrics.SqlserverSlowqueryHistoricalAvgElapsedTimeMs),
@@ -9072,7 +9000,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverMemoryTarget.emit(ils.Metrics())
 	mb.metricSqlserverMemoryTotal.emit(ils.Metrics())
 	mb.metricSqlserverPlanAvgElapsedTimeMs.emit(ils.Metrics())
-	mb.metricSqlserverPlanTotalElapsedTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverSecurityServerPrincipalsCount.emit(ils.Metrics())
 	mb.metricSqlserverSecurityServerRoleMembersCount.emit(ils.Metrics())
 	mb.metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs.emit(ils.Metrics())
@@ -9676,13 +9603,8 @@ func (mb *MetricsBuilder) RecordSqlserverMemoryTotalDataPoint(ts pcommon.Timesta
 }
 
 // RecordSqlserverPlanAvgElapsedTimeMsDataPoint adds a data point to sqlserver.plan.avg_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
-}
-
-// RecordSqlserverPlanTotalElapsedTimeMsDataPoint adds a data point to sqlserver.plan.total_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverPlanTotalElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanHashAttributeValue string, sessionIDAttributeValue int64, requestIDAttributeValue int64, requestStartTimeAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string, databaseNameAttributeValue string, schemaNameAttributeValue string) {
-	mb.metricSqlserverPlanTotalElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanHashAttributeValue, sessionIDAttributeValue, requestIDAttributeValue, requestStartTimeAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue, databaseNameAttributeValue, schemaNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverPlanAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, lastExecutionTimeAttributeValue string, creationTimeAttributeValue string) {
+	mb.metricSqlserverPlanAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, lastExecutionTimeAttributeValue, creationTimeAttributeValue)
 }
 
 // RecordSqlserverSecurityServerPrincipalsCountDataPoint adds a data point to sqlserver.security.server_principals_count metric.
