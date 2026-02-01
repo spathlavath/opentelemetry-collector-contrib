@@ -20,347 +20,40 @@ Page splits per second
 | ---- | ----------- | ---------- | --------- |
 | 1/s | Gauge | Int | Alpha |
 
-### sqlserver.activequery.cpu_time_ms
+### sqlserver.activequery.session_id
 
-CPU time for currently executing query
+Session ID for currently executing query
 
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Int | Alpha |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | Recommended |
 | request_id | SQL Server request identifier | Any Int | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
 | login_name | SQL Server login name | Any Str | Recommended |
 | host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
 | wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, CPU, Memory, Network, etc.) | Any Str | Recommended |
 | wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on (KEY, OBJECT, PAGE, RID, etc.) | Any Str | Recommended |
 | wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
 | last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| last_wait_type_description | Human-readable description of the last wait type | Any Str | Recommended |
 | request_start_time | Timestamp when the request started | Any Str | Recommended |
 | collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 | transaction_id | Transaction identifier | Any Int | Recommended |
 | open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
-| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-
-### sqlserver.activequery.elapsed_time_ms
-
-Total elapsed time for currently executing query
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| login_name | SQL Server login name | Any Str | Recommended |
-| host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
-| wait_resource | Resource being waited on | Any Str | Recommended |
-| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
-| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| transaction_id | Transaction identifier | Any Int | Recommended |
-| open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
 | blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-
-### sqlserver.activequery.granted_query_memory_pages
-
-Number of memory pages granted to currently executing query
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {pages} | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| login_name | SQL Server login name | Any Str | Recommended |
-| host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
-| wait_resource | Resource being waited on | Any Str | Recommended |
-| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
-| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| transaction_id | Transaction identifier | Any Int | Recommended |
-| open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
 | blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
 | blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
-| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-
-### sqlserver.activequery.logical_reads
-
-Number of logical reads from buffer cache for currently executing query
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {reads} | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| login_name | SQL Server login name | Any Str | Recommended |
-| host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
-| wait_resource | Resource being waited on | Any Str | Recommended |
-| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
-| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| transaction_id | Transaction identifier | Any Int | Recommended |
-| open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
 | blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
-| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-
-### sqlserver.activequery.reads
-
-Number of physical reads from disk for currently executing query
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {reads} | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| login_name | SQL Server login name | Any Str | Recommended |
-| host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
-| wait_resource | Resource being waited on | Any Str | Recommended |
-| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
-| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| transaction_id | Transaction identifier | Any Int | Recommended |
-| open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
-| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-
-### sqlserver.activequery.row_count
-
-Number of rows returned by currently executing query
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {rows} | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| login_name | SQL Server login name | Any Str | Recommended |
-| host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
-| wait_resource | Resource being waited on | Any Str | Recommended |
-| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
-| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| transaction_id | Transaction identifier | Any Int | Recommended |
-| open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
-| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
 
 ### sqlserver.activequery.wait_time_seconds
 
@@ -379,102 +72,24 @@ Wait time for currently executing query
 | database_name | Name of the database | Any Str | Recommended |
 | login_name | SQL Server login name | Any Str | Recommended |
 | host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
 | wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
+| wait_type_category | Category of the wait type (I/O, Lock, Latch, CPU, Memory, Network, etc.) | Any Str | Recommended |
 | wait_resource | Resource being waited on | Any Str | Recommended |
+| wait_resource_type | Type of resource being waited on (KEY, OBJECT, PAGE, RID, etc.) | Any Str | Recommended |
 | wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
 | last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
+| last_wait_type_description | Human-readable description of the last wait type | Any Str | Recommended |
 | request_start_time | Timestamp when the request started | Any Str | Recommended |
 | collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 | transaction_id | Transaction identifier | Any Int | Recommended |
 | open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
-| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-
-### sqlserver.activequery.writes
-
-Number of writes for currently executing query
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {writes} | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| session_id | SQL Server session identifier | Any Int | Recommended |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| login_name | SQL Server login name | Any Str | Recommended |
-| host_name | Client host name | Any Str | Recommended |
-| program_name | Client program name | Any Str | Recommended |
-| request_command | SQL command type being executed | Any Str | Recommended |
-| request_status | Status of the request (running, runnable, suspended, etc.) | Any Str | Recommended |
-| session_status | Status of the session | Any Str | Recommended |
-| client_interface_name | Name of the client interface | Any Str | Recommended |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, etc.) | Any Str | Recommended |
-| wait_resource | Resource being waited on | Any Str | Recommended |
-| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| wait_resource_database_name | Database name of the resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on | Any Str | Recommended |
-| wait_resource_description | Enhanced description of the resource being waited on | Any Str | Recommended |
-| wait_resource_schema_name | Schema name of the wait resource | Any Str | Recommended |
-| wait_resource_table_name | Table name of the wait resource | Any Str | Recommended |
-| wait_resource_object_type | Type of the object being waited on | Any Str | Recommended |
-| wait_resource_index_name | Index name of the wait resource | Any Str | Recommended |
-| wait_resource_index_type | Type of index being waited on | Any Str | Recommended |
-| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Description of the last wait type | Any Str | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| transaction_id | Transaction identifier | Any Int | Recommended |
-| open_transaction_count | Number of open transactions | Any Int | Recommended |
-| transaction_isolation_level | Transaction isolation level | Any Int | Recommended |
-| degree_of_parallelism | Degree of parallelism for the query | Any Int | Recommended |
-| parallel_worker_count | Number of parallel workers | Any Int | Recommended |
-| blocking_host_name | Host name of the blocking session | Any Str | Recommended |
-| blocking_isolation_level | Isolation level of the blocking session | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_open_transaction_count | Number of open transactions in the blocking session | Any Int | Recommended |
-| blocking_program_name | Program name of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
 | blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_status | Status of the blocking session | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
 
 ### sqlserver.buffer.cache_hit_ratio
 

@@ -29,14 +29,8 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 // MetricsConfig provides config for newrelicsqlserver metrics.
 type MetricsConfig struct {
 	SqlserverAccessPageSplitsPerSec                           MetricConfig `mapstructure:"sqlserver.access.page_splits_per_sec"`
-	SqlserverActivequeryCPUTimeMs                             MetricConfig `mapstructure:"sqlserver.activequery.cpu_time_ms"`
-	SqlserverActivequeryElapsedTimeMs                         MetricConfig `mapstructure:"sqlserver.activequery.elapsed_time_ms"`
-	SqlserverActivequeryGrantedQueryMemoryPages               MetricConfig `mapstructure:"sqlserver.activequery.granted_query_memory_pages"`
-	SqlserverActivequeryLogicalReads                          MetricConfig `mapstructure:"sqlserver.activequery.logical_reads"`
-	SqlserverActivequeryReads                                 MetricConfig `mapstructure:"sqlserver.activequery.reads"`
-	SqlserverActivequeryRowCount                              MetricConfig `mapstructure:"sqlserver.activequery.row_count"`
+	SqlserverActivequerySessionID                             MetricConfig `mapstructure:"sqlserver.activequery.session_id"`
 	SqlserverActivequeryWaitTimeSeconds                       MetricConfig `mapstructure:"sqlserver.activequery.wait_time_seconds"`
-	SqlserverActivequeryWrites                                MetricConfig `mapstructure:"sqlserver.activequery.writes"`
 	SqlserverBufferCacheHitRatio                              MetricConfig `mapstructure:"sqlserver.buffer.cache_hit_ratio"`
 	SqlserverBufferCheckpointPagesPerSec                      MetricConfig `mapstructure:"sqlserver.buffer.checkpoint_pages_per_sec"`
 	SqlserverBufferPageLifeExpectancy                         MetricConfig `mapstructure:"sqlserver.buffer.page_life_expectancy"`
@@ -194,28 +188,10 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverAccessPageSplitsPerSec: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverActivequeryCPUTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryGrantedQueryMemoryPages: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryLogicalReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryRowCount: MetricConfig{
+		SqlserverActivequerySessionID: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverActivequeryWaitTimeSeconds: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryWrites: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverBufferCacheHitRatio: MetricConfig{

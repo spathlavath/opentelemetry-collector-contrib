@@ -1049,7 +1049,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Debug("Successfully scraped TempDB contention metrics")
 	}
 
-	// Build final metrics using MetricsBuilder 
+	// Build final metrics using MetricsBuilder
 	metrics := s.buildMetrics(ctx)
 
 	// Log summary of scraping results

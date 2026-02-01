@@ -162,31 +162,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		hostName = *result.HostName
 	}
 
-	var programName string
-	if result.ProgramName != nil {
-		programName = *result.ProgramName
-	}
-
-	var requestCommand string
-	if result.RequestCommand != nil {
-		requestCommand = *result.RequestCommand
-	}
-
-	var requestStatus string
-	if result.RequestStatus != nil {
-		requestStatus = *result.RequestStatus
-	}
-
-	var sessionStatus string
-	if result.SessionStatus != nil {
-		sessionStatus = *result.SessionStatus
-	}
-
-	var clientInterfaceName string
-	if result.ClientInterfaceName != nil {
-		clientInterfaceName = *result.ClientInterfaceName
-	}
-
 	var waitType string
 	if result.WaitType != nil {
 		waitType = *result.WaitType
@@ -200,11 +175,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 	var waitResourceObjectName string
 	if result.WaitResourceObjectName != nil {
 		waitResourceObjectName = *result.WaitResourceObjectName
-	}
-
-	var waitResourceDatabaseName string
-	if result.WaitResourceDatabaseName != nil {
-		waitResourceDatabaseName = *result.WaitResourceDatabaseName
 	}
 
 	var lastWaitType string
@@ -232,21 +202,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		openTransactionCount = *result.OpenTransactionCount
 	}
 
-	var transactionIsolationLevel int64
-	if result.TransactionIsolationLevel != nil {
-		transactionIsolationLevel = *result.TransactionIsolationLevel
-	}
-
-	var degreeOfParallelism int64
-	if result.DegreeOfParallelism != nil {
-		degreeOfParallelism = *result.DegreeOfParallelism
-	}
-
-	var parallelWorkerCount int64
-	if result.ParallelWorkerCount != nil {
-		parallelWorkerCount = *result.ParallelWorkerCount
-	}
-
 	var blockingSessionID int64
 	if result.BlockingSessionID != nil {
 		blockingSessionID = *result.BlockingSessionID
@@ -257,31 +212,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		blockingLoginName = *result.BlockerLoginName
 	}
 
-	var blockingHostName string
-	if result.BlockerHostName != nil {
-		blockingHostName = *result.BlockerHostName
-	}
-
-	var blockingProgramName string
-	if result.BlockerProgramName != nil {
-		blockingProgramName = *result.BlockerProgramName
-	}
-
-	var blockingStatus string
-	if result.BlockerStatus != nil {
-		blockingStatus = *result.BlockerStatus
-	}
-
-	var blockingIsolationLevel int64
-	if result.BlockerIsolationLevel != nil {
-		blockingIsolationLevel = *result.BlockerIsolationLevel
-	}
-
-	var blockingOpenTransactionCount int64
-	if result.BlockerOpenTransactionCount != nil {
-		blockingOpenTransactionCount = *result.BlockerOpenTransactionCount
-	}
-
 	var blockingQueryHash string
 	if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
 		blockingQueryHash = result.BlockingQueryHash.String()
@@ -289,12 +219,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 
 	var blockingQueryText string
 	if result.BlockingQueryStatementText != nil {
-		blockingQueryText = *result.BlockingQueryStatementText
-	}
-
-	var queryText string
-	if result.QueryStatementText != nil {
-		queryText = *result.QueryStatementText
+		blockingQueryText = helpers.AnonymizeQueryText(*result.BlockingQueryStatementText)
 	}
 
 	var queryID string
@@ -326,39 +251,49 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		waitTypeCategory = "Other"
 	}
 
-	var waitResourceType, waitResourceDescription string
-	if result.WaitResource != nil {
-		waitResourceType, waitResourceDescription = helpers.DecodeWaitResource(*result.WaitResource)
-	}
-
-	var waitResourceSchemaName string
-	if result.WaitResourceSchemaNameObject != nil {
-		waitResourceSchemaName = *result.WaitResourceSchemaNameObject
-	}
-
-	var waitResourceTableName string
-	if result.WaitResourceObjectName != nil {
-		waitResourceTableName = *result.WaitResourceObjectName
-	}
-
-	var waitResourceObjectType string
-	if result.WaitResourceObjectType != nil {
-		waitResourceObjectType = *result.WaitResourceObjectType
-	}
-
-	var waitResourceIndexName string
-	if result.WaitResourceIndexName != nil {
-		waitResourceIndexName = *result.WaitResourceIndexName
-	}
-
-	var waitResourceIndexType string
-	if result.WaitResourceIndexType != nil {
-		waitResourceIndexType = *result.WaitResourceIndexType
-	}
-
 	var lastWaitTypeDescription string
 	if result.LastWaitType != nil {
 		lastWaitTypeDescription = helpers.DecodeWaitType(*result.LastWaitType)
+	}
+
+	// Decode wait resource type (ignore description)
+	var waitResourceType string
+	if result.WaitResource != nil {
+		waitResourceType, _ = helpers.DecodeWaitResource(*result.WaitResource)
+	}
+
+	// Active query session ID
+	if result.CurrentSessionID != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.session_id",
+			zap.Int64("value", *result.CurrentSessionID),
+			zap.Any("database_name", result.DatabaseName))
+
+		s.mb.RecordSqlserverActivequerySessionIDDataPoint(
+			timestamp,
+			*result.CurrentSessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			queryID,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceType,
+			waitResourceObjectName,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			planHandle,
+			blockingSessionID,
+			blockingLoginName,
+			blockingQueryText,
+			blockingQueryHash,
+		)
 	}
 
 	// Active query wait time
@@ -377,463 +312,30 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			databaseName,
 			loginName,
 			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
+			queryID,
 			waitType,
 			waitTypeDescription,
 			waitTypeCategory,
 			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
 			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
+			waitResourceObjectName,
 			lastWaitType,
 			lastWaitTypeDescription,
 			requestStartTime,
 			collectionTimestamp,
 			transactionID,
 			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
 			planHandle,
+			blockingSessionID,
+			blockingLoginName,
+			blockingQueryText,
+			blockingQueryHash,
 		)
 	} else {
 		s.logger.Warn("❌ SKIPPED wait_time metric (wait_time_s <= 0 or nil)",
 			zap.Any("session_id", result.CurrentSessionID),
 			zap.Any("wait_time_s", result.WaitTimeS),
 			zap.Any("wait_type", result.WaitType))
-	}
-
-	// Active query CPU time
-	if result.CPUTimeMs != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.cpu_time_ms",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int64("value", *result.CPUTimeMs))
-
-		s.mb.RecordSqlserverActivequeryCPUTimeMsDataPoint(
-			timestamp,
-			*result.CPUTimeMs,
-			sessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
-			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
-			planHandle,
-		)
-	} else {
-		s.logger.Debug("SKIPPED cpu_time metric (nil)",
-			zap.Any("session_id", result.CurrentSessionID))
-	}
-
-	// Active query elapsed time
-	if result.TotalElapsedTimeMs != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.elapsed_time_ms",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int64("value", *result.TotalElapsedTimeMs))
-
-		s.mb.RecordSqlserverActivequeryElapsedTimeMsDataPoint(
-			timestamp,
-			*result.TotalElapsedTimeMs,
-			sessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
-			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
-			planHandle,
-		)
-	} else {
-		s.logger.Debug("SKIPPED elapsed_time metric (nil)",
-			zap.Any("session_id", result.CurrentSessionID))
-	}
-
-	// Active query reads
-	if result.Reads != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.reads",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int64("value", *result.Reads))
-
-		s.mb.RecordSqlserverActivequeryReadsDataPoint(
-			timestamp,
-			*result.Reads,
-			sessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
-			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
-			planHandle,
-		)
-	} else {
-		s.logger.Debug("SKIPPED reads metric (nil)",
-			zap.Any("session_id", result.CurrentSessionID))
-	}
-
-	// Active query writes
-	if result.Writes != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.writes",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int64("value", *result.Writes))
-
-		s.mb.RecordSqlserverActivequeryWritesDataPoint(
-			timestamp,
-			*result.Writes,
-			sessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
-			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
-			planHandle,
-		)
-	} else {
-		s.logger.Debug("SKIPPED writes metric (nil)",
-			zap.Any("session_id", result.CurrentSessionID))
-	}
-
-	// Active query logical reads
-	if result.LogicalReads != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.logical_reads",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int64("value", *result.LogicalReads))
-
-		s.mb.RecordSqlserverActivequeryLogicalReadsDataPoint(
-			timestamp,
-			*result.LogicalReads,
-			sessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
-			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
-			planHandle,
-		)
-	} else {
-		s.logger.Debug("SKIPPED logical_reads metric (nil)",
-			zap.Any("session_id", result.CurrentSessionID))
-	}
-
-	// Active query row count
-	if result.RowCount != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.row_count",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int64("value", *result.RowCount))
-
-		s.mb.RecordSqlserverActivequeryRowCountDataPoint(
-			timestamp,
-			*result.RowCount,
-			sessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
-			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
-			planHandle,
-		)
-	} else {
-		s.logger.Debug("SKIPPED row_count metric (nil)",
-			zap.Any("session_id", result.CurrentSessionID))
-	}
-
-	if result.GrantedQueryMemoryPages != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.granted_query_memory_pages",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.Int64("value", *result.GrantedQueryMemoryPages))
-
-		s.mb.RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(
-			timestamp,
-			*result.GrantedQueryMemoryPages,
-			sessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			programName,
-			requestCommand,
-			requestStatus,
-			sessionStatus,
-			clientInterfaceName,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceObjectName,
-			waitResourceDatabaseName,
-			waitResourceType,
-			waitResourceDescription,
-			waitResourceSchemaName,
-			waitResourceTableName,
-			waitResourceObjectType,
-			waitResourceIndexName,
-			waitResourceIndexType,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			transactionIsolationLevel,
-			degreeOfParallelism,
-			parallelWorkerCount,
-			blockingHostName,
-			blockingIsolationLevel,
-			blockingLoginName,
-			blockingOpenTransactionCount,
-			blockingProgramName,
-			blockingQueryHash,
-			blockingQueryText,
-			blockingSessionID,
-			blockingStatus,
-			queryText,
-			queryID,
-			planHandle,
-		)
-	} else {
-		s.logger.Debug("SKIPPED granted_query_memory_pages metric (nil)",
-			zap.Any("session_id", result.CurrentSessionID))
 	}
 
 	return nil

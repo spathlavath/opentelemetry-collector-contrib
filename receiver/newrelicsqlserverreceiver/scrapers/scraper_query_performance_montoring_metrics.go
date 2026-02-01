@@ -348,9 +348,6 @@ func (s *QueryPerformanceScraper) emitActiveQueryPlanMetrics(planResult models.P
 	}
 
 	schemaName := ""
-	if activeQuery.SchemaName != nil {
-		schemaName = *activeQuery.SchemaName
-	}
 
 	if planResult.AvgElapsedTimeMs != nil {
 		s.mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(

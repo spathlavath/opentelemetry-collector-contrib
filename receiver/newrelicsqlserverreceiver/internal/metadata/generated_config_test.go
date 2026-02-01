@@ -28,14 +28,8 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					SqlserverAccessPageSplitsPerSec:                           MetricConfig{Enabled: true},
-					SqlserverActivequeryCPUTimeMs:                             MetricConfig{Enabled: true},
-					SqlserverActivequeryElapsedTimeMs:                         MetricConfig{Enabled: true},
-					SqlserverActivequeryGrantedQueryMemoryPages:               MetricConfig{Enabled: true},
-					SqlserverActivequeryLogicalReads:                          MetricConfig{Enabled: true},
-					SqlserverActivequeryReads:                                 MetricConfig{Enabled: true},
-					SqlserverActivequeryRowCount:                              MetricConfig{Enabled: true},
+					SqlserverActivequerySessionID:                             MetricConfig{Enabled: true},
 					SqlserverActivequeryWaitTimeSeconds:                       MetricConfig{Enabled: true},
-					SqlserverActivequeryWrites:                                MetricConfig{Enabled: true},
 					SqlserverBufferCacheHitRatio:                              MetricConfig{Enabled: true},
 					SqlserverBufferCheckpointPagesPerSec:                      MetricConfig{Enabled: true},
 					SqlserverBufferPageLifeExpectancy:                         MetricConfig{Enabled: true},
@@ -201,14 +195,8 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					SqlserverAccessPageSplitsPerSec:                           MetricConfig{Enabled: false},
-					SqlserverActivequeryCPUTimeMs:                             MetricConfig{Enabled: false},
-					SqlserverActivequeryElapsedTimeMs:                         MetricConfig{Enabled: false},
-					SqlserverActivequeryGrantedQueryMemoryPages:               MetricConfig{Enabled: false},
-					SqlserverActivequeryLogicalReads:                          MetricConfig{Enabled: false},
-					SqlserverActivequeryReads:                                 MetricConfig{Enabled: false},
-					SqlserverActivequeryRowCount:                              MetricConfig{Enabled: false},
+					SqlserverActivequerySessionID:                             MetricConfig{Enabled: false},
 					SqlserverActivequeryWaitTimeSeconds:                       MetricConfig{Enabled: false},
-					SqlserverActivequeryWrites:                                MetricConfig{Enabled: false},
 					SqlserverBufferCacheHitRatio:                              MetricConfig{Enabled: false},
 					SqlserverBufferCheckpointPagesPerSec:                      MetricConfig{Enabled: false},
 					SqlserverBufferPageLifeExpectancy:                         MetricConfig{Enabled: false},

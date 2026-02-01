@@ -40,341 +40,39 @@ metrics:
     gauge:
       value_type: int
 
-  sqlserver.activequery.cpu_time_ms:
-    enabled: true
-    stability:
-      level: alpha
-    description: CPU time for currently executing query
-    unit: "ms"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        session_id,
-        request_id,
-        database_name,
-        login_name,
-        host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
-        wait_type,
-        wait_type_description,
-        wait_type_category,
-        wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
-        wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
-        last_wait_type,
-        last_wait_type_description,
-        request_start_time,
-        collection_timestamp,
-        transaction_id,
-        open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
-        blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
-        blocking_query_hash,
-        blocking_query_text,
-        blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
-        plan_handle,
-      ]
 
-  sqlserver.activequery.elapsed_time_ms:
+  sqlserver.activequery.session_id:
     enabled: true
     stability:
       level: alpha
-    description: Total elapsed time for currently executing query
-    unit: "ms"
+    description: Session ID for currently executing query
+    unit: "1"
     gauge:
       value_type: int
     attributes:
       [
-        session_id,
         request_id,
         database_name,
         login_name,
         host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
+        query_id,
         wait_type,
         wait_type_description,
         wait_type_category,
         wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
         wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
+        wait_resource_object_name,
         last_wait_type,
         last_wait_type_description,
         request_start_time,
         collection_timestamp,
         transaction_id,
         open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
-        blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
-        blocking_query_hash,
-        blocking_query_text,
-        blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
         plan_handle,
-      ]
-
-  sqlserver.activequery.granted_query_memory_pages:
-    enabled: true
-    stability:
-      level: alpha
-    description: Number of memory pages granted to currently executing query
-    unit: "{pages}"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        session_id,
-        request_id,
-        database_name,
-        login_name,
-        host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
-        wait_type,
-        wait_type_description,
-        wait_type_category,
-        wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
-        wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
-        last_wait_type,
-        last_wait_type_description,
-        request_start_time,
-        collection_timestamp,
-        transaction_id,
-        open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
-        blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
-        blocking_query_hash,
-        blocking_query_text,
         blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
-        plan_handle,
-      ]
-
-  # Locked Object Metric
-  sqlserver.activequery.logical_reads:
-    enabled: true
-    stability:
-      level: alpha
-    description: Number of logical reads from buffer cache for currently executing query
-    unit: "{reads}"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        session_id,
-        request_id,
-        database_name,
-        login_name,
-        host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
-        wait_type,
-        wait_type_description,
-        wait_type_category,
-        wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
-        wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
-        last_wait_type,
-        last_wait_type_description,
-        request_start_time,
-        collection_timestamp,
-        transaction_id,
-        open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
         blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
-        blocking_query_hash,
         blocking_query_text,
-        blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
-        plan_handle,
-      ]
-
-  sqlserver.activequery.reads:
-    enabled: true
-    stability:
-      level: alpha
-    description: Number of physical reads from disk for currently executing query
-    unit: "{reads}"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        session_id,
-        request_id,
-        database_name,
-        login_name,
-        host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
-        wait_type,
-        wait_type_description,
-        wait_type_category,
-        wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
-        wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
-        last_wait_type,
-        last_wait_type_description,
-        request_start_time,
-        collection_timestamp,
-        transaction_id,
-        open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
-        blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
         blocking_query_hash,
-        blocking_query_text,
-        blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
-        plan_handle,
-      ]
-
-  sqlserver.activequery.row_count:
-    enabled: true
-    stability:
-      level: alpha
-    description: Number of rows returned by currently executing query
-    unit: "{rows}"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        session_id,
-        request_id,
-        database_name,
-        login_name,
-        host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
-        wait_type,
-        wait_type_description,
-        wait_type_category,
-        wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
-        wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
-        last_wait_type,
-        last_wait_type_description,
-        request_start_time,
-        collection_timestamp,
-        transaction_id,
-        open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
-        blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
-        blocking_query_hash,
-        blocking_query_text,
-        blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
-        plan_handle,
       ]
 
   sqlserver.activequery.wait_time_seconds:
@@ -392,101 +90,24 @@ metrics:
         database_name,
         login_name,
         host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
+        query_id,
         wait_type,
         wait_type_description,
         wait_type_category,
         wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
         wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
+        wait_resource_object_name,
         last_wait_type,
         last_wait_type_description,
         request_start_time,
         collection_timestamp,
         transaction_id,
         open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
-        blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
-        blocking_query_hash,
-        blocking_query_text,
-        blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
         plan_handle,
-      ]
-
-  sqlserver.activequery.writes:
-    enabled: true
-    stability:
-      level: alpha
-    description: Number of writes for currently executing query
-    unit: "{writes}"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        session_id,
-        request_id,
-        database_name,
-        login_name,
-        host_name,
-        program_name,
-        request_command,
-        request_status,
-        session_status,
-        client_interface_name,
-        wait_type,
-        wait_type_description,
-        wait_type_category,
-        wait_resource,
-        wait_resource_object_name,
-        wait_resource_database_name,
-        wait_resource_type,
-        wait_resource_description,
-        wait_resource_schema_name,
-        wait_resource_table_name,
-        wait_resource_object_type,
-        wait_resource_index_name,
-        wait_resource_index_type,
-        last_wait_type,
-        last_wait_type_description,
-        request_start_time,
-        collection_timestamp,
-        transaction_id,
-        open_transaction_count,
-        transaction_isolation_level,
-        degree_of_parallelism,
-        parallel_worker_count,
-        blocking_host_name,
-        blocking_isolation_level,
-        blocking_login_name,
-        blocking_open_transaction_count,
-        blocking_program_name,
-        blocking_query_hash,
-        blocking_query_text,
         blocking_session_id,
-        blocking_status,
-        query_text,
-        query_id,
-        plan_handle,
+        blocking_login_name,
+        blocking_query_text,
+        blocking_query_hash,
       ]
 
   sqlserver.buffer.cache_hit_ratio:
@@ -2081,20 +1702,8 @@ attributes:
   avg_row_size:
     description: Average row size in bytes
     type: double
-  blocking_host_name:
-    description: Host name of the blocking session
-    type: string
-  blocking_isolation_level:
-    description: Isolation level of the blocking session
-    type: int
   blocking_login_name:
     description: Login name of the blocking session
-    type: string
-  blocking_open_transaction_count:
-    description: Number of open transactions in the blocking session
-    type: int
-  blocking_program_name:
-    description: Program name of the blocking session
     type: string
   blocking_query_hash:
     description: Query hash of the blocking session for correlation
@@ -2105,13 +1714,7 @@ attributes:
   blocking_session_id:
     description: Session ID that is blocking this request
     type: int
-  blocking_status:
-    description: Status of the blocking session
-    type: string
   # Removed: child_role_name (used by removed granular metrics)
-  client_interface_name:
-    description: Name of the client interface
-    type: string
   cluster_type_desc:
     description: Cluster type description (WSFC, EXTERNAL, NONE)
     type: string
@@ -2124,9 +1727,6 @@ attributes:
   database_name:
     description: Name of the database
     type: string
-  degree_of_parallelism:
-    description: Degree of parallelism for the query
-    type: int
   engine_edition:
     description: SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database)
     type: string
@@ -2182,7 +1782,7 @@ attributes:
     description: Last wait type experienced by the request
     type: string
   last_wait_type_description:
-    description: Description of the last wait type
+    description: Human-readable description of the last wait type
     type: string
   logical_op:
     description: Logical operator name
@@ -2208,9 +1808,6 @@ attributes:
     type: int
   open_transaction_count:
     description: Number of open transactions
-    type: int
-  parallel_worker_count:
-    description: Number of parallel workers
     type: int
   parent_node_id:
     description: Parent node identifier in execution plan tree
@@ -2246,17 +1843,11 @@ attributes:
   replica_server_name:
     description: Replica server name in availability group
     type: string
-  request_command:
-    description: SQL command type being executed
-    type: string
   request_id:
     description: SQL Server request identifier
     type: int
   request_start_time:
     description: Timestamp when the request started
-    type: string
-  request_status:
-    description: Status of the request (running, runnable, suspended, etc.)
     type: string
   role_desc:
     description: Replica role description (PRIMARY or SECONDARY)
@@ -2271,9 +1862,6 @@ attributes:
   session_id:
     description: SQL Server session identifier
     type: int
-  session_status:
-    description: Status of the session
-    type: string
   spill_occurred:
     description: Whether memory spill occurred
     type: bool
@@ -2307,44 +1895,20 @@ attributes:
   transaction_id:
     description: Transaction identifier
     type: int
-  transaction_isolation_level:
-    description: Transaction isolation level
-    type: int
   wait_resource:
     description: Resource being waited on
-    type: string
-  wait_resource_database_name:
-    description: Database name of the resource being waited on
-    type: string
-  wait_resource_description:
-    description: Enhanced description of the resource being waited on
-    type: string
-  wait_resource_index_name:
-    description: Index name of the wait resource
-    type: string
-  wait_resource_index_type:
-    description: Type of index being waited on
     type: string
   wait_resource_object_name:
     description: Name of the object being waited on
     type: string
-  wait_resource_object_type:
-    description: Type of the object being waited on
-    type: string
-  wait_resource_schema_name:
-    description: Schema name of the wait resource
-    type: string
-  wait_resource_table_name:
-    description: Table name of the wait resource
-    type: string
   wait_resource_type:
-    description: Type of resource being waited on
+    description: Type of resource being waited on (KEY, OBJECT, PAGE, RID, etc.)
     type: string
   wait_type:
     description: Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S)
     type: string
   wait_type_category:
-    description: Category of the wait type (I/O, Lock, Latch, etc.)
+    description: Category of the wait type (I/O, Lock, Latch, CPU, Memory, Network, etc.)
     type: string
   wait_type_description:
     description: Human-readable description of the wait type

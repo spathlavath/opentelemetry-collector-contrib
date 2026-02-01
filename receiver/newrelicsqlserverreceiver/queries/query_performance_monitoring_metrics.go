@@ -73,16 +73,10 @@ FROM
 // NOTE: This is used only for active running queries, NOT for slow queries from dm_exec_query_stats
 // The plan_handle hex string is converted to VARBINARY(64) format that sys.dm_exec_query_plan expects
 const ActiveQueryExecutionPlanQuery = `
-SELECT
-    CAST(qp.query_plan AS NVARCHAR(MAX)) AS execution_plan_xml
-FROM sys.dm_exec_query_plan(CONVERT(VARBINARY(64), '%s', 1)) AS qp
-WHERE qp.query_plan IS NOT NULL;`
+SELECT query_plan FROM sys.dm_exec_query_plan(CONVERT(VARBINARY(64), '%s', 1));`
 
 // ActiveRunningQueriesQuery retrieves currently executing queries with wait and blocking details
 // This query captures real-time execution state including wait types, blocking chains, and query text
-//
-// RCA Enhancement: Includes query_hash for correlation with slow queries, with fallback to text hash
-// when query_hash is NULL (queries not yet cached in dm_exec_query_stats)
 const ActiveRunningQueriesQuery = `
 -- ============================================================================
 -- CROSS-DATABASE KEY LOCK RESOLUTION: Populate partition info from all databases
@@ -133,43 +127,26 @@ DECLARE @Limit INT = %d; -- Set the maximum number of rows to return
 DECLARE @ElapsedTimeThresholdMs INT = %d; -- Minimum elapsed time threshold in milliseconds
 
 SELECT TOP (@Limit)
-    -- A. CURRENT SESSION DETAILS
+    -- A. SESSION IDENTIFICATION (Required for correlation)
     r_wait.session_id AS current_session_id,
     r_wait.request_id AS request_id,
+
+    -- B. SESSION CONTEXT (Required by NRQL Query 2)
     DB_NAME(r_wait.database_id) AS database_name,
     s_wait.login_name AS login_name,
     s_wait.host_name AS host_name,
-    s_wait.program_name AS program_name,
-    r_wait.command AS request_command,
-    r_wait.status AS request_status,
 
-    -- B. CORRELATION KEY (Critical for RCA)
-    -- query_id: SQL Server's query_hash - used for correlating active queries with slow query metrics
-    -- NULL indicates query is not correlatable (ad-hoc SQL with different literals, OPTION(RECOMPILE), etc.)
-    -- Only parameterized queries and stored procedures get consistent query_hash values
+    -- C. QUERY CORRELATION (Required for slow query correlation)
     r_wait.query_hash AS query_id,
 
-    -- B2. QUERY TEXT (moved up before wait decoding to avoid SUBSTRING errors in later sections)
-    -- Using full text without truncation
-    st_wait.text AS query_statement_text,
-
-    -- B3. QUERY CONTEXT - Schema and Object Name (for stored procedures)
-    -- Use query plan's objectid (qp_wait.objectid) not SQL text's objectid (st_wait.objectid)
-    -- When stored procedures execute, sql_text shows the statement inside the procedure (NULL objectid)
-    -- but query_plan contains the actual stored procedure's objectid
-    OBJECT_SCHEMA_NAME(qp_wait.objectid, qp_wait.dbid) AS schema_name,
-    OBJECT_NAME(qp_wait.objectid, qp_wait.dbid) AS object_name,
-
-    -- C. WAIT DETAILS
+    -- D. WAIT DETAILS (Required by NRQL Query 1)
     r_wait.wait_type AS wait_type,
     r_wait.wait_time / 1000.0 AS wait_time_s,
     r_wait.wait_resource AS wait_resource,
     r_wait.last_wait_type AS last_wait_type,
 
-    -- C2. WAIT RESOURCE DECODED (Works across all databases)
-    -- Extracts object name for OBJECT locks and KEY locks
+    -- D2. WAIT RESOURCE OBJECT NAME (Required by NRQL Query 1 - Lock Time Analysis dashboard)
     CASE
-        -- OBJECT locks: Direct object_id extraction using OBJECT_NAME
         WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
             OBJECT_NAME(
                 TRY_CAST(
@@ -198,76 +175,25 @@ SELECT TOP (@Limit)
         ELSE NULL
     END AS wait_resource_object_name,
 
-    -- Extract database name for wait resources that contain database_id
-    CASE
-        WHEN r_wait.wait_resource LIKE 'KEY:%%' OR
-             r_wait.wait_resource LIKE 'PAGE:%%' OR
-             r_wait.wait_resource LIKE 'RID:%%' OR
-             r_wait.wait_resource LIKE 'OBJECT:%%' OR
-             r_wait.wait_resource LIKE 'DATABASE:%%' OR
-             r_wait.wait_resource LIKE 'FILE:%%' OR
-             r_wait.wait_resource LIKE 'EXTENT:%%' THEN
-            DB_NAME(
-                TRY_CAST(
-                    SUBSTRING(
-                        r_wait.wait_resource,
-                        PATINDEX('%[0-9]%', r_wait.wait_resource),
-                        CASE
-                            WHEN CHARINDEX(':', r_wait.wait_resource, PATINDEX('%[0-9]%', r_wait.wait_resource)) > 0
-                            THEN CHARINDEX(':', r_wait.wait_resource, PATINDEX('%[0-9]%', r_wait.wait_resource)) - PATINDEX('%[0-9]%', r_wait.wait_resource)
-                            ELSE LEN(r_wait.wait_resource)
-                        END
-                    ) AS INT
-                )
-            )
-        ELSE NULL
-    END AS wait_resource_database_name,
-
-    -- D. PERFORMANCE/EXECUTION METRICS
-    r_wait.cpu_time AS cpu_time_ms,
-    r_wait.total_elapsed_time AS total_elapsed_time_ms,
-    r_wait.reads AS reads,
-    r_wait.writes AS writes,
-    r_wait.logical_reads AS logical_reads,
-    r_wait.row_count AS row_count,
-    r_wait.granted_query_memory AS granted_query_memory_pages,
+    -- E. TIMESTAMPS (Required by NRQL queries)
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(r_wait.start_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS request_start_time,
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp,
 
-    -- E. TRANSACTION CONTEXT (RCA for long-running transactions)
+    -- F. TRANSACTION CONTEXT (Required by NRQL Query 1)
     r_wait.transaction_id AS transaction_id,
     r_wait.open_transaction_count AS open_transaction_count,
-    r_wait.transaction_isolation_level AS transaction_isolation_level,
 
-    -- F. PARALLEL EXECUTION DETAILS (RCA for CXPACKET waits)
-    r_wait.dop AS degree_of_parallelism,
-    r_wait.parallel_worker_count AS parallel_worker_count,
-
-    -- G. SESSION CONTEXT
-    s_wait.status AS session_status,
-    s_wait.client_interface_name AS client_interface_name,
-
-    -- H. PLAN HANDLE (for execution plan retrieval)
+    -- G. PLAN HANDLE (Required for execution plan retrieval)
     r_wait.plan_handle AS plan_handle,
 
-    -- I. BLOCKING DETAILS
-    -- LINKING FIX: Return INT64 instead of STRING for proper numeric joins
-    -- NULL when not blocked (instead of 'N/A' string) for type consistency
+    -- H. BLOCKING DETAILS (Required by NRQL Query 1)
     CASE
         WHEN r_wait.blocking_session_id = 0 THEN NULL
         ELSE r_wait.blocking_session_id
     END AS blocking_session_id,
- 
-
     ISNULL(s_blocker.login_name, 'N/A') AS blocker_login_name,
-    ISNULL(s_blocker.host_name, 'N/A') AS blocker_host_name,
-    ISNULL(s_blocker.program_name, 'N/A') AS blocker_program_name,
-    s_blocker.status AS blocker_status,
-    s_blocker.transaction_isolation_level AS blocker_isolation_level,
-    s_blocker.open_transaction_count AS blocker_open_transaction_count,
 
-    -- J. QUERY TEXT - Blocking Session
-    -- Full text without truncation
+    -- H2. BLOCKING QUERY TEXT (Required by NRQL Query 1)
     CASE
         WHEN r_wait.blocking_session_id = 0 THEN 'N/A'
         WHEN r_blocker.command IS NULL AND ib_blocker.event_info IS NOT NULL THEN ib_blocker.event_info
@@ -275,91 +201,13 @@ SELECT TOP (@Limit)
         ELSE 'N/A'
     END AS blocking_query_statement_text,
 
-    -- J2. QUERY HASH - Blocking Session (for correlation)
-    r_blocker.query_hash AS blocking_query_hash,
-
-    -- L. ENHANCED WAIT RESOURCE DECODING (OBJECT locks - table-level locks)
-    -- Cross-database schema name resolution using OBJECT_SCHEMA_NAME
-    CASE
-        WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
-            OBJECT_SCHEMA_NAME(
-                TRY_CAST(
-                    SUBSTRING(
-                        r_wait.wait_resource,
-                        CHARINDEX(':', r_wait.wait_resource, 8) + 1,
-                        CASE
-                            WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
-                            THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
-                            ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
-                        END
-                    ) AS INT
-                ),
-                r_wait.database_id
-            )
-        ELSE NULL
-    END AS wait_resource_schema_name_object,
-    obj_lock.type_desc AS wait_resource_object_type,
-
-    -- M. ENHANCED WAIT RESOURCE DECODING (INDEX locks - KEY locks, row-level locks)
-    -- Resolved via sys.partitions subquery with cross-database OBJECT_NAME functions
-    OBJECT_SCHEMA_NAME(idx_key.object_id, r_wait.database_id) AS wait_resource_schema_name_index,
-    OBJECT_NAME(idx_key.object_id, r_wait.database_id) AS wait_resource_table_name_index,
-    idx_key.index_name AS wait_resource_index_name,
-    idx_key.index_type AS wait_resource_index_type,
-
-    -- N. UNIFIED WAIT RESOURCE FIELDS (works for both OBJECT and KEY locks)
-    -- These provide a single set of attributes regardless of lock type
-    COALESCE(
-        CASE
-            WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
-                OBJECT_SCHEMA_NAME(
-                    TRY_CAST(
-                        SUBSTRING(
-                            r_wait.wait_resource,
-                            CHARINDEX(':', r_wait.wait_resource, 8) + 1,
-                            CASE
-                                WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
-                                THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
-                                ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
-                            END
-                        ) AS INT
-                    ),
-                    r_wait.database_id
-                )
-            ELSE NULL
-        END,
-        OBJECT_SCHEMA_NAME(idx_key.object_id, r_wait.database_id)
-    ) AS wait_resource_schema_name,
-    COALESCE(
-        CASE
-            WHEN r_wait.wait_resource LIKE 'OBJECT:%%' THEN
-                OBJECT_NAME(
-                    TRY_CAST(
-                        SUBSTRING(
-                            r_wait.wait_resource,
-                            CHARINDEX(':', r_wait.wait_resource, 8) + 1,
-                            CASE
-                                WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
-                                THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
-                                ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
-                            END
-                        ) AS INT
-                    ),
-                    r_wait.database_id
-                )
-            ELSE NULL
-        END,
-        OBJECT_NAME(idx_key.object_id, r_wait.database_id)
-    ) AS wait_resource_table_name
+    -- H3. BLOCKING QUERY HASH (Required by NRQL Query 1)
+    r_blocker.query_hash AS blocking_query_hash
 
 FROM
     sys.dm_exec_requests AS r_wait
 INNER JOIN
     sys.dm_exec_sessions AS s_wait ON s_wait.session_id = r_wait.session_id
-CROSS APPLY
-    sys.dm_exec_sql_text(r_wait.sql_handle) AS st_wait
-OUTER APPLY
-    sys.dm_exec_query_plan(r_wait.plan_handle) AS qp_wait
 LEFT JOIN
     sys.dm_exec_requests AS r_blocker ON r_wait.blocking_session_id = r_blocker.session_id
 LEFT JOIN
@@ -368,43 +216,25 @@ OUTER APPLY
     sys.dm_exec_sql_text(r_blocker.sql_handle) AS st_blocker
 OUTER APPLY
     sys.dm_exec_input_buffer(r_wait.blocking_session_id, NULL) AS ib_blocker
-
--- Enhanced wait resource decoding: OBJECT locks (table-level locks)
--- Format: "OBJECT: <database_id>:<object_id>:<lock_type>"
-LEFT JOIN sys.objects obj_lock ON
-    r_wait.wait_resource LIKE 'OBJECT:%%'
-    AND CHARINDEX(':', r_wait.wait_resource, 8) > 0  -- Safety: Ensure 2nd colon exists
-    AND CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0  -- Safety: Ensure 3rd colon exists
-    AND TRY_CAST(
-        SUBSTRING(
-            r_wait.wait_resource,
-            CHARINDEX(':', r_wait.wait_resource, 8) + 1,
-            CASE
-                WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) > 0
-                THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, 8) + 1) - CHARINDEX(':', r_wait.wait_resource, 8) - 1
-                ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, 8)
-            END
-        ) AS INT
-    ) = obj_lock.object_id
-    AND r_wait.database_id = DB_ID(DB_NAME(r_wait.database_id))
-
--- Enhanced wait resource decoding: KEY locks (row-level locks) - CROSS-DATABASE RESOLUTION
--- KEY lock format: "KEY: database_id:hobt_id (key_hash)"
--- Uses pre-populated #all_partitions temp table with data from ALL databases
--- This enables true cross-database index name resolution with a single collector
-LEFT JOIN #all_partitions idx_key ON
-    r_wait.wait_resource LIKE 'KEY:%%'
-    AND idx_key.database_id = r_wait.database_id  -- Match database
-    AND idx_key.hobt_id = TRY_CAST(
-        -- Extract HOBT ID from "KEY: <db_id>:<hobt_id> (<hash>)"
-        -- Example: "KEY: 5:72057594049986560 (0216d1a0d5d2)"
-        SUBSTRING(
-            r_wait.wait_resource,
-            CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1,  -- Start after second colon
-            CHARINDEX(' ', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1) -
-            CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) - 1   -- Length = space position - colon position - 1
-        ) AS BIGINT
-    )
+-- JOIN temp table for KEY/PAGE lock resolution
+LEFT JOIN
+    #all_partitions AS idx_key ON idx_key.hobt_id =
+        TRY_CAST(
+            SUBSTRING(
+                r_wait.wait_resource,
+                -- Find SECOND colon position (after database_id, before hobt_id)
+                CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1,
+                CASE
+                    -- Find THIRD colon or space (before lock hash)
+                    WHEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1) > 0
+                    THEN CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1) - CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) - 1
+                    WHEN CHARINDEX(' ', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1) > 0
+                    THEN CHARINDEX(' ', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) + 1) - CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1) - 1
+                    ELSE LEN(r_wait.wait_resource) - CHARINDEX(':', r_wait.wait_resource, CHARINDEX(':', r_wait.wait_resource) + 1)
+                END
+            ) AS BIGINT
+        )
+    AND idx_key.database_id = r_wait.database_id
 
 WHERE
     r_wait.session_id > 50

@@ -3,21 +3,9 @@ all_set:
   metrics:
     sqlserver.access.page_splits_per_sec:
       enabled: true
-    sqlserver.activequery.cpu_time_ms:
-      enabled: true
-    sqlserver.activequery.elapsed_time_ms:
-      enabled: true
-    sqlserver.activequery.granted_query_memory_pages:
-      enabled: true
-    sqlserver.activequery.logical_reads:
-      enabled: true
-    sqlserver.activequery.reads:
-      enabled: true
-    sqlserver.activequery.row_count:
+    sqlserver.activequery.session_id:
       enabled: true
     sqlserver.activequery.wait_time_seconds:
-      enabled: true
-    sqlserver.activequery.writes:
       enabled: true
     sqlserver.buffer.cache_hit_ratio:
       enabled: true
@@ -334,21 +322,9 @@ none_set:
   metrics:
     sqlserver.access.page_splits_per_sec:
       enabled: false
-    sqlserver.activequery.cpu_time_ms:
-      enabled: false
-    sqlserver.activequery.elapsed_time_ms:
-      enabled: false
-    sqlserver.activequery.granted_query_memory_pages:
-      enabled: false
-    sqlserver.activequery.logical_reads:
-      enabled: false
-    sqlserver.activequery.reads:
-      enabled: false
-    sqlserver.activequery.row_count:
+    sqlserver.activequery.session_id:
       enabled: false
     sqlserver.activequery.wait_time_seconds:
-      enabled: false
-    sqlserver.activequery.writes:
       enabled: false
     sqlserver.buffer.cache_hit_ratio:
       enabled: false
