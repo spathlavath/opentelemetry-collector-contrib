@@ -219,7 +219,13 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 
 	var blockingQueryText string
 	if result.BlockingQueryStatementText != nil {
-		blockingQueryText = helpers.AnonymizeQueryText(*result.BlockingQueryStatementText)
+		// Truncate to 4095 characters first (before anonymization for efficiency)
+		truncatedText := *result.BlockingQueryStatementText
+		if len(truncatedText) > 4095 {
+			truncatedText = truncatedText[:4095]
+		}
+		// Then anonymize only what we're sending
+		blockingQueryText = helpers.AnonymizeQueryText(truncatedText)
 	}
 
 	var queryID string
