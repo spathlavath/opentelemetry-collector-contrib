@@ -134,6 +134,31 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		return nil
 	}
 
+	// APM metadata extraction and SQL normalization (similar to slow query processing)
+	// This enables APM integration and query correlation across different language agents
+	if result.QueryStatementText != nil && *result.QueryStatementText != "" {
+		// Extract metadata from New Relic query comments (e.g., /* nr_service=MyApp,nr_txn=WebTransaction/API/users */)
+		clientName, transactionName := helpers.ExtractNewRelicMetadata(*result.QueryStatementText)
+
+		// Normalize SQL and generate MD5 hash for cross-language query correlation
+		normalizedSQL, sqlHash := helpers.NormalizeSqlAndHash(*result.QueryStatementText)
+
+		// Populate model fields with extracted metadata
+		if clientName != "" {
+			result.ClientName = &clientName
+		}
+		if transactionName != "" {
+			result.TransactionName = &transactionName
+		}
+		if sqlHash != "" {
+			result.NormalisedSqlHash = &sqlHash
+		}
+
+		// Replace QueryStatementText with normalized version for privacy and consistency
+		// This removes literals while preserving query structure
+		result.QueryStatementText = &normalizedSQL
+	}
+
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	// Extract attribute values
@@ -261,11 +286,175 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 	if result.LastWaitType != nil {
 		lastWaitTypeDescription = helpers.DecodeWaitType(*result.LastWaitType)
 	}
+<<<<<<< HEAD
 
 	// Decode wait resource type (ignore description)
 	var waitResourceType string
 	if result.WaitResource != nil {
 		waitResourceType, _ = helpers.DecodeWaitResource(*result.WaitResource)
+=======
+	getBlockingHostName := func() string {
+		if result.BlockerHostName != nil {
+			return *result.BlockerHostName
+		}
+		return ""
+	}
+	getBlockingProgramName := func() string {
+		if result.BlockerProgramName != nil {
+			return *result.BlockerProgramName
+		}
+		return ""
+	}
+	getBlockingStatus := func() string {
+		if result.BlockerStatus != nil {
+			return *result.BlockerStatus
+		}
+		return ""
+	}
+	getBlockingIsolationLevel := func() int64 {
+		if result.BlockerIsolationLevel != nil {
+			return *result.BlockerIsolationLevel
+		}
+		return 0
+	}
+	getBlockingOpenTransactionCount := func() int64 {
+		if result.BlockerOpenTransactionCount != nil {
+			return *result.BlockerOpenTransactionCount
+		}
+		return 0
+	}
+	getBlockingQueryHash := func() string {
+		if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
+			return result.BlockingQueryHash.String()
+		}
+		return ""
+	}
+	getBlockingQueryText := func() string {
+		if result.BlockingQueryStatementText != nil {
+			return *result.BlockingQueryStatementText
+		}
+		return ""
+	}
+	getQueryText := func() string {
+		if result.QueryStatementText != nil {
+			return *result.QueryStatementText
+		}
+		return ""
+	}
+	getQueryID := func() string {
+		if result.QueryID != nil && !result.QueryID.IsEmpty() {
+			return result.QueryID.String()
+		}
+		return ""
+	}
+	getClientName := func() string {
+		if result.ClientName != nil {
+			return *result.ClientName
+		}
+		return ""
+	}
+	getTransactionName := func() string {
+		if result.TransactionName != nil {
+			return *result.TransactionName
+		}
+		return ""
+	}
+	getNormalisedSqlHash := func() string {
+		if result.NormalisedSqlHash != nil {
+			return *result.NormalisedSqlHash
+		}
+		return ""
+	}
+	getPlanHandle := func() string {
+		// Use slow query plan_handle for consistency across all metrics and logs
+		if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
+			return slowQueryPlanHandle.String()
+		}
+		return ""
+	}
+	// getWaitTypeDescription returns human-readable wait event name (never blank)
+	// Falls back to raw wait_type if description is unavailable
+	getWaitTypeDescription := func() string {
+		waitType := getWaitType()
+		if waitType == "" {
+			waitType = "N/A"
+		}
+		description := helpers.DecodeWaitType(waitType)
+		// DecodeWaitType already handles empty/N/A and returns "Not Waiting"
+		// It also returns the original waitType for unknown types
+		// So this should never be blank, but we double-check
+		if description == "" {
+			return waitType
+		}
+		return description
+	}
+	// getWaitTypeCategory returns wait category (never blank)
+	// Falls back to "Other" if category cannot be determined
+	getWaitTypeCategory := func() string {
+		waitType := getWaitType()
+		if waitType == "" {
+			waitType = "N/A"
+		}
+		category := helpers.GetWaitTypeCategory(waitType)
+		// GetWaitTypeCategory returns "None" for empty/N/A and "Other" for unknown
+		// So this should never be blank, but we double-check
+		if category == "" {
+			return "Other"
+		}
+		return category
+	}
+	getWaitResourceType := func() string {
+		// This would be computed from wait_resource parsing
+		if result.WaitResource != nil {
+			resourceType, _ := helpers.DecodeWaitResource(*result.WaitResource)
+			return resourceType
+		}
+		return ""
+	}
+	getWaitResourceDescription := func() string {
+		// This would be computed with enhanced logic from addActiveQueryAttributes
+		if result.WaitResource != nil {
+			_, resourceDesc := helpers.DecodeWaitResource(*result.WaitResource)
+			return resourceDesc
+		}
+		return ""
+	}
+	getWaitResourceSchemaName := func() string {
+		if result.WaitResourceSchemaNameObject != nil {
+			return *result.WaitResourceSchemaNameObject
+		}
+		return ""
+	}
+	getWaitResourceTableName := func() string {
+		if result.WaitResourceObjectName != nil {
+			return *result.WaitResourceObjectName
+		}
+		return ""
+	}
+	getWaitResourceObjectType := func() string {
+		if result.WaitResourceObjectType != nil {
+			return *result.WaitResourceObjectType
+		}
+		return ""
+	}
+	getWaitResourceIndexName := func() string {
+		if result.WaitResourceIndexName != nil {
+			return *result.WaitResourceIndexName
+		}
+		return ""
+	}
+	getWaitResourceIndexType := func() string {
+		if result.WaitResourceIndexType != nil {
+			return *result.WaitResourceIndexType
+		}
+		return ""
+	}
+	getLastWaitTypeDescription := func() string {
+		if result.LastWaitType != nil {
+			return helpers.DecodeWaitType(*result.LastWaitType)
+		}
+		return ""
+>>>>>>> cc93c4313f (Handled new format of query comments where nr_service and nr_txn enclosed in double qoutes)
 	}
 
 	// Active query wait time
@@ -279,6 +468,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(
 			timestamp,
 			*result.WaitTimeS,
+<<<<<<< HEAD
 			sessionID,
 			requestID,
 			databaseName,
@@ -302,6 +492,55 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			blockingLoginName,
 			blockingQueryText,
 			blockingQueryHash,
+=======
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+>>>>>>> cc93c4313f (Handled new format of query comments where nr_service and nr_txn enclosed in double qoutes)
 		)
 	} else {
 		s.logger.Warn("❌ SKIPPED wait_time metric (wait_time_s <= 0 or nil)",
@@ -310,6 +549,442 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			zap.Any("wait_type", result.WaitType))
 	}
 
+<<<<<<< HEAD
+=======
+	// Active query CPU time
+	if result.CPUTimeMs != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.cpu_time_ms",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int64("value", *result.CPUTimeMs))
+
+		s.mb.RecordSqlserverActivequeryCPUTimeMsDataPoint(
+			timestamp,
+			*result.CPUTimeMs,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
+	} else {
+		s.logger.Debug("SKIPPED cpu_time metric (nil)",
+			zap.Any("session_id", result.CurrentSessionID))
+	}
+
+	// Active query elapsed time
+	if result.TotalElapsedTimeMs != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.elapsed_time_ms",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int64("value", *result.TotalElapsedTimeMs))
+
+		s.mb.RecordSqlserverActivequeryElapsedTimeMsDataPoint(
+			timestamp,
+			*result.TotalElapsedTimeMs,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
+	} else {
+		s.logger.Debug("SKIPPED elapsed_time metric (nil)",
+			zap.Any("session_id", result.CurrentSessionID))
+	}
+
+	// Active query reads
+	if result.Reads != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.reads",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int64("value", *result.Reads))
+
+		s.mb.RecordSqlserverActivequeryReadsDataPoint(
+			timestamp,
+			*result.Reads,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
+	} else {
+		s.logger.Debug("SKIPPED reads metric (nil)",
+			zap.Any("session_id", result.CurrentSessionID))
+	}
+
+	// Active query writes
+	if result.Writes != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.writes",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int64("value", *result.Writes))
+
+		s.mb.RecordSqlserverActivequeryWritesDataPoint(
+			timestamp,
+			*result.Writes,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
+	} else {
+		s.logger.Debug("SKIPPED writes metric (nil)",
+			zap.Any("session_id", result.CurrentSessionID))
+	}
+
+	// Active query logical reads
+	if result.LogicalReads != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.logical_reads",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int64("value", *result.LogicalReads))
+
+		s.mb.RecordSqlserverActivequeryLogicalReadsDataPoint(
+			timestamp,
+			*result.LogicalReads,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
+	} else {
+		s.logger.Debug("SKIPPED logical_reads metric (nil)",
+			zap.Any("session_id", result.CurrentSessionID))
+	}
+
+	// Active query row count
+	if result.RowCount != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.row_count",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int64("value", *result.RowCount))
+
+		s.mb.RecordSqlserverActivequeryRowCountDataPoint(
+			timestamp,
+			*result.RowCount,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
+	} else {
+		s.logger.Debug("SKIPPED row_count metric (nil)",
+			zap.Any("session_id", result.CurrentSessionID))
+	}
+
+	if result.GrantedQueryMemoryPages != nil {
+		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.granted_query_memory_pages",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.Int64("value", *result.GrantedQueryMemoryPages))
+
+		s.mb.RecordSqlserverActivequeryGrantedQueryMemoryPagesDataPoint(
+			timestamp,
+			*result.GrantedQueryMemoryPages,
+			getSessionID(),
+			getRequestID(),
+			getDatabaseName(),
+			getLoginName(),
+			getHostName(),
+			getProgramName(),
+			getRequestCommand(),
+			getRequestStatus(),
+			getSessionStatus(),
+			getClientInterfaceName(),
+			getClientName(),
+			getWaitType(),
+			getWaitTypeDescription(),
+			getWaitTypeCategory(),
+			getWaitResource(),
+			getWaitResourceObjectName(),
+			getWaitResourceDatabaseName(),
+			getWaitResourceType(),
+			getWaitResourceDescription(),
+			getWaitResourceSchemaName(),
+			getWaitResourceTableName(),
+			getWaitResourceObjectType(),
+			getWaitResourceIndexName(),
+			getWaitResourceIndexType(),
+			getLastWaitType(),
+			getLastWaitTypeDescription(),
+			getRequestStartTime(),
+			getCollectionTimestamp(),
+			getTransactionID(),
+			getNormalisedSqlHash(),
+			getOpenTransactionCount(),
+			getTransactionIsolationLevel(),
+			getTransactionName(),
+			getDegreeOfParallelism(),
+			getParallelWorkerCount(),
+			getBlockingHostName(),
+			getBlockingIsolationLevel(),
+			getBlockingLoginName(),
+			getBlockingOpenTransactionCount(),
+			getBlockingProgramName(),
+			getBlockingQueryHash(),
+			getBlockingQueryText(),
+			getBlockingSessionID(),
+			getBlockingStatus(),
+			getQueryText(),
+			getQueryID(),
+			getPlanHandle(),
+		)
+	} else {
+		s.logger.Debug("SKIPPED granted_query_memory_pages metric (nil)",
+			zap.Any("session_id", result.CurrentSessionID))
+	}
+
+>>>>>>> cc93c4313f (Handled new format of query comments where nr_service and nr_txn enclosed in double qoutes)
 	return nil
 }
 

@@ -160,6 +160,12 @@ type ActiveRunningQuery struct {
 	BlockerLoginName           *string  `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
 	BlockingQueryStatementText *string  `db:"blocking_query_statement_text" metric_name:"blocking_query_statement_text" source_type:"attribute"`
 	BlockingQueryHash          *QueryID `db:"blocking_query_hash" metric_name:"blocking_query_hash" source_type:"attribute"`
+
+	// K. APM Integration (calculated in-memory from query comments, not from DB)
+	// These fields enable cross-language query correlation for active queries
+	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
+	TransactionName   *string `db:"-" metric_name:"transaction_name" source_type:"attribute"`    // Extracted from nr_txn comment
+	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
 
 // LockedObject represents detailed information about database objects locked by a session
