@@ -3,8 +3,6 @@ all_set:
   metrics:
     sqlserver.access.page_splits_per_sec:
       enabled: true
-    sqlserver.activequery.session_id:
-      enabled: true
     sqlserver.activequery.wait_time_seconds:
       enabled: true
     sqlserver.buffer.cache_hit_ratio:
@@ -319,8 +317,6 @@ all_set:
 none_set:
   metrics:
     sqlserver.access.page_splits_per_sec:
-      enabled: false
-    sqlserver.activequery.session_id:
       enabled: false
     sqlserver.activequery.wait_time_seconds:
       enabled: false

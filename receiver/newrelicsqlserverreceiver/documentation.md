@@ -20,41 +20,6 @@ Page splits per second
 | ---- | ----------- | ---------- | --------- |
 | 1/s | Gauge | Int | Alpha |
 
-### sqlserver.activequery.session_id
-
-Session ID for currently executing query
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| request_id | SQL Server request identifier | Any Int | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| login_name | SQL Server login name | Any Str | Recommended |
-| host_name | Client host name | Any Str | Recommended |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-| wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
-| wait_type_category | Category of the wait type (I/O, Lock, Latch, CPU, Memory, Network, etc.) | Any Str | Recommended |
-| wait_resource | Resource being waited on | Any Str | Recommended |
-| wait_resource_type | Type of resource being waited on (KEY, OBJECT, PAGE, RID, etc.) | Any Str | Recommended |
-| wait_resource_object_name | Name of the object being waited on | Any Str | Recommended |
-| last_wait_type | Last wait type experienced by the request | Any Str | Recommended |
-| last_wait_type_description | Human-readable description of the last wait type | Any Str | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| transaction_id | Transaction identifier | Any Int | Recommended |
-| open_transaction_count | Number of open transactions | Any Int | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_login_name | Login name of the blocking session | Any Str | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
-| blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
-
 ### sqlserver.activequery.wait_time_seconds
 
 Wait time for currently executing query

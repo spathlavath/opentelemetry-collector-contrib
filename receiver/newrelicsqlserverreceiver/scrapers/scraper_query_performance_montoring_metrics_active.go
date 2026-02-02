@@ -268,40 +268,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		waitResourceType, _ = helpers.DecodeWaitResource(*result.WaitResource)
 	}
 
-	// Active query session ID
-	if result.CurrentSessionID != nil {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.session_id",
-			zap.Int64("value", *result.CurrentSessionID),
-			zap.Any("database_name", result.DatabaseName))
-
-		s.mb.RecordSqlserverActivequerySessionIDDataPoint(
-			timestamp,
-			*result.CurrentSessionID,
-			requestID,
-			databaseName,
-			loginName,
-			hostName,
-			queryID,
-			waitType,
-			waitTypeDescription,
-			waitTypeCategory,
-			waitResource,
-			waitResourceType,
-			waitResourceObjectName,
-			lastWaitType,
-			lastWaitTypeDescription,
-			requestStartTime,
-			collectionTimestamp,
-			transactionID,
-			openTransactionCount,
-			planHandle,
-			blockingSessionID,
-			blockingLoginName,
-			blockingQueryText,
-			blockingQueryHash,
-		)
-	}
-
 	// Active query wait time
 	if result.WaitTimeS != nil && *result.WaitTimeS > 0 {
 		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.wait_time_seconds",

@@ -40,41 +40,6 @@ metrics:
     gauge:
       value_type: int
 
-
-  sqlserver.activequery.session_id:
-    enabled: true
-    stability:
-      level: alpha
-    description: Session ID for currently executing query
-    unit: "1"
-    gauge:
-      value_type: int
-    attributes:
-      [
-        request_id,
-        database_name,
-        login_name,
-        host_name,
-        query_id,
-        wait_type,
-        wait_type_description,
-        wait_type_category,
-        wait_resource,
-        wait_resource_type,
-        wait_resource_object_name,
-        last_wait_type,
-        last_wait_type_description,
-        request_start_time,
-        collection_timestamp,
-        transaction_id,
-        open_transaction_count,
-        plan_handle,
-        blocking_session_id,
-        blocking_login_name,
-        blocking_query_text,
-        blocking_query_hash,
-      ]
-
   sqlserver.activequery.wait_time_seconds:
     enabled: true
     stability:
