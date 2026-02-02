@@ -83,10 +83,7 @@ func (s *PgBouncerScraper) recordPgBouncerStatsMetrics(now pcommon.Timestamp, me
 	avgXactTimeMs := float64(avgXactTimeUs) / 1000.0
 	s.mb.RecordPgbouncerStatsAvgTransactionDurationMillisecondsDataPoint(now, avgXactTimeMs, s.instanceName, database)
 
-	// PgBouncer doesn't directly provide server assignment count
-	// Using total_xact_count as a proxy for total server assignments
-	s.mb.RecordPgbouncerStatsTotalServerAssignmentCountDataPoint(now, getInt64(metric.TotalXactCount), s.instanceName, database)
-
-	// Average server assignment count (using avg_xact_count as proxy)
-	s.mb.RecordPgbouncerStatsAvgServerAssignmentCountDataPoint(now, getInt64(metric.AvgXactCount), s.instanceName, database)
+	// Record server assignment counts (how many times server connections were assigned from pool)
+	s.mb.RecordPgbouncerStatsTotalServerAssignmentCountDataPoint(now, getInt64(metric.TotalServerAssignmentCount), s.instanceName, database)
+	s.mb.RecordPgbouncerStatsAvgServerAssignmentCountDataPoint(now, getInt64(metric.AvgServerAssignmentCount), s.instanceName, database)
 }
