@@ -81,6 +81,12 @@ var MapAttributeCommand = map[string]AttributeCommand{
 }
 
 var MetricsInfo = metricsInfo{
+	NewrelicmysqlBinlogCacheDiskUse: metricInfo{
+		Name: "newrelicmysql.binlog.cache_disk_use",
+	},
+	NewrelicmysqlBinlogCacheUse: metricInfo{
+		Name: "newrelicmysql.binlog.cache_use",
+	},
 	NewrelicmysqlCommands: metricInfo{
 		Name: "newrelicmysql.commands",
 	},
@@ -204,6 +210,42 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlPerformanceCreatedTmpTables: metricInfo{
 		Name: "newrelicmysql.performance.created_tmp_tables",
 	},
+	NewrelicmysqlPerformanceHandlerCommit: metricInfo{
+		Name: "newrelicmysql.performance.handler_commit",
+	},
+	NewrelicmysqlPerformanceHandlerDelete: metricInfo{
+		Name: "newrelicmysql.performance.handler_delete",
+	},
+	NewrelicmysqlPerformanceHandlerPrepare: metricInfo{
+		Name: "newrelicmysql.performance.handler_prepare",
+	},
+	NewrelicmysqlPerformanceHandlerReadFirst: metricInfo{
+		Name: "newrelicmysql.performance.handler_read_first",
+	},
+	NewrelicmysqlPerformanceHandlerReadKey: metricInfo{
+		Name: "newrelicmysql.performance.handler_read_key",
+	},
+	NewrelicmysqlPerformanceHandlerReadNext: metricInfo{
+		Name: "newrelicmysql.performance.handler_read_next",
+	},
+	NewrelicmysqlPerformanceHandlerReadPrev: metricInfo{
+		Name: "newrelicmysql.performance.handler_read_prev",
+	},
+	NewrelicmysqlPerformanceHandlerReadRnd: metricInfo{
+		Name: "newrelicmysql.performance.handler_read_rnd",
+	},
+	NewrelicmysqlPerformanceHandlerReadRndNext: metricInfo{
+		Name: "newrelicmysql.performance.handler_read_rnd_next",
+	},
+	NewrelicmysqlPerformanceHandlerRollback: metricInfo{
+		Name: "newrelicmysql.performance.handler_rollback",
+	},
+	NewrelicmysqlPerformanceHandlerUpdate: metricInfo{
+		Name: "newrelicmysql.performance.handler_update",
+	},
+	NewrelicmysqlPerformanceHandlerWrite: metricInfo{
+		Name: "newrelicmysql.performance.handler_write",
+	},
 	NewrelicmysqlPerformanceKeyCacheUtilization: metricInfo{
 		Name: "newrelicmysql.performance.key_cache_utilization",
 	},
@@ -216,11 +258,20 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlPerformanceOpenTables: metricInfo{
 		Name: "newrelicmysql.performance.open_tables",
 	},
+	NewrelicmysqlPerformanceOpenedTables: metricInfo{
+		Name: "newrelicmysql.performance.opened_tables",
+	},
 	NewrelicmysqlPerformancePerformanceSchemaDigestLost: metricInfo{
 		Name: "newrelicmysql.performance.performance_schema_digest_lost",
 	},
 	NewrelicmysqlPerformancePreparedStmtCount: metricInfo{
 		Name: "newrelicmysql.performance.prepared_stmt_count",
+	},
+	NewrelicmysqlPerformanceQcacheFreeBlocks: metricInfo{
+		Name: "newrelicmysql.performance.qcache_free_blocks",
+	},
+	NewrelicmysqlPerformanceQcacheFreeMemory: metricInfo{
+		Name: "newrelicmysql.performance.qcache_free_memory",
 	},
 	NewrelicmysqlPerformanceQcacheHits: metricInfo{
 		Name: "newrelicmysql.performance.qcache_hits",
@@ -234,14 +285,53 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlPerformanceQcacheNotCached: metricInfo{
 		Name: "newrelicmysql.performance.qcache_not_cached",
 	},
+	NewrelicmysqlPerformanceQcacheQueriesInCache: metricInfo{
+		Name: "newrelicmysql.performance.qcache_queries_in_cache",
+	},
 	NewrelicmysqlPerformanceQcacheSize: metricInfo{
 		Name: "newrelicmysql.performance.qcache_size",
+	},
+	NewrelicmysqlPerformanceQcacheTotalBlocks: metricInfo{
+		Name: "newrelicmysql.performance.qcache_total_blocks",
 	},
 	NewrelicmysqlPerformanceQuestions: metricInfo{
 		Name: "newrelicmysql.performance.questions",
 	},
+	NewrelicmysqlPerformanceSelectFullJoin: metricInfo{
+		Name: "newrelicmysql.performance.select_full_join",
+	},
+	NewrelicmysqlPerformanceSelectFullRangeJoin: metricInfo{
+		Name: "newrelicmysql.performance.select_full_range_join",
+	},
+	NewrelicmysqlPerformanceSelectRange: metricInfo{
+		Name: "newrelicmysql.performance.select_range",
+	},
+	NewrelicmysqlPerformanceSelectRangeCheck: metricInfo{
+		Name: "newrelicmysql.performance.select_range_check",
+	},
+	NewrelicmysqlPerformanceSelectScan: metricInfo{
+		Name: "newrelicmysql.performance.select_scan",
+	},
 	NewrelicmysqlPerformanceSlowQueries: metricInfo{
 		Name: "newrelicmysql.performance.slow_queries",
+	},
+	NewrelicmysqlPerformanceSortMergePasses: metricInfo{
+		Name: "newrelicmysql.performance.sort_merge_passes",
+	},
+	NewrelicmysqlPerformanceSortRange: metricInfo{
+		Name: "newrelicmysql.performance.sort_range",
+	},
+	NewrelicmysqlPerformanceSortRows: metricInfo{
+		Name: "newrelicmysql.performance.sort_rows",
+	},
+	NewrelicmysqlPerformanceSortScan: metricInfo{
+		Name: "newrelicmysql.performance.sort_scan",
+	},
+	NewrelicmysqlPerformanceTableLocksImmediate: metricInfo{
+		Name: "newrelicmysql.performance.table_locks_immediate",
+	},
+	NewrelicmysqlPerformanceTableLocksImmediateRate: metricInfo{
+		Name: "newrelicmysql.performance.table_locks_immediate.rate",
 	},
 	NewrelicmysqlPerformanceTableLocksWaited: metricInfo{
 		Name: "newrelicmysql.performance.table_locks_waited",
@@ -252,8 +342,14 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlPerformanceThreadCacheSize: metricInfo{
 		Name: "newrelicmysql.performance.thread_cache_size",
 	},
+	NewrelicmysqlPerformanceThreadsCached: metricInfo{
+		Name: "newrelicmysql.performance.threads_cached",
+	},
 	NewrelicmysqlPerformanceThreadsConnected: metricInfo{
 		Name: "newrelicmysql.performance.threads_connected",
+	},
+	NewrelicmysqlPerformanceThreadsCreated: metricInfo{
+		Name: "newrelicmysql.performance.threads_created",
 	},
 	NewrelicmysqlPerformanceThreadsRunning: metricInfo{
 		Name: "newrelicmysql.performance.threads_running",
@@ -294,6 +390,8 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	NewrelicmysqlBinlogCacheDiskUse                     metricInfo
+	NewrelicmysqlBinlogCacheUse                         metricInfo
 	NewrelicmysqlCommands                               metricInfo
 	NewrelicmysqlConnectionCount                        metricInfo
 	NewrelicmysqlDbHandlerRollback                      metricInfo
@@ -335,23 +433,53 @@ type metricsInfo struct {
 	NewrelicmysqlPerformanceCreatedTmpDiskTables        metricInfo
 	NewrelicmysqlPerformanceCreatedTmpFiles             metricInfo
 	NewrelicmysqlPerformanceCreatedTmpTables            metricInfo
+	NewrelicmysqlPerformanceHandlerCommit               metricInfo
+	NewrelicmysqlPerformanceHandlerDelete               metricInfo
+	NewrelicmysqlPerformanceHandlerPrepare              metricInfo
+	NewrelicmysqlPerformanceHandlerReadFirst            metricInfo
+	NewrelicmysqlPerformanceHandlerReadKey              metricInfo
+	NewrelicmysqlPerformanceHandlerReadNext             metricInfo
+	NewrelicmysqlPerformanceHandlerReadPrev             metricInfo
+	NewrelicmysqlPerformanceHandlerReadRnd              metricInfo
+	NewrelicmysqlPerformanceHandlerReadRndNext          metricInfo
+	NewrelicmysqlPerformanceHandlerRollback             metricInfo
+	NewrelicmysqlPerformanceHandlerUpdate               metricInfo
+	NewrelicmysqlPerformanceHandlerWrite                metricInfo
 	NewrelicmysqlPerformanceKeyCacheUtilization         metricInfo
 	NewrelicmysqlPerformanceMaxPreparedStmtCount        metricInfo
 	NewrelicmysqlPerformanceOpenFiles                   metricInfo
 	NewrelicmysqlPerformanceOpenTables                  metricInfo
+	NewrelicmysqlPerformanceOpenedTables                metricInfo
 	NewrelicmysqlPerformancePerformanceSchemaDigestLost metricInfo
 	NewrelicmysqlPerformancePreparedStmtCount           metricInfo
+	NewrelicmysqlPerformanceQcacheFreeBlocks            metricInfo
+	NewrelicmysqlPerformanceQcacheFreeMemory            metricInfo
 	NewrelicmysqlPerformanceQcacheHits                  metricInfo
 	NewrelicmysqlPerformanceQcacheInserts               metricInfo
 	NewrelicmysqlPerformanceQcacheLowmemPrunes          metricInfo
 	NewrelicmysqlPerformanceQcacheNotCached             metricInfo
+	NewrelicmysqlPerformanceQcacheQueriesInCache        metricInfo
 	NewrelicmysqlPerformanceQcacheSize                  metricInfo
+	NewrelicmysqlPerformanceQcacheTotalBlocks           metricInfo
 	NewrelicmysqlPerformanceQuestions                   metricInfo
+	NewrelicmysqlPerformanceSelectFullJoin              metricInfo
+	NewrelicmysqlPerformanceSelectFullRangeJoin         metricInfo
+	NewrelicmysqlPerformanceSelectRange                 metricInfo
+	NewrelicmysqlPerformanceSelectRangeCheck            metricInfo
+	NewrelicmysqlPerformanceSelectScan                  metricInfo
 	NewrelicmysqlPerformanceSlowQueries                 metricInfo
+	NewrelicmysqlPerformanceSortMergePasses             metricInfo
+	NewrelicmysqlPerformanceSortRange                   metricInfo
+	NewrelicmysqlPerformanceSortRows                    metricInfo
+	NewrelicmysqlPerformanceSortScan                    metricInfo
+	NewrelicmysqlPerformanceTableLocksImmediate         metricInfo
+	NewrelicmysqlPerformanceTableLocksImmediateRate     metricInfo
 	NewrelicmysqlPerformanceTableLocksWaited            metricInfo
 	NewrelicmysqlPerformanceTableOpenCache              metricInfo
 	NewrelicmysqlPerformanceThreadCacheSize             metricInfo
+	NewrelicmysqlPerformanceThreadsCached               metricInfo
 	NewrelicmysqlPerformanceThreadsConnected            metricInfo
+	NewrelicmysqlPerformanceThreadsCreated              metricInfo
 	NewrelicmysqlPerformanceThreadsRunning              metricInfo
 	NewrelicmysqlQueryCount                             metricInfo
 	NewrelicmysqlReplicationExecMasterLogPos            metricInfo
@@ -368,6 +496,104 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricNewrelicmysqlBinlogCacheDiskUse struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.binlog.cache_disk_use metric with initial data.
+func (m *metricNewrelicmysqlBinlogCacheDiskUse) init() {
+	m.data.SetName("newrelicmysql.binlog.cache_disk_use")
+	m.data.SetDescription("The number of transactions that used the temporary binary log cache but exceeded binlog_cache_size and used a temporary file.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlBinlogCacheDiskUse) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlBinlogCacheDiskUse) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlBinlogCacheDiskUse) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlBinlogCacheDiskUse(cfg MetricConfig) metricNewrelicmysqlBinlogCacheDiskUse {
+	m := metricNewrelicmysqlBinlogCacheDiskUse{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlBinlogCacheUse struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.binlog.cache_use metric with initial data.
+func (m *metricNewrelicmysqlBinlogCacheUse) init() {
+	m.data.SetName("newrelicmysql.binlog.cache_use")
+	m.data.SetDescription("The number of transactions that used the binary log cache.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlBinlogCacheUse) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlBinlogCacheUse) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlBinlogCacheUse) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlBinlogCacheUse(cfg MetricConfig) metricNewrelicmysqlBinlogCacheUse {
+	m := metricNewrelicmysqlBinlogCacheUse{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricNewrelicmysqlCommands struct {
@@ -2437,6 +2663,618 @@ func newMetricNewrelicmysqlPerformanceCreatedTmpTables(cfg MetricConfig) metricN
 	return m
 }
 
+type metricNewrelicmysqlPerformanceHandlerCommit struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_commit metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerCommit) init() {
+	m.data.SetName("newrelicmysql.performance.handler_commit")
+	m.data.SetDescription("The number of internal COMMIT statements.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerCommit) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerCommit) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerCommit) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerCommit(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerCommit {
+	m := metricNewrelicmysqlPerformanceHandlerCommit{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerDelete struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_delete metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerDelete) init() {
+	m.data.SetName("newrelicmysql.performance.handler_delete")
+	m.data.SetDescription("The number of times that rows have been deleted from tables.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerDelete) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerDelete) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerDelete) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerDelete(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerDelete {
+	m := metricNewrelicmysqlPerformanceHandlerDelete{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerPrepare struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_prepare metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerPrepare) init() {
+	m.data.SetName("newrelicmysql.performance.handler_prepare")
+	m.data.SetDescription("A counter for the prepare phase of two-phase commit operations.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerPrepare) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerPrepare) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerPrepare) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerPrepare(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerPrepare {
+	m := metricNewrelicmysqlPerformanceHandlerPrepare{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerReadFirst struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_read_first metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerReadFirst) init() {
+	m.data.SetName("newrelicmysql.performance.handler_read_first")
+	m.data.SetDescription("The number of times the first entry in an index was read.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerReadFirst) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerReadFirst) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerReadFirst) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerReadFirst(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerReadFirst {
+	m := metricNewrelicmysqlPerformanceHandlerReadFirst{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerReadKey struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_read_key metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerReadKey) init() {
+	m.data.SetName("newrelicmysql.performance.handler_read_key")
+	m.data.SetDescription("The number of requests to read a row based on a key.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerReadKey) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerReadKey) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerReadKey) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerReadKey(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerReadKey {
+	m := metricNewrelicmysqlPerformanceHandlerReadKey{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerReadNext struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_read_next metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerReadNext) init() {
+	m.data.SetName("newrelicmysql.performance.handler_read_next")
+	m.data.SetDescription("The number of requests to read the next row in key order.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerReadNext) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerReadNext) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerReadNext) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerReadNext(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerReadNext {
+	m := metricNewrelicmysqlPerformanceHandlerReadNext{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerReadPrev struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_read_prev metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerReadPrev) init() {
+	m.data.SetName("newrelicmysql.performance.handler_read_prev")
+	m.data.SetDescription("The number of requests to read the previous row in key order.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerReadPrev) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerReadPrev) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerReadPrev) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerReadPrev(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerReadPrev {
+	m := metricNewrelicmysqlPerformanceHandlerReadPrev{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerReadRnd struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_read_rnd metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerReadRnd) init() {
+	m.data.SetName("newrelicmysql.performance.handler_read_rnd")
+	m.data.SetDescription("The number of requests to read a row based on a fixed position.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerReadRnd) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerReadRnd) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerReadRnd) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerReadRnd(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerReadRnd {
+	m := metricNewrelicmysqlPerformanceHandlerReadRnd{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerReadRndNext struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_read_rnd_next metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerReadRndNext) init() {
+	m.data.SetName("newrelicmysql.performance.handler_read_rnd_next")
+	m.data.SetDescription("The number of requests to read the next row in the data file.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerReadRndNext) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerReadRndNext) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerReadRndNext) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerReadRndNext(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerReadRndNext {
+	m := metricNewrelicmysqlPerformanceHandlerReadRndNext{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerRollback struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_rollback metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerRollback) init() {
+	m.data.SetName("newrelicmysql.performance.handler_rollback")
+	m.data.SetDescription("The number of requests for a storage engine to perform a rollback operation.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerRollback) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerRollback) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerRollback) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerRollback(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerRollback {
+	m := metricNewrelicmysqlPerformanceHandlerRollback{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerUpdate struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_update metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerUpdate) init() {
+	m.data.SetName("newrelicmysql.performance.handler_update")
+	m.data.SetDescription("The number of requests to update a row in a table.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerUpdate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerUpdate) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerUpdate) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerUpdate(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerUpdate {
+	m := metricNewrelicmysqlPerformanceHandlerUpdate{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceHandlerWrite struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.handler_write metric with initial data.
+func (m *metricNewrelicmysqlPerformanceHandlerWrite) init() {
+	m.data.SetName("newrelicmysql.performance.handler_write")
+	m.data.SetDescription("The number of requests to insert a row in a table.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceHandlerWrite) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceHandlerWrite) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceHandlerWrite) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceHandlerWrite(cfg MetricConfig) metricNewrelicmysqlPerformanceHandlerWrite {
+	m := metricNewrelicmysqlPerformanceHandlerWrite{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlPerformanceKeyCacheUtilization struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2633,6 +3471,57 @@ func newMetricNewrelicmysqlPerformanceOpenTables(cfg MetricConfig) metricNewreli
 	return m
 }
 
+type metricNewrelicmysqlPerformanceOpenedTables struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.opened_tables metric with initial data.
+func (m *metricNewrelicmysqlPerformanceOpenedTables) init() {
+	m.data.SetName("newrelicmysql.performance.opened_tables")
+	m.data.SetDescription("The number of tables that have been opened. If this value is large, your table_open_cache value is probably too small.")
+	m.data.SetUnit("{tables}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceOpenedTables) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceOpenedTables) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceOpenedTables) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceOpenedTables(cfg MetricConfig) metricNewrelicmysqlPerformanceOpenedTables {
+	m := metricNewrelicmysqlPerformanceOpenedTables{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlPerformancePerformanceSchemaDigestLost struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2726,6 +3615,104 @@ func (m *metricNewrelicmysqlPerformancePreparedStmtCount) emit(metrics pmetric.M
 
 func newMetricNewrelicmysqlPerformancePreparedStmtCount(cfg MetricConfig) metricNewrelicmysqlPerformancePreparedStmtCount {
 	m := metricNewrelicmysqlPerformancePreparedStmtCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceQcacheFreeBlocks struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.qcache_free_blocks metric with initial data.
+func (m *metricNewrelicmysqlPerformanceQcacheFreeBlocks) init() {
+	m.data.SetName("newrelicmysql.performance.qcache_free_blocks")
+	m.data.SetDescription("The number of free memory blocks in the query cache.")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlPerformanceQcacheFreeBlocks) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceQcacheFreeBlocks) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceQcacheFreeBlocks) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceQcacheFreeBlocks(cfg MetricConfig) metricNewrelicmysqlPerformanceQcacheFreeBlocks {
+	m := metricNewrelicmysqlPerformanceQcacheFreeBlocks{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceQcacheFreeMemory struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.qcache_free_memory metric with initial data.
+func (m *metricNewrelicmysqlPerformanceQcacheFreeMemory) init() {
+	m.data.SetName("newrelicmysql.performance.qcache_free_memory")
+	m.data.SetDescription("The amount of free memory for the query cache.")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlPerformanceQcacheFreeMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceQcacheFreeMemory) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceQcacheFreeMemory) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceQcacheFreeMemory(cfg MetricConfig) metricNewrelicmysqlPerformanceQcacheFreeMemory {
+	m := metricNewrelicmysqlPerformanceQcacheFreeMemory{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -2937,6 +3924,55 @@ func newMetricNewrelicmysqlPerformanceQcacheNotCached(cfg MetricConfig) metricNe
 	return m
 }
 
+type metricNewrelicmysqlPerformanceQcacheQueriesInCache struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.qcache_queries_in_cache metric with initial data.
+func (m *metricNewrelicmysqlPerformanceQcacheQueriesInCache) init() {
+	m.data.SetName("newrelicmysql.performance.qcache_queries_in_cache")
+	m.data.SetDescription("The number of queries registered in the query cache.")
+	m.data.SetUnit("{queries}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlPerformanceQcacheQueriesInCache) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceQcacheQueriesInCache) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceQcacheQueriesInCache) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceQcacheQueriesInCache(cfg MetricConfig) metricNewrelicmysqlPerformanceQcacheQueriesInCache {
+	m := metricNewrelicmysqlPerformanceQcacheQueriesInCache{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlPerformanceQcacheSize struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -2979,6 +4015,55 @@ func (m *metricNewrelicmysqlPerformanceQcacheSize) emit(metrics pmetric.MetricSl
 
 func newMetricNewrelicmysqlPerformanceQcacheSize(cfg MetricConfig) metricNewrelicmysqlPerformanceQcacheSize {
 	m := metricNewrelicmysqlPerformanceQcacheSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceQcacheTotalBlocks struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.qcache_total_blocks metric with initial data.
+func (m *metricNewrelicmysqlPerformanceQcacheTotalBlocks) init() {
+	m.data.SetName("newrelicmysql.performance.qcache_total_blocks")
+	m.data.SetDescription("The total number of blocks in the query cache.")
+	m.data.SetUnit("{blocks}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlPerformanceQcacheTotalBlocks) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceQcacheTotalBlocks) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceQcacheTotalBlocks) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceQcacheTotalBlocks(cfg MetricConfig) metricNewrelicmysqlPerformanceQcacheTotalBlocks {
+	m := metricNewrelicmysqlPerformanceQcacheTotalBlocks{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -3037,6 +4122,261 @@ func newMetricNewrelicmysqlPerformanceQuestions(cfg MetricConfig) metricNewrelic
 	return m
 }
 
+type metricNewrelicmysqlPerformanceSelectFullJoin struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.select_full_join metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSelectFullJoin) init() {
+	m.data.SetName("newrelicmysql.performance.select_full_join")
+	m.data.SetDescription("The number of joins that perform table scans because they do not use indexes. If this value is not 0, you should carefully check the indexes of your tables.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSelectFullJoin) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSelectFullJoin) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSelectFullJoin) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSelectFullJoin(cfg MetricConfig) metricNewrelicmysqlPerformanceSelectFullJoin {
+	m := metricNewrelicmysqlPerformanceSelectFullJoin{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSelectFullRangeJoin struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.select_full_range_join metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSelectFullRangeJoin) init() {
+	m.data.SetName("newrelicmysql.performance.select_full_range_join")
+	m.data.SetDescription("The number of joins that used a range search on a reference table.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSelectFullRangeJoin) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSelectFullRangeJoin) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSelectFullRangeJoin) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSelectFullRangeJoin(cfg MetricConfig) metricNewrelicmysqlPerformanceSelectFullRangeJoin {
+	m := metricNewrelicmysqlPerformanceSelectFullRangeJoin{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSelectRange struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.select_range metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSelectRange) init() {
+	m.data.SetName("newrelicmysql.performance.select_range")
+	m.data.SetDescription("The number of joins that used ranges on the first table.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSelectRange) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSelectRange) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSelectRange) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSelectRange(cfg MetricConfig) metricNewrelicmysqlPerformanceSelectRange {
+	m := metricNewrelicmysqlPerformanceSelectRange{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSelectRangeCheck struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.select_range_check metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSelectRangeCheck) init() {
+	m.data.SetName("newrelicmysql.performance.select_range_check")
+	m.data.SetDescription("The number of joins without keys that check for key usage after each row. If this is not 0, you should carefully check the indexes of your tables.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSelectRangeCheck) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSelectRangeCheck) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSelectRangeCheck) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSelectRangeCheck(cfg MetricConfig) metricNewrelicmysqlPerformanceSelectRangeCheck {
+	m := metricNewrelicmysqlPerformanceSelectRangeCheck{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSelectScan struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.select_scan metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSelectScan) init() {
+	m.data.SetName("newrelicmysql.performance.select_scan")
+	m.data.SetDescription("The number of joins that did a full scan of the first table.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSelectScan) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSelectScan) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSelectScan) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSelectScan(cfg MetricConfig) metricNewrelicmysqlPerformanceSelectScan {
+	m := metricNewrelicmysqlPerformanceSelectScan{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlPerformanceSlowQueries struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3081,6 +4421,310 @@ func (m *metricNewrelicmysqlPerformanceSlowQueries) emit(metrics pmetric.MetricS
 
 func newMetricNewrelicmysqlPerformanceSlowQueries(cfg MetricConfig) metricNewrelicmysqlPerformanceSlowQueries {
 	m := metricNewrelicmysqlPerformanceSlowQueries{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSortMergePasses struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.sort_merge_passes metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSortMergePasses) init() {
+	m.data.SetName("newrelicmysql.performance.sort_merge_passes")
+	m.data.SetDescription("The number of merge passes that the sort algorithm has had to do. If this value is large, you should consider increasing the value of the sort_buffer_size system variable.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSortMergePasses) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSortMergePasses) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSortMergePasses) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSortMergePasses(cfg MetricConfig) metricNewrelicmysqlPerformanceSortMergePasses {
+	m := metricNewrelicmysqlPerformanceSortMergePasses{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSortRange struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.sort_range metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSortRange) init() {
+	m.data.SetName("newrelicmysql.performance.sort_range")
+	m.data.SetDescription("The number of sorts that were done using ranges.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSortRange) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSortRange) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSortRange) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSortRange(cfg MetricConfig) metricNewrelicmysqlPerformanceSortRange {
+	m := metricNewrelicmysqlPerformanceSortRange{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSortRows struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.sort_rows metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSortRows) init() {
+	m.data.SetName("newrelicmysql.performance.sort_rows")
+	m.data.SetDescription("The number of sorted rows.")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSortRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSortRows) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSortRows) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSortRows(cfg MetricConfig) metricNewrelicmysqlPerformanceSortRows {
+	m := metricNewrelicmysqlPerformanceSortRows{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceSortScan struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.sort_scan metric with initial data.
+func (m *metricNewrelicmysqlPerformanceSortScan) init() {
+	m.data.SetName("newrelicmysql.performance.sort_scan")
+	m.data.SetDescription("The number of sorts that were done by scanning the table.")
+	m.data.SetUnit("{operations}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceSortScan) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceSortScan) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceSortScan) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceSortScan(cfg MetricConfig) metricNewrelicmysqlPerformanceSortScan {
+	m := metricNewrelicmysqlPerformanceSortScan{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceTableLocksImmediate struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.table_locks_immediate metric with initial data.
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediate) init() {
+	m.data.SetName("newrelicmysql.performance.table_locks_immediate")
+	m.data.SetDescription("The number of times that a request for a table lock could be granted immediately.")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediate) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediate) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceTableLocksImmediate(cfg MetricConfig) metricNewrelicmysqlPerformanceTableLocksImmediate {
+	m := metricNewrelicmysqlPerformanceTableLocksImmediate{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceTableLocksImmediateRate struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.table_locks_immediate.rate metric with initial data.
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediateRate) init() {
+	m.data.SetName("newrelicmysql.performance.table_locks_immediate.rate")
+	m.data.SetDescription("The rate of times that a request for a table lock could be granted immediately.")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediateRate) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediateRate) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceTableLocksImmediateRate) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceTableLocksImmediateRate(cfg MetricConfig) metricNewrelicmysqlPerformanceTableLocksImmediateRate {
+	m := metricNewrelicmysqlPerformanceTableLocksImmediateRate{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -3237,6 +4881,55 @@ func newMetricNewrelicmysqlPerformanceThreadCacheSize(cfg MetricConfig) metricNe
 	return m
 }
 
+type metricNewrelicmysqlPerformanceThreadsCached struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.threads_cached metric with initial data.
+func (m *metricNewrelicmysqlPerformanceThreadsCached) init() {
+	m.data.SetName("newrelicmysql.performance.threads_cached")
+	m.data.SetDescription("The number of threads in the thread cache.")
+	m.data.SetUnit("{threads}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlPerformanceThreadsCached) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceThreadsCached) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceThreadsCached) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceThreadsCached(cfg MetricConfig) metricNewrelicmysqlPerformanceThreadsCached {
+	m := metricNewrelicmysqlPerformanceThreadsCached{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlPerformanceThreadsConnected struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3279,6 +4972,57 @@ func (m *metricNewrelicmysqlPerformanceThreadsConnected) emit(metrics pmetric.Me
 
 func newMetricNewrelicmysqlPerformanceThreadsConnected(cfg MetricConfig) metricNewrelicmysqlPerformanceThreadsConnected {
 	m := metricNewrelicmysqlPerformanceThreadsConnected{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlPerformanceThreadsCreated struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.performance.threads_created metric with initial data.
+func (m *metricNewrelicmysqlPerformanceThreadsCreated) init() {
+	m.data.SetName("newrelicmysql.performance.threads_created")
+	m.data.SetDescription("The number of threads created to handle connections. If this value is large, you may want to increase the thread_cache_size value.")
+	m.data.SetUnit("{threads}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlPerformanceThreadsCreated) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlPerformanceThreadsCreated) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlPerformanceThreadsCreated) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlPerformanceThreadsCreated(cfg MetricConfig) metricNewrelicmysqlPerformanceThreadsCreated {
+	m := metricNewrelicmysqlPerformanceThreadsCreated{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -3888,6 +5632,8 @@ type MetricsBuilder struct {
 	buildInfo                                                 component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                            map[string]filter.Filter
 	resourceAttributeExcludeFilter                            map[string]filter.Filter
+	metricNewrelicmysqlBinlogCacheDiskUse                     metricNewrelicmysqlBinlogCacheDiskUse
+	metricNewrelicmysqlBinlogCacheUse                         metricNewrelicmysqlBinlogCacheUse
 	metricNewrelicmysqlCommands                               metricNewrelicmysqlCommands
 	metricNewrelicmysqlConnectionCount                        metricNewrelicmysqlConnectionCount
 	metricNewrelicmysqlDbHandlerRollback                      metricNewrelicmysqlDbHandlerRollback
@@ -3929,23 +5675,53 @@ type MetricsBuilder struct {
 	metricNewrelicmysqlPerformanceCreatedTmpDiskTables        metricNewrelicmysqlPerformanceCreatedTmpDiskTables
 	metricNewrelicmysqlPerformanceCreatedTmpFiles             metricNewrelicmysqlPerformanceCreatedTmpFiles
 	metricNewrelicmysqlPerformanceCreatedTmpTables            metricNewrelicmysqlPerformanceCreatedTmpTables
+	metricNewrelicmysqlPerformanceHandlerCommit               metricNewrelicmysqlPerformanceHandlerCommit
+	metricNewrelicmysqlPerformanceHandlerDelete               metricNewrelicmysqlPerformanceHandlerDelete
+	metricNewrelicmysqlPerformanceHandlerPrepare              metricNewrelicmysqlPerformanceHandlerPrepare
+	metricNewrelicmysqlPerformanceHandlerReadFirst            metricNewrelicmysqlPerformanceHandlerReadFirst
+	metricNewrelicmysqlPerformanceHandlerReadKey              metricNewrelicmysqlPerformanceHandlerReadKey
+	metricNewrelicmysqlPerformanceHandlerReadNext             metricNewrelicmysqlPerformanceHandlerReadNext
+	metricNewrelicmysqlPerformanceHandlerReadPrev             metricNewrelicmysqlPerformanceHandlerReadPrev
+	metricNewrelicmysqlPerformanceHandlerReadRnd              metricNewrelicmysqlPerformanceHandlerReadRnd
+	metricNewrelicmysqlPerformanceHandlerReadRndNext          metricNewrelicmysqlPerformanceHandlerReadRndNext
+	metricNewrelicmysqlPerformanceHandlerRollback             metricNewrelicmysqlPerformanceHandlerRollback
+	metricNewrelicmysqlPerformanceHandlerUpdate               metricNewrelicmysqlPerformanceHandlerUpdate
+	metricNewrelicmysqlPerformanceHandlerWrite                metricNewrelicmysqlPerformanceHandlerWrite
 	metricNewrelicmysqlPerformanceKeyCacheUtilization         metricNewrelicmysqlPerformanceKeyCacheUtilization
 	metricNewrelicmysqlPerformanceMaxPreparedStmtCount        metricNewrelicmysqlPerformanceMaxPreparedStmtCount
 	metricNewrelicmysqlPerformanceOpenFiles                   metricNewrelicmysqlPerformanceOpenFiles
 	metricNewrelicmysqlPerformanceOpenTables                  metricNewrelicmysqlPerformanceOpenTables
+	metricNewrelicmysqlPerformanceOpenedTables                metricNewrelicmysqlPerformanceOpenedTables
 	metricNewrelicmysqlPerformancePerformanceSchemaDigestLost metricNewrelicmysqlPerformancePerformanceSchemaDigestLost
 	metricNewrelicmysqlPerformancePreparedStmtCount           metricNewrelicmysqlPerformancePreparedStmtCount
+	metricNewrelicmysqlPerformanceQcacheFreeBlocks            metricNewrelicmysqlPerformanceQcacheFreeBlocks
+	metricNewrelicmysqlPerformanceQcacheFreeMemory            metricNewrelicmysqlPerformanceQcacheFreeMemory
 	metricNewrelicmysqlPerformanceQcacheHits                  metricNewrelicmysqlPerformanceQcacheHits
 	metricNewrelicmysqlPerformanceQcacheInserts               metricNewrelicmysqlPerformanceQcacheInserts
 	metricNewrelicmysqlPerformanceQcacheLowmemPrunes          metricNewrelicmysqlPerformanceQcacheLowmemPrunes
 	metricNewrelicmysqlPerformanceQcacheNotCached             metricNewrelicmysqlPerformanceQcacheNotCached
+	metricNewrelicmysqlPerformanceQcacheQueriesInCache        metricNewrelicmysqlPerformanceQcacheQueriesInCache
 	metricNewrelicmysqlPerformanceQcacheSize                  metricNewrelicmysqlPerformanceQcacheSize
+	metricNewrelicmysqlPerformanceQcacheTotalBlocks           metricNewrelicmysqlPerformanceQcacheTotalBlocks
 	metricNewrelicmysqlPerformanceQuestions                   metricNewrelicmysqlPerformanceQuestions
+	metricNewrelicmysqlPerformanceSelectFullJoin              metricNewrelicmysqlPerformanceSelectFullJoin
+	metricNewrelicmysqlPerformanceSelectFullRangeJoin         metricNewrelicmysqlPerformanceSelectFullRangeJoin
+	metricNewrelicmysqlPerformanceSelectRange                 metricNewrelicmysqlPerformanceSelectRange
+	metricNewrelicmysqlPerformanceSelectRangeCheck            metricNewrelicmysqlPerformanceSelectRangeCheck
+	metricNewrelicmysqlPerformanceSelectScan                  metricNewrelicmysqlPerformanceSelectScan
 	metricNewrelicmysqlPerformanceSlowQueries                 metricNewrelicmysqlPerformanceSlowQueries
+	metricNewrelicmysqlPerformanceSortMergePasses             metricNewrelicmysqlPerformanceSortMergePasses
+	metricNewrelicmysqlPerformanceSortRange                   metricNewrelicmysqlPerformanceSortRange
+	metricNewrelicmysqlPerformanceSortRows                    metricNewrelicmysqlPerformanceSortRows
+	metricNewrelicmysqlPerformanceSortScan                    metricNewrelicmysqlPerformanceSortScan
+	metricNewrelicmysqlPerformanceTableLocksImmediate         metricNewrelicmysqlPerformanceTableLocksImmediate
+	metricNewrelicmysqlPerformanceTableLocksImmediateRate     metricNewrelicmysqlPerformanceTableLocksImmediateRate
 	metricNewrelicmysqlPerformanceTableLocksWaited            metricNewrelicmysqlPerformanceTableLocksWaited
 	metricNewrelicmysqlPerformanceTableOpenCache              metricNewrelicmysqlPerformanceTableOpenCache
 	metricNewrelicmysqlPerformanceThreadCacheSize             metricNewrelicmysqlPerformanceThreadCacheSize
+	metricNewrelicmysqlPerformanceThreadsCached               metricNewrelicmysqlPerformanceThreadsCached
 	metricNewrelicmysqlPerformanceThreadsConnected            metricNewrelicmysqlPerformanceThreadsConnected
+	metricNewrelicmysqlPerformanceThreadsCreated              metricNewrelicmysqlPerformanceThreadsCreated
 	metricNewrelicmysqlPerformanceThreadsRunning              metricNewrelicmysqlPerformanceThreadsRunning
 	metricNewrelicmysqlQueryCount                             metricNewrelicmysqlQueryCount
 	metricNewrelicmysqlReplicationExecMasterLogPos            metricNewrelicmysqlReplicationExecMasterLogPos
@@ -3983,6 +5759,8 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		startTime:                                                 pcommon.NewTimestampFromTime(time.Now()),
 		metricsBuffer:                                             pmetric.NewMetrics(),
 		buildInfo:                                                 settings.BuildInfo,
+		metricNewrelicmysqlBinlogCacheDiskUse:                     newMetricNewrelicmysqlBinlogCacheDiskUse(mbc.Metrics.NewrelicmysqlBinlogCacheDiskUse),
+		metricNewrelicmysqlBinlogCacheUse:                         newMetricNewrelicmysqlBinlogCacheUse(mbc.Metrics.NewrelicmysqlBinlogCacheUse),
 		metricNewrelicmysqlCommands:                               newMetricNewrelicmysqlCommands(mbc.Metrics.NewrelicmysqlCommands),
 		metricNewrelicmysqlConnectionCount:                        newMetricNewrelicmysqlConnectionCount(mbc.Metrics.NewrelicmysqlConnectionCount),
 		metricNewrelicmysqlDbHandlerRollback:                      newMetricNewrelicmysqlDbHandlerRollback(mbc.Metrics.NewrelicmysqlDbHandlerRollback),
@@ -4024,23 +5802,53 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicmysqlPerformanceCreatedTmpDiskTables:        newMetricNewrelicmysqlPerformanceCreatedTmpDiskTables(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpDiskTables),
 		metricNewrelicmysqlPerformanceCreatedTmpFiles:             newMetricNewrelicmysqlPerformanceCreatedTmpFiles(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpFiles),
 		metricNewrelicmysqlPerformanceCreatedTmpTables:            newMetricNewrelicmysqlPerformanceCreatedTmpTables(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpTables),
+		metricNewrelicmysqlPerformanceHandlerCommit:               newMetricNewrelicmysqlPerformanceHandlerCommit(mbc.Metrics.NewrelicmysqlPerformanceHandlerCommit),
+		metricNewrelicmysqlPerformanceHandlerDelete:               newMetricNewrelicmysqlPerformanceHandlerDelete(mbc.Metrics.NewrelicmysqlPerformanceHandlerDelete),
+		metricNewrelicmysqlPerformanceHandlerPrepare:              newMetricNewrelicmysqlPerformanceHandlerPrepare(mbc.Metrics.NewrelicmysqlPerformanceHandlerPrepare),
+		metricNewrelicmysqlPerformanceHandlerReadFirst:            newMetricNewrelicmysqlPerformanceHandlerReadFirst(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadFirst),
+		metricNewrelicmysqlPerformanceHandlerReadKey:              newMetricNewrelicmysqlPerformanceHandlerReadKey(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadKey),
+		metricNewrelicmysqlPerformanceHandlerReadNext:             newMetricNewrelicmysqlPerformanceHandlerReadNext(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadNext),
+		metricNewrelicmysqlPerformanceHandlerReadPrev:             newMetricNewrelicmysqlPerformanceHandlerReadPrev(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadPrev),
+		metricNewrelicmysqlPerformanceHandlerReadRnd:              newMetricNewrelicmysqlPerformanceHandlerReadRnd(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadRnd),
+		metricNewrelicmysqlPerformanceHandlerReadRndNext:          newMetricNewrelicmysqlPerformanceHandlerReadRndNext(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadRndNext),
+		metricNewrelicmysqlPerformanceHandlerRollback:             newMetricNewrelicmysqlPerformanceHandlerRollback(mbc.Metrics.NewrelicmysqlPerformanceHandlerRollback),
+		metricNewrelicmysqlPerformanceHandlerUpdate:               newMetricNewrelicmysqlPerformanceHandlerUpdate(mbc.Metrics.NewrelicmysqlPerformanceHandlerUpdate),
+		metricNewrelicmysqlPerformanceHandlerWrite:                newMetricNewrelicmysqlPerformanceHandlerWrite(mbc.Metrics.NewrelicmysqlPerformanceHandlerWrite),
 		metricNewrelicmysqlPerformanceKeyCacheUtilization:         newMetricNewrelicmysqlPerformanceKeyCacheUtilization(mbc.Metrics.NewrelicmysqlPerformanceKeyCacheUtilization),
 		metricNewrelicmysqlPerformanceMaxPreparedStmtCount:        newMetricNewrelicmysqlPerformanceMaxPreparedStmtCount(mbc.Metrics.NewrelicmysqlPerformanceMaxPreparedStmtCount),
 		metricNewrelicmysqlPerformanceOpenFiles:                   newMetricNewrelicmysqlPerformanceOpenFiles(mbc.Metrics.NewrelicmysqlPerformanceOpenFiles),
 		metricNewrelicmysqlPerformanceOpenTables:                  newMetricNewrelicmysqlPerformanceOpenTables(mbc.Metrics.NewrelicmysqlPerformanceOpenTables),
+		metricNewrelicmysqlPerformanceOpenedTables:                newMetricNewrelicmysqlPerformanceOpenedTables(mbc.Metrics.NewrelicmysqlPerformanceOpenedTables),
 		metricNewrelicmysqlPerformancePerformanceSchemaDigestLost: newMetricNewrelicmysqlPerformancePerformanceSchemaDigestLost(mbc.Metrics.NewrelicmysqlPerformancePerformanceSchemaDigestLost),
 		metricNewrelicmysqlPerformancePreparedStmtCount:           newMetricNewrelicmysqlPerformancePreparedStmtCount(mbc.Metrics.NewrelicmysqlPerformancePreparedStmtCount),
+		metricNewrelicmysqlPerformanceQcacheFreeBlocks:            newMetricNewrelicmysqlPerformanceQcacheFreeBlocks(mbc.Metrics.NewrelicmysqlPerformanceQcacheFreeBlocks),
+		metricNewrelicmysqlPerformanceQcacheFreeMemory:            newMetricNewrelicmysqlPerformanceQcacheFreeMemory(mbc.Metrics.NewrelicmysqlPerformanceQcacheFreeMemory),
 		metricNewrelicmysqlPerformanceQcacheHits:                  newMetricNewrelicmysqlPerformanceQcacheHits(mbc.Metrics.NewrelicmysqlPerformanceQcacheHits),
 		metricNewrelicmysqlPerformanceQcacheInserts:               newMetricNewrelicmysqlPerformanceQcacheInserts(mbc.Metrics.NewrelicmysqlPerformanceQcacheInserts),
 		metricNewrelicmysqlPerformanceQcacheLowmemPrunes:          newMetricNewrelicmysqlPerformanceQcacheLowmemPrunes(mbc.Metrics.NewrelicmysqlPerformanceQcacheLowmemPrunes),
 		metricNewrelicmysqlPerformanceQcacheNotCached:             newMetricNewrelicmysqlPerformanceQcacheNotCached(mbc.Metrics.NewrelicmysqlPerformanceQcacheNotCached),
+		metricNewrelicmysqlPerformanceQcacheQueriesInCache:        newMetricNewrelicmysqlPerformanceQcacheQueriesInCache(mbc.Metrics.NewrelicmysqlPerformanceQcacheQueriesInCache),
 		metricNewrelicmysqlPerformanceQcacheSize:                  newMetricNewrelicmysqlPerformanceQcacheSize(mbc.Metrics.NewrelicmysqlPerformanceQcacheSize),
+		metricNewrelicmysqlPerformanceQcacheTotalBlocks:           newMetricNewrelicmysqlPerformanceQcacheTotalBlocks(mbc.Metrics.NewrelicmysqlPerformanceQcacheTotalBlocks),
 		metricNewrelicmysqlPerformanceQuestions:                   newMetricNewrelicmysqlPerformanceQuestions(mbc.Metrics.NewrelicmysqlPerformanceQuestions),
+		metricNewrelicmysqlPerformanceSelectFullJoin:              newMetricNewrelicmysqlPerformanceSelectFullJoin(mbc.Metrics.NewrelicmysqlPerformanceSelectFullJoin),
+		metricNewrelicmysqlPerformanceSelectFullRangeJoin:         newMetricNewrelicmysqlPerformanceSelectFullRangeJoin(mbc.Metrics.NewrelicmysqlPerformanceSelectFullRangeJoin),
+		metricNewrelicmysqlPerformanceSelectRange:                 newMetricNewrelicmysqlPerformanceSelectRange(mbc.Metrics.NewrelicmysqlPerformanceSelectRange),
+		metricNewrelicmysqlPerformanceSelectRangeCheck:            newMetricNewrelicmysqlPerformanceSelectRangeCheck(mbc.Metrics.NewrelicmysqlPerformanceSelectRangeCheck),
+		metricNewrelicmysqlPerformanceSelectScan:                  newMetricNewrelicmysqlPerformanceSelectScan(mbc.Metrics.NewrelicmysqlPerformanceSelectScan),
 		metricNewrelicmysqlPerformanceSlowQueries:                 newMetricNewrelicmysqlPerformanceSlowQueries(mbc.Metrics.NewrelicmysqlPerformanceSlowQueries),
+		metricNewrelicmysqlPerformanceSortMergePasses:             newMetricNewrelicmysqlPerformanceSortMergePasses(mbc.Metrics.NewrelicmysqlPerformanceSortMergePasses),
+		metricNewrelicmysqlPerformanceSortRange:                   newMetricNewrelicmysqlPerformanceSortRange(mbc.Metrics.NewrelicmysqlPerformanceSortRange),
+		metricNewrelicmysqlPerformanceSortRows:                    newMetricNewrelicmysqlPerformanceSortRows(mbc.Metrics.NewrelicmysqlPerformanceSortRows),
+		metricNewrelicmysqlPerformanceSortScan:                    newMetricNewrelicmysqlPerformanceSortScan(mbc.Metrics.NewrelicmysqlPerformanceSortScan),
+		metricNewrelicmysqlPerformanceTableLocksImmediate:         newMetricNewrelicmysqlPerformanceTableLocksImmediate(mbc.Metrics.NewrelicmysqlPerformanceTableLocksImmediate),
+		metricNewrelicmysqlPerformanceTableLocksImmediateRate:     newMetricNewrelicmysqlPerformanceTableLocksImmediateRate(mbc.Metrics.NewrelicmysqlPerformanceTableLocksImmediateRate),
 		metricNewrelicmysqlPerformanceTableLocksWaited:            newMetricNewrelicmysqlPerformanceTableLocksWaited(mbc.Metrics.NewrelicmysqlPerformanceTableLocksWaited),
 		metricNewrelicmysqlPerformanceTableOpenCache:              newMetricNewrelicmysqlPerformanceTableOpenCache(mbc.Metrics.NewrelicmysqlPerformanceTableOpenCache),
 		metricNewrelicmysqlPerformanceThreadCacheSize:             newMetricNewrelicmysqlPerformanceThreadCacheSize(mbc.Metrics.NewrelicmysqlPerformanceThreadCacheSize),
+		metricNewrelicmysqlPerformanceThreadsCached:               newMetricNewrelicmysqlPerformanceThreadsCached(mbc.Metrics.NewrelicmysqlPerformanceThreadsCached),
 		metricNewrelicmysqlPerformanceThreadsConnected:            newMetricNewrelicmysqlPerformanceThreadsConnected(mbc.Metrics.NewrelicmysqlPerformanceThreadsConnected),
+		metricNewrelicmysqlPerformanceThreadsCreated:              newMetricNewrelicmysqlPerformanceThreadsCreated(mbc.Metrics.NewrelicmysqlPerformanceThreadsCreated),
 		metricNewrelicmysqlPerformanceThreadsRunning:              newMetricNewrelicmysqlPerformanceThreadsRunning(mbc.Metrics.NewrelicmysqlPerformanceThreadsRunning),
 		metricNewrelicmysqlQueryCount:                             newMetricNewrelicmysqlQueryCount(mbc.Metrics.NewrelicmysqlQueryCount),
 		metricNewrelicmysqlReplicationExecMasterLogPos:            newMetricNewrelicmysqlReplicationExecMasterLogPos(mbc.Metrics.NewrelicmysqlReplicationExecMasterLogPos),
@@ -4131,6 +5939,8 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricNewrelicmysqlBinlogCacheDiskUse.emit(ils.Metrics())
+	mb.metricNewrelicmysqlBinlogCacheUse.emit(ils.Metrics())
 	mb.metricNewrelicmysqlCommands.emit(ils.Metrics())
 	mb.metricNewrelicmysqlConnectionCount.emit(ils.Metrics())
 	mb.metricNewrelicmysqlDbHandlerRollback.emit(ils.Metrics())
@@ -4172,23 +5982,53 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicmysqlPerformanceCreatedTmpDiskTables.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceCreatedTmpFiles.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceCreatedTmpTables.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerCommit.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerDelete.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerPrepare.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerReadFirst.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerReadKey.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerReadNext.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerReadPrev.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerReadRnd.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerReadRndNext.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerRollback.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerUpdate.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceHandlerWrite.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceKeyCacheUtilization.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceMaxPreparedStmtCount.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceOpenFiles.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceOpenTables.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceOpenedTables.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformancePerformanceSchemaDigestLost.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformancePreparedStmtCount.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceQcacheFreeBlocks.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceQcacheFreeMemory.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceQcacheHits.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceQcacheInserts.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceQcacheLowmemPrunes.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceQcacheNotCached.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceQcacheQueriesInCache.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceQcacheSize.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceQcacheTotalBlocks.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceQuestions.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSelectFullJoin.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSelectFullRangeJoin.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSelectRange.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSelectRangeCheck.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSelectScan.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceSlowQueries.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSortMergePasses.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSortRange.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSortRows.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceSortScan.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceTableLocksImmediate.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceTableLocksImmediateRate.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceTableLocksWaited.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceTableOpenCache.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceThreadCacheSize.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceThreadsCached.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceThreadsConnected.emit(ils.Metrics())
+	mb.metricNewrelicmysqlPerformanceThreadsCreated.emit(ils.Metrics())
 	mb.metricNewrelicmysqlPerformanceThreadsRunning.emit(ils.Metrics())
 	mb.metricNewrelicmysqlQueryCount.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationExecMasterLogPos.emit(ils.Metrics())
@@ -4230,6 +6070,16 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordNewrelicmysqlBinlogCacheDiskUseDataPoint adds a data point to newrelicmysql.binlog.cache_disk_use metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlBinlogCacheDiskUseDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlBinlogCacheDiskUse.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlBinlogCacheUseDataPoint adds a data point to newrelicmysql.binlog.cache_use metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlBinlogCacheUseDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlBinlogCacheUse.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlCommandsDataPoint adds a data point to newrelicmysql.commands metric.
@@ -4447,6 +6297,66 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceCreatedTmpTablesDataPoin
 	mb.metricNewrelicmysqlPerformanceCreatedTmpTables.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicmysqlPerformanceHandlerCommitDataPoint adds a data point to newrelicmysql.performance.handler_commit metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerCommitDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerCommit.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerDeleteDataPoint adds a data point to newrelicmysql.performance.handler_delete metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerDeleteDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerDelete.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerPrepareDataPoint adds a data point to newrelicmysql.performance.handler_prepare metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerPrepareDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerPrepare.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerReadFirstDataPoint adds a data point to newrelicmysql.performance.handler_read_first metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerReadFirstDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerReadFirst.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerReadKeyDataPoint adds a data point to newrelicmysql.performance.handler_read_key metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerReadKeyDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerReadKey.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerReadNextDataPoint adds a data point to newrelicmysql.performance.handler_read_next metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerReadNextDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerReadNext.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerReadPrevDataPoint adds a data point to newrelicmysql.performance.handler_read_prev metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerReadPrevDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerReadPrev.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerReadRndDataPoint adds a data point to newrelicmysql.performance.handler_read_rnd metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerReadRndDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerReadRnd.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerReadRndNextDataPoint adds a data point to newrelicmysql.performance.handler_read_rnd_next metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerReadRndNextDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerReadRndNext.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerRollbackDataPoint adds a data point to newrelicmysql.performance.handler_rollback metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerRollbackDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerRollback.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerUpdateDataPoint adds a data point to newrelicmysql.performance.handler_update metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerUpdateDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerUpdate.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceHandlerWriteDataPoint adds a data point to newrelicmysql.performance.handler_write metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceHandlerWriteDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceHandlerWrite.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicmysqlPerformanceKeyCacheUtilizationDataPoint adds a data point to newrelicmysql.performance.key_cache_utilization metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceKeyCacheUtilizationDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicmysqlPerformanceKeyCacheUtilization.recordDataPoint(mb.startTime, ts, val)
@@ -4467,6 +6377,11 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceOpenTablesDataPoint(ts p
 	mb.metricNewrelicmysqlPerformanceOpenTables.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicmysqlPerformanceOpenedTablesDataPoint adds a data point to newrelicmysql.performance.opened_tables metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceOpenedTablesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceOpenedTables.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicmysqlPerformancePerformanceSchemaDigestLostDataPoint adds a data point to newrelicmysql.performance.performance_schema_digest_lost metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlPerformancePerformanceSchemaDigestLostDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlPerformancePerformanceSchemaDigestLost.recordDataPoint(mb.startTime, ts, val)
@@ -4475,6 +6390,16 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlPerformancePerformanceSchemaDigestL
 // RecordNewrelicmysqlPerformancePreparedStmtCountDataPoint adds a data point to newrelicmysql.performance.prepared_stmt_count metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlPerformancePreparedStmtCountDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlPerformancePreparedStmtCount.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceQcacheFreeBlocksDataPoint adds a data point to newrelicmysql.performance.qcache_free_blocks metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceQcacheFreeBlocksDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceQcacheFreeBlocks.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceQcacheFreeMemoryDataPoint adds a data point to newrelicmysql.performance.qcache_free_memory metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceQcacheFreeMemoryDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceQcacheFreeMemory.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlPerformanceQcacheHitsDataPoint adds a data point to newrelicmysql.performance.qcache_hits metric.
@@ -4497,9 +6422,19 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceQcacheNotCachedDataPoint
 	mb.metricNewrelicmysqlPerformanceQcacheNotCached.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicmysqlPerformanceQcacheQueriesInCacheDataPoint adds a data point to newrelicmysql.performance.qcache_queries_in_cache metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceQcacheQueriesInCacheDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceQcacheQueriesInCache.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicmysqlPerformanceQcacheSizeDataPoint adds a data point to newrelicmysql.performance.qcache_size metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceQcacheSizeDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlPerformanceQcacheSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceQcacheTotalBlocksDataPoint adds a data point to newrelicmysql.performance.qcache_total_blocks metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceQcacheTotalBlocksDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceQcacheTotalBlocks.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlPerformanceQuestionsDataPoint adds a data point to newrelicmysql.performance.questions metric.
@@ -4507,9 +6442,64 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceQuestionsDataPoint(ts pc
 	mb.metricNewrelicmysqlPerformanceQuestions.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicmysqlPerformanceSelectFullJoinDataPoint adds a data point to newrelicmysql.performance.select_full_join metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSelectFullJoinDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSelectFullJoin.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSelectFullRangeJoinDataPoint adds a data point to newrelicmysql.performance.select_full_range_join metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSelectFullRangeJoinDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSelectFullRangeJoin.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSelectRangeDataPoint adds a data point to newrelicmysql.performance.select_range metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSelectRangeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSelectRange.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSelectRangeCheckDataPoint adds a data point to newrelicmysql.performance.select_range_check metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSelectRangeCheckDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSelectRangeCheck.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSelectScanDataPoint adds a data point to newrelicmysql.performance.select_scan metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSelectScanDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSelectScan.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicmysqlPerformanceSlowQueriesDataPoint adds a data point to newrelicmysql.performance.slow_queries metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSlowQueriesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlPerformanceSlowQueries.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSortMergePassesDataPoint adds a data point to newrelicmysql.performance.sort_merge_passes metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSortMergePassesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSortMergePasses.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSortRangeDataPoint adds a data point to newrelicmysql.performance.sort_range metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSortRangeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSortRange.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSortRowsDataPoint adds a data point to newrelicmysql.performance.sort_rows metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSortRowsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSortRows.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceSortScanDataPoint adds a data point to newrelicmysql.performance.sort_scan metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceSortScanDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceSortScan.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceTableLocksImmediateDataPoint adds a data point to newrelicmysql.performance.table_locks_immediate metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceTableLocksImmediateDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceTableLocksImmediate.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceTableLocksImmediateRateDataPoint adds a data point to newrelicmysql.performance.table_locks_immediate.rate metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceTableLocksImmediateRateDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceTableLocksImmediateRate.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlPerformanceTableLocksWaitedDataPoint adds a data point to newrelicmysql.performance.table_locks_waited metric.
@@ -4527,9 +6517,19 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceThreadCacheSizeDataPoint
 	mb.metricNewrelicmysqlPerformanceThreadCacheSize.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicmysqlPerformanceThreadsCachedDataPoint adds a data point to newrelicmysql.performance.threads_cached metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceThreadsCachedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceThreadsCached.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicmysqlPerformanceThreadsConnectedDataPoint adds a data point to newrelicmysql.performance.threads_connected metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceThreadsConnectedDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlPerformanceThreadsConnected.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlPerformanceThreadsCreatedDataPoint adds a data point to newrelicmysql.performance.threads_created metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlPerformanceThreadsCreatedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlPerformanceThreadsCreated.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlPerformanceThreadsRunningDataPoint adds a data point to newrelicmysql.performance.threads_running metric.

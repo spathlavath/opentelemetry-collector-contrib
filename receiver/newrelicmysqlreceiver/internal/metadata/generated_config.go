@@ -28,6 +28,8 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicmysql metrics.
 type MetricsConfig struct {
+	NewrelicmysqlBinlogCacheDiskUse                     MetricConfig `mapstructure:"newrelicmysql.binlog.cache_disk_use"`
+	NewrelicmysqlBinlogCacheUse                         MetricConfig `mapstructure:"newrelicmysql.binlog.cache_use"`
 	NewrelicmysqlCommands                               MetricConfig `mapstructure:"newrelicmysql.commands"`
 	NewrelicmysqlConnectionCount                        MetricConfig `mapstructure:"newrelicmysql.connection.count"`
 	NewrelicmysqlDbHandlerRollback                      MetricConfig `mapstructure:"newrelicmysql.db.handler_rollback"`
@@ -69,23 +71,53 @@ type MetricsConfig struct {
 	NewrelicmysqlPerformanceCreatedTmpDiskTables        MetricConfig `mapstructure:"newrelicmysql.performance.created_tmp_disk_tables"`
 	NewrelicmysqlPerformanceCreatedTmpFiles             MetricConfig `mapstructure:"newrelicmysql.performance.created_tmp_files"`
 	NewrelicmysqlPerformanceCreatedTmpTables            MetricConfig `mapstructure:"newrelicmysql.performance.created_tmp_tables"`
+	NewrelicmysqlPerformanceHandlerCommit               MetricConfig `mapstructure:"newrelicmysql.performance.handler_commit"`
+	NewrelicmysqlPerformanceHandlerDelete               MetricConfig `mapstructure:"newrelicmysql.performance.handler_delete"`
+	NewrelicmysqlPerformanceHandlerPrepare              MetricConfig `mapstructure:"newrelicmysql.performance.handler_prepare"`
+	NewrelicmysqlPerformanceHandlerReadFirst            MetricConfig `mapstructure:"newrelicmysql.performance.handler_read_first"`
+	NewrelicmysqlPerformanceHandlerReadKey              MetricConfig `mapstructure:"newrelicmysql.performance.handler_read_key"`
+	NewrelicmysqlPerformanceHandlerReadNext             MetricConfig `mapstructure:"newrelicmysql.performance.handler_read_next"`
+	NewrelicmysqlPerformanceHandlerReadPrev             MetricConfig `mapstructure:"newrelicmysql.performance.handler_read_prev"`
+	NewrelicmysqlPerformanceHandlerReadRnd              MetricConfig `mapstructure:"newrelicmysql.performance.handler_read_rnd"`
+	NewrelicmysqlPerformanceHandlerReadRndNext          MetricConfig `mapstructure:"newrelicmysql.performance.handler_read_rnd_next"`
+	NewrelicmysqlPerformanceHandlerRollback             MetricConfig `mapstructure:"newrelicmysql.performance.handler_rollback"`
+	NewrelicmysqlPerformanceHandlerUpdate               MetricConfig `mapstructure:"newrelicmysql.performance.handler_update"`
+	NewrelicmysqlPerformanceHandlerWrite                MetricConfig `mapstructure:"newrelicmysql.performance.handler_write"`
 	NewrelicmysqlPerformanceKeyCacheUtilization         MetricConfig `mapstructure:"newrelicmysql.performance.key_cache_utilization"`
 	NewrelicmysqlPerformanceMaxPreparedStmtCount        MetricConfig `mapstructure:"newrelicmysql.performance.max_prepared_stmt_count"`
 	NewrelicmysqlPerformanceOpenFiles                   MetricConfig `mapstructure:"newrelicmysql.performance.open_files"`
 	NewrelicmysqlPerformanceOpenTables                  MetricConfig `mapstructure:"newrelicmysql.performance.open_tables"`
+	NewrelicmysqlPerformanceOpenedTables                MetricConfig `mapstructure:"newrelicmysql.performance.opened_tables"`
 	NewrelicmysqlPerformancePerformanceSchemaDigestLost MetricConfig `mapstructure:"newrelicmysql.performance.performance_schema_digest_lost"`
 	NewrelicmysqlPerformancePreparedStmtCount           MetricConfig `mapstructure:"newrelicmysql.performance.prepared_stmt_count"`
+	NewrelicmysqlPerformanceQcacheFreeBlocks            MetricConfig `mapstructure:"newrelicmysql.performance.qcache_free_blocks"`
+	NewrelicmysqlPerformanceQcacheFreeMemory            MetricConfig `mapstructure:"newrelicmysql.performance.qcache_free_memory"`
 	NewrelicmysqlPerformanceQcacheHits                  MetricConfig `mapstructure:"newrelicmysql.performance.qcache_hits"`
 	NewrelicmysqlPerformanceQcacheInserts               MetricConfig `mapstructure:"newrelicmysql.performance.qcache_inserts"`
 	NewrelicmysqlPerformanceQcacheLowmemPrunes          MetricConfig `mapstructure:"newrelicmysql.performance.qcache_lowmem_prunes"`
 	NewrelicmysqlPerformanceQcacheNotCached             MetricConfig `mapstructure:"newrelicmysql.performance.qcache_not_cached"`
+	NewrelicmysqlPerformanceQcacheQueriesInCache        MetricConfig `mapstructure:"newrelicmysql.performance.qcache_queries_in_cache"`
 	NewrelicmysqlPerformanceQcacheSize                  MetricConfig `mapstructure:"newrelicmysql.performance.qcache_size"`
+	NewrelicmysqlPerformanceQcacheTotalBlocks           MetricConfig `mapstructure:"newrelicmysql.performance.qcache_total_blocks"`
 	NewrelicmysqlPerformanceQuestions                   MetricConfig `mapstructure:"newrelicmysql.performance.questions"`
+	NewrelicmysqlPerformanceSelectFullJoin              MetricConfig `mapstructure:"newrelicmysql.performance.select_full_join"`
+	NewrelicmysqlPerformanceSelectFullRangeJoin         MetricConfig `mapstructure:"newrelicmysql.performance.select_full_range_join"`
+	NewrelicmysqlPerformanceSelectRange                 MetricConfig `mapstructure:"newrelicmysql.performance.select_range"`
+	NewrelicmysqlPerformanceSelectRangeCheck            MetricConfig `mapstructure:"newrelicmysql.performance.select_range_check"`
+	NewrelicmysqlPerformanceSelectScan                  MetricConfig `mapstructure:"newrelicmysql.performance.select_scan"`
 	NewrelicmysqlPerformanceSlowQueries                 MetricConfig `mapstructure:"newrelicmysql.performance.slow_queries"`
+	NewrelicmysqlPerformanceSortMergePasses             MetricConfig `mapstructure:"newrelicmysql.performance.sort_merge_passes"`
+	NewrelicmysqlPerformanceSortRange                   MetricConfig `mapstructure:"newrelicmysql.performance.sort_range"`
+	NewrelicmysqlPerformanceSortRows                    MetricConfig `mapstructure:"newrelicmysql.performance.sort_rows"`
+	NewrelicmysqlPerformanceSortScan                    MetricConfig `mapstructure:"newrelicmysql.performance.sort_scan"`
+	NewrelicmysqlPerformanceTableLocksImmediate         MetricConfig `mapstructure:"newrelicmysql.performance.table_locks_immediate"`
+	NewrelicmysqlPerformanceTableLocksImmediateRate     MetricConfig `mapstructure:"newrelicmysql.performance.table_locks_immediate.rate"`
 	NewrelicmysqlPerformanceTableLocksWaited            MetricConfig `mapstructure:"newrelicmysql.performance.table_locks_waited"`
 	NewrelicmysqlPerformanceTableOpenCache              MetricConfig `mapstructure:"newrelicmysql.performance.table_open_cache"`
 	NewrelicmysqlPerformanceThreadCacheSize             MetricConfig `mapstructure:"newrelicmysql.performance.thread_cache_size"`
+	NewrelicmysqlPerformanceThreadsCached               MetricConfig `mapstructure:"newrelicmysql.performance.threads_cached"`
 	NewrelicmysqlPerformanceThreadsConnected            MetricConfig `mapstructure:"newrelicmysql.performance.threads_connected"`
+	NewrelicmysqlPerformanceThreadsCreated              MetricConfig `mapstructure:"newrelicmysql.performance.threads_created"`
 	NewrelicmysqlPerformanceThreadsRunning              MetricConfig `mapstructure:"newrelicmysql.performance.threads_running"`
 	NewrelicmysqlQueryCount                             MetricConfig `mapstructure:"newrelicmysql.query.count"`
 	NewrelicmysqlReplicationExecMasterLogPos            MetricConfig `mapstructure:"newrelicmysql.replication.exec_master_log_pos"`
@@ -102,6 +134,12 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		NewrelicmysqlBinlogCacheDiskUse: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlBinlogCacheUse: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlCommands: MetricConfig{
 			Enabled: true,
 		},
@@ -225,6 +263,42 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlPerformanceCreatedTmpTables: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlPerformanceHandlerCommit: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerDelete: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerPrepare: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerReadFirst: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerReadKey: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerReadNext: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerReadPrev: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerReadRnd: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerReadRndNext: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerRollback: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerUpdate: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceHandlerWrite: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlPerformanceKeyCacheUtilization: MetricConfig{
 			Enabled: true,
 		},
@@ -237,10 +311,19 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlPerformanceOpenTables: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlPerformanceOpenedTables: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlPerformancePerformanceSchemaDigestLost: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlPerformancePreparedStmtCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheFreeBlocks: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheFreeMemory: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlPerformanceQcacheHits: MetricConfig{
@@ -255,13 +338,52 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlPerformanceQcacheNotCached: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlPerformanceQcacheQueriesInCache: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlPerformanceQcacheSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceQcacheTotalBlocks: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlPerformanceQuestions: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlPerformanceSelectFullJoin: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSelectFullRangeJoin: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSelectRange: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSelectRangeCheck: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSelectScan: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlPerformanceSlowQueries: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSortMergePasses: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSortRange: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSortRows: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceSortScan: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceTableLocksImmediate: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceTableLocksImmediateRate: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlPerformanceTableLocksWaited: MetricConfig{
@@ -273,7 +395,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlPerformanceThreadCacheSize: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlPerformanceThreadsCached: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlPerformanceThreadsConnected: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlPerformanceThreadsCreated: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlPerformanceThreadsRunning: MetricConfig{

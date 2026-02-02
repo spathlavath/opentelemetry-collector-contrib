@@ -1,6 +1,10 @@
 default:
 all_set:
   metrics:
+    newrelicmysql.binlog.cache_disk_use:
+      enabled: true
+    newrelicmysql.binlog.cache_use:
+      enabled: true
     newrelicmysql.commands:
       enabled: true
     newrelicmysql.connection.count:
@@ -83,6 +87,30 @@ all_set:
       enabled: true
     newrelicmysql.performance.created_tmp_tables:
       enabled: true
+    newrelicmysql.performance.handler_commit:
+      enabled: true
+    newrelicmysql.performance.handler_delete:
+      enabled: true
+    newrelicmysql.performance.handler_prepare:
+      enabled: true
+    newrelicmysql.performance.handler_read_first:
+      enabled: true
+    newrelicmysql.performance.handler_read_key:
+      enabled: true
+    newrelicmysql.performance.handler_read_next:
+      enabled: true
+    newrelicmysql.performance.handler_read_prev:
+      enabled: true
+    newrelicmysql.performance.handler_read_rnd:
+      enabled: true
+    newrelicmysql.performance.handler_read_rnd_next:
+      enabled: true
+    newrelicmysql.performance.handler_rollback:
+      enabled: true
+    newrelicmysql.performance.handler_update:
+      enabled: true
+    newrelicmysql.performance.handler_write:
+      enabled: true
     newrelicmysql.performance.key_cache_utilization:
       enabled: true
     newrelicmysql.performance.max_prepared_stmt_count:
@@ -91,9 +119,15 @@ all_set:
       enabled: true
     newrelicmysql.performance.open_tables:
       enabled: true
+    newrelicmysql.performance.opened_tables:
+      enabled: true
     newrelicmysql.performance.performance_schema_digest_lost:
       enabled: true
     newrelicmysql.performance.prepared_stmt_count:
+      enabled: true
+    newrelicmysql.performance.qcache_free_blocks:
+      enabled: true
+    newrelicmysql.performance.qcache_free_memory:
       enabled: true
     newrelicmysql.performance.qcache_hits:
       enabled: true
@@ -103,11 +137,37 @@ all_set:
       enabled: true
     newrelicmysql.performance.qcache_not_cached:
       enabled: true
+    newrelicmysql.performance.qcache_queries_in_cache:
+      enabled: true
     newrelicmysql.performance.qcache_size:
+      enabled: true
+    newrelicmysql.performance.qcache_total_blocks:
       enabled: true
     newrelicmysql.performance.questions:
       enabled: true
+    newrelicmysql.performance.select_full_join:
+      enabled: true
+    newrelicmysql.performance.select_full_range_join:
+      enabled: true
+    newrelicmysql.performance.select_range:
+      enabled: true
+    newrelicmysql.performance.select_range_check:
+      enabled: true
+    newrelicmysql.performance.select_scan:
+      enabled: true
     newrelicmysql.performance.slow_queries:
+      enabled: true
+    newrelicmysql.performance.sort_merge_passes:
+      enabled: true
+    newrelicmysql.performance.sort_range:
+      enabled: true
+    newrelicmysql.performance.sort_rows:
+      enabled: true
+    newrelicmysql.performance.sort_scan:
+      enabled: true
+    newrelicmysql.performance.table_locks_immediate:
+      enabled: true
+    newrelicmysql.performance.table_locks_immediate.rate:
       enabled: true
     newrelicmysql.performance.table_locks_waited:
       enabled: true
@@ -115,7 +175,11 @@ all_set:
       enabled: true
     newrelicmysql.performance.thread_cache_size:
       enabled: true
+    newrelicmysql.performance.threads_cached:
+      enabled: true
     newrelicmysql.performance.threads_connected:
+      enabled: true
+    newrelicmysql.performance.threads_created:
       enabled: true
     newrelicmysql.performance.threads_running:
       enabled: true
@@ -146,6 +210,10 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    newrelicmysql.binlog.cache_disk_use:
+      enabled: false
+    newrelicmysql.binlog.cache_use:
+      enabled: false
     newrelicmysql.commands:
       enabled: false
     newrelicmysql.connection.count:
@@ -228,6 +296,30 @@ none_set:
       enabled: false
     newrelicmysql.performance.created_tmp_tables:
       enabled: false
+    newrelicmysql.performance.handler_commit:
+      enabled: false
+    newrelicmysql.performance.handler_delete:
+      enabled: false
+    newrelicmysql.performance.handler_prepare:
+      enabled: false
+    newrelicmysql.performance.handler_read_first:
+      enabled: false
+    newrelicmysql.performance.handler_read_key:
+      enabled: false
+    newrelicmysql.performance.handler_read_next:
+      enabled: false
+    newrelicmysql.performance.handler_read_prev:
+      enabled: false
+    newrelicmysql.performance.handler_read_rnd:
+      enabled: false
+    newrelicmysql.performance.handler_read_rnd_next:
+      enabled: false
+    newrelicmysql.performance.handler_rollback:
+      enabled: false
+    newrelicmysql.performance.handler_update:
+      enabled: false
+    newrelicmysql.performance.handler_write:
+      enabled: false
     newrelicmysql.performance.key_cache_utilization:
       enabled: false
     newrelicmysql.performance.max_prepared_stmt_count:
@@ -236,9 +328,15 @@ none_set:
       enabled: false
     newrelicmysql.performance.open_tables:
       enabled: false
+    newrelicmysql.performance.opened_tables:
+      enabled: false
     newrelicmysql.performance.performance_schema_digest_lost:
       enabled: false
     newrelicmysql.performance.prepared_stmt_count:
+      enabled: false
+    newrelicmysql.performance.qcache_free_blocks:
+      enabled: false
+    newrelicmysql.performance.qcache_free_memory:
       enabled: false
     newrelicmysql.performance.qcache_hits:
       enabled: false
@@ -248,11 +346,37 @@ none_set:
       enabled: false
     newrelicmysql.performance.qcache_not_cached:
       enabled: false
+    newrelicmysql.performance.qcache_queries_in_cache:
+      enabled: false
     newrelicmysql.performance.qcache_size:
+      enabled: false
+    newrelicmysql.performance.qcache_total_blocks:
       enabled: false
     newrelicmysql.performance.questions:
       enabled: false
+    newrelicmysql.performance.select_full_join:
+      enabled: false
+    newrelicmysql.performance.select_full_range_join:
+      enabled: false
+    newrelicmysql.performance.select_range:
+      enabled: false
+    newrelicmysql.performance.select_range_check:
+      enabled: false
+    newrelicmysql.performance.select_scan:
+      enabled: false
     newrelicmysql.performance.slow_queries:
+      enabled: false
+    newrelicmysql.performance.sort_merge_passes:
+      enabled: false
+    newrelicmysql.performance.sort_range:
+      enabled: false
+    newrelicmysql.performance.sort_rows:
+      enabled: false
+    newrelicmysql.performance.sort_scan:
+      enabled: false
+    newrelicmysql.performance.table_locks_immediate:
+      enabled: false
+    newrelicmysql.performance.table_locks_immediate.rate:
       enabled: false
     newrelicmysql.performance.table_locks_waited:
       enabled: false
@@ -260,7 +384,11 @@ none_set:
       enabled: false
     newrelicmysql.performance.thread_cache_size:
       enabled: false
+    newrelicmysql.performance.threads_cached:
+      enabled: false
     newrelicmysql.performance.threads_connected:
+      enabled: false
+    newrelicmysql.performance.threads_created:
       enabled: false
     newrelicmysql.performance.threads_running:
       enabled: false

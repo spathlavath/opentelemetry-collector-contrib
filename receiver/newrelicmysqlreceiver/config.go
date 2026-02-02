@@ -20,6 +20,7 @@ type Config struct {
 	Password                       configopaque.String `mapstructure:"password,omitempty"`
 	Database                       string              `mapstructure:"database,omitempty"`
 	AllowNativePasswords           bool                `mapstructure:"allow_native_passwords,omitempty"`
+	ExtraStatusMetrics             bool                `mapstructure:"extra_status_metrics,omitempty"`
 	confignet.AddrConfig           `mapstructure:",squash"`
 	TLS                            configtls.ClientConfig        `mapstructure:"tls,omitempty"`
 	MetricsBuilderConfig           metadata.MetricsBuilderConfig `mapstructure:",squash"`
