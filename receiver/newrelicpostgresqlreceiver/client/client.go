@@ -229,4 +229,11 @@ type PostgreSQLClient interface {
 	// Returns empty slice if no VACUUM operations are currently running
 	// Available in PostgreSQL 12+
 	QueryVacuumProgress(ctx context.Context) ([]models.PgStatProgressVacuum, error)
+
+	// QueryPgBouncerStats retrieves connection pool statistics from PgBouncer
+	// Returns statistics from SHOW STATS command
+	// Must be executed against PgBouncer admin console
+	// Returns empty slice if PgBouncer is not available
+	// Available in PgBouncer 1.8+
+	QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncerStatsMetric, error)
 }

@@ -12,6 +12,186 @@ metrics:
     enabled: false
 ```
 
+### pgbouncer.stats.avg_bytes_in
+
+Average bytes received per request (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.avg_bytes_out
+
+Average bytes sent per request (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.avg_requests_per_second
+
+Average requests per second (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {requests}/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.avg_server_assignment_count
+
+Average number of server assignments per transaction (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {assignments} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.avg_transaction_count
+
+Average transaction count (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.avg_transaction_duration_milliseconds
+
+Average transaction duration in milliseconds (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.bytes_in_per_second
+
+Average bytes received per second from clients (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.bytes_out_per_second
+
+Average bytes sent per second to clients (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.queries_per_second
+
+Average SQL queries per second (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {queries}/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.requests_per_second
+
+Average client requests per second (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {requests}/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.total_server_assignment_count
+
+Total number of server assignments since PgBouncer start (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {assignments} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### pgbouncer.stats.transactions_per_second
+
+Average transactions per second (PgBouncer 1.8+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions}/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
 ### postgresql.active_waiting_queries
 
 Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)

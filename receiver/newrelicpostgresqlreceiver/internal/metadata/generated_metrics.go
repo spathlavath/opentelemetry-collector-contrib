@@ -13,6 +13,42 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	PgbouncerStatsAvgBytesIn: metricInfo{
+		Name: "pgbouncer.stats.avg_bytes_in",
+	},
+	PgbouncerStatsAvgBytesOut: metricInfo{
+		Name: "pgbouncer.stats.avg_bytes_out",
+	},
+	PgbouncerStatsAvgRequestsPerSecond: metricInfo{
+		Name: "pgbouncer.stats.avg_requests_per_second",
+	},
+	PgbouncerStatsAvgServerAssignmentCount: metricInfo{
+		Name: "pgbouncer.stats.avg_server_assignment_count",
+	},
+	PgbouncerStatsAvgTransactionCount: metricInfo{
+		Name: "pgbouncer.stats.avg_transaction_count",
+	},
+	PgbouncerStatsAvgTransactionDurationMilliseconds: metricInfo{
+		Name: "pgbouncer.stats.avg_transaction_duration_milliseconds",
+	},
+	PgbouncerStatsBytesInPerSecond: metricInfo{
+		Name: "pgbouncer.stats.bytes_in_per_second",
+	},
+	PgbouncerStatsBytesOutPerSecond: metricInfo{
+		Name: "pgbouncer.stats.bytes_out_per_second",
+	},
+	PgbouncerStatsQueriesPerSecond: metricInfo{
+		Name: "pgbouncer.stats.queries_per_second",
+	},
+	PgbouncerStatsRequestsPerSecond: metricInfo{
+		Name: "pgbouncer.stats.requests_per_second",
+	},
+	PgbouncerStatsTotalServerAssignmentCount: metricInfo{
+		Name: "pgbouncer.stats.total_server_assignment_count",
+	},
+	PgbouncerStatsTransactionsPerSecond: metricInfo{
+		Name: "pgbouncer.stats.transactions_per_second",
+	},
 	PostgresqlActiveWaitingQueries: metricInfo{
 		Name: "postgresql.active_waiting_queries",
 	},
@@ -562,6 +598,18 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	PgbouncerStatsAvgBytesIn                          metricInfo
+	PgbouncerStatsAvgBytesOut                         metricInfo
+	PgbouncerStatsAvgRequestsPerSecond                metricInfo
+	PgbouncerStatsAvgServerAssignmentCount            metricInfo
+	PgbouncerStatsAvgTransactionCount                 metricInfo
+	PgbouncerStatsAvgTransactionDurationMilliseconds  metricInfo
+	PgbouncerStatsBytesInPerSecond                    metricInfo
+	PgbouncerStatsBytesOutPerSecond                   metricInfo
+	PgbouncerStatsQueriesPerSecond                    metricInfo
+	PgbouncerStatsRequestsPerSecond                   metricInfo
+	PgbouncerStatsTotalServerAssignmentCount          metricInfo
+	PgbouncerStatsTransactionsPerSecond               metricInfo
 	PostgresqlActiveWaitingQueries                    metricInfo
 	PostgresqlActivityBackendXidAge                   metricInfo
 	PostgresqlActivityBackendXminAge                  metricInfo
@@ -748,6 +796,632 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricPgbouncerStatsAvgBytesIn struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.avg_bytes_in metric with initial data.
+func (m *metricPgbouncerStatsAvgBytesIn) init() {
+	m.data.SetName("pgbouncer.stats.avg_bytes_in")
+	m.data.SetDescription("Average bytes received per request (PgBouncer 1.8+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsAvgBytesIn) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsAvgBytesIn) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsAvgBytesIn) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsAvgBytesIn(cfg MetricConfig) metricPgbouncerStatsAvgBytesIn {
+	m := metricPgbouncerStatsAvgBytesIn{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsAvgBytesOut struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.avg_bytes_out metric with initial data.
+func (m *metricPgbouncerStatsAvgBytesOut) init() {
+	m.data.SetName("pgbouncer.stats.avg_bytes_out")
+	m.data.SetDescription("Average bytes sent per request (PgBouncer 1.8+)")
+	m.data.SetUnit("By")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsAvgBytesOut) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsAvgBytesOut) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsAvgBytesOut) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsAvgBytesOut(cfg MetricConfig) metricPgbouncerStatsAvgBytesOut {
+	m := metricPgbouncerStatsAvgBytesOut{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsAvgRequestsPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.avg_requests_per_second metric with initial data.
+func (m *metricPgbouncerStatsAvgRequestsPerSecond) init() {
+	m.data.SetName("pgbouncer.stats.avg_requests_per_second")
+	m.data.SetDescription("Average requests per second (PgBouncer 1.8+)")
+	m.data.SetUnit("{requests}/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsAvgRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsAvgRequestsPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsAvgRequestsPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsAvgRequestsPerSecond(cfg MetricConfig) metricPgbouncerStatsAvgRequestsPerSecond {
+	m := metricPgbouncerStatsAvgRequestsPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsAvgServerAssignmentCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.avg_server_assignment_count metric with initial data.
+func (m *metricPgbouncerStatsAvgServerAssignmentCount) init() {
+	m.data.SetName("pgbouncer.stats.avg_server_assignment_count")
+	m.data.SetDescription("Average number of server assignments per transaction (PgBouncer 1.8+)")
+	m.data.SetUnit("{assignments}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsAvgServerAssignmentCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsAvgServerAssignmentCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsAvgServerAssignmentCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsAvgServerAssignmentCount(cfg MetricConfig) metricPgbouncerStatsAvgServerAssignmentCount {
+	m := metricPgbouncerStatsAvgServerAssignmentCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsAvgTransactionCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.avg_transaction_count metric with initial data.
+func (m *metricPgbouncerStatsAvgTransactionCount) init() {
+	m.data.SetName("pgbouncer.stats.avg_transaction_count")
+	m.data.SetDescription("Average transaction count (PgBouncer 1.8+)")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsAvgTransactionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsAvgTransactionCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsAvgTransactionCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsAvgTransactionCount(cfg MetricConfig) metricPgbouncerStatsAvgTransactionCount {
+	m := metricPgbouncerStatsAvgTransactionCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsAvgTransactionDurationMilliseconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.avg_transaction_duration_milliseconds metric with initial data.
+func (m *metricPgbouncerStatsAvgTransactionDurationMilliseconds) init() {
+	m.data.SetName("pgbouncer.stats.avg_transaction_duration_milliseconds")
+	m.data.SetDescription("Average transaction duration in milliseconds (PgBouncer 1.8+)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsAvgTransactionDurationMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsAvgTransactionDurationMilliseconds) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsAvgTransactionDurationMilliseconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsAvgTransactionDurationMilliseconds(cfg MetricConfig) metricPgbouncerStatsAvgTransactionDurationMilliseconds {
+	m := metricPgbouncerStatsAvgTransactionDurationMilliseconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsBytesInPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.bytes_in_per_second metric with initial data.
+func (m *metricPgbouncerStatsBytesInPerSecond) init() {
+	m.data.SetName("pgbouncer.stats.bytes_in_per_second")
+	m.data.SetDescription("Average bytes received per second from clients (PgBouncer 1.8+)")
+	m.data.SetUnit("By/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsBytesInPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsBytesInPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsBytesInPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsBytesInPerSecond(cfg MetricConfig) metricPgbouncerStatsBytesInPerSecond {
+	m := metricPgbouncerStatsBytesInPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsBytesOutPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.bytes_out_per_second metric with initial data.
+func (m *metricPgbouncerStatsBytesOutPerSecond) init() {
+	m.data.SetName("pgbouncer.stats.bytes_out_per_second")
+	m.data.SetDescription("Average bytes sent per second to clients (PgBouncer 1.8+)")
+	m.data.SetUnit("By/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsBytesOutPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsBytesOutPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsBytesOutPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsBytesOutPerSecond(cfg MetricConfig) metricPgbouncerStatsBytesOutPerSecond {
+	m := metricPgbouncerStatsBytesOutPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsQueriesPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.queries_per_second metric with initial data.
+func (m *metricPgbouncerStatsQueriesPerSecond) init() {
+	m.data.SetName("pgbouncer.stats.queries_per_second")
+	m.data.SetDescription("Average SQL queries per second (PgBouncer 1.8+)")
+	m.data.SetUnit("{queries}/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsQueriesPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsQueriesPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsQueriesPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsQueriesPerSecond(cfg MetricConfig) metricPgbouncerStatsQueriesPerSecond {
+	m := metricPgbouncerStatsQueriesPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsRequestsPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.requests_per_second metric with initial data.
+func (m *metricPgbouncerStatsRequestsPerSecond) init() {
+	m.data.SetName("pgbouncer.stats.requests_per_second")
+	m.data.SetDescription("Average client requests per second (PgBouncer 1.8+)")
+	m.data.SetUnit("{requests}/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsRequestsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsRequestsPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsRequestsPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsRequestsPerSecond(cfg MetricConfig) metricPgbouncerStatsRequestsPerSecond {
+	m := metricPgbouncerStatsRequestsPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsTotalServerAssignmentCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.total_server_assignment_count metric with initial data.
+func (m *metricPgbouncerStatsTotalServerAssignmentCount) init() {
+	m.data.SetName("pgbouncer.stats.total_server_assignment_count")
+	m.data.SetDescription("Total number of server assignments since PgBouncer start (PgBouncer 1.8+)")
+	m.data.SetUnit("{assignments}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsTotalServerAssignmentCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsTotalServerAssignmentCount) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsTotalServerAssignmentCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsTotalServerAssignmentCount(cfg MetricConfig) metricPgbouncerStatsTotalServerAssignmentCount {
+	m := metricPgbouncerStatsTotalServerAssignmentCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerStatsTransactionsPerSecond struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.stats.transactions_per_second metric with initial data.
+func (m *metricPgbouncerStatsTransactionsPerSecond) init() {
+	m.data.SetName("pgbouncer.stats.transactions_per_second")
+	m.data.SetDescription("Average transactions per second (PgBouncer 1.8+)")
+	m.data.SetUnit("{transactions}/s")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerStatsTransactionsPerSecond) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerStatsTransactionsPerSecond) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerStatsTransactionsPerSecond) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerStatsTransactionsPerSecond(cfg MetricConfig) metricPgbouncerStatsTransactionsPerSecond {
+	m := metricPgbouncerStatsTransactionsPerSecond{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricPostgresqlActiveWaitingQueries struct {
@@ -10497,6 +11171,18 @@ type MetricsBuilder struct {
 	buildInfo                                               component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                          map[string]filter.Filter
 	resourceAttributeExcludeFilter                          map[string]filter.Filter
+	metricPgbouncerStatsAvgBytesIn                          metricPgbouncerStatsAvgBytesIn
+	metricPgbouncerStatsAvgBytesOut                         metricPgbouncerStatsAvgBytesOut
+	metricPgbouncerStatsAvgRequestsPerSecond                metricPgbouncerStatsAvgRequestsPerSecond
+	metricPgbouncerStatsAvgServerAssignmentCount            metricPgbouncerStatsAvgServerAssignmentCount
+	metricPgbouncerStatsAvgTransactionCount                 metricPgbouncerStatsAvgTransactionCount
+	metricPgbouncerStatsAvgTransactionDurationMilliseconds  metricPgbouncerStatsAvgTransactionDurationMilliseconds
+	metricPgbouncerStatsBytesInPerSecond                    metricPgbouncerStatsBytesInPerSecond
+	metricPgbouncerStatsBytesOutPerSecond                   metricPgbouncerStatsBytesOutPerSecond
+	metricPgbouncerStatsQueriesPerSecond                    metricPgbouncerStatsQueriesPerSecond
+	metricPgbouncerStatsRequestsPerSecond                   metricPgbouncerStatsRequestsPerSecond
+	metricPgbouncerStatsTotalServerAssignmentCount          metricPgbouncerStatsTotalServerAssignmentCount
+	metricPgbouncerStatsTransactionsPerSecond               metricPgbouncerStatsTransactionsPerSecond
 	metricPostgresqlActiveWaitingQueries                    metricPostgresqlActiveWaitingQueries
 	metricPostgresqlActivityBackendXidAge                   metricPostgresqlActivityBackendXidAge
 	metricPostgresqlActivityBackendXminAge                  metricPostgresqlActivityBackendXminAge
@@ -10700,10 +11386,22 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                                  mbc,
-		startTime:                                               pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                                           pmetric.NewMetrics(),
-		buildInfo:                                               settings.BuildInfo,
+		config:                                   mbc,
+		startTime:                                pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                            pmetric.NewMetrics(),
+		buildInfo:                                settings.BuildInfo,
+		metricPgbouncerStatsAvgBytesIn:           newMetricPgbouncerStatsAvgBytesIn(mbc.Metrics.PgbouncerStatsAvgBytesIn),
+		metricPgbouncerStatsAvgBytesOut:          newMetricPgbouncerStatsAvgBytesOut(mbc.Metrics.PgbouncerStatsAvgBytesOut),
+		metricPgbouncerStatsAvgRequestsPerSecond: newMetricPgbouncerStatsAvgRequestsPerSecond(mbc.Metrics.PgbouncerStatsAvgRequestsPerSecond),
+		metricPgbouncerStatsAvgServerAssignmentCount:            newMetricPgbouncerStatsAvgServerAssignmentCount(mbc.Metrics.PgbouncerStatsAvgServerAssignmentCount),
+		metricPgbouncerStatsAvgTransactionCount:                 newMetricPgbouncerStatsAvgTransactionCount(mbc.Metrics.PgbouncerStatsAvgTransactionCount),
+		metricPgbouncerStatsAvgTransactionDurationMilliseconds:  newMetricPgbouncerStatsAvgTransactionDurationMilliseconds(mbc.Metrics.PgbouncerStatsAvgTransactionDurationMilliseconds),
+		metricPgbouncerStatsBytesInPerSecond:                    newMetricPgbouncerStatsBytesInPerSecond(mbc.Metrics.PgbouncerStatsBytesInPerSecond),
+		metricPgbouncerStatsBytesOutPerSecond:                   newMetricPgbouncerStatsBytesOutPerSecond(mbc.Metrics.PgbouncerStatsBytesOutPerSecond),
+		metricPgbouncerStatsQueriesPerSecond:                    newMetricPgbouncerStatsQueriesPerSecond(mbc.Metrics.PgbouncerStatsQueriesPerSecond),
+		metricPgbouncerStatsRequestsPerSecond:                   newMetricPgbouncerStatsRequestsPerSecond(mbc.Metrics.PgbouncerStatsRequestsPerSecond),
+		metricPgbouncerStatsTotalServerAssignmentCount:          newMetricPgbouncerStatsTotalServerAssignmentCount(mbc.Metrics.PgbouncerStatsTotalServerAssignmentCount),
+		metricPgbouncerStatsTransactionsPerSecond:               newMetricPgbouncerStatsTransactionsPerSecond(mbc.Metrics.PgbouncerStatsTransactionsPerSecond),
 		metricPostgresqlActiveWaitingQueries:                    newMetricPostgresqlActiveWaitingQueries(mbc.Metrics.PostgresqlActiveWaitingQueries),
 		metricPostgresqlActivityBackendXidAge:                   newMetricPostgresqlActivityBackendXidAge(mbc.Metrics.PostgresqlActivityBackendXidAge),
 		metricPostgresqlActivityBackendXminAge:                  newMetricPostgresqlActivityBackendXminAge(mbc.Metrics.PostgresqlActivityBackendXminAge),
@@ -10994,6 +11692,18 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricPgbouncerStatsAvgBytesIn.emit(ils.Metrics())
+	mb.metricPgbouncerStatsAvgBytesOut.emit(ils.Metrics())
+	mb.metricPgbouncerStatsAvgRequestsPerSecond.emit(ils.Metrics())
+	mb.metricPgbouncerStatsAvgServerAssignmentCount.emit(ils.Metrics())
+	mb.metricPgbouncerStatsAvgTransactionCount.emit(ils.Metrics())
+	mb.metricPgbouncerStatsAvgTransactionDurationMilliseconds.emit(ils.Metrics())
+	mb.metricPgbouncerStatsBytesInPerSecond.emit(ils.Metrics())
+	mb.metricPgbouncerStatsBytesOutPerSecond.emit(ils.Metrics())
+	mb.metricPgbouncerStatsQueriesPerSecond.emit(ils.Metrics())
+	mb.metricPgbouncerStatsRequestsPerSecond.emit(ils.Metrics())
+	mb.metricPgbouncerStatsTotalServerAssignmentCount.emit(ils.Metrics())
+	mb.metricPgbouncerStatsTransactionsPerSecond.emit(ils.Metrics())
 	mb.metricPostgresqlActiveWaitingQueries.emit(ils.Metrics())
 	mb.metricPostgresqlActivityBackendXidAge.emit(ils.Metrics())
 	mb.metricPostgresqlActivityBackendXminAge.emit(ils.Metrics())
@@ -11205,6 +11915,66 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordPgbouncerStatsAvgBytesInDataPoint adds a data point to pgbouncer.stats.avg_bytes_in metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsAvgBytesInDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsAvgBytesIn.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsAvgBytesOutDataPoint adds a data point to pgbouncer.stats.avg_bytes_out metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsAvgBytesOutDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsAvgBytesOut.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsAvgRequestsPerSecondDataPoint adds a data point to pgbouncer.stats.avg_requests_per_second metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsAvgRequestsPerSecondDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsAvgRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsAvgServerAssignmentCountDataPoint adds a data point to pgbouncer.stats.avg_server_assignment_count metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsAvgServerAssignmentCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsAvgServerAssignmentCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsAvgTransactionCountDataPoint adds a data point to pgbouncer.stats.avg_transaction_count metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsAvgTransactionCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsAvgTransactionCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsAvgTransactionDurationMillisecondsDataPoint adds a data point to pgbouncer.stats.avg_transaction_duration_milliseconds metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsAvgTransactionDurationMillisecondsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsAvgTransactionDurationMilliseconds.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsBytesInPerSecondDataPoint adds a data point to pgbouncer.stats.bytes_in_per_second metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsBytesInPerSecondDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsBytesInPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsBytesOutPerSecondDataPoint adds a data point to pgbouncer.stats.bytes_out_per_second metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsBytesOutPerSecondDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsBytesOutPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsQueriesPerSecondDataPoint adds a data point to pgbouncer.stats.queries_per_second metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsQueriesPerSecondDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsQueriesPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsRequestsPerSecondDataPoint adds a data point to pgbouncer.stats.requests_per_second metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsRequestsPerSecondDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsRequestsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsTotalServerAssignmentCountDataPoint adds a data point to pgbouncer.stats.total_server_assignment_count metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsTotalServerAssignmentCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsTotalServerAssignmentCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPgbouncerStatsTransactionsPerSecondDataPoint adds a data point to pgbouncer.stats.transactions_per_second metric.
+func (mb *MetricsBuilder) RecordPgbouncerStatsTransactionsPerSecondDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPgbouncerStatsTransactionsPerSecond.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
 }
 
 // RecordPostgresqlActiveWaitingQueriesDataPoint adds a data point to postgresql.active_waiting_queries metric.

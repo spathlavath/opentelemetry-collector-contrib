@@ -1,6 +1,30 @@
 default:
 all_set:
   metrics:
+    pgbouncer.stats.avg_bytes_in:
+      enabled: true
+    pgbouncer.stats.avg_bytes_out:
+      enabled: true
+    pgbouncer.stats.avg_requests_per_second:
+      enabled: true
+    pgbouncer.stats.avg_server_assignment_count:
+      enabled: true
+    pgbouncer.stats.avg_transaction_count:
+      enabled: true
+    pgbouncer.stats.avg_transaction_duration_milliseconds:
+      enabled: true
+    pgbouncer.stats.bytes_in_per_second:
+      enabled: true
+    pgbouncer.stats.bytes_out_per_second:
+      enabled: true
+    pgbouncer.stats.queries_per_second:
+      enabled: true
+    pgbouncer.stats.requests_per_second:
+      enabled: true
+    pgbouncer.stats.total_server_assignment_count:
+      enabled: true
+    pgbouncer.stats.transactions_per_second:
+      enabled: true
     postgresql.active_waiting_queries:
       enabled: true
     postgresql.activity.backend_xid_age:
@@ -380,6 +404,30 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    pgbouncer.stats.avg_bytes_in:
+      enabled: false
+    pgbouncer.stats.avg_bytes_out:
+      enabled: false
+    pgbouncer.stats.avg_requests_per_second:
+      enabled: false
+    pgbouncer.stats.avg_server_assignment_count:
+      enabled: false
+    pgbouncer.stats.avg_transaction_count:
+      enabled: false
+    pgbouncer.stats.avg_transaction_duration_milliseconds:
+      enabled: false
+    pgbouncer.stats.bytes_in_per_second:
+      enabled: false
+    pgbouncer.stats.bytes_out_per_second:
+      enabled: false
+    pgbouncer.stats.queries_per_second:
+      enabled: false
+    pgbouncer.stats.requests_per_second:
+      enabled: false
+    pgbouncer.stats.total_server_assignment_count:
+      enabled: false
+    pgbouncer.stats.transactions_per_second:
+      enabled: false
     postgresql.active_waiting_queries:
       enabled: false
     postgresql.activity.backend_xid_age:

@@ -1218,3 +1218,46 @@ func (c *SQLClient) QueryVacuumProgress(ctx context.Context) ([]models.PgStatPro
 
 	return metrics, nil
 }
+
+// QueryPgBouncerStats retrieves connection pool statistics from PgBouncer
+// Returns statistics from SHOW STATS command
+func (c *SQLClient) QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncerStatsMetric, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgBouncerStatsSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query PgBouncer stats: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgBouncerStatsMetric
+
+	for rows.Next() {
+		var metric models.PgBouncerStatsMetric
+		err := rows.Scan(
+			&metric.Database,
+			&metric.TotalXactCount,
+			&metric.TotalQueryCount,
+			&metric.TotalReceived,
+			&metric.TotalSent,
+			&metric.TotalXactTime,
+			&metric.TotalQueryTime,
+			&metric.TotalWaitTime,
+			&metric.AvgXactCount,
+			&metric.AvgQueryCount,
+			&metric.AvgRecv,
+			&metric.AvgSent,
+			&metric.AvgXactTime,
+			&metric.AvgQueryTime,
+			&metric.AvgWaitTime,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan PgBouncer stats row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating PgBouncer stats rows: %w", err)
+	}
+
+	return metrics, nil
+}

@@ -47,6 +47,7 @@ type newRelicPostgreSQLScraper struct {
 	bgwriterScraper           *scrapers.BgwriterScraper
 	vacuumMaintenanceScraper  *scrapers.VacuumMaintenanceScraper
 	tableIOScraper            *scrapers.TableIOScraper
+	pgbouncerScraper          *scrapers.PgBouncerScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -245,6 +246,16 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 			s.logger.Info("Table IO scraper initialized (relations not configured)")
 		}
 	}
+
+	// Initialize PgBouncer scraper (optional, for connection pooler monitoring)
+	// This scraper collects statistics from PgBouncer if available
+	s.pgbouncerScraper = scrapers.NewPgBouncerScraper(
+		s.client,
+		s.mb,
+		s.logger,
+		s.instanceName,
+	)
+	s.logger.Info("PgBouncer scraper initialized (will fail gracefully if PgBouncer not available)")
 
 	return nil
 }
@@ -588,6 +599,16 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 			}
 		} else {
 			s.logger.Debug("Per-table metrics skipped (no tables configured)")
+		}
+	}
+
+	// Scrape PgBouncer statistics (optional, fails gracefully if PgBouncer not available)
+	if s.pgbouncerScraper != nil {
+		pgbouncerErrs := s.pgbouncerScraper.ScrapePgBouncerStats(scrapeCtx)
+		if len(pgbouncerErrs) > 0 {
+			s.logger.Debug("PgBouncer stats not available or query failed",
+				zap.Int("error_count", len(pgbouncerErrs)))
+			// Don't append to scrapeErrors - PgBouncer may not be configured, which is acceptable
 		}
 	}
 
