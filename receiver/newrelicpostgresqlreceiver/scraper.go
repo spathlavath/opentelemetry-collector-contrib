@@ -198,13 +198,10 @@ func (s *newRelicPostgreSQLScraper) createPgBouncerConnection() (*sql.DB, error)
 	db.SetConnMaxLifetime(10 * time.Minute)
 	db.SetConnMaxIdleTime(30 * time.Second)
 
-	// Test the connection
-	ctx, cancel := context.WithTimeout(context.Background(), s.config.Timeout)
-	defer cancel()
-	if err := db.PingContext(ctx); err != nil {
-		db.Close()
-		return nil, fmt.Errorf("failed to ping PgBouncer admin database: %w", err)
-	}
+	// Note: We don't call PingContext() here because PgBouncer's admin database
+	// only supports SHOW commands (SHOW STATS, SHOW POOLS, etc.) and rejects
+	// regular SQL queries that Ping() would execute. The connection will be
+	// tested when we actually run SHOW STATS during scraping.
 
 	return db, nil
 }
