@@ -1255,6 +1255,8 @@ func (c *SQLClient) QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncer
 		var metric models.PgBouncerStatsMetric
 		err := rows.Scan(
 			&metric.Database,
+			// Total counters (must match SHOW STATS column order)
+			&metric.TotalServerAssignmentCount,
 			&metric.TotalXactCount,
 			&metric.TotalQueryCount,
 			&metric.TotalReceived,
@@ -1262,6 +1264,11 @@ func (c *SQLClient) QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncer
 			&metric.TotalXactTime,
 			&metric.TotalQueryTime,
 			&metric.TotalWaitTime,
+			&metric.TotalClientParseCount,
+			&metric.TotalServerParseCount,
+			&metric.TotalBindCount,
+			// Average metrics (must match SHOW STATS column order)
+			&metric.AvgServerAssignmentCount,
 			&metric.AvgXactCount,
 			&metric.AvgQueryCount,
 			&metric.AvgRecv,
@@ -1269,6 +1276,9 @@ func (c *SQLClient) QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncer
 			&metric.AvgXactTime,
 			&metric.AvgQueryTime,
 			&metric.AvgWaitTime,
+			&metric.AvgClientParseCount,
+			&metric.AvgServerParseCount,
+			&metric.AvgBindCount,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan PgBouncer stats row: %w", err)
