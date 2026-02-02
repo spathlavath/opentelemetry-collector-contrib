@@ -22,6 +22,24 @@ attributes:
     enum: [commit, delete, delete_multi, insert, insert_select, load, replace, replace_select, rollback, select, update, update_multi]
 
 metrics:
+  newrelicmysql.binlog.cache_disk_use:
+    enabled: true
+    description: The number of transactions that used the temporary binary log cache but exceeded binlog_cache_size and used a temporary file.
+    stability:
+      level: development
+    unit: "{transactions}"
+    gauge:
+      value_type: int
+
+  newrelicmysql.binlog.cache_use:
+    enabled: true
+    description: The number of transactions that used the binary log cache.
+    stability:
+      level: development
+    unit: "{transactions}"
+    gauge:
+      value_type: int
+
   newrelicmysql.commands:
     enabled: true
     description: The number of times each type of command has been executed.
@@ -453,6 +471,138 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.performance.handler_commit:
+    enabled: true
+    description: The number of internal COMMIT statements.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_delete:
+    enabled: true
+    description: The number of times that rows have been deleted from tables.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_prepare:
+    enabled: true
+    description: A counter for the prepare phase of two-phase commit operations.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_read_first:
+    enabled: true
+    description: The number of times the first entry in an index was read.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_read_key:
+    enabled: true
+    description: The number of requests to read a row based on a key.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_read_next:
+    enabled: true
+    description: The number of requests to read the next row in key order.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_read_prev:
+    enabled: true
+    description: The number of requests to read the previous row in key order.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_read_rnd:
+    enabled: true
+    description: The number of requests to read a row based on a fixed position.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_read_rnd_next:
+    enabled: true
+    description: The number of requests to read the next row in the data file.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_rollback:
+    enabled: true
+    description: The number of requests for a storage engine to perform a rollback operation.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_update:
+    enabled: true
+    description: The number of requests to update a row in a table.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.handler_write:
+    enabled: true
+    description: The number of requests to insert a row in a table.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
   newrelicmysql.performance.key_cache_utilization:
     enabled: true
     description: The key cache utilization percentage.
@@ -489,6 +639,17 @@ metrics:
     gauge:
       value_type: int
 
+  newrelicmysql.performance.opened_tables:
+    enabled: true
+    description: The number of tables that have been opened. If this value is large, your table_open_cache value is probably too small.
+    stability:
+      level: development
+    unit: "{tables}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
   newrelicmysql.performance.performance_schema_digest_lost:
     enabled: true
     description: Number of digest lost in performance schema.
@@ -506,6 +667,24 @@ metrics:
     stability:
       level: development
     unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.performance.qcache_free_blocks:
+    enabled: true
+    description: The number of free memory blocks in the query cache.
+    stability:
+      level: development
+    unit: "{blocks}"
+    gauge:
+      value_type: int
+
+  newrelicmysql.performance.qcache_free_memory:
+    enabled: true
+    description: The amount of free memory for the query cache.
+    stability:
+      level: development
+    unit: By
     gauge:
       value_type: int
 
@@ -553,12 +732,30 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.performance.qcache_queries_in_cache:
+    enabled: true
+    description: The number of queries registered in the query cache.
+    stability:
+      level: development
+    unit: "{queries}"
+    gauge:
+      value_type: int
+
   newrelicmysql.performance.qcache_size:
     enabled: true
     description: The amount of memory allocated for the query cache.
     stability:
       level: development
     unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.performance.qcache_total_blocks:
+    enabled: true
+    description: The total number of blocks in the query cache.
+    stability:
+      level: development
+    unit: "{blocks}"
     gauge:
       value_type: int
 
@@ -573,12 +770,131 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.performance.select_full_join:
+    enabled: true
+    description: The number of joins that perform table scans because they do not use indexes. If this value is not 0, you should carefully check the indexes of your tables.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.select_full_range_join:
+    enabled: true
+    description: The number of joins that used a range search on a reference table.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.select_range:
+    enabled: true
+    description: The number of joins that used ranges on the first table.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.select_range_check:
+    enabled: true
+    description: The number of joins without keys that check for key usage after each row. If this is not 0, you should carefully check the indexes of your tables.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.select_scan:
+    enabled: true
+    description: The number of joins that did a full scan of the first table.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
   newrelicmysql.performance.slow_queries:
     enabled: true
     description: The number of queries that have taken more than long_query_time seconds.
     stability:
       level: development
     unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.sort_merge_passes:
+    enabled: true
+    description: The number of merge passes that the sort algorithm has had to do. If this value is large, you should consider increasing the value of the sort_buffer_size system variable.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.sort_range:
+    enabled: true
+    description: The number of sorts that were done using ranges.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.sort_rows:
+    enabled: true
+    description: The number of sorted rows.
+    stability:
+      level: development
+    unit: "{rows}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.sort_scan:
+    enabled: true
+    description: The number of sorts that were done by scanning the table.
+    stability:
+      level: development
+    unit: "{operations}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.performance.table_locks_immediate:
+    enabled: true
+    description: The number of times that a request for a table lock could be granted immediately.
+    stability:
+      level: development
+    unit: "{locks}"
+    gauge:
+      value_type: int
+
+  newrelicmysql.performance.table_locks_immediate.rate:
+    enabled: true
+    description: The rate of times that a request for a table lock could be granted immediately.
+    stability:
+      level: development
+    unit: "{locks}"
     sum:
       value_type: int
       monotonic: true
@@ -613,6 +929,15 @@ metrics:
     gauge:
       value_type: int
 
+  newrelicmysql.performance.threads_cached:
+    enabled: true
+    description: The number of threads in the thread cache.
+    stability:
+      level: development
+    unit: "{threads}"
+    gauge:
+      value_type: int
+
   newrelicmysql.performance.threads_connected:
     enabled: true
     description: The number of currently open connections.
@@ -621,6 +946,17 @@ metrics:
     unit: "1"
     gauge:
       value_type: int
+
+  newrelicmysql.performance.threads_created:
+    enabled: true
+    description: The number of threads created to handle connections. If this value is large, you may want to increase the thread_cache_size value.
+    stability:
+      level: development
+    unit: "{threads}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
 
   newrelicmysql.performance.threads_running:
     enabled: true
@@ -743,8 +1079,6 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
-
-
 
 tests:
   config:

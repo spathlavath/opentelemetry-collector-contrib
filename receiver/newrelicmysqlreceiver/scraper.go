@@ -75,6 +75,15 @@ func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error 
 		replicationScraper,
 	}
 
+	if n.config.ExtraStatusMetrics {
+		extraStatusScraper, err := scrapers.NewExtraStatusScraper(n.sqlclient, n.mb, n.logger)
+		if err != nil {
+			return err
+		}
+		n.scrapers = append(n.scrapers, extraStatusScraper)
+		n.logger.Info("Extra status metrics collection enabled")
+	}
+
 	return nil
 }
 

@@ -12,6 +12,22 @@ metrics:
     enabled: false
 ```
 
+### newrelicmysql.binlog.cache_disk_use
+
+The number of transactions that used the temporary binary log cache but exceeded binlog_cache_size and used a temporary file.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Development |
+
+### newrelicmysql.binlog.cache_use
+
+The number of transactions that used the binary log cache.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Development |
+
 ### newrelicmysql.commands
 
 The number of times each type of command has been executed.
@@ -346,6 +362,102 @@ The number of internal temporary tables created by the server.
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | Development |
 
+### newrelicmysql.performance.handler_commit
+
+The number of internal COMMIT statements.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_delete
+
+The number of times that rows have been deleted from tables.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_prepare
+
+A counter for the prepare phase of two-phase commit operations.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_read_first
+
+The number of times the first entry in an index was read.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_read_key
+
+The number of requests to read a row based on a key.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_read_next
+
+The number of requests to read the next row in key order.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_read_prev
+
+The number of requests to read the previous row in key order.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_read_rnd
+
+The number of requests to read a row based on a fixed position.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_read_rnd_next
+
+The number of requests to read the next row in the data file.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_rollback
+
+The number of requests for a storage engine to perform a rollback operation.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_update
+
+The number of requests to update a row in a table.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.handler_write
+
+The number of requests to insert a row in a table.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
 ### newrelicmysql.performance.key_cache_utilization
 
 The key cache utilization percentage.
@@ -378,6 +490,14 @@ The number of tables that are currently open.
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Development |
 
+### newrelicmysql.performance.opened_tables
+
+The number of tables that have been opened. If this value is large, your table_open_cache value is probably too small.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {tables} | Sum | Int | Cumulative | true | Development |
+
 ### newrelicmysql.performance.performance_schema_digest_lost
 
 Number of digest lost in performance schema.
@@ -393,6 +513,22 @@ Current number of prepared statements.
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.qcache_free_blocks
+
+The number of free memory blocks in the query cache.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Development |
+
+### newrelicmysql.performance.qcache_free_memory
+
+The amount of free memory for the query cache.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Development |
 
 ### newrelicmysql.performance.qcache_hits
 
@@ -426,6 +562,14 @@ The number of queries that were not cached in the query cache.
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | Development |
 
+### newrelicmysql.performance.qcache_queries_in_cache
+
+The number of queries registered in the query cache.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {queries} | Gauge | Int | Development |
+
 ### newrelicmysql.performance.qcache_size
 
 The amount of memory allocated for the query cache.
@@ -433,6 +577,14 @@ The amount of memory allocated for the query cache.
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | By | Gauge | Int | Development |
+
+### newrelicmysql.performance.qcache_total_blocks
+
+The total number of blocks in the query cache.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Development |
 
 ### newrelicmysql.performance.questions
 
@@ -442,6 +594,46 @@ The number of statements executed by the server (sent by clients).
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | Development |
 
+### newrelicmysql.performance.select_full_join
+
+The number of joins that perform table scans because they do not use indexes. If this value is not 0, you should carefully check the indexes of your tables.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.select_full_range_join
+
+The number of joins that used a range search on a reference table.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.select_range
+
+The number of joins that used ranges on the first table.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.select_range_check
+
+The number of joins without keys that check for key usage after each row. If this is not 0, you should carefully check the indexes of your tables.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.select_scan
+
+The number of joins that did a full scan of the first table.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
 ### newrelicmysql.performance.slow_queries
 
 The number of queries that have taken more than long_query_time seconds.
@@ -449,6 +641,54 @@ The number of queries that have taken more than long_query_time seconds.
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | 1 | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.sort_merge_passes
+
+The number of merge passes that the sort algorithm has had to do. If this value is large, you should consider increasing the value of the sort_buffer_size system variable.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.sort_range
+
+The number of sorts that were done using ranges.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.sort_rows
+
+The number of sorted rows.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.sort_scan
+
+The number of sorts that were done by scanning the table.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.performance.table_locks_immediate
+
+The number of times that a request for a table lock could be granted immediately.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Development |
+
+### newrelicmysql.performance.table_locks_immediate.rate
+
+The rate of times that a request for a table lock could be granted immediately.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {locks} | Sum | Int | Cumulative | true | Development |
 
 ### newrelicmysql.performance.table_locks_waited
 
@@ -474,6 +714,14 @@ Thread cache size.
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Development |
 
+### newrelicmysql.performance.threads_cached
+
+The number of threads in the thread cache.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {threads} | Gauge | Int | Development |
+
 ### newrelicmysql.performance.threads_connected
 
 The number of currently open connections.
@@ -481,6 +729,14 @@ The number of currently open connections.
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Development |
+
+### newrelicmysql.performance.threads_created
+
+The number of threads created to handle connections. If this value is large, you may want to increase the thread_cache_size value.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {threads} | Sum | Int | Cumulative | true | Development |
 
 ### newrelicmysql.performance.threads_running
 
