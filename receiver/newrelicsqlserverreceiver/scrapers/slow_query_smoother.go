@@ -218,61 +218,8 @@ func (s *SlowQuerySmoother) applyExponentialSmoothing(previous, current *models.
 	smoothed := copySlowQuery(current) // Start with current query structure
 
 	// Apply EWMA to each numeric metric
-	if current.AvgCPUTimeMS != nil && previous.AvgCPUTimeMS != nil {
-		smoothed.AvgCPUTimeMS = smootherFloatPtr(α*(*current.AvgCPUTimeMS) + β*(*previous.AvgCPUTimeMS))
-	}
-
 	if current.AvgElapsedTimeMS != nil && previous.AvgElapsedTimeMS != nil {
 		smoothed.AvgElapsedTimeMS = smootherFloatPtr(α*(*current.AvgElapsedTimeMS) + β*(*previous.AvgElapsedTimeMS))
-	}
-
-	if current.AvgDiskReads != nil && previous.AvgDiskReads != nil {
-		smoothed.AvgDiskReads = smootherFloatPtr(α*(*current.AvgDiskReads) + β*(*previous.AvgDiskReads))
-	}
-
-	if current.AvgDiskWrites != nil && previous.AvgDiskWrites != nil {
-		smoothed.AvgDiskWrites = smootherFloatPtr(α*(*current.AvgDiskWrites) + β*(*previous.AvgDiskWrites))
-	}
-
-	if current.AvgRowsProcessed != nil && previous.AvgRowsProcessed != nil {
-		smoothed.AvgRowsProcessed = smootherFloatPtr(α*(*current.AvgRowsProcessed) + β*(*previous.AvgRowsProcessed))
-	}
-
-	if current.AvgLockWaitTimeMs != nil && previous.AvgLockWaitTimeMs != nil {
-		smoothed.AvgLockWaitTimeMs = smootherFloatPtr(α*(*current.AvgLockWaitTimeMs) + β*(*previous.AvgLockWaitTimeMs))
-	}
-
-	// RCA Enhancement Fields
-	if current.MinElapsedTimeMs != nil && previous.MinElapsedTimeMs != nil {
-		smoothed.MinElapsedTimeMs = smootherFloatPtr(α*(*current.MinElapsedTimeMs) + β*(*previous.MinElapsedTimeMs))
-	}
-
-	if current.MaxElapsedTimeMs != nil && previous.MaxElapsedTimeMs != nil {
-		smoothed.MaxElapsedTimeMs = smootherFloatPtr(α*(*current.MaxElapsedTimeMs) + β*(*previous.MaxElapsedTimeMs))
-	}
-
-	if current.LastElapsedTimeMs != nil && previous.LastElapsedTimeMs != nil {
-		smoothed.LastElapsedTimeMs = smootherFloatPtr(α*(*current.LastElapsedTimeMs) + β*(*previous.LastElapsedTimeMs))
-	}
-
-	if current.LastGrantKB != nil && previous.LastGrantKB != nil {
-		smoothed.LastGrantKB = smootherFloatPtr(α*(*current.LastGrantKB) + β*(*previous.LastGrantKB))
-	}
-
-	if current.LastUsedGrantKB != nil && previous.LastUsedGrantKB != nil {
-		smoothed.LastUsedGrantKB = smootherFloatPtr(α*(*current.LastUsedGrantKB) + β*(*previous.LastUsedGrantKB))
-	}
-
-	if current.LastSpills != nil && previous.LastSpills != nil {
-		smoothed.LastSpills = smootherFloatPtr(α*(*current.LastSpills) + β*(*previous.LastSpills))
-	}
-
-	if current.MaxSpills != nil && previous.MaxSpills != nil {
-		smoothed.MaxSpills = smootherFloatPtr(α*(*current.MaxSpills) + β*(*previous.MaxSpills))
-	}
-
-	if current.LastDOP != nil && previous.LastDOP != nil {
-		smoothed.LastDOP = smootherFloatPtr(α*(*current.LastDOP) + β*(*previous.LastDOP))
 	}
 
 	// For execution count, use simple addition (cumulative)
@@ -341,64 +288,17 @@ func copySlowQuery(src *models.SlowQuery) *models.SlowQuery {
 	if src.DatabaseName != nil {
 		dst.DatabaseName = smootherStringPtr(*src.DatabaseName)
 	}
-	if src.SchemaName != nil {
-		dst.SchemaName = smootherStringPtr(*src.SchemaName)
-	}
 	if src.LastExecutionTimestamp != nil {
 		dst.LastExecutionTimestamp = smootherStringPtr(*src.LastExecutionTimestamp)
 	}
 	if src.ExecutionCount != nil {
 		dst.ExecutionCount = smootherInt64Ptr(*src.ExecutionCount)
 	}
-	if src.AvgCPUTimeMS != nil {
-		dst.AvgCPUTimeMS = smootherFloatPtr(*src.AvgCPUTimeMS)
-	}
 	if src.AvgElapsedTimeMS != nil {
 		dst.AvgElapsedTimeMS = smootherFloatPtr(*src.AvgElapsedTimeMS)
 	}
-	if src.AvgDiskReads != nil {
-		dst.AvgDiskReads = smootherFloatPtr(*src.AvgDiskReads)
-	}
-	if src.AvgDiskWrites != nil {
-		dst.AvgDiskWrites = smootherFloatPtr(*src.AvgDiskWrites)
-	}
-	if src.AvgRowsProcessed != nil {
-		dst.AvgRowsProcessed = smootherFloatPtr(*src.AvgRowsProcessed)
-	}
-	if src.AvgLockWaitTimeMs != nil {
-		dst.AvgLockWaitTimeMs = smootherFloatPtr(*src.AvgLockWaitTimeMs)
-	}
-	if src.StatementType != nil {
-		dst.StatementType = smootherStringPtr(*src.StatementType)
-	}
 	if src.CollectionTimestamp != nil {
 		dst.CollectionTimestamp = smootherStringPtr(*src.CollectionTimestamp)
-	}
-
-	// RCA Enhancement Fields
-	if src.MinElapsedTimeMs != nil {
-		dst.MinElapsedTimeMs = smootherFloatPtr(*src.MinElapsedTimeMs)
-	}
-	if src.MaxElapsedTimeMs != nil {
-		dst.MaxElapsedTimeMs = smootherFloatPtr(*src.MaxElapsedTimeMs)
-	}
-	if src.LastElapsedTimeMs != nil {
-		dst.LastElapsedTimeMs = smootherFloatPtr(*src.LastElapsedTimeMs)
-	}
-	if src.LastGrantKB != nil {
-		dst.LastGrantKB = smootherFloatPtr(*src.LastGrantKB)
-	}
-	if src.LastUsedGrantKB != nil {
-		dst.LastUsedGrantKB = smootherFloatPtr(*src.LastUsedGrantKB)
-	}
-	if src.LastSpills != nil {
-		dst.LastSpills = smootherFloatPtr(*src.LastSpills)
-	}
-	if src.MaxSpills != nil {
-		dst.MaxSpills = smootherFloatPtr(*src.MaxSpills)
-	}
-	if src.LastDOP != nil {
-		dst.LastDOP = smootherFloatPtr(*src.LastDOP)
 	}
 
 	return dst

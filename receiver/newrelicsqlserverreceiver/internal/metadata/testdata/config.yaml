@@ -3,21 +3,7 @@ all_set:
   metrics:
     sqlserver.access.page_splits_per_sec:
       enabled: true
-    sqlserver.activequery.cpu_time_ms:
-      enabled: true
-    sqlserver.activequery.elapsed_time_ms:
-      enabled: true
-    sqlserver.activequery.granted_query_memory_pages:
-      enabled: true
-    sqlserver.activequery.logical_reads:
-      enabled: true
-    sqlserver.activequery.reads:
-      enabled: true
-    sqlserver.activequery.row_count:
-      enabled: true
     sqlserver.activequery.wait_time_seconds:
-      enabled: true
-    sqlserver.activequery.writes:
       enabled: true
     sqlserver.buffer.cache_hit_ratio:
       enabled: true
@@ -100,6 +86,8 @@ all_set:
     sqlserver.database.size.total_mb:
       enabled: true
     sqlserver.database.transactions.active:
+      enabled: true
+    sqlserver.execution.plan:
       enabled: true
     sqlserver.failover_cluster.ag_cluster_type:
       enabled: true
@@ -223,19 +211,9 @@ all_set:
       enabled: true
     sqlserver.plan.avg_elapsed_time_ms:
       enabled: true
-    sqlserver.plan.total_elapsed_time_ms:
-      enabled: true
     sqlserver.security.server_principals_count:
       enabled: true
     sqlserver.security.server_role_members_count:
-      enabled: true
-    sqlserver.slowquery.avg_disk_reads:
-      enabled: true
-    sqlserver.slowquery.avg_disk_writes:
-      enabled: true
-    sqlserver.slowquery.avg_rows_processed:
-      enabled: true
-    sqlserver.slowquery.historical_avg_cpu_time_ms:
       enabled: true
     sqlserver.slowquery.historical_avg_elapsed_time_ms:
       enabled: true
@@ -245,23 +223,7 @@ all_set:
       enabled: true
     sqlserver.slowquery.interval_execution_count:
       enabled: true
-    sqlserver.slowquery.last_dop:
-      enabled: true
-    sqlserver.slowquery.last_elapsed_time_ms:
-      enabled: true
-    sqlserver.slowquery.last_grant_kb:
-      enabled: true
-    sqlserver.slowquery.last_spills:
-      enabled: true
-    sqlserver.slowquery.last_used_grant_kb:
-      enabled: true
-    sqlserver.slowquery.max_elapsed_time_ms:
-      enabled: true
-    sqlserver.slowquery.max_spills:
-      enabled: true
-    sqlserver.slowquery.min_elapsed_time_ms:
-      enabled: true
-    sqlserver.slowquery.query_text:
+    sqlserver.slowquery.query_details:
       enabled: true
     sqlserver.stats.connections:
       enabled: true
@@ -340,9 +302,6 @@ all_set:
     sqlserver.wait_stats.wait_time_ms:
       enabled: true
     sqlserver.wait_stats.waiting_tasks_count:
-      enabled: true
-  events:
-    sqlserver.active_query_execution_plan:
       enabled: true
   resource_attributes:
     database_name:
@@ -359,21 +318,7 @@ none_set:
   metrics:
     sqlserver.access.page_splits_per_sec:
       enabled: false
-    sqlserver.activequery.cpu_time_ms:
-      enabled: false
-    sqlserver.activequery.elapsed_time_ms:
-      enabled: false
-    sqlserver.activequery.granted_query_memory_pages:
-      enabled: false
-    sqlserver.activequery.logical_reads:
-      enabled: false
-    sqlserver.activequery.reads:
-      enabled: false
-    sqlserver.activequery.row_count:
-      enabled: false
     sqlserver.activequery.wait_time_seconds:
-      enabled: false
-    sqlserver.activequery.writes:
       enabled: false
     sqlserver.buffer.cache_hit_ratio:
       enabled: false
@@ -456,6 +401,8 @@ none_set:
     sqlserver.database.size.total_mb:
       enabled: false
     sqlserver.database.transactions.active:
+      enabled: false
+    sqlserver.execution.plan:
       enabled: false
     sqlserver.failover_cluster.ag_cluster_type:
       enabled: false
@@ -579,19 +526,9 @@ none_set:
       enabled: false
     sqlserver.plan.avg_elapsed_time_ms:
       enabled: false
-    sqlserver.plan.total_elapsed_time_ms:
-      enabled: false
     sqlserver.security.server_principals_count:
       enabled: false
     sqlserver.security.server_role_members_count:
-      enabled: false
-    sqlserver.slowquery.avg_disk_reads:
-      enabled: false
-    sqlserver.slowquery.avg_disk_writes:
-      enabled: false
-    sqlserver.slowquery.avg_rows_processed:
-      enabled: false
-    sqlserver.slowquery.historical_avg_cpu_time_ms:
       enabled: false
     sqlserver.slowquery.historical_avg_elapsed_time_ms:
       enabled: false
@@ -601,23 +538,7 @@ none_set:
       enabled: false
     sqlserver.slowquery.interval_execution_count:
       enabled: false
-    sqlserver.slowquery.last_dop:
-      enabled: false
-    sqlserver.slowquery.last_elapsed_time_ms:
-      enabled: false
-    sqlserver.slowquery.last_grant_kb:
-      enabled: false
-    sqlserver.slowquery.last_spills:
-      enabled: false
-    sqlserver.slowquery.last_used_grant_kb:
-      enabled: false
-    sqlserver.slowquery.max_elapsed_time_ms:
-      enabled: false
-    sqlserver.slowquery.max_spills:
-      enabled: false
-    sqlserver.slowquery.min_elapsed_time_ms:
-      enabled: false
-    sqlserver.slowquery.query_text:
+    sqlserver.slowquery.query_details:
       enabled: false
     sqlserver.stats.connections:
       enabled: false
@@ -696,9 +617,6 @@ none_set:
     sqlserver.wait_stats.wait_time_ms:
       enabled: false
     sqlserver.wait_stats.waiting_tasks_count:
-      enabled: false
-  events:
-    sqlserver.active_query_execution_plan:
       enabled: false
   resource_attributes:
     database_name:
@@ -717,31 +635,21 @@ filter_set_include:
       enabled: true
       metrics_include:
         - regexp: ".*"
-      events_include:
-        - regexp: ".*"
     db.system:
       enabled: true
       metrics_include:
-        - regexp: ".*"
-      events_include:
         - regexp: ".*"
     engine_edition:
       enabled: true
       metrics_include:
         - regexp: ".*"
-      events_include:
-        - regexp: ".*"
     server.address:
       enabled: true
       metrics_include:
         - regexp: ".*"
-      events_include:
-        - regexp: ".*"
     server.port:
       enabled: true
       metrics_include:
-        - regexp: ".*"
-      events_include:
         - regexp: ".*"
 filter_set_exclude:
   resource_attributes:
@@ -749,29 +657,19 @@ filter_set_exclude:
       enabled: true
       metrics_exclude:
         - strict: "database_name-val"
-      events_exclude:
-        - strict: "database_name-val"
     db.system:
       enabled: true
       metrics_exclude:
-        - strict: "db.system-val"
-      events_exclude:
         - strict: "db.system-val"
     engine_edition:
       enabled: true
       metrics_exclude:
         - strict: "engine_edition-val"
-      events_exclude:
-        - strict: "engine_edition-val"
     server.address:
       enabled: true
       metrics_exclude:
         - strict: "server.address-val"
-      events_exclude:
-        - strict: "server.address-val"
     server.port:
       enabled: true
       metrics_exclude:
-        - strict: "server.port-val"
-      events_exclude:
         - strict: "server.port-val"

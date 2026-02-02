@@ -29,14 +29,7 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 // MetricsConfig provides config for newrelicsqlserver metrics.
 type MetricsConfig struct {
 	SqlserverAccessPageSplitsPerSec                           MetricConfig `mapstructure:"sqlserver.access.page_splits_per_sec"`
-	SqlserverActivequeryCPUTimeMs                             MetricConfig `mapstructure:"sqlserver.activequery.cpu_time_ms"`
-	SqlserverActivequeryElapsedTimeMs                         MetricConfig `mapstructure:"sqlserver.activequery.elapsed_time_ms"`
-	SqlserverActivequeryGrantedQueryMemoryPages               MetricConfig `mapstructure:"sqlserver.activequery.granted_query_memory_pages"`
-	SqlserverActivequeryLogicalReads                          MetricConfig `mapstructure:"sqlserver.activequery.logical_reads"`
-	SqlserverActivequeryReads                                 MetricConfig `mapstructure:"sqlserver.activequery.reads"`
-	SqlserverActivequeryRowCount                              MetricConfig `mapstructure:"sqlserver.activequery.row_count"`
 	SqlserverActivequeryWaitTimeSeconds                       MetricConfig `mapstructure:"sqlserver.activequery.wait_time_seconds"`
-	SqlserverActivequeryWrites                                MetricConfig `mapstructure:"sqlserver.activequery.writes"`
 	SqlserverBufferCacheHitRatio                              MetricConfig `mapstructure:"sqlserver.buffer.cache_hit_ratio"`
 	SqlserverBufferCheckpointPagesPerSec                      MetricConfig `mapstructure:"sqlserver.buffer.checkpoint_pages_per_sec"`
 	SqlserverBufferPageLifeExpectancy                         MetricConfig `mapstructure:"sqlserver.buffer.page_life_expectancy"`
@@ -78,6 +71,7 @@ type MetricsConfig struct {
 	SqlserverDatabaseSizeDataMb                               MetricConfig `mapstructure:"sqlserver.database.size.data_mb"`
 	SqlserverDatabaseSizeTotalMb                              MetricConfig `mapstructure:"sqlserver.database.size.total_mb"`
 	SqlserverDatabaseTransactionsActive                       MetricConfig `mapstructure:"sqlserver.database.transactions.active"`
+	SqlserverExecutionPlan                                    MetricConfig `mapstructure:"sqlserver.execution.plan"`
 	SqlserverFailoverClusterAgClusterType                     MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_cluster_type"`
 	SqlserverFailoverClusterAgFailureConditionLevel           MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_failure_condition_level"`
 	SqlserverFailoverClusterAgHealthCheckTimeout              MetricConfig `mapstructure:"sqlserver.failover_cluster.ag_health_check_timeout"`
@@ -139,26 +133,13 @@ type MetricsConfig struct {
 	SqlserverMemoryTarget                                     MetricConfig `mapstructure:"sqlserver.memory.target"`
 	SqlserverMemoryTotal                                      MetricConfig `mapstructure:"sqlserver.memory.total"`
 	SqlserverPlanAvgElapsedTimeMs                             MetricConfig `mapstructure:"sqlserver.plan.avg_elapsed_time_ms"`
-	SqlserverPlanTotalElapsedTimeMs                           MetricConfig `mapstructure:"sqlserver.plan.total_elapsed_time_ms"`
 	SqlserverSecurityServerPrincipalsCount                    MetricConfig `mapstructure:"sqlserver.security.server_principals_count"`
 	SqlserverSecurityServerRoleMembersCount                   MetricConfig `mapstructure:"sqlserver.security.server_role_members_count"`
-	SqlserverSlowqueryAvgDiskReads                            MetricConfig `mapstructure:"sqlserver.slowquery.avg_disk_reads"`
-	SqlserverSlowqueryAvgDiskWrites                           MetricConfig `mapstructure:"sqlserver.slowquery.avg_disk_writes"`
-	SqlserverSlowqueryAvgRowsProcessed                        MetricConfig `mapstructure:"sqlserver.slowquery.avg_rows_processed"`
-	SqlserverSlowqueryHistoricalAvgCPUTimeMs                  MetricConfig `mapstructure:"sqlserver.slowquery.historical_avg_cpu_time_ms"`
 	SqlserverSlowqueryHistoricalAvgElapsedTimeMs              MetricConfig `mapstructure:"sqlserver.slowquery.historical_avg_elapsed_time_ms"`
 	SqlserverSlowqueryHistoricalExecutionCount                MetricConfig `mapstructure:"sqlserver.slowquery.historical_execution_count"`
 	SqlserverSlowqueryIntervalAvgElapsedTimeMs                MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_elapsed_time_ms"`
 	SqlserverSlowqueryIntervalExecutionCount                  MetricConfig `mapstructure:"sqlserver.slowquery.interval_execution_count"`
-	SqlserverSlowqueryLastDop                                 MetricConfig `mapstructure:"sqlserver.slowquery.last_dop"`
-	SqlserverSlowqueryLastElapsedTimeMs                       MetricConfig `mapstructure:"sqlserver.slowquery.last_elapsed_time_ms"`
-	SqlserverSlowqueryLastGrantKb                             MetricConfig `mapstructure:"sqlserver.slowquery.last_grant_kb"`
-	SqlserverSlowqueryLastSpills                              MetricConfig `mapstructure:"sqlserver.slowquery.last_spills"`
-	SqlserverSlowqueryLastUsedGrantKb                         MetricConfig `mapstructure:"sqlserver.slowquery.last_used_grant_kb"`
-	SqlserverSlowqueryMaxElapsedTimeMs                        MetricConfig `mapstructure:"sqlserver.slowquery.max_elapsed_time_ms"`
-	SqlserverSlowqueryMaxSpills                               MetricConfig `mapstructure:"sqlserver.slowquery.max_spills"`
-	SqlserverSlowqueryMinElapsedTimeMs                        MetricConfig `mapstructure:"sqlserver.slowquery.min_elapsed_time_ms"`
-	SqlserverSlowqueryQueryText                               MetricConfig `mapstructure:"sqlserver.slowquery.query_text"`
+	SqlserverSlowqueryQueryDetails                            MetricConfig `mapstructure:"sqlserver.slowquery.query_details"`
 	SqlserverStatsConnections                                 MetricConfig `mapstructure:"sqlserver.stats.connections"`
 	SqlserverStatsDeadlocksPerSec                             MetricConfig `mapstructure:"sqlserver.stats.deadlocks_per_sec"`
 	SqlserverStatsKillConnectionErrorsPerSec                  MetricConfig `mapstructure:"sqlserver.stats.kill_connection_errors_per_sec"`
@@ -205,28 +186,7 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverAccessPageSplitsPerSec: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverActivequeryCPUTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryGrantedQueryMemoryPages: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryLogicalReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryRowCount: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverActivequeryWaitTimeSeconds: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverActivequeryWrites: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverBufferCacheHitRatio: MetricConfig{
@@ -350,6 +310,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverDatabaseTransactionsActive: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverExecutionPlan: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverFailoverClusterAgClusterType: MetricConfig{
@@ -535,25 +498,10 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverPlanAvgElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverPlanTotalElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverSecurityServerPrincipalsCount: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSecurityServerRoleMembersCount: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryAvgDiskReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryAvgDiskWrites: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryAvgRowsProcessed: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryHistoricalAvgCPUTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSlowqueryHistoricalAvgElapsedTimeMs: MetricConfig{
@@ -568,31 +516,7 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverSlowqueryIntervalExecutionCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryLastDop: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastGrantKb: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastSpills: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryLastUsedGrantKb: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryMaxElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryMaxSpills: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryMinElapsedTimeMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryQueryText: MetricConfig{
+		SqlserverSlowqueryQueryDetails: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverStatsConnections: MetricConfig{
@@ -715,38 +639,6 @@ func DefaultMetricsConfig() MetricsConfig {
 	}
 }
 
-// EventConfig provides common config for a particular event.
-type EventConfig struct {
-	Enabled bool `mapstructure:"enabled"`
-
-	enabledSetByUser bool
-}
-
-func (ec *EventConfig) Unmarshal(parser *confmap.Conf) error {
-	if parser == nil {
-		return nil
-	}
-	err := parser.Unmarshal(ec)
-	if err != nil {
-		return err
-	}
-	ec.enabledSetByUser = parser.IsSet("enabled")
-	return nil
-}
-
-// EventsConfig provides config for newrelicsqlserver events.
-type EventsConfig struct {
-	SqlserverActiveQueryExecutionPlan EventConfig `mapstructure:"sqlserver.active_query_execution_plan"`
-}
-
-func DefaultEventsConfig() EventsConfig {
-	return EventsConfig{
-		SqlserverActiveQueryExecutionPlan: EventConfig{
-			Enabled: true,
-		},
-	}
-}
-
 // ResourceAttributeConfig provides common config for a particular resource attribute.
 type ResourceAttributeConfig struct {
 	Enabled bool `mapstructure:"enabled"`
@@ -757,13 +649,6 @@ type ResourceAttributeConfig struct {
 	// If the list is not empty, metrics with matching resource attribute values will not be emitted.
 	// MetricsInclude has higher priority than MetricsExclude.
 	MetricsExclude []filter.Config `mapstructure:"metrics_exclude"`
-	// Experimental: EventsInclude defines a list of filters for attribute values.
-	// If the list is not empty, only events with matching resource attribute values will be emitted.
-	EventsInclude []filter.Config `mapstructure:"events_include"`
-	// Experimental: EventsExclude defines a list of filters for attribute values.
-	// If the list is not empty, events with matching resource attribute values will not be emitted.
-	// EventsInclude has higher priority than EventsExclude.
-	EventsExclude []filter.Config `mapstructure:"events_exclude"`
 
 	enabledSetByUser bool
 }
@@ -818,19 +703,6 @@ type MetricsBuilderConfig struct {
 func DefaultMetricsBuilderConfig() MetricsBuilderConfig {
 	return MetricsBuilderConfig{
 		Metrics:            DefaultMetricsConfig(),
-		ResourceAttributes: DefaultResourceAttributesConfig(),
-	}
-}
-
-// LogsBuilderConfig is a configuration for newrelicsqlserver logs builder.
-type LogsBuilderConfig struct {
-	Events             EventsConfig             `mapstructure:"events"`
-	ResourceAttributes ResourceAttributesConfig `mapstructure:"resource_attributes"`
-}
-
-func DefaultLogsBuilderConfig() LogsBuilderConfig {
-	return LogsBuilderConfig{
-		Events:             DefaultEventsConfig(),
 		ResourceAttributes: DefaultResourceAttributesConfig(),
 	}
 }

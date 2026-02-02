@@ -28,14 +28,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					SqlserverAccessPageSplitsPerSec:                           MetricConfig{Enabled: true},
-					SqlserverActivequeryCPUTimeMs:                             MetricConfig{Enabled: true},
-					SqlserverActivequeryElapsedTimeMs:                         MetricConfig{Enabled: true},
-					SqlserverActivequeryGrantedQueryMemoryPages:               MetricConfig{Enabled: true},
-					SqlserverActivequeryLogicalReads:                          MetricConfig{Enabled: true},
-					SqlserverActivequeryReads:                                 MetricConfig{Enabled: true},
-					SqlserverActivequeryRowCount:                              MetricConfig{Enabled: true},
 					SqlserverActivequeryWaitTimeSeconds:                       MetricConfig{Enabled: true},
-					SqlserverActivequeryWrites:                                MetricConfig{Enabled: true},
 					SqlserverBufferCacheHitRatio:                              MetricConfig{Enabled: true},
 					SqlserverBufferCheckpointPagesPerSec:                      MetricConfig{Enabled: true},
 					SqlserverBufferPageLifeExpectancy:                         MetricConfig{Enabled: true},
@@ -77,6 +70,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					SqlserverDatabaseSizeDataMb:                               MetricConfig{Enabled: true},
 					SqlserverDatabaseSizeTotalMb:                              MetricConfig{Enabled: true},
 					SqlserverDatabaseTransactionsActive:                       MetricConfig{Enabled: true},
+					SqlserverExecutionPlan:                                    MetricConfig{Enabled: true},
 					SqlserverFailoverClusterAgClusterType:                     MetricConfig{Enabled: true},
 					SqlserverFailoverClusterAgFailureConditionLevel:           MetricConfig{Enabled: true},
 					SqlserverFailoverClusterAgHealthCheckTimeout:              MetricConfig{Enabled: true},
@@ -138,26 +132,13 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					SqlserverMemoryTarget:                                     MetricConfig{Enabled: true},
 					SqlserverMemoryTotal:                                      MetricConfig{Enabled: true},
 					SqlserverPlanAvgElapsedTimeMs:                             MetricConfig{Enabled: true},
-					SqlserverPlanTotalElapsedTimeMs:                           MetricConfig{Enabled: true},
 					SqlserverSecurityServerPrincipalsCount:                    MetricConfig{Enabled: true},
 					SqlserverSecurityServerRoleMembersCount:                   MetricConfig{Enabled: true},
-					SqlserverSlowqueryAvgDiskReads:                            MetricConfig{Enabled: true},
-					SqlserverSlowqueryAvgDiskWrites:                           MetricConfig{Enabled: true},
-					SqlserverSlowqueryAvgRowsProcessed:                        MetricConfig{Enabled: true},
-					SqlserverSlowqueryHistoricalAvgCPUTimeMs:                  MetricConfig{Enabled: true},
 					SqlserverSlowqueryHistoricalAvgElapsedTimeMs:              MetricConfig{Enabled: true},
 					SqlserverSlowqueryHistoricalExecutionCount:                MetricConfig{Enabled: true},
 					SqlserverSlowqueryIntervalAvgElapsedTimeMs:                MetricConfig{Enabled: true},
 					SqlserverSlowqueryIntervalExecutionCount:                  MetricConfig{Enabled: true},
-					SqlserverSlowqueryLastDop:                                 MetricConfig{Enabled: true},
-					SqlserverSlowqueryLastElapsedTimeMs:                       MetricConfig{Enabled: true},
-					SqlserverSlowqueryLastGrantKb:                             MetricConfig{Enabled: true},
-					SqlserverSlowqueryLastSpills:                              MetricConfig{Enabled: true},
-					SqlserverSlowqueryLastUsedGrantKb:                         MetricConfig{Enabled: true},
-					SqlserverSlowqueryMaxElapsedTimeMs:                        MetricConfig{Enabled: true},
-					SqlserverSlowqueryMaxSpills:                               MetricConfig{Enabled: true},
-					SqlserverSlowqueryMinElapsedTimeMs:                        MetricConfig{Enabled: true},
-					SqlserverSlowqueryQueryText:                               MetricConfig{Enabled: true},
+					SqlserverSlowqueryQueryDetails:                            MetricConfig{Enabled: true},
 					SqlserverStatsConnections:                                 MetricConfig{Enabled: true},
 					SqlserverStatsDeadlocksPerSec:                             MetricConfig{Enabled: true},
 					SqlserverStatsKillConnectionErrorsPerSec:                  MetricConfig{Enabled: true},
@@ -212,14 +193,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 			want: MetricsBuilderConfig{
 				Metrics: MetricsConfig{
 					SqlserverAccessPageSplitsPerSec:                           MetricConfig{Enabled: false},
-					SqlserverActivequeryCPUTimeMs:                             MetricConfig{Enabled: false},
-					SqlserverActivequeryElapsedTimeMs:                         MetricConfig{Enabled: false},
-					SqlserverActivequeryGrantedQueryMemoryPages:               MetricConfig{Enabled: false},
-					SqlserverActivequeryLogicalReads:                          MetricConfig{Enabled: false},
-					SqlserverActivequeryReads:                                 MetricConfig{Enabled: false},
-					SqlserverActivequeryRowCount:                              MetricConfig{Enabled: false},
 					SqlserverActivequeryWaitTimeSeconds:                       MetricConfig{Enabled: false},
-					SqlserverActivequeryWrites:                                MetricConfig{Enabled: false},
 					SqlserverBufferCacheHitRatio:                              MetricConfig{Enabled: false},
 					SqlserverBufferCheckpointPagesPerSec:                      MetricConfig{Enabled: false},
 					SqlserverBufferPageLifeExpectancy:                         MetricConfig{Enabled: false},
@@ -261,6 +235,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					SqlserverDatabaseSizeDataMb:                               MetricConfig{Enabled: false},
 					SqlserverDatabaseSizeTotalMb:                              MetricConfig{Enabled: false},
 					SqlserverDatabaseTransactionsActive:                       MetricConfig{Enabled: false},
+					SqlserverExecutionPlan:                                    MetricConfig{Enabled: false},
 					SqlserverFailoverClusterAgClusterType:                     MetricConfig{Enabled: false},
 					SqlserverFailoverClusterAgFailureConditionLevel:           MetricConfig{Enabled: false},
 					SqlserverFailoverClusterAgHealthCheckTimeout:              MetricConfig{Enabled: false},
@@ -322,26 +297,13 @@ func TestMetricsBuilderConfig(t *testing.T) {
 					SqlserverMemoryTarget:                                     MetricConfig{Enabled: false},
 					SqlserverMemoryTotal:                                      MetricConfig{Enabled: false},
 					SqlserverPlanAvgElapsedTimeMs:                             MetricConfig{Enabled: false},
-					SqlserverPlanTotalElapsedTimeMs:                           MetricConfig{Enabled: false},
 					SqlserverSecurityServerPrincipalsCount:                    MetricConfig{Enabled: false},
 					SqlserverSecurityServerRoleMembersCount:                   MetricConfig{Enabled: false},
-					SqlserverSlowqueryAvgDiskReads:                            MetricConfig{Enabled: false},
-					SqlserverSlowqueryAvgDiskWrites:                           MetricConfig{Enabled: false},
-					SqlserverSlowqueryAvgRowsProcessed:                        MetricConfig{Enabled: false},
-					SqlserverSlowqueryHistoricalAvgCPUTimeMs:                  MetricConfig{Enabled: false},
 					SqlserverSlowqueryHistoricalAvgElapsedTimeMs:              MetricConfig{Enabled: false},
 					SqlserverSlowqueryHistoricalExecutionCount:                MetricConfig{Enabled: false},
 					SqlserverSlowqueryIntervalAvgElapsedTimeMs:                MetricConfig{Enabled: false},
 					SqlserverSlowqueryIntervalExecutionCount:                  MetricConfig{Enabled: false},
-					SqlserverSlowqueryLastDop:                                 MetricConfig{Enabled: false},
-					SqlserverSlowqueryLastElapsedTimeMs:                       MetricConfig{Enabled: false},
-					SqlserverSlowqueryLastGrantKb:                             MetricConfig{Enabled: false},
-					SqlserverSlowqueryLastSpills:                              MetricConfig{Enabled: false},
-					SqlserverSlowqueryLastUsedGrantKb:                         MetricConfig{Enabled: false},
-					SqlserverSlowqueryMaxElapsedTimeMs:                        MetricConfig{Enabled: false},
-					SqlserverSlowqueryMaxSpills:                               MetricConfig{Enabled: false},
-					SqlserverSlowqueryMinElapsedTimeMs:                        MetricConfig{Enabled: false},
-					SqlserverSlowqueryQueryText:                               MetricConfig{Enabled: false},
+					SqlserverSlowqueryQueryDetails:                            MetricConfig{Enabled: false},
 					SqlserverStatsConnections:                                 MetricConfig{Enabled: false},
 					SqlserverStatsDeadlocksPerSec:                             MetricConfig{Enabled: false},
 					SqlserverStatsKillConnectionErrorsPerSec:                  MetricConfig{Enabled: false},
@@ -407,16 +369,6 @@ func loadMetricsBuilderConfig(t *testing.T, name string) MetricsBuilderConfig {
 	sub, err := cm.Sub(name)
 	require.NoError(t, err)
 	cfg := DefaultMetricsBuilderConfig()
-	require.NoError(t, sub.Unmarshal(&cfg, confmap.WithIgnoreUnused()))
-	return cfg
-}
-
-func loadLogsBuilderConfig(t *testing.T, name string) LogsBuilderConfig {
-	cm, err := confmaptest.LoadConf(filepath.Join("testdata", "config.yaml"))
-	require.NoError(t, err)
-	sub, err := cm.Sub(name)
-	require.NoError(t, err)
-	cfg := DefaultLogsBuilderConfig()
 	require.NoError(t, sub.Unmarshal(&cfg, confmap.WithIgnoreUnused()))
 	return cfg
 }

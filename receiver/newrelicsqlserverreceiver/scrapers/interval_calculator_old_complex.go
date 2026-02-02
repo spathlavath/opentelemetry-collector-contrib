@@ -41,7 +41,6 @@ type QueryState struct {
 	// Previous values from DMV
 	PrevExecutionCount     int64
 	PrevTotalElapsedTimeUs int64 // microseconds from DMV
-	PrevTotalCPUTimeUs     int64 // microseconds from DMV
 
 	// Timestamps
 	LastSeenTimestamp  time.Time
@@ -52,7 +51,6 @@ type QueryState struct {
 type IntervalMetrics struct {
 	// Primary metric - interval-based average
 	IntervalAvgElapsedTimeMs float64
-	IntervalAvgCPUTimeMs     float64
 	IntervalExecutionCount   int64
 
 	// Detection metadata
@@ -112,7 +110,6 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 	// Get current values from query
 	currentExecCount := getInt64ValueFromQuery(query.ExecutionCount)
 	currentTotalElapsedUs := int64(getFloat64ValueFromQuery(query.AvgElapsedTimeMS) * float64(currentExecCount) * 1000.0) // Convert ms to μs
-	currentTotalCPUUs := int64(getFloat64ValueFromQuery(query.AvgCPUTimeMS) * float64(currentExecCount) * 1000.0)         // Convert ms to μs
 
 	// Last execution time (for staleness check)
 	lastExecTime := query.LastExecutionTimestamp
@@ -134,18 +131,15 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 		ic.stateCache[queryID] = &QueryState{
 			PrevExecutionCount:     currentExecCount,
 			PrevTotalElapsedTimeUs: currentTotalElapsedUs,
-			PrevTotalCPUTimeUs:     currentTotalCPUUs,
 			FirstSeenTimestamp:     now,
 			LastSeenTimestamp:      now,
 		}
 
-		// Use last_elapsed_time as proxy (most recent execution)
-		lastElapsedMs := getFloat64ValueFromQuery(query.LastElapsedTimeMs)
+		// Use cumulative average for initial observation
 		cumulativeAvgMs := getFloat64ValueFromQuery(query.AvgElapsedTimeMS)
 
 		return &IntervalMetrics{
-			IntervalAvgElapsedTimeMs:   lastElapsedMs,
-			IntervalAvgCPUTimeMs:       getFloat64ValueFromQuery(query.AvgCPUTimeMS),
+			IntervalAvgElapsedTimeMs:   cumulativeAvgMs,
 			IntervalExecutionCount:     currentExecCount,
 			DetectionMethod:            "initial_observation",
 			IsInitialObservation:       true,
@@ -167,17 +161,14 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 		ic.stateCache[queryID] = &QueryState{
 			PrevExecutionCount:     currentExecCount,
 			PrevTotalElapsedTimeUs: currentTotalElapsedUs,
-			PrevTotalCPUTimeUs:     currentTotalCPUUs,
 			FirstSeenTimestamp:     now, // Reset first seen
 			LastSeenTimestamp:      now,
 		}
 
-		lastElapsedMs := getFloat64ValueFromQuery(query.LastElapsedTimeMs)
 		cumulativeAvgMs := getFloat64ValueFromQuery(query.AvgElapsedTimeMS)
 
 		return &IntervalMetrics{
-			IntervalAvgElapsedTimeMs:   lastElapsedMs,
-			IntervalAvgCPUTimeMs:       getFloat64ValueFromQuery(query.AvgCPUTimeMS),
+			IntervalAvgElapsedTimeMs:   cumulativeAvgMs,
 			IntervalExecutionCount:     currentExecCount,
 			DetectionMethod:            "plan_cache_reset",
 			IsInitialObservation:       true, // Treat as initial
@@ -190,7 +181,6 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 	// Calculate deltas
 	deltaExecCount := currentExecCount - state.PrevExecutionCount
 	deltaElapsedUs := currentTotalElapsedUs - state.PrevTotalElapsedTimeUs
-	deltaCPUUs := currentTotalCPUUs - state.PrevTotalCPUTimeUs
 
 	// SCENARIO 2: No New Executions in Interval
 	// Condition: delta_execution_count == 0
@@ -213,7 +203,6 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 		// Return stale metric (caller can decide whether to emit)
 		return &IntervalMetrics{
 			IntervalAvgElapsedTimeMs:   0,
-			IntervalAvgCPUTimeMs:       0,
 			IntervalExecutionCount:     0,
 			DetectionMethod:            "stale",
 			IsInitialObservation:       false,
@@ -236,25 +225,13 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 			intervalAvgElapsedMs = float64(deltaElapsedUs) / float64(deltaExecCount) / 1000.0 // Convert μs to ms
 		}
 
-		intervalAvgCPUMs := 0.0
-		if deltaExecCount > 0 {
-			intervalAvgCPUMs = float64(deltaCPUUs) / float64(deltaExecCount) / 1000.0 // Convert μs to ms
-		}
-
-		// Use hybrid approach: weighted average of interval_avg and last_elapsed_time
-		lastElapsedMs := getFloat64ValueFromQuery(query.LastElapsedTimeMs)
-		hybridWeight := 0.6 // 60% interval avg, 40% last elapsed
-		hybridAvgElapsedMs := hybridWeight*intervalAvgElapsedMs + (1-hybridWeight)*lastElapsedMs
-
 		// Update state
 		state.PrevExecutionCount = currentExecCount
 		state.PrevTotalElapsedTimeUs = currentTotalElapsedUs
-		state.PrevTotalCPUTimeUs = currentTotalCPUUs
 		state.LastSeenTimestamp = now
 
 		return &IntervalMetrics{
-			IntervalAvgElapsedTimeMs:   hybridAvgElapsedMs,
-			IntervalAvgCPUTimeMs:       intervalAvgCPUMs,
+			IntervalAvgElapsedTimeMs:   intervalAvgElapsedMs,
 			IntervalExecutionCount:     deltaExecCount,
 			DetectionMethod:            "hybrid_low_sample",
 			IsInitialObservation:       false,
@@ -272,17 +249,14 @@ func (ic *IntervalCalculator) CalculateIntervalMetrics(query *models.SlowQuery, 
 
 	// Calculate pure interval average
 	intervalAvgElapsedMs := float64(deltaElapsedUs) / float64(deltaExecCount) / 1000.0 // Convert μs to ms
-	intervalAvgCPUMs := float64(deltaCPUUs) / float64(deltaExecCount) / 1000.0         // Convert μs to ms
 
 	// Update state
 	state.PrevExecutionCount = currentExecCount
 	state.PrevTotalElapsedTimeUs = currentTotalElapsedUs
-	state.PrevTotalCPUTimeUs = currentTotalCPUUs
 	state.LastSeenTimestamp = now
 
 	return &IntervalMetrics{
 		IntervalAvgElapsedTimeMs:   intervalAvgElapsedMs,
-		IntervalAvgCPUTimeMs:       intervalAvgCPUMs,
 		IntervalExecutionCount:     deltaExecCount,
 		DetectionMethod:            "interval_avg",
 		IsInitialObservation:       false,
