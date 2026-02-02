@@ -130,18 +130,28 @@ func (s *newRelicPostgreSQLScraper) initializeDatabase() error {
 	sqlClient := client.NewSQLClient(db)
 	s.client = sqlClient
 
+	// Log database configuration for debugging
+	s.logger.Info("Database connection initialized",
+		zap.String("database", s.config.Database),
+		zap.String("hostname", s.config.Hostname),
+		zap.String("port", s.config.Port))
+
 	// If connected to a regular database (not pgbouncer admin DB),
 	// create a separate connection to pgbouncer admin DB for SHOW STATS commands
 	if s.config.Database != "pgbouncer" {
+		s.logger.Info("Attempting to create PgBouncer admin connection",
+			zap.String("current_database", s.config.Database))
 		pgBouncerDB, err := s.createPgBouncerConnection()
 		if err != nil {
 			// Log the error but don't fail - PgBouncer may not be available
-			s.logger.Debug("Failed to create PgBouncer admin connection, PgBouncer metrics will not be available",
+			s.logger.Warn("Failed to create PgBouncer admin connection, PgBouncer metrics will not be available",
 				zap.Error(err))
 		} else {
 			sqlClient.SetPgBouncerDB(pgBouncerDB)
 			s.logger.Info("PgBouncer admin connection established for metrics collection")
 		}
+	} else {
+		s.logger.Info("Connected directly to pgbouncer admin database, skipping separate admin connection")
 	}
 
 	return nil
